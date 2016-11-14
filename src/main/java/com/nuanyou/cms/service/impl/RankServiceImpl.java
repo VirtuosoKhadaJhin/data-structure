@@ -1,0 +1,58 @@
+package com.nuanyou.cms.service.impl;
+
+import com.nuanyou.cms.dao.RankDao;
+import com.nuanyou.cms.entity.Rank;
+import com.nuanyou.cms.model.PageUtil;
+import com.nuanyou.cms.service.RankService;
+import com.nuanyou.cms.util.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by Felix on 2016/9/30.
+ */
+@Service
+public class RankServiceImpl implements RankService {
+
+    @Autowired
+    private RankDao rankDao;
+
+    @Override
+    public Page<Rank> findByCondition(Integer index, final Rank entity) {
+        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
+
+        return rankDao.findAll(new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (entity.getCity() != null && entity.getCity().getId() != null) {
+                    Predicate p = cb.equal(root.get("city").get("id"), entity.getCity().getId());
+                    predicate.add(p);
+                }
+                Predicate[] pre = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(pre)).getRestriction();
+            }
+        }, pageable);
+    }
+
+    @Override
+    public Rank saveNotNull(Rank entity) {
+        if (entity.getId() == null) {
+            return rankDao.save(entity);
+        }
+        Rank oldEntity = rankDao.findOne(entity.getId());
+        BeanUtils.copyBeanNotNull(entity, oldEntity);
+        return rankDao.save(oldEntity);
+    }
+}

@@ -1,0 +1,12 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>$!result.msg</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<h1>$!result.msg</h1>
+#include("common/js-support.vm")</body>
+</html>

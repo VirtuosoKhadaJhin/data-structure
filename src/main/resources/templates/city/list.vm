@@ -1,0 +1,60 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="../city/list" class="tip-bottom" data-original-title="">城市管理</a>
+    <a href="#" class="tip-bottom" data-original-title="">列表</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>城市列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>城市名称</th>
+        <th>所属国家</th>
+        <th>排序</th>
+        <th>是否显示</th>
+        <th class="table-set">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.id</td>
+            <td>$!entity.name</td>
+            <td>$!entity.country.name</td>
+            <td>$!entity.sort</td>
+            <td>#if($!entity.display)显示#else 隐藏#end</td>
+            <td>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+<div class="form-actions">
+    <a class="btn btn-info" href="edit?type=1">新增</a>
+</div>
+#parse("common/list_mid.vm")
+<form class="form-horizontal " method="get">
+    <div class="control-group">
+        <label>城市名称 或ID</label>
+        <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
+    </div>
+    <div class="control-group">
+        <label>国家</label>
+        <select id="country.id" name="country.id" class="span7 selector">
+            <option value="">全部</option>
+            #foreach($e in $!countries)
+                <option value="$!e.id" #if($!entity.country.id==$!e.id) selected #end>$!e.id:$!e.name</option>
+            #end
+        </select>
+    </div>
+    <div class="control-group">
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+#parse("common/list_end.vm")

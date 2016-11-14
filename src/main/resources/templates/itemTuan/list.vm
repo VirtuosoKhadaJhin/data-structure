@@ -1,0 +1,66 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
+    <a href="javascipt:void(0);" class="tip-bottom" data-original-title="">团购商品管理</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>商品列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>所属商户</th>
+        <th>分类名称</th>
+        <th>商品名称</th>
+        <th>是否推荐</th>
+        <th>是否上架</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($item in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!item.id</td>
+            <td>$!item.merchant.name</td>
+            <td>$!item.cat.name</td>
+            <td>$!item.name</td>
+            <td>#if($!item.isHot)推荐#else 普通#end</td>
+            <td>#if($!item.display)上架#else 下架#end</td>
+            <td>
+                <a class="btn btn-success btn-mini" data-id="$!item.id" href="detail?id=$!item.id">查看</a>
+                <a class="btn btn-info btn-mini" data-id="$!item.id" href="edit?id=$!item.id">编辑</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+<div class="form-actions ">
+    <a class="btn btn-info" href="add">新增</a>
+</div>
+#parse("common/list_mid.vm")
+<form>
+    <div class="control-group">
+        <label>商户</label>
+        <select name="merchant.id" class="span11">
+            <option value="">全部</option>
+            #foreach($merchant in $!merchants)
+                <option value="$!merchant.id"
+                    #if($!entity.merchant.id == $!merchant.id)
+                        selected
+                    #end
+                >$!merchant.id:$!merchant.name</option>
+            #end
+        </select>
+    </div>
+    <div class="control-group">
+        <span>商品名称：</span>
+        <input type="text" name="name" class="span11" value="$!entity.name" placeholder="商品名称"/>
+    </div>
+    <div class="control-group">
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+#parse("common/list_end.vm")
+#include("common/js-support.vm")

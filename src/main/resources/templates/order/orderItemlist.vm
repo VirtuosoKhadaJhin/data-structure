@@ -1,0 +1,35 @@
+#parse("common/list_start.vm")
+<div class="widget-title"><span class="icon"> <i class="icon-th"></i> </span>
+    <h5>订单商品列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>名称</th>
+        <th>本地名称</th>
+        <th>数量</th>
+        <th>单价(￥)</th>
+        <th>单价(₩)</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.name</td>
+            <td>$!entity.kpname</td>
+            <td>$!entity.num</td>
+            <td>$!entity.price</td>
+            <td>$!entity.kpprice</td>
+        </tr>
+        #end
+    </tbody>
+</table>
+
+<a class="btn btn-primary" href="list">返回</a>
+
+#set($i=$!page.number + 1)
+<div class="pagination" style="float:right">
+    <ul total="$!page.totalPages" index="$!i"></ul>
+</div>
+#include("common/js-support.vm")
+<script src="/dist/js/page-support.js"></script>

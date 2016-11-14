@@ -1,0 +1,84 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
+    <a href="javascript:void(0);" class="tip-bottom">商户补贴管理</a>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>优付补贴名称</th>
+        <th>商户补贴率</th>
+        <th>商户补贴上限</th>
+        <th>开始时间</th>
+        <th>结束时间</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($e in $!page.content)
+        <tr>
+            <td>$!e.id</td>
+            <td>$!e.subsidyName</td>
+            <td>$!e.mchSubsidy %</td>
+            <td>$!e.mchSubsidyLimit</td>
+            <td>$!e.startTime</td>
+            <td>$!e.endTime</td>
+            <td>
+                <button data-id="$!e.id" class="btn btn-info btn-mini update-item" modal-id="update-modal">编辑</button>
+                <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</button>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+<div class="form-actions ">
+    <button class="btn btn-success update-item" modal-id="update-modal">新建</button>
+</div>
+#parse("common/list_mid.vm")
+<div id="update-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>商户补贴</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal " action="update">
+            <input name="id" type="text" style="display: none;">
+            <input name="mchId" type="hidden" value="$!entity.mchId">
+            <div class="control-group">
+                <label class="control-label">补贴名称</label>
+                <div class="controls">
+                    <input name="subsidyName" type="text" class="span10">
+                </div>
+                <label class="control-label">补贴率</label>
+                <div class="controls">
+                    <input name="mchSubsidy" type="text" class="span9">&nbsp;%
+                </div>
+                <label class="control-label">补贴上限</label>
+                <div class="controls">
+                    <input name="mchSubsidyLimit" type="text" class="span10" placeholder="本地">
+                </div>
+                <label class="control-label">补贴支付方式</label>
+                <div class="controls">
+                    <select name="mchSubsidyPeriod" class="span10">
+                        #foreach($e in $!periodTypes)
+                            <option value="$!e">$!e.name</option>
+                        #end
+                    </select>
+                </div>
+                <label class="control-label">补贴周期</label>
+                <div class="controls">
+                    <input name="startTime" type="text" class="span5 dateTimeFormat" placeholder="开始时间">
+                    <input name="endTime" type="text" class="span5 dateTimeFormat" placeholder="结束时间">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        <button class="btn btn-primary submit-item" type="button" modal-id="update-modal">保存</button>
+    </div>
+</div>
+<script src="/dist/js/curd.js"></script>
+#parse("common/list_end.vm")
+#include("common/js-support.vm")

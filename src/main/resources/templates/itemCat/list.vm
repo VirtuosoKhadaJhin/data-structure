@@ -1,0 +1,81 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
+    <a href="/itemCat/list" class="tip-bottom" data-original-title="">商品分类管理</a>
+</div>
+
+
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>商品分类列表</h5>
+</div>
+<table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+    <thead>
+    <tr role="row">
+        <th>ID</th>
+        <th>商品分类</th>
+        <th>简称</th>
+        <th>所属商户</th>
+        <th>是否显示</th>
+        <th class="table-set">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.id</td>
+            <td>$!entity.name</td>
+            <td>$!entity.shortname</td>
+            <td>$!entity.merchant.name</td>
+            <td>
+                #if($!entity.display)
+                    显示
+                #else
+                    隐藏
+                #end
+            </td>
+
+            <td>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini" class="btn btn-success btn-mini">编辑</a>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+
+</table>
+
+
+<div class="form-actions">
+    <a class="btn btn-info" href="edit?type=1">新增</a>
+</div>
+
+#parse("common/list_mid.vm")
+<form >
+    <div class="control-group">
+        <label for="status">ID：</label>
+        <input type="text" class="span11" name="id" value="$!entity.id"
+               placeholder="ID">
+
+        <label for="status">商户：</label>
+        <select id="merchant.id" class="span11 select2" name="merchant.id" data-am-selected="{searchBox:1,btnWidth:'200px',maxHeight:'200px'}">
+            <option value="">全部</option>
+            #foreach($merchant in $!merchants)
+                <option value="$!merchant.id"
+                    #if($!entity.merchant.id == $!merchant.id)
+                        selected
+                    #end
+                >
+                    $!merchant.id:$!merchant.name
+                </option>
+            #end
+        </select>
+        <label for="status">商品分类名称：</label>
+        <input type="text" class="span11" id="name" name="name"
+               value="$!entity.name" placeholder="商品分类名称"/>
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+#parse("common/list_end.vm")
+
+

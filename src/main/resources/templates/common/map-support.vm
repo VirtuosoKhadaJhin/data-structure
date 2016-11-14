@@ -1,0 +1,145 @@
+<!-- 地图框 -->
+<div class="modal hide" tabindex="-1" style="height:700px;" id="doc-modal-basic" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>设置经纬度</h3>
+    </div>
+    <input type="hidden" id="longitudel" value="0"/>
+    <input type="hidden" id="latitudel" value="0"/>
+    <div style="margin:0">点击相应位置或者搜索地址 ,设定好后点击右侧按钮==>
+        <button type="button" class="btn btn-primary" id="mapSetup">设定</button>
+    </div>
+    <div class="ftip" style="margin:0">输入地址<input type="text" id="popupAddress" size="30"/>
+        <a id="setAddressButton" style="float:none" href="javascript:void(0);">搜索地址</a>
+    </div>
+    <div id="address_list"></div>
+    <div id="l-map" style="height:600px;"></div>
+</div>
+
+<script type="text/javascript" src="http://ditu.google.cn/maps/api/js?key=AIzaSyANA1ppgmEfDK2UKsuIlD67Gk-ze98p-48&sensor=false"></script>
+<script>
+    $(function () {
+        // 图片预览
+        $(".viewMap").bind("click", function () {
+            $('#doc-modal-basic').modal();
+            $("#popupAddress").val("");
+            $("#l-map").empty();
+            $("#address_list").empty();
+            showlatlng($('#longitude').val(), $('#latitude').val());
+        });
+        //设置坐标
+        $("#mapSetup").bind("click", function () {
+            var longitudel = $("#longitudel").val();
+            var latitudel = $("#latitudel").val();
+            $('#longitude').val(longitudel);
+            $('#latitude').val(latitudel);
+        });
+    });
+
+    var map;
+    var marker;
+    var baseZoom = 13;
+    function showlatlng(longitudel, latitudel) {
+        var canvas = document.getElementById("l-map");
+        if (canvas) {
+            var origin = new google.maps.LatLng(latitudel, longitudel);
+            var zoom = baseZoom;
+            var mapOptions = {
+                disableDefaultUI: true,
+                zoomControl: true,
+
+            };
+            map = new google.maps.Map(canvas, mapOptions);
+            if (origin.lat() == 0 || origin.lng() == 0) {
+                origin = new google.maps.LatLng(36.10047804918315, 127.6171875);
+                zoom = 7;
+            } else {
+                addMarker(map, origin, "原位置");
+            }
+
+            map.setCenter(origin);
+            map.setZoom(zoom);
+
+            google.maps.event.addListener(map, 'click', function (e) {
+                $('#address_list').empty();
+                $('#latitudel').attr('value', e.latLng.lat());
+                $('#longitudel').attr('value', e.latLng.lng());
+                map.setCenter(e.latLng);
+                if (map.getZoom() < baseZoom) map.setZoom(13);
+                if (marker) marker.setMap(null);
+                marker = addMarker(map, e.latLng, "新位置");
+            });
+        }
+
+        document.getElementById("setAddressButton").onclick = searchLatLngByAddress;
+    }
+    function addMarker(map, position, content) {
+        var marker = new google.maps.Marker({
+            position: position,
+            map: map
+        });
+        if (content) {
+            var infoWindow = new google.maps.InfoWindow();
+            infoWindow.setContent(content);
+            infoWindow.open(map, marker);
+        }
+        return marker;
+    }
+
+    function searchLatLngByAddress() {
+        $('#address_list').empty();
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({address: $('#popupAddress').val()}, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                // 如果只找到一个坐标，则根据找到的坐标设置marker
+                if (results.length == 1) {
+                    $('#latitudel').attr('value', results[0].geometry.location.lat());
+                    $('#longitudel').attr('value', results[0].geometry.location.lng());
+
+                    map.setCenter(results[0].geometry.location);
+                    if (map.getZoom() < baseZoom) {
+                        map.setZoom(13);
+                    }
+                    if (marker) {
+                        marker.setMap(null);
+                    }
+                    marker = addMarker(map, results[0].geometry.location, '新位置');
+                }
+                // 否则，提示找到多个坐标，让用户选择具体地址
+                else {
+                    alert("根据您输入的地址得到了多个坐标，请在列表中选择一个精确的地址！");
+                    for (var i = 0; i < results.length; i++) {
+                        var addressItemStr = '<div class="address_item" style="border-bottom:1px solid; cursor:pointer;" onclick="selectAddress()">';
+                        addressItemStr += results[i].formatted_address;
+                        addressItemStr += '<input type="hidden" class="hidden_latitudel" value="' + results[i].geometry.location.lat() + '" />';
+                        addressItemStr += '<input type="hidden" class="hidden_longitudel" value="' + results[i].geometry.location.lng() + '" />';
+                        addressItemStr += '</div>';
+
+                        $(addressItemStr).appendTo($('#address_list'));
+                    }
+                }
+            } else {
+                alert("Invalid address: " + address);
+            }
+        });
+    }
+
+    function selectAddress() {
+        var longitudel = $(".address_item").find(".hidden_longitudel").val();
+        var latitudel = $(".address_item").find(".hidden_latitudel").val();
+        $('#longitudel').attr('value', longitudel);
+        $('#latitudel').attr('value', latitudel);
+
+        if (marker) {
+            marker.setMap(null);
+        }
+
+        var position = new google.maps.LatLng(latitudel, longitudel);
+
+        map.setCenter(position);
+        if (map.getZoom() < baseZoom) {
+            map.setZoom(13);
+        }
+        marker = addMarker(map, position, '新位置');
+    }
+</script>

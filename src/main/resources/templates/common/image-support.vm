@@ -1,0 +1,70 @@
+<!-- 预览框 -->
+<div class="modal hide fade" tabindex="-1" id="modal-preview" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>图片预览</h3>
+    </div>
+    <div class="modal-body">
+        <img id="previewImg" class="img-thumbnail"/>
+    </div>
+</div>
+<!-- 上传框 -->
+<div class="modal hide fade" tabindex="-1" id="modal-fileupload" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>图片上传</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal " target="hidden_frame" id="uploadForm" action="/upload"
+              enctype="multipart/form-data" method="post">
+            <div class="input-group">
+                <input type="hidden" name="callbackId" id="callbackId"/>
+                <input type="hidden" name="width" id="width"/>
+                <input type="hidden" name="height" id="height"/>
+                <div class="controls">
+                    <input type="file" name="uploadFile" id="uploadFile"/>
+                </div>
+                <div class="controls">
+                    <button type="button" class="btn btn-success" id="uploadBtn">上传</button>
+                </div>
+            </div>
+            <iframe style="display:none" name='hidden_frame' id="hidden_frame"></iframe>
+        </form>
+    </div>
+</div>
+<script>
+    $(function () {
+        // 图片预览
+        $(".previewBtn").bind("click", function () {
+            var id = $(this).attr("data-id");
+            var imgUrl = $("#" + id).val();
+            $("#previewImg").attr("src", imgUrl);
+            $('#modal-preview').modal();
+        });
+
+        // 上传文件选择
+        $(".uploadImgBtn").bind("click", function () {
+            $("#uploadFile").val("");
+            $("#callbackId").val($(this).attr("data-id"));
+            $("#width").val($(this).attr("data-width"));
+            $("#height").val($(this).attr("data-height"));
+            $('#modal-fileupload').modal();
+        });
+
+        // 上传
+        $("#uploadBtn").bind("click", function () {
+            if ($("#uploadFile").val() == "") {
+                alert("请选择文件！");
+            } else {
+                $("#uploadForm").submit();
+                $(this).attr("disabled", "disabled");
+            }
+        });
+    });
+    // iframe中接收返回的图片url
+    function callback(id, imgUrl) {
+        $('#modal-fileupload').modal('hide');
+        $("#" + id).val(imgUrl);
+        $("#uploadBtn").removeAttr("disabled");
+    }
+</script>

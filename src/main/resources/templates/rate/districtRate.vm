@@ -1,0 +1,65 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="../city/list" class="tip-bottom" data-original-title="">商圈汇率</a>
+    <a href="#" class="tip-bottom" data-original-title="">列表</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>城市列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>商圈ID</th>
+        <th>名称</th>
+        <th>商圈汇率</th>
+        <th>保存</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!districts)
+        <tr class="odd gradeX">
+            <td>$!entity.id</td>
+            <td>$!entity.name</td>
+            <td>
+                <input value="$!entity.radio" name="radio_$!entity.id" id="radio_$!entity.id"/>
+            </td>
+            <td>
+                <button type="submit" data-id="$!entity.id" class="btn btn-primary saveRadio">保存</button>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#parse("common/list_mid.vm")
+
+#parse("common/list_end.vm")
+
+<script>
+
+    $(".saveRadio").each(function () {
+        $(this).on("click", function () {
+            var each = $(this);
+            var id = each.attr("data-id");
+            var radioId = "radio_" + id;
+            var radio = $("#" + radioId).val();
+            var url = "savedistrictRate";
+            $.ajax({
+                url: url, async: false, data: {radio: radio, id: id},
+                success: function (result) {
+                    if (result.code == 0) {
+                        alert("成功");
+                        window.location.reload();
+                    } else {
+                        alert("Fail Code: " + result.code + " MSG: " + result.msg);
+                    }
+                }
+            });
+        });
+
+    });
+
+</script>
+
+

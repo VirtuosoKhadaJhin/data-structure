@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span6">
+                <div class="widget-box">
+                    <div id="breadcrumb">
+                        <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
+                        <a href="list" class="tip-bottom" data-original-title="">攻略管理</a>
+                        <a href="javascipt:void(0);" class="tip-bottom" data-original-title="">编辑/查看</a>
+                    </div>
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
+                        <h5>攻略编辑</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form class="form-horizontal commonValidate" action="update" method="post">
+                            <input name="id" type="hidden" value="$!entity.id">
+                            <div class="control-group">
+                                <label class="control-label">攻略名称</label>
+                                <div class="controls">
+                                    <input name="name" type="text" class="span11" value="$!entity.name">
+                                </div>
+                                <label class="control-label">国家</label>
+                                <div class="controls">
+                                    <select name="countryId" class="span11" target-name="city.id" target-url="/city/api/getCitys">
+                                        <option value="">无</option>
+                                        #foreach($e in $!countries)
+                                            <option value="$!e.id" #if($!e.id == $!entity.countryId) selected #end>$!e.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <label class="control-label">城市</label>
+                                <div class="controls">
+                                    <select name="city.id" class="span11" def-value="$!entity.city.id" target-name="districtId" target-url="/district/api/list"></select>
+                                </div>
+                                <label class="control-label">跳转链接</label>
+                                <div class="controls">
+                                    <input name="url" type="text" class="span11" value="$!entity.url">
+                                </div>
+                                <label class="control-label">顺序</label>
+                                <div class="controls">
+                                    <input name="sort" type="text" class="span11" value="$!entity.sort">
+                                </div>
+
+                                <label class="control-label">展示方式</label>
+                                <div class="controls">
+                                    #foreach($e in $!guidelineTypes)
+                                        <input name="type" type="checkbox" value="$!e"
+                                            #foreach($t in $!entity.type)
+                                               #if($!e == $!t)checked#end
+                                            #end
+                                        /> $!e.name
+                                    #end
+                                </div>
+                            </div>
+                            <div class="control-group App">
+                                <label class="control-label">图标链接</label>
+                                <div class="controls">
+                                    <input name="imgUrl" type="text" class="span9" id="imgUrl" value="$!entity.imgUrl">
+                                    <button class="btn btn-success previewBtn" type="button" data-id="imgUrl">预览</button>
+                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="imgUrl">上传</button>
+                                </div>
+                                <label class="control-label">图片链接</label>
+                                <div class="controls">
+                                    <input name="icon" type="text" class="span9" id="icon" value="$!entity.icon">
+                                    <button class="btn btn-success previewBtn" type="button" data-id="icon">预览</button>
+                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="icon">上传</button>
+                                </div>
+                            </div>
+                            <div class="control-group Push">
+                                <!-- <label class="control-label">商圈</label>
+                                <div class="controls">
+                                    <select name="districtId" class="span11" def-value="$!entity.districtId"></select>
+                                </div>-->
+                                <label class="control-label">推送标题</label>
+                                <div class="controls">
+                                    <input name="pushTitle" type="text" class="span11" value="$!entity.pushTitle">
+                                </div>
+                                <label class="control-label">推送描述</label>
+                                <div class="controls">
+                                    <input name="pushIntro" type="text" class="span11" value="$!entity.pushIntro">
+                                </div>
+                                <label class="control-label">推送图片</label>
+                                <div class="controls">
+                                    <input name="pushImgUrl" type="text" class="span9" id="pushImgUrl" value="$!entity.pushImgUrl">
+                                    <button class="btn btn-success previewBtn" type="button" data-id="pushImgUrl">预览</button>
+                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="pushImgUrl">上传</button>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-success" type="submit" id="btn-save">保存</button>
+                                <a class="btn btn-warning" type="button" id="btn-edit">编辑</a>
+                                <a class="btn btn-primary" href="list">返回</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #include("common/js-support.vm")
+    <script>
+            #if($!disabled)
+            $("#btn-save").hide();
+            $(":input").each(function (i, o) {
+                $(o).attr("disabled", true);
+            });
+            $("#btn-edit").on("click", function () {
+                $(":input").each(function (i, o) {
+                    $(o).attr("disabled", false);
+                    $("#btn-save").show();
+                    $("#btn-edit").hide();
+                });
+            });
+            #else
+            $("#btn-edit").hide();
+            #end
+
+        $("input[name='type']").each(function (i, o) {
+            var value = $(o).val();
+            var checked = $(o).prop("checked");
+            if (!checked)
+                $("." + value).hide();
+
+            $(o).on("click", function () {
+                var value = $(this).val();
+                var checked = $(this).prop("checked");
+                if (!checked)
+                    $("." + value).hide();
+                else
+                    $("." + value).show();
+            });
+        });
+    </script>
+    #include("common/image-support.vm")
+    <script src="/dist/js/cascade-select.js"></script>
+</body>
+</html>

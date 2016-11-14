@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+            <a href="../merchant/list" class="tip-bottom" data-original-title="">评论美化</a>
+            <a href="#" class="tip-bottom" data-original-title="">编辑</a>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <form class="form-horizontal commonValidate" role="form" action="update" method="post" id="commonForm">
+                <div class="span6">
+                    <div class="widget-box">
+                        <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
+                            <h5>评论美化</h5>
+                        </div>
+                        <div class="widget-content nopadding">
+                            <input name="id" type="hidden" class="span11" value="$!entity.id">
+                            <input name="type" type="hidden" class="span11" value="$!entity.type">
+                            <div class="control-group">
+                                <label class="control-label">商户</label>
+                                <div class="controls">
+                                    <select name="merchant.id" class="span9">
+                                        #foreach($e in $!merchants)
+                                            <option value="$!e.id" #if($!e.id == $!entity.merchant.id) selected #end>$!e.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <label class="control-label">用户</label>
+                                <div class="controls">
+                                    <select name="userId" class="span9">
+                                        #foreach($e in $!fakeUsers)
+                                            <option value="$!e.id" #if($!e.id == $!entity.userId) selected #end>$!e.nickname</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <label class="control-label">评分</label>
+                                <div class="controls">
+                                    <select name="score" class="span9">
+                                        <option value="5" #if($!entity.score == 3) selected #end>5</option>
+                                        <option value="4" #if($!entity.score == 2) selected #end>4</option>
+                                        <option value="3" #if($!entity.score == 1) selected #end>3</option>
+                                        <option value="2" #if($!entity.score == 1) selected #end>2</option>
+                                        <option value="1" #if($!entity.score == 1) selected #end>1</option>
+                                    </select>
+                                </div>
+                                <label class="control-label">评价</label>
+                                <div class="controls">
+                                    <input name="content" type="text" class="span9" value="$!entity.content">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-success btn-save" type="submit">保存</button>
+                                <button class="btn btn-warning btn-edit" type="button">编辑</button>
+                                <button class="btn btn-warning uploadImgBtn btn-save" type="button">添加图片</button>
+                                <a class="btn btn-primary goback" href="list">返回</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="span5">
+                    <div class="widget-box">
+                        <div class="widget-title"><span class="icon"><i class="icon-list"></i></span>
+                            <h5>图片列表</h5>
+                        </div>
+                        <div class="widget-content">
+                            <ul class="quick-actions">
+                                #foreach($e in $!entity.imgs)
+                                    <li class="bg_lb">
+                                        <img height="120" width="150" src="$e">
+                                        <input type="hidden" name="imgs" value="$e">
+                                        <a href="javascript:void(0);" class="remove-img"><i class="icon-remove"></i></a>
+                                    </li>
+                                #end
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+    #include("common/js-support.vm")
+    #include("common/image-support.vm")
+<script>
+        #if($!disabled)
+        $(".btn-save").hide();
+        $(".span11").each(function (i, o) {
+            $(o).attr("disabled", true);
+        });
+        $(".btn-edit").on("click", function () {
+            $(":input").each(function (i, o) {
+                $(o).attr("disabled", false);
+                $(".btn-save").show();
+                $(".btn-edit").hide();
+            });
+        });
+        #else
+        $(".btn-edit").hide();
+        #end
+
+    $(".remove-img").on("click", function () {
+        $($(this).parent()).remove();
+    });
+
+    // iframe中接收返回的图片url
+    function callback(id, imgUrl) {
+        var htm = '<li class="bg_lb"><img height="120" width="150" src="' + imgUrl + '">' +
+                '<input type="hidden" name="imgs" value="' + imgUrl + '">' +
+                '<a href="javascript:void(0);" class="remove-img"><i class="icon-remove"></i></a></li>';
+        $(".quick-actions").append(htm);
+        $('#modal-fileupload').modal('hide');
+    }
+</script>
+
+</html>

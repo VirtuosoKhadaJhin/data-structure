@@ -1,0 +1,79 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="../searchKeyword/list" class="tip-bottom" data-original-title="">关键词管理</a>
+    <a href="#" class="tip-bottom" data-original-title="">列表</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>关键词列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>搜索关键词</th>
+        <th>跳转链接</th>
+        <th>排序值</th>
+        <th>是否显示</th>
+        <th>是否热门</th>
+        <th>创建时间</th>
+        <th>国家</th>
+        <th class="table-set">操作</th>
+
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.id</td>
+            <td>$!entity.keyword</td>
+            <td>$!entity.url</td>
+            <td>$!entity.sort</td>
+            <td>
+                #if($!entity.display)
+                    显示
+                #else
+                    隐藏
+                #end
+            </td>
+            <td>
+                #if($!entity.ishot)
+                    是
+                #else
+                    否
+                #end
+            </td>
+
+            <td>
+                $!dateFormatter.format(
+                    "yyyy-MM-dd HH:mm:ss",$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.createtime))
+            </td>
+            <td>
+                $!entity.country.name
+            </td>
+            <td>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+<div class="form-actions">
+    <a class="btn btn-info" href="edit?type=1">新增</a>
+</div>
+#parse("common/list_mid.vm")
+<form class="am-form am-form-inline zy-search" role="form" id="itemCatForm" method="get">
+    <div class="control-group">
+        <label>国家</label>
+        <select name="country.id" class="span11">
+            <option value="">全部</option>
+            #foreach($e in $!countries)
+                <option value="$!e.id" #if($!entity.country.id==$!e.id) selected #end>$!e.name</option>
+            #end
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">查询</button>
+</form>
+#parse("common/list_end.vm")

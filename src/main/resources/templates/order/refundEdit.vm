@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+            <a href="../order/refundList" class="tip-bottom" data-original-title="">退款管理</a>
+            <a href="#" class="tip-bottom" data-original-title="">编辑/查看</a>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span6">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
+                        <h5>退款处理</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form class="form-horizontal commonValidate" role="form" action="validate" method="post" id="validate">
+                            <input name="id" type="hidden"  class="span11" value="$!entity.id">
+                            <div class="control-group">
+                                <label class="control-label">订单ID</label>
+                                <div class="controls">
+                                    <input name="ordersn" type="text" disabled  class="span11" placeholder="订单ID22"
+                                           value="$!entity.ordersn">
+                                </div>
+                                <label class="control-label">用户</label>
+                                <div class="controls">
+                                    <input name="nickname" disabled type="text" class="span11"
+                                           placeholder="用户"
+                                           value="$!entity.user.nickname">
+                                </div>
+                                <label class="control-label">下单时间</label>
+                                <div class="controls">
+                                    <input name="createtime" disabled type="text" class="span11"
+                                           placeholder="下单时间"
+                                           value="$!entity.createtime">
+                                </div>
+                                <label class="control-label">提出时间</label>
+                                <div class="controls">
+                                    <input name="refundtime" disabled type="text" class="span11" placeholder="人均消费"
+                                           value="$!entity.refundtime">
+                                </div>
+                                <label class="control-label">退款理由</label>
+                                <div class="controls">
+                                    <input name="refundreason" disabled type="text" class="span11"
+                                           placeholder="营业开始时间"
+                                           value="$!entity.refundreason">
+                                </div>
+                                <label class="control-label">退款备注</label>
+                                <div class="controls">
+                                    <textarea name="refundremark" disabled>$!entity.refundremark</textarea>
+                                </div>
+                                <label class="control-label">处理时间</label>
+                                <div class="controls">
+                                    <input name="refundaudittime" disabled type="text" class="span11" placeholder="处理时间"
+                                           value="$!entity.refundaudittime">
+                                </div>
+                                <label class="control-label">处理人</label>
+                                <div class="controls">
+                                    <input name="cmsusername" type="text"  class="span11" placeholder="处理人"
+                                           value="$!log.cmsusername">
+                                </div>
+                            </div>
+
+                            <input type="hidden" id="type" name="type" >
+
+                            <div class="form-actions">
+                                #if($!entity.refundstatus==201)
+                                    <button data-id="203"  class="btn btn-success action">通过</button>
+                                    <button data-id="202"  class="btn btn-success action">拒绝</button>
+                            #end
+                            #if($!entity.refundstatus==203)
+                                    <span style="color: red">已通过</span>
+                                #elseif($!entity.refundstatus==202)
+                                    <span style="color: red" >未通过</span>
+                                #end
+                                <a class="btn btn-primary" href="refundList">返回</a>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #include("common/js-support.vm")
+
+
+</body>
+
+<script>
+    $(document).ready(function () {
+
+        $(".action").on("click",function () {
+            var type=$(this).attr("data-id");
+            $("#type").val(type);
+            $("#validate").submit();
+        })
+    });
+
+</script>
+</html>

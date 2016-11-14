@@ -1,0 +1,72 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
+    <a href="#" class="tip-bottom">优惠券分类</a>
+</div>
+
+<!--列表开始-->
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>组名称</th>
+        <th class="table-set">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($e in $!page.content)
+        <tr>
+            <td>$!e.id</td>
+            <td>$!e.name</td>
+            <td>
+                <a href="javascript:void(0);" data-id="$!e.id" class="btn btn-info btn-mini update-item">编辑</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+<!--列表结束-->
+
+
+<div class="form-actions ">
+    <a href="javascript:void(0);" class="btn btn-success update-item">新建</a>
+</div>
+#parse("common/list_mid.vm")
+
+
+<!--编辑模态框开始-->
+<form id="couponGroupForm">
+    <div id="update-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>优惠券类别</h3>
+        </div>
+        <div class="modal-body">
+            <div class="form-horizontal ">
+                <input name="id" type="hidden" class="span11 update-field not-clean">
+                <div class="control-group">
+                    <label class="control-label">优惠券类别名称</label>
+                    <div class="controls">
+                        <input name="name" for="name" type="text" class="span11 update-field" placeholder="优惠券类别名称">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:void(0);" id="update-submit" date-id="couponGroupForm" class="btn btn-primary">保存</a>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
+    </div>
+</form>
+<!--编辑模态框结束-->
+<form >
+    <div class="control-group">
+        <label>优惠券分类名称：</label>
+        <input type="text" class="span11" id="name" name="name"
+               value="$!entity.name" placeholder="优惠券分类名称"/>
+        </select>
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+#parse("common/list_end.vm")
+<script src="/dist/js/curd_common.js"></script>

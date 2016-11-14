@@ -1,0 +1,103 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
+    <a href="javascript:void(0);" class="tip-bottom">评价管理</a>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>订单编号</th>
+        <th>店铺名称</th>
+        <th>评分</th>
+        <th>商铺评价</th>
+        <th>评论时间</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($e in $!page.content)
+        <tr>
+            <td>$!e.order.ordersn</td>
+
+            <td>
+                <a href="$!link.requestPath/merchant/detail?id=$!e.merchant.id" class="alink"> $!e.merchant.name</a>
+            </td>
+            <td>$!e.score</td>
+            <td>$!e.content</td>
+            <td>$!e.createTime</td>
+            <td>
+                <button data-name="commentId" data-value="$!e.id" class="btn btn-info btn-mini add-item"
+                        modal-id="reply-modal">回复
+                </button>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#parse("common/list_mid.vm")
+<form class="form-horizontal " role="form" method="get">
+    <div class="control-group">
+        <label>评分高低：</label>
+        <select name="scoreStr" class="span11">
+            <option value="">所有</option>
+            <option #if($!scoreStr == "high") selected #end value="high">高分</option>
+            <option #if($!scoreStr == "low") selected #end value="low">低分</option>
+        </select>
+    </div>
+    <div class="control-group">
+        <label>订单编号：</label>
+        <input type="text" name="order.ordersn" class="span11" value="$!entity.order.ordersn" placeholder="订单编号"/>
+    </div>
+##    <div class="control-group">
+##        <label>是否评价</label>
+##        <select name="isComment" class="span11">
+##            <option value="true">已评价</option>
+##            <option value="false">未评价</option>
+##        </select>
+##    </div>
+    <div class="control-group">
+        <label>开始时间：</label>
+        <input name="begin" value="$!time.beginStr" type="text" class="span11 timeFormat" placeholder="开始时间">
+    </div>
+    <div class="control-group">
+        <label>结束时间：</label>
+        <input name="end" value="$!time.endStr" type="text" class="span11 timeFormat" placeholder="结束时间">
+    </div>
+    <div class="control-group">
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+<div id="reply-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>评价管理</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal commonValidate" action="reply">
+            <input name="commentId" id="id" type="hidden">
+            <div class="control-group">
+                <label class="control-label">回复内容</label>
+                <div class="controls">
+                    <textarea name="content" class="span11"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        <button class="btn btn-primary submit-item" type="button" modal-id="reply-modal">保存</button>
+    </div>
+</div>
+<script src="/dist/js/curd.js"></script>
+<script>
+    $(function () {
+        $('.timeFormat').datetimepicker({
+            format: "Y-m-d H:i:00",
+            timepicker: true,
+            yearStart: 2000,
+            yearEnd: 2050,
+            todayButton: false
+        });
+    });
+</script>
+#parse("common/list_end.vm")

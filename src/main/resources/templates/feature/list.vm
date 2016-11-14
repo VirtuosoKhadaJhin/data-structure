@@ -1,0 +1,112 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="../feature/list" class="tip-bottom" data-original-title="">特色频道管理</a>
+    <a href="#" class="tip-bottom" data-original-title="">列表</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>城市列表</h5>
+</div>
+<div style="overflow: auto;width: 100%">
+    <table class="table table-bordered table-striped" >
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>标题</th>
+            <th>图片URL</th>
+            <th>跳转URL</th>
+            <th>内容</th>
+            <th>类型</th>
+            <th>城市</th>
+            <th>国家</th>
+            <th>显示</th>
+            <th>阅读量</th>
+            <th>点赞数量</th>
+            <th class="table-set">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+            #foreach($entity in $!page.content)
+            <tr class="odd gradeX">
+                <td>$!entity.id</td>
+                <td>$!entity.title</td>
+                <td>
+                    <a href="$!entity.imgurl" target="_blank" title="$!entity.imgurl">链接</a></td>
+                </td>
+                <td>
+                    <a href="$!entity.linkurl" target="_blank" title="$!entity.linkurl">链接</a></td>
+                <td>$!entity.content</td>
+                <td>
+                    #if($!entity.type==1)
+                        普通
+                    #else
+                        精选
+                    #end
+                </td>
+                <td>
+
+                    #if($!entity.city)
+                        $!entity.city.name ($!entity.city.id)
+                    #else
+                        无
+                    #end
+
+                  </td>
+                <td>
+                    #if($!entity.country)
+                        $!entity.country.name ($!entity.country.id)
+                    #else
+                        无
+                    #end
+
+                    </td>
+                <td>
+                    #if($!entity.display)
+                        显示
+                    #else
+                        隐藏
+                    #end
+                </td>
+                <td>$!entity.readnum</td>
+                <td>$!entity.likenum</td>
+
+
+                <td>
+                    <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
+                    <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+                </td>
+            </tr>
+            #end
+        </tbody>
+    </table>
+</div>
+<div class="form-actions">
+    <a class="btn btn-info" href="edit?type=1">新增</a>
+</div>
+#parse("common/list_mid.vm")
+<form class="am-form am-form-inline zy-search" role="form" id="itemCatForm" method="get">
+    <div class="control-group">
+        <label>国家</label>
+        <select name="country.id" class="span11 parent" target-name="city.id" target-url="/city/api/getCitys">
+            <option value="">全部</option>
+            #foreach($e in $!countries)
+                <option value="$!e.id" #if($!entity.country.id==$!e.id) selected #end>$!e.id:$!e.name</option>
+            #end
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>城市</label>
+        <select name="city.id" class="span11 child" def-value="$!entity.city.id">
+            <option value="">全部</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">查询</button>
+</form>
+#parse("common/list_end.vm")
+<script src="/dist/js/cascadeAll.js"></script>
+
+
+
+

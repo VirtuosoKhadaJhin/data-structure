@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 菜单管理</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+            <a href="/district/list" class="tip-bottom" data-original-title="">商圈管理</a>
+            <a href="#" class="tip-bottom" data-original-title="">编辑</a>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span6">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                        <h5>商圈编辑&查看</h5>
+                        <!--页面类型-->
+                        <input id="type" name="type" type="hidden" value="$!type">
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form id="districtForm" action="update" method="post" class="form-horizontal commonValidate" role="form">
+                            <div class="control-group">
+                                <label class="col-sm-2 control-label">ID</label>
+                                <div class="controls">
+                                    #if($!type==2)
+                                        <input name="id" readonly type="text" class="form-control" placeholder="ID"
+                                               value="$!entity.id">
+                                    #end
+                                    #if($!type==3)
+                                        <label>$!entity.id</label>
+                                    #end
+                                </div>
+                                <label class="control-label">中文名称</label>
+                                <div class="controls">
+                                    <input for="name" name="name" type="text" class="span11" placeholder="中文名称"
+                                           value="$!entity.name">
+                                </div>
+                                <label class="control-label">简称</label>
+                                <div class="controls">
+                                    <input for="shortname" name="shortname" type="text" class="span11" placeholder="简称"
+                                           value="$!entity.shortname">
+                                </div>
+
+                                <label class="control-label">本地名称</label>
+                                <div class="controls">
+                                    <input name="kpname" type="text" class="span11" placeholder="本地名称"
+                                           value="$!entity.kpname">
+                                </div>
+                                <label class="control-label">汇率系数</label>
+                                <div class="controls">
+                                    <input name="radio" type="text" class="span11" placeholder="汇率系数"
+                                           value="$!entity.radio">
+                                </div>
+                                <label class="control-label">是否显示 </label>
+                                <div class="controls">
+                                    <select id="display" name="display">
+                                        <option value="true"  #if($!entity.display==true)  selected #end>显示</option>
+                                        <option value="false"  #if($!entity.display==false)  selected #end>隐藏</option>
+                                    </select>
+                                </div>
+
+
+                                <label class="control-label">国家</label>
+                                <div class="controls">
+                                    <select id="country.id" name="country.id" class="span7 selector" target-name="city.id" target-url="/city/api/getCitys">
+                                        <option value="">请选择</option>
+                                        #foreach($e in $!countries)
+                                            <option value="$!e.id" #if($!entity.country.id==$!e.id)
+                                                    selected #end>$!e.id:$!e.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <label class="control-label">城市</label>
+                                <div class="controls">
+                                    <select id="city.id" name="city.id" class="span7 selector form-control" def-value="$!entity.city.id">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+
+
+                                <label class="control-label">排序</label>
+                                <div class="controls">
+                                    <input name="sort" for="sort" type="text" class="span11" placeholder="排序"
+                                           value="$!entity.sort">
+                                </div>
+                                <label class="control-label">跳转链接</label>
+                                <div class="controls">
+                                    <input name="link" type="text" class="span11" placeholder="商圈介绍"
+                                           value="$!entity.link">
+                                </div>
+                                <label class="control-label">列表图</label>
+                                <div class="controls">
+                                    <input type="text" class="span9" id="indeximgurl" name="indeximgurl"
+                                           value='$!entity.indeximgurl'/>
+
+                                    <button type="button" class="btn btn-success previewBtn" data-id="indeximgurl">预览
+                                    </button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indeximgurl">上传
+                                    </button>
+                                </div>
+                                <label class="control-label">背景图</label>
+                                <div class="controls">
+                                    <input type="text" class="span9" id="bgimgurl" name="bgimgurl"
+                                           value='$!entity.bgimgurl'/>
+                                    <button type="button" class="btn btn-success previewBtn" data-id="bgimgurl">预览
+                                    </button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="bgimgurl">上传
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                #if($!type==2 || $!type==1)
+                                    <button type="submit" class="btn btn-success">保存</button>
+                                #elseif($!type==3)
+                                    <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
+                                    <a class="btn btn-primary" href="list">返回</a>
+                                #end
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+    #include("common/js-support.vm")
+    #include("common/image-support.vm")
+<script src="/dist/js/cascade-select.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var type = $!type;
+        //禁用所有表单
+        if (type == 3) {
+            $(":text").attr("disabled", "disabled");
+            $("select").attr("disabled", "disabled");
+
+        }
+    });
+
+</script>
+</html>

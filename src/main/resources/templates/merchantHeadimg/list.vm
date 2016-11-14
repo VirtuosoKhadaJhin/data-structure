@@ -1,0 +1,112 @@
+#parse("common/list_start.vm")
+<div class="widget-title"><span class="icon"> <i class="icon-th"></i> </span>
+    <h5>商家列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>商家名称</th>
+        <th>本地名称</th>
+        <th>支持类型</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.id</td>
+            <td>$!entity.name</td>
+            <td>$!entity.kpname</td>
+            <td>
+                <ul class="thumbnails">
+                    #foreach($e in $!entity.headimgs)
+                        #if($velocityCount>4)
+                            #break
+                        #end
+                        <li class="span2">
+                            <img width="126px" height="100px" src="$!e.detailImgUrl">
+                            <button type="button" class="btn btn-danger btn-mini remove" data-id="$!e.id">删除</button>
+                            <button type="button" class="btn btn-success btn-mini top" data-id="$!e.id">置顶</button>
+                        </li>
+                    #end
+                </ul>
+            </td>
+            <td><a class="btn btn-info btn-mini" href="edit?mchId=$!entity.id">编辑</a></td>
+        </tr>
+        #end
+    </tbody>
+</table>
+<div class="form-actions ">
+    <a class="btn btn-info" href="add">新增</a>
+</div>
+#parse("common/list_mid.vm")
+<form>
+    <div class="control-group">
+        <label>ID：</label>
+        <input name="id" value="$!entity.id" type="text" placeholder="ID" class="span11">
+        <label>名称：</label>
+        <input name="name" value="$!entity.name" type="text" placeholder="名称" class="span11">
+        <label>本地名称：</label>
+        <input name="kpname" value="$!entity.kpname" type="text" placeholder="本地名称" class="span11">
+        <label>状态</label>
+        <select name="display" class="span11">
+            <option value="">全部</option>
+            <option value="true" #if($!entity.display == true) selected #end>显示</option>
+            <option value="false" #if($!entity.display == false) selected #end>隐藏</option>
+        </select>
+        <label>国家</label>
+        <select name="district.country.id" class="span11">
+            <option value="">全部</option>
+            #foreach($e in $!countries)
+                <option value="$!e.id" #if($!entity.district.country.id==$!e.id) selected #end>$!e.name</option>
+            #end
+        </select>
+        <button type="submit" class="btn btn-primary">查询</button>
+        <a class="btn btn-warning export" href="javascript:void(0);">导出</a>
+    </div>
+</form>
+
+<script src="/dist/js/curd.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".remove").each(function (i, o) {
+            $(o).on("click", function () {
+                var id = $(this).attr("data-id");
+                if (!confirm('确实要删除该内容吗?'))
+                    return;
+                $.ajax({
+                    url: 'remove',
+                    data: {id: id},
+                    type: 'get',
+                    success: function (result) {
+                        if (result.code == 0) {
+                            window.location.reload();
+                        } else {
+                            alert("失败:" + result.msg);
+                        }
+                    }
+                });
+            });
+        });
+
+        $(".top").each(function (i, o) {
+            $(o).on("click", function () {
+                var id = $(this).attr("data-id");
+                $.ajax({
+                    url: 'top',
+                    data: {id: id},
+                    type: 'post',
+                    success: function (result) {
+                        if (result.code == 0) {
+                            window.location.reload();
+                        } else {
+                            alert("失败:" + result.msg);
+                        }
+                    }
+                });
+            });
+        });
+    });
+</script>
+#parse("common/list_end.vm")

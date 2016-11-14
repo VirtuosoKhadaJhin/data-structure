@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 菜单管理</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <div id="breadcrumb">
+                <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+                <a href="../landMark/list" class="tip-bottom" data-original-title="">地标管理</a>
+                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span6">
+                    <div class="widget-box">
+                        <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                            <h5>地标编辑&查看</h5>
+                            <!--页面类型-->
+                        </div>
+                        <div class="widget-content nopadding">
+                            <form action="update" method="post" class="form-horizontal commonValidate" role="form" id="commonForm">
+                                <div class="control-group">
+                                    <span class="control-label">ID</span>
+                                    <div class="controls">
+                                        #if($!type==2)
+                                            <input name="id" readonly type="text" class="form-control" placeholder="ID"
+                                                   value="$!entity.id">
+                                        #end
+                                        #if($!type==3)
+                                            <label>$!entity.id</label>
+                                        #end
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">地标名称</label>
+                                    <div class="controls">
+                                        <input for="name" name="name" type="text" class="span7" placeholder="地标名称"
+                                               value="$!entity.name">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">简称</label>
+                                    <div class="controls">
+                                        <input name="shortname" for="shortname" type="text" class="span7"
+                                               placeholder="简称"
+                                               value="$!entity.shortname">
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">经纬度</label>
+                                    <div class="controls">
+                                        <a class="viewMap" href="javascript:void(0);">查看地图</a>
+                                        <input name="longitude" id="longitude" type="text" class="span11"
+                                               placeholder="经度"
+                                               value="$!entity.longitude">
+                                        <input name="latitude" id="latitude" type="text" class="span11" placeholder="纬度"
+                                               value="$!entity.latitude">
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <label class="control-label">商圈</label>
+                                    <div class="controls">
+                                        <select id="district.id" name="district.id"
+                                                data-am-selected="{searchBox:1,btnWidth:'200px',maxHeight:'200px'}">
+                                            <option value="">全部</option>
+                                            #foreach($district in $!districts)
+                                                <option value="$!district.id"
+                                                    #if($!entity.district.id == $!district.id)
+                                                        selected
+                                                    #end
+                                                >
+                                                    $!district.id:$!district.name
+                                                </option>
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">是否显示</label>
+                                    <div class="controls">
+                                        <select id="display" name="display" class="span7 selector">
+                                            <option value="true"  #if($!entity.display==true)  selected #end>显示</option>
+                                            <option value="false"  #if($!entity.display==false)  selected #end>隐藏
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">排序</label>
+                                    <div class="controls">
+                                        <input for="sort" name="sort" id="sort" type="text" class="span7"
+                                               placeholder="排序" value="$!entity.sort">
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    #if($!type==2 || $!type==1)
+                                        <button type="submit" class="btn btn-success">保存</button>
+                                    #elseif($!type==3)
+                                        <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
+                                    #end
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    #include("common/js-support.vm")
+    #include("common/map-support.vm")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var type = $!type;
+            if (type == 3) {
+                $(":text").attr("disabled", "disabled");
+                $("select").attr("disabled", "disabled");
+
+            }
+        });
+    </script>
+</body>
+</html>

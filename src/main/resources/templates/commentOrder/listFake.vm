@@ -1,0 +1,48 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
+    <a href="javascript:void(0);" class="tip-bottom">评价美化</a>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>店铺名称</th>
+        <th>评分</th>
+        <th>商铺评价</th>
+        <th>评论时间</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($e in $!page.content)
+        <tr>
+            <td>$!e.id</td>
+            <td>
+                <a href="$!link.requestPath/merchant/detail?id=$!e.merchant.id" class="alink"> $!e.merchant.name</a>
+            </td>
+            <td>$!e.score</td>
+            <td>$!e.content</td>
+            <td>$!e.createTime</td>
+            <td>
+                <a data-id="$!e.id" class="btn btn-info btn-mini" href="edit?id=$!e.id">编辑</a>
+                <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</button>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+<div class="form-actions ">
+    <a class="btn btn-info" href="add">新增</a>
+</div>
+#parse("common/list_mid.vm")
+<form class="form-horizontal " role="form" method="get">
+    <div class="control-group">
+        <input type="text" name="order.ordersn" class="span11" value="$!entity.order.ordersn" placeholder="订单编号"/>
+    </div>
+    <div class="control-group">
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+<script src="/dist/js/curd.js"></script>
+#parse("common/list_end.vm")

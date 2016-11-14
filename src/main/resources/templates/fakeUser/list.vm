@@ -1,0 +1,55 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="../fakeUser/list" class="tip-bottom" data-original-title="">用户美化管理</a>
+    <a href="#" class="tip-bottom" data-original-title="">列表</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>城市列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>用户昵称</th>
+        <th>用户性别</th>
+        <th>头像地址</th>
+        <th>创建时间</th>
+        <th class="table-set">操作</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.id</td>
+            <td>$!entity.nickname</td>
+            <td>$!entity.sex.name</td>
+            <td>
+                <a href="$!entity.headImgUrl" target="_blank">$!entitycreat.headImgUrl</a>
+            </td>
+            <td>
+                $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!order.createTime)
+            </td>
+            <td>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+<div class="form-actions">
+    <a class="btn btn-info" href="edit?type=1">新增</a>
+</div>
+#parse("common/list_mid.vm")
+<form>
+    <div class="control-group">
+        <label>用户昵称</label>
+        <input type="text" class="span11" id="nickname" name="nickname"
+               value="$!entity.nickname" placeholder="用户昵称"/>
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+#parse("common/list_end.vm")

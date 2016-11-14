@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span6">
+                <div class="widget-box">
+                    <div id="breadcrumb">
+                        <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
+                        <a href="list" class="tip-bottom" data-original-title="">推荐组管理</a>
+                        <a href="javascipt:void(0);" class="tip-bottom" data-original-title="">编辑/查看</a>
+                    </div>
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
+                        <h5>推荐组编辑</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form class="form-horizontal commonValidate" action="update" method="post">
+                            <input name="id" type="hidden" value="$!entity.id">
+                            <div class="control-group">
+                                <label class="control-label">名称</label>
+                                <div class="controls">
+                                    <input name="title" type="text" class="span11" value="$!entity.title">
+                                </div>
+                                <label class="control-label">国家</label>
+                                <div class="controls">
+                                    <select name="countryId" class="span11" target-name="city.id"
+                                            target-url="/city/api/getCitys">
+                                        <option value="">无</option>
+                                        #foreach($e in $!countries)
+                                            <option value="$!e.id" #if($!e.id == $!entity.countryId)
+                                                    selected #end>$!e.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <label class="control-label">城市</label>
+                                <div class="controls">
+                                    <select name="city.id" class="span11" def-value="$!entity.city.id"></select>
+                                </div>
+                                <label class="control-label">链接</label>
+                                <div class="controls">
+                                    <input name="linkUrl" type="text" class="span11" value="$!entity.linkUrl">
+                                </div>
+                                <label class="control-label">顺序</label>
+                                <div class="controls">
+                                    <input name="sort" type="text" class="span11" value="$!entity.sort">
+                                </div>
+                                <label class="control-label">备注</label>
+                                <div class="controls">
+                                    <input name="remark" type="text" class="span11" value="$!entity.remark">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-success" type="submit" id="btn-save">保存</button>
+                                <button class="btn btn-warning" type="button" id="btn-edit">编辑</button>
+                                <a class="btn btn-primary" href="list">返回</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #include("common/js-support.vm")
+    <script>
+            #if($!disabled)
+            $("#btn-save").hide();
+            $(".span11").each(function (i, o) {
+                $(o).attr("disabled", true);
+            });
+            $("#btn-edit").on("click", function () {
+                $(":input").each(function (i, o) {
+                    $(o).attr("disabled", false);
+                    $("#btn-save").show();
+                    $("#btn-edit").hide();
+                });
+            });
+            #else
+            $("#btn-edit").hide();
+            #end
+    </script>
+    #include("common/image-support.vm")
+    <script src="/dist/js/cascade-select.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+
+                    </div>
+                </div>
+                    #set($i=$!page.number + 1)
+                    <div class="pagination" style="float:right">
+                        <ul total="$!page.totalPages" index="$!i"></ul>
+                    </div>
+            </div>
+            <div class="span2">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"><i class="icon-list"></i></span>
+                        <h5>筛选列表</h5>
+                    </div>
+                    <div class="widget-content">
+                        #include("common/js-support.vm")
+                        <script src="/dist/js/page-support.js"></script>

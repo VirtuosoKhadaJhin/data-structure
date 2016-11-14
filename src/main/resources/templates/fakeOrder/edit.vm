@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 菜单管理</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <div id="breadcrumb">
+                <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+                <a href="../city/list" class="tip-bottom" data-original-title="">城市管理</a>
+                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span6">
+                    <div class="widget-box">
+                        <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                            <h5>城市编辑&查看</h5>
+                        </div>
+                        <div class="widget-content nopadding">
+                            <form action="update" method="post" class="form-horizontal commonValidate" role="form"
+                                  id="cityform">
+                                <div class="control-group">
+                                    <span class="col-sm-2 control-label">ID</span>
+                                    <div class="controls">
+                                        #if($!type==2)
+                                            <input name="id" readonly type="text" class="form-control" placeholder="ID"
+                                                   value="$!entity.id">
+                                        #end
+                                        #if($!type==3)
+                                            <label>$!entity.id</label>
+                                        #end
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <label class="control-label">店铺</label>
+                                    <div class="controls">
+                                        <select id="merchant.id" name="merchant.id" class="span11 select2"
+                                                data-am-selected="{searchBox:1,btnWidth:'200px',maxHeight:'200px'}">
+                                            <option value="">全部</option>
+                                            #foreach($merchant in $!merchants)
+                                                <option value="$!merchant.id"
+                                                    #if($!entity.merchant.id == $!merchant.id)
+                                                        selected
+                                                    #end
+                                                >
+                                                    $!merchant.id:$!merchant.name
+                                                </option>
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">用户</label>
+                                    <div class="controls">
+                                        <select id="fakeUser.id" name="fakeUser.id" class="span11 select2"
+                                                data-am-selected="{searchBox:1,btnWidth:'200px',maxHeight:'200px'}">
+                                            <option value="">全部</option>
+                                            #foreach($fakeUser in $!fakeUsers)
+                                                <option value="$!fakeUser.id"
+                                                    #if($!entity.fakeUser.id == $!fakeUser.id)
+                                                        selected
+                                                    #end
+                                                >
+                                                    $!fakeUser.id:$!fakeUser.nickname
+                                                </option>
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <label class="control-label">评分</label>
+                                    <div class="controls">
+                                        <input for="score" name="score" type="text" class="span7"
+                                               value="$!entity.score">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">评价</label>
+                                    <div class="controls">
+                                        <input name="comment" for="comment" type="text" class="span7"
+                                               value="$!entity.comment">
+                                    </div>
+                                </div>
+
+
+                                <div class="form-actions">
+                                    #if($!type==2 || $!type==1)
+                                        <button type="submit" class="btn btn-success">保存</button>
+                                    #elseif($!type==3)
+                                        <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
+                                    #end
+                                    <a class="btn btn-primary" href="list">返回</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #include("common/js-support.vm")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var type = $!type;
+            if (type == 3) {
+                $(":text").attr("disabled", "disabled");
+                $("select").attr("disabled", "disabled");
+            }
+        });
+    </script>
+</body>
+</html>

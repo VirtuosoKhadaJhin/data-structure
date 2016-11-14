@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<toolbox>
+    <tool>
+        <key>dateFormatter</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.DateTool</class>
+        <parameter name="format" value="yyyy-MM-dd HH:mm:ss"/>
+    </tool>
+    <tool>
+        <key>numberFormatter</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.NumberTool</class>
+    </tool>
+    <tool>
+        <key>mathTool</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.MathTool</class>
+    </tool>
+    <!--    <tool>
+            <key>dateUtils</key>
+            <scope>application</scope>
+            <class>com.nuanyou.cms.web.util.DateUtil</class>
+        </tool>-->
+    <!--    <tool>
+            <key>boolFormater</key>
+            <scope>application</scope>
+            <class>com.nuanyou.cms.web.util.BoolUtil</class>
+        </tool>-->
+    <tool>
+        <key>link</key>
+        <scope>request</scope>
+        <class>com.nuanyou.cms.util.LinkTool</class>
+    </tool>
+
+</toolbox>

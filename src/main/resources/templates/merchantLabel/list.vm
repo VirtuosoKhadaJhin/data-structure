@@ -1,0 +1,53 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
+    <a href="javascript:void(0);" class="tip-bottom">商户标签管理</a>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>中文名称</th>
+        <th>本地名称</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($e in $!list)
+        <tr>
+            <td>$!e.id</td>
+            <td>$!e.name</td>
+            <td>$!e.kpname</td>
+            <td>
+                <button data-id="$!e.id" class="btn btn-info btn-mini update-item" modal-id="update-modal">编辑</button>
+                <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</button>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+<div class="form-actions">
+    <button class="btn btn-success update-item" modal-id="update-modal">新建</button>
+</div>
+#parse("common/list_mid.vm")
+<div id="update-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>商户评分</h3>
+    </div>
+    <div class="modal-body">
+        <form action="update">
+            <input name="id" type="text" style="display: none;">
+            <input name="mchId" type="hidden" value="$!entity.mchId">
+            <input name="name" type="text" class="span11" placeholder="中文名称">
+            <input name="kpname" type="text" class="span11" placeholder="本地名称">
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        <button class="btn btn-primary submit-item" type="button" modal-id="update-modal">保存</button>
+    </div>
+</div>
+<script src="/dist/js/curd.js"></script>
+#parse("common/list_end.vm")
+#include("common/js-support.vm")

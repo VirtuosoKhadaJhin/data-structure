@@ -1,0 +1,43 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="../city/list" class="tip-bottom" data-original-title="">城市管理</a>
+    <a href="#" class="tip-bottom" data-original-title="">列表</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>汇率列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>国家</th>
+        <th>卖出汇率</th>
+        <th>中间汇率</th>
+        <th>汇率系数</th>
+        <th>优付汇率</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.country.name</td>
+            <td>$!entity.yhrate</td>
+            <td>$!entity.midrate</td>
+            <td>$!entity.country.radio</td>
+            <td>$!entity.nyrate</td>
+            <td>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini"
+                   class="btn btn-success btn-mini">编辑</a>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+                <a href="districtRate?id=$!entity.country.id" class="btn btn-info btn-mini">商圈汇率编辑</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#parse("common/list_mid.vm")
+<form class="am-form am-form-inline zy-search" role="form" id="itemCatForm" method="get">
+</form>
+#parse("common/list_end.vm")

@@ -1,0 +1,311 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+    #include("common/js-support.vm")
+    <link rel="stylesheet" href="/dist/markdown/css/editormd.css"/>
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+            <a href="../merchant/list" class="tip-bottom" data-original-title="">商户管理</a>
+            <a href="#" class="tip-bottom" data-original-title="">编辑</a>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
+                        <h5>商户编辑</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form class="form-horizontal commonValidate" role="form" action="update" method="post"
+                              id="commonForm">
+                            <input name="id" type="hidden" class="span11" value="$!entity.id">
+                            <div class="control-group">
+                                <label class="control-label">中文名称</label>
+                                <div class="controls">
+                                    <input for="name" name="name" type="text" class="span11" placeholder="中文名称"
+                                           value="$!entity.name">
+                                </div>
+                                <label class="control-label">本地名称</label>
+                                <div class="controls">
+                                    <input name="kpname" type="text" class="span11" placeholder="本地名称"
+                                           value="$!entity.kpname">
+                                </div>
+                                <label class="control-label">商家电话</label>
+                                <div class="controls">
+                                    <input name="telphone" type="text" class="span11" placeholder="商家电话"
+                                           value="$!entity.telphone">
+                                </div>
+                                <label class="control-label">人均消费</label>
+                                <div class="controls">
+                                    <input name="consume" type="text" class="span11" placeholder="人均消费"
+                                           value="$!entity.consume">
+                                </div>
+                                <label class="control-label">营业开始时间</label>
+                                <div class="controls">
+                                    <input name="businessStart" type="text" class="span11 timeFormat"
+                                           placeholder="营业开始时间"
+                                           value="$!dateFormatter.format("HH:mm:ss",$!entity.businessStart)">
+                                </div>
+                                <label class="control-label">营业结束时间</label>
+                                <div class="controls">
+                                    <input name="businessEnd" type="text" class="span11 timeFormat" placeholder="营业结束时间"
+                                           value="$!dateFormatter.format("HH:mm:ss",$!entity.businessEnd)">
+                                </div>
+                                <label class="control-label">营业日</label>
+                                <div class="controls">
+                                    #foreach($e in $!weeks)
+                                        <input name="businessDay" type="checkbox" class="checkbox" value="$!e"
+                                            #foreach($t in $!entity.businessDay)
+                                               #if($!t == $!e)checked#end
+                                            #end
+                                        /> $!e.name
+                                    #end
+                                </div>
+                                <label class="control-label">显示状态</label>
+                                <div class="controls">
+                                    <input name="display" type="checkbox" value="true"
+                                           #if($!entity.display)checked#end/> 显示
+                                </div>
+                                <label class="control-label">合作情况</label>
+                                <div class="controls">
+                                    <input name="issign" type="checkbox" value="true" #if($!entity.issign)
+                                           checked #end/>
+                                    已签约
+                                </div>
+                                <label class="control-label">是否推荐</label>
+                                <div class="controls">
+                                    <input name="recommend" type="checkbox" value="true"
+                                           #if($!entity.recommend)checked#end/> 是
+                                </div>
+                                <label class="control-label">商户评分</label>
+                                <div class="controls">
+                                    <input name="score" type="text" class="span11" placeholder="商户评分"
+                                           value="$!entity.score">
+                                </div>
+                                <label class="control-label">商户分级</label>
+                                <div class="controls">
+                                    <select name="rank" class="span11">
+                                        <option value="3" #if($!entity.rank == 3) selected #end>三级商户(普通)</option>
+                                        <option value="2" #if($!entity.rank == 2) selected #end>二级商户(优秀)</option>
+                                        <option value="1" #if($!entity.rank == 1) selected #end>一级商户(重要)</option>
+                                    </select>
+                                </div>
+                                <label class="control-label">分类信息</label>
+                                <div class="controls">
+                                    <select name="mcat.id" class="span11" target-name="subcat.id"
+                                            target-url="/merchantCat/api/list">
+                                        #foreach($e in $!cats)
+                                            <option value="$!e.id" #if($!e.id == $!entity.mcat.id)
+                                                    selected #end>$!e.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <label class="control-label">子分类信息</label>
+                                <div class="controls">
+                                    <select name="subcat.id" class="span11" def-value="$!entity.subcat.id"></select>
+                                </div>
+                                <label class="control-label">2.0分类信息</label>
+                                <div class="controls">
+                                    <select name="catId" class="span11">
+                                        <option value="1" #if($!entity.catId==1) selected #end>美食</option>
+                                        <option value="2" #if($!entity.catId==2) selected #end>购物</option>
+                                        <option value="3" #if($!entity.catId==3) selected #end>景点</option>
+                                    </select>
+                                </div>
+                                <label class="control-label">中文地址</label>
+                                <div class="controls">
+                                    <input name="address" type="text" class="span11" placeholder="中文地址"
+                                           value="$!entity.address">
+                                </div>
+                                <label class="control-label">本地地址</label>
+                                <div class="controls">
+                                    <input name="kpaddress" type="text" class="span11" placeholder="本地地址" value="$!entity.kpaddress">
+                                </div>
+                                <label class="control-label">2.0列表页门头图</label>
+                                <div class="controls">
+                                    <input name="indexImgUrl" type="text" class="span9" id="indexImgUrl" placeholder="2.0列表页门头图" value="$!entity.indexImgUrl">
+                                    <button class="btn btn-success previewBtn" type="button" data-id="indexImgUrl">预览</button>
+                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="indexImgUrl" data-width="600" data-height="200">上传
+                                    </button>
+                                </div>
+
+                                <label class="control-label">3.0列表页门头图</label>
+                                <div class="controls">
+                                    <input name="listImgUrl" type="text" class="span9" id="listImgUrl" placeholder="3.0列表页门头图" value="$!entity.listImgUrl">
+                                    <button class="btn btn-success previewBtn" type="button" data-id="listImgUrl">预览</button>
+                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="listImgUrl" data-width="200" data-height="150">上传</button>
+                                </div>
+
+                                <label class="control-label">经纬度</label>
+                                <div class="controls">
+                                    <input name="longitude" id="longitude" type="text" class="span4" placeholder="经度" value="$!entity.longitude">
+                                    <input name="latitude" id="latitude" type="text" class="span4" placeholder="纬度" value="$!entity.latitude">
+                                    <a class="btn btn-success viewMap" href="javascript:void(0);">查看地图</a>
+                                </div>
+
+                                <label class="control-label">商圈信息</label>
+                                <div class="controls">
+                                    <select name="district.Id" class="span11">
+                                        #foreach($e in $!districts)
+                                            <option value="$!e.id" #if($!e.id == $!entity.district.Id)
+                                                    selected #end>$!e.name
+                                                （$!e.kpname）
+                                            </option>
+                                        #end
+                                    </select>
+                                </div>
+
+                                <label class="control-label">地标信息</label>
+                                <div class="controls">
+                                    <select name="landmarkId" class="span9" def-value="$!entity.landmarkId"></select>
+                                    <button class="btn btn-success landmark" type="button" data-width="200" data-height="150">获得地标</button>
+                                </div>
+
+                                <label class="control-label">顺序</label>
+                                <div class="controls">
+                                    <input name="sort" type="text" class="span11" placeholder="顺序"
+                                           value="$!entity.sort">
+                                </div>
+                                <label class="control-label">支付方式</label>
+                                <div class="controls">
+                                    #foreach($e in $!payTypes)
+                                        <input name="payTypes" type="checkbox" value="$!e"
+                                            #foreach($t in $!entity.payTypes)
+                                               #if($!e == $!t)checked#end
+                                            #end
+                                        /> $!e.name
+                                    #end
+                                </div>
+                                <label class="control-label">支持类型</label>
+                                <div class="controls">
+                                    #foreach($e in $!supportTypes)
+                                        <input name="supportType" type="checkbox" value="$!e"
+                                            #foreach($t in $!entity.supportType)
+                                               #if($!e == $!t)checked#end
+                                            #end
+                                        /> $!e.name
+                                    #end
+                                </div>
+                                <label class="control-label">概述</label>
+                                <div class="controls">
+                                    <input name="outline" type="text" class="span11" placeholder="概述"
+                                           value="$!entity.outline">
+                                </div>
+                                <label class="control-label">小贴士</label>
+                                <div class="controls">
+                                    <textarea name="tips" class="span11">$!entity.tips</textarea>
+                                </div>
+                                <label class="control-label">商户介绍</label>
+                            #*<div class="controls">
+                                <textarea name="intro" class="span11" id="intro">$!entity.intro</textarea>
+                            </div>*#
+                                <div id="layout" class="controls">
+                                    <div id="test-editormd" style="margin: 0,0,0">
+                                        <textarea style="display:none;" name="intro" id="intro"
+                                                  value="$!entity.intro"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-success" type="submit" id="btn-save">保存</button>
+                                <a class="btn btn-warning" id="btn-edit">编辑</a>
+                                <a class="btn btn-primary goback" href="list">返回</a>
+                                <input type="hidden" id="disabled" value="$!disabled"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+            #if($!disabled)
+            $("#btn-save").hide();
+            $(":input").each(function (i, o) {
+                $(o).attr("disabled", true);
+            });
+            $("#btn-edit").on("click", function () {
+                $(":input").each(function (i, o) {
+                    $(o).attr("disabled", false);
+                    $("#btn-save").show();
+                    $("#btn-edit").hide();
+                    $("#disabled").val("false");
+                    /* editor.readonly(false);*/
+                });
+            });
+
+            #else
+            $("#btn-edit").hide();
+            #end
+
+    </script>
+    #include("common/image-support.vm")
+    #include("common/map-support.vm")
+    <script src="/dist/js/cascade-select.js"></script>
+
+    <script src="/dist/markdown/editormd.min.js"></script>
+    <script type="text/javascript">
+        var mdEditor;
+        $(function () {
+            mdEditor = editormd("test-editormd", {
+                width: "90%",
+                height: 300,
+                syncScrolling: "single",
+                path: "/dist/markdown/lib/",
+                toolbarIcons: function () {
+                    return ["undo", "redo", "del", "clear", "|", "bold", "italic", "uppercase", "lowercase", "|", "h1", "h2", "h3", "h4", "h5", "h6", "list-ul", "list-ol", "hr", "link",
+                        "image", "code", "preformatted-text", "code-block", "datetime", "help", "||", "watch", "preview", "fullscreen"]
+                },
+                onload: function () {
+                    mdEditor.setMarkdown($("#intro").attr("value"));
+                }
+            });
+        });
+
+        var defaultOption = null;
+        $(".landmark").each(function () {
+            $(this).on("click", function () {
+
+                var value = $("select[name='district.Id']").val();
+                var longitude = $("#longitude").val();
+                var latitude = $("#latitude").val();
+
+                $.ajax({
+                    url: "/landMark/api/list", async: false, data: {id: value, longitude: longitude, latitude: latitude},
+                    success: function (result) {
+                        var htm = '';
+                        $.each(result.data, function (k, v) {
+                            htm += '<option value="' + v.id + '">' + v.id + ":" + v.name;
+                        });
+                        var target = $("select[name='landmarkId']");
+                        if (defaultOption == null) {
+                            defaultOption = "" + $(target).html();
+                        }
+                        htm = defaultOption + htm;
+                        $(target).html(htm);
+                    }
+                });
+            }).click();
+            var target = $("select[name='landmarkId']");
+            var value = $(target).attr("def-value");
+            if (value) {
+                $(target).val(value);
+            }
+        });
+    </script>
+</body>
+
+
+</html>

@@ -1,0 +1,107 @@
+#parse("common/list_start.vm")
+<div class="widget-title"><span class="icon"> <i class="icon-th"></i> </span>
+    <h5>商户详情图片3.0</h5>
+</div>
+<div class="widget-content">
+##    <div class="span10">
+    <ul class="thumbnails">
+        #foreach($e in $!list)
+            <li class="span2">
+                <img width="239px" height="189px" src="$!e.detailImgUrl">
+                <button type="button" class="btn btn-danger btn-mini remove" data-id="$!e.id">删除</button>
+                <button type="button" class="btn btn-success btn-mini top" data-id="$!e.id">置顶</button>
+            </li>
+        #end
+    </ul>
+##    </div>
+</div>
+
+<div id="add-img-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>新增图片</h3>
+    </div>
+    <div class="modal-body">
+        <input id="add-img-mchId" type="hidden" class="span11">
+        <input id="add-img-url" type="text" class="span11" value="$!entity.id">
+        <button class="btn btn-success previewBtn" type="button" data-id="add-img-url">预览</button>
+        <button class="btn btn-success uploadImgBtn" type="button" data-id="add-img-url" data-width="720" data-height="540">上传</button>
+        是否置顶 <input id="add-img-sort" type="checkbox">
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        <a href="javascript:void(0);" id="add-img-submit" class="btn btn-primary">保存</a>
+    </div>
+</div>
+#parse("common/list_mid.vm")
+<a class="btn btn-success" id="add-img" data-mchId="$!entity.mchId" href="javascript:void(0);">新增</a>
+<script>
+    $(function () {
+        $("#add-img").on("click", function (event) {
+            var mchId = $(this).attr("data-mchId");
+            $("#add-img-mchId").attr("value", mchId);
+            $("#add-img-modal").modal();
+        });
+
+        $("#add-img-submit").on("click", function (event) {
+            var detailImgUrl = $("#add-img-url").val();
+            var mchId = $("#add-img-mchId").val();
+            if ($("#add-img-sort").prop("checked"))
+                var sort = 0;
+
+            $.ajax({
+                url: 'add',
+                data: {detailImgUrl: detailImgUrl, mchId: mchId, sort: sort},
+                type: 'post',
+                success: function (result) {
+                    if (result.code == 0) {
+                        window.location.reload();
+                    } else {
+                        alert("失败:" + result.msg);
+                    }
+                }
+            });
+        });
+
+        $(".remove").each(function (i, o) {
+            $(o).on("click", function () {
+                var id = $(this).attr("data-id");
+                if (!confirm('确实要删除该内容吗?'))
+                    return;
+                $.ajax({
+                    url: 'remove',
+                    data: {id: id},
+                    type: 'get',
+                    success: function (result) {
+                        if (result.code == 0) {
+                            window.location.reload();
+                        } else {
+                            alert("失败:" + result.msg);
+                        }
+                    }
+                });
+            });
+        });
+
+        $(".top").each(function (i, o) {
+            $(o).on("click", function () {
+                var id = $(this).attr("data-id");
+                $.ajax({
+                    url: 'top',
+                    data: {id: id},
+                    type: 'post',
+                    success: function (result) {
+                        if (result.code == 0) {
+                            window.location.reload();
+                        } else {
+                            alert("失败:" + result.msg);
+                        }
+                    }
+                });
+            });
+        });
+    });
+</script>
+#include("common/image-support.vm")
+#parse("common/list_end.vm")
+#include("common/js-support.vm")

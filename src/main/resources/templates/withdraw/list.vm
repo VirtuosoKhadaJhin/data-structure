@@ -1,0 +1,163 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="../withdraw/list" class="tip-bottom" data-original-title="">提现管理</a>
+    <a href="#" class="tip-bottom" data-original-title="">列表</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>提现列表</h5>
+</div>
+<div style="overflow: auto;width: 100%">
+    <table class="table table-bordered table-striped" style="width: 1500px">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>用户id</th>
+            <th>用户昵称</th>
+            <th>银行</th>
+            <th>账户名</th>
+            <th>账户</th>
+            <th>提现金额</th>
+            <th>审批状态</th>
+            <th>失败原因</th>
+            <th>创建时间</th>
+            <th>审批时间</th>
+            <th class="table-set">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+            #foreach($entity in $!page.content)
+            <tr class="odd gradeX">
+                <td>$!entity.id</td>
+                <td>$!entity.userid</td>
+                <td>$!entity.nickname</td>
+                <td>$!entity.bank</td>
+                <td>$!entity.name</td>
+                <td>$!entity.account</td>
+                <td>$!entity.amount</td>
+
+                <td>
+                    #if($!entity.status==1)
+                        等待提现
+                    #elseif($!entity.status==2)
+                        提现成功
+                    #elseif($!entity.status==3)
+                        提现失败
+                    #end
+                </td>
+
+
+                <td>$!entity.message</td>
+                <td> $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.createtime)</td>
+                <td> $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.approvetime)</td>
+
+                <td>
+                    #if($!entity.status==1)
+                        <a data-id="$!entity.id" type="success" class="btn btn-success btn-mini operate">成功</a>
+                        <a data-id="$!entity.id" type="failure" class="btn btn-info btn-mini operate">失败</a>
+                    #end
+                </td>
+            </tr>
+            #end
+        </tbody>
+    </table>
+</div>
+#parse("common/list_mid.vm")
+<form class="am-form am-form-inline zy-search" role="form"
+      method="get">
+    <div class="control-group">
+
+        <label>用户id:</label>
+        <input type="text" class="span11" name="userid" value="$!entity.userid"
+               placeholder="用户id">
+
+        <label>开始时间:</label>
+        <input type="text" class="span11 dateTimeFormat" name="begin" id="begin" value="$!entity.beginStr"
+               placeholder="开始时间">
+
+        <label>结束时间:</label>
+        <input type="text" class="span11 dateTimeFormat" name="end" value="$!entity.endStr" id="end"
+               placeholder="结束时间">
+
+
+        <label for="status">状态：</label>
+        <select id="status" name="status" class="span11">
+            <option value="">全部</option>
+            <option value="1" #if($!entity.status==1) selected #end>等待提现</option>
+            <option value="2" #if($!entity.status==2) selected #end>提现成功</option>
+            <option value="3" #if($!entity.status==3) selected #end>提现失败</option>
+        </select>
+
+
+    </div>
+    <button type="submit" class="btn btn-primary">查询</button>
+</form>
+#parse("common/list_end.vm")
+
+
+
+
+
+
+
+<div id="operateModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">操作详细</h3>
+    </div>
+    <div class="modal-body">
+        <div class="control-group">
+            <label class="control-label">备注</label>
+            <div class="controls">
+                <input name="message" id="message" type="text">
+            </div>
+        </div>
+        <input type="hidden" id="operateid" name="operateid">
+        <input type="hidden" id="type" name="type">
+
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        <button class="btn btn-primary" id="saveOperate">Save</button>
+    </div>
+</div>
+
+<script>
+    $(".operate").on("click", function () {
+        var type = $(this).attr("type");
+        var id = $(this).attr("data-id");
+        if (type == "success") {
+            $("#message").attr("disabled", "disabled");
+        } else {
+            $("#message").remove("disabled");
+        }
+
+        $("#operateid").val(id);
+        $("#type").val(type);
+        $('#operateModal').modal('show');
+    });
+
+    $("#saveOperate").on("click", function () {
+        var message = $("#message").val();
+        var type = $("#type").val();
+        var operateid = $("#operateid").val();
+        $.ajax({
+            url: 'api/operate',
+            data: {type: type, message: message, operateid: operateid},
+            type: 'post',
+            success: function (result) {
+                if (result.code == 0) {
+                    window.location.reload();
+                } else {
+                    alert("Fail Code: " + result.code + " MSG: " + result.msg);
+                }
+            }
+        });
+
+    });
+
+
+</script>

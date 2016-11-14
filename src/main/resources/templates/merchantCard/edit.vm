@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span6">
+                <div class="widget-box">
+                    <div id="breadcrumb">
+                        <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
+                        <a href="list" class="tip-bottom">商品单品管理</a>
+                        <a href="javascript:void(0);" class="tip-bottom">编辑/查看</a>
+                    </div>
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
+                        <h5>商品编辑</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form class="form-horizontal commonValidate" action="update" method="post">
+                            <input name="id" type="hidden" value="$!entity.id">
+                            <div class="control-group">
+                                <label class="control-label">商户</label>
+                                <div class="controls">
+                                    <select name="merchant.id" class="span11">
+                                        #foreach($e in $!merchants)
+                                            <option value="$!e.id" #if($!e.id == $!entity.merchant.id) selected #end>$!e.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <label class="control-label">类型</label>
+                                <div class="controls">
+                                    <select name="type" class="span11" def-value="$!entity.type">
+                                        #foreach($e in $!cardTypes)
+                                            <option value="$!e" #if($!e == $!entity.type) selected #end>$!e.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <label class="control-label">名称</label>
+                                <div class="controls">
+                                    <input name="title" for="title" type="text" class="span11" placeholder="名称" value="$!entity.title">
+                                </div>
+                                <label class="control-label">是否显示</label>
+                                <div class="controls">
+                                    <input name="display" type="radio" value="true"#if($entity.display)checked#end/>是
+                                    <input name="display" type="radio" value="false"#if(!$entity.display)checked#end/>否
+                                </div>
+                                <label class="control-label">数量</label>
+                                <div class="controls">
+                                    <input name="num" type="text" class="span11" placeholder="" value="$!entity.num">
+                                </div>
+                                <label class="control-label">创建时间</label>
+                                <div class="controls">
+                                    <input name="createTime" type="text" class="span11 dateTimeFormat" placeholder="" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.createTime)">
+                                </div>
+                                <label class="control-label">到期时间</label>
+                                <div class="controls">
+                                    <input name="validTime" type="text" class="span11 dateTimeFormat" placeholder="" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.validTime)">
+                                </div>
+                                <label class="control-label">描述</label>
+                                <div class="controls">
+                                    <input name="intro" type="text" class="span11" placeholder="" value="$!entity.intro">
+                                </div>
+                                <label class="control-label">卡券说明</label>
+                                <div class="controls">
+                                    <textarea name="explains" class="span11">$!entity.explains</textarea>
+                                </div>
+                            </div>
+
+
+                            <div class="control-group Gift">
+                                <label class="control-label">礼品券使用码</label>
+                                <div class="controls">
+                                    <input name="code" for="code" type="text" class="span11" placeholder="" value="$!entity.code">
+                                </div>
+                            </div>
+                            <div class="control-group Discount">
+                                <label class="control-label">折扣</label>
+                                <div class="controls">
+                                    <input name="discount" for="discount" type="text" class="span11" placeholder="" value="$!entity.discount">
+                                </div>
+                            </div>
+                            <div class="control-group Voucher">
+                                <label class="control-label">起始限额</label>
+                                <div class="controls">
+                                    <input name="startPrice" type="text" class="span11" placeholder="" value="$!entity.startPrice">
+                                </div>
+                                <label class="control-label">上限</label>
+                                <div class="controls">
+                                    <input name="limitPrice" type="text" class="span11" placeholder="" value="$!entity.limitPrice">
+                                </div>
+                                <label class="control-label">代金券现价</label>
+                                <div class="controls">
+                                    <input name="price" type="text" class="span11" placeholder="" value="$!entity.price">
+                                </div>
+                                <label class="control-label">代金券原价</label>
+                                <div class="controls">
+                                    <input name="oPrice" type="text" class="span11" placeholder="" value="$!entity.oPrice">
+                                </div>
+                                <label class="control-label">代金券商户价</label>
+                                <div class="controls">
+                                    <input name="merchantPrice" type="text" class="span11" placeholder="" value="$!entity.merchantPrice">
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button class="btn btn-success" type="submit" id="btn-save">保存</button>
+                                <button class="btn btn-warning" type="button" id="btn-edit">编辑</button>
+                                <a class="btn btn-primary" href="list">返回</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #include("common/js-support.vm")
+    <script>
+            #if($!disabled)
+            $("#btn-save").hide();
+            $(".span11").each(function (i, o) {
+                $(o).attr("disabled", true);
+            });
+            $("#btn-edit").on("click", function () {
+                $(":input").each(function (i, o) {
+                    $(o).attr("disabled", false);
+                    $("#btn-save").show();
+                    $("#btn-edit").hide();
+                });
+            });
+            #else
+            $("#btn-edit").hide();
+            #end
+    </script>
+    #include("common/image-support.vm")
+    <script src="/dist/js/cascade-select.js"></script>
+</body>
+</html>

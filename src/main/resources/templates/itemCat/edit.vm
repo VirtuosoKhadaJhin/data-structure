@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 菜单管理</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
+            <a href="/itemCat/list" class="tip-bottom" data-original-title="">商品分类管理</a>
+            <a href="#" class="tip-bottom" data-original-title="">编辑/查看</a>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span6">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                        <h5>商品分类编辑&查看</h5>
+                        <!--页面类型-->
+                        <input id="type" name="type" type="hidden" value="$!type">
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form action="/itemCat/update" method="get" class="form-horizontal commonValidate"
+                              id="itemCatForm"
+                              role="form">
+
+                            <div class="control-group">
+                                <span class="col-sm-2 control-label">ID</span>
+                                <div class="controls">
+                                    #if($!type==2)
+                                        <input name="id" readonly type="text" class="form-control" placeholder="ID"
+                                               value="$!entity.id">
+                                    #end
+                                    #if($!type==3)
+                                        <label>$!entity.id</label>
+                                    #end
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">中文名称</label>
+                                <div class="controls">
+                                    <input name="name" for="name" type="text" class="form-control"
+                                           placeholder="中文名称" value="$!entity.name">
+                                </div>
+
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">简称</label>
+                                <div class="controls">
+                                    <input name="shortname" for="shortname" type="text" class="form-control"
+                                           placeholder="简称"
+                                           value="$!entity.shortname">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">本地名称</label>
+                                <div class="controls">
+                                    <input name="kpname" type="text" placeholder="本地名称" class="form-control"
+                                           value="$!entity.kpname">
+                                </div>
+
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">是否显示 </label>
+                                <div class="controls">
+                                    <select id="display" name="display">
+                                        <option value="true"  #if($!entity.display==true)  selected #end>显示</option>
+                                        <option value="false"  #if($!entity.display==false)  selected #end>隐藏
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">所属商户</label>
+                                <div class="controls">
+                                    <select id="merchant.id" name="merchant.id" class="select2">
+                                        #foreach($merchant in $!merchants)
+                                            <option value="$!merchant.id" #if($!entity.merchant.id == $!merchant.id)
+                                                    selected #end> $!merchant.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">排序</label>
+                                <div class="controls">
+                                    <input name="sort" for="sort" type="text" class="form-control" placeholder="排序"
+                                           value="$!entity.sort">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                #if($!type==2 || $!type==1)
+                                    <button type="submit" class="btn btn-success">保存</button>
+                                    <a class="btn btn-primary goback" href="list">返回</a>
+                                    <button>返回列表</>
+                                #elseif($!type==3)
+                                    <a href="/itemCat/edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
+                                #end
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    #include("common/js-support.vm")
+<script type="text/javascript">
+    $(document).ready(function () {
+        var type = $!type;
+        if (type == 3) {
+            $(":text").attr("disabled", "disabled");
+            $("select").attr("disabled", "disabled");
+        }
+    });
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

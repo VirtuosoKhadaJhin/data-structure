@@ -1,0 +1,131 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
+    <a href="javascript:void(0);" class="tip-bottom">用户补贴管理</a>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>补贴类型</th>
+        <th>补贴方式</th>
+        <th>折扣</th>
+        <th>固定金额</th>
+        <th>补贴上限</th>
+        <th>起减金额</th>
+        <th>优惠单数</th>
+        <th>开始时间</th>
+        <th>结束时间</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($e in $!page.content)
+        <tr>
+            <td>$!e.id</td>
+            <td>#if($!e.subsidyUsAge == 1) 优付用户补贴#else 商户用户补贴#end</td>
+            <td>$!e.userSubsidyType.name</td>
+            <td>$!e.userSubsidyDiscount %</td>
+            <td>$!e.userSubsidyAmount</td>
+            <td>$!e.userSubsidyLimit</td>
+            <td></td>
+            <td>$!e.num</td>
+            <td>$!e.startTime</td>
+            <td>$!e.endTime</td>
+            <td>
+                <button data-id="$!e.id" class="btn btn-info btn-mini update-item" modal-id="update-modal">编辑</button>
+                <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</button>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+<div class="form-actions ">
+    <button class="btn btn-success update-item" modal-id="update-modal">新建</button>
+</div>
+#parse("common/list_mid.vm")
+<div id="update-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>商户补贴</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal " action="update">
+            <input name="id" type="text" style="display: none;">
+            <input name="mchId" type="hidden" value="$!entity.mchId">
+            <div class="control-group">
+                <label class="control-label">补贴类型</label>
+                <div class="controls">
+                    <select name="subsidyUsAge" class="span10">
+                        <option value="1">优付用户补贴</option>
+                        <option value="2">商户用户补贴</option>
+                    </select>
+                </div>
+                <label class="control-label">补贴周期</label>
+                <div class="controls">
+                    <input name="startTime" type="text" class="span5 dateTimeFormat" placeholder="开始时间">
+                    <input name="endTime" type="text" class="span5 dateTimeFormat" placeholder="结束时间">
+                </div>
+                <label class="control-label">补贴方式</label>
+                <div class="controls">
+                    <input name="userSubsidyType" class="radio" type="radio" value="None" checked>无优惠
+                    <input name="userSubsidyType" class="radio" type="radio" value="Discount">折扣
+                    <input name="userSubsidyType" class="radio" type="radio" value="Quota">固定金额
+                </div>
+            </div>
+            <div class="discount">
+                <label class="control-label">补贴折扣</label>
+                <div class="controls">
+                    <input name="userSubsidyDiscount" type="text" class="span9">&nbsp;%
+                </div>
+            </div>
+            <div class="quota">
+                <label class="control-label">补贴金额</label>
+                <div class="controls">
+                    <input name="userSubsidyAmount" type="text" class="span10" placeholder="本地">
+                </div>
+            </div>
+            <div class="discount quota">
+                <label class="control-label">补贴上限</label>
+                <div class="controls">
+                    <input name="userSubsidyLimit" type="text" class="span10" placeholder="本地">
+                </div>
+                <label class="control-label">起减金额</label>
+                <div class="controls">
+                    <input name="userSubsidyFloor" type="text" class="span10" placeholder="本地">
+                </div>
+                <label class="control-label">优惠单数</label>
+                <div class="controls">
+                    <input name="num" type="text" class="span10" placeholder="不填表示每单">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        <button class="btn btn-primary submit-item" type="button" modal-id="update-modal">保存</button>
+    </div>
+</div>
+<script src="/dist/js/curd.js"></script>
+<script>
+    $(function () {
+        $(".discount").hide();
+        $(".quota").hide();
+        $(".radio").on("change", function (event) {
+            show($(this).val());
+        });
+    });
+    function show(subsidyType) {
+        if (subsidyType == "Discount") {
+            $(".quota").hide();
+            $(".discount").show();
+        } else if (subsidyType == "Quota") {
+            $(".discount").hide();
+            $(".quota").show();
+        } else {
+            $(".discount").hide();
+            $(".quota").hide();
+        }
+    }
+</script>
+#parse("common/list_end.vm")

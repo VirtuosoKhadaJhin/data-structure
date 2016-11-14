@@ -1,0 +1,100 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
+    <a href="javascript:void(0);" class="tip-bottom">用户管理</a>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>昵称</th>
+        <th>性别</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr>
+            <td>$!entity.id</td>
+            <td>$!entity.nickname</td>
+            <td>$!entity.sex.name</td>
+            <td>
+                <button data-id="$!entity.id" class="btn btn-info btn-mini update-item" modal-id="update-balance-modal">余额变更</button>
+                <button data-id="$!entity.id" class="btn btn-success btn-mini update-item" modal-id="push-message-modal">消息推送</button>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+<div class="form-actions"></div>
+#parse("common/list_mid.vm")
+<form class="form-horizontal " role="form" method="get">
+    <div class="control-group">
+        <label>用户昵称:</label>
+        <input type="text" name="nickname" class="span11" value="$!entity.nickname" placeholder="用户昵称"/>
+    </div>
+    <div class="control-group">
+        <label>用户ID:</label>
+        <input type="number" name="id" class="span11" value="$!entity.id" placeholder="用户ID"/>
+    </div>
+    <div class="control-group">
+        <button type="submit" class="btn btn-primary">查询</button>
+        <button type="reset" class="btn btn-success">重置</button>
+    </div>
+</form>
+<!-- 余额变更 -->
+<div id="update-balance-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>余额变更</h3>
+    </div>
+    <div class="modal-body">
+        <form action="updateBalance" class="form-horizontal">
+            <input name="id" type="text" style="display: none;">
+            <label class="control-label">余额</label>
+            <div class="controls">
+                <input name="balance" type="text" class="span9" disabled>
+            </div>
+            <label class="control-label">冻结金额</label>
+            <div class="controls">
+                <input name="frozenbalance" type="text" class="span9" disabled>
+            </div>
+            <label class="control-label">变更类别</label>
+            <div class="controls">
+                <input type="radio" ignore="true" name="type" value="1" checked/>充值
+                <input type="radio" ignore="true" name="type" value="2"/>扣除
+            </div>
+            <label class="control-label">变更金额</label>
+            <div class="controls">
+                <input name="updatebalance" type="text" class="span9">
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        <button class="btn btn-primary submit-item" type="button" modal-id="update-balance-modal">保存</button>
+    </div>
+</div>
+<!-- 消息推送 -->
+<div id="push-message-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>消息推送</h3>
+    </div>
+    <div class="modal-body">
+        <form action="pushMessage" class="form-horizontal">
+            <input name="id" type="text" style="display: none;">
+            <label class="control-label">内容</label>
+            <div class="controls">
+                <textarea name="message" class="span11" rows="6"></textarea>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        <button class="btn btn-primary submit-item" type="button" modal-id="push-message-modal">保存</button>
+    </div>
+</div>
+<script src="/dist/js/curd.js"></script>
+#parse("common/list_end.vm")
+#include("common/js-support.vm")

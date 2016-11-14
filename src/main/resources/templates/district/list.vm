@@ -1,0 +1,76 @@
+#parse("common/list_start.vm")
+
+<div id="content-header">
+    <div id="breadcrumb">
+        <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+        <a href="/district/list" class="tip-bottom" data-original-title="">商圈管理</a>
+    </div>
+</div>
+
+<table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+    <thead>
+    <tr role="row">
+        <th>ID</th>
+        <th>名称（中文）</th>
+        <th>简称</th>
+        <th>名称（本地）</th>
+        <th>是否显示</th>
+        <th>所属城市</th>
+        <th>所属国家</th>
+        <th class="table-set">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.id</td>
+            <td>$!entity.name</td>
+            <td>$!entity.shortname</td>
+            <td>$!entity.kpname</td>
+            <td>
+                #if($!entity.display)显示#else 隐藏#end
+            </td>
+            <td>$!entity.city.name</td>
+            <td>$!entity.country.name</td>
+            <td>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+
+<div class="form-actions">
+    <a class="btn btn-info" href="edit?type=1">新增</a>
+</div>
+#parse("common/list_mid.vm")
+
+<form>
+    <div class="control-group">
+        <div class="control-group">
+            <label>商圈名称 或ID</label>
+            <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
+        </div>
+        <div class="control-group">
+            <label>国家</label>
+            <select id="country.id" name="country.id" class="span7 selector">
+                <option value="">全部</option>
+                #foreach($e in $!countries)
+                    <option value="$!e.id" #if($!entity.country.id==$!e.id) selected #end>$!e.id:$!e.name</option>
+                #end
+            </select>
+        </div>
+        <div class="control-group">
+            <label>状态：</label>
+            <select id="display" name="display" class="span11">
+                <option value="">全部</option>
+                <option value="true"  #if($!entity.display==true)  selected #end>显示</option>
+                <option value="false"  #if($!entity.display==false)  selected #end>隐藏</option>
+            </select>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">查询</button>
+</form>
+#parse("common/list_end.vm")
+

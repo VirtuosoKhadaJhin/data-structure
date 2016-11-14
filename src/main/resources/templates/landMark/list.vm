@@ -1,0 +1,69 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="../landMark/list" class="tip-bottom" data-original-title="">地标管理</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>地标列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>名称</th>
+        <th>简称</th>
+        <th>商圈</th>
+        <th>排序</th>
+        <th>显示</th>
+        <th class="table-set">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.id</td>
+            <td>$!entity.name</td>
+            <td>$!entity.shortname</td>
+            <td>$!entity.district.name</td>
+            <td>$!entity.sort</td>
+            <td>
+                #if($!entity.display)显示#else 隐藏#end</td>
+            <td>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+<div class="form-actions">
+    <a class="btn btn-info" href="edit?type=1">新增</a>
+</div>
+#parse("common/list_mid.vm")
+<form>
+    <div class="control-group">
+        <label for="status">地标名称：</label>
+        <input type="text" class="span11" id="name" name="name"
+               value="$!entity.name" placeholder="地标名称"/>
+
+
+        <label for="status">商圈：</label>
+        <select id="district.id" name="district.id" class="span11"
+                data-am-selected="{searchBox:1,btnWidth:'200px',maxHeight:'200px'}">
+            <option value="">全部</option>
+            #foreach($district in $!districts)
+                <option value="$!district.id"
+                    #if($!entity.district.id == $!district.id)
+                        selected
+                    #end
+                >
+                    $!district.id:$!district.name
+                </option>
+            #end
+        </select>
+
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+#parse("common/list_end.vm")
