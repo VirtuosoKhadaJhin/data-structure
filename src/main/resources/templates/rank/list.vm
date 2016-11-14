@@ -77,6 +77,6 @@
 </form>
 #parse("common/list_end.vm")
 
-<script src="/dist/js/cascadeAll.js"></script>
+<script src="/dist/js/cascade-select.js"></script>
 
 

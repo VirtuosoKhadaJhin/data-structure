@@ -105,7 +105,7 @@
     <button type="submit" class="btn btn-primary">查询</button>
 </form>
 #parse("common/list_end.vm")
-<script src="/dist/js/cascadeAll.js"></script>
+<script src="/dist/js/cascade-select.js"></script>
 
 
 

@@ -124,6 +124,6 @@
         </div>
     </div>
     #include("common/js-support.vm")
-    <script src="/dist/js/cascadeAll.js"></script>
+    <script src="/dist/js/cascade-select.js"></script>
 </body>
 </html>
