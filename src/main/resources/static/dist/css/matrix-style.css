@@ -1592,3 +1592,7 @@ div.dataTables_wrapper .ui-widget-header {
 }
 #sidebar .content{ display:none;}
 }
+.form-actions{
+	margin-top:0px;
+	margin-bottom:0px;"
+}
