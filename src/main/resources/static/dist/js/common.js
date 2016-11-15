@@ -1,6 +1,6 @@
 window.onload = function () {
     $('.dateTimeFormat').datetimepicker({
-        format: "Y-m-d H:i:00",
+        format: "Y-m-d H:i:s",
         timepicker: true,
         yearStart: 2000,
         yearEnd: 2050,
@@ -14,7 +14,7 @@ window.onload = function () {
         todayButton: false
     });
     $('.timeFormat').datetimepicker({
-        format: "H:i:00",
+        format: "H:i:s",
         timepicker: true,
         yearStart: 2000,
         yearEnd: 2050,

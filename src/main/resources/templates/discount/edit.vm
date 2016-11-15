@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+    <link rel="stylesheet" href="/dist/markdown/css/editormd.css"/>
+</head>
+<body>
+<div id="content">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span9">
+                <div class="widget-box">
+                    <div id="breadcrumb">
+                        <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
+                        <a href="list" class="tip-bottom">推荐管理</a>
+                        <a href="javascript:void(0);" class="tip-bottom">编辑/查看</a>
+                    </div>
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
+                        <h5>推荐编辑</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form class="form-horizontal commonValidate" action="update" method="post">
+                            <div class="control-group">
+                                <input name="id" type="hidden" value="$!entity.id">
+                                <label class="control-label">标题</label>
+                                <div class="controls">
+                                    <input name="title" type="text" class="span11" placeholder="标题" value="$!entity.title">
+                                </div>
+
+                                <label class="control-label">城市</label>
+                                <div class="controls">
+                                    <select name="country.id" class="span5" target-name="city.id" target-url="/city/api/getCitys">
+                                        #foreach($e in $!countries)
+                                            <option value="$!e.id" #if($!entity.country.id==$!e.id)
+                                                    selected #end>$!e.id:$!e.name</option>
+                                        #end
+                                    </select>
+                                    <select name="city.id" class="span5" def-value="$!entity.city.id"></select>
+                                </div>
+
+                                <label class="control-label">图片</label>
+                                <div class="controls">
+                                    <input type="text" class="span9" name="imgUrl" id="imgUrl" value="$!entity.imgUrl">
+                                    <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览</button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl">上传</button>
+                                </div>
+
+                                <label class="control-label">优惠类型</label>
+                                <div class="controls">
+                                    #foreach($e in $!discountTypes)
+                                        <input name="type" type="radio" value="$!e"
+                                               #if($!e == $!entity.type)checked#end
+                                        /> $!e.name
+                                    #end
+                                </div>
+
+                                <label class="control-label Item">商品ID</label>
+                                <label class="control-label Discount">优惠模板ID</label>
+                                <label class="control-label Voucher">代金券ID</label>
+                                <div class="controls">
+                                    <input name="relatedId" type="text" class="span11" placeholder="商品ID" value="$!entity.relatedId">
+                                </div>
+
+                                <label class="control-label">链接</label>
+                                <div class="controls">
+                                    <input name="linkUrl" type="text" class="span11" placeholder="可选" value="$!entity.linkUrl">
+                                </div>
+
+                                <label class="control-label">起止时间</label>
+                                <div class="controls">
+                                    <input name="startTime" type="text" class="span5 dateTimeFormat" placeholder="开始时间" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.startTime)">
+                                    <input name="endTime" type="text" class="span5 dateTimeFormat" placeholder="结束时间" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.endTime)">
+                                </div>
+
+                                <label class="control-label">说明</label>
+                                <div id="layout" class="controls">
+                                    <div id="test-editormd" style="margin: 0,0,0">
+                                        <textarea style="display:none;" name="intro" id="intro"
+                                                  value="$!entity.intro"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-success" type="submit" id="btn-save">保存</button>
+                                <a class="btn btn-warning" type="button" id="btn-edit">编辑</a>
+                                <a class="btn btn-primary" href="list">返回</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #include("common/js-support.vm")
+    <script>
+            #if($!disabled)
+            $("#btn-save").hide();
+            $(":input").each(function (i, o) {
+                $(o).attr("disabled", true);
+            });
+            $("#btn-edit").on("click", function () {
+                $(":input").each(function (i, o) {
+                    $(o).attr("disabled", false);
+                    $("#btn-save").show();
+                    $("#btn-edit").hide();
+                });
+            });
+            #else
+            $("#btn-edit").hide();
+            #end
+        $("input[name='type']").each(function (i, o) {
+            var value = $(o).val();
+            var checked = $(o).prop("checked");
+            if (!checked)
+                $("." + value).hide();
+
+            $(o).on("click", function () {
+                $("input[name='type']").each(function (i, o) {
+                    var value = $(o).val();
+                    $("." + value).hide();
+                });
+
+                var value = $(this).val();
+                var checked = $(this).prop("checked");
+                if (!checked)
+                    $("." + value).hide();
+                else
+                    $("." + value).show();
+            });
+        });
+
+    </script>
+    #include("common/image-support.vm")
+    <script src="/dist/js/cascade-select.js"></script>
+    <script src="/dist/markdown/editormd.min.js"></script>
+    <script type="text/javascript">
+        var mdEditor;
+        $(function () {
+            mdEditor = editormd("test-editormd", {
+                width: "90%",
+                height: 300,
+                syncScrolling: "single",
+                path: "/dist/markdown/lib/",
+                toolbarIcons: function () {
+                    return ["undo", "redo", "del", "clear", "|", "bold", "italic", "uppercase", "lowercase", "|", "h1", "h2", "h3", "h4", "h5", "h6", "list-ul", "list-ol", "hr", "link",
+                        "image", "code", "preformatted-text", "code-block", "datetime", "help", "||", "watch", "preview", "fullscreen"]
+                },
+                onload: function () {
+                    mdEditor.setMarkdown($("#intro").attr("value"));
+                }
+            });
+        });
+    </script>
+</body>
+</html>

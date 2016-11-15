@@ -90,7 +90,7 @@
                                 <div class="control-group">
                                     <label class="control-label">是否显示</label>
                                     <div class="controls">
-                                        <select id="display" name="display" class="span7 selector">
+                                        <select id="display" name="display" class="span7">
                                             <option value="true"  #if($!entity.display==true)  selected #end>显示</option>
                                             <option value="false"  #if($!entity.display==false)  selected #end>隐藏
                                             </option>

@@ -46,7 +46,7 @@
                                 <div class="control-group">
                                     <label class="control-label">国家</label>
                                     <div class="controls">
-                                        <select id="country.id" name="country.id" class="span7 selector"
+                                        <select id="country.id" name="country.id" class="span7"
                                                 target-name="city.id" target-url="/city/api/getCitys">
                                             <option value="">请选择</option>
                                             #foreach($e in $!countries)
@@ -59,7 +59,7 @@
                                 <div class="control-group">
                                     <label class="control-label">城市</label>
                                     <div class="controls">
-                                        <select id="city.id" name="city.id" class="span7 selector form-control"
+                                        <select id="city.id" name="city.id" class="span7"
                                                 def-value="$!entity.city.id">
                                             <option value="">请选择</option>
                                         </select>
@@ -86,7 +86,7 @@
                                 <div class="control-group">
                                     <label class="control-label">是否热门</label>
                                     <div class="controls">
-                                        <select id="ishot" name="ishot" class="span7 selector">
+                                        <select id="ishot" name="ishot" class="span7">
                                             <option value="true"  #if($!entity.ishot==true)  selected #end>是</option>
                                             <option value="false"  #if($!entity.ishot==false)  selected #end>否</option>
                                         </select>
@@ -95,7 +95,7 @@
                                 <div class="control-group">
                                     <label class="control-label">是否显示</label>
                                     <div class="controls">
-                                        <select id="display" name="display" class="span7 selector">
+                                        <select id="display" name="display" class="span7">
                                             <option value="true"  #if($!entity.display==true)  selected #end>显示</option>
                                             <option value="false"  #if($!entity.display==false)  selected #end>隐藏
                                             </option>

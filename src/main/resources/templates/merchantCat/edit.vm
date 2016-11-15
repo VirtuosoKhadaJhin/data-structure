@@ -66,7 +66,7 @@
                                 </div>
                                 <label class="control-label">是否显示</label>
                                 <div class="controls">
-                                    <select id="display" name="display" class="span11 selector">
+                                    <select id="display" name="display" class="span11">
                                         <option value="true"  #if($!entity.display==true)  selected #end>显示</option>
                                         <option value="false"  #if($!entity.display==false)  selected #end>隐藏</option>
                                     </select>

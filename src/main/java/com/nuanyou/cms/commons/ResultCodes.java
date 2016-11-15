@@ -33,6 +33,12 @@ public enum ResultCodes {
 
     NotFoundUser(502, "找不到用户"),
 
+    NotFoundItem(503, "找不到该商品"),
+
+    NotFoundCouponTemplate(504, "找不到模板"),
+
+    NotFoundMerchantCard(505, "找不到代金券"),
+
 
     /**
      * ----------order -----------
@@ -42,7 +48,7 @@ public enum ResultCodes {
     RefundingFail(2002, "退款已经失败"),
     Audited(2004, "已经审核完毕"),
     OrderNotFound(2005, "未发现订单"),
-    OrderOther(2006,"其他订单错误");
+    OrderOther(2006, "其他订单错误");
 
     /**
      * ----------order -----------

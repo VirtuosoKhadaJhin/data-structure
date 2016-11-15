@@ -44,7 +44,7 @@
                                     </div>
                                     <label class="control-label">性别</label>
                                     <div class="controls">
-                                        <select id="sex" name="sex" class="span7 selector">
+                                        <select id="sex" name="sex" class="span7">
                                             <option value="Male" #if($!entity.sex == "Male") selected #end>男</option>
                                             <option value="Female" #if($!entity.sex== "Female") selected #end>女</option>
                                         </select>
