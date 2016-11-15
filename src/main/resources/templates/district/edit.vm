@@ -69,7 +69,7 @@
 
                                 <label class="control-label">国家</label>
                                 <div class="controls">
-                                    <select id="country.id" name="country.id" class="span7 selector" target-name="city.id" target-url="/city/api/getCitys">
+                                    <select id="country.id" name="country.id" class="span7" target-name="city.id" target-url="/city/api/getCitys">
                                         <option value="">请选择</option>
                                         #foreach($e in $!countries)
                                             <option value="$!e.id" #if($!entity.country.id==$!e.id)
@@ -79,7 +79,7 @@
                                 </div>
                                 <label class="control-label">城市</label>
                                 <div class="controls">
-                                    <select id="city.id" name="city.id" class="span7 selector form-control" def-value="$!entity.city.id">
+                                    <select id="city.id" name="city.id" class="span7" def-value="$!entity.city.id">
                                         <option value="">请选择</option>
                                     </select>
                                 </div>

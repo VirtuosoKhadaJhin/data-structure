@@ -46,7 +46,7 @@
                                     <label class="control-label">国家</label>
                                     <div class="controls">
                                         <select id="country.id" for="country.id" name="country.id"
-                                                class="span7 selector"
+                                                class="span7"
                                                 target-name="city.id" target-url="/city/api/getCitys">
                                             <option value="">请选择</option>
                                             #foreach($e in $!countries)
@@ -60,7 +60,7 @@
                                     <label class="control-label">城市</label>
                                     <div class="controls">
                                         <select id="city.id" for="city.id" name="city.id"
-                                                class="span7 selector form-control"
+                                                class="span7"
                                                 def-value="$!entity.city.id">
                                             <option value="">请选择</option>
                                         </select>
@@ -69,7 +69,7 @@
 
                                     <label class="control-label">广告类型</label>
                                     <div class="controls">
-                                        <select name="userange" class="span7 selector">
+                                        <select name="userange" class="span7">
                                             <option value="1" #if($!entity.userange==1) selected #end>Banner</option>
                                             <option value="2" #if($!entity.userange==2) selected #end>弹窗</option>
                                         </select>
@@ -140,7 +140,7 @@
                                 <label class="control-label">是否热门</label>
                                 <div class="controls">
 
-                                    <select id="ishot" name="ishot" class="span7 selector">
+                                    <select id="ishot" name="ishot" class="span7">
                                         <option value="true"  #if($!entity.ishot==true)  selected #end>是</option>
                                         <option value="false"  #if($!entity.ishot==false)  selected #end>否</option>
                                     </select>

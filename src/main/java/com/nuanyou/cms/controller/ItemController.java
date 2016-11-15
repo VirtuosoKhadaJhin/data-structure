@@ -83,12 +83,6 @@ public class ItemController {
         return "item/edit";
     }
 
-    @RequestMapping(path = "remove", method = RequestMethod.GET)
-    public String remove(Long id) {
-        itemDao.delete(id);
-        return "item/list";
-    }
-
     @RequestMapping("list")
     public String list(Item entity, @RequestParam(required = false, defaultValue = "1") int index, Model model) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
