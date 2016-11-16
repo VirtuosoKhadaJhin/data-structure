@@ -1,0 +1,73 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
+    <a href="/item/list" class="tip-bottom" data-original-title="">优惠管理</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>优惠列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>标题</th>
+        <th>类型</th>
+        <th>城市</th>
+        <th>国家</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($e in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!e.id</td>
+            <td>$!e.title</td>
+            <td>$!e.type.name</td>
+            <td>$!e.city.name</td>
+            <td>$!e.country.name</td>
+            <td>
+                <a class="btn btn-success btn-mini" data-id="$!e.id" href="detail?id=$!e.id">查看</a>
+                <a class="btn btn-info btn-mini" data-id="$!e.id" href="edit?id=$!e.id">编辑</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+<div class="form-actions ">
+    <a class="btn btn-info" href="add">新增</a>
+</div>
+#parse("common/list_mid.vm")
+<form class="form-horizontal " role="form" method="get">
+    <div class="control-group">
+        <label>标题 或ID</label>
+        <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
+
+        <label>优惠类型</label>
+        <select name="type" class="span11">
+            <option value="">全部</option>
+            #foreach($e in $!discountTypes)
+                <option value="$e" #if($!entity.type== $e) selected #end>$e.name</option>
+            #end
+        </select>
+
+        <label>国家</label>
+        <select id="country.id" name="country.id" class="span11" target-name="city.id" target-url="/city/api/getCitys">
+            <option value="">全部</option>
+            #foreach($e in $!countries)
+                <option value="$!e.id" #if($!entity.country.id==$!e.id) selected #end>$!e.id:$!e.name</option>
+            #end
+        </select>
+
+        <label>城市</label>
+        <select id="city.id" name="city.id" class="span11" def-value="$!entity.city.id">
+            <option value="">请选择</option>
+        </select>
+    </div>
+    <div class="control-group">
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+#parse("common/list_end.vm")
+#include("common/js-support.vm")
+<script src="/dist/js/cascade-select.js"></script>

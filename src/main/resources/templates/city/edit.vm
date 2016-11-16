@@ -57,7 +57,7 @@
                                 <div class="control-group">
                                     <label class="control-label">所属国家</label>
                                     <div class="controls">
-                                        <select id="country.id" name="country.id" class="span7 selector">
+                                        <select id="country.id" name="country.id" class="span7">
                                             #foreach($country in $!countries)
                                                 <option value="$!country.id" #if($!entity.country.id == $!country.id)
                                                         selected #end> $!country.name</option>
@@ -68,7 +68,7 @@
                                 <div class="control-group">
                                     <label class="control-label">是否显示</label>
                                     <div class="controls">
-                                        <select id="display" name="display" class="span7 selector">
+                                        <select id="display" name="display" class="span7">
                                             <option value="true"  #if($!entity.display==true)  selected #end>显示</option>
                                             <option value="false"  #if($!entity.display==false)  selected #end>隐藏
                                             </option>
