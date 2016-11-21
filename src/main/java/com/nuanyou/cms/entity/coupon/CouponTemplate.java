@@ -23,12 +23,14 @@ public class CouponTemplate {
     private String title;
     private String intro;
     private BigDecimal price;
-    private Integer availabledays;
+    private BigDecimal localPrice;
+    private Integer availableDays;
     private List<UserRange> userRanges;
-    private BigDecimal startprice;
+    private BigDecimal startPrice;
+    private BigDecimal startLocalPrice;
     private CouponGroup couponGroup;
-    private String groupname;
-    private Date createtime;
+    private String groupName;
+    private Date createTime;
 
 
     @Id
@@ -72,14 +74,22 @@ public class CouponTemplate {
         this.price = price;
     }
 
-
-    @Column(name = "availabledays", nullable = true)
-    public Integer getAvailabledays() {
-        return availabledays;
+    @Column(name = "localprice", nullable = true)
+    public BigDecimal getLocalPrice() {
+        return localPrice;
     }
 
-    public void setAvailabledays(Integer availabledays) {
-        this.availabledays = availabledays;
+    public void setLocalPrice(BigDecimal localPrice) {
+        this.localPrice = localPrice;
+    }
+
+    @Column(name = "availabledays", nullable = true)
+    public Integer getAvailableDays() {
+        return availableDays;
+    }
+
+    public void setAvailableDays(Integer availableDays) {
+        this.availableDays = availableDays;
     }
 
 
@@ -95,14 +105,22 @@ public class CouponTemplate {
 
 
     @Column(name = "startprice", nullable = true, precision = 2)
-    public BigDecimal getStartprice() {
-        return startprice;
+    public BigDecimal getStartPrice() {
+        return startPrice;
     }
 
-    public void setStartprice(BigDecimal startprice) {
-        this.startprice = startprice;
+    public void setStartPrice(BigDecimal startPrice) {
+        this.startPrice = startPrice;
     }
 
+    @Column(name = "startlocalprice", nullable = true)
+    public BigDecimal getStartLocalPrice() {
+        return startLocalPrice;
+    }
+
+    public void setStartLocalPrice(BigDecimal startLocalPrice) {
+        this.startLocalPrice = startLocalPrice;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "groupid")
@@ -116,27 +134,27 @@ public class CouponTemplate {
 
 
     @Column(name = "groupname", nullable = true, length = 50)
-    public String getGroupname() {
-        return groupname;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setGroupname(String groupname) {
-        this.groupname = groupname;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
 
     @CreatedAt
     @Column(name = "createtime", nullable = true)
-    public Date getCreatetime() {
-        return createtime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreatetime(Date createtime) {
-        this.createtime = createtime;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     @Transient
-    public Long getCouponGroupId(){
+    public Long getCouponGroupId() {
         return couponGroup.getId();
     }
 

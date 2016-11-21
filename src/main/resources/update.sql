@@ -20,3 +20,26 @@ CREATE TABLE ny_discount (
     createtime DATETIME COMMENT '创建时间',
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- 优惠券领取记录
+CREATE TABLE ny_coupon_receive_record (
+    id INT(10) NOT NULL AUTO_INCREMENT,
+    title VARCHAR(40) COMMENT '优惠券标题',
+    userid INT(10) COMMENT '用户ID',
+    coupontemplateid INT(10) COMMENT '优惠券模板ID',
+    couponid INT(10) COMMENT '优惠券ID',
+    createTime DATETIME COMMENT '创建时间',
+    PRIMARY KEY (id),
+    KEY `idx_userid` (`userid`),
+    KEY `idx_coupontemplateid` (`coupontemplateid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- 3.0优惠券模板增加 优惠券面值(本地)
+ALTER TABLE `ny_coupon_template`
+ADD COLUMN `localprice` DECIMAL NULL COMMENT '优惠券面值(本地)' AFTER `price`;
+
+-- 3.0优惠券模板增加 使用起始限额(本地)
+ALTER TABLE `ny_coupon_template`
+ADD COLUMN `startlocalprice` DECIMAL NULL COMMENT '使用起始限额(本地)' AFTER `startPrice`;

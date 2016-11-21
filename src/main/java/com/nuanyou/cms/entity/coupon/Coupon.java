@@ -2,7 +2,6 @@ package com.nuanyou.cms.entity.coupon;
 
 import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
-import com.nuanyou.cms.entity.MerchantHeadimg;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -23,8 +22,10 @@ public class Coupon {
     private String title;
     private String intro;
     private BigDecimal price;
+    private BigDecimal localPrice;
     private Integer useRange;
     private BigDecimal startPrice;
+    private BigDecimal startLocalPrice;
     private Long groupId;
     private String groupName;
     private Integer codeId;
@@ -90,6 +91,14 @@ public class Coupon {
         this.price = price;
     }
 
+    @Column(name = "localprice", nullable = true, precision = 2)
+    public BigDecimal getLocalPrice() {
+        return localPrice;
+    }
+
+    public void setLocalPrice(BigDecimal localPrice) {
+        this.localPrice = localPrice;
+    }
 
     @Column(name = "userange", nullable = true)
     public Integer getUseRange() {
@@ -110,6 +119,14 @@ public class Coupon {
         this.startPrice = startPrice;
     }
 
+    @Column(name = "startlocalprice", nullable = true, precision = 2)
+    public BigDecimal getStartLocalPrice() {
+        return startLocalPrice;
+    }
+
+    public void setStartLocalPrice(BigDecimal startLocalPrice) {
+        this.startLocalPrice = startLocalPrice;
+    }
 
     @Column(name = "groupid", nullable = true)
     public Long getGroupId() {
