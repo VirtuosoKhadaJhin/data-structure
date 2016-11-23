@@ -33,6 +33,8 @@ $(".update-item").each(function (i, o) {
                                 }
                             } else {
                                 $(o).val(value);
+                                if (o.multiple == true)
+                                    $(o).trigger("change");
                             }
                         });
                         if (isExitsFunction("callback"))

@@ -3,11 +3,17 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.dao.CouponGroupDao;
 import com.nuanyou.cms.dao.CouponTemplateDao;
+import com.nuanyou.cms.entity.Country;
+import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.coupon.CouponGroup;
 import com.nuanyou.cms.entity.coupon.CouponTemplate;
+import com.nuanyou.cms.entity.enums.CouponTemplateType;
 import com.nuanyou.cms.entity.enums.UserRange;
+import com.nuanyou.cms.model.CouponTemplateVO;
 import com.nuanyou.cms.model.PageUtil;
+import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.CouponTemplateService;
+import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +40,10 @@ public class CouponTemplateController {
     private CouponGroupDao couponGroupDao;
     @Autowired
     private CouponTemplateService couponTemplateService;
+    @Autowired
+    private MerchantService merchantService;
+    @Autowired
+    private CountryService countryService;
 
 
     @RequestMapping(path = "detail", method = RequestMethod.GET)
@@ -45,8 +55,8 @@ public class CouponTemplateController {
 
     @RequestMapping(path = "update", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult update(CouponTemplate entity) {
-        couponTemplateService.saveNotNull(entity);
+    public APIResult update(CouponTemplateVO vo) {
+        couponTemplateService.saveNotNull(vo);
         return new APIResult();
     }
 
@@ -75,12 +85,21 @@ public class CouponTemplateController {
         BeanUtils.cleanEmpty(entity);
 
         Page<CouponTemplate> page = couponTemplateDao.findAll(Example.of(entity, matcher), pageable);
-        List<CouponGroup> couponGroups = couponGroupDao.findAll();
         model.addAttribute("page", page);
-        model.addAttribute("entity", entity);
-        model.addAttribute("couponGroups", couponGroups);
-        model.addAttribute("userRanges", UserRange.values());
         model.addAttribute("nameOrId", nameOrId);
+        model.addAttribute("entity", entity);
+        model.addAttribute("userRanges", UserRange.values());
+
+        model.addAttribute("types", CouponTemplateType.values());
+
+        List<Merchant> merchants = merchantService.getIdNameList();
+        model.addAttribute("merchants", merchants);
+
+        List<Country> countries = countryService.getIdNameList();
+        model.addAttribute("countries", countries);
+
+        List<CouponGroup> couponGroups = couponGroupDao.findAll();
+        model.addAttribute("couponGroups", couponGroups);
         return "couponTemplate/list";
     }
 

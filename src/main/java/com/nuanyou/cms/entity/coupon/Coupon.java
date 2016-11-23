@@ -19,6 +19,7 @@ public class Coupon {
 
     private Long id;
     private Long userId;
+    private Long countryId;
     private String title;
     private String intro;
     private BigDecimal price;
@@ -61,6 +62,14 @@ public class Coupon {
         this.userId = userId;
     }
 
+    @Column(name = "countryid", nullable = true)
+    public Long getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(Long countryId) {
+        this.countryId = countryId;
+    }
 
     @Column(name = "title", nullable = true, length = 40)
     public String getTitle() {
