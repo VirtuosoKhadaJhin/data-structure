@@ -2,11 +2,12 @@ package com.nuanyou.cms.controller;
 
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.dao.CouponDao;
-import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.coupon.Coupon;
+import com.nuanyou.cms.entity.coupon.CouponTemplate;
+import com.nuanyou.cms.entity.enums.CouponTemplateType;
 import com.nuanyou.cms.entity.enums.PeriodType;
 import com.nuanyou.cms.model.CouponBatchVO;
-import com.nuanyou.cms.service.MerchantService;
+import com.nuanyou.cms.service.CouponTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,7 @@ public class CouponController {
     private CouponDao couponDao;
 
     @Autowired
-    private MerchantService merchantService;
+    private CouponTemplateService couponTemplateService;
 
     @RequestMapping(path = "detail", method = RequestMethod.GET)
     @ResponseBody
@@ -68,17 +69,18 @@ public class CouponController {
 
     @RequestMapping(value = "batchSendCoupon", method = RequestMethod.GET)
     public String batchSendCoupon(Model model) {
-        List<Merchant> merchants = merchantService.getIdNameList();
-        model.addAttribute("merchants", merchants);
+        List<CouponTemplate> merchantTemplate = couponTemplateService.findIdNameList(CouponTemplateType.Merchant);
+        List<CouponTemplate> currencyTemplate = couponTemplateService.findIdNameList(CouponTemplateType.Currency);
+
+        model.addAttribute("merchantTemplate", merchantTemplate);
+        model.addAttribute("currencyTemplate", currencyTemplate);
         return "coupon/batchSendCoupon";
     }
 
     @RequestMapping(value = "batchSendCoupon", method = RequestMethod.POST)
     @ResponseBody
     public APIResult batchSendCoupon(CouponBatchVO couponBatch) {
-        List<Coupon> couponList = couponBatch.buildCoupon();
-        couponDao.save(couponList);
-
+        couponTemplateService.batchSendCoupon(couponBatch);
         return new APIResult<>();
     }
 

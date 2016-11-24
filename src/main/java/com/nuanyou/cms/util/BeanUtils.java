@@ -29,28 +29,34 @@ public class BeanUtils {
         ignores.add("fieldHandler");
     }
 
-    public static void copyBean(Object source, Object target) {
-        Map<String, Object> map = toMap(source);
-        copyBean(map, target);
+    public static <T> T copyBean(Object source, T target) {
+        return copyBean(source, target, null);
     }
 
-    public static void copyBeanNotNull(Object source, Object target) {
+    public static <T> T copyBean(Object source, T target, String ignore) {
+        Map<String, Object> map = toMap(source, ignore);
+        return copyBean(map, target);
+    }
+
+    public static <T> T copyBeanNotNull(Object source, T target) {
         Map<String, Object> map = toMapNotNull(source);
-        copyBeanNotNull(map, target);
+        return copyBeanNotNull(map, target);
     }
 
-    public static void copyBean(Map<String, Object> source, Object target) {
+    public static <T> T copyBean(Map<String, Object> source, T target) {
         BeanInfo beanInfo = getBeanInfo(target.getClass());
         PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
         for (PropertyDescriptor pd : pds) {
-            if (ignores.contains(pd.getName()))
+            String name = pd.getName();
+            if (ignores.contains(name) || !source.containsKey(name))
                 continue;
-            Object value = source.get(pd.getName());
+            Object value = source.get(name);
             setValue(target, pd.getWriteMethod(), value);
         }
+        return target;
     }
 
-    public static void copyBeanNotNull(Map<String, Object> source, Object target) {
+    public static <T> T copyBeanNotNull(Map<String, Object> source, T target) {
         BeanInfo beanInfo = getBeanInfo(target.getClass());
         PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
         for (PropertyDescriptor pd : pds) {
@@ -61,6 +67,7 @@ public class BeanUtils {
                 setValue(target, pd.getWriteMethod(), value);
             }
         }
+        return target;
     }
 
     public static void cleanEmpty(Object obj) {
@@ -76,7 +83,7 @@ public class BeanUtils {
         }
     }
 
-    public static Map<String, Object> toMap(Object obj) {
+    public static Map<String, Object> toMap(Object obj, String ignore) {
         if (obj == null)
             return null;
         Map<String, Object> result = new HashMap<>();
@@ -86,6 +93,8 @@ public class BeanUtils {
         for (PropertyDescriptor pd : pds) {
             String name = pd.getName();
             if (ignores.contains(name))
+                continue;
+            if (ignore != null && ignore.contains(name))
                 continue;
 
             Object value = getValue(obj, pd.getReadMethod());

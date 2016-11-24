@@ -13,7 +13,8 @@ public enum UserRange {
     YouFu(2, "优付订单"),
     WaiMai(4, "外卖"),
     TuanGou(8, "团购"),
-    POS(16, "POS收款");
+    POS(16, "POS收款"),
+    Voucher(32, "代金券");
 
     public final Byte value;
 
@@ -54,7 +55,19 @@ public enum UserRange {
     }
 
     public static List<UserRange> toEnums(Integer value) {
+        if (value == null)
+            return null;
         return toEnums(value.byteValue());
+    }
+
+    public static Integer toValue(List<UserRange> attribute) {
+        if (attribute == null || attribute.isEmpty())
+            return null;
+        Integer flag = 0;
+        for (UserRange e : attribute) {
+            flag += e.value;
+        }
+        return flag;
     }
 
 }

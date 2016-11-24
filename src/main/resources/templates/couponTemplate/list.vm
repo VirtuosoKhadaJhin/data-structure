@@ -8,12 +8,12 @@
     <thead>
     <tr>
         <th>ID</th>
+        <th>标题</th>
         <th>组名称</th>
-        <th>模板优惠券标题</th>
-        <th>模板优惠券描述</th>
-        <th>模板优惠券价格</th>
-        <th>模板优惠券有效天数</th>
-        <th>模板优惠券起始限额</th>
+        <th>描述</th>
+        <th>价格</th>
+        <th>有效天数</th>
+        <th>起始限额</th>
         <th class="table-set">操作</th>
     </tr>
     </thead>
@@ -21,16 +21,13 @@
         #foreach($e in $!page.content)
         <tr>
             <td>$!e.id</td>
-            <td>$!e.couponGroup.name</td>
             <td>$!e.title</td>
+            <td>$!e.couponGroup.name</td>
             <td>$!e.intro</td>
             <td>$!e.price</td>
-            <td>$!e.availabledays</td>
-            <td>$!e.startprice</td>
-            <td>
-                <a href="javascript:void(0);" data-id="$!e.id" class="btn btn-info btn-mini update-item"
-                   modal-id="update-modal">编辑</a>
-            </td>
+            <td>$!e.availableDays</td>
+            <td>$!e.startPrice</td>
+            <td><a href="javascript:void(0);" data-id="$!e.id" class="btn btn-info btn-mini update-item" modal-id="update-modal">编辑</a></td>
         </tr>
         #end
     </tbody>
@@ -42,21 +39,33 @@
 </div>
 #parse("common/list_mid.vm")
 
-<!--查询窗口开始-->
-<form >
+<form class="form-horizontal " method="get">
     <div class="control-group">
-
-        <label>模板标题：</label>
-        <input type="text" class="span11" id="title" name="title"
-               value="$!entity.title" placeholder="模板标题"/>
+        <label>标题 或ID</label>
+        <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
+    </div>
+    <div class="control-group">
+        <label>分组</label>
+        <select id="couponGroup.id" name="couponGroup.id" class="span7">
+            <option value="">全部</option>
+            #foreach($e in $!couponGroups)
+                <option value="$!e.id" #if($!entity.couponGroup.id==$!e.id) selected #end>$!e.id:$!e.name</option>
+            #end
         </select>
+        <label>类型</label>
+        <select name="type">
+            <option value="">全部</option>
+            #foreach($e in $!types)
+                <option value="$!e">$!e.name</option>
+            #end
+        </select>
+    </div>
+    <div class="control-group">
         <button type="submit" class="btn btn-primary">查询</button>
     </div>
 </form>
-<!--查询窗口结束-->
 
 <!--编辑模态框开始-->
-
 <div id="update-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -64,14 +73,9 @@
     </div>
 
     <div class="modal-body">
-        <form class="form-horizontal " id="couponTemplateForm" action="update">
+        <form class="form-horizontal" id="couponTemplateForm" action="update">
             <div class="control-group">
-                <label class="control-label">ID</label>
-                <div class="controls">
-                    <!--隐藏域-->
-                    <input name="id" type="text" readonly class="span11 update-field">
-                    <!--隐藏域-->
-                </div>
+                <input name="id" type="text" style="display: none;">
                 <label class="control-label">所属组</label>
                 <div class="controls">
                     <select id="couponGroupId" class="span11" name="couponGroup.id">
@@ -84,23 +88,27 @@
                 </div>
                 <label class="control-label">标题</label>
                 <div class="controls">
-                    <input name="title" type="text" class="span11 update-field" placeholder="标题">
-                </div>
-                <label class="control-label">描述</label>
-                <div class="controls">
-                    <input name="intro" type="text" class="span11 update-field" placeholder="描述">
+                    <input name="title" type="text" class="span11" placeholder="标题">
                 </div>
                 <label class="control-label">价格</label>
                 <div class="controls">
-                    <input name="price" type="text" class="span11 update-field" placeholder="价格">
+                    <input name="price" type="text" class="span11" placeholder="价格">
+                </div>
+                <label class="control-label">价格(本地)</label>
+                <div class="controls">
+                    <input name="localPrice" type="text" class="span11" placeholder="本地价格(本地)">
                 </div>
                 <label class="control-label">有效期(天)</label>
                 <div class="controls">
-                    <input name="availabledays" type="text" class="span11 update-field" placeholder="有效期(天)">
+                    <input name="availableDays" type="text" class="span11" placeholder="有效期(天)">
                 </div>
                 <label class="control-label">使用起始限额</label>
                 <div class="controls">
-                    <input name="startprice" type="text" class="span11 update-field" placeholder="使用起始限额">
+                    <input name="startPrice" type="text" class="span11" placeholder="使用起始限额">
+                </div>
+                <label class="control-label">使用起始限额(本地)</label>
+                <div class="controls">
+                    <input name="startLocalPrice" type="text" class="span11" placeholder="使用起始限额(本地)">
                 </div>
                 <label class="control-label">使用范围</label>
                 <div class="controls">
@@ -111,6 +119,37 @@
                             #end
                         /> $!e.name
                     #end
+                </div>
+
+                <label class="control-label">所属国家</label>
+                <div class="controls">
+                    <select name="countryId" class="span11">
+                        <option value="">无</option>
+                        #foreach($country in $!countries)
+                            <option value="$!country.id">$!country.name</option>
+                        #end
+                    </select>
+                </div>
+
+                <label class="control-label">类型</label>
+                <div class="controls">
+                    <select name="type">
+                        #foreach($e in $!types)
+                            <option value="$!e">$!e.name</option>
+                        #end
+                    </select>
+                </div>
+                <label class="control-label">商家选择</label>
+                <div class="controls">
+                    <select name="merchants" class="select2" multiple>
+                        #foreach($e in $!merchants)
+                            <option value="$!e.id">$!e.name</option>
+                        #end
+                    </select>
+                </div>
+                <label class="control-label">描述</label>
+                <div class="controls">
+                    <textarea name="intro" class="span11"></textarea>
                 </div>
             </div>
         </form>
