@@ -5,9 +5,6 @@
 .idea
 
 # Package Files #
-*.jar
-*.war
-*.ear
 /.settings/
 /target/
 /logs/
