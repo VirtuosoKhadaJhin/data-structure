@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span6">
+                <div class="widget-box">
+                    <div id="breadcrumb">
+                        <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
+                        <a href="list" class="tip-bottom" data-original-title="">优惠券分类</a>
+                        <a href="javascipt:void(0);" class="tip-bottom" data-original-title="">编辑/查看</a>
+                    </div>
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
+                        <h5>模板明细</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form class="form-horizontal commonValidate" role="form" action="update" method="post" id="couponTemplateForm">
+                            <div class="control-group">
+                                <input name="id" type="text" style="display: none;" value="$!entity.id">
+                                <label class="control-label">所属组</label>
+                                <div class="controls">
+                                    <select id="couponGroupId" class="span11" name="couponGroup.id">
+                                        #foreach($e in $!couponGroups)
+                                            <option value="$!e.id"#if($!e.id == $!entity.couponGroup.id) selected #end>
+                                                $!e.id:$!e.name
+                                            </option>
+                                        #end
+                                    </select>
+                                </div>
+                                <label class="control-label">标题</label>
+                                <div class="controls">
+                                    <input name="title" type="text" class="span11" placeholder="标题" value="$!entity.title">
+                                </div>
+                                <label class="control-label">价格</label>
+                                <div class="controls">
+                                    <input name="price" type="text" class="span11" placeholder="价格" value="$!entity.price">
+                                </div>
+                                <label class="control-label">价格(本地)</label>
+                                <div class="controls">
+                                    <input name="localPrice" type="text" class="span11" placeholder="本地价格(本地)" value="$!entity.localPrice">
+                                </div>
+                                <label class="control-label">有效期(天)</label>
+                                <div class="controls">
+                                    <input name="availableDays" type="text" class="span11" placeholder="有效期(天)" value="$!entity.availableDays">
+                                </div>
+                                <label class="control-label">使用起始限额</label>
+                                <div class="controls">
+                                    <input name="startPrice" type="text" class="span11" placeholder="使用起始限额" value="$!entity.startPrice">
+                                </div>
+                                <label class="control-label">使用起始限额(本地)</label>
+                                <div class="controls">
+                                    <input name="startLocalPrice" type="text" class="span11" placeholder="使用起始限额(本地)" value="$!entity.startLocalPrice">
+                                </div>
+                                <label class="control-label">使用范围</label>
+                                <div class="controls">
+                                    #foreach($e in $!userRanges)
+                                        <input name="userRanges" type="checkbox" value="$!e"
+                                            #foreach($t in $!entity.userRanges)
+                                               #if($!e.value == $!t.value)checked#end
+                                            #end
+                                        /> $!e.name
+                                    #end
+                                </div>
+
+                                <label class="control-label">所属国家</label>
+                                <div class="controls">
+                                    <select name="countryId" class="span11">
+                                        #foreach($e in $!countries)
+                                            <option value="$!e.id" #if($!e.id == $!entity.countryId) selected #end>$!e.name</option>
+                                        #end
+                                    </select>
+                                </div>
+
+                                <label class="control-label">类型</label>
+                                <div class="controls">
+                                    <select name="type" id="type">
+                                        #foreach($e in $!types)
+                                            <option value="$!e" #if($!e == $!entity.type) selected #end>$!e.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <div class="merchant">
+                                    <label class="control-label">商家选择</label>
+                                    <div class="controls">
+                                        <select name="merchants" class="select2" multiple required>
+                                            #foreach($e in $!merchants)
+                                                <option value="$!e.id">$!e.name</option>
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>
+                                <label class="control-label">描述</label>
+                                <div class="controls">
+                                    <textarea name="intro" class="span11">$!entity.intro</textarea>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-success" type="submit" id="btn-save">保存</button>
+                                <a class="btn btn-warning" id="btn-edit">编辑</a>
+                                <a class="btn btn-primary goback" href="list">返回</a>
+                                <input type="hidden" id="disabled" value="$!disabled"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #include("common/js-support.vm")
+    <script>
+            #if($!disabled)
+            $("#btn-save").hide();
+            $(":input").each(function (i, o) {
+                $(o).attr("disabled", true);
+            });
+            $("#btn-edit").on("click", function () {
+                $(":input").each(function (i, o) {
+                    $(o).attr("disabled", false);
+                    $("#btn-save").show();
+                    $("#btn-edit").hide();
+                });
+            });
+            #else
+            $("#btn-edit").hide();
+            #end
+        var attr = $('.btn-primary').attr("href");
+        if (attr.indexOf("?") == -1) {
+            attr += '?index=' + localStorage['index'];
+        } else {
+            attr += '&index=' + localStorage['index'];
+        }
+        $('.btn-primary').attr("href", attr);
+
+
+        $("#type").on("change", function () {
+            if ($(this).val() == "Merchant") {
+                $(".merchant").show();
+            } else {
+                $(".merchant").hide();
+            }
+        }).trigger("change");
+
+        $("select[name='merchants']").val($!entity.merchants.toString()).trigger("change");
+    </script>
+    #include("common/image-support.vm")
+    <script src="/dist/js/cascade-select.js"></script>
+</body>
+</html>

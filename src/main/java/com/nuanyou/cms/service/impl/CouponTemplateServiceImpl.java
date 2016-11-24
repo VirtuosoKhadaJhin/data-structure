@@ -37,9 +37,11 @@ public class CouponTemplateServiceImpl implements CouponTemplateService {
 
     @Override
     public CouponTemplateVO saveNotNull(CouponTemplateVO vo) {
+        if (vo.getType() != CouponTemplateType.Merchant)
+            vo.setMerchants(null);
         CouponTemplate entity = BeanUtils.copyBean(vo, new CouponTemplate());
-        couponTemplateDao.save(entity);
-        return vo;
+        entity = couponTemplateDao.save(entity);
+        return BeanUtils.copyBean(entity, new CouponTemplateVO());
     }
 
     @Override

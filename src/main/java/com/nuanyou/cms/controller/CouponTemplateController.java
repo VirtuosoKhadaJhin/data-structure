@@ -46,18 +46,33 @@ public class CouponTemplateController {
     private CountryService countryService;
 
 
-    @RequestMapping(path = "detail", method = RequestMethod.GET)
-    @ResponseBody
-    public APIResult detail(Long id) {
-        CouponTemplate entity = couponTemplateDao.findOne(id);
-        return new APIResult(entity);
+    @RequestMapping(path = {"edit", "add"}, method = RequestMethod.GET)
+    public String edit(@RequestParam(required = false) Long id, Model model) {
+        if (id != null) {
+            CouponTemplate entity = couponTemplateDao.findOne(id);
+            model.addAttribute("entity", entity);
+        }
+
+        model.addAttribute("userRanges", UserRange.values());
+
+        model.addAttribute("types", CouponTemplateType.values());
+
+        List<Merchant> merchants = merchantService.getIdNameList();
+        model.addAttribute("merchants", merchants);
+
+        List<Country> countries = countryService.getIdNameList();
+        model.addAttribute("countries", countries);
+
+        List<CouponGroup> couponGroups = couponGroupDao.findAll();
+        model.addAttribute("couponGroups", couponGroups);
+        return "couponTemplate/edit";
     }
 
     @RequestMapping(path = "update", method = RequestMethod.POST)
-    @ResponseBody
-    public APIResult update(CouponTemplateVO vo) {
-        couponTemplateService.saveNotNull(vo);
-        return new APIResult();
+    public String update(CouponTemplateVO vo) {
+        CouponTemplateVO entity = couponTemplateService.saveNotNull(vo);
+        String url = "edit?type=3&id=" + entity.getId();
+        return "redirect:" + url;
     }
 
     @RequestMapping(path = "remove", method = RequestMethod.POST)

@@ -11,7 +11,6 @@
     <div id="content-header">
         <div id="breadcrumb">
             <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-            <a href="../coupon/list" class="tip-bottom" data-original-title="">优惠券管理</a>
             <a href="#" class="tip-bottom" data-original-title="">优惠券派发</a>
         </div>
     </div>
@@ -95,6 +94,7 @@
                 data: $(form).serialize(),
                 success: function (result) {
                     if (result.code == 0) {
+                        alert("发送成功！");
                         window.location.reload();
                     } else {
                         alert(result.msg);
