@@ -1,23 +1,16 @@
-package com.nuanyou.cms.entity.coupon;
+package com.nuanyou.cms.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.nuanyou.cms.commons.CreatedAt;
-import com.nuanyou.cms.commons.DateEntityListener;
-import com.nuanyou.cms.entity.enums.*;
+import com.nuanyou.cms.entity.coupon.CouponGroup;
+import com.nuanyou.cms.entity.enums.CouponTemplateType;
+import com.nuanyou.cms.entity.enums.UserRange;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Felix on 2016/9/21.
+ * Created by Alan.ye on 2016/9/21.
  */
-@Entity
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
-@EntityListeners(DateEntityListener.class)
-@Table(name = "ny_coupon_template")
-public class CouponTemplate {
+public class CouponTemplateVO {
     private Long id;
     private Long countryId;
     private String title;
@@ -31,20 +24,7 @@ public class CouponTemplate {
     private BigDecimal startPrice;
     private BigDecimal startLocalPrice;
     private CouponGroup couponGroup;
-    private String groupName;
-    private Date createTime;
 
-    public CouponTemplate() {
-    }
-
-    public CouponTemplate(Long id, String title) {
-        this.id = id;
-        this.title = title;
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     public Long getId() {
         return id;
     }
@@ -53,7 +33,7 @@ public class CouponTemplate {
         this.id = id;
     }
 
-    @Column(name = "countryid", nullable = false)
+
     public Long getCountryId() {
         return countryId;
     }
@@ -62,7 +42,7 @@ public class CouponTemplate {
         this.countryId = countryId;
     }
 
-    @Column(name = "title", nullable = true, length = 40)
+
     public String getTitle() {
         return title;
     }
@@ -72,7 +52,6 @@ public class CouponTemplate {
     }
 
 
-    @Column(name = "intro", nullable = true, length = 200)
     public String getIntro() {
         return intro;
     }
@@ -81,8 +60,7 @@ public class CouponTemplate {
         this.intro = intro;
     }
 
-    @Convert(converter = CouponTemplateConverter.class)
-    @Column(name = "type", nullable = true)
+
     public CouponTemplateType getType() {
         return type;
     }
@@ -91,8 +69,6 @@ public class CouponTemplate {
         this.type = type;
     }
 
-    @Convert(converter = JsonListConverter.class)
-    @Column(name = "merchants", nullable = true)
     public List<String> getMerchants() {
         return merchants;
     }
@@ -101,7 +77,7 @@ public class CouponTemplate {
         this.merchants = merchants;
     }
 
-    @Column(name = "price", nullable = true, precision = 2)
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -110,7 +86,7 @@ public class CouponTemplate {
         this.price = price;
     }
 
-    @Column(name = "localprice", nullable = true)
+
     public BigDecimal getLocalPrice() {
         return localPrice;
     }
@@ -119,7 +95,7 @@ public class CouponTemplate {
         this.localPrice = localPrice;
     }
 
-    @Column(name = "availabledays", nullable = true)
+
     public Integer getAvailableDays() {
         return availableDays;
     }
@@ -129,8 +105,6 @@ public class CouponTemplate {
     }
 
 
-    @Column(name = "userange", nullable = true)
-    @Convert(converter = UserRangeConverter.class)
     public List<UserRange> getUserRanges() {
         return userRanges;
     }
@@ -140,7 +114,6 @@ public class CouponTemplate {
     }
 
 
-    @Column(name = "startprice", nullable = true, precision = 2)
     public BigDecimal getStartPrice() {
         return startPrice;
     }
@@ -149,7 +122,7 @@ public class CouponTemplate {
         this.startPrice = startPrice;
     }
 
-    @Column(name = "startlocalprice", nullable = true)
+
     public BigDecimal getStartLocalPrice() {
         return startLocalPrice;
     }
@@ -158,35 +131,13 @@ public class CouponTemplate {
         this.startLocalPrice = startLocalPrice;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "groupid")
+
     public CouponGroup getCouponGroup() {
         return couponGroup;
     }
 
     public void setCouponGroup(CouponGroup couponGroup) {
         this.couponGroup = couponGroup;
-    }
-
-
-    @Column(name = "groupname", nullable = true, length = 50)
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
-
-    @CreatedAt
-    @Column(name = "createtime", nullable = true)
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
     }
 
 }

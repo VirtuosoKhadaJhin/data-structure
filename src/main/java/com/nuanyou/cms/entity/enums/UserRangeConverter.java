@@ -9,19 +9,11 @@ public class UserRangeConverter implements AttributeConverter<List<UserRange>, I
 
     @Override
     public Integer convertToDatabaseColumn(List<UserRange> attribute) {
-        if (attribute == null || attribute.isEmpty())
-            return null;
-        Integer flag = 0;
-        for (UserRange e : attribute) {
-            flag += e.value;
-        }
-        return flag;
+        return UserRange.toValue(attribute);
     }
 
     @Override
     public List<UserRange> convertToEntityAttribute(Integer dbData) {
-        if (dbData == null)
-            return null;
         return UserRange.toEnums(dbData);
     }
 

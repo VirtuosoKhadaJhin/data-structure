@@ -11,7 +11,6 @@
     <div id="content-header">
         <div id="breadcrumb">
             <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-            <a href="../coupon/list" class="tip-bottom" data-original-title="">优惠券管理</a>
             <a href="#" class="tip-bottom" data-original-title="">优惠券派发</a>
         </div>
     </div>
@@ -30,24 +29,10 @@
                     <input type="hidden" name="type" value="1">
                     <label class="control-label">优惠方案</label>
                     <div class="controls">
-                        <select name="plans" class="select2" multiple>
-                            <option value="1">满300减15</option>
-                            <option value="2">满500减40</option>
-                            <option value="3">满1000减80</option>
-                        </select>
-                    </div>
-                    <label class="control-label">商家选择</label>
-                    <div class="controls">
-                        <select name="mchInfos" class="select2" multiple>
-                        #*#foreach($e in $!merchants)
-                            <option value="$!e.id:$!e.name">$!e.name</option>
-                        #end*#
-
-                            <option value="1946"> O-lens 明洞中央店</option>
-                            <option value="1723">多妍 明洞一号店</option>
-                            <option value="1128">Beyond 明洞3号店</option>
-                            <option value="1010">Golden Eight化妆品批发</option>
-                            <option value="2073">Lens Story 明洞店</option>
+                        <select name="couponTemplateIds" class="select2" multiple>
+                            #foreach($e in $!merchantTemplate)
+                                <option value="$!e.id">$!e.title</option>
+                            #end
                         </select>
                     </div>
                     <label class="control-label">用户ID</label>
@@ -72,17 +57,11 @@
                     <input type="hidden" name="type" value="2">
                     <label class="control-label">优惠方案</label>
                     <div class="controls">
-                        <select name="plans" class="select2" multiple>
-                            <option value="1">满100减5</option>
-                            <option value="2">满200减10</option>
-                            <option value="3">满300减15</option>
-                            <option value="4">满500减25</option>
-                            <option value="5">满1000减50</option>
+                        <select name="couponTemplateIds" class="select2" multiple>
+                            #foreach($e in $!currencyTemplate)
+                                <option value="$!e.id">$!e.title</option>
+                            #end
                         </select>
-                    </div>
-                    <label class="control-label">用户优惠券介绍</label>
-                    <div class="controls">
-                        <textarea type="text" name="title"></textarea>
                     </div>
                     <label class="control-label">用户ID</label>
                     <div class="controls">
@@ -115,6 +94,7 @@
                 data: $(form).serialize(),
                 success: function (result) {
                     if (result.code == 0) {
+                        alert("发送成功！");
                         window.location.reload();
                     } else {
                         alert(result.msg);

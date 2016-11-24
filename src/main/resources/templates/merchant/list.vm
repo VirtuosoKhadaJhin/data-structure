@@ -40,7 +40,6 @@
                     <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="javascript:(0);">操 作 <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <li><a href="detail?id=$!entity.id">详细信息</a></li>
                         <li><a href="edit?id=$!entity.id">基础信息编辑</a></li>
                         <li><a href="/merchantHeadimgOld/list?mchId=$!entity.id"">商家详情页图片编辑2.0</a></li>
                         <li><a href="/merchantHeadimg/edit?mchId=$!entity.id"">商家详情页图片编辑3.0</a></li>

@@ -8,12 +8,12 @@
     <thead>
     <tr>
         <th>ID</th>
+        <th>标题</th>
         <th>组名称</th>
-        <th>模板优惠券标题</th>
-        <th>模板优惠券描述</th>
-        <th>模板优惠券价格</th>
-        <th>模板优惠券有效天数</th>
-        <th>模板优惠券起始限额</th>
+        <th>描述</th>
+        <th>价格</th>
+        <th>有效天数</th>
+        <th>起始限额</th>
         <th class="table-set">操作</th>
     </tr>
     </thead>
@@ -21,16 +21,13 @@
         #foreach($e in $!page.content)
         <tr>
             <td>$!e.id</td>
-            <td>$!e.couponGroup.name</td>
             <td>$!e.title</td>
+            <td>$!e.couponGroup.name</td>
             <td>$!e.intro</td>
             <td>$!e.price</td>
-            <td>$!e.availabledays</td>
-            <td>$!e.startprice</td>
-            <td>
-                <a href="javascript:void(0);" data-id="$!e.id" class="btn btn-info btn-mini update-item"
-                   modal-id="update-modal">编辑</a>
-            </td>
+            <td>$!e.availableDays</td>
+            <td>$!e.startPrice</td>
+            <td><a href="edit?id=$!e.id" class="btn btn-info btn-mini">编辑</a></td>
         </tr>
         #end
     </tbody>
@@ -38,94 +35,34 @@
 <!--列表结束-->
 
 <div class="form-actions ">
-    <a href="javascript:void(0);" class="btn btn-success update-item" modal-id="update-modal">新建</a>
+    <a href="add" class="btn btn-success">新建</a>
 </div>
 #parse("common/list_mid.vm")
 
-<!--查询窗口开始-->
-<form >
+<form class="form-horizontal " method="get">
     <div class="control-group">
-
-        <label>模板标题：</label>
-        <input type="text" class="span11" id="title" name="title"
-               value="$!entity.title" placeholder="模板标题"/>
+        <label>标题 或ID</label>
+        <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
+    </div>
+    <div class="control-group">
+        <label>分组</label>
+        <select id="couponGroup.id" name="couponGroup.id" class="span7">
+            <option value="">全部</option>
+            #foreach($e in $!couponGroups)
+                <option value="$!e.id" #if($!entity.couponGroup.id==$!e.id) selected #end>$!e.id:$!e.name</option>
+            #end
         </select>
+        <label>类型</label>
+        <select name="type">
+            <option value="">全部</option>
+            #foreach($e in $!types)
+                <option value="$!e">$!e.name</option>
+            #end
+        </select>
+    </div>
+    <div class="control-group">
         <button type="submit" class="btn btn-primary">查询</button>
     </div>
 </form>
-<!--查询窗口结束-->
 
-<!--编辑模态框开始-->
-
-<div id="update-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>模板明细</h3>
-    </div>
-
-    <div class="modal-body">
-        <form class="form-horizontal " id="couponTemplateForm" action="update">
-            <div class="control-group">
-                <label class="control-label">ID</label>
-                <div class="controls">
-                    <!--隐藏域-->
-                    <input name="id" type="text" readonly class="span11 update-field">
-                    <!--隐藏域-->
-                </div>
-                <label class="control-label">所属组</label>
-                <div class="controls">
-                    <select id="couponGroupId" class="span11" name="couponGroup.id">
-                        #foreach($couponGroup in $!couponGroups)
-                            <option value="$!couponGroup.id">
-                                $!couponGroup.id:$!couponGroup.name
-                            </option>
-                        #end
-                    </select>
-                </div>
-                <label class="control-label">标题</label>
-                <div class="controls">
-                    <input name="title" type="text" class="span11 update-field" placeholder="标题">
-                </div>
-                <label class="control-label">描述</label>
-                <div class="controls">
-                    <input name="intro" type="text" class="span11 update-field" placeholder="描述">
-                </div>
-                <label class="control-label">价格</label>
-                <div class="controls">
-                    <input name="price" type="text" class="span11 update-field" placeholder="价格">
-                </div>
-                <label class="control-label">有效期(天)</label>
-                <div class="controls">
-                    <input name="availabledays" type="text" class="span11 update-field" placeholder="有效期(天)">
-                </div>
-                <label class="control-label">使用起始限额</label>
-                <div class="controls">
-                    <input name="startprice" type="text" class="span11 update-field" placeholder="使用起始限额">
-                </div>
-                <label class="control-label">使用范围</label>
-                <div class="controls">
-                    #foreach($e in $!userRanges)
-                        <input name="userRanges" type="checkbox" value="$!e"
-                            #foreach($t in $!entity.userRanges)
-                               #if($!e.value == $!t.value)checked#end
-                            #end
-                        /> $!e.name
-                    #end
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-        <button class="btn btn-primary submit-item" type="button" modal-id="update-modal">保存</button>
-    </div>
-</div>
-<!--编辑模态框结束-->
 #parse("common/list_end.vm")
-<script src="/dist/js/curd.js"></script>
-
-
-
-
-
