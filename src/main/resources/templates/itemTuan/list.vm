@@ -43,7 +43,7 @@
 <form>
     <div class="control-group">
         <label>商户</label>
-        <select name="merchant.id" class="span11">
+        <select name="merchant.id" class="span11 select2">
             <option value="">全部</option>
             #foreach($merchant in $!merchants)
                 <option value="$!merchant.id"

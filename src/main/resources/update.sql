@@ -1,3 +1,12 @@
+use nuanyou20;
+-- 2016-11-28
+ALTER TABLE `ny_recommend`
+ADD COLUMN `display` INT(1) DEFAULT 1 COMMENT '是否显示' AFTER `sort`;
+
+ALTER TABLE `ny_recommend_cat`
+ADD COLUMN `display` INT(1) DEFAULT 1 COMMENT '是否显示' AFTER `sort`;
+
+-- 2016-11-20
 -- 攻略表新增城市ID
 ALTER TABLE `ny_guideline` ADD (cityid INT);
 
