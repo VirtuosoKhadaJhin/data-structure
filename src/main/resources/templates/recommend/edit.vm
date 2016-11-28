@@ -36,6 +36,13 @@
                                         <option #if($!entity.type==2) selected#end value="2">商品</option>
                                     </select>
                                 </div>
+                                <label class="control-label">是否显示</label>
+                                <div class="controls">
+                                    <select name="display" class="span11">
+                                        <option value="true" #if($!entity.display==true)selected#end>显示</option>
+                                        <option value="false" #if($!entity.display==false)selected#end>隐藏</option>
+                                    </select>
+                                </div>
                                 <label class="control-label">目标</label>
                                 <div class="controls">
                                     <select name="referId" class="span11" def-value="$!entity.referId"></select>
@@ -83,13 +90,13 @@
             #else
             $("#btn-edit").hide();
             #end
-            var attr = $('.btn-primary').attr("href");
-            if(attr.indexOf("?")==-1){
-                attr += '?index=' + localStorage['index'];
-            }else{
-                attr += '&index=' + localStorage['index'];
-            }
-            $('.btn-primary').attr("href", attr);
+        var attr = $('.btn-primary').attr("href");
+        if (attr.indexOf("?") == -1) {
+            attr += '?index=' + localStorage['index'];
+        } else {
+            attr += '&index=' + localStorage['index'];
+        }
+        $('.btn-primary').attr("href", attr);
     </script>
     #include("common/image-support.vm")
     <script src="/dist/js/cascade-select.js"></script>

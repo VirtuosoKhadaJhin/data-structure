@@ -10,6 +10,7 @@ import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.ItemService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.RecommendCatService;
+import com.nuanyou.cms.service.RecommendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,9 @@ public class RecommendController {
 
     @Autowired
     private RecommendDao recommendDao;
+
+    @Autowired
+    private RecommendService recommendService;
 
     @Autowired
     private RecommendCatService recommendCatService;
@@ -66,6 +70,13 @@ public class RecommendController {
         setEnums(model);
         model.addAttribute("disabled", true);
         return "recommend/edit";
+    }
+
+    @RequestMapping(path = "remove", method = RequestMethod.POST)
+    @ResponseBody
+    public APIResult remove(Long id) {
+        recommendService.delete(id);
+        return new APIResult();
     }
 
     @RequestMapping("list")

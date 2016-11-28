@@ -43,6 +43,13 @@
                                 <div class="controls">
                                     <select name="city.id" class="span11" def-value="$!entity.city.id"></select>
                                 </div>
+                                <label class="control-label">是否显示</label>
+                                <div class="controls">
+                                    <select name="display" class="span11">
+                                        <option value="true" #if($!entity.display==true)selected#end>显示</option>
+                                        <option value="false" #if($!entity.display==false)selected#end>隐藏</option>
+                                    </select>
+                                </div>
                                 <label class="control-label">链接</label>
                                 <div class="controls">
                                     <input name="linkUrl" type="text" class="span11" value="$!entity.linkUrl">
