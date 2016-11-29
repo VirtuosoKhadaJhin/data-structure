@@ -205,15 +205,14 @@
                                     <textarea name="tips" class="span11">$!entity.tips</textarea>
                                 </div>
                                 <label class="control-label">商户介绍</label>
-                            #*<div class="controls">
-                                <textarea name="intro" class="span11" id="intro">$!entity.intro</textarea>
-                            </div>*#
-                                <div id="layout" class="controls">
-                                    <div id="test-editormd" style="margin: 0,0,0">
-                                        <textarea style="display:none;" name="intro" id="intro"
-                                                  value="$!entity.intro"></textarea>
-                                    </div>
-                                </div>
+                            <div class="controls">
+                                <textarea name="intro" class="span11">$!entity.intro</textarea>
+                            </div>
+                            #*<div id="layout" class="controls">
+                                 <div id="test-editormd" style="margin: 0,0,0">
+                                     <textarea style="display:none;" name="intro" id="intro">$!entity.intro</textarea>
+                                 </div>
+                             </div>*#
                             </div>
                             <div class="form-actions">
                                 <button class="btn btn-success" type="submit" id="btn-save">保存</button>
