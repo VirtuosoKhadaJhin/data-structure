@@ -208,13 +208,8 @@
                                 </div>
                                 <label class="control-label">商户介绍</label>
                                 <div class="controls">
-                                    <textarea name="intro" class="span11">$!entity.intro</textarea>
+                                    <textarea name="intro" id="intro" class="span11">$!entity.intro</textarea>
                                 </div>
-                            #*<div id="layout" class="controls">
-                                 <div id="test-editormd" style="margin: 0,0,0">
-                                     <textarea style="display:none;" name="intro" id="intro">$!entity.intro</textarea>
-                                 </div>
-                             </div>*#
                             </div>
                             <div class="form-actions">
                                 <button class="btn btn-success" type="submit" id="btn-save">保存</button>
@@ -256,22 +251,21 @@
     #include("common/map-support.vm")
     <script src="/dist/js/cascade-select.js"></script>
 
-    <script src="/dist/markdown/editormd.min.js"></script>
+    <script charset="utf-8" src="/dist/kindeditor/kindeditor.js"></script>
     <script type="text/javascript">
-        var mdEditor;
-        $(function () {
-            mdEditor = editormd("test-editormd", {
-                width: "90%",
-                height: 300,
-                syncScrolling: "single",
-                path: "/dist/markdown/lib/",
-                toolbarIcons: function () {
-                    return ["undo", "redo", "del", "clear", "|", "bold", "italic", "uppercase", "lowercase", "|", "h1", "h2", "h3", "h4", "h5", "h6", "list-ul", "list-ol", "hr", "link",
-                        "image", "code", "preformatted-text", "code-block", "datetime", "help", "||", "watch", "preview", "fullscreen"]
-                },
-                onload: function () {
-                    mdEditor.setMarkdown($("#intro").attr("value"));
-                }
+        var editor;
+        KindEditor.ready(function(K) {
+            editor = K.create('#intro', {
+                items:
+                        [
+                            'source', '|', 'undo', 'redo', '|', 'preview', 'template', 'code', 'cut', 'copy', 'paste',
+                            'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                            'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                            'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+                            'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                            'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'hr', 'emoticons', 'pagebreak',
+                            'link', 'unlink', '|', 'about'
+                        ]
             });
         });
 
