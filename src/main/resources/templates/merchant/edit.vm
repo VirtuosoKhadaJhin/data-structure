@@ -166,7 +166,9 @@
 
                                 <label class="control-label">地标信息</label>
                                 <div class="controls">
-                                    <select name="landmarkId" class="span9" def-value="$!entity.landmarkId"></select>
+                                    <select name="landmarkId" class="span9" def-value="$!entity.landmarkId">
+                                        <option value="">无</option>
+                                    </select>
                                     <button class="btn btn-success landmark" type="button" data-width="200" data-height="150">获得地标</button>
                                 </div>
 
@@ -205,9 +207,9 @@
                                     <textarea name="tips" class="span11">$!entity.tips</textarea>
                                 </div>
                                 <label class="control-label">商户介绍</label>
-                            <div class="controls">
-                                <textarea name="intro" class="span11">$!entity.intro</textarea>
-                            </div>
+                                <div class="controls">
+                                    <textarea name="intro" class="span11">$!entity.intro</textarea>
+                                </div>
                             #*<div id="layout" class="controls">
                                  <div id="test-editormd" style="margin: 0,0,0">
                                      <textarea style="display:none;" name="intro" id="intro">$!entity.intro</textarea>
