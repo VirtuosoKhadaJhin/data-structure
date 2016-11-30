@@ -6,6 +6,7 @@ import com.nuanyou.cms.dao.CouponDao;
 import com.nuanyou.cms.dao.OrderDao;
 import com.nuanyou.cms.dao.OrderVouchCardDao;
 import com.nuanyou.cms.dao.UserCardItemDao;
+import com.nuanyou.cms.domain.NotificationPublisher;
 import com.nuanyou.cms.entity.UserCardItem;
 import com.nuanyou.cms.entity.coupon.Coupon;
 import com.nuanyou.cms.entity.enums.CardStatusEnum;
@@ -54,6 +55,8 @@ public class OrderServiceImpl implements OrderService {
     private UserCardItemDao userCardItemDao;
     @Autowired
     private CouponDao couponDao;
+    @Autowired
+    private NotificationPublisher notificationPublisher;
 
     @Override
     public Page<Order> findByCondition(Integer index, final Order entity, final TimeCondition time) {
@@ -70,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
                     Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd());
                     predicate.add(p);
                 }
-                if(entity.getMerchant()!=null&&StringUtils.isNotBlank(entity.getMerchant().getKpname())){
+                if (entity.getMerchant() != null && StringUtils.isNotBlank(entity.getMerchant().getKpname())) {
                     Predicate p = cb.equal(root.get("merchant").get("kpname"), entity.getMerchant().getKpname());
                     predicate.add(p);
                 }
@@ -84,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
                 }
                 if (entity.getOrdertype() != null) {
                     Predicate p = cb.equal(root.get("ordertype"), entity.getOrdertype());
-                    cb.or(p,p);
+                    cb.or(p, p);
                     predicate.add(p);
                 }
                 if (entity.getPaytype() != null) {
@@ -123,11 +126,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void refund(Order entity) {
         Order order = this.orderDao.findOne(entity.getId());
-        if(order==null){
+        if (order == null) {
             throw new APIException(ResultCodes.OrderNotFound, " Detail：OrderID" + entity.getId());
         }
-        if(order.getOrderstatus()==1){
-            throw new APIException(ResultCodes.OrderOther,"只有已付款的订单支持发起退款申请");//(modual,msg)
+        if (order.getOrderstatus() == 1) {
+            throw new APIException(ResultCodes.OrderOther, "只有已付款的订单支持发起退款申请");//(modual,msg)
         }
         if (order.getRefundstatus() != null) {
             if (order.getRefundstatus() == 201) {
@@ -147,6 +150,8 @@ public class OrderServiceImpl implements OrderService {
         order.setRefundtime(DateUtils.newDate());
         order.setRefundsource((byte) 2);//// 退款来源：1.客户端，2.cms，3.商户端
         this.orderDao.save(order);
+
+        this.notificationPublisher.publishRefund(order.getId().toString());
     }
 
     @Override
@@ -192,8 +197,12 @@ public class OrderServiceImpl implements OrderService {
         }
         if (order.getRefundstatus() == 202) {
             order.setStatusname("退款失败");
+
+            this.notificationPublisher.publishRefundFail(order.getId().toString());
         } else if (order.getRefundstatus() == 203) {
             order.setStatusname("退款成功");
+
+            this.notificationPublisher.publishRefundSuccess(order.getId().toString());
         }
         this.saveNotNull(order);
 
