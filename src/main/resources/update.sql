@@ -14,6 +14,9 @@ ALTER TABLE `ny_guideline` ADD (cityid INT);
 ALTER TABLE `ny_merchant_headimg_allsize`
 ADD COLUMN `sort` INT(10) NULL COMMENT '排序值' AFTER `size`;
 
+ALTER TABLE `bd_merchant`
+ADD COLUMN `subcatid` INT(10) NULL COMMENT '子分类ID' AFTER `catid`;
+
 -- 优惠信息表
 CREATE TABLE ny_discount (
     id INT(10) NOT NULL AUTO_INCREMENT,

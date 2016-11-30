@@ -30,7 +30,7 @@
                             <div class="control-group">
                                 <label class="control-label">商户</label>
                                 <div class="controls">
-                                    <select name="merchant.id" class="span11 select2" target-name="cat.id" target-url="/itemCat/api/list">
+                                    <select name="merchant.id" class="span9 select2" target-name="cat.id" target-url="/itemCat/api/list">
                                         #foreach($e in $!merchants)
                                             <option value="$!e.id" #if($!e.id == $!entity.merchant.id)
                                                     selected #end>$!e.id:$!e.name</option>
@@ -39,16 +39,16 @@
                                 </div>
                                 <label class="control-label">分类</label>
                                 <div class="controls">
-                                    <select name="cat.id" class="span9" def-value="$!entity.cat.id"></select>&nbsp;
+                                    <select name="cat.id" class="span8" def-value="$!entity.cat.id"></select>&nbsp;
                                     <button class="btn btn-success setDetail" type="button">单品设置</button>
                                 </div>
                                 <label class="control-label">中文名称</label>
                                 <div class="controls">
-                                    <input name="name" type="text" class="span11" value="$!entity.name">
+                                    <input name="name" type="text" class="span9" value="$!entity.name">
                                 </div>
                                 <label class="control-label">本地名称</label>
                                 <div class="controls">
-                                    <input name="kpname" type="text" class="span11" value="$!entity.kpname">
+                                    <input name="kpname" type="text" class="span9" value="$!entity.kpname">
                                 </div>
                                 <label class="control-label">团购类型</label>
                                 <div class="controls">
@@ -62,7 +62,7 @@
                                 </div>
                                 <label class="control-label">模板选择</label>
                                 <div class="controls">
-                                    <select name="templateId" class="span11">
+                                    <select name="templateId" class="span9">
                                         <option value="">无</option>
                                         #foreach($e in $!templates)
                                             <option value="$!e.id" #if($!e.id == $!entity.templateId)
@@ -72,15 +72,15 @@
                                 </div>
                                 <label class="control-label">原价(本地)</label>
                                 <div class="controls">
-                                    <input name="okpPrice" type="text" class="span11" value="$!entity.okpPrice">
+                                    <input name="okpPrice" type="text" class="span9" value="$!entity.okpPrice">
                                 </div>
                                 <label class="control-label">现价(本地)</label>
                                 <div class="controls">
-                                    <input name="kpPrice" type="text" class="span11" value="$!entity.kpPrice">
+                                    <input name="kpPrice" type="text" class="span9" value="$!entity.kpPrice">
                                 </div>
                                 <label class="control-label">商户价</label>
                                 <div class="controls">
-                                    <input name="mchPrice" type="text" class="span11" placeholder="$!entity.kpPrice"
+                                    <input name="mchPrice" type="text" class="span9" placeholder="$!entity.kpPrice"
                                            value="$!entity.mchPrice">
                                 </div>
                                 <label class="control-label">是否推荐</label>
@@ -100,30 +100,27 @@
                                          </div>*#
                                 <label class="control-label">顺序</label>
                                 <div class="controls">
-                                    <input name="sort" type="text" class="span11" value="$!entity.sort">
+                                    <input name="sort" type="text" class="span9" value="$!entity.sort">
                                 </div>
                                 <label class="control-label">概述</label>
                                 <div class="controls">
-                                    <input name="intro" type="text" class="span11" value="$!entity.intro">
+                                    <input name="intro" type="text" class="span9" value="$!entity.intro">
                                 </div>
                                 <label class="control-label">展示图</label>
                                 <div class="controls">
-                                    <input type="text" class="span9" name="imgUrl" id="imgUrl" value="$!entity.imgUrl">
+                                    <input type="text" class="span8" name="imgUrl" id="imgUrl" value="$!entity.imgUrl">
                                     <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览</button>
                                     <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl">上传</button>
                                 </div>
                                 <label class="control-label">列表页展示图</label>
                                 <div class="controls">
-                                    <input type="text" class="span9" name="indexImgUrl" id="indexImgUrl" value="$!entity.indexImgUrl">
+                                    <input type="text" class="span8" name="indexImgUrl" id="indexImgUrl" value="$!entity.indexImgUrl">
                                     <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">预览</button>
                                     <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl">上传</button>
                                 </div>
                                 <label class="control-label">注意事项</label>
-                                <div id="layout" class="controls">
-                                    <div id="test-editormd" style="margin: 0,0,0">
-                                        <textarea style="display:none;" name="notice" id="notice"
-                                                  value="$!entity.notice"></textarea>
-                                    </div>
+                                <div class="controls">
+                                    <textarea name="notice" id="notice" class="span9">$!entity.notice</textarea>
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -366,22 +363,14 @@
     #include("common/image-support.vm")
     <script src="/dist/js/cascade-select.js"></script>
 
-    <script src="/dist/markdown/editormd.min.js"></script>
+    <script charset="utf-8" src="/dist/kindeditor/kindeditor.js"></script>
     <script type="text/javascript">
-        var mdEditor;
-        $(function () {
-            mdEditor = editormd("test-editormd", {
-                width: "90%",
-                height: 300,
-                syncScrolling: "single",
-                path: "/dist/markdown/lib/",
-                toolbarIcons: function () {
-                    return ["undo", "redo", "del", "clear", "|", "bold", "italic", "uppercase", "lowercase", "|", "h1", "h2", "h3", "h4", "h5", "h6", "list-ul", "list-ol", "hr", "link",
-                        "image", "code", "preformatted-text", "code-block", "datetime", "help", "||", "watch", "preview", "fullscreen"]
-                },
-                onload: function () {
-                    mdEditor.setMarkdown($("#notice").attr("value"));
-                }
+        var editor;
+        KindEditor.ready(function (K) {
+            editor = K.create('#notice', {
+                items: [
+                    'forecolor', 'bold'
+                ]
             });
         });
     </script>
