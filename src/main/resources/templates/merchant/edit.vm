@@ -254,18 +254,17 @@
     <script charset="utf-8" src="/dist/kindeditor/kindeditor.js"></script>
     <script type="text/javascript">
         var editor;
-        KindEditor.ready(function(K) {
+        KindEditor.ready(function (K) {
             editor = K.create('#intro', {
-                items:
-                        [
-                            'source', '|', 'undo', 'redo', '|', 'preview', 'template', 'code', 'cut', 'copy', 'paste',
-                            'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
-                            'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
-                            'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
-                            'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
-                            'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'hr', 'emoticons', 'pagebreak',
-                            'link', 'unlink', '|', 'about'
-                        ]
+                items: [
+                    'source', '|', 'undo', 'redo', '|', 'preview', 'template', 'code', 'cut', 'copy', 'paste',
+                    'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                    'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                    'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+                    'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                    'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'hr', 'emoticons', 'pagebreak',
+                    'link', 'unlink', '|', 'about'
+                ]
             });
         });
 
