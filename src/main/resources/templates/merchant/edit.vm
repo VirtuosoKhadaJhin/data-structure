@@ -72,8 +72,8 @@
                                 </div>
                                 <label class="control-label">显示状态</label>
                                 <div class="controls">
-                                    <input name="display" type="checkbox" value="true"
-                                           #if($!entity.display)checked#end/> 显示
+                                    <input name="display" type="radio" value="true" #if($entity.display)checked#end/>是
+                                    <input name="display" type="radio" value="false" #if(!$entity.display)checked#end/>否
                                 </div>
                                 <label class="control-label">合作情况</label>
                                 <div class="controls">
