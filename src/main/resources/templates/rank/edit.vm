@@ -149,7 +149,8 @@
 
 <!--***************************************模态框begin*************************************************************-->
 
-<div id="modal-merchant" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+#*<div id="modal-merchant" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">*#
+<div id="modal-merchant" class="modal hide fade" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3>商户选择</h3>
@@ -193,7 +194,7 @@
 
 <!--***************************************模态框begin*************************************************************-->
 
-<div id="modal-tuan" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+<div id="modal-tuan" class="modal hide fade"  role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3>团购选择</h3>

@@ -11,6 +11,8 @@ public interface RecommendCatService {
 
     RecommendCat saveNotNull(RecommendCat entity);
 
+    void delete(Long id);
+
     List<RecommendCat> getIdNameList();
 
 }

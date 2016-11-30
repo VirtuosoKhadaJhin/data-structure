@@ -6,6 +6,7 @@ import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.RecommendCat;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.CountryService;
+import com.nuanyou.cms.service.RecommendCatService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -26,6 +27,9 @@ public class RecommendCatController {
 
     @Autowired
     private RecommendCatDao recommendCatDao;
+
+    @Autowired
+    private RecommendCatService recommendCatService;
 
     @Autowired
     private CountryService countryService;
@@ -60,7 +64,7 @@ public class RecommendCatController {
     @RequestMapping(path = "remove", method = RequestMethod.POST)
     @ResponseBody
     public APIResult remove(Long id) {
-        recommendCatDao.delete(id);
+        recommendCatService.delete(id);
         return new APIResult();
     }
 

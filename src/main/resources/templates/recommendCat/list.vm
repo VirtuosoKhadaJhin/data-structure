@@ -31,7 +31,9 @@
             <td>
                 <a class="btn btn-success btn-mini" data-id="$!e.id" href="detail?id=$!e.id">查看</a>
                 <a class="btn btn-info btn-mini" data-id="$!e.id" href="edit?id=$!e.id">编辑</a>
-                <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</button>
+                #if($!e.display)
+                    <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">隐藏</button>
+                #end
                 <a class="btn btn-info btn-mini" data-id="$!e.id" href="/recommend/list?cat.id=$!e.id">推荐管理</a>
             </td>
         </tr>
@@ -59,6 +61,14 @@
     <div class="control-group">
         <label>城市</label>
         <select name="city.id" class="span11"></select>
+    </div>
+    <div class="control-group">
+        <label>状态：</label>
+        <select name="display" class="span11">
+            <option value="">全部</option>
+            <option value="true" #if($!entity.display==true)selected#end>显示</option>
+            <option value="false" #if($!entity.display==false)selected#end>隐藏</option>
+        </select>
     </div>
     <div class="control-group">
         <label>名称</label>
