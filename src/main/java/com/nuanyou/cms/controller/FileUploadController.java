@@ -46,7 +46,7 @@ public class FileUploadController {
             fileType = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
         }
         String callBackImgUrl = fileUploadService.commonUpdateImg(is, fileType);
-        response.getWriter().println("<script>parent.callback('" + callbackId + "', '" + callBackImgUrl + "')</script>");
+        response.getWriter().println("<script>parent.callbackImg('" + callbackId + "', '" + callBackImgUrl + "')</script>");
     }
 
     @RequestMapping(value = "upload/editor",
