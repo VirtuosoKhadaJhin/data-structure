@@ -55,4 +55,3 @@
     </div>
 </form>
 #parse("common/list_end.vm")
-<script src="/dist/js/loadcity.js"></script>

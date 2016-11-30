@@ -1,6 +1,7 @@
 package com.nuanyou.cms.service.impl;
 
 import com.nuanyou.cms.dao.RecommendCatDao;
+import com.nuanyou.cms.entity.Recommend;
 import com.nuanyou.cms.entity.RecommendCat;
 import com.nuanyou.cms.service.RecommendCatService;
 import com.nuanyou.cms.util.BeanUtils;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by Felix on 2016/9/8.
+ * Created by Alan.ye on 2016/9/8.
  */
 @Service
 public class RecommendCatServiceImpl implements RecommendCatService {
@@ -26,6 +27,14 @@ public class RecommendCatServiceImpl implements RecommendCatService {
         RecommendCat oldEntity = dao.findOne(entity.getId());
         BeanUtils.copyBeanNotNull(entity, oldEntity);
         return dao.save(oldEntity);
+    }
+
+    public void delete(Long id) {
+        RecommendCat entity = dao.findOne(id);
+        if (entity != null) {
+            entity.setDisplay(false);
+            dao.save(entity);
+        }
     }
 
     @Override

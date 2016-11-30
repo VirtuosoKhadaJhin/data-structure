@@ -1,9 +1,21 @@
+use nuanyou20;
+-- 2016-11-28
+ALTER TABLE `ny_recommend`
+ADD COLUMN `display` INT(1) DEFAULT 1 COMMENT '是否显示' AFTER `sort`;
+
+ALTER TABLE `ny_recommend_cat`
+ADD COLUMN `display` INT(1) DEFAULT 1 COMMENT '是否显示' AFTER `sort`;
+
+-- 2016-11-20
 -- 攻略表新增城市ID
 ALTER TABLE `ny_guideline` ADD (cityid INT);
 
 -- 3.0商户列表页门头图 增加排序
 ALTER TABLE `ny_merchant_headimg_allsize`
 ADD COLUMN `sort` INT(10) NULL COMMENT '排序值' AFTER `size`;
+
+ALTER TABLE `bd_merchant`
+ADD COLUMN `subcatid` INT(10) NULL COMMENT '子分类ID' AFTER `catid`;
 
 -- 优惠信息表
 CREATE TABLE ny_discount (

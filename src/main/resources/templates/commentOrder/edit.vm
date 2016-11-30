@@ -11,7 +11,7 @@
     <div id="content-header">
         <div id="breadcrumb">
             <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-            <a href="../merchant/list" class="tip-bottom" data-original-title="">评论美化</a>
+            <a href="listFake" class="tip-bottom" data-original-title="">评价美化</a>
             <a href="#" class="tip-bottom" data-original-title="">编辑</a>
         </div>
     </div>
@@ -29,17 +29,17 @@
                             <div class="control-group">
                                 <label class="control-label">商户</label>
                                 <div class="controls">
-                                    <select name="merchant.id" class="span9">
+                                    <select name="merchant.id" class="span9 select2">
                                         #foreach($e in $!merchants)
-                                            <option value="$!e.id" #if($!e.id == $!entity.merchant.id) selected #end>$!e.name</option>
+                                            <option value="$!e.id" #if($!e.id == $!entity.merchant.id) selected #end>$!e.id:$!e.name</option>
                                         #end
                                     </select>
                                 </div>
                                 <label class="control-label">用户</label>
                                 <div class="controls">
-                                    <select name="userId" class="span9">
+                                    <select name="userId" class="span9 select2">
                                         #foreach($e in $!fakeUsers)
-                                            <option value="$!e.id" #if($!e.id == $!entity.userId) selected #end>$!e.nickname</option>
+                                            <option value="$!e.id" #if($!e.id == $!entity.userId) selected #end>$!e.id:$!e.nickname</option>
                                         #end
                                     </select>
                                 </div>
