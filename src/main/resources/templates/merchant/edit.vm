@@ -257,6 +257,7 @@
 
     <script src="/dist/markdown/editormd.min.js"></script>
     <script type="text/javascript">
+<<<<<<< HEAD
         var mdEditor;
         $(function () {
             mdEditor = editormd("test-editormd", {
@@ -271,6 +272,20 @@
                 onload: function () {
                     mdEditor.setMarkdown($("#intro").attr("value"));
                 }
+=======
+        var editor;
+        KindEditor.ready(function (K) {
+            editor = K.create('#intro', {
+                items: [
+                    'source', '|', 'undo', 'redo', '|', 'preview', 'template', 'code', 'cut', 'copy', 'paste',
+                    'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                    'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                    'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+                    'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                    'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'hr', 'emoticons', 'pagebreak',
+                    'link', 'unlink', '|', 'about'
+                ]
+>>>>>>> 禁用markdown
             });
         });
 
