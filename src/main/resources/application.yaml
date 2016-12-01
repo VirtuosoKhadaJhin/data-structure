@@ -49,3 +49,6 @@ aliyun:
 
 nuanyou-host: http://testh5.91nuanyou.com
 withdrawurl: http://testuser.api.91nuanyou.com
+
+upload:
+  s3server: http://kr.file.91nuanyou.com
