@@ -274,7 +274,7 @@
             });
         });
 
-        var defaultOption = null;
+        var landmarkOption = null;
         $(".landmark").each(function () {
             $(this).on("click", function () {
 
@@ -290,10 +290,10 @@
                             htm += '<option value="' + v.id + '">' + v.id + ":" + v.name;
                         });
                         var target = $("select[name='landmarkId']");
-                        if (defaultOption == null) {
-                            defaultOption = "" + $(target).html();
+                        if (landmarkOption == null) {
+                            landmarkOption = "" + $(target).html();
                         }
-                        htm = defaultOption + htm;
+                        htm = landmarkOption + htm;
                         $(target).html(htm);
                     }
                 });
