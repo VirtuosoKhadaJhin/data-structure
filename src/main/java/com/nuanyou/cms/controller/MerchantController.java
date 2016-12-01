@@ -223,6 +223,7 @@ public class MerchantController {
         model.addAttribute("weeks", Week.values());
         model.addAttribute("payTypes", PayType.values());
         model.addAttribute("supportTypes", SupportType.values());
+        model.addAttribute("verifyTypes", VerifyType.values());
     }
 
     @RequestMapping("api/list")
