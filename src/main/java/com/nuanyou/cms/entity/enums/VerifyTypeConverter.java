@@ -15,6 +15,8 @@ public class VerifyTypeConverter implements AttributeConverter<VerifyType, Integ
 
     @Override
     public VerifyType convertToEntityAttribute(Integer dbData) {
+        if (dbData == null)
+            return null;
         return VerifyType.toEnum(dbData);
     }
 
