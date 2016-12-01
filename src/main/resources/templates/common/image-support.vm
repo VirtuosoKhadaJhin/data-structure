@@ -62,7 +62,7 @@
         });
     });
     // iframe中接收返回的图片url
-    function callback(id, imgUrl) {
+    function callbackImg(id, imgUrl) {
         $('#modal-fileupload').modal('hide');
         $("#" + id).val(imgUrl);
         $("#uploadBtn").removeAttr("disabled");
