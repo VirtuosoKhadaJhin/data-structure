@@ -83,7 +83,13 @@
                 <td>$!order.coupon.title/$!order.coupon.price/$!order.coupon.localPrice </td>
                 <td>$numberFormatter.format("#0.00",$!order.kpprice)</td>
                 <td>$numberFormatter.format("#0.00",$!order.okpprice)</td>
-                <td>$!order.price</td>
+                <td>
+                    #if($!order.payable)
+                        $!order.payable
+                    #else
+                        $!order.price
+                    #end
+                </td>
                 <td>$!order.oprice</td>
                 <td>$!order.merchantsubsidy</td>
                 <td>$!order.statusname</td>
