@@ -8,25 +8,3 @@ a:visited { text-decoration: none;color: green}
     text-decoration: underline;
     color: green;
 }
-
-.carettr {
-    vertical-align: 2px;
-    margin-left: 10px;
-    -webkit-transition: all .3s;
-    -moz-transition: all .3s;
-    -ms-transition: all .3s;
-    transition: all .3s;
-}
-
-.carettr-top {
-    vertical-align: 2px;
-    margin-left: 10px;
-    -webkit-transform: rotate(180deg);
-    -moz-transform: rotate(180deg);
-    -ms-transform: rotate(180deg);
-    transform: rotate(180deg);
-    -webkit-transition: all .3s;
-    -moz-transition: all .3s;
-    -ms-transition: all .3s;
-    transition: all .3s;
-}

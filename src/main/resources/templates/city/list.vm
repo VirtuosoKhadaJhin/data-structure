@@ -11,9 +11,26 @@
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
-        <th>ID</th>
+        <th>ID
+            #if($!page.sort.getOrderFor("id").direction=="ASC")
+                <i class="icon-sort-up" onclick="sort('id','DESC')"></i>
+            #elseif($!page.sort.getOrderFor("id").direction=="DESC")
+                <i class="icon-sort-down" onclick="sort('id','')"></i>
+            #else
+                <i class="icon-sort" onclick="sort('id','ASC')"></i>
+            #end
+        </th>
         <th>城市名称</th>
-        <th>所属国家<b class="caret carettr"></b></th>
+        <th>所属国家
+            #if($!page.sort.getOrderFor("country.name").direction=="ASC")
+                <i class="icon-sort-up" onclick="sort('country.name','DESC')"></i>
+            #elseif($!page.sort.getOrderFor("country.name").direction=="DESC")
+                <i class="icon-sort-down" onclick="sort('country.name','')"></i>
+            #else
+                <i class="icon-sort" onclick="sort('country.name','ASC')"></i>
+            #end
+        </th>
+
         <th>排序</th>
         <th>是否显示</th>
         <th class="table-set">操作</th>
