@@ -1,8 +1,4 @@
 use nuanyou20;
--- 2016-12-01
-ALTER TABLE `ny_merchant`
-ADD COLUMN `verifytype` INT(4) DEFAULT 1 COMMENT '核销方式: 1用户核销,2商家核销' AFTER `businessday`;
-
 -- 2016-11-28
 ALTER TABLE `ny_recommend`
 ADD COLUMN `display` INT(1) DEFAULT 1 COMMENT '是否显示' AFTER `sort`;
