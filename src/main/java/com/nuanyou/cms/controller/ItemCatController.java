@@ -63,6 +63,7 @@ public class ItemCatController {
         List<Merchant> merchants = merchantService.getIdNameList();
         model.addAttribute("merchants", merchants);
         model.addAttribute("page", page);
+        model.addAttribute("entity", entity);
         return "itemCat/list";
     }
 
