@@ -72,9 +72,11 @@
                                 </div>
                                 <label class="control-label">核销方式</label>
                                 <div class="controls">
-                                    #foreach($e in $!verifyTypes)
-                                        <input name="verifyType" type="radio" value="$!e" #if($!entity.verifyType == $!e)checked#end/> $!e.name
-                                    #end
+                                    <select name="verifyType" class="span11">
+                                        #foreach($e in $!verifyTypes)
+                                            <option value="$!e" #if($!e == $!entity.verifyType)selected#end>$!e.name</option>
+                                        #end
+                                    </select>
                                 </div>
                                 <label class="control-label">显示状态</label>
                                 <div class="controls">
