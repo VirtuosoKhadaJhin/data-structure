@@ -31,6 +31,7 @@ public class Merchant {
     private Date businessStart;
     private Date businessEnd;
     private List<Week> businessDay;
+    private VerifyType verifyType;
     private String address;
     private String kpaddress;
     private Boolean recommend;
@@ -164,6 +165,16 @@ public class Merchant {
 
     public void setBusinessDay(List<Week> businessDay) {
         this.businessDay = businessDay;
+    }
+
+    @Convert(converter = VerifyTypeConverter.class)
+    @Column(name = "verifytype", nullable = true)
+    public VerifyType getVerifyType() {
+        return verifyType;
+    }
+
+    public void setVerifyType(VerifyType verifyType) {
+        this.verifyType = verifyType;
     }
 
     @Column(name = "address", nullable = true, length = 200)

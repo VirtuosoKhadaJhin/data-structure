@@ -70,6 +70,12 @@
                                         /> $!e.name
                                     #end
                                 </div>
+                                <label class="control-label">核销方式</label>
+                                <div class="controls">
+                                    #foreach($e in $!verifyTypes)
+                                        <input name="verifyType" type="radio" value="$!e" #if($!entity.verifyType == $!e)checked#end/> $!e.name
+                                    #end
+                                </div>
                                 <label class="control-label">显示状态</label>
                                 <div class="controls">
                                     <input name="display" type="radio" value="true" #if($entity.display)checked#end/>是
@@ -268,7 +274,7 @@
             });
         });
 
-        var defaultOption = null;
+        var landmarkOption = null;
         $(".landmark").each(function () {
             $(this).on("click", function () {
 
@@ -284,10 +290,10 @@
                             htm += '<option value="' + v.id + '">' + v.id + ":" + v.name;
                         });
                         var target = $("select[name='landmarkId']");
-                        if (defaultOption == null) {
-                            defaultOption = "" + $(target).html();
+                        if (landmarkOption == null) {
+                            landmarkOption = "" + $(target).html();
                         }
-                        htm = defaultOption + htm;
+                        htm = landmarkOption + htm;
                         $(target).html(htm);
                     }
                 });
