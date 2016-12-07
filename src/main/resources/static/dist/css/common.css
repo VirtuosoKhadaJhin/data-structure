@@ -4,4 +4,7 @@ a:active { text-decoration:blink}
 a:hover { text-decoration:underline;color: red}
 a:visited { text-decoration: none;color: green}
 }*/
-.alink {text-decoration:underline;color: green;}
+.alink {
+    text-decoration: underline;
+    color: green;
+}

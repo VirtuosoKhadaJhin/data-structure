@@ -29,7 +29,7 @@ $(".pagination ul").each(function (i, o) {
 });
 
 function build(index, show, disable, style) {
-    index = "?index=" + index + window.location.search.replace(/^[?]/, "&").replace(/[?|&]?index=[^&]*/, "");
+    index = new UrlBuilder().set("index", index).build();
 
     if (disable == true) {
         return '<li><a href="javascript:void(0);">' + show + '</a></li>';
@@ -38,4 +38,41 @@ function build(index, show, disable, style) {
     } else {
         return '<li class="' + style + '"><a href="' + index + '">' + show + '</a></li>';
     }
+}
+
+function sort(propertie, direction) {
+    var search = new UrlBuilder().set("propertie", propertie).set("direction", direction).build();
+    window.location.href = window.location.href.split("?")[0] + search;
+}
+
+function UrlBuilder() {
+    var params = window.location.search;
+    if (params) {
+        params = params.replace("?", "");
+        params = params.split("&");
+    } else {
+        params = [];
+    }
+
+    this.set = function (key, value) {
+        for (var p in params) {
+            var entry = params[p].split("=");
+            if (entry[0] == key) {
+                params[p] = key + "=" + value;
+                return this;
+            }
+        }
+        params.push(key + "=" + value);
+        return this;
+    };
+
+    this.build = function () {
+        var result = "";
+        for (var p in params)
+            result += "&" + params[p];
+
+        result = result.replace("&", "?");
+        return result;
+    };
+
 }
