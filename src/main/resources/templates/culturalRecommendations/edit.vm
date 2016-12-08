@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span6">
+                <div class="widget-box">
+                    <div id="breadcrumb">
+                        <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
+                        <a href="list" class="tip-bottom" data-original-title="">特色管理</a>
+                        <a href="javascipt:void(0);" class="tip-bottom" data-original-title="">编辑/查看</a>
+                    </div>
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
+                        <h5>特色编辑</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form class="form-horizontal commonValidate" action="update" method="post">
+                            <input name="id" type="hidden" value="$!entity.id">
+                            <input name="cat.id" type="hidden" value="$!entity.cat.id">
+                            <div class="control-group">
+                                <label class="control-label">名称</label>
+                                <div class="controls">
+                                    <input name="title" type="text" class="span11" value="$!entity.title">
+                                </div>
+                                <label class="control-label">类型</label>
+                                <div class="controls">
+                                    <select name="type" class="span11" target-name="referId" target-url="/recommend/api/target/list">
+                                        <option #if($!entity.type==1) selected#end value="1">商户</option>
+                                        <option #if($!entity.type==2) selected#end value="2">商品</option>
+                                    </select>
+                                </div>
+                                <label class="control-label">是否显示</label>
+                                <div class="controls">
+                                    <select name="display" class="span11">
+                                        <option value="true" #if($!entity.display==true)selected#end>显示</option>
+                                        <option value="false" #if($!entity.display==false)selected#end>隐藏</option>
+                                    </select>
+                                </div>
+                                <label class="control-label">目标</label>
+                                <div class="controls">
+                                    <select name="referId" class="span11" def-value="$!entity.referId"></select>
+                                </div>
+                                <label class="control-label">顺序</label>
+                                <div class="controls">
+                                    <input name="sort" type="text" class="span11" value="$!entity.sort">
+                                </div>
+                                <label class="control-label">链接</label>
+                                <div class="controls">
+                                    <input name="linkUrl" type="text" class="span11" value="$!entity.linkUrl">
+                                </div>
+                                <label class="control-label">图片</label>
+                                <div class="controls">
+                                    <input name="imgUrl" type="text" class="span9" id="imgUrl" placeholder="列表页门头图" value="$!entity.imgUrl">
+                                    <button class="btn btn-success previewBtn" type="button" data-id="imgUrl">预览</button>
+                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="imgUrl">上传</button>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-success" type="submit" id="btn-save">保存</button>
+                                <a class="btn btn-warning" type="button" id="btn-edit">编辑</a>
+                                <a class="btn btn-primary" href="list?cat.id=$!entity.cat.id">返回</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #include("common/js-support.vm")
+    <script>
+            #if($!disabled)
+            $("#btn-save").hide();
+            $(":input").each(function (i, o) {
+                $(o).attr("disabled", true);
+            });
+            $("#btn-edit").on("click", function () {
+                $(":input").each(function (i, o) {
+                    $(o).attr("disabled", false);
+                    $("#btn-save").show();
+                    $("#btn-edit").hide();
+                });
+            });
+            #else
+            $("#btn-edit").hide();
+            #end
+        var attr = $('.btn-primary').attr("href");
+        if (attr.indexOf("?") == -1) {
+            attr += '?index=' + localStorage['index'];
+        } else {
+            attr += '&index=' + localStorage['index'];
+        }
+        $('.btn-primary').attr("href", attr);
+    </script>
+    #include("common/image-support.vm")
+    <script src="/dist/js/cascade-select.js"></script>
+</body>
+</html>
