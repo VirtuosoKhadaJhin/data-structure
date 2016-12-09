@@ -36,7 +36,7 @@
     </tbody>
 </table>
 <div class="form-actions ">
-    <a class="btn btn-info" href="add?cat.id=$!entity.cat.id">新增</a>
+    <a class="btn btn-info" href="add?group.id=$!entity.group.id">新增</a>
 </div>
 #parse("common/list_mid.vm")
 <form>
