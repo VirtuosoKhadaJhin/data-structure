@@ -82,10 +82,10 @@
                             <div class="form-actions">
                                 #if($!type==2 || $!type==1)
                                     <button type="submit" class="btn btn-success">保存</button>
-                                    <a class="btn btn-primary goback" href="list">返回</a>
                                 #elseif($!type==3)
                                     <a href="/itemCat/edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
                                 #end
+                                <a class="btn btn-primary goback" href="list">返回</a>
                             </div>
                         </form>
                     </div>

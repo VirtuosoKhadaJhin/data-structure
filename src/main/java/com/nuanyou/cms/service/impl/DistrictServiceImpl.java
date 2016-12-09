@@ -21,8 +21,7 @@ public class DistrictServiceImpl implements DistrictService {
     private DistrictDao districtDao;
 
     @Override
-    public Page<District> findByCondition(Integer index, District district) {
-        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "id");
+    public Page<District> findByCondition(District district, Pageable pageable) {
         ExampleMatcher e = ExampleMatcher.matching();
         ExampleMatcher.GenericPropertyMatcher g = ExampleMatcher.GenericPropertyMatcher.of(ExampleMatcher.StringMatcher.ENDING);
         if (district.getId() != null) {
