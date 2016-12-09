@@ -40,7 +40,7 @@ aliyun:
   secret-access-key: zgSa3pBpQEo4EPQt1sVBF4U66QJZ21
   endpoint: http://oss-cn-hangzhou.aliyuncs.com
  nuanyou:
-  image-server: http://img.91nuanyou.com
+  image-server: https://img.91nuanyou.com
   bucketname: nuanyou-image
   cms-basepath: cms
   fake-image-server: http://image.hellodfs.com/nuanyou20opt
@@ -51,4 +51,4 @@ nuanyou-host: http://testh5.91nuanyou.com
 withdrawurl: http://testuser.api.91nuanyou.com
 
 upload:
-  s3server: http://kr.file.91nuanyou.com
+  s3server: https://kr.file.91nuanyou.com
