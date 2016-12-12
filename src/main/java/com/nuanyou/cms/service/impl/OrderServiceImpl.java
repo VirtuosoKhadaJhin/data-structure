@@ -56,8 +56,7 @@ public class OrderServiceImpl implements OrderService {
     private CouponDao couponDao;
 
     @Override
-    public Page<Order> findByCondition(Integer index, final Order entity, final TimeCondition time) {
-        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "id");
+    public Page<Order> findByCondition(Integer index, final Order entity, final TimeCondition time, Pageable pageable) {
         return orderDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
@@ -138,7 +137,6 @@ public class OrderServiceImpl implements OrderService {
                 throw new APIException(ResultCodes.RefundingSuccess, " Detail：OrderID" + order.getId());
             }
         }
-
         order.setRefundremark(entity.getRefundremark());
         order.setId(entity.getId());
         order.setStatusname("已申请退款");
@@ -184,7 +182,7 @@ public class OrderServiceImpl implements OrderService {
         if (order == null) {
             return;
         }
-        if (order != null && order.getRefundstatus() != 201) {
+        if (order.getRefundstatus() != 201) {
             throw new APIException(ResultCodes.Audited);
         } else {
             order.setRefundaudittime(DateUtils.newDate());
@@ -196,7 +194,6 @@ public class OrderServiceImpl implements OrderService {
             order.setStatusname("退款成功");
         }
         this.saveNotNull(order);
-
         OrderRefundLog log = new OrderRefundLog();
         log.setOrder(order);
         log.setCmsusername(cmsusername);

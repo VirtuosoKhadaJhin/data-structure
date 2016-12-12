@@ -50,28 +50,10 @@
                 <td>$!order.ordertype.name</td>
                 <td>$!order.paytype.name</td>
                 <td>
-                    #if($!order.platform==1)
-                        微信
-                    #elseif($!order.platform==2)
-                        APP
-                    #elseif($!order.platform==3)
-                        WAP
-                    #elseif($!order.platform==4)
-                        POS
-                    #else
-                        其他
-                    #end
+                    $!order.platform.name
                 </td>
                 <td>
-                    #if($!order.os==1)
-                        IOS
-                    #elseif($!order.os==2)
-                        IPAD
-                    #elseif($!order.os==3)
-                        Android
-                    #else
-                        其他
-                    #end
+                    $!order.os.name
                 </td>
                 <td>$!order.ordercode</td>
                 <td>
@@ -104,7 +86,7 @@
     </table>
 </div>
 #parse("common/list_mid.vm")
-<form class="form-horizontal" method="get">
+<form class="form-horizontal orderForm" method="get">
     <div class="control-group">
         <label>渠道：</label>
         <input type="text" class="span11" name="sceneid" value="$!entity.sceneid" placeholder="渠道">
@@ -116,10 +98,10 @@
         <input type="text" class="span11" name="merchant.kpname" value="$!entity.merchant.kpname " placeholder="商户本地名称">
 
         <label>开始时间：</label>
-        <input type="text" class="span11 dateTimeFormat" name="begin" id="begin" value="$!time.beginStr" placeholder="开始时间">
+        <input type="text" class="span11 dateTimeFormat" name="begin" id="beginTime" value="$!time.beginStr" placeholder="开始时间">
 
         <label>结束时间：</label>
-        <input type="text" class="span11 dateTimeFormat" name="end" value="$!time.endStr" id="end" placeholder="结束时间">
+        <input type="text" class="span11 dateTimeFormat" name="end"  value="$!time.endStr" id="endTime" placeholder="结束时间">
 
         <label for="status">店铺：</label>
         <select id="merchant.id" name="merchant.id" class="span11 select2">
@@ -177,6 +159,7 @@
             #end
         </select>
         <button type="submit" class="btn btn-success">查询</button>
+        <a class="btn btn-warning export" href="javascript:void(0);">导出</a>
     </div>
 </form>
 #parse("common/list_end.vm")
@@ -203,80 +186,44 @@
     </div>
 </div>
 
-<div id="address_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">地址详情</h3>
-    </div>
-    <div class="modal-body">
-        <div class="control-group">
-            <div class="controls">
-                <textarea id="address_value"></textarea>
-            </div>
-        </div>
-        <input type="hidden" id="refundid" name="refundid">
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-    </div>
-</div>
 
 
-<div id="order-detail" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>订单明细</h3>
-    </div>
 
-    <div class="modal-body">
-        <form class="form-horizontal " id="couponTemplateForm" action="update">
-            <div class="control-group">
-                <label class="control-label">短信通知状态</label>
-                <div class="controls">
-                    <input name="sms.code" readonly type="text">
-                </div>
-                <label class="control-label">短信通知次数</label>
-                <div class="controls">
-                    <input name="sms.times" readonly type="text">
-                </div>
-                <label class="control-label">购买次数</label>
-                <div class="controls">
-                    <input name="buyNum" readonly type="text">
-                </div>
-                <label class="control-label">优付优惠（本地）</label>
-                <div class="controls">
-                    <input name="subsidy.youfusubsidyprice_Format" readonly type="text">
-                </div>
-                <label class="control-label">优付优惠（人民币）</label>
-                <div class="controls">
-                    <input name="subsidy.youfusubsidykpprice_Format" readonly type="text">
-                </div>
-                <label class="control-label">商户优惠（本地）</label>
-                <div class="controls">
-                    <input name="subsidy.mchsubsidyprice_Format" readonly type="text">
-                </div>
-                <label class="control-label">商户优惠（人民币）</label>
-                <div class="controls">
-                    <input name="subsidy.mchsubsidykpprice_Format" readonly type="text">
-                </div>
-                <label class="control-label">收货地址</label>
-                <div class="controls">
-                    <textarea name="logistics.address" readonly></textarea>
-                </div>
-            </div>
-        </form>
-    </div>
 
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-        <button class="btn btn-primary submit-item" type="button" modal-id="update-modal">保存</button>
-    </div>
-</div>
 
 
 <script>
     $(function () {
+        $(".export").on("click", function () {
+            var begin=$("#beginTime").val();
+            var end=$("#endTime").val();
+            if(!validateTime(begin,end)){
+                return alert("开始时间和结束时间不能为空,且只能在七天以内!");
+            }
+            var form = $(".orderForm");
+            form.attr("action", "export");
+            form.submit();
+            form.attr("action", "");
+            form.attr("target", "");
+        })
+
+        function validateTime(begin,end){
+            if(begin==""||end==""){
+                return false;
+            }
+            var begin=new Date(begin.replace("-", "/").replace("-", "/"));
+            var end=new Date(end.replace("-", "/").replace("-", "/"));
+            var result = end-begin;
+            if(result>7*24*60*60*1000){
+                return false;
+            }
+
+            return true;
+
+        }
+
+
+
         $(".tuikuan").each(function (i, o) {
             $(o).on("click", function (event) {
                 var id = $(this).attr("data-id");
@@ -285,42 +232,10 @@
             })
         });
 
-        $(".address").each(function (i, o) {
-            $(o).on("click", function (event) {
-                var address = $(this).attr("add");
-                //alert(address);
-                $("#address_value").val(address);
-                $('#address_modal').modal('show');
-            })
-        });
 
 
-        $(".orderDetail").each(function (i, o) {
-            $(o).on("click", function (event) {
-                var id = $(this).attr("data-id");
-                $.ajax({
-                    url: 'api/detail',
-                    data: {id: id},
-                    type: 'post',
-                    success: function (result) {
-                        if (result.code == 0) {
-                            $("input[name='sms.code']").val(result.data.orderDetail["sms_code"]);
-                            $("input[name='sms.times']").val(result.data.orderDetail["sms_times"]);
-                            $("textarea[name='logistics.address']").val(result.data.orderDetail["logistics_address"]);
-                            $("input[name='buyNum']").val(result.data.orderDetail["buyNum"]);
-                            $("input[name='subsidy.youfusubsidyprice_Format']").val(result.data.orderDetail["subsidy_youfusubsidyprice_Format"]);
-                            $("input[name='subsidy.youfusubsidykpprice_Format']").val(result.data.orderDetail["subsidy_youfusubsidykpprice_Format"]);
-                            $("input[name='subsidy.mchsubsidyprice_Format']").val(result.data.orderDetail["subsidy_mchsubsidyprice_Format"]);
-                            $("input[name='subsidy.mchsubsidykpprice_Format']").val(result.data.orderDetail["subsidy_mchsubsidykpprice_Format"]);
-                        } else {
-                            alert("Fail Code: " + result.code + " MSG: " + result.msg);
-                        }
-                    }
-                });
-                var address = $(this).attr("add");
-                $('#order-detail').modal('show');
-            })
-        });
+
+
 
 
         $("#saveRefund").on("click", function () {
