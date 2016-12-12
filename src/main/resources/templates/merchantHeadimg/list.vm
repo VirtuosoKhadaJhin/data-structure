@@ -1,6 +1,6 @@
 #parse("common/list_start.vm")
 <div class="widget-title"><span class="icon"> <i class="icon-th"></i> </span>
-    <h5>商家列表</h5>
+    <h5>商家详情图管理</h5>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
@@ -37,9 +37,7 @@
         #end
     </tbody>
 </table>
-<div class="form-actions ">
-    <a class="btn btn-info" href="add">新增</a>
-</div>
+
 #parse("common/list_mid.vm")
 <form>
     <div class="control-group">
