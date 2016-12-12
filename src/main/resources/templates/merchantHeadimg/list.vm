@@ -61,7 +61,6 @@
             #end
         </select>
         <button type="submit" class="btn btn-primary">查询</button>
-        <a class="btn btn-warning export" href="javascript:void(0);">导出</a>
     </div>
 </form>
 
