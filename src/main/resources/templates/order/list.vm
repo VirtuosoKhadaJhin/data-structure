@@ -80,7 +80,9 @@
                 <td>$!order.merchant.kpname</td>
                 <td>$!order.user.userid</td>
                 <td>$!order.user.nickname</td>
-                <td>$!order.coupon.title/$!order.coupon.price/$!order.coupon.localPrice </td>
+                <td>
+                    #if($!order.coupon)$!order.coupon.title/$!order.coupon.price/$!order.coupon.localPrice#end
+                </td>
                 <td>$numberFormatter.format("#0.00",$!order.kpprice)</td>
                 <td>$numberFormatter.format("#0.00",$!order.okpprice)</td>
                 <td>
