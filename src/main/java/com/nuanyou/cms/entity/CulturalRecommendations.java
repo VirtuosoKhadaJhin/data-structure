@@ -7,7 +7,7 @@ import com.nuanyou.cms.commons.LastModified;
 import javax.persistence.*;
 import java.util.Date;
 
-import static javafx.scene.input.KeyCode.W;
+
 
 /**
  * Created by Alan.ye on 2016/9/5.

@@ -12,12 +12,17 @@ import com.nuanyou.cms.model.OrderDetail;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.OrderService;
+import com.nuanyou.cms.util.ConvertFileEncoding;
+import com.nuanyou.cms.util.DateUtils;
 import com.nuanyou.cms.util.TimeCondition;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.velocity.tools.generic.DateTool;
+import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
@@ -48,14 +54,10 @@ public class OrderController {
     private MerchantService merchantService;
     @Autowired
     private OrderItemDao orderItemDao;
-
     @Autowired
     private OrderSmsDao orderSmsDao;
-
-
     @Autowired
     private OrderSubsidyDao orderSubsidyDao;
-
     @Autowired
     private OrderLogisticsDao orderLogisticsDao;
 
@@ -99,11 +101,12 @@ public class OrderController {
 
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, TimeCondition time) {
+        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "id");
         List<Country> countries = this.countryDao.findAll();
         List<OrderType> orderTypes= Arrays.asList( OrderType.values());
         List<OrderPayType> orderPayTypes=Arrays.asList( OrderPayType.values());
         List<Merchant> merchants = this.merchantService.getIdNameList();
-        Page<Order> page = orderService.findByCondition(index, entity, time);
+        Page<Order> page = orderService.findByCondition(index, entity, time,pageable);
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
         model.addAttribute("countries", countries);
@@ -114,6 +117,67 @@ public class OrderController {
         return "order/list";
     }
 
+
+
+    @RequestMapping("export")
+    public void export(@RequestParam(required = false, defaultValue = "1") int index,  Model model,
+                       HttpServletRequest request,HttpServletResponse response,
+                       Order entity, TimeCondition time) throws IOException {
+        String[] titles=new String[]{
+                        "序号","ID","订单ID","渠道","订单类型","支付类型","来源平台","来源系统","使用码","商户中文名称","商户本地名称",
+                        "userid","购买人","优惠券/面值/本地面值","总价(本地)","原价(本地)","总价(人民币)","原价(人民币)","商户优付补贴","订单状态","下单时间",
+                        "使用时间","订单手机号码"};
+        String filename = "order.xls";
+        HSSFWorkbook workbook=new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("订单列表");
+        HSSFRow row = sheet.createRow(0);
+        Page<Order> page = orderService.findByCondition(index, entity, time,null);
+        for (int i = 0; i < titles.length; i++) {
+            HSSFCell c = row.createCell(i);
+            c.setCellValue(titles[i]);
+        }
+        NumberTool numberFormatter=new NumberTool();
+        DateTool dateFormatter=new DateTool();
+        FillContent(sheet, page, numberFormatter, dateFormatter);
+        setResponseOut(filename,workbook,request,response);
+    }
+
+    private void FillContent(HSSFSheet sheet, Page<Order> page, NumberTool numberFormatter, DateTool dateFormatter) {
+        for (int i = 0; i < page.getContent().size(); i++) {
+            HSSFRow r = sheet.createRow(i+1);
+            Order each=page.getContent().get(0);
+            r.createCell(0).setCellValue(i+1);
+            r.createCell(1).setCellValue(each.getId());
+            r.createCell(2).setCellValue(each.getOrdersn());
+            r.createCell(3).setCellValue(each.getSceneid());
+            r.createCell(4).setCellValue(each.getOrdertype()==null?"":each.getOrdertype().getName());
+            r.createCell(5).setCellValue(each.getPaytype()==null?"":each.getPaytype().getName());
+            r.createCell(6).setCellValue(each.getPlatform()==null?"":each.getPlatform().getName());
+            r.createCell(7).setCellValue(each.getOs()==null?"":each.getOs().getName());
+            r.createCell(8).setCellValue(each.getOrdercode());
+            r.createCell(9).setCellValue(each.getMerchant()==null?"":each.getMerchant().getName());
+            r.createCell(10).setCellValue(each.getMerchant()==null?"":each.getMerchant().getKpname());
+            r.createCell(11).setCellValue(each.getUser()==null?"":each.getUser().getUserid().toString());
+            r.createCell(12).setCellValue(each.getUser()==null?"":each.getUser().getNickname());
+            r.createCell(13).setCellValue(each.getCoupon()==null?"":
+                    each.getCoupon().getTitle()+"/"+each.getCoupon().getPrice()+"/"+each.getCoupon().getLocalPrice());
+            r.createCell(14).setCellValue(numberFormatter.format("#0.00",each.getKpprice()));
+            r.createCell(15).setCellValue(numberFormatter.format("#0.00",each.getOkpprice()));
+            r.createCell(16).setCellValue(each.getPayable()==null?each.getPrice().doubleValue():each.getPayable().doubleValue());
+            r.createCell(17).setCellValue(each.getOprice()==null?"":each.getOprice().toPlainString());
+            r.createCell(18).setCellValue(each.getMerchantsubsidy()==null?"":each.getMerchantsubsidy().toPlainString());
+            r.createCell(19).setCellValue(each.getStatusname());
+            r.createCell(20).setCellValue(dateFormatter.format("yyyy-MM-dd HH:mm:ss",each.getCreatetime()));
+            r.createCell(21).setCellValue(dateFormatter.format("yyyy-MM-dd HH:mm:ss",each.getUsetime()));
+        }
+    }
+
+    private void setResponseOut(String filename, HSSFWorkbook workbook,HttpServletRequest request,HttpServletResponse response) throws IOException {
+        filename = ConvertFileEncoding.encodeFilename(filename, request);
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-disposition", "attachment;filename=" + filename);
+        workbook.write(response.getOutputStream());
+    }
 
     @RequestMapping("api/detail")
     @ResponseBody

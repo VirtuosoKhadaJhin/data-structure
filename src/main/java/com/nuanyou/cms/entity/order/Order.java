@@ -4,10 +4,7 @@ import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.coupon.Coupon;
-import com.nuanyou.cms.entity.enums.OrderPayType;
-import com.nuanyou.cms.entity.enums.OrderPayTypeConverter;
-import com.nuanyou.cms.entity.enums.OrderType;
-import com.nuanyou.cms.entity.enums.OrderTypeConverter;
+import com.nuanyou.cms.entity.enums.*;
 import com.nuanyou.cms.entity.user.PasUserProfile;
 
 import javax.persistence.*;
@@ -40,8 +37,8 @@ public class Order {
     private Date commenttime;
     private BigDecimal oprice;
     private BigDecimal okpprice;
-    private Byte platform;
-    private Byte os;
+    private Platform platform;
+    private Os os;
     private String sceneid;
     private BigDecimal merchantsubsidy;
     private Byte paystatus;
@@ -309,23 +306,28 @@ public class Order {
 
 
     @Column(name = "platform", nullable = true)
-    public Byte getPlatform() {
+    @Convert(converter=PlatformConverter.class)
+    public Platform getPlatform() {
         return platform;
     }
 
-    public void setPlatform(Byte platform) {
+    public void setPlatform(Platform platform) {
         this.platform = platform;
     }
 
 
     @Column(name = "OS", nullable = true)
-    public Byte getOs() {
+    @Convert(converter = OsConverter.class)
+    public Os getOs() {
         return os;
     }
 
-    public void setOs(Byte os) {
+    public void setOs(Os os) {
         this.os = os;
     }
+
+
+
 
 
     @Column(name = "sceneid", nullable = true, length = 255)

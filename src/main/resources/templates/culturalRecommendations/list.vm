@@ -28,7 +28,7 @@
                 <a class="btn btn-success btn-mini" data-id="$!e.id" href="detail?id=$!e.id">查看</a>
                 <a class="btn btn-info btn-mini" data-id="$!e.id" href="edit?id=$!e.id">编辑</a>
            #*     #if($!e.display)
-                    <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">隐藏</button>
+                    <button data-id="$!e.id" class="btn btn-danger -btnmini remove-item">隐藏</button>
                 #end*#
             </td>
         </tr>
