@@ -61,6 +61,8 @@ public class OrderController {
     @Autowired
     private OrderLogisticsDao orderLogisticsDao;
 
+    private static String timePattern="yyyy-MM-dd HH:mm:ss";
+    private static String decimalPattern="#0.00";
 
     @RequestMapping("add")
     public String add(Order entity) {
@@ -145,7 +147,7 @@ public class OrderController {
     private void FillContent(HSSFSheet sheet, Page<Order> page, NumberTool numberFormatter, DateTool dateFormatter) {
         for (int i = 0; i < page.getContent().size(); i++) {
             HSSFRow r = sheet.createRow(i+1);
-            Order each=page.getContent().get(0);
+            Order each=page.getContent().get(i);
             r.createCell(0).setCellValue(i+1);
             r.createCell(1).setCellValue(each.getId());
             r.createCell(2).setCellValue(each.getOrdersn());
@@ -161,16 +163,18 @@ public class OrderController {
             r.createCell(12).setCellValue(each.getUser()==null?"":each.getUser().getNickname());
             r.createCell(13).setCellValue(each.getCoupon()==null?"":
                     each.getCoupon().getTitle()+"/"+each.getCoupon().getPrice()+"/"+each.getCoupon().getLocalPrice());
-            r.createCell(14).setCellValue(numberFormatter.format("#0.00",each.getKpprice()));
-            r.createCell(15).setCellValue(numberFormatter.format("#0.00",each.getOkpprice()));
+            r.createCell(14).setCellValue(numberFormatter.format(decimalPattern,each.getKpprice()));
+            r.createCell(15).setCellValue(numberFormatter.format(decimalPattern,each.getOkpprice()));
             r.createCell(16).setCellValue(each.getPayable()==null?each.getPrice().doubleValue():each.getPayable().doubleValue());
             r.createCell(17).setCellValue(each.getOprice()==null?"":each.getOprice().toPlainString());
             r.createCell(18).setCellValue(each.getMerchantsubsidy()==null?"":each.getMerchantsubsidy().toPlainString());
             r.createCell(19).setCellValue(each.getStatusname());
-            r.createCell(20).setCellValue(dateFormatter.format("yyyy-MM-dd HH:mm:ss",each.getCreatetime()));
-            r.createCell(21).setCellValue(dateFormatter.format("yyyy-MM-dd HH:mm:ss",each.getUsetime()));
+            r.createCell(20).setCellValue(dateFormatter.format(timePattern,each.getCreatetime()));
+            r.createCell(21).setCellValue(dateFormatter.format(timePattern,each.getUsetime()));
         }
     }
+
+
 
     private void setResponseOut(String filename, HSSFWorkbook workbook,HttpServletRequest request,HttpServletResponse response) throws IOException {
         filename = ConvertFileEncoding.encodeFilename(filename, request);
