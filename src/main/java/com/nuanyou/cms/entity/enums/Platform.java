@@ -31,6 +31,9 @@ public enum Platform {
     }
 
     public static Platform toEnum(Integer value) {
+        if(value==null){
+            return null;
+        }
         Platform[] values = Platform.values();
         for (Platform type : values) {
             if (type.value== value.byteValue())
