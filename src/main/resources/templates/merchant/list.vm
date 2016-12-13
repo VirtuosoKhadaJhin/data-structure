@@ -254,6 +254,7 @@
     });
     function callback() {
         var elText = $("#payUrl").val();
+        $('#qrcode').empty();
         $('#qrcode').qrcode({width: 200, height: 200, correctLevel: 0, text: elText});
     }
 </script>

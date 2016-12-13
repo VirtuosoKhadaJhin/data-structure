@@ -57,11 +57,11 @@
 ##    </div>
     <div class="control-group">
         <label>开始时间：</label>
-        <input name="begin" value="$!time.beginStr" type="text" class="span11 timeFormat" placeholder="开始时间">
+        <input name="beginDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.beginDate)" type="text" class="span11 dateFormat" placeholder="开始时间">
     </div>
     <div class="control-group">
         <label>结束时间：</label>
-        <input name="end" value="$!time.endStr" type="text" class="span11 timeFormat" placeholder="结束时间">
+        <input name="endDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.endDate)" type="text" class="span11 dateFormat" placeholder="结束时间">
     </div>
     <div class="control-group">
         <button type="submit" class="btn btn-primary">查询</button>
@@ -89,15 +89,4 @@
     </div>
 </div>
 <script src="/dist/js/curd.js"></script>
-<script>
-    $(function () {
-        $('.timeFormat').datetimepicker({
-            format: "Y-m-d H:i:00",
-            timepicker: true,
-            yearStart: 2000,
-            yearEnd: 2050,
-            todayButton: false
-        });
-    });
-</script>
 #parse("common/list_end.vm")
