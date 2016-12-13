@@ -73,11 +73,17 @@ public class OrderController {
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
+        OrderDetail orderDetail = getOrderDetail(id);
+        model.addAttribute("orderDetail",orderDetail);
+        return "order/edit";
+    }
+
+    private OrderDetail getOrderDetail(Long id) {
         Order order=this.orderDao.findOne(id);
         OrderSms sms=this.orderSmsDao.findByOrderId(id);
         OrderLogistics logistics=this.orderLogisticsDao.findByOrderId(id);
         Integer buyNum=this.orderService.getBuyNum(order);
-        OrderDetail orderDetail=new OrderDetail(
+        return new OrderDetail(
                 sms==null?null:sms.getCode(),
                 sms==null?null:sms.getTimes(),
                 logistics==null?null:logistics.getAddress(),
@@ -87,11 +93,7 @@ public class OrderController {
                 order==null?null:order.getMchlocalereduce(),
                 buyNum
         );
-        model.addAttribute("orderDetail",orderDetail);
-        return "order/edit";
     }
-
-
 
 
     @RequestMapping("update")
@@ -128,10 +130,7 @@ public class OrderController {
         String[] titles=new String[]{
                         "序号","ID","订单ID","渠道","订单类型","支付类型","来源平台","来源系统","使用码","商户中文名称","商户本地名称",
                         "userid","购买人","优惠券/面值/本地面值","总价(本地)","原价(本地)","总价(人民币)","原价(人民币)","商户优付补贴","订单状态","下单时间",
-                        "使用时间","订单手机号码"};
-                        //订单流水号  渠道  使用码  商户ID  商户中文名称  商户本地名称  userid  购买次数  购买人  手机号码  优惠券  总价(本地)
-        // 原价（本地）  总价（人民币）  原价（人民币）  订单类型  支付类型  订单状态  商户优付补贴  下单时间  使用时间  暖游优付优惠百分比  暖游优付优惠（本地）
-        //  暖游优付优惠（人民币）  商户优惠百分比  商户优惠（本地）  商户优惠（人民币）  订单手机号  订单详情  收货地址
+                        "使用时间","短信通知状态","短信通知次数","购买次数","优付优惠（本地）","优付优惠（人民币）","商户优惠（本地）","商户优惠（人民币）","收货地址"};
         String filename = "order.xls";
         HSSFWorkbook workbook=new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("订单列表");
@@ -174,6 +173,15 @@ public class OrderController {
             r.createCell(19).setCellValue(each.getStatusname());
             r.createCell(20).setCellValue(dateFormatter.format(timePattern,each.getCreatetime()));
             r.createCell(21).setCellValue(dateFormatter.format(timePattern,each.getUsetime()));
+            OrderDetail orderDetail = getOrderDetail(each.getId());
+            r.createCell(22).setCellValue(orderDetail.getSms_code()==null?"":orderDetail.getSms_code());
+            r.createCell(23).setCellValue(orderDetail.getSms_times()==null?"":orderDetail.getSms_times().toString());
+            r.createCell(24).setCellValue(orderDetail.getBuyNum()==null?"":orderDetail.getBuyNum().toString());
+            r.createCell(25).setCellValue(orderDetail.getSubsidy_youfusubsidyprice_Format()==null?"":orderDetail.getSubsidy_youfusubsidyprice_Format());
+            r.createCell(26).setCellValue(orderDetail.getSubsidy_youfusubsidykpprice_Format()==null?"":orderDetail.getSubsidy_youfusubsidykpprice_Format());
+            r.createCell(27).setCellValue(orderDetail.getSubsidy_mchsubsidyprice_Format()==null?"":orderDetail.getSubsidy_mchsubsidyprice_Format());
+            r.createCell(28).setCellValue(orderDetail.getSubsidy_mchsubsidykpprice_Format()==null?"":orderDetail.getSubsidy_mchsubsidykpprice_Format());
+            r.createCell(29).setCellValue(orderDetail.getLogistics_address()==null?"":orderDetail.getLogistics_address());
         }
     }
 
