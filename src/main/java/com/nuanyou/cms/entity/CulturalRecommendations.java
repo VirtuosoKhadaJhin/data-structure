@@ -27,7 +27,7 @@ public class CulturalRecommendations {
     private Boolean display;
     private Date createTime;
     private Date updateTime;
-    private Boolean deleted;
+    private Boolean deleted=false;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
