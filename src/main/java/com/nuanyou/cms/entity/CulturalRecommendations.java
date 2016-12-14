@@ -27,6 +27,7 @@ public class CulturalRecommendations {
     private Boolean display;
     private Date createTime;
     private Date updateTime;
+    private Boolean deleted;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -129,5 +130,13 @@ public class CulturalRecommendations {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+    @Column(name = "deleted")
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

@@ -44,6 +44,10 @@ public class OrderDetail {
         this.buyNum = buyNum;
     }
 
+    public OrderDetail(){
+
+    }
+
     public Integer getBuyNum() {
         return buyNum;
     }

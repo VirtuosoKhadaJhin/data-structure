@@ -40,13 +40,18 @@
                                 <div class="controls">
                                     <input name="sort" type="text" class="span11" value="$!entity.sort">
                                 </div>
+                                <label class="control-label">内容</label>
+                                <div class="controls">
+                                    <input name="content" type="text" class="span11" value="$!entity.content">
+                                </div>
+
                                 <label class="control-label">链接</label>
                                 <div class="controls">
                                     <input name="linkUrl" type="text" class="span11" value="$!entity.linkUrl">
                                 </div>
                                 <label class="control-label">图片</label>
                                 <div class="controls">
-                                    <input name="imgUrl" type="text" class="span9" id="imgUrl" placeholder="列表页门头图" value="$!entity.imgUrl">
+                                    <input name="imgUrl" type="text" class="span9" id="imgUrl"  value="$!entity.imgUrl">
                                     <button class="btn btn-success previewBtn" type="button" data-id="imgUrl">预览</button>
                                     <button class="btn btn-success uploadImgBtn" type="button" data-id="imgUrl">上传</button>
                                 </div>

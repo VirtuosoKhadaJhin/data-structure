@@ -150,7 +150,7 @@ public class Order {
         this.paytype = paytype;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mchid", nullable = true)
     public Merchant getMerchant() {
         return merchant;
@@ -161,8 +161,21 @@ public class Order {
     }
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid", referencedColumnName = "userid")
+
+    private Long userId;
+
+    @Column(name = "userid")
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    /* @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "userid", referencedColumnName = "userid")*/
+   @Transient
     public PasUserProfile getUser() {
         return user;
     }
