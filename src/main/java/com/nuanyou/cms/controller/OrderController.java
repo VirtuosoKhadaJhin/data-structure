@@ -8,6 +8,7 @@ import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.enums.OrderPayType;
 import com.nuanyou.cms.entity.enums.OrderType;
 import com.nuanyou.cms.entity.order.*;
+import com.nuanyou.cms.entity.user.PasUserProfile;
 import com.nuanyou.cms.model.OrderDetail;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.MerchantService;
@@ -33,10 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("order")
@@ -61,6 +59,9 @@ public class OrderController {
     @Autowired
     private OrderLogisticsDao orderLogisticsDao;
 
+    @Autowired
+    private PasUserProfileDao pasUserProfileDao;
+
     private static String timePattern="yyyy-MM-dd HH:mm:ss";
     private static String decimalPattern="#0.00";
 
@@ -81,7 +82,8 @@ public class OrderController {
     private OrderDetail getOrderDetail(Long id) {
         Order order=this.orderDao.findOne(id);
         OrderSms sms=this.orderSmsDao.findByOrderId(id);
-        OrderLogistics logistics=this.orderLogisticsDao.findByOrderId(id);
+        //OrderLogistics logistics=this.orderLogisticsDao.findByOrderId(id);
+        OrderLogistics logistics=null;
         Integer buyNum=this.orderService.getBuyNum(order);
         return new OrderDetail(
                 sms==null?null:sms.getCode(),
@@ -90,7 +92,7 @@ public class OrderController {
                 order==null?null:order.getYoufurmbreduce(),
                 order==null?null:order.getYoufulocalereduce(),
                 order==null?null:order.getMchrmbreduce(),
-                order==null?null:order.getMchlocalereduce(),
+                    order==null?null:order.getMchlocalereduce(),
                 buyNum
         );
     }
@@ -111,6 +113,14 @@ public class OrderController {
         List<OrderPayType> orderPayTypes=Arrays.asList( OrderPayType.values());
         List<Merchant> merchants = this.merchantService.getIdNameList();
         Page<Order> page = orderService.findByCondition(index, entity, time,pageable);
+        for (Order order : page.getContent()) {
+            PasUserProfile user=this.pasUserProfileDao.findByUserid(order.getUserId());
+            if(user!=null){
+                order.setUser(user);
+            }else{
+                order.setUser(null);
+            }
+        }
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
         model.addAttribute("countries", countries);
@@ -136,17 +146,26 @@ public class OrderController {
         HSSFSheet sheet = workbook.createSheet("订单列表");
         HSSFRow row = sheet.createRow(0);
         Page<Order> page = orderService.findByCondition(index, entity, time,null);
+        List<OrderDetail> orderDetails=new ArrayList<OrderDetail>();
+
+        Long begin=System.currentTimeMillis();
+        for (int i = 0; i < page.getContent().size(); i++) {
+            OrderDetail orderDetail = getOrderDetail(page.getContent().get(i).getId());
+            orderDetails.add(i,orderDetail);
+        }
         for (int i = 0; i < titles.length; i++) {
             HSSFCell c = row.createCell(i);
             c.setCellValue(titles[i]);
         }
+        Long end=System.currentTimeMillis();
+        System.out.println("时间差:"+(end-begin)/1000);
         NumberTool numberFormatter=new NumberTool();
         DateTool dateFormatter=new DateTool();
-        FillContent(sheet, page, numberFormatter, dateFormatter);
+        FillContent(sheet, page, numberFormatter, dateFormatter,orderDetails);
         setResponseOut(filename,workbook,request,response);
     }
 
-    private void FillContent(HSSFSheet sheet, Page<Order> page, NumberTool numberFormatter, DateTool dateFormatter) {
+    private void FillContent(HSSFSheet sheet, Page<Order> page, NumberTool numberFormatter, DateTool dateFormatter,List<OrderDetail> orderDetails) {
         for (int i = 0; i < page.getContent().size(); i++) {
             HSSFRow r = sheet.createRow(i+1);
             Order each=page.getContent().get(i);
@@ -173,7 +192,8 @@ public class OrderController {
             r.createCell(19).setCellValue(each.getStatusname());
             r.createCell(20).setCellValue(dateFormatter.format(timePattern,each.getCreatetime()));
             r.createCell(21).setCellValue(dateFormatter.format(timePattern,each.getUsetime()));
-            OrderDetail orderDetail = getOrderDetail(each.getId());
+            OrderDetail orderDetail=orderDetails.get(i);
+
             r.createCell(22).setCellValue(orderDetail.getSms_code()==null?"":orderDetail.getSms_code());
             r.createCell(23).setCellValue(orderDetail.getSms_times()==null?"":orderDetail.getSms_times().toString());
             r.createCell(24).setCellValue(orderDetail.getBuyNum()==null?"":orderDetail.getBuyNum().toString());

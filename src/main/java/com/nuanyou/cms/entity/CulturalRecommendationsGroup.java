@@ -20,10 +20,12 @@ public class CulturalRecommendationsGroup {
     private String linkUrl;
     private City city;
     private Long countryId;
+    private String imgUrl;
     private Integer sort;
     private Boolean display;
     private Date createTime;
     private Date updateTime;
+    private Boolean deleted=false;
 
     public CulturalRecommendationsGroup() {
     }
@@ -64,6 +66,14 @@ public class CulturalRecommendationsGroup {
         this.linkUrl = linkUrl;
     }
 
+    @Column(name = "imgurl", nullable = true, length = 100)
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 
 
 
@@ -124,5 +134,13 @@ public class CulturalRecommendationsGroup {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+    @Column(name = "deleted")
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }
