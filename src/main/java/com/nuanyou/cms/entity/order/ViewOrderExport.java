@@ -16,8 +16,8 @@ import java.util.Date;
  */
 @Entity
 @EntityListeners(DateEntityListener.class)
-@Table(name = "ny_order")
-public class Order {
+@Table(name = "view_export_order")
+public class ViewOrderExport {
     private Long id;
     private String ordersn;
     private String ordercode;
@@ -70,9 +70,39 @@ public class Order {
     private BigDecimal youfulocalereduce;//优付优惠金额
     private BigDecimal mchrmbreduce;//商户优惠人民币金额
     private BigDecimal mchlocalereduce;//商户优惠金额
-    private PasUserProfile user;
     private Coupon coupon;
+    private Long userId;
 
+    private String address;
+    private String postalcode;
+    private String username;
+    private String province;
+    private String district;
+    private String city;
+    private String tel;
+
+    private String merchantName;
+    private Long merchantId;
+    private String merchantKpname;
+
+
+    @Column(name = "merchantid")
+    public Long getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Long merchantId) {
+        this.merchantId = merchantId;
+    }
+
+    @Column(name = "merchantkpname")
+    public String getMerchantKpname() {
+        return merchantKpname;
+    }
+
+    public void setMerchantKpname(String merchantKpname) {
+        this.merchantKpname = merchantKpname;
+    }
 
     @Id
     @Column(name = "id", nullable = false)
@@ -154,7 +184,6 @@ public class Order {
 
 
 
-    private Long userId;
 
     @Column(name = "userid")
     public Long getUserId() {
@@ -165,16 +194,6 @@ public class Order {
         this.userId = userId;
     }
 
-    /* @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "userid", referencedColumnName = "userid")*/
-   @Transient
-    public PasUserProfile getUser() {
-        return user;
-    }
-
-    public void setUser(PasUserProfile user) {
-        this.user = user;
-    }
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -650,5 +669,70 @@ public class Order {
         this.mchlocalereduce = mchlocalereduce;
     }
 
+    @Column(name = "address")
+    public String getAddress() {
+        return address;
+    }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    @Column(name = "postalcode")
+    public String getPostalcode() {
+        return postalcode;
+    }
+
+    public void setPostalcode(String postalcode) {
+        this.postalcode = postalcode;
+    }
+    @Column(name = "username")
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    @Column(name = "province")
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+    @Column(name = "district")
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+    @Column(name = "city")
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+    @Column(name = "tel")
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+
+    @Column(name = "merchantname")
+    public String getMerchantName() {
+        return merchantName;
+    }
+
+    public void setMerchantName(String merchantName) {
+        this.merchantName = merchantName;
+    }
 }

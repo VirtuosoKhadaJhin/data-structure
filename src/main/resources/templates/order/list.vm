@@ -161,7 +161,7 @@
             #end
         </select>
         <button type="submit" class="btn btn-success">查询</button>
-       <!-- <a class="btn btn-warning export" href="javascript:void(0);">导出</a>-->
+        <a class="btn btn-warning export" href="javascript:void(0);">导出</a>
     </div>
 </form>
 #parse("common/list_end.vm")

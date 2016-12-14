@@ -82,8 +82,7 @@ public class OrderController {
     private OrderDetail getOrderDetail(Long id) {
         Order order=this.orderDao.findOne(id);
         OrderSms sms=this.orderSmsDao.findByOrderId(id);
-        //OrderLogistics logistics=this.orderLogisticsDao.findByOrderId(id);
-        OrderLogistics logistics=null;
+        OrderLogistics logistics=this.orderLogisticsDao.findByOrderId(id);
         Integer buyNum=this.orderService.getBuyNum(order);
         return new OrderDetail(
                 sms==null?null:sms.getCode(),
@@ -136,23 +135,18 @@ public class OrderController {
     @RequestMapping("export")
     public void export(@RequestParam(required = false, defaultValue = "1") int index,  Model model,
                        HttpServletRequest request,HttpServletResponse response,
-                       Order entity, TimeCondition time) throws IOException {
+                       ViewOrderExport entity, TimeCondition time) throws IOException {
+        //"短信通知状态","短信通知次数","购买次数","优付优惠（本地）","优付优惠（人民币）","商户优惠（本地）","商户优惠（人民币）","收货地址"
         String[] titles=new String[]{
-                        "序号","ID","订单ID","渠道","订单类型","支付类型","来源平台","来源系统","使用码","商户中文名称","商户本地名称",
-                        "userid","购买人","优惠券/面值/本地面值","总价(本地)","原价(本地)","总价(人民币)","原价(人民币)","商户优付补贴","订单状态","下单时间",
-                        "使用时间","短信通知状态","短信通知次数","购买次数","优付优惠（本地）","优付优惠（人民币）","商户优惠（本地）","商户优惠（人民币）","收货地址"};
+                         "序号","ID","订单ID","渠道","订单类型","支付类型","来源平台","来源系统","使用码","商户中文名称",
+                         "用户ID","用户名","商户本地名称", "总价(本地)","原价(本地)","总价(人民币)","原价(人民币)","商户优付补贴","订单状态","下单时间",
+                         "使用时间","地址","邮编","省会","区","城市","电话"};
         String filename = "order.xls";
         HSSFWorkbook workbook=new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("订单列表");
         HSSFRow row = sheet.createRow(0);
-        Page<Order> page = orderService.findByCondition(index, entity, time,null);
-        List<OrderDetail> orderDetails=new ArrayList<OrderDetail>();
-
+        Page<ViewOrderExport> page = orderService.findExportByCondition(index, entity, time,null);
         Long begin=System.currentTimeMillis();
-        for (int i = 0; i < page.getContent().size(); i++) {
-            OrderDetail orderDetail = getOrderDetail(page.getContent().get(i).getId());
-            orderDetails.add(i,orderDetail);
-        }
         for (int i = 0; i < titles.length; i++) {
             HSSFCell c = row.createCell(i);
             c.setCellValue(titles[i]);
@@ -161,14 +155,14 @@ public class OrderController {
         System.out.println("时间差:"+(end-begin)/1000);
         NumberTool numberFormatter=new NumberTool();
         DateTool dateFormatter=new DateTool();
-        FillContent(sheet, page, numberFormatter, dateFormatter,orderDetails);
+        FillContent(sheet, page, numberFormatter, dateFormatter);
         setResponseOut(filename,workbook,request,response);
     }
 
-    private void FillContent(HSSFSheet sheet, Page<Order> page, NumberTool numberFormatter, DateTool dateFormatter,List<OrderDetail> orderDetails) {
+    private void FillContent(HSSFSheet sheet, Page<ViewOrderExport> page, NumberTool numberFormatter, DateTool dateFormatter) {
         for (int i = 0; i < page.getContent().size(); i++) {
             HSSFRow r = sheet.createRow(i+1);
-            Order each=page.getContent().get(i);
+            ViewOrderExport each=page.getContent().get(i);
             r.createCell(0).setCellValue(i+1);
             r.createCell(1).setCellValue(each.getId());
             r.createCell(2).setCellValue(each.getOrdersn());
@@ -178,30 +172,27 @@ public class OrderController {
             r.createCell(6).setCellValue(each.getPlatform()==null?"":each.getPlatform().getName());
             r.createCell(7).setCellValue(each.getOs()==null?"":each.getOs().getName());
             r.createCell(8).setCellValue(each.getOrdercode());
-            r.createCell(9).setCellValue(each.getMerchant()==null?"":each.getMerchant().getName());
-            r.createCell(10).setCellValue(each.getMerchant()==null?"":each.getMerchant().getKpname());
-            r.createCell(11).setCellValue(each.getUser()==null?"":each.getUser().getUserid().toString());
-            r.createCell(12).setCellValue(each.getUser()==null?"":each.getUser().getNickname());
-            r.createCell(13).setCellValue(each.getCoupon()==null?"":
-                    each.getCoupon().getTitle()+"/"+each.getCoupon().getPrice()+"/"+each.getCoupon().getLocalPrice());
-            r.createCell(14).setCellValue(numberFormatter.format(decimalPattern,each.getKpprice()));
-            r.createCell(15).setCellValue(numberFormatter.format(decimalPattern,each.getOkpprice()));
-            r.createCell(16).setCellValue(each.getPayable()==null?each.getPrice().doubleValue():each.getPayable().doubleValue());
-            r.createCell(17).setCellValue(each.getOprice()==null?"":each.getOprice().toPlainString());
-            r.createCell(18).setCellValue(each.getMerchantsubsidy()==null?"":each.getMerchantsubsidy().toPlainString());
-            r.createCell(19).setCellValue(each.getStatusname());
-            r.createCell(20).setCellValue(dateFormatter.format(timePattern,each.getCreatetime()));
-            r.createCell(21).setCellValue(dateFormatter.format(timePattern,each.getUsetime()));
-            OrderDetail orderDetail=orderDetails.get(i);
+            r.createCell(9).setCellValue(each.getMerchantName()==null?"":each.getMerchantName());
 
-            r.createCell(22).setCellValue(orderDetail.getSms_code()==null?"":orderDetail.getSms_code());
-            r.createCell(23).setCellValue(orderDetail.getSms_times()==null?"":orderDetail.getSms_times().toString());
-            r.createCell(24).setCellValue(orderDetail.getBuyNum()==null?"":orderDetail.getBuyNum().toString());
-            r.createCell(25).setCellValue(orderDetail.getSubsidy_youfusubsidyprice_Format()==null?"":orderDetail.getSubsidy_youfusubsidyprice_Format());
-            r.createCell(26).setCellValue(orderDetail.getSubsidy_youfusubsidykpprice_Format()==null?"":orderDetail.getSubsidy_youfusubsidykpprice_Format());
-            r.createCell(27).setCellValue(orderDetail.getSubsidy_mchsubsidyprice_Format()==null?"":orderDetail.getSubsidy_mchsubsidyprice_Format());
-            r.createCell(28).setCellValue(orderDetail.getSubsidy_mchsubsidykpprice_Format()==null?"":orderDetail.getSubsidy_mchsubsidykpprice_Format());
-            r.createCell(29).setCellValue(orderDetail.getLogistics_address()==null?"":orderDetail.getLogistics_address());
+            r.createCell(10).setCellValue(each.getMerchantKpname()==null?"":each.getMerchantKpname());
+            r.createCell(11).setCellValue(each.getUserId()==null?"":each.getUserId().toString());
+            r.createCell(12).setCellValue(each.getUsername()==null?"":each.getUsername());
+            //r.createCell(13).setCellValue(each.getCoupon()==null?"":each.getCoupon().getTitle()+"/"+each.getCoupon().getPrice()+"/"+each.getCoupon().getLocalPrice());
+            r.createCell(13).setCellValue(numberFormatter.format(decimalPattern,each.getKpprice()));
+            r.createCell(14).setCellValue(numberFormatter.format(decimalPattern,each.getOkpprice()));
+            r.createCell(15).setCellValue(each.getPayable()==null?each.getPrice().doubleValue():each.getPayable().doubleValue());
+            r.createCell(16).setCellValue(each.getOprice()==null?"":each.getOprice().toPlainString());
+            r.createCell(17).setCellValue(each.getMerchantsubsidy()==null?"":each.getMerchantsubsidy().toPlainString());
+            r.createCell(18).setCellValue(each.getStatusname());
+            r.createCell(19).setCellValue(dateFormatter.format(timePattern,each.getCreatetime()));
+
+            r.createCell(20).setCellValue(dateFormatter.format(timePattern,each.getUsetime()));
+            r.createCell(21).setCellValue(each.getAddress()==null?"":each.getAddress());
+            r.createCell(22).setCellValue(each.getPostalcode()==null?"":each.getPostalcode());
+            r.createCell(23).setCellValue(each.getProvince()==null?"":each.getProvince());
+            r.createCell(24).setCellValue(each.getDistrict()==null?"":each.getDistrict());
+            r.createCell(25).setCellValue(each.getCity()==null?"":each.getCity());
+            r.createCell(26).setCellValue(each.getTel()==null?"":each.getTel());
         }
     }
 
@@ -292,7 +283,17 @@ public class OrderController {
        response.sendRedirect( "../order/refundEdit?refundEdit=3&id="+id);
         return null;
     }
+//
+    //OrderDetail orderDetail=orderDetails.get(i);
 
+        /*    r.createCell(22).setCellValue(orderDetail.getSms_code()==null?"":orderDetail.getSms_code());
+            r.createCell(23).setCellValue(orderDetail.getSms_times()==null?"":orderDetail.getSms_times().toString());
+            r.createCell(24).setCellValue(orderDetail.getBuyNum()==null?"":orderDetail.getBuyNum().toString());
+            r.createCell(25).setCellValue(orderDetail.getSubsidy_youfusubsidyprice_Format()==null?"":orderDetail.getSubsidy_youfusubsidyprice_Format());
+            r.createCell(26).setCellValue(orderDetail.getSubsidy_youfusubsidykpprice_Format()==null?"":orderDetail.getSubsidy_youfusubsidykpprice_Format());
+            r.createCell(27).setCellValue(orderDetail.getSubsidy_mchsubsidyprice_Format()==null?"":orderDetail.getSubsidy_mchsubsidyprice_Format());
+            r.createCell(28).setCellValue(orderDetail.getSubsidy_mchsubsidykpprice_Format()==null?"":orderDetail.getSubsidy_mchsubsidykpprice_Format());
+            r.createCell(29).setCellValue(orderDetail.getLogistics_address()==null?"":orderDetail.getLogistics_address());*/
 
 
 }
