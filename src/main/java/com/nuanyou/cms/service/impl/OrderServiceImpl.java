@@ -2,10 +2,7 @@ package com.nuanyou.cms.service.impl;
 
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
-import com.nuanyou.cms.dao.CouponDao;
-import com.nuanyou.cms.dao.OrderDao;
-import com.nuanyou.cms.dao.OrderVouchCardDao;
-import com.nuanyou.cms.dao.UserCardItemDao;
+import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.UserCardItem;
 import com.nuanyou.cms.entity.coupon.Coupon;
 import com.nuanyou.cms.entity.enums.CardStatusEnum;
@@ -13,6 +10,7 @@ import com.nuanyou.cms.entity.enums.CouponStatusEnum;
 import com.nuanyou.cms.entity.order.Order;
 import com.nuanyou.cms.entity.order.OrderRefundLog;
 import com.nuanyou.cms.entity.order.OrderVouchCard;
+import com.nuanyou.cms.entity.order.ViewOrderExport;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.OrderRefundLogService;
 import com.nuanyou.cms.service.OrderService;
@@ -44,6 +42,8 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
+    private ViewOrderExportDao viewOrderExportDao;
+    @Autowired
     private OrderDao orderDao;
     @Autowired
     private OrderRefundLogService orderRefundLogService;
@@ -56,8 +56,7 @@ public class OrderServiceImpl implements OrderService {
     private CouponDao couponDao;
 
     @Override
-    public Page<Order> findByCondition(Integer index, final Order entity, final TimeCondition time) {
-        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "id");
+    public Page<Order> findByCondition(Integer index, final Order entity, final TimeCondition time, Pageable pageable) {
         return orderDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
@@ -110,6 +109,63 @@ public class OrderServiceImpl implements OrderService {
         }, pageable);
     }
 
+
+
+
+    @Override
+    public Page<ViewOrderExport> findExportByCondition(Integer index, final ViewOrderExport entity, final TimeCondition time, Pageable pageable) {
+        return viewOrderExportDao.findAll(new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (time.getBegin() != null) {
+                    Predicate p = cb.greaterThanOrEqualTo(root.get("createtime").as(Date.class), time.getBegin());
+                    predicate.add(p);
+                }
+                if (time.getEnd() != null) {
+                    Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd());
+                    predicate.add(p);
+                }
+                if(!StringUtils.isEmpty(entity.getMerchantKpname())){
+                    Predicate p = cb.equal(root.get("merchantKpname"), entity.getMerchantKpname());
+                    predicate.add(p);
+                }
+                if (entity.getMerchantId()!=null) {
+                    Predicate p = cb.equal(root.get("merchantId"), entity.getMerchantId());
+                    predicate.add(p);
+                }
+                if (!StringUtils.isEmpty(entity.getSceneid())) {
+                    Predicate p = cb.equal(root.get("sceneid"), entity.getSceneid());
+                    predicate.add(p);
+                }
+                if (!StringUtils.isEmpty(entity.getOrdersn())) {
+                    Predicate p = cb.equal(root.get("ordersn"), entity.getOrdersn());
+                    predicate.add(p);
+                }
+                if (entity.getOrdertype() != null) {
+                    Predicate p = cb.equal(root.get("ordertype"), entity.getOrdertype());
+                    cb.or(p,p);
+                    predicate.add(p);
+                }
+                if (entity.getPaytype() != null) {
+                    Predicate p = cb.equal(root.get("paytype"), entity.getPaytype());
+                    predicate.add(p);
+                }
+                if (entity.getOrderstatus() != null) {
+                    Predicate p = cb.equal(root.get("orderstatus"), entity.getOrderstatus());
+                    predicate.add(p);
+                }
+
+                if (entity.getMerchant() != null && entity.getMerchant().getDistrict() != null && entity.getMerchant().getDistrict().getCountry() != null
+                        && entity.getMerchant().getDistrict().getCountry().getId() != null) {
+                    Predicate p = cb.equal(root.get("merchant").get("district").get("country").get("id"), entity.getMerchant().getDistrict().getCountry().getId());
+                    predicate.add(p);
+                }
+                Predicate[] pre = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(pre)).getRestriction();
+            }
+        }, pageable);
+    }
     @Override
     public Integer getBuyNum(Order order) {
         if (order.getUser() == null) {
@@ -138,7 +194,6 @@ public class OrderServiceImpl implements OrderService {
                 throw new APIException(ResultCodes.RefundingSuccess, " Detail：OrderID" + order.getId());
             }
         }
-
         order.setRefundremark(entity.getRefundremark());
         order.setId(entity.getId());
         order.setStatusname("已申请退款");
@@ -184,7 +239,7 @@ public class OrderServiceImpl implements OrderService {
         if (order == null) {
             return;
         }
-        if (order != null && order.getRefundstatus() != 201) {
+        if (order.getRefundstatus() != 201) {
             throw new APIException(ResultCodes.Audited);
         } else {
             order.setRefundaudittime(DateUtils.newDate());
@@ -196,7 +251,6 @@ public class OrderServiceImpl implements OrderService {
             order.setStatusname("退款成功");
         }
         this.saveNotNull(order);
-
         OrderRefundLog log = new OrderRefundLog();
         log.setOrder(order);
         log.setCmsusername(cmsusername);

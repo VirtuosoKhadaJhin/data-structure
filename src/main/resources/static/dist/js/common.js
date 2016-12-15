@@ -20,7 +20,6 @@ window.onload = function () {
         yearEnd: 2050,
         todayButton: false
     });
-
     var attr = $("a:contains('返回')").attr("href");
     if (attr) {
         if (attr.indexOf("?") == -1) {
