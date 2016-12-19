@@ -16,6 +16,7 @@ import com.nuanyou.cms.service.OrderService;
 import com.nuanyou.cms.util.ConvertFileEncoding;
 import com.nuanyou.cms.util.DateUtils;
 import com.nuanyou.cms.util.TimeCondition;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -139,7 +140,7 @@ public class OrderController {
         //"短信通知状态","短信通知次数","购买次数","优付优惠（本地）","优付优惠（人民币）","商户优惠（本地）","商户优惠（人民币）","收货地址"
         String[] titles=new String[]{
                          "序号","ID","订单ID","渠道","订单类型","支付类型","来源平台","来源系统","使用码","商户中文名称",
-                         "用户ID","用户名","商户本地名称", "总价(本地)","原价(本地)","总价(人民币)","原价(人民币)","商户优付补贴","订单状态","下单时间",
+                         "商户本地名称","用户ID","用户名", "总价(本地)","原价(本地)","总价(人民币)","原价(人民币)","商户优付补贴","订单状态","下单时间",
                          "使用时间","地址","邮编","省会","区","城市","电话"};
         String filename = "order.xls";
         HSSFWorkbook workbook=new HSSFWorkbook();
@@ -172,9 +173,8 @@ public class OrderController {
             r.createCell(6).setCellValue(each.getPlatform()==null?"":each.getPlatform().getName());
             r.createCell(7).setCellValue(each.getOs()==null?"":each.getOs().getName());
             r.createCell(8).setCellValue(each.getOrdercode());
-            r.createCell(9).setCellValue(each.getMerchantName()==null?"":each.getMerchantName());
-
-            r.createCell(10).setCellValue(each.getMerchantKpname()==null?"":each.getMerchantKpname());
+            r.createCell(9).setCellValue(each.getMerchant()==null|| StringUtils.isEmpty(each.getMerchant().getName())?"":each.getMerchant().getName());
+            r.createCell(10).setCellValue(each.getMerchant()==null|| StringUtils.isEmpty(each.getMerchant().getKpname())?"":each.getMerchant().getKpname());
             r.createCell(11).setCellValue(each.getUserId()==null?"":each.getUserId().toString());
             r.createCell(12).setCellValue(each.getUsername()==null?"":each.getUsername());
             //r.createCell(13).setCellValue(each.getCoupon()==null?"":each.getCoupon().getTitle()+"/"+each.getCoupon().getPrice()+"/"+each.getCoupon().getLocalPrice());

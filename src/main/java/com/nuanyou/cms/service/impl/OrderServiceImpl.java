@@ -126,12 +126,12 @@ public class OrderServiceImpl implements OrderService {
                     Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd());
                     predicate.add(p);
                 }
-                if(!StringUtils.isEmpty(entity.getMerchantKpname())){
-                    Predicate p = cb.equal(root.get("merchantKpname"), entity.getMerchantKpname());
+                if(entity.getMerchant()!=null&&!StringUtils.isEmpty(entity.getMerchant().getKpname())){
+                    Predicate p = cb.equal(root.get("merchant").get("kpname"), entity.getMerchant().getKpname());
                     predicate.add(p);
                 }
-                if (entity.getMerchantId()!=null) {
-                    Predicate p = cb.equal(root.get("merchantId"), entity.getMerchantId());
+                if (entity.getMerchant()!=null&&entity.getMerchant().getId()!=null) {
+                    Predicate p = cb.equal(root.get("merchant").get("id"), entity.getId());
                     predicate.add(p);
                 }
                 if (!StringUtils.isEmpty(entity.getSceneid())) {
