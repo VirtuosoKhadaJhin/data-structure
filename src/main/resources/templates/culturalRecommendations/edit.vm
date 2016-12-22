@@ -43,7 +43,7 @@
                                 <label class="control-label">内容</label>
                                 <div class="controls">
                                     <input name="content" type="text" class="span11" value="$!entity.content">
-                                </div>
+                                </div>-
 
                                 <label class="control-label">链接</label>
                                 <div class="controls">

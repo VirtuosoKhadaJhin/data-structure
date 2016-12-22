@@ -28,11 +28,12 @@
                             <div class="control-group">
                                 <span class="col-sm-2 control-label">ID</span>
                                 <div class="controls">
-                                    #if($!type==2)
+                                    #if($!type==1)
+                                       &nbsp;
+                                    #elseif($!type==2)
                                         <input name="id" readonly type="text" class="form-control" placeholder="ID"
                                                value="$!entity.id">
-                                    #end
-                                    #if($!type==3)
+                                    #elseif($!type==3)
                                         <label>$!entity.id</label>
                                     #end
                                 </div>
