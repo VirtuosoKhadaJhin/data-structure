@@ -29,12 +29,14 @@
                             <form action="update" method="post" class="form-horizontal featureValidate" role="form" id="">
                                 <div class="control-group">
                                     <span class="col-sm-2 control-label">ID</span>
+
                                     <div class="controls">
-                                        #if($!type==2)
+                                        #if($!type==1)
+                                            &nbsp;
+                                        #elseif($!type==2)
                                             <input name="id" readonly type="text" class="form-control" placeholder="ID"
                                                    value="$!entity.id">
-                                        #end
-                                        #if($!type==3)
+                                        #elseif($!type==3)
                                             <label>$!entity.id</label>
                                         #end
                                     </div>
@@ -82,7 +84,7 @@
                                     <label class="control-label">阅读量</label>
                                     <div class="controls">
                                         <input name="readnum" for="readnum" type="text" class="span11"
-                                               placeholder="英文名称"
+                                               placeholder="阅读量"
                                                value="$!entity.readnum">
                                     </div>
                                     <label class="control-label">点赞数量</label>
