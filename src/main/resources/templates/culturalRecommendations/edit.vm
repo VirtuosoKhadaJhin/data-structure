@@ -51,9 +51,9 @@
                                 </div>
                                 <label class="control-label">图片</label>
                                 <div class="controls">
-                                    <input name="imgUrl" type="text" class="span9" id="imgUrl"  value="$!entity.imgUrl">
+                                    <input name="imgUrl" type="text" class="span9" id="imgUrl" value="$!entity.imgUrl">
                                     <button class="btn btn-success previewBtn" type="button" data-id="imgUrl">预览</button>
-                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="imgUrl">上传</button>
+                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="imgUrl" data-width="200" data-height="200">上传</button>
                                 </div>
                             </div>
                             <div class="form-actions">

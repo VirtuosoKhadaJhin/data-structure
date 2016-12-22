@@ -81,28 +81,9 @@ public class ViewOrderExport {
     private String city;
     private String tel;
 
-    private String merchantName;
-    private Long merchantId;
-    private String merchantKpname;
 
 
-    @Column(name = "merchantid")
-    public Long getMerchantId() {
-        return merchantId;
-    }
 
-    public void setMerchantId(Long merchantId) {
-        this.merchantId = merchantId;
-    }
-
-    @Column(name = "merchantkpname")
-    public String getMerchantKpname() {
-        return merchantKpname;
-    }
-
-    public void setMerchantKpname(String merchantKpname) {
-        this.merchantKpname = merchantKpname;
-    }
 
     @Id
     @Column(name = "id", nullable = false)
@@ -172,7 +153,7 @@ public class ViewOrderExport {
         this.paytype = paytype;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "mchid", nullable = true)
     public Merchant getMerchant() {
         return merchant;
@@ -727,12 +708,4 @@ public class ViewOrderExport {
     }
 
 
-    @Column(name = "merchantname")
-    public String getMerchantName() {
-        return merchantName;
-    }
-
-    public void setMerchantName(String merchantName) {
-        this.merchantName = merchantName;
-    }
 }

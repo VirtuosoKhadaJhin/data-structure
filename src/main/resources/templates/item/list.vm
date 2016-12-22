@@ -60,7 +60,7 @@
     </div>
     <div class="control-group">
         <label>商品分类名称：</label>
-        <input type="text" name="name" class="span11" value="$!entity.name" placeholder="商品分类名称"/>
+        <input type="text" name="cat.name" class="span11" value="$!entity.cat.name" placeholder="商品分类名称"/>
     </div>
     <div class="control-group">
         <button type="submit" class="btn btn-primary">查询</button>
