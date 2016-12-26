@@ -156,14 +156,17 @@ public class MerchantController {
     }
 
     @RequestMapping("export")
-    public void export(Merchant entity, HttpServletResponse response, Model model) throws IOException {
+    public void export(Merchant entity, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=" + "UTF-8");
         response.setHeader("Pragma", "public");
         response.setHeader("Cache-Control", "max-age=30");
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("商户列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
-        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("name", contains().ignoreCase());
-        List<Merchant> list = merchantDao.findAll(Example.of(entity, matcher));
+
+        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("name", contains().ignoreCase()).withMatcher("kpname", contains().ignoreCase());
+        BeanUtils.cleanEmpty(entity);
+        List<Merchant> list = merchantDao.findAll(Example.of(entity, matcher), new Sort(Sort.Direction.DESC, "id"));
+
 
 //        for (Merchant merchant : list) {
 //            Long id = merchant.getId();
