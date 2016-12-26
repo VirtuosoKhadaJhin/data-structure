@@ -161,7 +161,7 @@
 <script type="text/javascript">
     $(function () {
         $(".export").on("click", function () {
-            var form = $("#serch");
+            var form = $(document.forms[0]);
             form.attr("action", "export");
             form.submit();
             form.attr("action", "");
