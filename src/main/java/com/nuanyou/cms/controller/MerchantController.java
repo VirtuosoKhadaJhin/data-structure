@@ -177,7 +177,7 @@ public class MerchantController {
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
         propertyHeaderMap.put("id", "商户id");
         propertyHeaderMap.put("name", "名称（中文）");
-        propertyHeaderMap.put("kname", "名称（本地）");
+        propertyHeaderMap.put("kpname", "名称（本地）");
         propertyHeaderMap.put("telphone", "商家电话");
         propertyHeaderMap.put("address", "地址（中文）");
         propertyHeaderMap.put("kpaddress", "地址（本地）");
@@ -208,7 +208,7 @@ public class MerchantController {
 //        propertyHeaderMap.put("name", "商户用户开始时间");
 //        propertyHeaderMap.put("name", "商户用户结束时间");
 //        propertyHeaderMap.put("name", "国家");
-        XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook("测试tab", propertyHeaderMap, list);
+        XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, list);
         OutputStream os = response.getOutputStream();
         ex.write(os);
 

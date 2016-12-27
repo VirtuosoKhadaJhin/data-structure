@@ -5,12 +5,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.*;
 
 import java.awt.Color;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -18,96 +12,48 @@ public class ExcelUtil {
 
     /**
      * 根据输入的数据生成一个XSSFWorkbook
-     *
-     * @param title：sheet名称
-     * @param propertyHeaderMap：<property, header>（<T中的property名称、有getter就行, 对应显示在Excel sheet中的列标题>）
-     *                                     用LinkedHashMap保证读取的顺序和put的顺序一样
-     * @param dataSet：实体类集合
-     * @return：XSSFWorkbook
      */
-    public static <T> XSSFWorkbook generateXlsxWorkbook(String title, LinkedHashMap<String, String> propertyHeaderMap, Collection<T> dataSet) {
-        // 声明一个工作薄
+    public static <T> XSSFWorkbook generateXlsxWorkbook(LinkedHashMap<String, String> titleMap, Collection<T> dataSet) {
         XSSFWorkbook workbook = new XSSFWorkbook();
-        // 生成一个表格
-        XSSFSheet sheet = workbook.createSheet(title);
-        // 设置表格默认列宽度为15个字节
-        sheet.setDefaultColumnWidth((int) 15);
+        XSSFSheet sheet = workbook.createSheet("sheet1");
+        sheet.setDefaultColumnWidth(15);
 
         XSSFCellStyle headerStyle = getHeaderStyle(workbook);
         XSSFCellStyle contentStyle = getContentStyle(workbook);
 
-        // 生成表格标题行
         XSSFRow row = sheet.createRow(0);
         int i = 0;
-        for (String key : propertyHeaderMap.keySet()) {
-            XSSFCell cell = row.createCell(i);
+        for (String key : titleMap.keySet()) {
+            XSSFCell cell = row.createCell(i++);
             cell.setCellStyle(headerStyle);
-            XSSFRichTextString text = new XSSFRichTextString(propertyHeaderMap.get(key));
-            cell.setCellValue(text);
-            i++;
+            cell.setCellValue(new XSSFRichTextString(titleMap.get(key)));
         }
 
-        //循环dataSet，每一条对应一行
-        int index = 0;
+        int rowNo = 1;
         for (T data : dataSet) {
-            index++;
-            row = sheet.createRow(index);
+            row = sheet.createRow(rowNo++);
 
-            int j = 0;
-            for (String property : propertyHeaderMap.keySet()) {
-                XSSFCell cell = row.createCell(j);
+            int cellNo = 0;
+            for (String property : titleMap.keySet()) {
+                XSSFCell cell = row.createCell(cellNo++);
                 cell.setCellStyle(contentStyle);
 
-                //拼装getter方法名
-                String getMethodName = "get" + property.substring(0, 1).toUpperCase() + property.substring(1);
+                String textValue = null;
 
-                try {
-                    //利用反射机制获取dataSet中的属性值，填进cell中
-                    Class<? extends Object> tCls = data.getClass();
-                    Method getMethod = tCls.getMethod(getMethodName, new Class[]{});
-                    Object value = getMethod.invoke(data, new Object[]{}); //调用getter从data中获取数据
-
-                    // 判断值的类型后进行类型转换
-                    String textValue = null;
-                    if (value instanceof Date) {
-                        Date date = (Date) value;
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                        textValue = sdf.format(date);
-                    } else {
-                        // 其它数据类型都当作字符串简单处理
+                Object value = BeanUtils.getValue(data, property);
+                if (value != null)
+                    if (value instanceof Date)
+                        textValue = DateUtils.format((Date) value);
+                    else
                         textValue = value.toString();
-                    }
-
-					/*if(textValue != null){
-                        Pattern p = Pattern.compile("^//d+(//.//d+)?$");
-						Matcher matcher = p.matcher(textValue);
-						if (matcher.matches()) {
-							// 是数字当作double处理
-							cell.setCellValue(Double.parseDouble(textValue));
-						} else {
-							XSSFRichTextString richString = new XSSFRichTextString(textValue);
-							cell.setCellValue(richString);
-						}
-					}*/
-
-                    XSSFRichTextString richString = new XSSFRichTextString(textValue);
-                    cell.setCellValue(richString);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                j++;
+                cell.setCellValue(new XSSFRichTextString(textValue));
             }
         }
-
         return workbook;
-
     }
 
     /**
      * 生成一个标题style
-     *
-     * @return style
      */
     public static XSSFCellStyle getHeaderStyle(Workbook workbook) {
         return getHeaderStyle(workbook, Color.WHITE, IndexedColors.BLACK.getIndex());
@@ -115,11 +61,6 @@ public class ExcelUtil {
 
     /**
      * 生成一个指定颜色的标题style
-     *
-     * @param workbook
-     * @param foregroundColor
-     * @param fontColor
-     * @return
      */
     public static XSSFCellStyle getHeaderStyle(Workbook workbook, Color foregroundColor, short fontColor) {
 
@@ -146,9 +87,6 @@ public class ExcelUtil {
 
     /**
      * 生成一个用于内容的style
-     *
-     * @param workbook
-     * @return
      */
     public static XSSFCellStyle getContentStyle(Workbook workbook) {
         // 生成并设置另一个样式（用于内容）
@@ -170,26 +108,26 @@ public class ExcelUtil {
         return style;
     }
 
-/*    //测试：
-    public static void main(String[] args) {
-        List dataSet = new ArrayList<>();
-
-        LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
-        //propertyHeaderMap.put("id", "唯一标识"); //注释掉，不导出id
-        propertyHeaderMap.put("name", "姓名");
-        propertyHeaderMap.put("age", "年龄");
-        propertyHeaderMap.put("sexName", "性别"); //直接获取Student中的sexName，而不是sex
-        propertyHeaderMap.put("birthday", "生日");
-
-        try {
-            XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook("测试tab", propertyHeaderMap, dataSet);
-            OutputStream out = new FileOutputStream("F://student3.xlsx");
-            ex.write(out);
-            System.out.println("导出成功！");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
+    //测试：
+//    public static void main(String[] args) {
+//        List dataSet = new ArrayList<>();
+//
+//        LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
+//        //propertyHeaderMap.put("id", "唯一标识"); //注释掉，不导出id
+//        propertyHeaderMap.put("name", "姓名");
+//        propertyHeaderMap.put("age", "年龄");
+//        propertyHeaderMap.put("sexName", "性别"); //直接获取Student中的sexName，而不是sex
+//        propertyHeaderMap.put("birthday", "生日");
+//
+//        try {
+//            XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, dataSet);
+//            OutputStream out = new FileOutputStream("F://student3.xlsx");
+//            ex.write(out);
+//            System.out.println("导出成功！");
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
