@@ -54,22 +54,27 @@
     </tbody>
 </table>
 #parse("common/list_mid.vm")
-<form >
-
-
-
-
-    <div class="form-group">
-        <div class="input-group">
-            <div class="input-group-addon">退款状态</div>
-            <select name="refundstatus" class="span11">
-                <option value="">全部</option>
-                <option value="201" #if($!entity.refundstatus == 201) selected #end>未审核</option>
-                <option value="202" #if($!entity.refundstatus == 202) selected #end>退款失败</option>
-                <option value="203" #if($!entity.refundstatus == 203) selected #end>退款成功</option>
-            </select>
-        </div>
+<form class="form-horizontal " role="form" method="get">
+    <div class="control-group">
+        <label>ID：</label>
+        <input type="text" class="span11" name="id" value="$!entity.id" placeholder="ID">
     </div>
+
+    <div class="control-group">
+        <label>订单编号：</label>
+        <input type="text" class="span11" name="ordersn" value="$!entity.ordersn" placeholder="订单编号">
+    </div>
+
+    <div class="control-group">
+        <div class="input-group-addon">退款状态</div>
+        <select name="refundstatus" class="span11">
+            <option value="201" #if($!entity.refundstatus == 201) selected #end>未审核</option>
+            <option value="202" #if($!entity.refundstatus == 202) selected #end>退款失败</option>
+            <option value="203" #if($!entity.refundstatus == 203) selected #end>退款成功</option>
+        </select>
+    </div>
+
+
     <button type="submit" class="btn btn-primary">查询</button>
 </form>
 #parse("common/list_end.vm")

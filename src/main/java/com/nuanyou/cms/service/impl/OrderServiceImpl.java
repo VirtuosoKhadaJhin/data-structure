@@ -214,6 +214,8 @@ public class OrderServiceImpl implements OrderService {
         return orderDao.save(oldEntity);
     }
 
+
+    private static Integer unaudited=201;
     @Override
     public Page<Order> findRefundByCondition(int index, final Order entity, final TimeCondition time) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "refundtime");
@@ -221,8 +223,16 @@ public class OrderServiceImpl implements OrderService {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
-                if (entity.getRefundstatus() != null) {
-                    Predicate p1 = cb.equal(root.get("refundstatus"), entity.getRefundstatus());
+                if (entity.getRefundstatus() == null) {
+                    entity.setRefundstatus(unaudited);
+                }
+                Predicate pStatus = cb.equal(root.get("refundstatus"), entity.getRefundstatus());
+                predicate.add(pStatus);
+                if(entity.getId()!=null){
+                    Predicate p1 = cb.equal(root.get("id"), entity.getId());
+                    predicate.add(p1);
+                }if(org.apache.commons.lang3.StringUtils.isNotEmpty(entity.getOrdersn()) ){
+                    Predicate p1 = cb.equal(root.get("ordersn"), entity.getOrderstatus());
                     predicate.add(p1);
                 }
                 Predicate[] pre = new Predicate[predicate.size()];
