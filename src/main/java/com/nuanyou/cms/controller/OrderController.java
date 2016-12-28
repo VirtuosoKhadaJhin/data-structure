@@ -140,8 +140,8 @@ public class OrderController {
         //"短信通知状态","短信通知次数","购买次数","优付优惠（本地）","优付优惠（人民币）","商户优惠（本地）","商户优惠（人民币）","收货地址"
         String[] titles=new String[]{
                          "序号","ID","订单ID","渠道","订单类型","支付类型","来源平台","来源系统","使用码","商户中文名称",
-                         "商户本地名称","用户ID","用户名", "总价(本地)","原价(本地)","总价(人民币)","原价(人民币)","商户优付补贴","订单状态","下单时间",
-                         "使用时间","地址","邮编","省会","区","城市","电话"};
+                         "商户本地名称","用户ID", "总价(本地)","原价(本地)","总价(人民币)","原价(人民币)","订单状态","下单时间", "使用时间","地址",
+                         "邮编","省会","区","城市","电话"};
         String filename = "order.xls";
         HSSFWorkbook workbook=new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("订单列表");
@@ -176,23 +176,21 @@ public class OrderController {
             r.createCell(9).setCellValue(each.getMerchant()==null|| StringUtils.isEmpty(each.getMerchant().getName())?"":each.getMerchant().getName());
             r.createCell(10).setCellValue(each.getMerchant()==null|| StringUtils.isEmpty(each.getMerchant().getKpname())?"":each.getMerchant().getKpname());
             r.createCell(11).setCellValue(each.getUserId()==null?"":each.getUserId().toString());
-            r.createCell(12).setCellValue(each.getUsername()==null?"":each.getUsername());
-            //r.createCell(13).setCellValue(each.getCoupon()==null?"":each.getCoupon().getTitle()+"/"+each.getCoupon().getPrice()+"/"+each.getCoupon().getLocalPrice());
-            r.createCell(13).setCellValue(numberFormatter.format(decimalPattern,each.getKpprice()));
-            r.createCell(14).setCellValue(numberFormatter.format(decimalPattern,each.getOkpprice()));
-            r.createCell(15).setCellValue(each.getPayable()==null?each.getPrice().doubleValue():each.getPayable().doubleValue());
-            r.createCell(16).setCellValue(each.getOprice()==null?"":each.getOprice().toPlainString());
-            r.createCell(17).setCellValue(each.getMerchantsubsidy()==null?"":each.getMerchantsubsidy().toPlainString());
-            r.createCell(18).setCellValue(each.getStatusname());
-            r.createCell(19).setCellValue(dateFormatter.format(timePattern,each.getCreatetime()));
-
-            r.createCell(20).setCellValue(dateFormatter.format(timePattern,each.getUsetime()));
-            r.createCell(21).setCellValue(each.getAddress()==null?"":each.getAddress());
-            r.createCell(22).setCellValue(each.getPostalcode()==null?"":each.getPostalcode());
-            r.createCell(23).setCellValue(each.getProvince()==null?"":each.getProvince());
-            r.createCell(24).setCellValue(each.getDistrict()==null?"":each.getDistrict());
-            r.createCell(25).setCellValue(each.getCity()==null?"":each.getCity());
-            r.createCell(26).setCellValue(each.getTel()==null?"":each.getTel());
+            //r.createCell(12).setCellValue(each.getUsername()==null?"":each.getUsername());
+            r.createCell(12).setCellValue(numberFormatter.format(decimalPattern,each.getKpprice()));
+            r.createCell(13).setCellValue(numberFormatter.format(decimalPattern,each.getOkpprice()));
+            r.createCell(14).setCellValue(each.getPayable()==null?each.getPrice().doubleValue():each.getPayable().doubleValue());
+            r.createCell(15).setCellValue(each.getOprice()==null?"":each.getOprice().toPlainString());
+            //r.createCell(17).setCellValue(each.getMerchantsubsidy()==null?"":each.getMerchantsubsidy().toPlainString());
+            r.createCell(16).setCellValue(each.getStatusname());
+            r.createCell(17).setCellValue(dateFormatter.format(timePattern,each.getCreatetime()));
+            r.createCell(18).setCellValue(dateFormatter.format(timePattern,each.getUsetime()));
+            r.createCell(19).setCellValue(each.getAddress()==null?"":each.getAddress());
+            r.createCell(20).setCellValue(each.getPostalcode()==null?"":each.getPostalcode());
+            r.createCell(21).setCellValue(each.getProvince()==null?"":each.getProvince());
+            r.createCell(22).setCellValue(each.getDistrict()==null?"":each.getDistrict());
+            r.createCell(23).setCellValue(each.getCity()==null?"":each.getCity());
+            r.createCell(24).setCellValue(each.getTel()==null?"":each.getTel());
         }
     }
 
