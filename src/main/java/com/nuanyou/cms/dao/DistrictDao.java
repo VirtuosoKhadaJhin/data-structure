@@ -1,5 +1,6 @@
 package com.nuanyou.cms.dao;
 
+import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.District;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -28,4 +29,7 @@ public interface DistrictDao extends JpaRepository<District, Long>, JpaSpecifica
     @Modifying
     @Query(value = "update District t set t.radio=:radio where t.id=:id")
     void updateDistrictRate(@Param("id") Long id, @Param("radio") BigDecimal radio);
+
+    @Query(value = "select new District(t.id,t.name) from District t where t.city.id=:id")
+    List<District> findIdNameListByCityId(@Param("id") Long id);
 }

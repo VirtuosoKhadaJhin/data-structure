@@ -28,7 +28,8 @@ public class Order {
     private Short total;
     private BigDecimal price;
     private BigDecimal kpprice;
-    private Integer orderstatus;
+    private NewOrderStatus orderstatus;
+    private RefundStatus refundstatus;
     private String statusname;
     private Date statustime;
     private Date paytime;
@@ -42,7 +43,6 @@ public class Order {
     private String sceneid;
     private BigDecimal merchantsubsidy;
     private Byte paystatus;
-    private Integer refundstatus;
     private Date refundtime;
     private Date refundaudittime;
     private String refundreason;
@@ -218,17 +218,16 @@ public class Order {
     }
 
 
+
     @Column(name = "orderstatus", nullable = true)
-    public Integer getOrderstatus() {
+    @Convert(converter = NewOrderStatusConverter.class)
+    public NewOrderStatus getOrderstatus() {
         return orderstatus;
     }
 
-    public void setOrderstatus(Integer orderstatus) {
+    public void setOrderstatus(NewOrderStatus orderstatus) {
         this.orderstatus = orderstatus;
     }
-
-    //@Convert(converter = OrderStatusConverter.class)
-
 
     @Column(name = "orderstatusname", nullable = true, length = 20)
     public String getStatusname() {
@@ -366,11 +365,12 @@ public class Order {
 
 
     @Column(name = "newrefundstatus", nullable = true)
-    public Integer getRefundstatus() {
+    @Convert(converter=RefundStatusConverter.class  )
+    public RefundStatus getRefundstatus() {
         return refundstatus;
     }
 
-    public void setRefundstatus(Integer refundstatus) {
+    public void setRefundstatus(RefundStatus refundstatus) {
         this.refundstatus = refundstatus;
     }
 
@@ -650,5 +650,21 @@ public class Order {
         this.mchlocalereduce = mchlocalereduce;
     }
 
+
+    @Transient
+    public  Boolean getRefundQualified(){
+        return getRefundQualified(this);
+    }
+
+
+    public static  Boolean getRefundQualified(Order order){
+        if(order.getOrderstatus()!= NewOrderStatus.Consumed&&order.getOrderstatus()!= NewOrderStatus.Commented&&
+                order.getOrderstatus()!= NewOrderStatus.AutoVerification&&order.getOrderstatus()!= NewOrderStatus.MerchantVerfication&&
+                order.getRefundstatus()!= RefundStatus.Failure){
+            return false;
+        }else {
+            return true;
+        }
+    }
 
 }

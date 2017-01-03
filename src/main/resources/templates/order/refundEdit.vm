@@ -73,13 +73,13 @@
                             <input type="hidden" id="type" name="type" >
 
                             <div class="form-actions">
-                                #if($!entity.refundstatus==201)
+                                #if($!entity.refundstatus.value==201)
                                     <button data-id="203"  class="btn btn-success action">通过</button>
                                     <button data-id="202"  class="btn btn-success action">拒绝</button>
                             #end
-                            #if($!entity.refundstatus==203)
+                            #if($!entity.refundstatus.value==203)
                                     <span style="color: red">已通过</span>
-                                #elseif($!entity.refundstatus==202)
+                                #elseif($!entity.refundstatus.value==202)
                                     <span style="color: red" >未通过</span>
                                 #end
                                 <a class="btn btn-primary" href="refundList">返回</a>
