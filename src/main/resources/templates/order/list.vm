@@ -11,11 +11,17 @@
             <th class="table-set">操作</th>
             <th>ID</th>
             <th>订单ID</th>
+            <th>订单状态</th>
+            <th>退款状态</th>
+
+
             <th>渠道</th>
             <th>订单类型</th>
             <th>支付类型</th>
             <th>来源平台</th>
             <th>来源系统</th>
+
+
             <th>使用码</th>
             <th>商户中文名称</th>
             <th>商户本地名称</th>
@@ -27,7 +33,6 @@
             <th>总价(人民币)</th>
             <th>原价(人民币)</th>
             <th>商户优付补贴</th>
-            <th>订单状态</th>
             <th>下单时间</th>
             <th>使用时间</th>
             <th>订单手机号码</th>
@@ -40,21 +45,32 @@
                 <td>
                     <a href="edit?type=3&id=$!order.id" data-id="$!order.id" class="btn btn-success btn-mini">详情</a>
                     <a href="itemList?id=$!order.id" class="btn btn-success btn-mini">商品</a>
-                    #if($!entity.orderstatus==1)
+                     #if($!order.refundQualified)
                         <a href="javascript:void(0);" data-id="$!order.id" class="btn btn-success btn-mini tuikuan">退款</a>
-                    #end
+                     #end
                 </td>
                 <td>$!order.id</td>
                 <td>$!order.ordersn</td>
+                <td>$!order.orderstatus.name</td>
+                <td>$!order.refundstatus.name</td>
+
+
                 <td>$!order.sceneid</td>
                 <td>$!order.ordertype.name</td>
                 <td>$!order.paytype.name</td>
+
+
+
                 <td>
                     $!order.platform.name
                 </td>
                 <td>
                     $!order.os.name
                 </td>
+
+
+
+
                 <td>$!order.ordercode</td>
                 <td>
                     <a href="$!link.requestPath/merchant/detail?id=$!order.merchant.id" class="alink"> $!order.merchant.name</a>
@@ -76,7 +92,6 @@
                 </td>
                 <td>$!order.oprice</td>
                 <td>$!order.merchantsubsidy</td>
-                <td>$!order.statusname</td>
                 <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!order.createtime)</td>
                 <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!order.usetime)</td>
                 <td>$!order.user.userTel.tel</td>
@@ -144,14 +159,9 @@
         <label for="orderstatus">订单状态：</label>
         <select id="orderstatus" name="orderstatus" class="span11">
             <option value="">全部</option>
-            <option value="0" #if($!entity.orderstatus==0) selected #end>已下单</option>
-            <option value="1" #if($!entity.orderstatus==1) selected #end>已支付</option>
-            <option value="2" #if($!entity.orderstatus==2) selected #end>已消费</option>
-            <option value="3" #if($!entity.orderstatus== 3) selected #end>已评价</option>
-            <option value="4" #if($!entity.orderstatus== 4) selected #end>已关闭</option>
-            <option value="104" #if($!entity.orderstatus== 104) selected #end>自动核销</option>
-            <option value="105" #if($!entity.orderstatus== 105) selected #end>商户核销</option>
-            <option value="203" #if($!entity.orderstatus== 203) selected #end>退款成功</option>
+            #foreach($o in $!refundStatuses)
+                <option value="$o" #if($!entity.orderstatus== $o) selected #end>$o.name</option>
+            #end
         </select>
         <label for="status">支付类型：</label>
         <select id="paytype" name="paytype" class="span11">

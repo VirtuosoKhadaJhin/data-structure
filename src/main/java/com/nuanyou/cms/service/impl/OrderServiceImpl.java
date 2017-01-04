@@ -7,6 +7,8 @@ import com.nuanyou.cms.entity.UserCardItem;
 import com.nuanyou.cms.entity.coupon.Coupon;
 import com.nuanyou.cms.entity.enums.CardStatusEnum;
 import com.nuanyou.cms.entity.enums.CouponStatusEnum;
+import com.nuanyou.cms.entity.enums.NewOrderStatus;
+import com.nuanyou.cms.entity.enums.RefundStatus;
 import com.nuanyou.cms.entity.order.Order;
 import com.nuanyou.cms.entity.order.OrderRefundLog;
 import com.nuanyou.cms.entity.order.OrderVouchCard;
@@ -34,6 +36,8 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.nuanyou.cms.entity.order.Order.getRefundQualified;
 
 /**
  * Created by Felix on 2016/9/8.
@@ -182,15 +186,16 @@ public class OrderServiceImpl implements OrderService {
         if(order==null){
             throw new APIException(ResultCodes.OrderNotFound, " Detail：OrderID" + entity.getId());
         }
-        if(order.getOrderstatus()==1){
-            throw new APIException(ResultCodes.OrderOther,"只有已付款的订单支持发起退款申请");//(modual,msg)
+        if(Order.getRefundQualified(order)){
+            throw new APIException(ResultCodes.OrderOther,"只有 【退款失败、已消费、已评价、自动核销、商户核销】 的订单支持发起退款申请");
         }
+
         if (order.getRefundstatus() != null) {
-            if (order.getRefundstatus() == 201) {
+            if (order.getRefundstatus() == RefundStatus.RefundInProgress) {
                 throw new APIException(ResultCodes.Refunding, " Detail：OrderID" + order.getId());
-            } else if (order.getRefundstatus() == 202) {
+            } else if (order.getRefundstatus() == RefundStatus.Failure) {
                 throw new APIException(ResultCodes.RefundingFail, " Detail：OrderID" + order.getId());
-            } else if (order.getRefundstatus() == 203) {
+            } else if (order.getRefundstatus() == RefundStatus.Success) {
                 throw new APIException(ResultCodes.RefundingSuccess, " Detail：OrderID" + order.getId());
             }
         }
@@ -198,7 +203,7 @@ public class OrderServiceImpl implements OrderService {
         order.setId(entity.getId());
         order.setStatusname("已申请退款");
         order.setRefundreason("匿名操作");
-        order.setRefundstatus(201);//退款中
+        order.setRefundstatus(RefundStatus.RefundInProgress);//退款中
         order.setRefundtime(DateUtils.newDate());
         order.setRefundsource((byte) 2);//// 退款来源：1.客户端，2.cms，3.商户端
         this.orderDao.save(order);
@@ -215,7 +220,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    private static Integer unaudited=201;
+    //private static Integer unaudited=201;
     @Override
     public Page<Order> findRefundByCondition(int index, final Order entity, final TimeCondition time) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "refundtime");
@@ -224,7 +229,7 @@ public class OrderServiceImpl implements OrderService {
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 if (entity.getRefundstatus() == null) {
-                    entity.setRefundstatus(unaudited);
+                    entity.setRefundstatus(RefundStatus.RefundInProgress);
                 }
                 Predicate pStatus = cb.equal(root.get("refundstatus"), entity.getRefundstatus());
                 predicate.add(pStatus);
@@ -249,24 +254,24 @@ public class OrderServiceImpl implements OrderService {
         if (order == null) {
             return;
         }
-        if (order.getRefundstatus() != 201) {
+        if (order.getRefundstatus() != RefundStatus.RefundInProgress) {
             throw new APIException(ResultCodes.Audited);
         } else {
             order.setRefundaudittime(DateUtils.newDate());
-            order.setRefundstatus(type);
+            order.setRefundstatus(RefundStatus.toEnum(type));
         }
-        if (order.getRefundstatus() == 202) {
+        if (order.getRefundstatus() == RefundStatus.Failure) {
             order.setStatusname("退款失败");
-        } else if (order.getRefundstatus() == 203) {
+        } else if (order.getRefundstatus() == RefundStatus.Success) {
             order.setStatusname("退款成功");
         }
         this.saveNotNull(order);
         OrderRefundLog log = new OrderRefundLog();
         log.setOrder(order);
         log.setCmsusername(cmsusername);
-        if (order.getRefundstatus() == 202) {
+        if (order.getRefundstatus() == RefundStatus.Failure) {
             log.setStatus(2);
-        } else if (order.getRefundstatus() == 203) {
+        } else if (order.getRefundstatus() == RefundStatus.Success) {
             log.setStatus(1);
         }
         this.orderRefundLogService.saveNotNull(log);

@@ -3,6 +3,7 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.dao.DistrictDao;
+import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.District;
 import com.nuanyou.cms.model.PageUtil;
@@ -96,6 +97,14 @@ public class DistrictController {
         return "district/list";
     }
 
+
+
+    @RequestMapping("api/getDistricts")
+    @ResponseBody
+    public APIResult getDistricts(City city) {
+        List<District> list = districtDao.findIdNameListByCityId(city.getId());
+        return new APIResult(list);
+    }
 
     @RequestMapping("api/list")
     @ResponseBody

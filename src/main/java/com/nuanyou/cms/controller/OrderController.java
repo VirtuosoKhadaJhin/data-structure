@@ -5,8 +5,10 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.Merchant;
+import com.nuanyou.cms.entity.enums.NewOrderStatus;
 import com.nuanyou.cms.entity.enums.OrderPayType;
 import com.nuanyou.cms.entity.enums.OrderType;
+import com.nuanyou.cms.entity.enums.RefundStatus;
 import com.nuanyou.cms.entity.order.*;
 import com.nuanyou.cms.entity.user.PasUserProfile;
 import com.nuanyou.cms.model.OrderDetail;
@@ -111,6 +113,8 @@ public class OrderController {
         List<Country> countries = this.countryDao.findAll();
         List<OrderType> orderTypes= Arrays.asList( OrderType.values());
         List<OrderPayType> orderPayTypes=Arrays.asList( OrderPayType.values());
+        List<NewOrderStatus> newOrderStatuses=Arrays.asList( NewOrderStatus.values());
+        List<RefundStatus> refundStatuses=Arrays.asList( RefundStatus.values());
         List<Merchant> merchants = this.merchantService.getIdNameList();
         Page<Order> page = orderService.findByCondition(index, entity, time,pageable);
         for (Order order : page.getContent()) {
@@ -125,6 +129,7 @@ public class OrderController {
         model.addAttribute("entity", entity);
         model.addAttribute("countries", countries);
         model.addAttribute("orderTypes", orderTypes);
+        model.addAttribute("newOrderStatuses", newOrderStatuses);
         model.addAttribute("orderPayTypes", orderPayTypes);
         model.addAttribute("merchants", merchants);
         model.addAttribute("time", time);
@@ -254,6 +259,8 @@ public class OrderController {
     @RequestMapping("refundList")
     public String refundList(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, TimeCondition time) {
         Page<Order> page = orderService.findRefundByCondition(index, entity, time);
+        List<RefundStatus> refundStatuses=Arrays.asList( RefundStatus.values());
+        model.addAttribute("refundStatuses", refundStatuses);
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
         model.addAttribute("time", time);
@@ -281,18 +288,6 @@ public class OrderController {
        response.sendRedirect( "../order/refundEdit?refundEdit=3&id="+id);
         return null;
     }
-//
-    //OrderDetail orderDetail=orderDetails.get(i);
-
-        /*    r.createCell(22).setCellValue(orderDetail.getSms_code()==null?"":orderDetail.getSms_code());
-            r.createCell(23).setCellValue(orderDetail.getSms_times()==null?"":orderDetail.getSms_times().toString());
-            r.createCell(24).setCellValue(orderDetail.getBuyNum()==null?"":orderDetail.getBuyNum().toString());
-            r.createCell(25).setCellValue(orderDetail.getSubsidy_youfusubsidyprice_Format()==null?"":orderDetail.getSubsidy_youfusubsidyprice_Format());
-            r.createCell(26).setCellValue(orderDetail.getSubsidy_youfusubsidykpprice_Format()==null?"":orderDetail.getSubsidy_youfusubsidykpprice_Format());
-            r.createCell(27).setCellValue(orderDetail.getSubsidy_mchsubsidyprice_Format()==null?"":orderDetail.getSubsidy_mchsubsidyprice_Format());
-            r.createCell(28).setCellValue(orderDetail.getSubsidy_mchsubsidykpprice_Format()==null?"":orderDetail.getSubsidy_mchsubsidykpprice_Format());
-            r.createCell(29).setCellValue(orderDetail.getLogistics_address()==null?"":orderDetail.getLogistics_address());*/
-
 
 }
 
