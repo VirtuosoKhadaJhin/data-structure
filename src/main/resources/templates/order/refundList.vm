@@ -11,7 +11,7 @@
     <thead>
     <tr>
         <th>ID</th>
-        <th>订单ID</th>
+        <th>订单编号</th>
         <th>下单时间</th>
         <th>订单状态</th>
         <th>退款状态</th>
@@ -69,12 +69,10 @@
     <div class="control-group">
         <div class="input-group-addon">退款状态</div>
         <select name="refundstatus" class="span11">
+            <option value="">请选择</option>
             #foreach($o in $!refundStatuses)
-                <option value="$o" #if($!entity.orderstatus== $o) selected #end>$o.name</option>
+                <option value="$o" #if($!entity.refundstatus== $o) selected #end>$o.name</option>
             #end
-#*            <option value="201" #if($!entity.refundstatus == 201) selected #end>未审核</option>
-            <option value="202" #if($!entity.refundstatus == 202) selected #end>退款失败</option>
-            <option value="203" #if($!entity.refundstatus == 203) selected #end>退款成功</option>*#
         </select>
     </div>
 
