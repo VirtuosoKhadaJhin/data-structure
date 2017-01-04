@@ -232,9 +232,7 @@ public class OrderServiceImpl implements OrderService {
         if (order.getRefundstatus() != null) {
             if (order.getRefundstatus() == RefundStatus.RefundInProgress) {
                 throw new APIException(ResultCodes.Refunding, " Detail：OrderID" + order.getId());
-            } else if (order.getRefundstatus() == RefundStatus.Failure) {
-                throw new APIException(ResultCodes.RefundingFail, " Detail：OrderID" + order.getId());
-            } else if (order.getRefundstatus() == RefundStatus.Success) {
+            }  else if (order.getRefundstatus() == RefundStatus.Success) {
                 throw new APIException(ResultCodes.RefundingSuccess, " Detail：OrderID" + order.getId());
             }
         }
