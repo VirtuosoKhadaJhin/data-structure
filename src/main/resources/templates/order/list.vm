@@ -167,7 +167,7 @@
         <label for="orderstatus">订单状态：</label>
         <select id="orderstatus" name="orderstatus" class="span11">
             <option value="">全部</option>
-            #foreach($o in $!refundStatuses)
+            #foreach($o in $!newOrderStatuses)
                 <option value="$o" #if($!entity.orderstatus== $o) selected #end>$o.name</option>
             #end
         </select>
