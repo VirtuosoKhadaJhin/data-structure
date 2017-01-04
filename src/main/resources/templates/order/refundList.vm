@@ -66,6 +66,13 @@
         <input type="text" class="span11" name="ordersn" value="$!entity.ordersn" placeholder="订单编号">
     </div>
 
+
+    <label>开始时间：</label>
+    <input type="text" class="span11 dateTimeFormat" name="begin" id="beginTime" value="$!time.beginStr" placeholder="开始时间">
+
+    <label>结束时间：</label>
+    <input type="text" class="span11 dateTimeFormat" name="end"  value="$!time.endStr" id="endTime" placeholder="结束时间">
+
     <div class="control-group">
         <div class="input-group-addon">退款状态</div>
         <select name="refundstatus" class="span11">

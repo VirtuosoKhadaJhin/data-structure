@@ -107,6 +107,18 @@ public class OrderController {
         return "redirect:" + url;
     }
 
+
+    @RequestMapping("itemList")
+    public String itemList(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model) {
+        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOrder(entity);
+        Page<OrderItem> page = orderItemDao.findAll(Example.of(orderItem), pageable);
+        model.addAttribute("page", page);
+        return "order/orderItemlist";
+    }
+
+
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, TimeCondition time) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "id");
@@ -136,7 +148,16 @@ public class OrderController {
         return "order/list";
     }
 
-
+    @RequestMapping("refundList")
+    public String refundList(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, TimeCondition time) {
+        Page<Order> page = orderService.findRefundByCondition(index, entity, time);
+        List<RefundStatus> refundStatuses=Arrays.asList( RefundStatus.values());
+        model.addAttribute("refundStatuses", refundStatuses);
+        model.addAttribute("page", page);
+        model.addAttribute("entity", entity);
+        model.addAttribute("time", time);
+        return "order/refundList";
+    }
 
     @RequestMapping("export")
     public void export(@RequestParam(required = false, defaultValue = "1") int index,  Model model,
@@ -235,15 +256,6 @@ public class OrderController {
 
 
 
-    @RequestMapping("itemList")
-    public String itemList(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model) {
-        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
-        OrderItem orderItem = new OrderItem();
-        orderItem.setOrder(entity);
-        Page<OrderItem> page = orderItemDao.findAll(Example.of(orderItem), pageable);
-        model.addAttribute("page", page);
-        return "order/orderItemlist";
-    }
 
 
     @RequestMapping("refund")
@@ -256,16 +268,7 @@ public class OrderController {
 
 
 
-    @RequestMapping("refundList")
-    public String refundList(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, TimeCondition time) {
-        Page<Order> page = orderService.findRefundByCondition(index, entity, time);
-        List<RefundStatus> refundStatuses=Arrays.asList( RefundStatus.values());
-        model.addAttribute("refundStatuses", refundStatuses);
-        model.addAttribute("page", page);
-        model.addAttribute("entity", entity);
-        model.addAttribute("time", time);
-        return "order/refundList";
-    }
+
 
 
 
