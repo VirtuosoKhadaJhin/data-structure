@@ -225,7 +225,7 @@ public class OrderServiceImpl implements OrderService {
         if(order==null){
             throw new APIException(ResultCodes.OrderNotFound, " Detail：OrderID" + entity.getId());
         }
-        if(Order.getRefundQualified(order)){
+        if(!Order.getRefundQualified(order)){
             throw new APIException(ResultCodes.OrderOther,"只有 【退款失败、已消费、已评价、自动核销、商户核销】 的订单支持发起退款申请");
         }
 
