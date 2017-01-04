@@ -131,7 +131,14 @@ public class OrderServiceImpl implements OrderService {
                     Predicate pStatus = cb.equal(root.get("refundstatus"), entity.getRefundstatus());
                     predicate.add(pStatus);
                 }
-
+                if (time.getBegin() != null) {
+                    Predicate p = cb.greaterThanOrEqualTo(root.get("createtime").as(Date.class), time.getBegin());
+                    predicate.add(p);
+                }
+                if (time.getEnd() != null) {
+                    Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd());
+                    predicate.add(p);
+                }
                 if(entity.getId()!=null){
                     Predicate p1 = cb.equal(root.get("id"), entity.getId());
                     predicate.add(p1);
