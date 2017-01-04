@@ -65,6 +65,11 @@ public class OrderServiceImpl implements OrderService {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
+
+                if (entity.getId() != null) {
+                    Predicate p = cb.equal(root.get("id"),entity.getId());
+                    predicate.add(p);
+                }
                 if (time.getBegin() != null) {
                     Predicate p = cb.greaterThanOrEqualTo(root.get("createtime").as(Date.class), time.getBegin());
                     predicate.add(p);
@@ -82,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
                     predicate.add(p);
                 }
                 if (!StringUtils.isEmpty(entity.getOrdersn())) {
-                    Predicate p = cb.equal(root.get("ordersn"), entity.getOrdersn());
+                    Predicate p = cb.like(root.get("ordersn"), "%"+entity.getOrdersn()+"%");
                     predicate.add(p);
                 }
                 if (entity.getOrdertype() != null) {
@@ -113,6 +118,33 @@ public class OrderServiceImpl implements OrderService {
         }, pageable);
     }
 
+
+    @Override
+    public Page<Order> findRefundByCondition(int index, final Order entity, final TimeCondition time) {
+        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "refundtime");
+        return orderDao.findAll(new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (entity.getRefundstatus() != null) {
+                    //entity.setRefundstatus(RefundStatus.RefundInProgress);
+                    Predicate pStatus = cb.equal(root.get("refundstatus"), entity.getRefundstatus());
+                    predicate.add(pStatus);
+                }
+
+                if(entity.getId()!=null){
+                    Predicate p1 = cb.equal(root.get("id"), entity.getId());
+                    predicate.add(p1);
+                }
+                if (!StringUtils.isEmpty(entity.getOrdersn())) {
+                    Predicate p = cb.like(root.get("ordersn"), "%"+entity.getOrdersn()+"%");
+                    predicate.add(p);
+                }
+                Predicate[] pre = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(pre)).getRestriction();
+            }
+        }, pageable);
+    }
 
 
 
@@ -219,32 +251,6 @@ public class OrderServiceImpl implements OrderService {
         return orderDao.save(oldEntity);
     }
 
-
-    //private static Integer unaudited=201;
-    @Override
-    public Page<Order> findRefundByCondition(int index, final Order entity, final TimeCondition time) {
-        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "refundtime");
-        return orderDao.findAll(new Specification() {
-            @Override
-            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                List<Predicate> predicate = new ArrayList<Predicate>();
-                if (entity.getRefundstatus() == null) {
-                    entity.setRefundstatus(RefundStatus.RefundInProgress);
-                }
-                Predicate pStatus = cb.equal(root.get("refundstatus"), entity.getRefundstatus());
-                predicate.add(pStatus);
-                if(entity.getId()!=null){
-                    Predicate p1 = cb.equal(root.get("id"), entity.getId());
-                    predicate.add(p1);
-                }if(org.apache.commons.lang3.StringUtils.isNotEmpty(entity.getOrdersn()) ){
-                    Predicate p1 = cb.equal(root.get("ordersn"), entity.getOrderstatus());
-                    predicate.add(p1);
-                }
-                Predicate[] pre = new Predicate[predicate.size()];
-                return query.where(predicate.toArray(pre)).getRestriction();
-            }
-        }, pageable);
-    }
 
 
     @Override
