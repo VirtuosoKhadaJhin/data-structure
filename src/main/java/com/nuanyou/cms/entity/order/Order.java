@@ -658,12 +658,15 @@ public class Order {
 
 
     public static  Boolean getRefundQualified(Order order){
-        if(order.getOrderstatus()!= NewOrderStatus.Consumed&&order.getOrderstatus()!= NewOrderStatus.Commented&&
-                order.getOrderstatus()!= NewOrderStatus.AutoVerification&&order.getOrderstatus()!= NewOrderStatus.MerchantVerfication&&
-                order.getRefundstatus()!= RefundStatus.Failure){
-            return false;
+        if(order.getOrderstatus()== NewOrderStatus.Consumed||order.getOrderstatus()== NewOrderStatus.Commented||
+                order.getOrderstatus()== NewOrderStatus.AutoVerification||order.getOrderstatus()== NewOrderStatus.MerchantVerfication){
+            if(order.getRefundstatus()== RefundStatus.Failure||order.getRefundstatus()== null||order.getRefundstatus()== RefundStatus.Unknown){//退款失败
+                return true;
+            }else{   //退款中或者退款成功
+                return false;
+            }
         }else {
-            return true;
+            return false;
         }
     }
 
