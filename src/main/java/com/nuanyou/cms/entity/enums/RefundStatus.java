@@ -5,6 +5,7 @@ package com.nuanyou.cms.entity.enums;
  */
 public enum RefundStatus {
 
+    Unknown(0,"未退款"),
     RefundInProgress(201, "退款中"),
     Failure(202, "退款失败"),
     Success(203, "退款成功");
