@@ -2,17 +2,12 @@ package com.nuanyou.cms.service.impl;
 
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
-import com.nuanyou.cms.dao.CouponDao;
-import com.nuanyou.cms.dao.OrderDao;
-import com.nuanyou.cms.dao.OrderVouchCardDao;
-import com.nuanyou.cms.dao.UserCardItemDao;
-import com.nuanyou.cms.domain.NotificationPublisher;
 import com.nuanyou.cms.dao.*;
+import com.nuanyou.cms.domain.NotificationPublisher;
 import com.nuanyou.cms.entity.UserCardItem;
 import com.nuanyou.cms.entity.coupon.Coupon;
 import com.nuanyou.cms.entity.enums.CardStatusEnum;
 import com.nuanyou.cms.entity.enums.CouponStatusEnum;
-import com.nuanyou.cms.entity.enums.NewOrderStatus;
 import com.nuanyou.cms.entity.enums.RefundStatus;
 import com.nuanyou.cms.entity.order.Order;
 import com.nuanyou.cms.entity.order.OrderRefundLog;
@@ -61,6 +56,8 @@ public class OrderServiceImpl implements OrderService {
     private CouponDao couponDao;
     @Autowired
     private NotificationPublisher notificationPublisher;
+    @Autowired
+    private ViewOrderExportDao viewOrderExportDao;
 
     @Override
     public Page<Order> findByCondition(Integer index, final Order entity, final TimeCondition time, Pageable pageable) {
@@ -70,7 +67,7 @@ public class OrderServiceImpl implements OrderService {
                 List<Predicate> predicate = new ArrayList<Predicate>();
 
                 if (entity.getId() != null) {
-                    Predicate p = cb.equal(root.get("id"),entity.getId());
+                    Predicate p = cb.equal(root.get("id"), entity.getId());
                     predicate.add(p);
                 }
                 if (time.getBegin() != null) {
@@ -81,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
                     Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd());
                     predicate.add(p);
                 }
-                if(entity.getMerchant()!=null&&StringUtils.isNotBlank(entity.getMerchant().getKpname())){
+                if (entity.getMerchant() != null && StringUtils.isNotBlank(entity.getMerchant().getKpname())) {
                     Predicate p = cb.equal(root.get("merchant").get("kpname"), entity.getMerchant().getKpname());
                     predicate.add(p);
                 }
@@ -90,12 +87,12 @@ public class OrderServiceImpl implements OrderService {
                     predicate.add(p);
                 }
                 if (!StringUtils.isEmpty(entity.getOrdersn())) {
-                    Predicate p = cb.like(root.get("ordersn"), "%"+entity.getOrdersn()+"%");
+                    Predicate p = cb.like(root.get("ordersn"), "%" + entity.getOrdersn() + "%");
                     predicate.add(p);
                 }
                 if (entity.getOrdertype() != null) {
                     Predicate p = cb.equal(root.get("ordertype"), entity.getOrdertype());
-                    cb.or(p,p);
+                    cb.or(p, p);
                     predicate.add(p);
                 }
                 if (entity.getPaytype() != null) {
@@ -142,12 +139,12 @@ public class OrderServiceImpl implements OrderService {
                     Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd());
                     predicate.add(p);
                 }
-                if(entity.getId()!=null){
+                if (entity.getId() != null) {
                     Predicate p1 = cb.equal(root.get("id"), entity.getId());
                     predicate.add(p1);
                 }
                 if (!StringUtils.isEmpty(entity.getOrdersn())) {
-                    Predicate p = cb.like(root.get("ordersn"), "%"+entity.getOrdersn()+"%");
+                    Predicate p = cb.like(root.get("ordersn"), "%" + entity.getOrdersn() + "%");
                     predicate.add(p);
                 }
                 Predicate[] pre = new Predicate[predicate.size()];
@@ -155,7 +152,6 @@ public class OrderServiceImpl implements OrderService {
             }
         }, pageable);
     }
-
 
 
     @Override
@@ -172,11 +168,11 @@ public class OrderServiceImpl implements OrderService {
                     Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd());
                     predicate.add(p);
                 }
-                if(entity.getMerchant()!=null&&!StringUtils.isEmpty(entity.getMerchant().getKpname())){
+                if (entity.getMerchant() != null && !StringUtils.isEmpty(entity.getMerchant().getKpname())) {
                     Predicate p = cb.equal(root.get("merchant").get("kpname"), entity.getMerchant().getKpname());
                     predicate.add(p);
                 }
-                if (entity.getMerchant()!=null&&entity.getMerchant().getId()!=null) {
+                if (entity.getMerchant() != null && entity.getMerchant().getId() != null) {
                     Predicate p = cb.equal(root.get("merchant").get("id"), entity.getId());
                     predicate.add(p);
                 }
@@ -190,7 +186,7 @@ public class OrderServiceImpl implements OrderService {
                 }
                 if (entity.getOrdertype() != null) {
                     Predicate p = cb.equal(root.get("ordertype"), entity.getOrdertype());
-                    cb.or(p,p);
+                    cb.or(p, p);
                     predicate.add(p);
                 }
                 if (entity.getPaytype() != null) {
@@ -212,6 +208,7 @@ public class OrderServiceImpl implements OrderService {
             }
         }, pageable);
     }
+
     @Override
     public Integer getBuyNum(Order order) {
         if (order.getUser() == null) {
@@ -225,17 +222,17 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void refund(Order entity) {
         Order order = this.orderDao.findOne(entity.getId());
-        if(order==null){
+        if (order == null) {
             throw new APIException(ResultCodes.OrderNotFound, " Detail：OrderID" + entity.getId());
         }
-        if(!Order.getRefundQualified(order)){
-            throw new APIException(ResultCodes.OrderOther,"只有 【退款失败、已消费、已评价、自动核销、商户核销】 的订单支持发起退款申请");
+        if (!Order.getRefundQualified(order)) {
+            throw new APIException(ResultCodes.OrderOther, "只有 【退款失败、已消费、已评价、自动核销、商户核销】 的订单支持发起退款申请");
         }
 
         if (order.getRefundstatus() != null) {
             if (order.getRefundstatus() == RefundStatus.RefundInProgress) {
                 throw new APIException(ResultCodes.Refunding, " Detail：OrderID" + order.getId());
-            }  else if (order.getRefundstatus() == RefundStatus.Success) {
+            } else if (order.getRefundstatus() == RefundStatus.Success) {
                 throw new APIException(ResultCodes.RefundingSuccess, " Detail：OrderID" + order.getId());
             }
         }
@@ -262,7 +259,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-
     @Override
     @Transactional
     public void validate(Long id, Integer type, String cmsusername) {
@@ -278,12 +274,9 @@ public class OrderServiceImpl implements OrderService {
         }
         if (order.getRefundstatus() == RefundStatus.Failure) {
             order.setStatusname("退款失败");
-        } else if (order.getRefundstatus() == RefundStatus.Success) {
-
             this.notificationPublisher.publishRefundFail(order.getId().toString());
-        } else if (order.getRefundstatus() == 203) {
+        } else if (order.getRefundstatus() == RefundStatus.Success) {
             order.setStatusname("退款成功");
-
             this.notificationPublisher.publishRefundSuccess(order.getId().toString());
         }
         this.saveNotNull(order);
