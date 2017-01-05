@@ -10,13 +10,37 @@
 <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
     <thead>
     <tr role="row">
-        <th>ID</th>
+        <th>ID
+            #if($!page.sort.getOrderFor("id").direction=="ASC")
+                <i class="icon-sort-up" onclick="sort('id','DESC')"></i>
+            #elseif($!page.sort.getOrderFor("id").direction=="DESC")
+                <i class="icon-sort-down" onclick="sort('id','')"></i>
+            #else
+                <i class="icon-sort" onclick="sort('id','ASC')"></i>
+            #end
+        </th>
         <th>名称（中文）</th>
         <th>简称</th>
         <th>名称（本地）</th>
         <th>是否显示</th>
-        <th>所属城市</th>
-        <th>所属国家</th>
+        <th>所属城市
+            #if($!page.sort.getOrderFor("city.name").direction=="ASC")
+                <i class="icon-sort-up" onclick="sort('city.name','DESC')"></i>
+            #elseif($!page.sort.getOrderFor("city.name").direction=="DESC")
+                <i class="icon-sort-down" onclick="sort('city.name','')"></i>
+            #else
+                <i class="icon-sort" onclick="sort('city.name','ASC')"></i>
+            #end
+        </th>
+        <th>所属国家
+            #if($!page.sort.getOrderFor("country.name").direction=="ASC")
+                <i class="icon-sort-up" onclick="sort('country.name','DESC')"></i>
+            #elseif($!page.sort.getOrderFor("country.name").direction=="DESC")
+                <i class="icon-sort-down" onclick="sort('country.name','')"></i>
+            #else
+                <i class="icon-sort" onclick="sort('country.name','ASC')"></i>
+            #end
+        </th>
         <th class="table-set">操作</th>
     </tr>
     </thead>

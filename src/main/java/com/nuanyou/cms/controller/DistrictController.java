@@ -3,13 +3,18 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.dao.DistrictDao;
+import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.District;
+import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.DistrictService;
 import com.nuanyou.cms.util.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,7 +68,10 @@ public class DistrictController {
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index,
                        @RequestParam(required = false) String nameOrId,
+                       @RequestParam(required = false, defaultValue = "id") String propertie,
+                       @RequestParam(required = false) Sort.Direction direction,
                        District entity, Model model) {
+
         if (StringUtils.isNotBlank(nameOrId)) {
             if (StringUtils.isNumeric(nameOrId)) {
                 entity.setId(NumberUtils.toLong(nameOrId));
@@ -72,7 +80,13 @@ public class DistrictController {
             }
         }
 
-        Page<District> page = districtService.findByCondition(index, entity);
+        Pageable pageable;
+        if (direction == null)
+            pageable = new PageRequest(index - 1, PageUtil.pageSize);
+        else
+            pageable = new PageRequest(index - 1, PageUtil.pageSize, direction, propertie);
+
+        Page<District> page = districtService.findByCondition(entity, pageable);
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
         model.addAttribute("flag", "district");
@@ -83,6 +97,14 @@ public class DistrictController {
         return "district/list";
     }
 
+
+
+    @RequestMapping("api/getDistricts")
+    @ResponseBody
+    public APIResult getDistricts(City city) {
+        List<District> list = districtDao.findIdNameListByCityId(city.getId());
+        return new APIResult(list);
+    }
 
     @RequestMapping("api/list")
     @ResponseBody

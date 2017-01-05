@@ -90,6 +90,12 @@
                 <option value="$!e.id" #if($!entity.district.country.id==$!e.id) selected #end>$!e.name</option>
             #end
         </select>
+        <label>合作情况</label>
+        <select name="issign" class="span11">
+            <option value="">全部</option>
+            <option value="true" #if($entity.issign==true) selected #end>已签约</option>
+            <option value="false" #if($entity.issign==false) selected #end>未签约</option>
+        </select>
         <button type="submit" class="btn btn-primary">查询</button>
         <a class="btn btn-warning export" href="javascript:void(0);">导出</a>
     </div>
@@ -155,7 +161,7 @@
 <script type="text/javascript">
     $(function () {
         $(".export").on("click", function () {
-            var form = $("#serch");
+            var form = $(document.forms[0]);
             form.attr("action", "export");
             form.submit();
             form.attr("action", "");
@@ -248,6 +254,7 @@
     });
     function callback() {
         var elText = $("#payUrl").val();
+        $('#qrcode').empty();
         $('#qrcode').qrcode({width: 200, height: 200, correctLevel: 0, text: elText});
     }
 </script>

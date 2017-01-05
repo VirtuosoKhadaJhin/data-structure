@@ -11,11 +11,17 @@
             <th class="table-set">操作</th>
             <th>ID</th>
             <th>订单ID</th>
+            <th>订单状态</th>
+            <th>退款状态</th>
+
+
             <th>渠道</th>
             <th>订单类型</th>
             <th>支付类型</th>
             <th>来源平台</th>
             <th>来源系统</th>
+
+
             <th>使用码</th>
             <th>商户中文名称</th>
             <th>商户本地名称</th>
@@ -27,7 +33,6 @@
             <th>总价(人民币)</th>
             <th>原价(人民币)</th>
             <th>商户优付补贴</th>
-            <th>订单状态</th>
             <th>下单时间</th>
             <th>使用时间</th>
             <th>订单手机号码</th>
@@ -40,39 +45,32 @@
                 <td>
                     <a href="edit?type=3&id=$!order.id" data-id="$!order.id" class="btn btn-success btn-mini">详情</a>
                     <a href="itemList?id=$!order.id" class="btn btn-success btn-mini">商品</a>
-                    #if($!entity.orderstatus==1)
+                     #if($!order.refundQualified)
                         <a href="javascript:void(0);" data-id="$!order.id" class="btn btn-success btn-mini tuikuan">退款</a>
-                    #end
+                     #end
                 </td>
                 <td>$!order.id</td>
                 <td>$!order.ordersn</td>
+                <td>$!order.orderstatus.name</td>
+                <td>$!order.refundstatus.name</td>
+
+
                 <td>$!order.sceneid</td>
                 <td>$!order.ordertype.name</td>
                 <td>$!order.paytype.name</td>
+
+
+
                 <td>
-                    #if($!order.platform==1)
-                        微信
-                    #elseif($!order.platform==2)
-                        APP
-                    #elseif($!order.platform==3)
-                        WAP
-                    #elseif($!order.platform==4)
-                        POS
-                    #else
-                        其他
-                    #end
+                    $!order.platform.name
                 </td>
                 <td>
-                    #if($!order.os==1)
-                        IOS
-                    #elseif($!order.os==2)
-                        IPAD
-                    #elseif($!order.os==3)
-                        Android
-                    #else
-                        其他
-                    #end
+                    $!order.os.name
                 </td>
+
+
+
+
                 <td>$!order.ordercode</td>
                 <td>
                     <a href="$!link.requestPath/merchant/detail?id=$!order.merchant.id" class="alink"> $!order.merchant.name</a>
@@ -80,13 +78,20 @@
                 <td>$!order.merchant.kpname</td>
                 <td>$!order.user.userid</td>
                 <td>$!order.user.nickname</td>
-                <td>$!order.coupon.title/$!order.coupon.price/$!order.coupon.localPrice </td>
+                <td>
+                    #if($!order.coupon)$!order.coupon.title/$!order.coupon.price/$!order.coupon.localPrice#end
+                </td>
                 <td>$numberFormatter.format("#0.00",$!order.kpprice)</td>
                 <td>$numberFormatter.format("#0.00",$!order.okpprice)</td>
-                <td>$!order.price</td>
+                <td>
+                    #if($!order.payable)
+                        $!order.payable
+                    #else
+                        $!order.price
+                    #end
+                </td>
                 <td>$!order.oprice</td>
                 <td>$!order.merchantsubsidy</td>
-                <td>$!order.statusname</td>
                 <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!order.createtime)</td>
                 <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!order.usetime)</td>
                 <td>$!order.user.userTel.tel</td>
@@ -98,24 +103,22 @@
     </table>
 </div>
 #parse("common/list_mid.vm")
-<form class="form-horizontal" method="get">
+<form class="form-horizontal orderForm" method="get">
     <div class="control-group">
-        <label>渠道：</label>
-        <input type="text" class="span11" name="sceneid" value="$!entity.sceneid" placeholder="渠道">
+
+        <label>订单ID：</label>
+        <input type="text" class="span11" name="id" value="$!entity.id" placeholder="订单ID">
 
         <label>订单编号：</label>
         <input type="text" class="span11" name="ordersn" value="$!entity.ordersn" placeholder="订单编号">
 
-        <label>商户本地名称：</label>
-        <input type="text" class="span11" name="merchant.kpname" value="$!entity.merchant.kpname " placeholder="商户本地名称">
 
-        <label>开始时间：</label>
-        <input type="text" class="span11 dateTimeFormat" name="begin" id="begin" value="$!time.beginStr" placeholder="开始时间">
+        <label>渠道：</label>
+        <input type="text" class="span11" name="sceneid" value="$!entity.sceneid" placeholder="渠道">
 
-        <label>结束时间：</label>
-        <input type="text" class="span11 dateTimeFormat" name="end" value="$!time.endStr" id="end" placeholder="结束时间">
 
-        <label for="status">店铺：</label>
+
+        <label for="status">商户搜索：</label>
         <select id="merchant.id" name="merchant.id" class="span11 select2">
             <option value="">全部</option>
             #foreach($merchant in $!merchants)
@@ -128,6 +131,16 @@
                 </option>
             #end
         </select>
+
+        <label>商户本地名称：</label>
+        <input type="text" class="span11" name="merchant.kpname" value="$!entity.merchant.kpname" placeholder="商户本地名称">
+
+        <label>开始时间：</label>
+        <input type="text" class="span11 dateTimeFormat" name="begin" id="beginTime" value="$!time.beginStr" placeholder="开始时间">
+
+        <label>结束时间：</label>
+        <input type="text" class="span11 dateTimeFormat" name="end"  value="$!time.endStr" id="endTime" placeholder="结束时间">
+
 
         <label for="status">国家：</label>
         <select id="merchant.district.country.id" name="merchant.district.country.id" class="span11">
@@ -154,14 +167,9 @@
         <label for="orderstatus">订单状态：</label>
         <select id="orderstatus" name="orderstatus" class="span11">
             <option value="">全部</option>
-            <option value="0" #if($!entity.orderstatus==0) selected #end>已下单</option>
-            <option value="1" #if($!entity.orderstatus==1) selected #end>已支付</option>
-            <option value="2" #if($!entity.orderstatus==2) selected #end>已消费</option>
-            <option value="3" #if($!entity.orderstatus== 3) selected #end>已评价</option>
-            <option value="4" #if($!entity.orderstatus== 4) selected #end>已关闭</option>
-            <option value="104" #if($!entity.orderstatus== 104) selected #end>自动核销</option>
-            <option value="105" #if($!entity.orderstatus== 105) selected #end>商户核销</option>
-            <option value="203" #if($!entity.orderstatus== 203) selected #end>退款成功</option>
+            #foreach($o in $!newOrderStatuses)
+                <option value="$o" #if($!entity.orderstatus== $o) selected #end>$o.name</option>
+            #end
         </select>
         <label for="status">支付类型：</label>
         <select id="paytype" name="paytype" class="span11">
@@ -171,6 +179,7 @@
             #end
         </select>
         <button type="submit" class="btn btn-success">查询</button>
+        <a class="btn btn-warning export" href="javascript:void(0);">导出</a>
     </div>
 </form>
 #parse("common/list_end.vm")
@@ -197,80 +206,50 @@
     </div>
 </div>
 
-<div id="address_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">地址详情</h3>
-    </div>
-    <div class="modal-body">
-        <div class="control-group">
-            <div class="controls">
-                <textarea id="address_value"></textarea>
-            </div>
-        </div>
-        <input type="hidden" id="refundid" name="refundid">
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-    </div>
-</div>
 
 
-<div id="order-detail" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>订单明细</h3>
-    </div>
 
-    <div class="modal-body">
-        <form class="form-horizontal " id="couponTemplateForm" action="update">
-            <div class="control-group">
-                <label class="control-label">短信通知状态</label>
-                <div class="controls">
-                    <input name="sms.code" readonly type="text">
-                </div>
-                <label class="control-label">短信通知次数</label>
-                <div class="controls">
-                    <input name="sms.times" readonly type="text">
-                </div>
-                <label class="control-label">购买次数</label>
-                <div class="controls">
-                    <input name="buyNum" readonly type="text">
-                </div>
-                <label class="control-label">优付优惠（本地）</label>
-                <div class="controls">
-                    <input name="subsidy.youfusubsidyprice_Format" readonly type="text">
-                </div>
-                <label class="control-label">优付优惠（人民币）</label>
-                <div class="controls">
-                    <input name="subsidy.youfusubsidykpprice_Format" readonly type="text">
-                </div>
-                <label class="control-label">商户优惠（本地）</label>
-                <div class="controls">
-                    <input name="subsidy.mchsubsidyprice_Format" readonly type="text">
-                </div>
-                <label class="control-label">商户优惠（人民币）</label>
-                <div class="controls">
-                    <input name="subsidy.mchsubsidykpprice_Format" readonly type="text">
-                </div>
-                <label class="control-label">收货地址</label>
-                <div class="controls">
-                    <textarea name="logistics.address" readonly></textarea>
-                </div>
-            </div>
-        </form>
-    </div>
 
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-        <button class="btn btn-primary submit-item" type="button" modal-id="update-modal">保存</button>
-    </div>
-</div>
 
 
 <script>
     $(function () {
+        $(".export").on("click", function () {
+            var begin=$("#beginTime").val();
+            var end=$("#endTime").val();
+            if(!validateTime(begin,end)){
+                return alert("开始时间和结束时间不能为空,且只能在七天以内!");
+            }
+            $(this).attr("disabled",true);
+            alert("正在导出Excel,20秒后可以重新导出!");
+            setTimeout(disableButton, 20000);
+            var form = $(".orderForm");
+            form.attr("action", "export");
+            form.attr("target", "_blank");
+            form.submit();
+            form.attr("action", "");
+            form.attr("target", "");
+        })
+
+        function disableButton(){
+            $(".export").attr("disabled",false);
+        }
+
+        function validateTime(begin,end){
+            if(begin==""||end==""){
+                return false;
+            }
+            var begin=new Date(begin.replace("-", "/").replace("-", "/"));
+            var end=new Date(end.replace("-", "/").replace("-", "/"));
+            var result = end-begin;
+            if(result>7*24*60*60*1000){
+                return false;
+            }
+            return true;
+        }
+
+
+
         $(".tuikuan").each(function (i, o) {
             $(o).on("click", function (event) {
                 var id = $(this).attr("data-id");
@@ -279,42 +258,10 @@
             })
         });
 
-        $(".address").each(function (i, o) {
-            $(o).on("click", function (event) {
-                var address = $(this).attr("add");
-                //alert(address);
-                $("#address_value").val(address);
-                $('#address_modal').modal('show');
-            })
-        });
 
 
-        $(".orderDetail").each(function (i, o) {
-            $(o).on("click", function (event) {
-                var id = $(this).attr("data-id");
-                $.ajax({
-                    url: 'api/detail',
-                    data: {id: id},
-                    type: 'post',
-                    success: function (result) {
-                        if (result.code == 0) {
-                            $("input[name='sms.code']").val(result.data.orderDetail["sms_code"]);
-                            $("input[name='sms.times']").val(result.data.orderDetail["sms_times"]);
-                            $("textarea[name='logistics.address']").val(result.data.orderDetail["logistics_address"]);
-                            $("input[name='buyNum']").val(result.data.orderDetail["buyNum"]);
-                            $("input[name='subsidy.youfusubsidyprice_Format']").val(result.data.orderDetail["subsidy_youfusubsidyprice_Format"]);
-                            $("input[name='subsidy.youfusubsidykpprice_Format']").val(result.data.orderDetail["subsidy_youfusubsidykpprice_Format"]);
-                            $("input[name='subsidy.mchsubsidyprice_Format']").val(result.data.orderDetail["subsidy_mchsubsidyprice_Format"]);
-                            $("input[name='subsidy.mchsubsidykpprice_Format']").val(result.data.orderDetail["subsidy_mchsubsidykpprice_Format"]);
-                        } else {
-                            alert("Fail Code: " + result.code + " MSG: " + result.msg);
-                        }
-                    }
-                });
-                var address = $(this).attr("add");
-                $('#order-detail').modal('show');
-            })
-        });
+
+
 
 
         $("#saveRefund").on("click", function () {

@@ -20,6 +20,7 @@ public class Recommend {
     private Long referId;
     private RecommendCat cat;
     private Integer sort;
+    private Boolean display;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -100,6 +101,15 @@ public class Recommend {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    @Column(name = "display", nullable = true)
+    public Boolean getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(Boolean display) {
+        this.display = display;
     }
 
 }

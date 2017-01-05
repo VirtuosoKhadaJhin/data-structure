@@ -1,14 +1,17 @@
 package com.nuanyou.cms.service;
 
 import com.nuanyou.cms.entity.order.Order;
+import com.nuanyou.cms.entity.order.ViewOrderExport;
 import com.nuanyou.cms.util.TimeCondition;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Created by Felix on 2016/9/8.
  */
 public interface OrderService {
-    Page<Order> findByCondition(Integer index, Order entity, TimeCondition time);
+    Page<Order> findByCondition(Integer index, Order entity, TimeCondition time, Pageable pageable);
+    Page<ViewOrderExport> findExportByCondition(Integer index, ViewOrderExport entity, TimeCondition time, Pageable o);
 
     Integer getBuyNum(Order order);
 
@@ -20,6 +23,7 @@ public interface OrderService {
 
 
     void validate(Long id, Integer type,String cmsusername);
+
 }
 
 

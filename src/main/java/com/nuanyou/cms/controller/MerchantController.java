@@ -156,14 +156,17 @@ public class MerchantController {
     }
 
     @RequestMapping("export")
-    public void export(Merchant entity, HttpServletResponse response, Model model) throws IOException {
+    public void export(Merchant entity, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=" + "UTF-8");
         response.setHeader("Pragma", "public");
         response.setHeader("Cache-Control", "max-age=30");
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("商户列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
-        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("name", contains().ignoreCase());
-        List<Merchant> list = merchantDao.findAll(Example.of(entity, matcher));
+
+        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("name", contains().ignoreCase()).withMatcher("kpname", contains().ignoreCase());
+        BeanUtils.cleanEmpty(entity);
+        List<Merchant> list = merchantDao.findAll(Example.of(entity, matcher), new Sort(Sort.Direction.DESC, "id"));
+
 
 //        for (Merchant merchant : list) {
 //            Long id = merchant.getId();
@@ -174,7 +177,7 @@ public class MerchantController {
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
         propertyHeaderMap.put("id", "商户id");
         propertyHeaderMap.put("name", "名称（中文）");
-        propertyHeaderMap.put("kname", "名称（本地）");
+        propertyHeaderMap.put("kpname", "名称（本地）");
         propertyHeaderMap.put("telphone", "商家电话");
         propertyHeaderMap.put("address", "地址（中文）");
         propertyHeaderMap.put("kpaddress", "地址（本地）");
@@ -205,7 +208,7 @@ public class MerchantController {
 //        propertyHeaderMap.put("name", "商户用户开始时间");
 //        propertyHeaderMap.put("name", "商户用户结束时间");
 //        propertyHeaderMap.put("name", "国家");
-        XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook("测试tab", propertyHeaderMap, list);
+        XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, list);
         OutputStream os = response.getOutputStream();
         ex.write(os);
 
@@ -223,6 +226,7 @@ public class MerchantController {
         model.addAttribute("weeks", Week.values());
         model.addAttribute("payTypes", PayType.values());
         model.addAttribute("supportTypes", SupportType.values());
+        model.addAttribute("verifyTypes", VerifyType.values());
     }
 
     @RequestMapping("api/list")

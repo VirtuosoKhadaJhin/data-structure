@@ -1,9 +1,10 @@
 <link href="http://cdn.bootcss.com/bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet"/>
 <link href="http://cdn.bootcss.com/bootstrap/2.3.2/css/bootstrap-responsive.min.cssrel=" stylesheet""/>
-<link href="http://cdn.bootcss.com/select2/4.0.3/css/select2.min.css" rel="stylesheet">
+<link href="/dist/css/select2.css" rel="stylesheet">
 <link href="http://cdn.bootcss.com/jquery-datetimepicker/2.5.4/jquery.datetimepicker.min.css" rel="stylesheet">
 <link href="/dist/css/matrix-style.css" rel="stylesheet"/>
 <link href="/dist/css/matrix-media.css" rel="stylesheet"/>
 <link href="/dist/font-awesome/css/font-awesome.css" rel="stylesheet"/>
 <link href="/dist/css/uniform.css" rel="stylesheet"/>
 <link href="/dist/css/common.css" rel="stylesheet"/>
+<link  href="/dist/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">

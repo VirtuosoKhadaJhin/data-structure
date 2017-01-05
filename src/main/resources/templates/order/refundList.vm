@@ -11,8 +11,9 @@
     <thead>
     <tr>
         <th>ID</th>
-        <th>订单ID</th>
+        <th>订单编号</th>
         <th>下单时间</th>
+        <th>订单状态</th>
         <th>退款状态</th>
         <th>退款理由</th>
         <th>提出退款时间</th>
@@ -27,11 +28,11 @@
         <tr>
             <td>$!e.id</td>
             <td >
-            <a href="$!link.contextPath/order/list?ordersn=$!e.ordersn" class="alink">$!e.ordersn</a>
-
+                 <a href="$!link.contextPath/order/list?ordersn=$!e.ordersn" class="alink">$!e.ordersn</a>
             </td>
             <td> $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.createtime)</td>
-            <td>$!e.statusname</td>
+            <td>$!e.orderstatus.name</td>
+            <td>$!e.refundstatus.name</td>
             <td>$!e.refundreason</td>
             <td> $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.refundtime)</td>
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.refundaudittime)</td>
@@ -54,22 +55,35 @@
     </tbody>
 </table>
 #parse("common/list_mid.vm")
-<form >
-
-
-
-
-    <div class="form-group">
-        <div class="input-group">
-            <div class="input-group-addon">退款状态</div>
-            <select name="refundstatus" class="span11">
-                <option value="">全部</option>
-                <option value="201" #if($!entity.refundstatus == 201) selected #end>未审核</option>
-                <option value="202" #if($!entity.refundstatus == 202) selected #end>退款失败</option>
-                <option value="203" #if($!entity.refundstatus == 203) selected #end>退款成功</option>
-            </select>
-        </div>
+<form class="form-horizontal " role="form" method="get">
+    <div class="control-group">
+        <label>ID：</label>
+        <input type="text" class="span11" name="id" value="$!entity.id" placeholder="ID">
     </div>
+
+    <div class="control-group">
+        <label>订单编号：</label>
+        <input type="text" class="span11" name="ordersn" value="$!entity.ordersn" placeholder="订单编号">
+    </div>
+
+
+    <label>开始时间：</label>
+    <input type="text" class="span11 dateTimeFormat" name="begin" id="beginTime" value="$!time.beginStr" placeholder="开始时间">
+
+    <label>结束时间：</label>
+    <input type="text" class="span11 dateTimeFormat" name="end"  value="$!time.endStr" id="endTime" placeholder="结束时间">
+
+    <div class="control-group">
+        <div class="input-group-addon">退款状态</div>
+        <select name="refundstatus" class="span11">
+            <option value="">请选择</option>
+            #foreach($o in $!refundStatuses)
+                <option value="$o" #if($!entity.refundstatus== $o) selected #end>$o.name</option>
+            #end
+        </select>
+    </div>
+
+
     <button type="submit" class="btn btn-primary">查询</button>
 </form>
 #parse("common/list_end.vm")

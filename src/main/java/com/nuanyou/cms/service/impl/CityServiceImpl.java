@@ -2,7 +2,6 @@ package com.nuanyou.cms.service.impl;
 
 import com.nuanyou.cms.dao.CityDao;
 import com.nuanyou.cms.entity.City;
-import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.CityService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -20,8 +19,7 @@ public class CityServiceImpl implements CityService {
     private CityDao cityDao;
 
     @Override
-    public Page<City> findByCondition(Integer index, City entity) {
-        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "id");
+    public Page<City> findByCondition(City entity, Pageable pageable) {
         ExampleMatcher e = ExampleMatcher.matching();
         ExampleMatcher.GenericPropertyMatcher g = ExampleMatcher.GenericPropertyMatcher.of(ExampleMatcher.StringMatcher.ENDING);
         if (entity.getId() != null) {
@@ -50,4 +48,5 @@ public class CityServiceImpl implements CityService {
         BeanUtils.copyBeanNotNull(entity, oldEntity);
         return cityDao.save(oldEntity);
     }
+
 }

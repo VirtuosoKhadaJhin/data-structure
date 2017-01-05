@@ -11,4 +11,6 @@ public interface RecommendService {
 
     Recommend saveNotNull(Recommend entity);
 
+    void delete(Long id);
+
 }

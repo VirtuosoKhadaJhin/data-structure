@@ -19,7 +19,7 @@
         <tr>
             <td>$!e.id</td>
             <td>
-                <a href="$!link.requestPath/merchant/detail?id=$!e.merchant.id" class="alink"> $!e.merchant.name</a>
+                <a href="$!link.requestPath/merchant/detail?id=$!e.merchant.id" class="alink">$!e.merchant.name</a>
             </td>
             <td>$!e.score</td>
             <td>$!e.content</td>
@@ -38,8 +38,16 @@
 #parse("common/list_mid.vm")
 <form class="form-horizontal " role="form" method="get">
     <div class="control-group">
-        <input type="text" name="order.ordersn" class="span11" value="$!entity.order.ordersn" placeholder="订单编号"/>
+        <label>订单编号</label>
+        <input type="text" name="order.ordersn" class="span9" value="$!entity.order.ordersn"/>
+        <label>商户</label>
+        <select name="merchant.id" class="span9 select2">
+            #foreach($e in $!merchants)
+                <option value="$!e.id" #if($!e.id == $!entity.merchant.id) selected #end>$!e.id:$!e.name</option>
+            #end
+        </select>
     </div>
+
     <div class="control-group">
         <button type="submit" class="btn btn-primary">查询</button>
     </div>

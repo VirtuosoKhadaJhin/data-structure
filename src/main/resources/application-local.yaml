@@ -1,0 +1,51 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: abc@123
+    test-on-borrow: true
+    validation-query: select 1
+
+  jpa:
+    database: MYSQL
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+  http:
+    multipart:
+      max-file-size: 9Mb
+      max-request-size: 20Mb
+
+  velocity:
+    charset: utf-8
+    resource-loader-path: classpath:/templates/
+    suffix: .vm
+    toolbox-config-location: /velocity_toolbox.xml
+    prefix:
+    allow-request-override: false
+    check-template-location: false
+
+server:
+  port: 8085
+  tomcat:
+    accesslog:
+      enabled: true
+      directory: /var/log/accesslog/
+
+aliyun:
+ oss:
+  access-key-id: OgdPMXR4cLyeIxEW
+  secret-access-key: zgSa3pBpQEo4EPQt1sVBF4U66QJZ21
+  endpoint: http://oss-cn-hangzhou.aliyuncs.com
+ nuanyou:
+  image-server: https://img.91nuanyou.com
+  bucketname: nuanyou-image
+  cms-basepath: cms
+  fake-image-server: http://image.hellodfs.com/nuanyou20opt
+  fakeuser-basepath: nuanyou20opt/user
+  fakercomment-basepath: nuanyou20opt/comment
+
+nuanyou-host: http://testh5.91nuanyou.com
+withdrawurl: http://testuser.api.91nuanyou.com

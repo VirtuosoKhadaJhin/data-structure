@@ -19,6 +19,7 @@ public class RecommendCat {
     private City city;
     private Long countryId;
     private Integer sort;
+    private Boolean display;
 
     public RecommendCat() {
     }
@@ -97,6 +98,15 @@ public class RecommendCat {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    @Column(name = "display", nullable = true)
+    public Boolean getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(Boolean display) {
+        this.display = display;
     }
 
 }

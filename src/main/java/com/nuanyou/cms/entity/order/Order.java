@@ -4,10 +4,7 @@ import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.coupon.Coupon;
-import com.nuanyou.cms.entity.enums.OrderPayType;
-import com.nuanyou.cms.entity.enums.OrderPayTypeConverter;
-import com.nuanyou.cms.entity.enums.OrderType;
-import com.nuanyou.cms.entity.enums.OrderTypeConverter;
+import com.nuanyou.cms.entity.enums.*;
 import com.nuanyou.cms.entity.user.PasUserProfile;
 
 import javax.persistence.*;
@@ -31,7 +28,8 @@ public class Order {
     private Short total;
     private BigDecimal price;
     private BigDecimal kpprice;
-    private Integer orderstatus;
+    private NewOrderStatus orderstatus;
+    private RefundStatus refundstatus;
     private String statusname;
     private Date statustime;
     private Date paytime;
@@ -40,12 +38,11 @@ public class Order {
     private Date commenttime;
     private BigDecimal oprice;
     private BigDecimal okpprice;
-    private Byte platform;
-    private Byte os;
+    private Platform platform;
+    private Os os;
     private String sceneid;
     private BigDecimal merchantsubsidy;
     private Byte paystatus;
-    private Integer refundstatus;
     private Date refundtime;
     private Date refundaudittime;
     private String refundreason;
@@ -69,20 +66,12 @@ public class Order {
     private BigDecimal itemprice;
     private BigDecimal itemlocalprice;
     private BigDecimal payable;
-
     private BigDecimal youfurmbreduce;//优付优惠人民币金额
     private BigDecimal youfulocalereduce;//优付优惠金额
     private BigDecimal mchrmbreduce;//商户优惠人民币金额
     private BigDecimal mchlocalereduce;//商户优惠金额
-
-
-
-    private OrderSms sms;
-    private OrderSubsidy subsidy;
     private PasUserProfile user;
     private Coupon coupon;
-
-    private OrderLogistics orderLogistics;
 
 
     @Id
@@ -153,7 +142,7 @@ public class Order {
         this.paytype = paytype;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mchid", nullable = true)
     public Merchant getMerchant() {
         return merchant;
@@ -164,8 +153,21 @@ public class Order {
     }
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid", referencedColumnName = "userid")
+
+    private Long userId;
+
+    @Column(name = "userid")
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    /* @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "userid", referencedColumnName = "userid")*/
+   @Transient
     public PasUserProfile getUser() {
         return user;
     }
@@ -216,17 +218,16 @@ public class Order {
     }
 
 
+
     @Column(name = "orderstatus", nullable = true)
-    public Integer getOrderstatus() {
+    @Convert(converter = NewOrderStatusConverter.class)
+    public NewOrderStatus getOrderstatus() {
         return orderstatus;
     }
 
-    public void setOrderstatus(Integer orderstatus) {
+    public void setOrderstatus(NewOrderStatus orderstatus) {
         this.orderstatus = orderstatus;
     }
-
-    //@Convert(converter = OrderStatusConverter.class)
-
 
     @Column(name = "orderstatusname", nullable = true, length = 20)
     public String getStatusname() {
@@ -309,23 +310,28 @@ public class Order {
 
 
     @Column(name = "platform", nullable = true)
-    public Byte getPlatform() {
+    @Convert(converter=PlatformConverter.class)
+    public Platform getPlatform() {
         return platform;
     }
 
-    public void setPlatform(Byte platform) {
+    public void setPlatform(Platform platform) {
         this.platform = platform;
     }
 
 
     @Column(name = "OS", nullable = true)
-    public Byte getOs() {
+    @Convert(converter = OsConverter.class)
+    public Os getOs() {
         return os;
     }
 
-    public void setOs(Byte os) {
+    public void setOs(Os os) {
         this.os = os;
     }
+
+
+
 
 
     @Column(name = "sceneid", nullable = true, length = 255)
@@ -359,11 +365,12 @@ public class Order {
 
 
     @Column(name = "newrefundstatus", nullable = true)
-    public Integer getRefundstatus() {
+    @Convert(converter=RefundStatusConverter.class  )
+    public RefundStatus getRefundstatus() {
         return refundstatus;
     }
 
-    public void setRefundstatus(Integer refundstatus) {
+    public void setRefundstatus(RefundStatus refundstatus) {
         this.refundstatus = refundstatus;
     }
 
@@ -643,5 +650,24 @@ public class Order {
         this.mchlocalereduce = mchlocalereduce;
     }
 
+
+    @Transient
+    public  Boolean getRefundQualified(){
+        return getRefundQualified(this);
+    }
+
+
+    public static  Boolean getRefundQualified(Order order){
+        if(order.getOrderstatus()== NewOrderStatus.Consumed||order.getOrderstatus()== NewOrderStatus.Commented||
+                order.getOrderstatus()== NewOrderStatus.AutoVerification||order.getOrderstatus()== NewOrderStatus.MerchantVerfication){
+            if(order.getRefundstatus()== null||order.getRefundstatus()== RefundStatus.Unknown){
+                return true;
+            }else{   //退款中或者退款成功//退款失败
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
 
 }

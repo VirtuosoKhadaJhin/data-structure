@@ -31,7 +31,7 @@ public class ExceptionControler {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public APIResult onException(Exception e) {
-        String message = ExceptionUtils.getMessage(e);
+        String message = ExceptionUtils.getStackTrace(e);
         log.error("系统异常:", e);
         return new APIResult(ResultCodes.UnkownError, message);
     }

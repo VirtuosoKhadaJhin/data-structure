@@ -4,12 +4,12 @@ import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.dao.LandMarkDao;
 import com.nuanyou.cms.entity.District;
 import com.nuanyou.cms.entity.Landmark;
+import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.DistrictService;
 import com.nuanyou.cms.service.LandMarkService;
 import com.nuanyou.cms.util.DistanceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,12 +62,24 @@ public class LandMarkController {
     }
 
     @RequestMapping("list")
-    public String list(@RequestParam(required = false, defaultValue = "1") int index, Landmark entity, Model model) {
+    public String list(@RequestParam(required = false, defaultValue = "1") int index,
+                       @RequestParam(required = false, defaultValue = "id") String propertie,
+                       @RequestParam(required = false) Sort.Direction direction,
+                       Landmark entity, Model model) {
+
+        Pageable pageable;
+        if (direction == null)
+            pageable = new PageRequest(index - 1, PageUtil.pageSize);
+        else
+            pageable = new PageRequest(index - 1, PageUtil.pageSize, direction, propertie);
+
+        Page<Landmark> page = landMarkService.findByCondition(entity, pageable);
+
         List<District> districts = this.districtService.getIdNameList();
-        Page<Landmark> page = landMarkService.findByCondition(index, entity);
+        model.addAttribute("districts", districts);
+
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
-        model.addAttribute("districts", districts);
         return "landMark/list";
     }
 

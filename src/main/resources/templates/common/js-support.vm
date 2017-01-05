@@ -6,3 +6,5 @@
 <script src="http://cdn.bootcss.com/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.full.min.js"></script>
 <script src="/dist/js/jquery.metadata.js"></script>
 <script src="/dist/js/common.js"></script>
+<script src="/dist/ztree/js/jquery.ztree.core.js"></script>
+<script src="/dist/ztree/js/jquery.ztree.excheck.js"></script>

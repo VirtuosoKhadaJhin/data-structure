@@ -31,8 +31,7 @@ public class LandMarkServiceImpl implements LandMarkService {
     private LandMarkDao landMarkDao;
 
     @Override
-    public Page<Landmark> findByCondition(int index, final Landmark entity) {
-        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "id");
+    public Page<Landmark> findByCondition(final Landmark entity, Pageable pageable) {
         return landMarkDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {

@@ -126,6 +126,9 @@ public class CommentOrderController {
         Page<CommentOrder> page = commentOrderDao.findAll(Example.of(entity), pageable);
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
+
+        List<Merchant> merchants = merchantService.getIdNameList();
+        model.addAttribute("merchants", merchants);
         return "commentOrder/listFake";
     }
 

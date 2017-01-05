@@ -1,7 +1,7 @@
 package com.nuanyou.cms.entity.enums;
 
 /**
- * Created by yangkai on 2016/9/19.
+ * by Felix
  */
 public enum OrderPayType {
     WXPAY( 1,"微信"), ALIPAY( 2,"支付宝"), COD(3,"到付"), APPLEPAY(4,"APPLEPAY"), UNION( 5,"联盟支付"), JDPAY(6,"京东支付");
