@@ -1,9 +1,9 @@
 spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://test20-db.9ny.me:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
-    username: nuanyou20
-    password: 1qaz2wsxE
+    url: jdbc:mysql://127.0.0.1:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: abc@123
     test-on-borrow: true
     validation-query: select 1
 
@@ -49,6 +49,3 @@ aliyun:
 
 nuanyou-host: http://testh5.91nuanyou.com
 withdrawurl: http://testuser.api.91nuanyou.com
-
-upload:
-  s3server: https://kr.file.91nuanyou.com

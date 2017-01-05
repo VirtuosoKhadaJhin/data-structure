@@ -4,6 +4,7 @@ import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.OrderDao;
 import com.nuanyou.cms.dao.OrderRefundLogDao;
+import com.nuanyou.cms.entity.enums.RefundStatus;
 import com.nuanyou.cms.entity.order.OrderRefundLog;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.OrderRefundService;
@@ -79,9 +80,9 @@ public class OrderRefundServiceImpl implements OrderRefundService {
 
         entity.setStatus(type);
         if (entity.getStatus() == 2) {
-            entity.getOrder().setRefundstatus(202);
+            entity.getOrder().setRefundstatus(RefundStatus.Failure);
         } else if (entity.getStatus() == 1) {
-            entity.getOrder().setRefundstatus(203);
+            entity.getOrder().setRefundstatus(RefundStatus.Success);
         }
         this.orderService.saveNotNull(entity.getOrder());
         this.saveNotNull(entity);

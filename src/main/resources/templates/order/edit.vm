@@ -51,28 +51,28 @@
                                 <div class="control-group">
                                     <label class="control-label">优付优惠（本地）</label>
                                     <div class="controls">
-                                        $!orderDetail.subsidy_youfusubsidyprice_Format
+                                        $!orderDetail.subsidy_youfusubsidykpprice_Format
                                     </div>
 
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label">优付优惠（人民币）</label>
                                     <div class="controls">
-                                        $!orderDetail.subsidy_youfusubsidykpprice_Format
+                                        $!orderDetail.subsidy_youfusubsidyprice_Format
                                     </div>
 
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label">商户优惠（本地）</label>
                                     <div class="controls">
-                                        $!orderDetail.subsidy_mchsubsidyprice_Format
+                                        $!orderDetail.subsidy_mchsubsidykpprice_Format
                                     </div>
 
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label">商户优惠（人民币）</label>
                                     <div class="controls">
-                                        $!orderDetail.subsidy_mchsubsidykpprice_Format
+                                        $!orderDetail.subsidy_mchsubsidyprice_Format
                                     </div>
 
                                 </div>
