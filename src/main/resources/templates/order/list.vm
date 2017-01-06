@@ -10,7 +10,8 @@
         <tr>
             <th class="table-set">操作</th>
             <th>ID</th>
-            <th>订单ID</th>
+            <th>订单编号</th>
+            <th>订单流水号</th>
             <th>订单状态</th>
             <th>退款状态</th>
 
@@ -51,6 +52,9 @@
                 </td>
                 <td>$!order.id</td>
                 <td>$!order.ordersn</td>
+                <td>
+                    $!order.transactionid
+                </td>
                 <td>$!order.orderstatus.name</td>
                 <td>$!order.refundstatus.name</td>
 
@@ -67,6 +71,7 @@
                 <td>
                     $!order.os.name
                 </td>
+
 
 
 
