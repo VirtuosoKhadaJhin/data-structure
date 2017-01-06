@@ -20,6 +20,7 @@
             <th>支付类型</th>
             <th>来源平台</th>
             <th>来源系统</th>
+            <th>对账流水号</th>
 
 
             <th>使用码</th>
@@ -67,6 +68,10 @@
                 <td>
                     $!order.os.name
                 </td>
+                <td>
+                    $!order.transactionid
+                </td>
+
 
 
 
