@@ -274,6 +274,7 @@ public class OrderServiceImpl implements OrderService {
         if (order.getRefundstatus() == RefundStatus.Failure) {
             order.setStatusname("退款失败");
         } else if (order.getRefundstatus() == RefundStatus.Success) {
+            order.setOrderstatus(NewOrderStatus.RefundSuccess);
             order.setStatusname("退款成功");
         }
         this.saveNotNull(order);
