@@ -151,6 +151,15 @@ public class OrderController {
     @RequestMapping("refundList")
     public String refundList(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, TimeCondition time) {
         Page<Order> page = orderService.findRefundByCondition(index, entity, time);
+        for(Order order : page.getContent()){
+            //注意：此处为避免查询慢，只查询userid和nickname字段
+            PasUserProfile userProfile = pasUserProfileDao.findPartsByUserid(order.getUserId());
+            if(userProfile!=null){
+                order.setUser(userProfile);
+            }
+        }
+        List<Country> countries = this.countryDao.findAll();
+        model.addAttribute("countries", countries);
         List<RefundStatus> refundStatuses=Arrays.asList( RefundStatus.values());
         model.addAttribute("refundStatuses", refundStatuses);
         model.addAttribute("page", page);

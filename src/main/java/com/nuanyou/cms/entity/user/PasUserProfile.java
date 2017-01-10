@@ -254,4 +254,10 @@ public class PasUserProfile implements Serializable {
         this.scenetime = scenetime;
     }
 
+
+    public PasUserProfile(Long id,  Long userid,String nickname) {
+        this.id = id;
+        this.nickname = nickname;
+        this.userid = userid;
+    }
 }
