@@ -3,6 +3,7 @@ package com.nuanyou.cms.service.impl;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
+import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.UserCardItem;
 import com.nuanyou.cms.entity.coupon.Coupon;
 import com.nuanyou.cms.entity.enums.CardStatusEnum;
@@ -17,9 +18,16 @@ import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.OrderRefundLogService;
 import com.nuanyou.cms.service.OrderService;
 import com.nuanyou.cms.util.BeanUtils;
+import com.nuanyou.cms.util.ConvertFileEncoding;
 import com.nuanyou.cms.util.DateUtils;
 import com.nuanyou.cms.util.TimeCondition;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.velocity.tools.generic.DateTool;
+import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +41,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,7 +69,11 @@ public class OrderServiceImpl implements OrderService {
     private UserCardItemDao userCardItemDao;
     @Autowired
     private CouponDao couponDao;
+    @Autowired
+    private MerchantDao merchantDao;
 
+    private static String timePattern="yyyy-MM-dd HH:mm:ss";
+    private static String decimalPattern="#0.00";
     @Override
     public Page<Order> findByCondition(Integer index, final Order entity, final TimeCondition time, Pageable pageable) {
         return orderDao.findAll(new Specification() {
@@ -138,6 +153,22 @@ public class OrderServiceImpl implements OrderService {
                     Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd());
                     predicate.add(p);
                 }
+                if (time.getBegin_2() != null) {
+                    Predicate p = cb.greaterThanOrEqualTo(root.get("refundtime").as(Date.class), time.getBegin_2());
+                    predicate.add(p);
+                }
+                if (time.getEnd_2() != null) {
+                    Predicate p = cb.lessThanOrEqualTo(root.get("refundtime").as(Date.class), time.getEnd_2());
+                    predicate.add(p);
+                }
+                if (entity.getMerchant()!=null && !StringUtils.isEmpty(entity.getMerchant().getName())) {
+                    Predicate pStatus = cb.like(root.get("merchant").get("name").as(String.class),entity.getMerchant().getName());
+                    predicate.add(pStatus);
+                }
+                if(entity.getCountryid()!=null){
+                    Predicate p1 = cb.equal(root.get("countryid"), entity.getCountryid());
+                    predicate.add(p1);
+                }
                 if(entity.getId()!=null){
                     Predicate p1 = cb.equal(root.get("id"), entity.getId());
                     predicate.add(p1);
@@ -153,7 +184,68 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
+    @Override
+    public void putOrderToExcel(int index, HttpServletRequest request, HttpServletResponse response, ViewOrderExport entity,
+                                TimeCondition time, String[] titles, String filename, HSSFWorkbook workbook, HSSFSheet firstSheet, HSSFRow firstRow) throws IOException {
+        Long begin=System.currentTimeMillis();
+        Page<ViewOrderExport> page = findExportByCondition(index, entity, time,null);
+        Long end=System.currentTimeMillis();
+        System.out.println("读的时间差:"+(end-begin));
+        Long beginWrite=System.currentTimeMillis();
+        for (int i = 0; i < titles.length; i++) {
+            HSSFCell c = firstRow.createCell(i);
+            c.setCellValue(titles[i]);
+        }
+        NumberTool numberFormatter=new NumberTool();
+        DateTool dateFormatter=new DateTool();
+        FillContent(firstSheet, page, numberFormatter, dateFormatter);
+        setResponseOut(filename,workbook,request,response);
+        Long endWrite=System.currentTimeMillis();
+        System.out.println("写的时间差:"+(endWrite-beginWrite));
+    }
+    private void FillContent(HSSFSheet sheet, Page<ViewOrderExport> page, NumberTool numberFormatter, DateTool dateFormatter) {
+        for (int i = 0; i < page.getContent().size(); i++) {
+            HSSFRow r = sheet.createRow(i+1);
+            ViewOrderExport each=page.getContent().get(i);
+            r.createCell(0).setCellValue(i+1);
+            r.createCell(1).setCellValue(each.getId());
+            r.createCell(2).setCellValue(each.getOrdersn());
+            r.createCell(3).setCellValue(each.getSceneid());
+            r.createCell(4).setCellValue(each.getOrdertype()==null?"":each.getOrdertype().getName());
+            r.createCell(5).setCellValue(each.getPaytype()==null?"":each.getPaytype().getName());
+            r.createCell(6).setCellValue(each.getPlatform()==null?"":each.getPlatform().getName());
+            r.createCell(7).setCellValue(each.getOs()==null?"":each.getOs().getName());
+            r.createCell(8).setCellValue(each.getOrdercode());
+            r.createCell(9).setCellValue(each.getMerchant()==null||each.getMerchant().getId()==null?"":each.getMerchant().getId().toString());
+            r.createCell(10).setCellValue(each.getMerchant()==null|| StringUtils.isEmpty(each.getMerchant().getName())?"":each.getMerchant().getName());
+            r.createCell(11).setCellValue(each.getMerchant()==null|| StringUtils.isEmpty(each.getMerchant().getKpname())?"":each.getMerchant().getKpname());
+            r.createCell(12).setCellValue(each.getUserId()==null?"":each.getUserId().toString());
+            //r.createCell(12).setCellValue(each.getUsername()==null?"":each.getUsername());
+            r.createCell(13).setCellValue(numberFormatter.format(decimalPattern,each.getKpprice()));
+            r.createCell(14).setCellValue(numberFormatter.format(decimalPattern,each.getOkpprice()));
+            r.createCell(15).setCellValue(each.getPayable()==null?each.getPrice().doubleValue():each.getPayable().doubleValue());
+            r.createCell(16).setCellValue(each.getOprice()==null?"":each.getOprice().toPlainString());
+            //r.createCell(17).setCellValue(each.getMerchantsubsidy()==null?"":each.getMerchantsubsidy().toPlainString());
+            r.createCell(17).setCellValue(each.getStatusname());
+            r.createCell(18).setCellValue(dateFormatter.format(timePattern,each.getCreatetime()));
+            r.createCell(19).setCellValue(dateFormatter.format(timePattern,each.getUsetime()));
+            r.createCell(20).setCellValue(each.getAddress()==null?"":each.getAddress());
+            r.createCell(21).setCellValue(each.getPostalcode()==null?"":each.getPostalcode());
+            r.createCell(22).setCellValue(each.getProvince()==null?"":each.getProvince());
+            r.createCell(23).setCellValue(each.getDistrict()==null?"":each.getDistrict());
+            r.createCell(24).setCellValue(each.getCity()==null?"":each.getCity());
+            r.createCell(25).setCellValue(each.getTel()==null?"":each.getTel());
+        }
+    }
 
+
+
+    private void setResponseOut(String filename, HSSFWorkbook workbook,HttpServletRequest request,HttpServletResponse response) throws IOException {
+        filename = ConvertFileEncoding.encodeFilename(filename, request);
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-disposition", "attachment;filename=" + filename);
+        workbook.write(response.getOutputStream());
+    }
     @Override
     public Page<ViewOrderExport> findExportByCondition(Integer index, final ViewOrderExport entity, final TimeCondition time, Pageable pageable) {
         return viewOrderExportDao.findAll(new Specification() {

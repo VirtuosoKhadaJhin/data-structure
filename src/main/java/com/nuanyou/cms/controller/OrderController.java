@@ -151,6 +151,15 @@ public class OrderController {
     @RequestMapping("refundList")
     public String refundList(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, TimeCondition time) {
         Page<Order> page = orderService.findRefundByCondition(index, entity, time);
+        for(Order order : page.getContent()){
+            //注意：此处为避免查询慢，只查询userid和nickname字段
+            PasUserProfile userProfile = pasUserProfileDao.findPartsByUserid(order.getUserId());
+            if(userProfile!=null){
+                order.setUser(userProfile);
+            }
+        }
+        List<Country> countries = this.countryDao.findAll();
+        model.addAttribute("countries", countries);
         List<RefundStatus> refundStatuses=Arrays.asList( RefundStatus.values());
         model.addAttribute("refundStatuses", refundStatuses);
         model.addAttribute("page", page);
@@ -169,92 +178,10 @@ public class OrderController {
                          "邮编","省会","区","城市","电话"};
         String filename = "order.xls";
         HSSFWorkbook workbook=new HSSFWorkbook();
-        HSSFSheet sheet = workbook.createSheet("订单列表");
-        HSSFRow row = sheet.createRow(0);
-        Page<ViewOrderExport> page = orderService.findExportByCondition(index, entity, time,null);
-        Long begin=System.currentTimeMillis();
-        for (int i = 0; i < titles.length; i++) {
-            HSSFCell c = row.createCell(i);
-            c.setCellValue(titles[i]);
-        }
-        Long end=System.currentTimeMillis();
-        System.out.println("时间差:"+(end-begin)/1000);
-        NumberTool numberFormatter=new NumberTool();
-        DateTool dateFormatter=new DateTool();
-        FillContent(sheet, page, numberFormatter, dateFormatter);
-        setResponseOut(filename,workbook,request,response);
+        HSSFSheet firstSheet = workbook.createSheet("订单列表");
+        HSSFRow firstRow = firstSheet.createRow(0);
+        this.orderService.putOrderToExcel(index, request, response, entity, time, titles, filename, workbook, firstSheet, firstRow);
     }
-
-    private void FillContent(HSSFSheet sheet, Page<ViewOrderExport> page, NumberTool numberFormatter, DateTool dateFormatter) {
-        for (int i = 0; i < page.getContent().size(); i++) {
-            HSSFRow r = sheet.createRow(i+1);
-            ViewOrderExport each=page.getContent().get(i);
-            r.createCell(0).setCellValue(i+1);
-            r.createCell(1).setCellValue(each.getId());
-            r.createCell(2).setCellValue(each.getOrdersn());
-            r.createCell(3).setCellValue(each.getSceneid());
-            r.createCell(4).setCellValue(each.getOrdertype()==null?"":each.getOrdertype().getName());
-            r.createCell(5).setCellValue(each.getPaytype()==null?"":each.getPaytype().getName());
-            r.createCell(6).setCellValue(each.getPlatform()==null?"":each.getPlatform().getName());
-            r.createCell(7).setCellValue(each.getOs()==null?"":each.getOs().getName());
-            r.createCell(8).setCellValue(each.getOrdercode());
-            r.createCell(9).setCellValue(each.getMerchant()==null||each.getMerchant().getId()==null?"":each.getMerchant().getId().toString());
-            r.createCell(10).setCellValue(each.getMerchant()==null|| StringUtils.isEmpty(each.getMerchant().getName())?"":each.getMerchant().getName());
-            r.createCell(11).setCellValue(each.getMerchant()==null|| StringUtils.isEmpty(each.getMerchant().getKpname())?"":each.getMerchant().getKpname());
-            r.createCell(12).setCellValue(each.getUserId()==null?"":each.getUserId().toString());
-            //r.createCell(12).setCellValue(each.getUsername()==null?"":each.getUsername());
-            r.createCell(13).setCellValue(numberFormatter.format(decimalPattern,each.getKpprice()));
-            r.createCell(14).setCellValue(numberFormatter.format(decimalPattern,each.getOkpprice()));
-            r.createCell(15).setCellValue(each.getPayable()==null?each.getPrice().doubleValue():each.getPayable().doubleValue());
-            r.createCell(16).setCellValue(each.getOprice()==null?"":each.getOprice().toPlainString());
-            //r.createCell(17).setCellValue(each.getMerchantsubsidy()==null?"":each.getMerchantsubsidy().toPlainString());
-            r.createCell(17).setCellValue(each.getStatusname());
-            r.createCell(18).setCellValue(dateFormatter.format(timePattern,each.getCreatetime()));
-            r.createCell(19).setCellValue(dateFormatter.format(timePattern,each.getUsetime()));
-            r.createCell(20).setCellValue(each.getAddress()==null?"":each.getAddress());
-            r.createCell(21).setCellValue(each.getPostalcode()==null?"":each.getPostalcode());
-            r.createCell(22).setCellValue(each.getProvince()==null?"":each.getProvince());
-            r.createCell(23).setCellValue(each.getDistrict()==null?"":each.getDistrict());
-            r.createCell(24).setCellValue(each.getCity()==null?"":each.getCity());
-            r.createCell(25).setCellValue(each.getTel()==null?"":each.getTel());
-        }
-    }
-
-
-
-    private void setResponseOut(String filename, HSSFWorkbook workbook,HttpServletRequest request,HttpServletResponse response) throws IOException {
-        filename = ConvertFileEncoding.encodeFilename(filename, request);
-        response.setContentType("application/vnd.ms-excel");
-        response.setHeader("Content-disposition", "attachment;filename=" + filename);
-        workbook.write(response.getOutputStream());
-    }
-
-    @RequestMapping("api/detail")
-    @ResponseBody
-    public APIResult detail(Long id) {
-        Map<String,Object> map=new HashMap<String,Object>();
-        Order order=this.orderDao.findOne(id);
-        OrderSms sms=this.orderSmsDao.findByOrderId(id);
-        OrderSubsidy subsidy=this.orderSubsidyDao.findByOrderId(id);
-        OrderLogistics logistics=this.orderLogisticsDao.findByOrderId(id);
-        Integer buyNum=this.orderService.getBuyNum(order);
-        OrderDetail orderDetail=new OrderDetail(
-                sms==null?null:sms.getCode(),
-                sms==null?null:sms.getTimes(),
-                logistics==null?null:logistics.getAddress(),
-                subsidy==null?null:subsidy.getYoufusubsidyprice(),
-                subsidy==null?null:subsidy.getYoufusubsidykpprice(),
-                subsidy==null?null:subsidy.getMchsubsidyprice(),
-                subsidy==null?null:subsidy.getMchsubsidykpprice(),
-                buyNum
-        );
-        map.put("orderDetail",orderDetail);
-        return new APIResult(map);
-    }
-
-
-
-
 
 
 
