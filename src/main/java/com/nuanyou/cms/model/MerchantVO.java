@@ -1,19 +1,20 @@
 package com.nuanyou.cms.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.nuanyou.cms.entity.District;
 import com.nuanyou.cms.entity.MerchantCat;
+import com.nuanyou.cms.entity.MerchantHeadimg;
 import com.nuanyou.cms.entity.enums.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Alan.ye on 2016/9/5.
  */
-public class Merchant {
-
+public class MerchantVO {
     private Long id;
     private String name;
     private String kpname;
@@ -21,9 +22,10 @@ public class Merchant {
     private String intro2;
     private String outline;
     private String telphone;
-    private Time businessStart;
-    private Time businessEnd;
+    private Date businessStart;
+    private Date businessEnd;
     private List<Week> businessDay;
+    private VerifyType verifyType;
     private String address;
     private String kpaddress;
     private Boolean recommend;
@@ -32,33 +34,34 @@ public class Merchant {
     private BigDecimal consume;
     private Integer sort;
     private Boolean display;
-    private Long districtId;
-    private MerchantCat mcat;
+    private District district;
     private List<PayType> payTypes;
+
+    //2.0地址 600*200
     private String indexImgUrl;
+    //3.0地址 200*150
+    private String listImgUrl;
+
     private List<SupportType> supportType;
     private String tips;
     private Boolean issign;
-    private Byte ispush;
+    private Boolean ispush;
     private Long channelId;
     private Date createTime;
     private Date firstshowTime;
     private Double score;
-    private Byte rank;
+    private Integer rank;
     private Byte pushType;
     private String code;
-    private Long subcatId;
-    private Byte appointType;
+    private List<AppointType> appointType;
+    private List<MerchantHeadimg> headimgs;
 
-    private Byte subsidyUsAge;
-    private Byte userSubsidyType;
-    private Byte userSubsidyDiscount;
-    private BigDecimal userSubsidyAmount;
-    private BigDecimal userSubsidyLimit;
-    private Byte isuserFirstOrder;
-    private Date startTime;
-    private Integer num;
-    private BigDecimal userSubsidyFloor;
+    private Long landmarkId;
+
+    private MerchantCat mcat;
+    private MerchantCat subcat;
+
+    private Long catId;
 
 
     public Long getId() {
@@ -69,6 +72,7 @@ public class Merchant {
         this.id = id;
     }
 
+
     public String getName() {
         return name;
     }
@@ -76,6 +80,7 @@ public class Merchant {
     public void setName(String name) {
         this.name = name;
     }
+
 
     public String getKpname() {
         return kpname;
@@ -85,21 +90,24 @@ public class Merchant {
         this.kpname = kpname;
     }
 
+
     public String getIntro() {
         return intro;
     }
 
-    public void setIntro(String intro) {
-        this.intro = intro;
+    public void setIntro(String Longro) {
+        this.intro = Longro;
     }
+
 
     public String getIntro2() {
         return intro2;
     }
 
-    public void setIntro2(String intro2) {
-        this.intro2 = intro2;
+    public void setIntro2(String Longro2) {
+        this.intro2 = Longro2;
     }
+
 
     public String getOutline() {
         return outline;
@@ -109,6 +117,7 @@ public class Merchant {
         this.outline = outline;
     }
 
+
     public String getTelphone() {
         return telphone;
     }
@@ -117,21 +126,28 @@ public class Merchant {
         this.telphone = telphone;
     }
 
-    public Time getBusinessStart() {
+
+    @DateTimeFormat(pattern = "HH:mm:ss", iso = DateTimeFormat.ISO.TIME)
+    @JsonFormat(pattern = "HH:mm:ss", timezone = "GMT+8")
+    public Date getBusinessStart() {
         return businessStart;
     }
 
-    public void setBusinessStart(Time businessStart) {
+    public void setBusinessStart(Date businessStart) {
         this.businessStart = businessStart;
     }
 
-    public Time getBusinessEnd() {
+
+    @DateTimeFormat(pattern = "HH:mm:ss", iso = DateTimeFormat.ISO.TIME)
+    @JsonFormat(pattern = "HH:mm:ss", timezone = "GMT+8")
+    public Date getBusinessEnd() {
         return businessEnd;
     }
 
-    public void setBusinessEnd(Time businessEnd) {
+    public void setBusinessEnd(Date businessEnd) {
         this.businessEnd = businessEnd;
     }
+
 
     public List<Week> getBusinessDay() {
         return businessDay;
@@ -141,6 +157,16 @@ public class Merchant {
         this.businessDay = businessDay;
     }
 
+
+    public VerifyType getVerifyType() {
+        return verifyType;
+    }
+
+    public void setVerifyType(VerifyType verifyType) {
+        this.verifyType = verifyType;
+    }
+
+
     public String getAddress() {
         return address;
     }
@@ -148,6 +174,7 @@ public class Merchant {
     public void setAddress(String address) {
         this.address = address;
     }
+
 
     public String getKpaddress() {
         return kpaddress;
@@ -157,6 +184,7 @@ public class Merchant {
         this.kpaddress = kpaddress;
     }
 
+
     public Boolean getRecommend() {
         return recommend;
     }
@@ -164,6 +192,7 @@ public class Merchant {
     public void setRecommend(Boolean recommend) {
         this.recommend = recommend;
     }
+
 
     public Double getLongitude() {
         return longitude;
@@ -173,6 +202,7 @@ public class Merchant {
         this.longitude = longitude;
     }
 
+
     public Double getLatitude() {
         return latitude;
     }
@@ -180,6 +210,7 @@ public class Merchant {
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
+
 
     public BigDecimal getConsume() {
         return consume;
@@ -189,6 +220,7 @@ public class Merchant {
         this.consume = consume;
     }
 
+
     public Integer getSort() {
         return sort;
     }
@@ -196,6 +228,7 @@ public class Merchant {
     public void setSort(Integer sort) {
         this.sort = sort;
     }
+
 
     public Boolean getDisplay() {
         return display;
@@ -205,13 +238,15 @@ public class Merchant {
         this.display = display;
     }
 
-    public Long getDistrictId() {
-        return districtId;
+
+    public District getDistrict() {
+        return district;
     }
 
-    public void setDistrictId(Long districtId) {
-        this.districtId = districtId;
+    public void setDistrict(District district) {
+        this.district = district;
     }
+
 
     public MerchantCat getMcat() {
         return mcat;
@@ -221,6 +256,16 @@ public class Merchant {
         this.mcat = mcat;
     }
 
+
+    public MerchantCat getSubcat() {
+        return subcat;
+    }
+
+    public void setSubcat(MerchantCat subcat) {
+        this.subcat = subcat;
+    }
+
+
     public List<PayType> getPayTypes() {
         return payTypes;
     }
@@ -228,6 +273,7 @@ public class Merchant {
     public void setPayTypes(List<PayType> payTypes) {
         this.payTypes = payTypes;
     }
+
 
     public String getIndexImgUrl() {
         return indexImgUrl;
@@ -237,6 +283,16 @@ public class Merchant {
         this.indexImgUrl = indexImgUrl;
     }
 
+
+    public String getListImgUrl() {
+        return listImgUrl;
+    }
+
+    public void setListImgUrl(String listImgUrl) {
+        this.listImgUrl = listImgUrl;
+    }
+
+
     public List<SupportType> getSupportType() {
         return supportType;
     }
@@ -244,6 +300,7 @@ public class Merchant {
     public void setSupportType(List<SupportType> supportType) {
         this.supportType = supportType;
     }
+
 
     public String getTips() {
         return tips;
@@ -253,6 +310,7 @@ public class Merchant {
         this.tips = tips;
     }
 
+
     public Boolean getIssign() {
         return issign;
     }
@@ -261,13 +319,15 @@ public class Merchant {
         this.issign = issign;
     }
 
-    public Byte getIspush() {
+
+    public Boolean getIspush() {
         return ispush;
     }
 
-    public void setIspush(Byte ispush) {
+    public void setIspush(Boolean ispush) {
         this.ispush = ispush;
     }
+
 
     public Long getChannelId() {
         return channelId;
@@ -277,6 +337,7 @@ public class Merchant {
         this.channelId = channelId;
     }
 
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -284,6 +345,7 @@ public class Merchant {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
 
     public Date getFirstshowTime() {
         return firstshowTime;
@@ -293,6 +355,7 @@ public class Merchant {
         this.firstshowTime = firstshowTime;
     }
 
+
     public Double getScore() {
         return score;
     }
@@ -301,13 +364,15 @@ public class Merchant {
         this.score = score;
     }
 
-    public Byte getRank() {
+
+    public Integer getRank() {
         return rank;
     }
 
-    public void setRank(Byte rank) {
+    public void setRank(Integer rank) {
         this.rank = rank;
     }
+
 
     public Byte getPushType() {
         return pushType;
@@ -317,6 +382,7 @@ public class Merchant {
         this.pushType = pushType;
     }
 
+
     public String getCode() {
         return code;
     }
@@ -325,91 +391,51 @@ public class Merchant {
         this.code = code;
     }
 
-    public Long getSubcatId() {
-        return subcatId;
-    }
 
-    public void setSubcatId(Long subcatId) {
-        this.subcatId = subcatId;
-    }
-
-    public Byte getAppointType() {
+    public List<AppointType> getAppointType() {
         return appointType;
     }
 
-    public void setAppointType(Byte appointType) {
+    public void setAppointType(List<AppointType> appointType) {
         this.appointType = appointType;
     }
 
-    public Byte getSubsidyUsAge() {
-        return subsidyUsAge;
+
+    public List<MerchantHeadimg> getHeadimgs() {
+        return headimgs;
     }
 
-    public void setSubsidyUsAge(Byte subsidyUsAge) {
-        this.subsidyUsAge = subsidyUsAge;
+    public void setHeadimgs(List<MerchantHeadimg> headimgs) {
+        this.headimgs = headimgs;
     }
 
-    public Byte getUserSubsidyType() {
-        return userSubsidyType;
+
+    public Long getCatId() {
+        return catId;
     }
 
-    public void setUserSubsidyType(Byte userSubsidyType) {
-        this.userSubsidyType = userSubsidyType;
+    public void setCatId(Long catId) {
+        this.catId = catId;
     }
 
-    public Byte getUserSubsidyDiscount() {
-        return userSubsidyDiscount;
+
+    public Long getLandmarkId() {
+        return landmarkId;
     }
 
-    public void setUserSubsidyDiscount(Byte userSubsidyDiscount) {
-        this.userSubsidyDiscount = userSubsidyDiscount;
+    public void setLandmarkId(Long landmarkId) {
+        this.landmarkId = landmarkId;
     }
 
-    public BigDecimal getUserSubsidyAmount() {
-        return userSubsidyAmount;
+    public MerchantVO(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public void setUserSubsidyAmount(BigDecimal userSubsidyAmount) {
-        this.userSubsidyAmount = userSubsidyAmount;
+    public MerchantVO(Long id) {
+        this.id = id;
     }
 
-    public BigDecimal getUserSubsidyLimit() {
-        return userSubsidyLimit;
-    }
-
-    public void setUserSubsidyLimit(BigDecimal userSubsidyLimit) {
-        this.userSubsidyLimit = userSubsidyLimit;
-    }
-
-    public Byte getIsuserFirstOrder() {
-        return isuserFirstOrder;
-    }
-
-    public void setIsuserFirstOrder(Byte isuserFirstOrder) {
-        this.isuserFirstOrder = isuserFirstOrder;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Integer getNum() {
-        return num;
-    }
-
-    public void setNum(Integer num) {
-        this.num = num;
-    }
-
-    public BigDecimal getUserSubsidyFloor() {
-        return userSubsidyFloor;
-    }
-
-    public void setUserSubsidyFloor(BigDecimal userSubsidyFloor) {
-        this.userSubsidyFloor = userSubsidyFloor;
+    public MerchantVO() {
     }
 }
