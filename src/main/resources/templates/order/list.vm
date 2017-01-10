@@ -9,34 +9,31 @@
         <tr role="row">
         <tr>
             <th class="table-set">操作</th>
-            <th>ID</th>
             <th>订单编号</th>
-            <th>订单流水号</th>
-            <th>订单状态</th>
-            <th>退款状态</th>
-
-
-            <th>渠道</th>
-            <th>订单类型</th>
-            <th>支付类型</th>
-            <th>来源平台</th>
-            <th>来源系统</th>
-
-
-            <th>使用码</th>
-            <th>商户中文名称</th>
-            <th>商户本地名称</th>
             <th>userid</th>
             <th>购买人</th>
-            <th>优惠券/面值/本地面值</th>
+            <th>商户id</th>
+            <th>商户中文名称</th>
+            <th>商户本地名称</th>
             <th>总价(本地)</th>
             <th>原价(本地)</th>
             <th>总价(人民币)</th>
             <th>原价(人民币)</th>
             <th>商户优付补贴</th>
+            <th>优惠券/面值/本地面值</th>
+            <th>订单状态</th>
+            <th>订单类型</th>
             <th>下单时间</th>
             <th>使用时间</th>
+            <th>支付类型</th>
+            <th>来源平台</th>
+            <th>来源系统</th>
             <th>订单手机号码</th>
+
+            #*<th>订单流水号</th>
+            <th>退款状态</th>
+            <th>渠道</th>
+            <th>使用码</th>*#
         </tr>
         </tr>
         </thead>
@@ -50,42 +47,14 @@
                         <a href="javascript:void(0);" data-id="$!order.id" class="btn btn-success btn-mini tuikuan">退款</a>
                      #end
                 </td>
-                <td>$!order.id</td>
                 <td>$!order.ordersn</td>
-                <td>
-                    $!order.transactionid
-                </td>
-                <td>$!order.orderstatus.name</td>
-                <td>$!order.refundstatus.name</td>
-
-
-                <td>$!order.sceneid</td>
-                <td>$!order.ordertype.name</td>
-                <td>$!order.paytype.name</td>
-
-
-
-                <td>
-                    $!order.platform.name
-                </td>
-                <td>
-                    $!order.os.name
-                </td>
-
-
-
-
-
-                <td>$!order.ordercode</td>
+                <td>$!order.user.userid</td>
+                <td>$!order.user.nickname</td>
+                <td>$!order.merchant.id</td>
                 <td>
                     <a href="$!link.requestPath/merchant/detail?id=$!order.merchant.id" class="alink"> $!order.merchant.name</a>
                 </td>
                 <td>$!order.merchant.kpname</td>
-                <td>$!order.user.userid</td>
-                <td>$!order.user.nickname</td>
-                <td>
-                    #if($!order.coupon)$!order.coupon.title/$!order.coupon.price/$!order.coupon.localPrice#end
-                </td>
                 <td>$numberFormatter.format("#0.00",$!order.kpprice)</td>
                 <td>$numberFormatter.format("#0.00",$!order.okpprice)</td>
                 <td>
@@ -97,10 +66,22 @@
                 </td>
                 <td>$!order.oprice</td>
                 <td>$!order.merchantsubsidy</td>
+                <td>
+                    #if($!order.coupon)$!order.coupon.title/$!order.coupon.price/$!order.coupon.localPrice#end
+                </td>
+                <td>$!order.orderstatus.name</td>
+                <td>$!order.ordertype.name</td>
                 <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!order.createtime)</td>
                 <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!order.usetime)</td>
+                <td>$!order.paytype.name</td>
+                <td>$!order.platform.name</td>
+                <td>$!order.os.name</td>
                 <td>$!order.user.userTel.tel</td>
 
+                #*<td>$!order.transactionid</td>
+                <td>$!order.refundstatus.name</td>
+                <td>$!order.sceneid</td>
+                <td>$!order.ordercode</td>*#
             </tr>
             #end
         </tbody>

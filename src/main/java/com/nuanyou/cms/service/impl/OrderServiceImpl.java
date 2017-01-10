@@ -3,6 +3,7 @@ package com.nuanyou.cms.service.impl;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
+import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.UserCardItem;
 import com.nuanyou.cms.entity.coupon.Coupon;
 import com.nuanyou.cms.entity.enums.CardStatusEnum;
@@ -58,6 +59,8 @@ public class OrderServiceImpl implements OrderService {
     private UserCardItemDao userCardItemDao;
     @Autowired
     private CouponDao couponDao;
+    @Autowired
+    private MerchantDao merchantDao;
 
     @Override
     public Page<Order> findByCondition(Integer index, final Order entity, final TimeCondition time, Pageable pageable) {
@@ -138,6 +141,22 @@ public class OrderServiceImpl implements OrderService {
                 if (time.getEnd() != null) {
                     Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd());
                     predicate.add(p);
+                }
+                if (time.getBegin_2() != null) {
+                    Predicate p = cb.greaterThanOrEqualTo(root.get("refundtime").as(Date.class), time.getBegin_2());
+                    predicate.add(p);
+                }
+                if (time.getEnd_2() != null) {
+                    Predicate p = cb.lessThanOrEqualTo(root.get("refundtime").as(Date.class), time.getEnd_2());
+                    predicate.add(p);
+                }
+                if (entity.getMerchant()!=null && !StringUtils.isEmpty(entity.getMerchant().getName())) {
+                    Predicate pStatus = cb.like(root.get("merchant").get("name").as(String.class),entity.getMerchant().getName());
+                    predicate.add(pStatus);
+                }
+                if(entity.getCountryid()!=null){
+                    Predicate p1 = cb.equal(root.get("countryid"), entity.getCountryid());
+                    predicate.add(p1);
                 }
                 if(entity.getId()!=null){
                     Predicate p1 = cb.equal(root.get("id"), entity.getId());
