@@ -19,12 +19,12 @@ public class SystemContext {
 
 
 
-    public static void setRequest(HttpServletRequest request) {
+    protected static void setRequest(HttpServletRequest request) {
         requestThreadLocal.set(request);
     }
 
 
-    public static void removeRequest() {
+    protected static void removeRequest() {
         requestThreadLocal.remove();
     }
 
