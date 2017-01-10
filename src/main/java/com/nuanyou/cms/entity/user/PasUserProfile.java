@@ -260,4 +260,7 @@ public class PasUserProfile implements Serializable {
         this.nickname = nickname;
         this.userid = userid;
     }
+
+    public PasUserProfile() {
+    }
 }

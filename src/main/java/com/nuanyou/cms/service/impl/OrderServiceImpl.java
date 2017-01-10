@@ -265,7 +265,7 @@ public class OrderServiceImpl implements OrderService {
                     predicate.add(p);
                 }
                 if (entity.getMerchant()!=null&&entity.getMerchant().getId()!=null) {
-                    Predicate p = cb.equal(root.get("merchant").get("id"), entity.getId());
+                    Predicate p = cb.equal(root.get("merchant").get("id"), entity.getMerchant().getId());
                     predicate.add(p);
                 }
                 if (!StringUtils.isEmpty(entity.getSceneid())) {
@@ -292,7 +292,8 @@ public class OrderServiceImpl implements OrderService {
 
                 if (entity.getMerchant() != null && entity.getMerchant().getDistrict() != null && entity.getMerchant().getDistrict().getCountry() != null
                         && entity.getMerchant().getDistrict().getCountry().getId() != null) {
-                    Predicate p = cb.equal(root.get("merchant").get("district").get("country").get("id"), entity.getMerchant().getDistrict().getCountry().getId());
+                    Predicate p = cb.equal(root.get("merchant").get("district").get("country").get("id"),
+                                            entity.getMerchant().getDistrict().getCountry().getId());
                     predicate.add(p);
                 }
                 Predicate[] pre = new Predicate[predicate.size()];

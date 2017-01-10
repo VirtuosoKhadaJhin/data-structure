@@ -126,11 +126,10 @@ public class OrderController {
         List<OrderType> orderTypes= Arrays.asList( OrderType.values());
         List<OrderPayType> orderPayTypes=Arrays.asList( OrderPayType.values());
         List<NewOrderStatus> newOrderStatuses=Arrays.asList( NewOrderStatus.values());
-        List<RefundStatus> refundStatuses=Arrays.asList( RefundStatus.values());
         List<Merchant> merchants = this.merchantService.getIdNameList();
         Page<Order> page = orderService.findByCondition(index, entity, time,pageable);
         for (Order order : page.getContent()) {
-            PasUserProfile user=this.pasUserProfileDao.findByUserid(order.getUserId());
+            PasUserProfile user = pasUserProfileDao.findPartsByUserid(order.getUserId());
             if(user!=null){
                 order.setUser(user);
             }else{

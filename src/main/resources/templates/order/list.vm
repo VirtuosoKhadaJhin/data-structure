@@ -1,8 +1,10 @@
 #parse("common/list_start.vm")
 <div id="breadcrumb">
     <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-    <a href="../order/list" class="tip-bottom" data-original-title="">订单管理${page.totalElements}</a>
+    <a href="../order/list" class="tip-bottom" data-original-title="">订单管理</a>
 </div>
+
+<input name="totalElements" value="${page.totalElements}" type="hidden">
 <div style="overflow: auto;width: 100%">
     <table class="table table-bordered data-table dataTable" id="DataTables_Table_0" style="width: 2500px">
         <thead>
@@ -29,11 +31,6 @@
             <th>来源平台</th>
             <th>来源系统</th>
             <th>订单手机号码</th>
-
-            #*<th>订单流水号</th>
-            <th>退款状态</th>
-            <th>渠道</th>
-            <th>使用码</th>*#
         </tr>
         </tr>
         </thead>
@@ -77,11 +74,6 @@
                 <td>$!order.platform.name</td>
                 <td>$!order.os.name</td>
                 <td>$!order.user.userTel.tel</td>
-
-                #*<td>$!order.transactionid</td>
-                <td>$!order.refundstatus.name</td>
-                <td>$!order.sceneid</td>
-                <td>$!order.ordercode</td>*#
             </tr>
             #end
         </tbody>
