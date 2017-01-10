@@ -127,7 +127,6 @@ public class OrderServiceImpl implements OrderService {
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 if (entity.getRefundstatus() != null) {
-                    //entity.setRefundstatus(RefundStatus.RefundInProgress);
                     Predicate pStatus = cb.equal(root.get("refundstatus"), entity.getRefundstatus());
                     predicate.add(pStatus);
                 }
@@ -274,6 +273,7 @@ public class OrderServiceImpl implements OrderService {
         if (order.getRefundstatus() == RefundStatus.Failure) {
             order.setStatusname("退款失败");
         } else if (order.getRefundstatus() == RefundStatus.Success) {
+            order.setOrderstatus(NewOrderStatus.RefundSuccess);
             order.setStatusname("退款成功");
         }
         this.saveNotNull(order);
