@@ -198,24 +198,25 @@ public class OrderController {
             r.createCell(6).setCellValue(each.getPlatform()==null?"":each.getPlatform().getName());
             r.createCell(7).setCellValue(each.getOs()==null?"":each.getOs().getName());
             r.createCell(8).setCellValue(each.getOrdercode());
-            r.createCell(9).setCellValue(each.getMerchant()==null|| StringUtils.isEmpty(each.getMerchant().getName())?"":each.getMerchant().getName());
-            r.createCell(10).setCellValue(each.getMerchant()==null|| StringUtils.isEmpty(each.getMerchant().getKpname())?"":each.getMerchant().getKpname());
-            r.createCell(11).setCellValue(each.getUserId()==null?"":each.getUserId().toString());
+            r.createCell(9).setCellValue(each.getMerchant()==null||each.getMerchant().getId()==null?"":each.getMerchant().getId().toString());
+            r.createCell(10).setCellValue(each.getMerchant()==null|| StringUtils.isEmpty(each.getMerchant().getName())?"":each.getMerchant().getName());
+            r.createCell(11).setCellValue(each.getMerchant()==null|| StringUtils.isEmpty(each.getMerchant().getKpname())?"":each.getMerchant().getKpname());
+            r.createCell(12).setCellValue(each.getUserId()==null?"":each.getUserId().toString());
             //r.createCell(12).setCellValue(each.getUsername()==null?"":each.getUsername());
-            r.createCell(12).setCellValue(numberFormatter.format(decimalPattern,each.getKpprice()));
-            r.createCell(13).setCellValue(numberFormatter.format(decimalPattern,each.getOkpprice()));
-            r.createCell(14).setCellValue(each.getPayable()==null?each.getPrice().doubleValue():each.getPayable().doubleValue());
-            r.createCell(15).setCellValue(each.getOprice()==null?"":each.getOprice().toPlainString());
+            r.createCell(13).setCellValue(numberFormatter.format(decimalPattern,each.getKpprice()));
+            r.createCell(14).setCellValue(numberFormatter.format(decimalPattern,each.getOkpprice()));
+            r.createCell(15).setCellValue(each.getPayable()==null?each.getPrice().doubleValue():each.getPayable().doubleValue());
+            r.createCell(16).setCellValue(each.getOprice()==null?"":each.getOprice().toPlainString());
             //r.createCell(17).setCellValue(each.getMerchantsubsidy()==null?"":each.getMerchantsubsidy().toPlainString());
-            r.createCell(16).setCellValue(each.getStatusname());
-            r.createCell(17).setCellValue(dateFormatter.format(timePattern,each.getCreatetime()));
-            r.createCell(18).setCellValue(dateFormatter.format(timePattern,each.getUsetime()));
-            r.createCell(19).setCellValue(each.getAddress()==null?"":each.getAddress());
-            r.createCell(20).setCellValue(each.getPostalcode()==null?"":each.getPostalcode());
-            r.createCell(21).setCellValue(each.getProvince()==null?"":each.getProvince());
-            r.createCell(22).setCellValue(each.getDistrict()==null?"":each.getDistrict());
-            r.createCell(23).setCellValue(each.getCity()==null?"":each.getCity());
-            r.createCell(24).setCellValue(each.getTel()==null?"":each.getTel());
+            r.createCell(17).setCellValue(each.getStatusname());
+            r.createCell(18).setCellValue(dateFormatter.format(timePattern,each.getCreatetime()));
+            r.createCell(19).setCellValue(dateFormatter.format(timePattern,each.getUsetime()));
+            r.createCell(20).setCellValue(each.getAddress()==null?"":each.getAddress());
+            r.createCell(21).setCellValue(each.getPostalcode()==null?"":each.getPostalcode());
+            r.createCell(22).setCellValue(each.getProvince()==null?"":each.getProvince());
+            r.createCell(23).setCellValue(each.getDistrict()==null?"":each.getDistrict());
+            r.createCell(24).setCellValue(each.getCity()==null?"":each.getCity());
+            r.createCell(25).setCellValue(each.getTel()==null?"":each.getTel());
         }
     }
 
