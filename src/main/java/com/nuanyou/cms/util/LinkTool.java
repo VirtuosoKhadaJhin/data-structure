@@ -13,7 +13,7 @@ public class LinkTool  extends org.apache.velocity.tools.generic.LinkTool{
 
 
     public String getContextPath() {
-        HttpServletRequest request=SystemContext.get_request();
+        HttpServletRequest request=SystemContext.getRequest();
         return request.getContextPath();
     }
 

@@ -225,9 +225,9 @@
             if(!validateTime(begin,end)){
                 return alert("开始时间和结束时间不能为空,且只能在七天以内!");
             }
-            $(this).attr("disabled",true);
-            alert("正在导出Excel,20秒后可以重新导出!");
-            setTimeout(disableButton, 20000);
+            //$(this).attr("disabled",true);
+            //alert("正在导出Excel,20秒后可以重新导出!");
+            //setTimeout(disableButton, 20000);
             var form = $(".orderForm");
             form.attr("action", "export");
             form.attr("target", "_blank");

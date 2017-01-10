@@ -1,5 +1,6 @@
 package com.nuanyou.cms.controller;
 
+import com.nuanyou.cms.config.SystemContext;
 import com.nuanyou.cms.dao.BannerDao;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.entity.Banner;
