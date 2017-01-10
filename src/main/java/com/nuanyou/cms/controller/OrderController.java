@@ -163,9 +163,8 @@ public class OrderController {
     public void export(@RequestParam(required = false, defaultValue = "1") int index,  Model model,
                        HttpServletRequest request,HttpServletResponse response,
                        ViewOrderExport entity, TimeCondition time) throws IOException {
-        //"短信通知状态","短信通知次数","购买次数","优付优惠（本地）","优付优惠（人民币）","商户优惠（本地）","商户优惠（人民币）","收货地址"
         String[] titles=new String[]{
-                         "序号","ID","订单ID","渠道","订单类型","支付类型","来源平台","来源系统","使用码","商户中文名称",
+                         "序号","ID","订单编号","渠道","订单类型","支付类型","来源平台","来源系统","使用码","商户ID","商户中文名称",
                          "商户本地名称","用户ID", "总价(本地)","原价(本地)","总价(人民币)","原价(人民币)","订单状态","下单时间", "使用时间","地址",
                          "邮编","省会","区","城市","电话"};
         String filename = "order.xls";

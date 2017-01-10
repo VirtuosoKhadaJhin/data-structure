@@ -10,8 +10,6 @@ import java.io.IOException;
  */
 @WebFilter(filterName = "system", urlPatterns = "/*")
 public class ServletFilter implements Filter {
-
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -19,14 +17,15 @@ public class ServletFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        SystemContext.set_request((HttpServletRequest) request);
-        chain.doFilter(request, response);
+        try {
+            SystemContext.setRequest((HttpServletRequest)request);
+            chain.doFilter(request, response);
+        } finally {
+            SystemContext.removeRequest();
+        }
     }
 
     @Override
     public void destroy() {
-
-
-        System.out.println("init destroy");
     }
 }
