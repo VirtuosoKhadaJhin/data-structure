@@ -1,7 +1,7 @@
 #parse("common/list_start.vm")
 <div id="breadcrumb">
     <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-    <a href="../order/list" class="tip-bottom" data-original-title="">订单管理</a>
+    <a href="../order/list" class="tip-bottom" data-original-title="">订单管理${page.totalElements}</a>
 </div>
 <div style="overflow: auto;width: 100%">
     <table class="table table-bordered data-table dataTable" id="DataTables_Table_0" style="width: 2500px">
@@ -223,7 +223,7 @@
             var begin=$("#beginTime").val();
             var end=$("#endTime").val();
             if(!validateTime(begin,end)){
-                return alert("开始时间和结束时间不能为空,且只能在七天以内!");
+                return alert("开始时间和结束时间不能为空,且只能在30天以内!");
             }
             //$(this).attr("disabled",true);
             //alert("正在导出Excel,20秒后可以重新导出!");
@@ -247,7 +247,7 @@
             var begin=new Date(begin.replace("-", "/").replace("-", "/"));
             var end=new Date(end.replace("-", "/").replace("-", "/"));
             var result = end-begin;
-            if(result>7*24*60*60*1000){
+            if(result>30*24*60*60*1000){
                 return false;
             }
             return true;
