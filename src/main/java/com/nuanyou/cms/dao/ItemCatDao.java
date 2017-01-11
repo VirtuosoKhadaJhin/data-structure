@@ -13,6 +13,10 @@ import java.util.List;
  */
 public interface ItemCatDao extends JpaRepository<ItemCat, Long>, JpaSpecificationExecutor {
 
+    List<ItemCat> findByMerchantId(Long mchId);
+
+    void deleteByMerchantId(Long id);
+
     @Query(value = "select new ItemCat(t.id, t.name, t.kpname) from ItemCat t where t.merchant.id=:id")
     List<ItemCat> findIdNameList(@Param("id") Long id);
 

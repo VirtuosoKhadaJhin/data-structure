@@ -6,6 +6,7 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.*;
+import com.nuanyou.cms.model.MerchantVO;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.util.*;
@@ -78,8 +79,8 @@ public class MerchantController {
     }
 
     @RequestMapping(path = "update", method = RequestMethod.POST)
-    public String update(Merchant entity, Model model) {
-        entity = merchantService.saveNotNull(entity);
+    public String update(MerchantVO vo, Model model) {
+        MerchantVO entity = merchantService.saveNotNull(vo);
         model.addAttribute("entity", entity);
         setEnums(model);
         model.addAttribute("disabled", true);
