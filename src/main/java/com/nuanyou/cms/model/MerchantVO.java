@@ -47,7 +47,6 @@ public class MerchantVO {
     private Boolean issign;
     private Boolean ispush;
     private Long channelId;
-    private Date createTime;
     private Date firstshowTime;
     private Double score;
     private Integer rank;
@@ -335,15 +334,6 @@ public class MerchantVO {
 
     public void setChannelId(Long channelId) {
         this.channelId = channelId;
-    }
-
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
     }
 
 
