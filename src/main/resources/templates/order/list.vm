@@ -12,6 +12,7 @@
         <tr>
             <th class="table-set">操作</th>
             <th>订单编号</th>
+            <th>订单流水号</th>
             <th>userid</th>
             <th>购买人</th>
             <th>商户id</th>
@@ -45,6 +46,9 @@
                      #end
                 </td>
                 <td>$!order.ordersn</td>
+                <td>
+                    $!order.transactionid
+                </td>
                 <td>$!order.user.userid</td>
                 <td>$!order.user.nickname</td>
                 <td>$!order.merchant.id</td>
