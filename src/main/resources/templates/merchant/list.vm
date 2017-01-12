@@ -132,7 +132,7 @@
         <a href="javascript:void(0);" id="update-score-submit" class="btn btn-primary">保存</a>
     </div>
 </div>
-<div id="copy-item-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+<div id="copy-item-modal" class="modal hide fade" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3>商品复制</h3>
@@ -140,7 +140,7 @@
     <div class="modal-body">
         <div class="input-group">
             <label class="control-label">源商户</label>
-            <select id="copy-item-sourceId">
+            <select id="copy-item-sourceId" class="select2">
                 #foreach($e in $!merchants)
                     <option value="$!e.id">$!e.name（$!e.kpname）</option>
                 #end
