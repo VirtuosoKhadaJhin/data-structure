@@ -103,12 +103,10 @@
                                     </div>
                                     <label class="control-label">背景图</label>
                                     <div class="controls">
-                                        <input type="text" class="span9" id="imgurl" name="imgurl"
-                                               value='$!entity.imgurl'/>
-                                        <button type="button" class="btn btn-success previewBtn" data-id="imgurl">预览
-                                        </button>
-                                        <button type="button" class="btn btn-success uploadImgBtn" data-id="imgurl">上传
-                                        </button>
+                                        <input type="text" class="span9" id="imgurl" name="imgurl" value='$!entity.imgurl'/>
+                                        <button type="button" class="btn btn-success previewBtn" data-id="imgurl">预览</button>
+                                        <button type="button" class="btn btn-success uploadImgBtn" data-id="imgurl" imageSpec="">上传</button>
+                                        <p id="imgmsg"></p>
                                     </div>
                                 </div>
                                 <div class="form-actions">
@@ -138,6 +136,17 @@
 
             }
         });
+
+        $("select[name='type']").on("change", function () {
+            var val = $(this).val();
+            if (val == "1") {
+                $(".uploadImgBtn").attr("imageSpec", "FeatureNormal");
+                $("#imgmsg").empty().append("尺寸: 240 * 240, 限制: 40k");
+            } else if (val == "2") {
+                $(".uploadImgBtn").attr("imageSpec", "FeatureGood");
+                $("#imgmsg").empty().append("尺寸: 640 * 400, 限制: 150k");
+            }
+        }).trigger("change");
     </script>
 </body>
 </html>

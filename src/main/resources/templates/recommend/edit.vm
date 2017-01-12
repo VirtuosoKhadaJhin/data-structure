@@ -14,7 +14,7 @@
                 <div class="widget-box">
                     <div id="breadcrumb">
                         <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
-                        <a href="list" class="tip-bottom" data-original-title="">推荐组管理</a>
+                        <a href="list" class="tip-bottom" data-original-title="">推荐管理</a>
                         <a href="javascipt:void(0);" class="tip-bottom" data-original-title="">编辑/查看</a>
                     </div>
                     <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
@@ -59,7 +59,8 @@
                                 <div class="controls">
                                     <input name="imgUrl" type="text" class="span9" id="imgUrl" placeholder="列表页门头图" value="$!entity.imgUrl">
                                     <button class="btn btn-success previewBtn" type="button" data-id="imgUrl">预览</button>
-                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="imgUrl">上传</button>
+                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="imgUrl" imageSpec="Recommend">上传</button>
+                                    <p>尺寸: 320 * 240, 限制: 40k</p>
                                 </div>
                             </div>
                             <div class="form-actions">

@@ -138,19 +138,20 @@
                                 <div class="controls">
                                     <input name="kpaddress" type="text" class="span11" placeholder="本地地址" value="$!entity.kpaddress">
                                 </div>
-                                <label class="control-label">2.0列表页门头图</label>
+                                <label class="control-label">2.0列表图</label>
                                 <div class="controls">
-                                    <input name="indexImgUrl" type="text" class="span9" id="indexImgUrl" placeholder="2.0列表页门头图" value="$!entity.indexImgUrl">
+                                    <input name="indexImgUrl" type="text" class="span9" id="indexImgUrl" placeholder="2.0列表图" value="$!entity.indexImgUrl">
                                     <button class="btn btn-success previewBtn" type="button" data-id="indexImgUrl">预览</button>
                                     <button class="btn btn-success uploadImgBtn" type="button" data-id="indexImgUrl" data-width="600" data-height="200">上传
                                     </button>
                                 </div>
 
-                                <label class="control-label">3.0列表页门头图</label>
+                                <label class="control-label">3.0列表图</label>
                                 <div class="controls">
-                                    <input name="listImgUrl" type="text" class="span9" id="listImgUrl" placeholder="3.0列表页门头图" value="$!entity.listImgUrl">
+                                    <input name="listImgUrl" type="text" class="span9" id="listImgUrl" placeholder="3.0列表图" value="$!entity.listImgUrl">
                                     <button class="btn btn-success previewBtn" type="button" data-id="listImgUrl">预览</button>
-                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="listImgUrl" data-width="200" data-height="150">上传</button>
+                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="listImgUrl" imageSpec="MerchantList">上传</button>
+                                    <p>尺寸: 320 * 240, 限制: 40k</p>
                                 </div>
 
                                 <label class="control-label">经纬度</label>
