@@ -70,6 +70,10 @@ public class Merchant {
 
     private Long catId;
 
+    private BigDecimal postage;
+
+    private BigDecimal mailWeight;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -470,5 +474,23 @@ public class Merchant {
     }
 
     public Merchant() {
+    }
+
+    @Column(name = "postage")
+    public BigDecimal getPostage() {
+        return postage;
+    }
+
+    public void setPostage(BigDecimal postage) {
+        this.postage = postage;
+    }
+
+    @Column(name = "mailweight")
+    public BigDecimal getMailWeight() {
+        return mailWeight;
+    }
+
+    public void setMailWeight(BigDecimal mailWeight) {
+        this.mailWeight = mailWeight;
     }
 }

@@ -25,7 +25,7 @@
                         <h5>商户编辑</h5>
                     </div>
                     <div class="widget-content nopadding">
-                        <form class="form-horizontal commonValidate" role="form" action="update" method="post"
+                        <form class="form-horizontal merchantValidate" role="form" action="update" method="post"
                               id="commonForm">
                             <input name="id" type="hidden" class="span11" value="$!entity.id">
                             <div class="control-group">
@@ -74,7 +74,8 @@
                                 <div class="controls">
                                     <select name="verifyType" class="span11">
                                         #foreach($e in $!verifyTypes)
-                                            <option value="$!e" #if($!e == $!entity.verifyType)selected#end>$!e.name</option>
+                                            <option value="$!e"
+                                                    #if($!e == $!entity.verifyType)selected#end>$!e.name</option>
                                         #end
                                     </select>
                                 </div>
@@ -136,27 +137,37 @@
                                 </div>
                                 <label class="control-label">本地地址</label>
                                 <div class="controls">
-                                    <input name="kpaddress" type="text" class="span11" placeholder="本地地址" value="$!entity.kpaddress">
+                                    <input name="kpaddress" type="text" class="span11" placeholder="本地地址"
+                                           value="$!entity.kpaddress">
                                 </div>
                                 <label class="control-label">2.0列表页门头图</label>
                                 <div class="controls">
-                                    <input name="indexImgUrl" type="text" class="span9" id="indexImgUrl" placeholder="2.0列表页门头图" value="$!entity.indexImgUrl">
-                                    <button class="btn btn-success previewBtn" type="button" data-id="indexImgUrl">预览</button>
-                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="indexImgUrl" data-width="600" data-height="200">上传
+                                    <input name="indexImgUrl" type="text" class="span9" id="indexImgUrl"
+                                           placeholder="2.0列表页门头图" value="$!entity.indexImgUrl">
+                                    <button class="btn btn-success previewBtn" type="button" data-id="indexImgUrl">预览
+                                    </button>
+                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="indexImgUrl"
+                                            data-width="600" data-height="200">上传
                                     </button>
                                 </div>
 
                                 <label class="control-label">3.0列表页门头图</label>
                                 <div class="controls">
-                                    <input name="listImgUrl" type="text" class="span9" id="listImgUrl" placeholder="3.0列表页门头图" value="$!entity.listImgUrl">
-                                    <button class="btn btn-success previewBtn" type="button" data-id="listImgUrl">预览</button>
-                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="listImgUrl" data-width="200" data-height="150">上传</button>
+                                    <input name="listImgUrl" type="text" class="span9" id="listImgUrl"
+                                           placeholder="3.0列表页门头图" value="$!entity.listImgUrl">
+                                    <button class="btn btn-success previewBtn" type="button" data-id="listImgUrl">预览
+                                    </button>
+                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="listImgUrl"
+                                            data-width="200" data-height="150">上传
+                                    </button>
                                 </div>
 
                                 <label class="control-label">经纬度</label>
                                 <div class="controls">
-                                    <input name="longitude" id="longitude" type="text" class="span4" placeholder="经度" value="$!entity.longitude">
-                                    <input name="latitude" id="latitude" type="text" class="span4" placeholder="纬度" value="$!entity.latitude">
+                                    <input name="longitude" id="longitude" type="text" class="span4" placeholder="经度"
+                                           value="$!entity.longitude">
+                                    <input name="latitude" id="latitude" type="text" class="span4" placeholder="纬度"
+                                           value="$!entity.latitude">
                                     <a class="btn btn-success viewMap" href="javascript:void(0);">查看地图</a>
                                 </div>
 
@@ -177,7 +188,9 @@
                                     <select name="landmarkId" class="span9" def-value="$!entity.landmarkId">
                                         <option value="">无</option>
                                     </select>
-                                    <button class="btn btn-success landmark" type="button" data-width="200" data-height="150">获得地标</button>
+                                    <button class="btn btn-success landmark" type="button" data-width="200"
+                                            data-height="150">获得地标
+                                    </button>
                                 </div>
 
                                 <label class="control-label">顺序</label>
@@ -200,7 +213,7 @@
                                     #foreach($e in $!supportTypes)
                                         <input name="supportType" type="checkbox" value="$!e"
                                             #foreach($t in $!entity.supportType)
-                                               #if($!e == $!t)checked#end
+                                               #if($!e == $!t)checked="true"#end
                                             #end
                                         /> $!e.name
                                     #end
@@ -218,6 +231,19 @@
                                 <div class="controls">
                                     <textarea name="intro" id="intro" class="span11">$!entity.intro</textarea>
                                 </div>
+                                <div class="directMail" style="display: none">
+                                    <label class="control-label">邮费</label>
+                                    <div class="controls">
+                                        <input name="postage" id="postage" type="text" class="span11"
+                                               placeholder="请输入本地货币"
+                                               value="$!entity.postage">
+                                    </div>
+                                    <label class="control-label">起邮重量</label>
+                                    <div class="controls">
+                                        <input name="mailWeight" type="text" class="span11" placeholder="最小计算重量，可选"
+                                               value="$!entity.mailWeight">（KG）
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-actions">
                                 <button class="btn btn-success" type="submit" id="btn-save">保存</button>
@@ -234,7 +260,6 @@
 
 
     <script>
-
             #if($!disabled)
             $("#btn-save").hide();
             $(":input").each(function (i, o) {
@@ -276,6 +301,10 @@
             });
         });
 
+        directMailChange();
+        $("input[name='supportType']").click(directMailChange)
+
+
         var landmarkOption = null;
         $(".landmark").each(function () {
             $(this).on("click", function () {
@@ -285,7 +314,9 @@
                 var latitude = $("#latitude").val();
 
                 $.ajax({
-                    url: "/landMark/api/list", async: false, data: {id: value, longitude: longitude, latitude: latitude},
+                    url: "/landMark/api/list",
+                    async: false,
+                    data: {id: value, longitude: longitude, latitude: latitude},
                     success: function (result) {
                         var htm = '';
                         $.each(result.data, function (k, v) {
@@ -306,6 +337,19 @@
                 $(target).val(value);
             }
         });
+
+        function directMailChange() {
+            var isCheck = $("input[name=supportType][value=ZhiYouGou]")[0].checked;
+            if (isCheck) {
+                var postage = $("input[name=postage]").val();
+                if (!postage) {
+                    $("input[name=postage]").val(8000);
+                }
+                $(".directMail").show();
+            } else {
+                $(".directMail").hide();
+            }
+        }
     </script>
 </body>
 

@@ -55,7 +55,7 @@ public class ItemServiceImpl implements ItemService {
             if (directmail == null)
                 directmail = new ItemDirectmail(oldItem);
 
-            directmail.setPostage(entity.getDirectmail().getPostage());
+            directmail.setPostage(entity.getDirectmail() != null ? entity.getDirectmail().getPostage() : null);
 
             BeanUtils.copyBeanNotNull(entity, oldItem);
             oldItem.setSupportType(entity.getSupportType());
@@ -66,9 +66,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     /**
+     * 若存在商品列表 设置价格为null
+     * 取得时候 若单品为0 那么就取出字段值
      *
-     若存在商品列表 设置价格为null
-     取得时候 若单品为0 那么就取出字段值
      * @param entity
      * @param itemTuans
      * @return
