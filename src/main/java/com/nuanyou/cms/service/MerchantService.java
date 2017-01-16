@@ -1,6 +1,7 @@
 package com.nuanyou.cms.service;
 
 import com.nuanyou.cms.entity.Merchant;
+import com.nuanyou.cms.model.MerchantVO;
 
 import java.util.List;
 
@@ -15,6 +16,6 @@ public interface MerchantService {
 
     void copyItem(Long sourceId, Long targetId);
 
-    Merchant saveNotNull(Merchant entity);
+    MerchantVO saveNotNull(MerchantVO vo);
 
 }

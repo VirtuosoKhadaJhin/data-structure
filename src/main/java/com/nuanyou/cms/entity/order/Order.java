@@ -72,6 +72,7 @@ public class Order {
     private BigDecimal mchlocalereduce;//商户优惠金额
     private PasUserProfile user;
     private Coupon coupon;
+    private Long countryid;
 
 
     @Id
@@ -80,15 +81,9 @@ public class Order {
     public Long getId() {
         return id;
     }
-
-
     public void setId(Long id) {
         this.id = id;
     }
-
-
-
-
 
     @Column(name = "ordersn", nullable = false, length = 40)
     public String getOrdersn() {
@@ -650,6 +645,13 @@ public class Order {
         this.mchlocalereduce = mchlocalereduce;
     }
 
+    public Long getCountryid() {
+        return countryid;
+    }
+
+    public void setCountryid(Long countryid) {
+        this.countryid = countryid;
+    }
 
     @Transient
     public  Boolean getRefundQualified(){

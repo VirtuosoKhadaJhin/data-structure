@@ -1,13 +1,12 @@
 package com.nuanyou.cms.service.impl;
 
 import com.nuanyou.cms.commons.APIException;
+import com.nuanyou.cms.dao.ItemCatDao;
 import com.nuanyou.cms.dao.ItemDao;
 import com.nuanyou.cms.dao.MerchantDao;
 import com.nuanyou.cms.dao.MerchantStatsDao;
-import com.nuanyou.cms.entity.Item;
-import com.nuanyou.cms.entity.Merchant;
-import com.nuanyou.cms.entity.MerchantStaff;
-import com.nuanyou.cms.entity.MerchantStats;
+import com.nuanyou.cms.entity.*;
+import com.nuanyou.cms.model.MerchantVO;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.MerchantStaffService;
 import com.nuanyou.cms.util.BeanUtils;
@@ -33,6 +32,9 @@ public class MerchantServiceImpl implements MerchantService {
     private ItemDao itemDao;
 
     @Autowired
+    private ItemCatDao itemCatDao;
+
+    @Autowired
     private MerchantDao merchantDao;
 
     @Autowired
@@ -42,7 +44,7 @@ public class MerchantServiceImpl implements MerchantService {
     private MerchantStaffService merchantStaffService;
 
 
-    private static String key="getMerchantList";
+    private static String key = "getMerchantList";
     @Autowired
     private MyCacheManager<List<Merchant>> cacheManager;
 
@@ -82,41 +84,52 @@ public class MerchantServiceImpl implements MerchantService {
         if (targetMerchant == null)
             throw new APIException(NotFoundMerchant, targetId);
 
-        List<Item> targetItemList = itemDao.findByMerchantId(targetId);
-        itemDao.delete(targetItemList);
+        itemDao.deleteByMerchantId(targetId);
+        itemCatDao.deleteByMerchantId(targetId);
 
-        List<Item> sourceItemList = itemDao.findByMerchantId(sourceId);
-        targetItemList = new ArrayList<>(sourceItemList.size());
-        for (Item sourceItem : sourceItemList) {
-            Item targetItem = new Item();
-            BeanUtils.copyBean(sourceItem, targetItem);
-            targetItem.setMerchant(targetMerchant);
-            targetItem.setId(null);
-            targetItemList.add(targetItem);
+        List<ItemCat> sourceCats = itemCatDao.findByMerchantId(sourceId);
+        for (ItemCat sourceCat : sourceCats) {
+            ItemCat targetCat = BeanUtils.copyBean(sourceCat, new ItemCat());
+
+            targetCat.setMerchant(targetMerchant);
+            targetCat.setId(null);
+            targetCat = itemCatDao.save(targetCat);
+
+            List<Item> sourceItems = itemDao.findByMerchantIdAndCatId(sourceId, sourceCat.getId());
+            if (!sourceItems.isEmpty()) {
+
+                List<Item> targetItems = new ArrayList<>(sourceItems.size());
+                for (Item sourceItem : sourceItems) {
+                    Item targetItem = BeanUtils.copyBean(sourceItem, new Item());
+
+                    targetItem.setMerchant(targetMerchant);
+                    targetItem.setCat(targetCat);
+                    targetItem.setId(null);
+                    targetItems.add(targetItem);
+                }
+                itemDao.save(targetItems);
+            }
         }
-        itemDao.save(targetItemList);
     }
 
     @Override
-    public Merchant saveNotNull(Merchant entity) {
-        if (entity.getId() == null) {
+    public MerchantVO saveNotNull(MerchantVO vo) {
+        Merchant entity;
+
+        if (vo.getId() == null) {
+            entity = BeanUtils.copyBean(vo, new Merchant());
             entity = merchantDao.save(entity);
             merchantStatsDao.save(new MerchantStats(0, entity.getId()));
             merchantStaffService.saveNotNull(new MerchantStaff(entity.getId(), StringUtils.leftPad(entity.getId().toString(), 4, '0')));
-            return entity;
-        }
-        Merchant oldEntity = merchantDao.findOne(entity.getId());
-        BeanUtils.copyBeanNotNull(entity, oldEntity);
+        } else {
+            entity = merchantDao.findOne(vo.getId());
+            BeanUtils.copyBean(vo, entity);
 
-        if (entity.getFirstshowTime() == null && Boolean.TRUE.equals(entity.getDisplay())) {
-            entity.setFirstshowTime(new Date());
+            if (entity.getFirstshowTime() == null && Boolean.TRUE.equals(entity.getDisplay())) {
+                entity.setFirstshowTime(new Date());
+            }
+            entity = merchantDao.save(entity);
         }
-        oldEntity.setDisplay(entity.getDisplay());
-        oldEntity.setIssign(entity.getIssign());
-        oldEntity.setRecommend(entity.getRecommend());
-        oldEntity.setBusinessDay(entity.getBusinessDay());
-        oldEntity.setSupportType(entity.getSupportType());
-        oldEntity.setPayTypes(entity.getPayTypes());
-        return merchantDao.save(oldEntity);
+        return BeanUtils.copyBean(entity, new MerchantVO());
     }
 }
