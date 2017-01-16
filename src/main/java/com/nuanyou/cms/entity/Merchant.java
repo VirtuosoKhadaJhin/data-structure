@@ -432,8 +432,9 @@ public class Merchant {
     }
 
 
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = MerchantHeadimg.class)
-    @JoinColumns(value = {@JoinColumn(name = "mchid", referencedColumnName = "id")})
+//    @OneToMany(fetch = FetchType.LAZY, targetEntity = MerchantHeadimg.class)
+//    @JoinColumns(value = {@JoinColumn(name = "mchid", referencedColumnName = "id")})
+    @Transient
     public List<MerchantHeadimg> getHeadimgs() {
         return headimgs;
     }
