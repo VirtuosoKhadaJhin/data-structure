@@ -9,6 +9,7 @@ import com.nuanyou.cms.entity.UserCardItem;
 import com.nuanyou.cms.entity.coupon.Coupon;
 import com.nuanyou.cms.entity.enums.CardStatusEnum;
 import com.nuanyou.cms.entity.enums.CouponStatusEnum;
+import com.nuanyou.cms.entity.enums.NewOrderStatus;
 import com.nuanyou.cms.entity.enums.RefundStatus;
 import com.nuanyou.cms.entity.order.Order;
 import com.nuanyou.cms.entity.order.OrderRefundLog;
