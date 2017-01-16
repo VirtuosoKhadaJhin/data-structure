@@ -85,9 +85,8 @@
                                 </div>
                                 <label class="control-label">合作情况</label>
                                 <div class="controls">
-                                    <input name="issign" type="checkbox" value="true" #if($!entity.issign)
-                                           checked #end/>
-                                    已签约
+                                    <input name="issign" type="radio" value="true" #if($entity.issign)checked#end/>已签约
+                                    <input name="issign" type="radio" value="false" #if(!$entity.issign)checked#end/>未签约
                                 </div>
                                 <label class="control-label">是否推荐</label>
                                 <div class="controls">
