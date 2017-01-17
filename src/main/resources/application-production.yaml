@@ -49,3 +49,10 @@ aliyun:
 
 nuanyou-host: http://h5.m.91nuanyou.com
 withdrawurl: http://user.api.91nuanyou.com
+
+AWS:
+  sns:
+    topic:
+      refund: arn:aws:sns:ap-northeast-2:904656167085:prod-ny-v3-refund
+      refundSuccess: arn:aws:sns:ap-northeast-2:904656167085:prod-ny-v3-refundSuccess
+      refundFail: arn:aws:sns:ap-northeast-2:904656167085:prod-ny-v3-refundFail
