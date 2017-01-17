@@ -51,13 +51,7 @@
                         #if(!$entity.issign)
                             <li><a class="updateScore" data-id="$!entity.id" href="javascript:void(0);">修改商户评分</a></li>
                         #end
-                        #if($!entity.supportType.contains($!YouFu))
-                            #if(!$entity.channelId)
-                                <li><a href="javascript:void(0);" class="genCode" data-id="$!entity.id">生成优付二维码</a></li>
-                            #else
-                                <li><a href="javascript:void(0);" class="update-item" modal-id="lookCode" action-get="lookCode" data-id="$!entity.channelId">查看优付URL</a></li>
-                            #end
-                        #end
+                        <li><a href="javascript:void(0);" class="update-item" modal-id="lookCode" action-get="lookCode" data-id="$!entity.id">查看优付URL</a></li>
                     </ul>
                 </div>
             </td>

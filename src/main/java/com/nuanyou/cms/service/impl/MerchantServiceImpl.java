@@ -1,11 +1,10 @@
 package com.nuanyou.cms.service.impl;
 
 import com.nuanyou.cms.commons.APIException;
-import com.nuanyou.cms.dao.ItemCatDao;
-import com.nuanyou.cms.dao.ItemDao;
-import com.nuanyou.cms.dao.MerchantDao;
-import com.nuanyou.cms.dao.MerchantStatsDao;
+import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
+import com.nuanyou.cms.entity.enums.ChannelType;
+import com.nuanyou.cms.entity.enums.CodeType;
 import com.nuanyou.cms.model.MerchantVO;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.MerchantStaffService;
@@ -13,6 +12,7 @@ import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.MyCacheManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -41,7 +41,13 @@ public class MerchantServiceImpl implements MerchantService {
     private MerchantStatsDao merchantStatsDao;
 
     @Autowired
+    private ChannelDao channelDao;
+
+    @Autowired
     private MerchantStaffService merchantStaffService;
+
+    @Value("${nuanyou-host}")
+    private String nuanyouHost;
 
 
     private static String key = "getMerchantList";
@@ -121,6 +127,8 @@ public class MerchantServiceImpl implements MerchantService {
             entity = merchantDao.save(entity);
             merchantStatsDao.save(new MerchantStats(0, entity.getId()));
             merchantStaffService.saveNotNull(new MerchantStaff(entity.getId(), StringUtils.leftPad(entity.getId().toString(), 4, '0')));
+
+            genPayUrl(entity.getId());
         } else {
             entity = merchantDao.findOne(vo.getId());
             BeanUtils.copyBean(vo, entity);
@@ -131,5 +139,35 @@ public class MerchantServiceImpl implements MerchantService {
             entity = merchantDao.save(entity);
         }
         return BeanUtils.copyBean(entity, new MerchantVO());
+    }
+
+    /**
+     * @param id merchantId
+     * @return
+     */
+    @Override
+    @Transactional
+    public Channel genPayUrl(Long id) {
+        Merchant merchant = merchantDao.findOne(id);
+        Long channelId = merchant.getChannelId();
+
+        Channel channel;
+        if (channelId != null) {
+            channel = channelDao.findOne(id);
+        } else {
+            channel = new Channel();
+            channel.setKeyword("");
+            channel.setTitle("新优付渠道码_" + id);
+            channel.setSceneId("qplcid_" + id);
+            channel.setGroupId("kfqdm");
+            channel.setChannelType(ChannelType.Link);
+            channel.setQrCodeType(CodeType.Persistent);
+            channel.setUrl(nuanyouHost + "/view/order/youfu.html?mchid=" + id + "&source=qplcid_" + id);
+            channelDao.save(channel);
+
+            merchant.setChannelId(channel.getId());
+            merchantDao.save(merchant);
+        }
+        return channel;
     }
 }
