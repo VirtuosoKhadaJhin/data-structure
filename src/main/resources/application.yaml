@@ -1,8 +1,8 @@
 spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://test20-db.9ny.me:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
-    username: nuanyou20
+    url: jdbc:mysql://rdsw9r566jxer973wqi2.mysql.rds.aliyuncs.com:3306/nuanyou30?useUnicode=true&characterEncoding=UTF-8
+    username: dev
     password: 1qaz2wsxE
     test-on-borrow: true
     validation-query: select 1
@@ -52,3 +52,10 @@ withdrawurl: http://testuser.api.91nuanyou.com
 
 upload:
   s3server: https://kr.file.91nuanyou.com
+
+AWS:
+  sns:
+    topic:
+      refund: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refund
+      refundSuccess: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refundSuccess
+      refundFail: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refundFail

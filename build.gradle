@@ -61,6 +61,7 @@ dependencies {
     compile ('com.amazonaws:aws-java-sdk-s3')
     compile ('com.sun.mail:mailapi:1.5.2')
 
+    compile('com.amazonaws:aws-java-sdk-sns:1.11.29')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 task wrapper(type: Wrapper) {

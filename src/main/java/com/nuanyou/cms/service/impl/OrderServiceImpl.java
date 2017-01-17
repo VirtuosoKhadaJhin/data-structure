@@ -3,6 +3,7 @@ package com.nuanyou.cms.service.impl;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
+import com.nuanyou.cms.domain.NotificationPublisher;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.UserCardItem;
 import com.nuanyou.cms.entity.coupon.Coupon;
@@ -48,16 +49,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.nuanyou.cms.entity.order.Order.getRefundQualified;
-
 /**
  * Created by Felix on 2016/9/8.
  */
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
-    private ViewOrderExportDao viewOrderExportDao;
     @Autowired
     private OrderDao orderDao;
     @Autowired
@@ -69,6 +66,10 @@ public class OrderServiceImpl implements OrderService {
     private UserCardItemDao userCardItemDao;
     @Autowired
     private CouponDao couponDao;
+    @Autowired
+    private NotificationPublisher notificationPublisher;
+    @Autowired
+    private ViewOrderExportDao viewOrderExportDao;
     @Autowired
     private MerchantDao merchantDao;
 
@@ -301,6 +302,7 @@ public class OrderServiceImpl implements OrderService {
             }
         }, pageable);
     }
+
     @Override
     public Integer getBuyNum(Order order) {
         if (order.getUser() == null) {
@@ -336,6 +338,8 @@ public class OrderServiceImpl implements OrderService {
         order.setRefundtime(DateUtils.newDate());
         order.setRefundsource((byte) 2);//// 退款来源：1.客户端，2.cms，3.商户端
         this.orderDao.save(order);
+
+        this.notificationPublisher.publishRefund(order.getId().toString());
     }
 
     @Override
@@ -365,9 +369,11 @@ public class OrderServiceImpl implements OrderService {
         }
         if (order.getRefundstatus() == RefundStatus.Failure) {
             order.setStatusname("退款失败");
+            this.notificationPublisher.publishRefundFail(order.getId().toString());
         } else if (order.getRefundstatus() == RefundStatus.Success) {
             order.setOrderstatus(NewOrderStatus.RefundSuccess);
             order.setStatusname("退款成功");
+            this.notificationPublisher.publishRefundSuccess(order.getId().toString());
         }
         this.saveNotNull(order);
         OrderRefundLog log = new OrderRefundLog();
