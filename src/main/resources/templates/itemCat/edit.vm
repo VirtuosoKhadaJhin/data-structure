@@ -24,7 +24,7 @@
                         <input id="type" name="type" type="hidden" value="$!type">
                     </div>
                     <div class="widget-content nopadding">
-                        <form action="update" method="get" class="form-horizontal commonValidate" id="itemCatForm">
+                        <form action="update" method="post" class="form-horizontal commonValidate" id="itemCatForm">
                             <div class="control-group">
                                 <span class="col-sm-2 control-label">ID</span>
                                 <div class="controls">
