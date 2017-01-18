@@ -2,10 +2,8 @@
 
 <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
 <configuration>
-    <!-- 日志名称 -->
-    <property name="APP_NAME" value="merchant-cms"/>
     <!-- 存放目录 -->
-    <property name="LOG_APP_HOME" value="logs/"/>
+    <property name="LOG_APP_HOME" value="/var/log/cms_merchant"/>
 
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <resetJUL>true</resetJUL>
@@ -18,15 +16,35 @@
     </appender>
 
     <appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator>
+                <expression><![CDATA[event.getLoggerName().contains("com.nuanyou.cms.commons.DateEntityListener")]]></expression>
+            </evaluator>
+            <OnMismatch>NEUTRAL</OnMismatch>
+            <OnMatch>DENY</OnMatch>
+        </filter>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}[%line] %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${LOG_APP_HOME}/${APP_NAME}-%d{yyyy-MM-dd}.log</FileNamePattern>
-            <!-- 保存30的日志 -->
+            <FileNamePattern>${LOG_APP_HOME}/cms_merchant-%d{yyyy-MM-dd}.30de.log</FileNamePattern>
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
     </appender>
+
+    <appender name="operationLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_APP_HOME}/cms_merchant_operation-%d{yyyy-MM-dd}.30de.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="com.nuanyou.cms.commons.DateEntityListener" level="INFO" additivity="true">
+        <appender-ref ref="operationLog"/>
+    </logger>
 
     <root level="INFO">
         <appender-ref ref="logfile"/>
