@@ -50,9 +50,6 @@ public class MerchantController {
     private CountryDao countryDao;
 
     @Autowired
-    private ChannelDao channelDao;
-
-    @Autowired
     private MerchantStatsDao merchantStatsDao;
 
     @Value("${nuanyou-host}")
@@ -127,33 +124,11 @@ public class MerchantController {
         return new APIResult<>();
     }
 
-    @RequestMapping(path = "genCode", method = RequestMethod.GET)
-    @ResponseBody
-    public APIResult genCode(Long id) {
-        Channel channel = new Channel();
-        channel.setKeyword("");
-        channel.setTitle("新优付渠道码_" + id);
-        channel.setSceneId("qplcid_" + id);
-        channel.setGroupId("kfqdm");
-        channel.setChannelType(ChannelType.Link);
-        channel.setQrCodeType(CodeType.Persistent);
-        channel.setUrl(nuanyouHost + "/view/order/youfu.html?mchid=" + id + "&source=qplcid_" + id);
-        channelDao.save(channel);
-
-        Merchant merchant = merchantDao.findOne(id);
-        merchant.setChannelId(channel.getId());
-        merchantDao.save(merchant);
-        return new APIResult<>();
-    }
-
     @RequestMapping(path = "lookCode", method = RequestMethod.GET)
     @ResponseBody
     public APIResult getImg(Long id) throws Exception {
-        Channel channel = channelDao.findOne(id);
+        Channel channel = merchantService.genPayUrl(id);
         return new APIResult(channel);
-
-//        response.setHeader("Content-Type", "image/gif");
-//        ZCodeImg.writeImage(channel.getUrl(), response.getOutputStream());
     }
 
     @RequestMapping("export")

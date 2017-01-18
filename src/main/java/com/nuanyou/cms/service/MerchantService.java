@@ -1,5 +1,6 @@
 package com.nuanyou.cms.service;
 
+import com.nuanyou.cms.entity.Channel;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.model.MerchantVO;
 
@@ -17,5 +18,7 @@ public interface MerchantService {
     void copyItem(Long sourceId, Long targetId);
 
     MerchantVO saveNotNull(MerchantVO vo);
+
+    Channel genPayUrl(Long id);
 
 }
