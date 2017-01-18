@@ -153,7 +153,7 @@ public class MerchantServiceImpl implements MerchantService {
 
         Channel channel;
         if (channelId != null) {
-            channel = channelDao.findOne(id);
+            channel = channelDao.findOne(channelId);
         } else {
             channel = new Channel();
             channel.setKeyword("");
