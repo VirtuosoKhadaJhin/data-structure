@@ -154,8 +154,8 @@
 
                                 <label class="control-label">经纬度</label>
                                 <div class="controls">
-                                    <input name="longitude" id="longitude" type="text" class="span4" placeholder="经度" value="$!entity.longitude">
-                                    <input name="latitude" id="latitude" type="text" class="span4" placeholder="纬度" value="$!entity.latitude">
+                                    <input name="longitude" id="longitude" type="text" class="span4" placeholder="经度" value="$!entity.longitude" required>
+                                    <input name="latitude" id="latitude" type="text" class="span4" placeholder="纬度" value="$!entity.latitude" required>
                                     <a class="btn btn-success viewMap" href="javascript:void(0);">查看地图</a>
                                 </div>
 
