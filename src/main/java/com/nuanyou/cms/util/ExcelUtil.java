@@ -40,12 +40,20 @@ public class ExcelUtil {
 
                 String textValue = null;
 
-                Object value = BeanUtils.getValue(data, property);
+
+                Object value = data;
+                String[] names = property.split("\\.");
+                for (String name : names) {
+                    if (value != null)
+                        value = BeanUtils.getValue(value, name);
+                }
+
                 if (value != null)
                     if (value instanceof Date)
                         textValue = DateUtils.format((Date) value);
                     else
                         textValue = value.toString();
+
                 cell.setCellValue(new XSSFRichTextString(textValue));
             }
         }

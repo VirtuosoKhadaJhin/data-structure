@@ -102,7 +102,20 @@
     </div>
 
     <button type="submit" class="btn btn-primary">查询</button>
+    <a class="btn btn-warning export" href="javascript:void(0);">导出</a>
 </form>
+<script type="text/javascript">
+    $(function () {
+        $(".export").on("click", function () {
+            var form = $(document.forms[0]);
+            form.attr("action", "refundList/export");
+            form.submit();
+            form.attr("action", "");
+            form.attr("target", "");
+        });
+    });
+
+</script>
 #parse("common/list_end.vm")
 
 

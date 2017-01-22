@@ -12,13 +12,18 @@ import org.springframework.data.domain.Pageable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Felix on 2016/9/8.
  */
 public interface OrderService {
+
     Page<Order> findByCondition(Integer index, Order entity, TimeCondition time, Pageable pageable);
+
     Page<ViewOrderExport> findExportByCondition(Integer index, ViewOrderExport entity, TimeCondition time, Pageable o);
+
+    List<Order> findRefundByCondition(Order entity, TimeCondition time);
 
     Integer getBuyNum(Order order);
 
@@ -28,8 +33,7 @@ public interface OrderService {
 
     Page<Order> findRefundByCondition(int index, Order entity, TimeCondition time);
 
-
-    void validate(Long id, Integer type,String cmsusername);
+    void validate(Long id, Integer type, String cmsusername);
 
     void putOrderToExcel(int index, HttpServletRequest request, HttpServletResponse response, ViewOrderExport entity, TimeCondition time, String[] titles, String filename, HSSFWorkbook workbook, HSSFSheet firstSheet, HSSFRow firstRow) throws IOException;
 }
