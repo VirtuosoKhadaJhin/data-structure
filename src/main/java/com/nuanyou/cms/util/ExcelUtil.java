@@ -48,11 +48,14 @@ public class ExcelUtil {
                         value = BeanUtils.getValue(value, name);
                 }
 
-                if (value != null)
+                if (value != null) {
                     if (value instanceof Date)
                         textValue = DateUtils.format((Date) value);
+                    else if (value instanceof Enum)
+                        textValue = BeanUtils.getValue(value, "name").toString();
                     else
                         textValue = value.toString();
+                }
 
                 cell.setCellValue(new XSSFRichTextString(textValue));
             }

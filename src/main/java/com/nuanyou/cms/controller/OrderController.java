@@ -190,6 +190,14 @@ public class OrderController {
 
         BeanUtils.cleanEmpty(entity);
         List<Order> list = orderService.findRefundByCondition(entity, time);
+        for (Order order : list) {
+            PasUserProfile user = pasUserProfileDao.findPartsByUserid(order.getUserId());
+            if (user != null) {
+                order.setUser(user);
+            } else {
+                order.setUser(null);
+            }
+        }
 
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
         propertyHeaderMap.put("ordersn", "订单编号");

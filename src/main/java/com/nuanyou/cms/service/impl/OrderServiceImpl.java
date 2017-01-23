@@ -4,13 +4,9 @@ import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.domain.NotificationPublisher;
-import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.UserCardItem;
 import com.nuanyou.cms.entity.coupon.Coupon;
-import com.nuanyou.cms.entity.enums.CardStatusEnum;
-import com.nuanyou.cms.entity.enums.CouponStatusEnum;
-import com.nuanyou.cms.entity.enums.NewOrderStatus;
-import com.nuanyou.cms.entity.enums.RefundStatus;
+import com.nuanyou.cms.entity.enums.*;
 import com.nuanyou.cms.entity.order.Order;
 import com.nuanyou.cms.entity.order.OrderRefundLog;
 import com.nuanyou.cms.entity.order.OrderVouchCard;
@@ -386,7 +382,7 @@ public class OrderServiceImpl implements OrderService {
         order.setRefundreason("匿名操作");
         order.setRefundstatus(RefundStatus.RefundInProgress);//退款中
         order.setRefundtime(DateUtils.newDate());
-        order.setRefundsource((byte) 2);//// 退款来源：1.客户端，2.cms，3.商户端
+        order.setRefundsource(RefundSource.CMS);//// 退款来源：1.客户端，2.cms，3.商户端
         this.orderDao.save(order);
 
         this.notificationPublisher.publishRefund(order.getId().toString());

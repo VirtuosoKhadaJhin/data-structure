@@ -44,15 +44,7 @@
             <td>$!e.refundreason</td>
             <td> $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.refundtime)</td>
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.refundaudittime)</td>
-            <td>
-                #if($!e.refundsource==1)
-                    客户端
-                #elseif($!e.refundsource==2)
-                    cms
-                #elseif($!e.refundsource==3)
-                    商户通
-                #end
-            </td>
+            <td>$!e.refundsource.name</td>
             <td>$!e.refundremark</td>
             <!--操作-->
             <td>
