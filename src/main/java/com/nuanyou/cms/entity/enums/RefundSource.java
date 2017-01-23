@@ -31,6 +31,8 @@ public enum RefundSource {
     }
 
     public static RefundSource toEnum(Integer value) {
+        if (value == null)
+            return null;
         RefundSource[] values = RefundSource.values();
         for (RefundSource type : values)
             if (value == type.value)
