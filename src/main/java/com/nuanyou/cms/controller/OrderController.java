@@ -56,15 +56,10 @@ public class OrderController {
     @Autowired
     private OrderSmsDao orderSmsDao;
     @Autowired
-    private OrderSubsidyDao orderSubsidyDao;
-    @Autowired
     private OrderLogisticsDao orderLogisticsDao;
 
     @Autowired
     private PasUserProfileDao pasUserProfileDao;
-
-    private static String timePattern = "yyyy-MM-dd HH:mm:ss";
-    private static String decimalPattern = "#0.00";
 
     @RequestMapping("add")
     public String add(Order entity) {
@@ -99,7 +94,7 @@ public class OrderController {
 
 
     @RequestMapping("update")
-    public String update(Order entity, HttpServletResponse response) throws IOException {
+    public String update(Order entity) throws IOException {
         orderService.saveNotNull(entity);
         String url = "edit?type=3&id=" + entity.getId();
         return "redirect:" + url;
@@ -190,14 +185,26 @@ public class OrderController {
 
         BeanUtils.cleanEmpty(entity);
         List<Order> list = orderService.findRefundByCondition(entity, time);
+
+        Map<Long, PasUserProfile> userMap = new HashMap<>();
         for (Order order : list) {
-            PasUserProfile user = pasUserProfileDao.findPartsByUserid(order.getUserId());
-            if (user != null) {
-                order.setUser(user);
-            } else {
-                order.setUser(null);
+            Long userId = order.getUserId();
+            if (userId == null)
+                continue;
+            PasUserProfile user = userMap.get(userId);
+            if (user == null) {
+                user = new PasUserProfile();
+                userMap.put(userId, user);
             }
+            order.setUser(user);
         }
+
+        List<PasUserProfile> users = pasUserProfileDao.findByUserid(userMap.keySet());
+        for (PasUserProfile user : users) {
+            PasUserProfile pasUserProfile = userMap.get(user.getUserid());
+            pasUserProfile.setNickname(user.getNickname());
+        }
+
 
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
         propertyHeaderMap.put("ordersn", "订单编号");
@@ -224,7 +231,7 @@ public class OrderController {
 
     @RequestMapping("refund")
     @ResponseBody
-    public APIResult refund(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, HttpServletResponse response) {
+    public APIResult refund(Order entity) {
         this.orderService.refund(entity);
         return new APIResult<>(ResultCodes.Success);
     }
@@ -244,7 +251,7 @@ public class OrderController {
     }
 
     @RequestMapping(path = "validate", method = RequestMethod.POST)
-    public String validate(Long id, Model model, Integer type, HttpServletResponse response, String cmsusername) throws IOException {
+    public String validate(Long id, Integer type, HttpServletResponse response, String cmsusername) throws IOException {
         this.orderService.validate(id, type, cmsusername);
         response.sendRedirect("../order/refundEdit?refundEdit=3&id=" + id);
         return null;
