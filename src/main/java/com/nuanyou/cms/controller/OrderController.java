@@ -207,6 +207,7 @@ public class OrderController {
 
 
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
+        propertyHeaderMap.put("id", "ID");
         propertyHeaderMap.put("ordersn", "订单编号");
         propertyHeaderMap.put("createtime", "下单时间");
         propertyHeaderMap.put("orderstatus", "订单状态");
