@@ -51,8 +51,6 @@ public class ExcelUtil {
                 if (value != null) {
                     if (value instanceof Date)
                         textValue = DateUtils.format((Date) value);
-                    else if (value instanceof Enum)
-                        textValue = BeanUtils.getValue(value, "name").toString();
                     else
                         textValue = value.toString();
                 }
