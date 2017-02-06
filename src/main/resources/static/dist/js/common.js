@@ -83,4 +83,73 @@ window.onload = function () {
         errorElement: "span"
     });
 
+    $(".merchantValidate").validate({
+        rules: {
+            sort: {
+                digits: true
+            },
+            name: {
+                required: true, maxlength: 50
+            },
+            title: {
+                required: true, maxlength: 50
+            },
+            'city.id': {
+                required: true
+            },
+            'country.id': {
+                required: true
+            },
+            cmsusername: {
+                required: true
+            },
+            postage: {
+                required: true, number:true
+            },
+            mailWeight: {
+                number:true
+            }
+        },
+        errorPlacement: function (error, element) {
+            $(element)
+                .closest("form")
+                .find(element)
+                .after(error);
+        },
+        errorElement: "span"
+    });
+
+    $(".itemValidate").validate({
+        rules: {
+            sort: {
+                digits: true
+            },
+            name: {
+                required: true, maxlength: 50
+            },
+            title: {
+                required: true, maxlength: 50
+            },
+            'city.id': {
+                required: true
+            },
+            'country.id': {
+                required: true
+            },
+            cmsusername: {
+                required: true
+            },
+            weight: {
+                required: true, number:true
+            }
+        },
+        errorPlacement: function (error, element) {
+            $(element)
+                .closest("form")
+                .find(element)
+                .after(error);
+        },
+        errorElement: "span"
+    });
+
 }

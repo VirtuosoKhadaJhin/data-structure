@@ -55,6 +55,8 @@ public class Item {
 
     private ItemDirectmail directmail;
 
+    private BigDecimal weight;
+
     public Item() {
     }
 
@@ -338,5 +340,14 @@ public class Item {
 
     public void setDirectmail(ItemDirectmail directmail) {
         this.directmail = directmail;
+    }
+
+    @Column(name = "weight")
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
     }
 }

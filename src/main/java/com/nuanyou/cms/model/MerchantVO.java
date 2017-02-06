@@ -61,6 +61,10 @@ public class MerchantVO {
 
     private Long catId;
 
+    private BigDecimal postage;
+
+    private BigDecimal mailWeight;
+
 
     public Long getId() {
         return id;
@@ -416,5 +420,21 @@ public class MerchantVO {
     }
 
     public MerchantVO() {
+    }
+
+    public BigDecimal getPostage() {
+        return postage;
+    }
+
+    public void setPostage(BigDecimal postage) {
+        this.postage = postage;
+    }
+
+    public BigDecimal getMailWeight() {
+        return mailWeight;
+    }
+
+    public void setMailWeight(BigDecimal mailWeight) {
+        this.mailWeight = mailWeight;
     }
 }
