@@ -74,8 +74,7 @@
                                 <div class="controls">
                                     <select name="verifyType" class="span11">
                                         #foreach($e in $!verifyTypes)
-                                            <option value="$!e"
-                                                    #if($!e == $!entity.verifyType)selected#end>$!e.name</option>
+                                            <option value="$!e" #if($!e == $!entity.verifyType)selected#end>$!e.name</option>
                                         #end
                                     </select>
                                 </div>
@@ -86,9 +85,8 @@
                                 </div>
                                 <label class="control-label">合作情况</label>
                                 <div class="controls">
-                                    <input name="issign" type="checkbox" value="true" #if($!entity.issign)
-                                           checked #end/>
-                                    已签约
+                                    <input name="issign" type="radio" value="true" #if($entity.issign)checked#end/>已签约
+                                    <input name="issign" type="radio" value="false" #if(!$entity.issign)checked#end/>未签约
                                 </div>
                                 <label class="control-label">是否推荐</label>
                                 <div class="controls">
@@ -137,37 +135,27 @@
                                 </div>
                                 <label class="control-label">本地地址</label>
                                 <div class="controls">
-                                    <input name="kpaddress" type="text" class="span11" placeholder="本地地址"
-                                           value="$!entity.kpaddress">
+                                    <input name="kpaddress" type="text" class="span11" placeholder="本地地址" value="$!entity.kpaddress">
                                 </div>
                                 <label class="control-label">2.0列表页门头图</label>
                                 <div class="controls">
-                                    <input name="indexImgUrl" type="text" class="span9" id="indexImgUrl"
-                                           placeholder="2.0列表页门头图" value="$!entity.indexImgUrl">
-                                    <button class="btn btn-success previewBtn" type="button" data-id="indexImgUrl">预览
-                                    </button>
-                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="indexImgUrl"
-                                            data-width="600" data-height="200">上传
+                                    <input name="indexImgUrl" type="text" class="span9" id="indexImgUrl" placeholder="2.0列表页门头图" value="$!entity.indexImgUrl">
+                                    <button class="btn btn-success previewBtn" type="button" data-id="indexImgUrl">预览</button>
+                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="indexImgUrl" data-width="600" data-height="200">上传
                                     </button>
                                 </div>
 
                                 <label class="control-label">3.0列表页门头图</label>
                                 <div class="controls">
-                                    <input name="listImgUrl" type="text" class="span9" id="listImgUrl"
-                                           placeholder="3.0列表页门头图" value="$!entity.listImgUrl">
-                                    <button class="btn btn-success previewBtn" type="button" data-id="listImgUrl">预览
-                                    </button>
-                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="listImgUrl"
-                                            data-width="200" data-height="150">上传
-                                    </button>
+                                    <input name="listImgUrl" type="text" class="span9" id="listImgUrl" placeholder="3.0列表页门头图" value="$!entity.listImgUrl">
+                                    <button class="btn btn-success previewBtn" type="button" data-id="listImgUrl">预览</button>
+                                    <button class="btn btn-success uploadImgBtn" type="button" data-id="listImgUrl" data-width="200" data-height="150">上传</button>
                                 </div>
 
                                 <label class="control-label">经纬度</label>
                                 <div class="controls">
-                                    <input name="longitude" id="longitude" type="text" class="span4" placeholder="经度"
-                                           value="$!entity.longitude">
-                                    <input name="latitude" id="latitude" type="text" class="span4" placeholder="纬度"
-                                           value="$!entity.latitude">
+                                    <input name="longitude" id="longitude" type="text" class="span4" placeholder="经度" value="$!entity.longitude" required>
+                                    <input name="latitude" id="latitude" type="text" class="span4" placeholder="纬度" value="$!entity.latitude" required>
                                     <a class="btn btn-success viewMap" href="javascript:void(0);">查看地图</a>
                                 </div>
 
@@ -188,9 +176,7 @@
                                     <select name="landmarkId" class="span9" def-value="$!entity.landmarkId">
                                         <option value="">无</option>
                                     </select>
-                                    <button class="btn btn-success landmark" type="button" data-width="200"
-                                            data-height="150">获得地标
-                                    </button>
+                                    <button class="btn btn-success landmark" type="button" data-width="200" data-height="150">获得地标</button>
                                 </div>
 
                                 <label class="control-label">顺序</label>
@@ -260,6 +246,7 @@
 
 
     <script>
+
             #if($!disabled)
             $("#btn-save").hide();
             $(":input").each(function (i, o) {
@@ -300,10 +287,6 @@
                 ]
             });
         });
-
-        directMailChange();
-        $("input[name='supportType']").click(directMailChange)
-
 
         var landmarkOption = null;
         $(".landmark").each(function () {

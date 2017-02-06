@@ -46,7 +46,6 @@ public class MerchantVO {
     private String tips;
     private Boolean issign;
     private Boolean ispush;
-    private Long channelId;
     private Date firstshowTime;
     private Double score;
     private Integer rank;
@@ -330,16 +329,6 @@ public class MerchantVO {
     public void setIspush(Boolean ispush) {
         this.ispush = ispush;
     }
-
-
-    public Long getChannelId() {
-        return channelId;
-    }
-
-    public void setChannelId(Long channelId) {
-        this.channelId = channelId;
-    }
-
 
     public Date getFirstshowTime() {
         return firstshowTime;

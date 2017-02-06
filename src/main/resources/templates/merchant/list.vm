@@ -13,6 +13,9 @@
         <th>地址（本地）</th>
         <th>支付方式</th>
         <th>支持类型</th>
+        <th>商圈信息</th>
+        <th>一级分类</th>
+        <th>二级分类</th>
         <th>操作</th>
     </tr>
     </thead>
@@ -35,6 +38,10 @@
                 $type.name
             #end
             </td>
+            <td>$!entity.district.name</td>
+            <td>$!entity.mcat.name</td>
+            <td>$!entity.subcat.name</td>
+
             <td>
                 <div class="dropdown">
                     <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="javascript:(0);">操 作 <b class="caret"></b>
@@ -51,13 +58,7 @@
                         #if(!$entity.issign)
                             <li><a class="updateScore" data-id="$!entity.id" href="javascript:void(0);">修改商户评分</a></li>
                         #end
-                        #if($!entity.supportType.contains($!YouFu))
-                            #if(!$entity.channelId)
-                                <li><a href="javascript:void(0);" class="genCode" data-id="$!entity.id">生成优付二维码</a></li>
-                            #else
-                                <li><a href="javascript:void(0);" class="update-item" modal-id="lookCode" action-get="lookCode" data-id="$!entity.channelId">查看优付URL</a></li>
-                            #end
-                        #end
+                        <li><a href="javascript:void(0);" class="update-item" modal-id="lookCode" action-get="lookCode" data-id="$!entity.id">查看优付URL</a></li>
                     </ul>
                 </div>
             </td>
