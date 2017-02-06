@@ -288,6 +288,9 @@
             });
         });
 
+        directMailChange();
+        $("input[name='supportType']").click(directMailChange)
+
         var landmarkOption = null;
         $(".landmark").each(function () {
             $(this).on("click", function () {
