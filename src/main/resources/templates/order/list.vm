@@ -224,7 +224,7 @@
             var begin=new Date(begin.replace("-", "/").replace("-", "/"));
             var end=new Date(end.replace("-", "/").replace("-", "/"));
             var result = end-begin;
-            if(result>30*24*60*60*1000){
+            if(result>32*24*60*60*1000){
                 return false;
             }
             return true;
