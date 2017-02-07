@@ -200,7 +200,7 @@
             var begin=$("#beginTime").val();
             var end=$("#endTime").val();
             if(!validateTime(begin,end)){
-                return alert("开始时间和结束时间不能为空,且只能在30天以内!");
+                return alert("开始时间和结束时间不能为空,且只能在32天以内!");
             }
             //$(this).attr("disabled",true);
             //alert("正在导出Excel,20秒后可以重新导出!");
