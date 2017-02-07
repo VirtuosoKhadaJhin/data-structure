@@ -15,16 +15,10 @@ import com.nuanyou.cms.model.OrderDetail;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.OrderService;
-import com.nuanyou.cms.util.ConvertFileEncoding;
-import com.nuanyou.cms.util.DateUtils;
 import com.nuanyou.cms.util.TimeCondition;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.velocity.tools.generic.DateTool;
-import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
@@ -37,7 +31,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 @RequestMapping("order")
@@ -172,7 +167,7 @@ public class OrderController {
                        HttpServletRequest request,HttpServletResponse response,
                        ViewOrderExport entity, TimeCondition time) throws IOException {
         String[] titles=new String[]{
-                         "序号","ID","订单编号","渠道","订单类型","支付类型","来源平台","来源系统","使用码","商户ID","商户中文名称",
+                         "序号","ID","订单编号","订单流水号","渠道","订单类型","支付类型","来源平台","来源系统","使用码","商户ID","商户中文名称",
                          "商户本地名称","用户ID", "总价(本地)","原价(本地)","总价(人民币)","原价(人民币)","订单状态","下单时间", "使用时间","地址",
                          "邮编","省会","区","城市","电话"};
         String filename = "order.xls";
