@@ -10,7 +10,7 @@
 <div id="content">
     <div class="container-fluid">
         <div class="row-fluid">
-            <div class="span6">
+            <div class="span10">
                 <div class="widget-box">
                     <div id="breadcrumb">
                         <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
@@ -21,15 +21,17 @@
                         <h5>商品编辑</h5>
                     </div>
                     <div class="widget-content nopadding">
-                        <form class="form-horizontal commonValidate" action="update" method="post">
+                        <form class="form-horizontal itemValidate" action="update" method="post">
                             <input name="id" type="hidden" value="$!entity.id">
                             <input name="itemType" type="hidden" type="1">
                             <div class="control-group">
                                 <label class="control-label">商户</label>
                                 <div class="controls">
-                                    <select name="merchant.id" class="span11 select2" target-name="cat.id" target-url="/itemCat/api/list">
+                                    <select name="merchant.id" class="span11 select2" target-name="cat.id"
+                                            target-url="/itemCat/api/list">
                                         #foreach($e in $!merchants)
-                                            <option value="$!e.id" #if($!e.id == $!entity.merchant.id) selected #end>$!e.name</option>
+                                            <option value="$!e.id" #if($!e.id == $!entity.merchant.id)
+                                                    selected #end>$!e.name</option>
                                         #end
                                     </select>
                                 </div>
@@ -47,19 +49,29 @@
                                         /> $!e.name
                                     #end
                                 </div>
-                                <div class="control-group ZhiYouGou">
-                                    <label class="control-label">邮费</label>
+                                <div class="directMail" style="display: none">
+                                    <label class="control-label">重量</label>
                                     <div class="controls">
-                                        <input name="directmail.postage" type="text" class="span11" placeholder="邮费" value="$!entity.directmail.postage" required>
+                                        <input name="weight" type="text" class="span11" placeholder="商品重量，必填"
+                                               value="$!entity.weight">（KG）
                                     </div>
                                 </div>
+##                                <div class="control-group ZhiYouGou">
+##                                    <label class="control-label">邮费</label>
+##                                    <div class="controls">
+##                                        <input name="directmail.postage" type="text" class="span11" placeholder="邮费"
+##                                               value="$!entity.directmail.postage" required>
+##                                    </div>
+##                                </div>
                                 <label class="control-label">中文名称</label>
                                 <div class="controls">
-                                    <input name="name" for="name" type="text" class="span11" placeholder="中文名称" value="$!entity.name">
+                                    <input name="name" for="name" type="text" class="span11" placeholder="中文名称"
+                                           value="$!entity.name">
                                 </div>
                                 <label class="control-label">本地名称</label>
                                 <div class="controls">
-                                    <input name="kpname" for="kpname" type="text" class="span11" placeholder="本地名称" value="$!entity.kpname">
+                                    <input name="kpname" for="kpname" type="text" class="span11" placeholder="本地名称"
+                                           value="$!entity.kpname">
                                 </div>
                                 <label class="control-label">原价(本地)</label>
                                 <div class="controls">
@@ -71,7 +83,8 @@
                                 </div>
                                 <label class="control-label">商户价</label>
                                 <div class="controls">
-                                    <input name="mchPrice" type="text" class="span11" placeholder="$!entity.kpPrice" value="$!entity.mchPrice">
+                                    <input name="mchPrice" type="text" class="span11" placeholder="$!entity.kpPrice"
+                                           value="$!entity.mchPrice">
                                 </div>
                                 <label class="control-label">是否推荐</label>
                                 <div class="controls">
@@ -87,21 +100,27 @@
                                 <div class="controls">
                                     <input name="sort" type="text" class="span11" value="$!entity.sort">
                                 </div>
-                                <label class="control-label">概述</label>
+                                <label class="control-label">商品详情</label>
                                 <div class="controls">
-                                    <input name="intro" type="text" class="span11" value="$!entity.intro">
+                                    <textarea name="intro" id="intro" class="span11">$!entity.intro</textarea>
                                 </div>
                                 <label class="control-label">展示图</label>
                                 <div class="controls">
                                     <input type="text" class="span9" name="imgUrl" id="imgUrl" value="$!entity.imgUrl">
-                                    <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览</button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl">上传</button>
+                                    <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览
+                                    </button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl">上传
+                                    </button>
                                 </div>
                                 <label class="control-label">列表页展示图</label>
                                 <div class="controls">
-                                    <input type="text" class="span9" name="indexImgUrl" id="indexImgUrl" value="$!entity.indexImgUrl">
-                                    <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">预览</button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl">上传</button>
+                                    <input type="text" class="span9" name="indexImgUrl" id="indexImgUrl"
+                                           value="$!entity.indexImgUrl">
+                                    <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">预览
+                                    </button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl">
+                                        上传
+                                    </button>
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -116,7 +135,26 @@
         </div>
     </div>
     #include("common/js-support.vm")
-    <script>
+    <script charset="utf-8" src="/dist/kindeditor/kindeditor.js"></script>
+    <script type="text/javascript">
+        var editor;
+        KindEditor.ready(function (K) {
+            editor = K.create('#intro', {
+                items: [
+                    'source', '|', 'undo', 'redo', '|', 'preview', 'template', 'code', 'cut', 'copy', 'paste',
+                    'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                    'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                    'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+                    'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                    'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'hr', 'emoticons', 'pagebreak',
+                    'link', 'unlink', '|', 'about'
+                ]
+            });
+        });
+
+        directMailChange();
+        $("input[name='supportType']").click(directMailChange)
+
             #if($!disabled)
             $("#btn-save").hide();
             $(":input").each(function (i, o) {
@@ -132,6 +170,7 @@
             #else
             $("#btn-edit").hide();
             #end
+
         $("input[name='supportType']").each(function (i, o) {
             var value = $(o).val();
             var checked = $(o).prop("checked");
@@ -148,6 +187,14 @@
             });
         });
 
+        function directMailChange() {
+            var isCheck = $("input[name=supportType][value=ZhiYouGou]")[0].checked;
+            if (isCheck) {
+                $(".directMail").show();
+            } else {
+                $(".directMail").hide();
+            }
+        }
     </script>
     #include("common/image-support.vm")
     <script src="/dist/js/cascade-select.js"></script>

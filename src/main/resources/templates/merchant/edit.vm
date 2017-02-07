@@ -25,7 +25,7 @@
                         <h5>商户编辑</h5>
                     </div>
                     <div class="widget-content nopadding">
-                        <form class="form-horizontal commonValidate" role="form" action="update" method="post"
+                        <form class="form-horizontal merchantValidate" role="form" action="update" method="post"
                               id="commonForm">
                             <input name="id" type="hidden" class="span11" value="$!entity.id">
                             <div class="control-group">
@@ -154,8 +154,8 @@
 
                                 <label class="control-label">经纬度</label>
                                 <div class="controls">
-                                    <input name="longitude" id="longitude" type="text" class="span4" placeholder="经度" value="$!entity.longitude">
-                                    <input name="latitude" id="latitude" type="text" class="span4" placeholder="纬度" value="$!entity.latitude">
+                                    <input name="longitude" id="longitude" type="text" class="span4" placeholder="经度" value="$!entity.longitude" required>
+                                    <input name="latitude" id="latitude" type="text" class="span4" placeholder="纬度" value="$!entity.latitude" required>
                                     <a class="btn btn-success viewMap" href="javascript:void(0);">查看地图</a>
                                 </div>
 
@@ -199,7 +199,7 @@
                                     #foreach($e in $!supportTypes)
                                         <input name="supportType" type="checkbox" value="$!e"
                                             #foreach($t in $!entity.supportType)
-                                               #if($!e == $!t)checked#end
+                                               #if($!e == $!t)checked="true"#end
                                             #end
                                         /> $!e.name
                                     #end
@@ -216,6 +216,19 @@
                                 <label class="control-label">商户介绍</label>
                                 <div class="controls">
                                     <textarea name="intro" id="intro" class="span11">$!entity.intro</textarea>
+                                </div>
+                                <div class="directMail" style="display: none">
+                                    <label class="control-label">邮费</label>
+                                    <div class="controls">
+                                        <input name="postage" id="postage" type="text" class="span11"
+                                               placeholder="请输入本地货币"
+                                               value="$!entity.postage">
+                                    </div>
+                                    <label class="control-label">起邮重量</label>
+                                    <div class="controls">
+                                        <input name="mailWeight" type="text" class="span11" placeholder="最小计算重量，可选"
+                                               value="$!entity.mailWeight">（KG）
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -275,6 +288,9 @@
             });
         });
 
+        directMailChange();
+        $("input[name='supportType']").click(directMailChange)
+
         var landmarkOption = null;
         $(".landmark").each(function () {
             $(this).on("click", function () {
@@ -284,7 +300,9 @@
                 var latitude = $("#latitude").val();
 
                 $.ajax({
-                    url: "/landMark/api/list", async: false, data: {id: value, longitude: longitude, latitude: latitude},
+                    url: "/landMark/api/list",
+                    async: false,
+                    data: {id: value, longitude: longitude, latitude: latitude},
                     success: function (result) {
                         var htm = '';
                         $.each(result.data, function (k, v) {
@@ -305,6 +323,19 @@
                 $(target).val(value);
             }
         });
+
+        function directMailChange() {
+            var isCheck = $("input[name=supportType][value=ZhiYouGou]")[0].checked;
+            if (isCheck) {
+                var postage = $("input[name=postage]").val();
+                if (!postage) {
+                    $("input[name=postage]").val(8000);
+                }
+                $(".directMail").show();
+            } else {
+                $(".directMail").hide();
+            }
+        }
     </script>
 </body>
 

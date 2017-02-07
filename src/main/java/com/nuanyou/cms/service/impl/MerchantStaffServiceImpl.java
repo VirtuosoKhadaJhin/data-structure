@@ -23,8 +23,8 @@ public class MerchantStaffServiceImpl implements MerchantStaffService {
     @Override
     public MerchantStaff saveNotNull(MerchantStaff entity) {
         String password = entity.getPassword();
+        int count = dao.findByUsername(entity.getUsername());
         if (entity.getId() == null) {
-            int count = dao.findByUsername(entity.getUsername());
             if (count > 0)
                 throw new APIException(ResultCodes.UsedName);
 
@@ -41,6 +41,10 @@ public class MerchantStaffServiceImpl implements MerchantStaffService {
                     entity.setPassword(MD5Utils.encrypt(password));
             }
             MerchantStaff oldEntity = dao.findOne(entity.getId());
+
+            if (count > 0 && !StringUtils.equals(entity.getUsername(), oldEntity.getUsername()))
+                throw new APIException(ResultCodes.UsedName);
+
             BeanUtils.copyBeanNotNull(entity, oldEntity);
             return dao.save(oldEntity);
         }

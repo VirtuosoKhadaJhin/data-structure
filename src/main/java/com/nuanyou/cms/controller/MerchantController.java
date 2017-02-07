@@ -157,12 +157,13 @@ public class MerchantController {
         propertyHeaderMap.put("telphone", "商家电话");
         propertyHeaderMap.put("address", "地址（中文）");
         propertyHeaderMap.put("kpaddress", "地址（本地）");
-        propertyHeaderMap.put("payTypes", "支付方式");
-        propertyHeaderMap.put("supportType", "支持类型");
+        propertyHeaderMap.put("payTypes.name", "支付方式");
+        propertyHeaderMap.put("supportType.name", "支持类型");
         propertyHeaderMap.put("display", "显示状态");
         propertyHeaderMap.put("issign", "合作情况");
-//        propertyHeaderMap.put("district", "商圈信息");
-//        propertyHeaderMap.put("subcatId", "分类信息");
+        propertyHeaderMap.put("district.name", "商圈信息");
+        propertyHeaderMap.put("mcat.name", "一级分类");
+        propertyHeaderMap.put("subcat.name", "二级分类");
 //        propertyHeaderMap.put("name", "优付名称");
 //        propertyHeaderMap.put("name", "商户补贴率");
 //        propertyHeaderMap.put("name", "商户补贴上限");

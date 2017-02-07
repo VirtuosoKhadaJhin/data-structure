@@ -40,12 +40,31 @@ public class ExcelUtil {
 
                 String textValue = null;
 
-                Object value = BeanUtils.getValue(data, property);
-                if (value != null)
-                    if (value instanceof Date)
+
+                Object value = data;
+                String[] names = property.split("\\.");
+                for (String name : names) {
+                    if (value != null) {
+                        if (value instanceof Collection) {
+                            StringBuilder sb = new StringBuilder();
+                            for (Object o : (Collection) value) {
+                                sb.append(BeanUtils.getValue(o, name)).append(",");
+                            }
+                            value = sb.deleteCharAt(sb.length() - 1).toString();
+                        } else {
+                            value = BeanUtils.getValue(value, name);
+                        }
+                    }
+                }
+
+                if (value != null) {
+                    if (value instanceof Date) {
                         textValue = DateUtils.format((Date) value);
-                    else
+                    } else {
                         textValue = value.toString();
+                    }
+                }
+
                 cell.setCellValue(new XSSFRichTextString(textValue));
             }
         }

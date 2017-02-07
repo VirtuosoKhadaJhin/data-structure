@@ -47,7 +47,7 @@ public class Order {
     private Date refundaudittime;
     private String refundreason;
     private String refundremark;
-    private Byte refundsource;
+    private RefundSource refundsource;
     private Date createtime;
     private Byte iscode;
     private BigDecimal couponprice;
@@ -81,6 +81,7 @@ public class Order {
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -116,9 +117,6 @@ public class Order {
     }
 
 
-
-
-
     @Column(name = "transactionid", nullable = true, length = 40)
     public String getTransactionid() {
         return transactionid;
@@ -133,6 +131,7 @@ public class Order {
     public OrderPayType getPaytype() {
         return paytype;
     }
+
     public void setPaytype(OrderPayType paytype) {
         this.paytype = paytype;
     }
@@ -148,7 +147,6 @@ public class Order {
     }
 
 
-
     private Long userId;
 
     @Column(name = "userid")
@@ -162,7 +160,7 @@ public class Order {
 
     /* @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "userid", referencedColumnName = "userid")*/
-   @Transient
+    @Transient
     public PasUserProfile getUser() {
         return user;
     }
@@ -211,7 +209,6 @@ public class Order {
     public void setKpprice(BigDecimal kpprice) {
         this.kpprice = kpprice;
     }
-
 
 
     @Column(name = "orderstatus", nullable = true)
@@ -305,7 +302,7 @@ public class Order {
 
 
     @Column(name = "platform", nullable = true)
-    @Convert(converter=PlatformConverter.class)
+    @Convert(converter = PlatformConverter.class)
     public Platform getPlatform() {
         return platform;
     }
@@ -324,9 +321,6 @@ public class Order {
     public void setOs(Os os) {
         this.os = os;
     }
-
-
-
 
 
     @Column(name = "sceneid", nullable = true, length = 255)
@@ -360,7 +354,7 @@ public class Order {
 
 
     @Column(name = "newrefundstatus", nullable = true)
-    @Convert(converter=RefundStatusConverter.class  )
+    @Convert(converter = RefundStatusConverter.class)
     public RefundStatus getRefundstatus() {
         return refundstatus;
     }
@@ -410,12 +404,13 @@ public class Order {
     }
 
 
+    @Convert(converter = RefundSourceConverter.class)
     @Column(name = "refundsource", nullable = true)
-    public Byte getRefundsource() {
+    public RefundSource getRefundsource() {
         return refundsource;
     }
 
-    public void setRefundsource(Byte refundsource) {
+    public void setRefundsource(RefundSource refundsource) {
         this.refundsource = refundsource;
     }
 
@@ -441,9 +436,6 @@ public class Order {
     }
 
 
-
-
-
     @Column(name = "couponprice", nullable = true, precision = 2)
     public BigDecimal getCouponprice() {
         return couponprice;
@@ -462,7 +454,6 @@ public class Order {
     public void setRate(BigDecimal rate) {
         this.rate = rate;
     }
-
 
     @Column(name = "merchantprice", nullable = true, precision = 5)
     public BigDecimal getMerchantprice() {
@@ -624,10 +615,6 @@ public class Order {
     }
 
 
-
-
-
-
     @Column(name = "youfulocalereduce")
     public BigDecimal getYoufulocalereduce() {
         return youfulocalereduce;
@@ -636,6 +623,7 @@ public class Order {
     public void setYoufulocalereduce(BigDecimal youfulocalereduce) {
         this.youfulocalereduce = youfulocalereduce;
     }
+
     @Column(name = "mchlocalereduce")
     public BigDecimal getMchlocalereduce() {
         return mchlocalereduce;
@@ -654,20 +642,20 @@ public class Order {
     }
 
     @Transient
-    public  Boolean getRefundQualified(){
+    public Boolean getRefundQualified() {
         return getRefundQualified(this);
     }
 
 
-    public static  Boolean getRefundQualified(Order order){
-        if(order.getOrderstatus()== NewOrderStatus.Consumed||order.getOrderstatus()== NewOrderStatus.Commented||
-                order.getOrderstatus()== NewOrderStatus.AutoVerification||order.getOrderstatus()== NewOrderStatus.MerchantVerfication){
-            if(order.getRefundstatus()== null||order.getRefundstatus()== RefundStatus.Unknown){
+    public static Boolean getRefundQualified(Order order) {
+        if (order.getOrderstatus() == NewOrderStatus.Consumed || order.getOrderstatus() == NewOrderStatus.Commented ||
+                order.getOrderstatus() == NewOrderStatus.AutoVerification || order.getOrderstatus() == NewOrderStatus.MerchantVerfication) {
+            if (order.getRefundstatus() == null || order.getRefundstatus() == RefundStatus.Unknown) {
                 return true;
-            }else{   //退款中或者退款成功//退款失败
+            } else {   //退款中或者退款成功//退款失败
                 return false;
             }
-        }else {
+        } else {
             return false;
         }
     }

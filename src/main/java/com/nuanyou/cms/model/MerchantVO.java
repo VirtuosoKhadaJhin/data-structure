@@ -46,7 +46,6 @@ public class MerchantVO {
     private String tips;
     private Boolean issign;
     private Boolean ispush;
-    private Long channelId;
     private Date firstshowTime;
     private Double score;
     private Integer rank;
@@ -61,6 +60,10 @@ public class MerchantVO {
     private MerchantCat subcat;
 
     private Long catId;
+
+    private BigDecimal postage;
+
+    private BigDecimal mailWeight;
 
 
     public Long getId() {
@@ -327,16 +330,6 @@ public class MerchantVO {
         this.ispush = ispush;
     }
 
-
-    public Long getChannelId() {
-        return channelId;
-    }
-
-    public void setChannelId(Long channelId) {
-        this.channelId = channelId;
-    }
-
-
     public Date getFirstshowTime() {
         return firstshowTime;
     }
@@ -427,5 +420,21 @@ public class MerchantVO {
     }
 
     public MerchantVO() {
+    }
+
+    public BigDecimal getPostage() {
+        return postage;
+    }
+
+    public void setPostage(BigDecimal postage) {
+        this.postage = postage;
+    }
+
+    public BigDecimal getMailWeight() {
+        return mailWeight;
+    }
+
+    public void setMailWeight(BigDecimal mailWeight) {
+        this.mailWeight = mailWeight;
     }
 }
