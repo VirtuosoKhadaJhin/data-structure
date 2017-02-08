@@ -165,7 +165,7 @@ public class OrderController {
                        HttpServletRequest request, HttpServletResponse response,
                        ViewOrderExport entity, TimeCondition time) throws IOException {
         String[] titles = new String[]{
-                "序号", "ID", "订单编号", "渠道", "订单类型", "支付类型", "来源平台", "来源系统", "使用码", "商户ID", "商户中文名称",
+                "序号", "ID", "订单编号", "订单流水号","渠道", "订单类型", "支付类型", "来源平台", "来源系统", "使用码", "商户ID", "商户中文名称",
                 "商户本地名称", "用户ID", "总价(本地)", "原价(本地)", "总价(人民币)", "原价(人民币)", "订单状态", "下单时间", "使用时间", "地址",
                 "邮编", "省会", "区", "城市", "电话"};
         String filename = "order.xls";
