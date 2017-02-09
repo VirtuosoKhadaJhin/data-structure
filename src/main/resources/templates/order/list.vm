@@ -11,19 +11,10 @@
         <tr role="row">
         <tr>
             <th class="table-set">操作</th>
-            <th>订单编号</th>
-            <th>订单流水号</th>
-            <th>userid</th>
-            <th>购买人</th>
-            <th>商户id</th>
-            <th>商户中文名称</th>
-            <th>商户本地名称</th>
-            <th>总价(本地)</th>
-            <th>原价(本地)</th>
-            <th>总价(人民币)</th>
-            <th>原价(人民币)</th>
-            <th>商户优付补贴</th>
-            <th>优惠券/面值/本地面值</th>
+            <th>
+                订单编号和流水
+            </th>
+
             <th>订单状态</th>
             <th>订单类型</th>
             <th>下单时间</th>
@@ -31,6 +22,18 @@
             <th>支付类型</th>
             <th>来源平台</th>
             <th>来源系统</th>
+
+            <th>userid</th>
+            <th>购买人</th>
+            <th>
+                商户
+            </th>
+##            <th>总价(本地)</th>
+            <th>原价(本地)</th>
+            <th>总价(人民币)</th>
+##            <th>原价(人民币)</th>
+            <th>商户优付补贴</th>
+            <th>优惠券/面值/本地面值</th>
             <th>订单手机号码</th>
         </tr>
         </tr>
@@ -45,18 +48,32 @@
                         <a href="javascript:void(0);" data-id="$!order.id" class="btn btn-success btn-mini tuikuan">退款</a>
                      #end
                 </td>
-                <td>$!order.ordersn</td>
                 <td>
-                    $!order.transactionid
+
+                    订单编号:$!order.ordersn<br>
+                    订单流水号:$!order.transactionid
+
                 </td>
+
+                <td>$!order.orderstatus.name</td>
+                <td>$!order.ordertype.name</td>
+                <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!order.createtime)</td>
+                <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!order.usetime)</td>
+                <td>$!order.paytype.name</td>
+                <td>$!order.platform.name</td>
+                <td>$!order.os.name</td>
+
                 <td>$!order.user.userid</td>
                 <td>$!order.user.nickname</td>
-                <td>$!order.merchant.id</td>
                 <td>
-                    <a href="$!link.requestPath/merchant/detail?id=$!order.merchant.id" class="alink"> $!order.merchant.name</a>
+                    <a href="$!link.requestPath/merchant/detail?id=$!order.merchant.id" class="alink">
+                        ID $!order.merchant.id<br>
+                        名称 $!order.merchant.name<br>
+                        本地 $!order.merchant.kpname
+                    </a>
+
                 </td>
-                <td>$!order.merchant.kpname</td>
-                <td>$numberFormatter.format("#0.00",$!order.kpprice)</td>
+##                <td>$numberFormatter.format("#0.00",$!order.kpprice)</td>
                 <td>$numberFormatter.format("#0.00",$!order.okpprice)</td>
                 <td>
                     #if($!order.payable)
@@ -65,18 +82,12 @@
                         $!order.price
                     #end
                 </td>
-                <td>$!order.oprice</td>
+##                <td>$!order.oprice</td>
                 <td>$!order.merchantsubsidy</td>
                 <td>
                     #if($!order.coupon)$!order.coupon.title/$!order.coupon.price/$!order.coupon.localPrice#end
                 </td>
-                <td>$!order.orderstatus.name</td>
-                <td>$!order.ordertype.name</td>
-                <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!order.createtime)</td>
-                <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!order.usetime)</td>
-                <td>$!order.paytype.name</td>
-                <td>$!order.platform.name</td>
-                <td>$!order.os.name</td>
+
                 <td>$!order.user.userTel.tel</td>
             </tr>
             #end
@@ -90,16 +101,19 @@
 
         <label>订单ID：</label>
         <input type="text" class="span11" name="id" value="$!entity.id" placeholder="订单ID">
+        </div>
 
+    <div>
         <label>订单编号：</label>
         <input type="text" class="span11" name="ordersn" value="$!entity.ordersn" placeholder="订单编号">
+    </div>
 
-
+    <div>
         <label>渠道：</label>
         <input type="text" class="span11" name="sceneid" value="$!entity.sceneid" placeholder="渠道">
+    </div>
 
-
-
+    <div>
         <label for="status">商户搜索：</label>
         <select id="merchant.id" name="merchant.id" class="span11 select2">
             <option value="">全部</option>
@@ -113,6 +127,7 @@
                 </option>
             #end
         </select>
+    </div>
 
         <label>商户本地名称：</label>
         <input type="text" class="span11" name="merchant.kpname" value="$!entity.merchant.kpname" placeholder="商户本地名称">
