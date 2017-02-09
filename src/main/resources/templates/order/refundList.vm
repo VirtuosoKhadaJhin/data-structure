@@ -31,8 +31,8 @@
         #foreach($e in $!page.content)
         <tr>
             <td>$!e.id</td>
-            <td >
-                 <a href="$!link.contextPath/order/list?ordersn=$!e.ordersn" class="alink">$!e.ordersn</a>
+            <td>
+                <a href="$!link.contextPath/order/list?ordersn=$!e.ordersn" class="alink">$!e.ordersn</a>
             </td>
             <td> $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.createtime)</td>
             <td>$!e.orderstatus.name</td>
@@ -76,12 +76,12 @@
         <input type="text" class="span11" name="merchant.name" value="$!entity.merchant.name" placeholder="商户中文名">
 
         <label>下单时间：</label>
-        <input type="text" class="span11 dateTimeFormat" name="begin" id="beginTime" value="$!time.beginStr" placeholder="开始时间">
-        <input type="text" class="span11 dateTimeFormat" name="end"  value="$!time.endStr" id="endTime" placeholder="结束时间">
+        <input type="text" class="span11 dateTimeFormat" name="begin" value="$!time.beginStr" id="beginTime" placeholder="开始时间">
+        <input type="text" class="span11 dateTimeFormat" name="end" value="$!time.endStr" id="endTime" placeholder="结束时间">
 
         <label>申请退款时间：</label>
-        <input type="text" class="span11 dateTimeFormat" name="begin_2" id="beginTime" value="$!time.begin_2Str" placeholder="开始时间">
-        <input type="text" class="span11 dateTimeFormat" name="end_2"  value="$!time.end_2Str" id="endTime" placeholder="结束时间">
+        <input type="text" class="span11 dateTimeFormat" name="begin_2" value="$!time.begin_2Str" id="beginTime2" placeholder="开始时间">
+        <input type="text" class="span11 dateTimeFormat" name="end_2" value="$!time.end_2Str" id="endTime2" placeholder="结束时间">
 
         <div class="input-group-addon">退款状态</div>
         <select name="refundstatus" class="span11">
@@ -99,12 +99,32 @@
 <script type="text/javascript">
     $(function () {
         $(".export").on("click", function () {
+
+            if (!validateTime($("#beginTime").val(), $("#endTime").val()) &&
+                !validateTime($("#beginTime2").val(), $("#endTime2").val())) {
+                return alert("下单时间或 申请退款时间的 开始和结束时间不能为空,且只能在7天以内!");
+            }
+
             var form = $(document.forms[0]);
             form.attr("action", "refundList/export");
+            form.attr("target", "_blank");
             form.submit();
             form.attr("action", "");
             form.attr("target", "");
         });
+
+        function validateTime(begin, end) {
+            if (begin == "" || end == "") {
+                return false;
+            }
+            var begin = new Date(begin.replace("-", "/").replace("-", "/"));
+            var end = new Date(end.replace("-", "/").replace("-", "/"));
+            var result = end - begin;
+            if (result > 7 * 24 * 60 * 60 * 1000) {
+                return false;
+            }
+            return true;
+        }
     });
 
 </script>
