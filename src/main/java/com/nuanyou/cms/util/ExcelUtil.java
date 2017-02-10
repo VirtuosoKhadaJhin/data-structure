@@ -50,7 +50,10 @@ public class ExcelUtil {
                             for (Object o : (Collection) value) {
                                 sb.append(BeanUtils.getValue(o, name)).append(",");
                             }
-                            value = sb.deleteCharAt(sb.length() - 1).toString();
+                            if (sb.length() > 0)
+                                value = sb.deleteCharAt(sb.length() - 1).toString();
+                            else
+                                value = "";
                         } else {
                             value = BeanUtils.getValue(value, name);
                         }
