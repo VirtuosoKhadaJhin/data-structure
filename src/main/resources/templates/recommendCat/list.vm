@@ -1,11 +1,11 @@
 #parse("common/list_start.vm")
 <div id="breadcrumb">
     <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
-    <a href="javascipt:void(0);" class="tip-bottom" data-original-title="">特色专辑管理</a>
+    <a href="javascipt:void(0);" class="tip-bottom" data-original-title="">推荐组管理</a>
 </div>
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
-    <h5>特色专辑列表</h5>
+    <h5>推荐组列表</h5>
 </div>
 <table class="table table-bordered table-striped">
     <thead>

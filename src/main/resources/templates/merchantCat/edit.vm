@@ -79,26 +79,20 @@
                                 </div>
                                 <label class="control-label">背景图</label>
                                 <div class="controls">
-                                    <input type="text" class="span9" id="imageUrl" name="imageUrl"
-                                           value='$!entity.imageUrl'/>
-                                    <button type="button" class="btn btn-success previewBtn" data-id="imageUrl">预览
-                                    </button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imageUrl">上传
-                                    </button>
+                                    <input type="text" class="span9" id="imageUrl" name="imageUrl" value='$!entity.imageUrl'/>
+                                    <button type="button" class="btn btn-success previewBtn" data-id="imageUrl" imageSpec="MerchantCatBG">预览</button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imageUrl">上传</button>
+                                    <p>尺寸: 60 * 60, 限制: 3k</p>
                                 </div>
 
 
                                 <label class="control-label">地图标志</label>
                                 <div class="controls">
-                                    <input type="text" class="span9" id="mapimgurl" name="mapimgurl"
-                                           value='$!entity.mapimgurl'/>
-                                    <button type="button" class="btn btn-success previewBtn" data-id="mapimgurl">预览
-                                    </button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="mapimgurl">上传
-                                    </button>
+                                    <input type="text" class="span9" id="mapimgurl" name="mapimgurl" value='$!entity.mapimgurl'/>
+                                    <button type="button" class="btn btn-success previewBtn" data-id="mapimgurl">预览</button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="mapimgurl" imageSpec="MerchantCatMap">上传</button>
+                                    <p>尺寸: 60 * 60, 限制: 3k</p>
                                 </div>
-
-
                             </div>
                             <div class="form-actions">
                                 #if($!type==2 || $!type==1)

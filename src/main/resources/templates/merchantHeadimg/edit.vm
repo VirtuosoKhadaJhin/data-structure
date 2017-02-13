@@ -25,8 +25,9 @@
         <input id="add-img-mchId" type="hidden" class="span11">
         <input id="add-img-url" type="text" class="span11" value="$!entity.id">
         <button class="btn btn-success previewBtn" type="button" data-id="add-img-url">预览</button>
-        <button class="btn btn-success uploadImgBtn" type="button" data-id="add-img-url" data-width="720" data-height="540">上传</button>
+        <button class="btn btn-success uploadImgBtn" type="button" data-id="add-img-url" imageSpec="MerchantDetail">上传</button>
         是否置顶 <input id="add-img-sort" type="checkbox">
+        <p>尺寸: 640 * 480, 限制: 60k</p>
     </div>
     <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>

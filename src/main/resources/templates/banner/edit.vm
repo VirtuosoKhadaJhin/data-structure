@@ -95,7 +95,8 @@
                                     <div class="controls">
                                         <input type="text" class="span7" id="bannerurl" name="bannerurl" value='$!entity.bannerurl'/>
                                         <button type="button" class="btn btn-success previewBtn" data-id="bannerurl">预览</button>
-                                        <button type="button" class="btn btn-success uploadImgBtn" id="bannerImgBtn" data-id="bannerurl" data-width="" data-height="">上传</button>
+                                        <button type="button" class="btn btn-success uploadImgBtn" id="bannerImgBtn" data-id="bannerurl" imageSpec="">上传</button>
+                                        <p id="bannermsg"></p>
                                     </div>
                                     <label class="control-label">app图片链接</label>
                                     <div class="controls">
@@ -143,17 +144,17 @@
         $("select[name='page']").on("change", function () {
             var val = $(this).val();
             if (val == "index") {
-                $("#bannerImgBtn").attr("data-width", 720);
-                $("#bannerImgBtn").attr("data-height", 450);
+                $("#bannerImgBtn").attr("imageSpec", "BannerIndex");
+                $("#bannermsg").empty().append("尺寸: 640 * 400, 限制: 150k");
             } else if (val == "up") {
-                $("#bannerImgBtn").attr("data-width", 670);
-                $("#bannerImgBtn").attr("data-height", 280);
+                $("#bannerImgBtn").attr("imageSpec", "BannerUp");
+                $("#bannermsg").empty().append("尺寸: 640 * 268, 限制: 100k");
             } else if (val == "down") {
-                $("#bannerImgBtn").attr("data-width", 270);
-                $("#bannerImgBtn").attr("data-height", 134);
+                $("#bannerImgBtn").attr("imageSpec", "BannerDown");
+                $("#bannermsg").empty().append("尺寸: 270 * 134, 限制: 50k");
             } else {
-                $("#bannerImgBtn").attr("data-width", null);
-                $("#bannerImgBtn").attr("data-height", null);
+                $("#bannerImgBtn").attr("imageSpec", "BannerYoufu");
+                $("#bannermsg").empty().append("尺寸: 160 * 120, 限制: 15k");
             }
         }).trigger("change");
     </script>

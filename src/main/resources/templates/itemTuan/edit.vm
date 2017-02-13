@@ -110,13 +110,15 @@
                                 <div class="controls">
                                     <input type="text" class="span8" name="imgUrl" id="imgUrl" value="$!entity.imgUrl">
                                     <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览</button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl">上传</button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl" imageSpec="TuanShow">上传</button>
+                                    <p>尺寸: 640 * 480, 限制: 60k</p>
                                 </div>
                                 <label class="control-label">列表页展示图</label>
                                 <div class="controls">
                                     <input type="text" class="span8" name="indexImgUrl" id="indexImgUrl" value="$!entity.indexImgUrl">
                                     <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">预览</button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl">上传</button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl" imageSpec="TuanList">上传</button>
+                                    <p>尺寸: 320 * 240, 限制: 40k</p>
                                 </div>
                                 <label class="control-label">注意事项</label>
                                 <div class="controls">
