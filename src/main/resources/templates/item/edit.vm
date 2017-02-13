@@ -27,11 +27,9 @@
                             <div class="control-group">
                                 <label class="control-label">商户</label>
                                 <div class="controls">
-                                    <select name="merchant.id" class="span11 select2" target-name="cat.id"
-                                            target-url="/itemCat/api/list">
+                                    <select name="merchant.id" class="span11 select2" target-name="cat.id" target-url="/itemCat/api/list">
                                         #foreach($e in $!merchants)
-                                            <option value="$!e.id" #if($!e.id == $!entity.merchant.id)
-                                                    selected #end>$!e.name</option>
+                                            <option value="$!e.id" #if($!e.id == $!entity.merchant.id) selected #end>$!e.name</option>
                                         #end
                                     </select>
                                 </div>
@@ -56,22 +54,13 @@
                                                value="$!entity.weight">（KG）
                                     </div>
                                 </div>
-##                                <div class="control-group ZhiYouGou">
-##                                    <label class="control-label">邮费</label>
-##                                    <div class="controls">
-##                                        <input name="directmail.postage" type="text" class="span11" placeholder="邮费"
-##                                               value="$!entity.directmail.postage" required>
-##                                    </div>
-##                                </div>
                                 <label class="control-label">中文名称</label>
                                 <div class="controls">
-                                    <input name="name" for="name" type="text" class="span11" placeholder="中文名称"
-                                           value="$!entity.name">
+                                    <input name="name" for="name" type="text" class="span11" placeholder="中文名称" value="$!entity.name">
                                 </div>
                                 <label class="control-label">本地名称</label>
                                 <div class="controls">
-                                    <input name="kpname" for="kpname" type="text" class="span11" placeholder="本地名称"
-                                           value="$!entity.kpname">
+                                    <input name="kpname" for="kpname" type="text" class="span11" placeholder="本地名称" value="$!entity.kpname">
                                 </div>
                                 <label class="control-label">原价(本地)</label>
                                 <div class="controls">
@@ -83,8 +72,7 @@
                                 </div>
                                 <label class="control-label">商户价</label>
                                 <div class="controls">
-                                    <input name="mchPrice" type="text" class="span11" placeholder="$!entity.kpPrice"
-                                           value="$!entity.mchPrice">
+                                    <input name="mchPrice" type="text" class="span11" placeholder="$!entity.kpPrice" value="$!entity.mchPrice">
                                 </div>
                                 <label class="control-label">是否推荐</label>
                                 <div class="controls">
@@ -107,20 +95,16 @@
                                 <label class="control-label">展示图</label>
                                 <div class="controls">
                                     <input type="text" class="span9" name="imgUrl" id="imgUrl" value="$!entity.imgUrl">
-                                    <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览
-                                    </button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl">上传
-                                    </button>
+                                    <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览</button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl" imageSpec="ItemShow">上传</button>
+                                    <p>尺寸: 320 * 240, 限制: 40k</p>
                                 </div>
                                 <label class="control-label">列表页展示图</label>
                                 <div class="controls">
-                                    <input type="text" class="span9" name="indexImgUrl" id="indexImgUrl"
-                                           value="$!entity.indexImgUrl">
-                                    <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">预览
-                                    </button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl">
-                                        上传
-                                    </button>
+                                    <input type="text" class="span9" name="indexImgUrl" id="indexImgUrl" value="$!entity.indexImgUrl">
+                                    <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">预览</button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl" imageSpec="ItemList">上传</button>
+                                    <p>尺寸: 320 * 240, 限制: 40k</p>
                                 </div>
                             </div>
                             <div class="form-actions">
