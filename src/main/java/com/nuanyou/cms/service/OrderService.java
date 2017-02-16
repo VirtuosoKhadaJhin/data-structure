@@ -23,6 +23,8 @@ public interface OrderService {
 
     Page<ViewOrderExport> findExportByCondition(Integer index, ViewOrderExport entity, TimeCondition time, Pageable o);
 
+    Page<Order> findRefundByCondition(Integer index, Order entity, TimeCondition time);
+
     List<Order> findRefundByCondition(Order entity, TimeCondition time);
 
     Integer getBuyNum(Order order);
@@ -30,8 +32,6 @@ public interface OrderService {
     void refund(Order entity);
 
     Order saveNotNull(Order entity);
-
-    Page<Order> findRefundByCondition(int index, Order entity, TimeCondition time);
 
     void validate(Long id, Integer type, String cmsusername);
 
