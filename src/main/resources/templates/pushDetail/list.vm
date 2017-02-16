@@ -1,0 +1,100 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="../pushDetail/list" class="tip-bottom" data-original-title="">推送详情管理</a>
+    <a href="#" class="tip-bottom" data-original-title="">列表</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>推送详情列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>国家</th>
+        <th>城市</th>
+        <th>商圈</th>
+        <th>标题</th>
+        <th>推送策略</th>
+        <th>图片</th>
+        <th>链接</th>
+        <th>追踪码</th>
+        <th>排序</th>
+        <th>状态</th>
+        <th class="table-set">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.countryName</td>
+            <td>$!entity.cityName</td>
+            <td>$!entity.districtName</td>
+            <td>$!entity.title</td>
+            <td>$!entity.statusName</td>
+            <td><img width="126px" height="100px" src="$!entity.imgUrl"></td>
+            <td><a href="$!entity.linkUrl">$!entity.linkUrl</a></td>
+            <td>$!entity.source</td>
+            <td>$!entity.sort</td>
+            <td>$!entity.statusName</td>
+            <td>
+                <a href="pushDetail/list?id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
+                <a href="javascript:deletePushDetail($!entity.id,0);" class="btn btn-info btn-mini delete">删除</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#include("common/js-support.vm")
+<script type="text/javascript">
+    function deletePushDetail(id) {
+        if (confirm("确定删除？")) {
+            $.ajax({
+                url: "/pushDetail/deletePushDetail",
+                async: false,
+                data: {id: id},
+                success: function (result) {
+                    if (result.code == 0) {
+                        alert("删除成功");
+                        window.location.reload();
+                    } else {
+                        alert("Fail Code: " + result.code + " MSG: " + result.msg);
+                    }
+                }
+            });
+        }
+    }
+</script>
+#parse("common/list_mid.vm")
+<form class="form-horizontal " role="form" method="get">
+    <input type="hidden" name="groupId" value="$!condition.groupId">
+    <div class="control-group">
+        <label>国家</label>
+        <select id="country.id" name="countryId" class="span11" target-name="cityId" target-url="/city/api/getCitys">
+            <option value="">全部</option>
+            #foreach($e in $!countries)
+                <option value="$!e.id" #if($!condition.countryId==$!e.id) selected #end>$!e.id:$!e.name</option>
+            #end
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>城市</label>
+        <select id="city.id" name="cityId" class="span11" def-value="$!condition.cityId">
+            <option value="">全部</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>状态:</label>
+        <select name="status" class="span11">
+            <option value="">全部</option>
+            <option value="0"  #if($!condition.status==false) selected #end>禁用</option>
+            <option value="1"  #if($!condition.status==true) selected #end>启用</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">查询</button>
+</form>
+#parse("common/list_end.vm")
+<script src="/dist/js/cascade-select.js"></script>

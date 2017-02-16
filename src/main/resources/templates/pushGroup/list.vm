@@ -1,0 +1,59 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="../pushGroup/list" class="tip-bottom" data-original-title="">推送管理</a>
+    <a href="#" class="tip-bottom" data-original-title="">列表</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>推送列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>推送类型</th>
+        <th>说明</th>
+        <th>启用消息数</th>
+        <th class="table-set">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.title</td>
+            <td>$!entity.illustration</td>
+            <td>$!entity.num</td>
+            <td>
+                <a href="../pushDetail/list?groupId=$!entity.id" class="btn btn-success btn-mini">编辑</a>
+                #if($!entity.status)
+                    <a href="javascript:changeStatus($!entity.id,0);" class="btn btn-info btn-mini changeStatus">禁用</a>
+                #else
+                    <a href="javascript:changeStatus($!entity.id,1);" class="btn btn-info btn-mini changeStatus">启用</a>
+                #end
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#include("common/js-support.vm")
+<script type="text/javascript">
+    function changeStatus(id, status) {
+        if (confirm("确定操作？")) {
+            $.ajax({
+                url: "/pushGroup/changeStatus",
+                async: false,
+                data: {id: id, status: status},
+                success: function (result) {
+                    if (result.code == 0) {
+                        alert("操作成功");
+                        window.location.reload();
+                    } else {
+                        alert("Fail Code: " + result.code + " MSG: " + result.msg);
+                    }
+                }
+            });
+        }
+    }
+</script>
+#parse("common/list_mid.vm")
+#parse("common/list_end.vm")
