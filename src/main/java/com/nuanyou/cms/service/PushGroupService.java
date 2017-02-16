@@ -1,6 +1,6 @@
 package com.nuanyou.cms.service;
 
-import com.nuanyou.cms.model.PushGroupVo;
+import com.nuanyou.cms.model.PushGroupListVo;
 import org.springframework.data.domain.Page;
 
 /**
@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
  */
 public interface PushGroupService {
 
-    Page<PushGroupVo> list(int index);
+    Page<PushGroupListVo> list(int index);
 
     void changeStatus(Long id, Boolean status);
 }

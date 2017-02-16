@@ -1,6 +1,10 @@
 package com.nuanyou.cms.entity.push;
 
+import com.nuanyou.cms.commons.CreatedAt;
+import com.nuanyou.cms.commons.DateEntityListener;
+import com.nuanyou.cms.commons.LastModified;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,49 +13,48 @@ import java.util.Date;
  * Created by yangkai on 2017/2/14.
  */
 @Entity
+@EntityListeners(DateEntityListener.class)
 @Table(name = "ny_push_detail")
-@EntityListeners({AuditingEntityListener.class})
 public class PushDetail {
+    private Long id;
+
+    private String title;
+
+    private String content;
+
+    private Integer type;
+
+    private String imgUrl;
+
+    private String linkUrl;
+
+    private String source;
+
+    private Integer sort;
+
+    private Long districtId;
+
+    private Long cityId;
+
+    private Long countryId;
+
+    private Boolean status;
+
+    private Boolean deleted;
+
+    private PushGroup pushGroup;
+
+    private Date startTime;
+
+    private Date endTime;
+
+    private Date updateTime;
+
+    private Date createTime;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
-    @Column(name = "title")
-    private String title;
-    @Column(name = "content")
-    private String content;
-    @Column(name = "type")
-    private Integer type;
-    @Column(name = "imgurl")
-    private String imgUrl;
-    @Column(name = "linkurl")
-    private String linkUrl;
-    @Column(name = "source")
-    private String source;
-    @Column(name = "sort")
-    private Integer sort;
-    @Column(name = "districtid")
-    private Long districtId;
-    @Column(name = "cityid")
-    private Long cityId;
-    @Column(name = "countryid")
-    private Long countryId;
-    @Column(name = "status")
-    private Boolean status;
-    @Column(name = "deleted")
-    private Boolean deleted;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "groupid")
-    private PushGroup pushGroup;
-    @Column(name = "starttime")
-    private Date startTime;
-    @Column(name = "endtime")
-    private Date endTime;
-    @Column(name = "updatetime")
-    private Date updateTime;
-    @Column(name = "createtime")
-    private Date createTime;
-
     public Long getId() {
         return id;
     }
@@ -60,6 +63,7 @@ public class PushDetail {
         this.id = id;
     }
 
+    @Column(name = "title")
     public String getTitle() {
         return title;
     }
@@ -68,6 +72,7 @@ public class PushDetail {
         this.title = title;
     }
 
+    @Column(name = "content")
     public String getContent() {
         return content;
     }
@@ -76,6 +81,7 @@ public class PushDetail {
         this.content = content;
     }
 
+    @Column(name = "type")
     public Integer getType() {
         return type;
     }
@@ -84,6 +90,7 @@ public class PushDetail {
         this.type = type;
     }
 
+    @Column(name = "imgurl")
     public String getImgUrl() {
         return imgUrl;
     }
@@ -92,6 +99,7 @@ public class PushDetail {
         this.imgUrl = imgUrl;
     }
 
+    @Column(name = "linkurl")
     public String getLinkUrl() {
         return linkUrl;
     }
@@ -100,6 +108,7 @@ public class PushDetail {
         this.linkUrl = linkUrl;
     }
 
+    @Column(name = "source")
     public String getSource() {
         return source;
     }
@@ -108,6 +117,7 @@ public class PushDetail {
         this.source = source;
     }
 
+    @Column(name = "sort")
     public Integer getSort() {
         return sort;
     }
@@ -116,6 +126,7 @@ public class PushDetail {
         this.sort = sort;
     }
 
+    @Column(name = "districtid")
     public Long getDistrictId() {
         return districtId;
     }
@@ -124,6 +135,7 @@ public class PushDetail {
         this.districtId = districtId;
     }
 
+    @Column(name = "cityid")
     public Long getCityId() {
         return cityId;
     }
@@ -132,6 +144,7 @@ public class PushDetail {
         this.cityId = cityId;
     }
 
+    @Column(name = "countryid")
     public Long getCountryId() {
         return countryId;
     }
@@ -140,6 +153,7 @@ public class PushDetail {
         this.countryId = countryId;
     }
 
+    @Column(name = "status", columnDefinition = "int(11) DEFAULT 0")
     public Boolean getStatus() {
         return status;
     }
@@ -148,6 +162,7 @@ public class PushDetail {
         this.status = status;
     }
 
+    @Column(name = "deleted", columnDefinition = "int(11) DEFAULT 0")
     public Boolean getDeleted() {
         return deleted;
     }
@@ -156,6 +171,8 @@ public class PushDetail {
         this.deleted = deleted;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "groupid")
     public PushGroup getPushGroup() {
         return pushGroup;
     }
@@ -164,6 +181,8 @@ public class PushDetail {
         this.pushGroup = pushGroup;
     }
 
+    @Column(name = "starttime")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public Date getStartTime() {
         return startTime;
     }
@@ -172,6 +191,8 @@ public class PushDetail {
         this.startTime = startTime;
     }
 
+    @Column(name = "endtime")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public Date getEndTime() {
         return endTime;
     }
@@ -180,6 +201,8 @@ public class PushDetail {
         this.endTime = endTime;
     }
 
+    @LastModified
+    @Column(name = "updatetime", nullable = true)
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -188,6 +211,8 @@ public class PushDetail {
         this.updateTime = updateTime;
     }
 
+    @CreatedAt
+    @Column(name = "createtime", nullable = true)
     public Date getCreateTime() {
         return createTime;
     }

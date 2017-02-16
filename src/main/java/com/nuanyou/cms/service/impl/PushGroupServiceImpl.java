@@ -4,7 +4,7 @@ import com.nuanyou.cms.dao.PushDetailDao;
 import com.nuanyou.cms.dao.PushGroupDao;
 import com.nuanyou.cms.entity.push.PushGroup;
 import com.nuanyou.cms.model.PageUtil;
-import com.nuanyou.cms.model.PushGroupVo;
+import com.nuanyou.cms.model.PushGroupListVo;
 import com.nuanyou.cms.service.PushGroupService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +29,19 @@ public class PushGroupServiceImpl implements PushGroupService {
     private PushDetailDao pushDetailDao;
 
     @Override
-    public Page<PushGroupVo> list(int index) {
+    public Page<PushGroupListVo> list(int index) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
 
         Page<PushGroup> pushGroupPage = this.pushGroupDao.findAll(pageable);
 
-        List<PushGroupVo> pushGroupVoList = new ArrayList<>();
+        List<PushGroupListVo> pushGroupListVoList = new ArrayList<>();
         for (PushGroup pushGroup : pushGroupPage.getContent()) {
-            PushGroupVo pushGroupVo = BeanUtils.copyBean(pushGroup, new PushGroupVo());
-            pushGroupVo.setNum(this.pushDetailDao.countByPushGroupIdAndStatusAndDeleted(pushGroup.getId(), true, false));
-            pushGroupVoList.add(pushGroupVo);
+            PushGroupListVo pushGroupListVo = BeanUtils.copyBean(pushGroup, new PushGroupListVo());
+            pushGroupListVo.setNum(this.pushDetailDao.countByPushGroupIdAndStatusAndDeleted(pushGroup.getId(), true, false));
+            pushGroupListVoList.add(pushGroupListVo);
         }
 
-        return new PageImpl<>(pushGroupVoList, pageable, pushGroupPage.getTotalElements());
+        return new PageImpl<>(pushGroupListVoList, pageable, pushGroupPage.getTotalElements());
     }
 
     @Override
@@ -49,7 +49,6 @@ public class PushGroupServiceImpl implements PushGroupService {
         PushGroup pushGroup = this.pushGroupDao.findOne(id);
         if (pushGroup != null) {
             pushGroup.setStatus(status);
-            pushGroup.setUpdateTime(new Date());
             this.pushGroupDao.save(pushGroup);
         }
     }

@@ -1,6 +1,8 @@
 package com.nuanyou.cms.entity.push;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import com.nuanyou.cms.commons.CreatedAt;
+import com.nuanyou.cms.commons.DateEntityListener;
+import com.nuanyou.cms.commons.LastModified;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,25 +11,24 @@ import java.util.Date;
  * Created by yangkai on 2017/2/14.
  */
 @Entity
+@EntityListeners(DateEntityListener.class)
 @Table(name = "ny_push_group")
-@EntityListeners({AuditingEntityListener.class})
 public class PushGroup {
+    private Long id;
+
+    private String title;
+
+    private String illustration;
+
+    private Boolean status;
+
+    private Date updateTime;
+
+    private Date createTime;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
-    @Column(name = "title")
-    private String title;
-    @Column(name = "illustration")
-    private String illustration;
-    @Column(name = "status")
-    private Boolean status;
-    @Column(name = "updatetime")
-    private Date updateTime;
-    @Column(name = "createtime")
-    private Date createTime;
-
-
     public Long getId() {
         return id;
     }
@@ -36,6 +37,7 @@ public class PushGroup {
         this.id = id;
     }
 
+    @Column(name = "title")
     public String getTitle() {
         return title;
     }
@@ -44,6 +46,7 @@ public class PushGroup {
         this.title = title;
     }
 
+    @Column(name = "illustration")
     public String getIllustration() {
         return illustration;
     }
@@ -52,6 +55,7 @@ public class PushGroup {
         this.illustration = illustration;
     }
 
+    @Column(name = "status",columnDefinition="int(11) DEFAULT 0")
     public Boolean getStatus() {
         return status;
     }
@@ -60,6 +64,8 @@ public class PushGroup {
         this.status = status;
     }
 
+    @LastModified
+    @Column(name = "updatetime", nullable = true)
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -68,6 +74,8 @@ public class PushGroup {
         this.updateTime = updateTime;
     }
 
+    @CreatedAt
+    @Column(name = "createtime", nullable = true)
     public Date getCreateTime() {
         return createTime;
     }

@@ -5,7 +5,7 @@ import com.nuanyou.cms.entity.push.PushGroup;
 /**
  * Created by yangkai on 2017/2/15.
  */
-public class PushGroupVo extends PushGroup {
+public class PushGroupListVo extends PushGroup {
 
     private Long num;
 

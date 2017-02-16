@@ -2,7 +2,7 @@ package com.nuanyou.cms.controller;
 
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
-import com.nuanyou.cms.model.PushGroupVo;
+import com.nuanyou.cms.model.PushGroupListVo;
 import com.nuanyou.cms.service.PushGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,7 +23,7 @@ public class PushGroupController {
 
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index, Model model) {
-        Page<PushGroupVo> pushGroupVoPage = this.pushGroupService.list(index);
+        Page<PushGroupListVo> pushGroupVoPage = this.pushGroupService.list(index);
         model.addAttribute("page", pushGroupVoPage);
         return "pushGroup/list";
     }

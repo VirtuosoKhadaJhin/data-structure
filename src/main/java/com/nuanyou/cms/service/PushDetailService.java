@@ -1,6 +1,7 @@
 package com.nuanyou.cms.service;
 
 import com.nuanyou.cms.model.PushDetailCondition;
+import com.nuanyou.cms.model.PushDetailListVo;
 import com.nuanyou.cms.model.PushDetailVo;
 import org.springframework.data.domain.Page;
 
@@ -10,5 +11,9 @@ import org.springframework.data.domain.Page;
 public interface PushDetailService {
     void deletePushDetail(Long id);
 
-    Page<PushDetailVo> list(PushDetailCondition pushDetailCondition, int index);
+    Page<PushDetailListVo> list(PushDetailCondition pushDetailCondition, int index);
+
+    PushDetailVo findById(Long id);
+
+    void update(PushDetailVo pushDetailVo);
 }

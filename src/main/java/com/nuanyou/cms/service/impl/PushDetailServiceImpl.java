@@ -11,10 +11,10 @@ import com.nuanyou.cms.entity.enums.PushDetailTypeEnum;
 import com.nuanyou.cms.entity.push.PushDetail;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.model.PushDetailCondition;
+import com.nuanyou.cms.model.PushDetailListVo;
 import com.nuanyou.cms.model.PushDetailVo;
 import com.nuanyou.cms.service.PushDetailService;
 import com.nuanyou.cms.util.BeanUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -50,13 +50,12 @@ public class PushDetailServiceImpl implements PushDetailService {
         PushDetail pushDetail = this.pushDetailDao.findOne(id);
         if (pushDetail != null) {
             pushDetail.setDeleted(true);
-            pushDetail.setUpdateTime(new Date());
             this.pushDetailDao.save(pushDetail);
         }
     }
 
     @Override
-    public Page<PushDetailVo> list(final PushDetailCondition pushDetailCondition, int index) {
+    public Page<PushDetailListVo> list(final PushDetailCondition pushDetailCondition, int index) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
 
         Page<PushDetail> page = pushDetailDao.findAll(new Specification() {
@@ -91,45 +90,58 @@ public class PushDetailServiceImpl implements PushDetailService {
             }
         }, pageable);
 
-        List<PushDetailVo> pushDetailVoList = new ArrayList<>();
+        List<PushDetailListVo> pushDetailListVoList = new ArrayList<>();
         for (PushDetail pushDetail : page.getContent()) {
-            PushDetailVo pushDetailVo = BeanUtils.copyBean(pushDetail, new PushDetailVo());
-            pushDetailVo.setTypeName(PushDetailTypeEnum.getNameByType(pushDetail.getType()));
+            PushDetailListVo pushDetailListVo = BeanUtils.copyBean(pushDetail, new PushDetailListVo());
+            pushDetailListVo.setTypeName(PushDetailTypeEnum.getNameByType(pushDetail.getType()));
 
             if (pushDetail.getCountryId() == null || pushDetail.getCountryId() == 0) {
-                pushDetailVo.setCountryName("全部");
+                pushDetailListVo.setCountryName("全部");
             } else {
                 Country country = this.countryDao.findOne(pushDetail.getCountryId());
                 if (country != null) {
-                    pushDetailVo.setCountryName(country.getName());
+                    pushDetailListVo.setCountryName(country.getName());
                 }
             }
             if (pushDetail.getCityId() == null || pushDetail.getCityId() == 0) {
-                pushDetailVo.setCityName("全部");
+                pushDetailListVo.setCityName("全部");
             } else {
                 City city = this.cityDao.findOne(pushDetail.getCityId());
                 if (city != null) {
-                    pushDetailVo.setCityName(city.getName());
+                    pushDetailListVo.setCityName(city.getName());
                 }
             }
             if (pushDetail.getDistrictId() == null || pushDetail.getDistrictId() == 0) {
-                pushDetailVo.setDistrictName("全部");
+                pushDetailListVo.setDistrictName("全部");
             } else {
                 District district = this.districtDao.findOne(pushDetail.getDistrictId());
                 if (district != null) {
-                    pushDetailVo.setDistrictName(district.getName());
+                    pushDetailListVo.setDistrictName(district.getName());
                 }
             }
             if (pushDetail.getStatus() != null) {
                 if (pushDetail.getStatus()) {
-                    pushDetailVo.setStatusName("已启动");
+                    pushDetailListVo.setStatusName("已启动");
                 } else {
-                    pushDetailVo.setStatusName("已禁用");
+                    pushDetailListVo.setStatusName("已禁用");
                 }
             }
-            pushDetailVoList.add(pushDetailVo);
+            pushDetailListVoList.add(pushDetailListVo);
         }
 
-        return new PageImpl<>(pushDetailVoList, pageable, page.getTotalElements());
+        return new PageImpl<>(pushDetailListVoList, pageable, page.getTotalElements());
+    }
+
+    @Override
+    public PushDetailVo findById(Long id) {
+        PushDetail pushDetail = this.pushDetailDao.findOne(id);
+        PushDetailVo pushDetailVo = BeanUtils.copyBean(pushDetail, new PushDetailVo());
+        return pushDetailVo;
+    }
+
+    @Override
+    public void update(PushDetailVo pushDetailVo) {
+        PushDetail pushDetail = BeanUtils.copyBeanNotNull(pushDetailVo, new PushDetail());
+        this.pushDetailDao.save(pushDetail);
     }
 }

@@ -1,12 +1,12 @@
 #parse("common/list_start.vm")
 <div id="breadcrumb">
     <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-    <a href="../pushDetail/list" class="tip-bottom" data-original-title="">推送详情管理</a>
+    <a href="../pushDetail/list" class="tip-bottom" data-original-title="">推送消息管理</a>
     <a href="#" class="tip-bottom" data-original-title="">列表</a>
 </div>
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
-    <h5>推送详情列表</h5>
+    <h5>推送消息列表</h5>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
@@ -31,14 +31,14 @@
             <td>$!entity.cityName</td>
             <td>$!entity.districtName</td>
             <td>$!entity.title</td>
-            <td>$!entity.statusName</td>
+            <td>$!entity.typeName</td>
             <td><img width="126px" height="100px" src="$!entity.imgUrl"></td>
             <td><a href="$!entity.linkUrl">$!entity.linkUrl</a></td>
             <td>$!entity.source</td>
             <td>$!entity.sort</td>
             <td>$!entity.statusName</td>
             <td>
-                <a href="pushDetail/list?id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
                 <a href="javascript:deletePushDetail($!entity.id,0);" class="btn btn-info btn-mini delete">删除</a>
             </td>
         </tr>
@@ -65,6 +65,9 @@
         }
     }
 </script>
+<div class="form-actions">
+    <a class="btn btn-info" href="edit?type=1">新增</a>
+</div>
 #parse("common/list_mid.vm")
 <form class="form-horizontal " role="form" method="get">
     <input type="hidden" name="groupId" value="$!condition.groupId">
