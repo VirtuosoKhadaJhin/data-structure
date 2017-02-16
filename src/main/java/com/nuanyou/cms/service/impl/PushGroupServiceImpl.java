@@ -37,7 +37,7 @@ public class PushGroupServiceImpl implements PushGroupService {
         List<PushGroupListVo> pushGroupListVoList = new ArrayList<>();
         for (PushGroup pushGroup : pushGroupPage.getContent()) {
             PushGroupListVo pushGroupListVo = BeanUtils.copyBean(pushGroup, new PushGroupListVo());
-            pushGroupListVo.setNum(this.pushDetailDao.countByPushGroupIdAndStatusAndDeleted(pushGroup.getId(), true, false));
+            pushGroupListVo.setNum(this.pushDetailDao.countByGroupIdAndStatusAndDeleted(pushGroup.getId(), true, false));
             pushGroupListVoList.add(pushGroupListVo);
         }
 

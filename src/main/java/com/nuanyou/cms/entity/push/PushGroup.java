@@ -20,7 +20,7 @@ public class PushGroup {
 
     private String illustration;
 
-    private Boolean status;
+    private Boolean status = false;
 
     private Date updateTime;
 
@@ -55,7 +55,7 @@ public class PushGroup {
         this.illustration = illustration;
     }
 
-    @Column(name = "status",columnDefinition="int(11) DEFAULT 0")
+    @Column(name = "status")
     public Boolean getStatus() {
         return status;
     }

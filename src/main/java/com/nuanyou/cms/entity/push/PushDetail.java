@@ -38,11 +38,11 @@ public class PushDetail {
 
     private Long countryId;
 
-    private Boolean status;
+    private Boolean status = false;
 
-    private Boolean deleted;
+    private Boolean deleted = false;
 
-    private PushGroup pushGroup;
+    private Long groupId;
 
     private Date startTime;
 
@@ -153,7 +153,7 @@ public class PushDetail {
         this.countryId = countryId;
     }
 
-    @Column(name = "status", columnDefinition = "int(11) DEFAULT 0")
+    @Column(name = "status")
     public Boolean getStatus() {
         return status;
     }
@@ -162,7 +162,7 @@ public class PushDetail {
         this.status = status;
     }
 
-    @Column(name = "deleted", columnDefinition = "int(11) DEFAULT 0")
+    @Column(name = "deleted")
     public Boolean getDeleted() {
         return deleted;
     }
@@ -171,14 +171,13 @@ public class PushDetail {
         this.deleted = deleted;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "groupid")
-    public PushGroup getPushGroup() {
-        return pushGroup;
+    @Column(name = "groupid")
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setPushGroup(PushGroup pushGroup) {
-        this.pushGroup = pushGroup;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
     @Column(name = "starttime")

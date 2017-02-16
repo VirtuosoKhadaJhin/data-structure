@@ -15,5 +15,5 @@ public interface PushDetailService {
 
     PushDetailVo findById(Long id);
 
-    void update(PushDetailVo pushDetailVo);
+    PushDetailVo update(PushDetailVo pushDetailVo);
 }

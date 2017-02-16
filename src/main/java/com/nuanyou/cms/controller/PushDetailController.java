@@ -56,13 +56,16 @@ public class PushDetailController {
 
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
-    public String edit(Long id, Model model, Integer type) {
+    public String edit(Long id, Long groupId, Model model, Integer type) {
         List<Country> countries = countryService.getIdNameList();
 
-        PushDetailVo pushDetailVo = this.pushDetailService.findById(id);
-        model.addAttribute("entity", pushDetailVo);
+        if (id != null) {
+            PushDetailVo pushDetailVo = this.pushDetailService.findById(id);
+            model.addAttribute("entity", pushDetailVo);
+        }
 
         model.addAttribute("pushTypes", PushDetailTypeEnum.values());
+        model.addAttribute("groupId", groupId);
         model.addAttribute("type", type);
         model.addAttribute("countries", countries);
         return "pushDetail/edit";
@@ -70,8 +73,8 @@ public class PushDetailController {
 
     @RequestMapping("update")
     public String update(PushDetailVo pushDetailVo, HttpServletResponse response) throws IOException {
-        this.pushDetailService.update(pushDetailVo);
-        String url = "edit?type=3&id=" + pushDetailVo.getId();
+        pushDetailVo = this.pushDetailService.update(pushDetailVo);
+        String url = "edit?type=3&id=" + pushDetailVo.getId() + "&groupId=" + pushDetailVo.getGroupId();
         return "redirect:" + url;
     }
 }

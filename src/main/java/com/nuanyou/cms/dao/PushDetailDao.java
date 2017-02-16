@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface PushDetailDao extends JpaRepository<PushDetail, Long>, JpaSpecificationExecutor {
 
-    Long countByPushGroupIdAndStatusAndDeleted(Long groupId, Boolean status, Boolean deleted);
+    Long countByGroupIdAndStatusAndDeleted(Long groupId, Boolean status, Boolean deleted);
 
 }

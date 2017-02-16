@@ -14,7 +14,7 @@
                 <div class="widget-box">
                     <div id="breadcrumb">
                         <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
-                        <a href="list" class="tip-bottom" data-original-title="">推送消息管理</a>
+                        <a href="../pushDetail/list?groupId=$!groupId" class="tip-bottom" data-original-title="">推送消息管理</a>
                         <a href="javascipt:void(0);" class="tip-bottom" data-original-title="">编辑/查看</a>
                     </div>
                     <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
@@ -23,62 +23,86 @@
                     <div class="widget-content nopadding">
                         <form class="form-horizontal commonValidate" action="update" method="post">
                             <input name="id" type="hidden" value="$!entity.id">
+                            <input name="groupId" type="hidden" value="$!groupId">
                             <div class="control-group">
                                 <label class="control-label">国家</label>
                                 <div class="controls">
-                                    <select name="countryId" class="span11" target-name="cityId" target-url="/city/api/getCitys">
+                                    <select name="countryId" class="span11" target-name="cityId"
+                                            target-url="/city/api/getCitys">
                                         <option value="0">全部</option>
                                         #foreach($e in $!countries)
-                                            <option value="$!e.id" #if($!e.id == $!entity.countryId) selected #end>$!e.name</option>
+                                            <option value="$!e.id" #if($!e.id == $!entity.countryId)
+                                                    selected #end>$!e.name</option>
                                         #end
                                     </select>
                                 </div>
                                 <label class="control-label">城市</label>
                                 <div class="controls">
-                                    <select name="cityId" class="span11" def-value="$!entity.cityId" target-name="districtId" target-url="/district/api/list">
+                                    <select name="cityId" class="span11" def-value="$!entity.cityId"
+                                            target-name="districtId" target-url="/district/api/list">
                                         <option value="0">全部</option>
                                     </select>
                                 </div>
                                 <label class="control-label">商圈</label>
                                 <div class="controls">
-                                    <select name="districtId" class="span11" def-value="$!entity.districtId"  target-url="/district/api/getDistricts">
+                                    <select name="districtId" class="span11" def-value="$!entity.districtId"
+                                            target-url="/district/api/getDistricts">
                                         <option value="0">全部</option>
                                     </select>
                                 </div>
                                 <label class="control-label">标题</label>
                                 <div class="controls">
-                                    <input name="title" type="text" class="span11" value="$!entity.title" placeholder="建议不超过40个字符">
+                                    <input name="title" type="text" class="span11" value="$!entity.title"
+                                           placeholder="建议不超过40个字符">
                                 </div>
                                 <label class="control-label">内容</label>
                                 <div class="controls">
-                                    <textarea name="content" placeholder="当仅推送一条消息时将展示此内容（可选）">$!entity.content</textarea>
+                                    <textarea name="content"
+                                              placeholder="当仅推送一条消息时将展示此内容（可选）">$!entity.content</textarea>
+                                </div>
+                                <label class="control-label">优惠类型</label>
+                                <div class="controls">
+                                    <select id="type" name="type" class="span9">
+                                        #foreach($p in $!pushTypes)
+                                            <option value="$!p.type"  #if($!p.type == $!entity.type)  selected #end>$!p.name</option>
+                                        #end
+                                    </select>
                                 </div>
                                 <label class="control-label">图片</label>
                                 <div class="controls">
                                     <input type="text" class="span7" id="imgurl" name="imgUrl" value='$!entity.imgUrl'/>
-                                    <button type="button" class="btn btn-success previewBtn" data-id="imgurl">预览</button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgurl">上传</button>
+                                    <button type="button" class="btn btn-success previewBtn" data-id="imgurl">预览
+                                    </button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgurl">上传
+                                    </button>
                                 </div>
                                 <label class="control-label">链接</label>
                                 <div class="controls">
-                                    <input name="linkUrl" type="text" class="span11" value="$!entity.linkUrl" placeholder="推文跳转的链接，不用加source">
+                                    <input name="linkUrl" type="text" class="span11" value="$!entity.linkUrl"
+                                           placeholder="推文跳转的链接，不用加source">
                                 </div>
                                 <label class="control-label">追踪码</label>
                                 <div class="controls">
-                                    <input name="source" type="text" class="span11" value="$!entity.source" placeholder="即原链接中的source，填写后不可修改">
+                                    <input name="source" type="text" class="span11" value="$!entity.source"
+                                           placeholder="即原链接中的source，填写后不可修改">
                                 </div>
                                 <label class="control-label">排序</label>
                                 <div class="controls">
-                                    <input name="sort" type="text" class="span11" value="$!entity.sort" placeholder="排序值">
+                                    <input name="sort" type="text" class="span11" value="$!entity.sort"
+                                           placeholder="排序值">
                                 </div>
                                 <label class="control-label">有效期</label>
                                 <div class="controls">
-                                    <input name="startTime" type="text" class="span5 dateTimeFormat" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.startTime)" id="startTime" placeholder="开始时间，不填表示立即开始">
-                                    <input name="endTime" type="text" class="span5 dateTimeFormat" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.endTime)" id="endtTime" placeholder="结束时间，不填表示永不结束">
+                                    <input name="startTime" type="text" class="span5 dateTimeFormat"
+                                           value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.startTime)"
+                                           id="startTime" placeholder="开始时间，不填表示立即开始">
+                                    <input name="endTime" type="text" class="span5 dateTimeFormat"
+                                           value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.endTime)"
+                                           id="endtTime" placeholder="结束时间，不填表示永不结束">
                                 </div>
                                 <label class="control-label">状态</label>
                                 <div class="controls">
-                                    <select id="ishot" name="ishot" class="span9">
+                                    <select id="status" name="status" class="span9">
                                         <option value="true"  #if($!entity.status==true)  selected #end>启动</option>
                                         <option value="false"  #if($!entity.status==false)  selected #end>禁用</option>
                                     </select>

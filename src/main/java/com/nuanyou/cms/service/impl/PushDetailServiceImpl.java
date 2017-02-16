@@ -80,7 +80,7 @@ public class PushDetailServiceImpl implements PushDetailService {
                     Predicate p = cb.equal(root.get("status"), pushDetailCondition.getStatus());
                     predicate.add(p);
                 }
-                Predicate p = cb.equal(root.get("pushGroup").get("id"), pushDetailCondition.getGroupId());
+                Predicate p = cb.equal(root.get("groupId"), pushDetailCondition.getGroupId());
                 predicate.add(p);
 
                 Predicate p1 = cb.equal(root.get("deleted"), false);
@@ -121,7 +121,13 @@ public class PushDetailServiceImpl implements PushDetailService {
             }
             if (pushDetail.getStatus() != null) {
                 if (pushDetail.getStatus()) {
-                    pushDetailListVo.setStatusName("已启动");
+                    Date now = new Date();
+                    if (pushDetail.getEndTime() != null && pushDetail.getEndTime().compareTo(now) < 0) {
+                        pushDetailListVo.setStatusName("已过期");
+                    } else {
+                        pushDetailListVo.setStatusName("已启动");
+                    }
+
                 } else {
                     pushDetailListVo.setStatusName("已禁用");
                 }
@@ -140,8 +146,19 @@ public class PushDetailServiceImpl implements PushDetailService {
     }
 
     @Override
-    public void update(PushDetailVo pushDetailVo) {
-        PushDetail pushDetail = BeanUtils.copyBeanNotNull(pushDetailVo, new PushDetail());
+    public PushDetailVo update(PushDetailVo pushDetailVo) {
+        PushDetail pushDetail = null;
+        if (pushDetailVo.getId() != null) {
+            pushDetail = this.pushDetailDao.findOne(pushDetailVo.getId());
+            if (pushDetail != null) {
+                pushDetail = BeanUtils.copyBeanNotNull(pushDetailVo, pushDetail);
+            }
+        } else {
+            pushDetail = BeanUtils.copyBeanNotNull(pushDetailVo, new PushDetail());
+
+        }
         this.pushDetailDao.save(pushDetail);
+        pushDetailVo = BeanUtils.copyBean(pushDetail, pushDetailVo);
+        return pushDetailVo;
     }
 }
