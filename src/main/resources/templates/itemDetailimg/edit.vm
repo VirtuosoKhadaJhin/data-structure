@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10">
+                <div class="widget-box">
+                    <div class="widget-content nopadding">
+                        <div class="widget-title"><span class="icon"> <i class="icon-th"></i> </span>
+                            <h5>商品详情图片</h5>
+                        </div>
+                        <div class="widget-content">
+                        ##    <div class="span10">
+                            <ul class="thumbnails">
+                                #foreach($e in $!list)
+                                    <li class="span2">
+                                        <img width="239px" height="189px" src="$!e.imgUrl">
+                                        <button type="button" class="btn btn-danger btn-mini remove" data-id="$!e.id">删除</button>
+                                        <button type="button" class="btn btn-success btn-mini top" data-id="$!e.id">置顶</button>
+                                    </li>
+                                #end
+                            </ul>
+                        ##    </div>
+                            <a class="btn btn-success" id="add-img" data-referId="$!entity.referId" href="javascript:void(0);">新增</a>
+                            <a class="btn btn-primary" href="/item/list">返回</a>
+                        </div>
+
+                        <div id="add-img-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3>新增图片</h3>
+                            </div>
+                            <div class="modal-body">
+                                <input id="add-img-referId" type="hidden" class="span11">
+                                <input id="add-img-url" type="text" class="span11">
+                                <button class="btn btn-success previewBtn" type="button" data-id="add-img-url">预览</button>
+                                <button class="btn btn-success uploadImgBtn" type="button" data-id="add-img-url" imageSpec="ItemShow">上传</button>
+                                是否置顶 <input id="add-img-sort" type="checkbox">
+                                <p>尺寸: 320 * 240, 限制: 40k</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                                <a href="javascript:void(0);" id="add-img-submit" class="btn btn-primary">保存</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+    #include("common/js-support.vm")
+    #include("common/image-support.vm")
+<script>
+    $(function () {
+        $("#add-img").on("click", function (event) {
+            var referId = $(this).attr("data-referId");
+            $("#add-img-referId").attr("value", referId);
+            $("#add-img-modal").modal();
+        });
+
+        $("#add-img-submit").on("click", function (event) {
+            var imgUrl = $("#add-img-url").val();
+            var referId = $("#add-img-referId").val();
+            if ($("#add-img-sort").prop("checked"))
+                var sort = 0;
+
+            $.ajax({
+                url: 'add',
+                data: {imgUrl: imgUrl, referId: referId, sort: sort},
+                type: 'post',
+                success: function (result) {
+                    if (result.code == 0) {
+                        window.location.reload();
+                    } else {
+                        alert("失败:" + result.msg);
+                    }
+                }
+            });
+        });
+
+        $(".remove").each(function (i, o) {
+            $(o).on("click", function () {
+                var id = $(this).attr("data-id");
+                if (!confirm('确实要删除该内容吗?'))
+                    return;
+                $.ajax({
+                    url: 'remove',
+                    data: {id: id},
+                    type: 'get',
+                    success: function (result) {
+                        if (result.code == 0) {
+                            window.location.reload();
+                        } else {
+                            alert("失败:" + result.msg);
+                        }
+                    }
+                });
+            });
+        });
+
+        $(".top").each(function (i, o) {
+            $(o).on("click", function () {
+                var id = $(this).attr("data-id");
+                $.ajax({
+                    url: 'top',
+                    data: {id: id},
+                    type: 'post',
+                    success: function (result) {
+                        if (result.code == 0) {
+                            window.location.reload();
+                        } else {
+                            alert("失败:" + result.msg);
+                        }
+                    }
+                });
+            });
+        });
+    });
+</script>
+</html>

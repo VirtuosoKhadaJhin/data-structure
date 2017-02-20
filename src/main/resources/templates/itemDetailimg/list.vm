@@ -1,12 +1,12 @@
 #parse("common/list_start.vm")
 <div class="widget-title"><span class="icon"> <i class="icon-th"></i> </span>
-    <h5>商家详情图管理</h5>
+    <h5>商品详情图管理</h5>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
         <th>ID</th>
-        <th>商家名称</th>
+        <th>商品名称</th>
         <th>本地名称</th>
         <th>图片列表</th>
         <th>操作</th>
@@ -20,19 +20,19 @@
             <td>$!entity.kpname</td>
             <td>
                 <ul class="thumbnails">
-                    #foreach($e in $!entity.headimgs)
+                    #foreach($e in $!entity.detailimgs)
                         #if($velocityCount>4)
                             #break
                         #end
                         <li class="span2">
-                            <img width="126px" height="100px" src="$!e.detailImgUrl">
+                            <img width="126px" height="100px" src="$!e.imgUrl">
                             <button type="button" class="btn btn-danger btn-mini remove" data-id="$!e.id">删除</button>
                             <button type="button" class="btn btn-success btn-mini top" data-id="$!e.id">置顶</button>
                         </li>
                     #end
                 </ul>
             </td>
-            <td><a class="btn btn-info btn-mini" href="edit?mchId=$!entity.id">编辑</a></td>
+            <td><a class="btn btn-info btn-mini" href="edit?referId=$!entity.id">编辑</a></td>
         </tr>
         #end
     </tbody>
@@ -52,19 +52,6 @@
             <option value="">全部</option>
             <option value="true" #if($!entity.display == true) selected #end>显示</option>
             <option value="false" #if($!entity.display == false) selected #end>隐藏</option>
-        </select>
-        <label>国家</label>
-        <select name="district.country.id" class="span11">
-            <option value="">全部</option>
-            #foreach($e in $!countries)
-                <option value="$!e.id" #if($!entity.district.country.id==$!e.id) selected #end>$!e.name</option>
-            #end
-        </select>
-        <label>合作情况</label>
-        <select name="issign" class="span11">
-            <option value="">全部</option>
-            <option value="1" #if($!entity.issign == 1) selected #end>已签约</option>
-            <option value="0" #if($!entity.issign == 0) selected #end>未签约</option>
         </select>
         <button type="submit" class="btn btn-primary">查询</button>
     </div>

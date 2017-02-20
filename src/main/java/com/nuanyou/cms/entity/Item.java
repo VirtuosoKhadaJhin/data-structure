@@ -57,6 +57,8 @@ public class Item {
 
     private BigDecimal weight;
 
+    private List<ItemDetailimg> detailimgs;
+
     public Item() {
     }
 
@@ -349,5 +351,14 @@ public class Item {
 
     public void setWeight(BigDecimal weight) {
         this.weight = weight;
+    }
+
+    @Transient
+    public List<ItemDetailimg> getDetailimgs() {
+        return detailimgs;
+    }
+
+    public void setDetailimgs(List<ItemDetailimg> detailimgs) {
+        this.detailimgs = detailimgs;
     }
 }
