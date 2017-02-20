@@ -88,6 +88,7 @@ public class OrderController {
                 order == null ? null : order.getYoufulocalereduce(),
                 order == null ? null : order.getMchrmbreduce(),
                 order == null ? null : order.getMchlocalereduce(),
+                order == null ? null : order.getMessage(),
                 buyNum
         );
     }
