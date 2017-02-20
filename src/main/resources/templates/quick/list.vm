@@ -55,6 +55,7 @@
                         <option value="index">首页-index</option>
                         <option value="user">用户-user</option>
                         <option value="tool">工具-tool</option>
+                        <option value="directmail">直邮购首页</option>
                     </select>
                 </div>
                 <label class="control-label">是否显示</label>
@@ -66,8 +67,8 @@
                 <div class="controls">
                     <input type="text" class="span11" placeholder="" id="imgUrl" name="imgUrl">
                     <button class="btn btn-success previewBtn" type="button" data-id="imgUrl">预览</button>
-                    <button class="btn btn-success uploadImgBtn" type="button" data-id="imgUrl" imageSpec="Quick">上传</button>
-                    <p>尺寸: 60 * 60, 限制: 3k</p>
+                    <button class="btn btn-success uploadImgBtn" id = "quickImgBtn" type="button" data-id="imgUrl" imageSpec="">上传</button>
+                    <p id="quickMsg"></p>
                 </div>
                 <label class="control-label">跳转</label>
                 <div class="controls">
@@ -84,4 +85,17 @@
 #include("common/js-support.vm")
 #include("common/image-support.vm")
 <script src="/dist/js/curd.js"></script>
+<script type="text/javascript">
+
+    $("select[name='position']").on("change", function () {
+        var val = $(this).val();
+        if (val == "index" || val == "user" || val == "tool") {
+            $("#quickImgBtn").attr("imageSpec", "Quick");
+            $("#quickMsg").empty().append("尺寸: 60 * 60, 限制: 3k");
+        } else if (val == "directmail") {
+            $("#quickImgBtn").attr("imageSpec", "");
+            $("#quickMsg").empty().append("");
+        }
+    }).trigger("change");
+</script>
 #parse("common/list_end.vm")
