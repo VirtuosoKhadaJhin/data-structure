@@ -272,7 +272,7 @@ public class OrderServiceImpl implements OrderService {
             r.createCell(15).setCellValue(numberFormatter.format(decimalPattern, each.getOkpprice()));
             r.createCell(16).setCellValue(each.getPayable() == null ? each.getPrice().doubleValue() : each.getPayable().doubleValue());
             r.createCell(17).setCellValue(each.getOprice() == null ? "" : each.getOprice().toPlainString());
-            r.createCell(18).setCellValue(each.getStatusname());
+            r.createCell(18).setCellValue(each.getOrderstatus().getName()== null ? "" :each.getOrderstatus().getName());
             r.createCell(19).setCellValue(dateFormatter.format(timePattern, each.getCreatetime()));
             r.createCell(20).setCellValue(dateFormatter.format(timePattern, each.getUsetime()));
             r.createCell(21).setCellValue(each.getAddress() == null ? "" : each.getAddress());
