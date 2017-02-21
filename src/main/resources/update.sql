@@ -1,4 +1,23 @@
 use nuanyou20;
+CREATE TABLE
+ny_item_detail_img
+(
+    id INT(10) unsigned NOT NULL AUTO_INCREMENT,
+    refer_id INT COMMENT '所属商品',
+    img_url VARCHAR(200) COMMENT '图片URL',
+    sort INT(10),
+    create_time DATETIME COMMENT '创建时间',
+    PRIMARY KEY (id),
+    INDEX idx_refer_id (refer_id)
+)
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO ny_item_detail_img (refer_id, img_url, sort, create_time)
+select a.id, a.imgurl, '1', now()
+from ny_item a
+left join ny_item_detail_img b on a.id = b.refer_id
+where b.id is null order by a.id;
+
 -- 2016-12-01
 ALTER TABLE `ny_merchant`
 ADD COLUMN `verifytype` INT(4) DEFAULT 1 COMMENT '核销方式: 1用户核销,2商家核销' AFTER `businessday`;

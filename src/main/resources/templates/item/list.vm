@@ -35,6 +35,7 @@
             <td>
                 <a class="btn btn-success btn-mini" data-id="$!item.id" href="detail?id=$!item.id">查看</a>
                 <a class="btn btn-info btn-mini" data-id="$!item.id" href="edit?id=$!item.id">编辑</a>
+                <a class="btn btn-warning btn-mini" data-id="$!item.id" href="/itemDetailimg/edit?referId=$!item.id">图片编辑</a>
             </td>
         </tr>
         #end

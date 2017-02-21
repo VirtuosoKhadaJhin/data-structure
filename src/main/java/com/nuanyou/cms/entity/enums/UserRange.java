@@ -11,10 +11,12 @@ public enum UserRange {
     None(0, "无限制"),
     HuiGou(1, "惠购订单"),
     YouFu(2, "优付订单"),
-    WaiMai(4, "外卖"),
+    //    WaiMai(4, "外卖"),
     TuanGou(8, "团购"),
-    POS(16, "POS收款"),
-    Voucher(32, "代金券");
+    //    POS(16, "POS收款"),
+//    Voucher(32, "代金券"),
+    DirectMail(64, "直邮购");
+
 
     public final Byte value;
 
