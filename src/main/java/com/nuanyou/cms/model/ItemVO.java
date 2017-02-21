@@ -1,10 +1,19 @@
 package com.nuanyou.cms.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.entity.ItemCat;
+import com.nuanyou.cms.entity.ItemDetailimg;
+import com.nuanyou.cms.entity.ItemDirectmail;
+import com.nuanyou.cms.entity.Merchant;
+import com.nuanyou.cms.entity.enums.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
 
 /**
  * Created by Alan.ye on 2016/9/7.
@@ -13,27 +22,47 @@ public class ItemVO {
     private Long id;
     private String name;
     private String kpname;
+    private Integer type;
     private Integer itemType;
     private String intro;
     private String outline;
     private BigDecimal price;
     private BigDecimal kpPrice;
     private BigDecimal okpPrice;
+    private Merchant merchant;
     private Integer sort;
     private Boolean isHot;
     private Boolean display;
     private String imgUrl;
     private ItemCat cat;
-    private Date createTime;
     private String indexImgUrl;
+    private List<TuanType> tuanType;
     private Long groupId;
     private Long templateId;
     private String unit;
     private BigDecimal mchPrice;
+    private Date startTime;
+    private Date endTime;
+    private String notice;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    private List<ItemSupportType> supportType;
+
+    private ItemDirectmail directmail;
+
+    private BigDecimal weight;
+
+    private List<ItemDetailimg> detailimgs;
+
+    private List<String> spec;
+
+    public ItemVO() {
+    }
+
+    public ItemVO(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }
@@ -43,7 +72,6 @@ public class ItemVO {
     }
 
 
-    @Column(name = "name", nullable = false, length = 80)
     public String getName() {
         return name;
     }
@@ -53,7 +81,6 @@ public class ItemVO {
     }
 
 
-    @Column(name = "kpname", nullable = true, length = 80)
     public String getKpname() {
         return kpname;
     }
@@ -63,17 +90,24 @@ public class ItemVO {
     }
 
 
-    @Column(name = "type", nullable = true)
     public Integer getItemType() {
         return itemType;
     }
 
     public void setItemType(Integer itemType) {
+        this.type = itemType;
         this.itemType = itemType;
     }
 
 
-    @Column(name = "intro", nullable = true, length = 4000)
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     public String getIntro() {
         return intro;
     }
@@ -83,7 +117,6 @@ public class ItemVO {
     }
 
 
-    @Column(name = "outline", nullable = true, length = 200)
     public String getOutline() {
         return outline;
     }
@@ -93,7 +126,6 @@ public class ItemVO {
     }
 
 
-    @Column(name = "price", nullable = true, precision = 2)
     public BigDecimal getPrice() {
         return price;
     }
@@ -103,7 +135,6 @@ public class ItemVO {
     }
 
 
-    @Column(name = "kpprice", nullable = true, precision = 2)
     public BigDecimal getKpPrice() {
         return kpPrice;
     }
@@ -113,7 +144,15 @@ public class ItemVO {
     }
 
 
-    @Column(name = "okpprice", nullable = true, precision = 2)
+    public String getNotice() {
+        return notice;
+    }
+
+    public void setNotice(String notice) {
+        this.notice = notice;
+    }
+
+
     public BigDecimal getOkpPrice() {
         return okpPrice;
     }
@@ -122,7 +161,15 @@ public class ItemVO {
         this.okpPrice = okpPrice;
     }
 
-    @Column(name = "sort", nullable = true)
+    public Merchant getMerchant() {
+        return merchant;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
+    }
+
+
     public Integer getSort() {
         return sort;
     }
@@ -131,7 +178,7 @@ public class ItemVO {
         this.sort = sort;
     }
 
-    @Column(name = "ishot", nullable = true)
+
     public Boolean getIsHot() {
         return isHot;
     }
@@ -140,7 +187,7 @@ public class ItemVO {
         isHot = hot;
     }
 
-    @Column(name = "display", nullable = true)
+
     public Boolean getDisplay() {
         return display;
     }
@@ -149,7 +196,7 @@ public class ItemVO {
         this.display = display;
     }
 
-    @Column(name = "imgurl", nullable = true, length = 200)
+
     public String getImgUrl() {
         return imgUrl;
     }
@@ -158,8 +205,6 @@ public class ItemVO {
         this.imgUrl = imgUrl;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "catid", nullable = true)
     public ItemCat getCat() {
         return cat;
     }
@@ -168,17 +213,7 @@ public class ItemVO {
         this.cat = cat;
     }
 
-    @Column(name = "createtime", nullable = true)
-    public Date getCreateTime() {
-        return createTime;
-    }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-
-    @Column(name = "indeximgurl", nullable = true, length = 200)
     public String getIndexImgUrl() {
         return indexImgUrl;
     }
@@ -188,7 +223,15 @@ public class ItemVO {
     }
 
 
-    @Column(name = "groupid", nullable = true)
+    public List<TuanType> getTuanType() {
+        return tuanType;
+    }
+
+    public void setTuanType(List<TuanType> tuanType) {
+        this.tuanType = tuanType;
+    }
+
+
     public Long getGroupId() {
         return groupId;
     }
@@ -198,7 +241,6 @@ public class ItemVO {
     }
 
 
-    @Column(name = "templateid", nullable = true)
     public Long getTemplateId() {
         return templateId;
     }
@@ -208,7 +250,6 @@ public class ItemVO {
     }
 
 
-    @Column(name = "unit", nullable = true, length = 100)
     public String getUnit() {
         return unit;
     }
@@ -218,13 +259,73 @@ public class ItemVO {
     }
 
 
-    @Column(name = "mchprice", nullable = true, precision = 2)
     public BigDecimal getMchPrice() {
         return mchPrice;
     }
 
     public void setMchPrice(BigDecimal mchPrice) {
         this.mchPrice = mchPrice;
+    }
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public List<ItemSupportType> getSupportType() {
+        return supportType;
+    }
+
+    public void setSupportType(List<ItemSupportType> supportType) {
+        this.supportType = supportType;
+    }
+
+    public ItemDirectmail getDirectmail() {
+        return directmail;
+    }
+
+    public void setDirectmail(ItemDirectmail directmail) {
+        this.directmail = directmail;
+    }
+
+
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
+    }
+
+    public List<ItemDetailimg> getDetailimgs() {
+        return detailimgs;
+    }
+
+    public void setDetailimgs(List<ItemDetailimg> detailimgs) {
+        this.detailimgs = detailimgs;
+    }
+
+    public List<String> getSpec() {
+        return spec;
+    }
+
+    public void setSpec(List<String> spec) {
+        this.spec = spec;
     }
 
 }

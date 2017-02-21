@@ -2,6 +2,7 @@ package com.nuanyou.cms.service;
 
 import com.nuanyou.cms.entity.Item;
 import com.nuanyou.cms.entity.ItemTuan;
+import com.nuanyou.cms.model.ItemVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public interface ItemService {
 
-    Item saveNotNull(Item entity);
+    Item saveNotNull(ItemVO vo);
 
     Item saveNotNull(Item item, List<ItemTuan> itemTuans);
 

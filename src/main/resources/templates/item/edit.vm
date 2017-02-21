@@ -74,6 +74,13 @@
                                 <div class="controls">
                                     <input name="mchPrice" type="text" class="span11" placeholder="$!entity.kpPrice" value="$!entity.mchPrice">
                                 </div>
+                                <label class="control-label">规格</label>
+                                <div class="controls">
+                                    #foreach($t in $!entity.spec)
+                                        <input name="spec" type="text" class="span1" value="$!t"><button type="button" class="removeSpec">X</button>
+                                    #end
+                                    <button type="button" class="btn btn-success" id="addSpec">新增</button>
+                                </div>
                                 <label class="control-label">是否推荐</label>
                                 <div class="controls">
                                     <input name="isHot" type="radio" value="true" #if($entity.isHot)checked#end/>是
@@ -169,6 +176,21 @@
                 else
                     $("." + value).show();
             });
+        });
+
+        $("#addSpec").on("click", function () {
+            var ele = $('<button type="button">X</button>');
+            ele.on("click", function () {
+                $(this.previousElementSibling).remove();
+                $(this).remove();
+            });
+            $(this).before('  <input name="spec" type="text" class="span1">');
+            $(this).before(ele);
+        });
+
+        $(".removeSpec").on("click", function () {
+            $(this.previousElementSibling).remove();
+            $(this).remove();
         });
 
         function directMailChange() {
