@@ -29,10 +29,12 @@ public class OrderDetail {
 
     private Integer buyNum;
 
+    private String message;
 
     public OrderDetail(String sms_code, Integer sms_times, String logistics_address,
                        BigDecimal subsidy_youfusubsidyprice, BigDecimal subsidy_youfusubsidykpprice,
                        BigDecimal subsidy_mchsubsidyprice, BigDecimal subsidy_mchsubsidykpprice,
+                       String message,
                        Integer buyNum) {
         this.sms_code = sms_code;
         this.sms_times = sms_times;
@@ -41,11 +43,20 @@ public class OrderDetail {
         this.subsidy_youfusubsidykpprice = subsidy_youfusubsidykpprice;
         this.subsidy_mchsubsidyprice = subsidy_mchsubsidyprice;
         this.subsidy_mchsubsidykpprice = subsidy_mchsubsidykpprice;
+        this.message=message;
         this.buyNum = buyNum;
     }
 
     public OrderDetail(){
 
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Integer getBuyNum() {
