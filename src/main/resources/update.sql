@@ -13,7 +13,7 @@ ny_item_detail_img
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO ny_item_detail_img (refer_id, img_url, sort, create_time)
-select a.id, a.imgurl, '1', now()
+select a.id, a.imgurl, '0', now()
 from ny_item a
 left join ny_item_detail_img b on a.id = b.refer_id
 where b.id is null order by a.id;
