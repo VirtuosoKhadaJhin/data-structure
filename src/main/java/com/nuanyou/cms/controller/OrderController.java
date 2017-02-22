@@ -207,19 +207,6 @@ public class OrderController {
         ex.write(os);
         os.flush();
         os.close();
-
-
-
-
-//        String[] titles = new String[]{
-//                "序号", "ID", "订单编号", "订单流水号","渠道", "订单类型", "支付类型", "来源平台", "来源系统", "使用码", "商户ID", "商户中文名称",
-//                "商户本地名称", "用户ID", "总价(本地)", "原价(本地)", "总价(人民币)", "原价(人民币)", "订单状态", "下单时间", "使用时间", "地址",
-//                "邮编", "省会", "区", "城市", "电话"};
-//        String filename =URLEncoder.encode("订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss"));
-//        HSSFWorkbook workbook = new HSSFWorkbook();
-//        HSSFSheet firstSheet = workbook.createSheet("订单列表");
-//        HSSFRow firstRow = firstSheet.createRow(0);
-//        this.orderService.putOrderToExcel(index, request, response, entity, time, titles, filename, workbook, firstSheet, firstRow);
     }
 
     @RequestMapping("refundList/export")
@@ -261,7 +248,7 @@ public class OrderController {
         propertyHeaderMap.put("orderstatus.name", "订单状态");
         propertyHeaderMap.put("ordertype.name", "订单类型");
         propertyHeaderMap.put("merchant.name", "商户中文名称");
-        propertyHeaderMap.put("userId", "用户ID");
+        propertyHeaderMap.put("userId", "退款人");
         propertyHeaderMap.put("user.nickname", "退款人名称");
         propertyHeaderMap.put("refundstatus.name", "退款状态");
         propertyHeaderMap.put("refundreason", "退款理由");
@@ -306,14 +293,5 @@ public class OrderController {
         return null;
     }
 
-
-//    public static void main(String[] args) {
-//        List<String> list=new ArrayList<String>(Arrays.asList(("sdf,sdf2").split(",")));
-//        list.remove(0);
-//        System.out.println(list.get(0));
-//
-//        List<RefundStatus> refundStatuses = new ArrayList<RefundStatus>(Arrays.asList(RefundStatus.values()));
-//        refundStatuses.remove(0);
-//    }
 }
 
