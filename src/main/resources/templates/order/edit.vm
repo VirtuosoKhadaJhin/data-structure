@@ -82,7 +82,12 @@
                                         $!orderDetail.logistics_address
                                     </div>
                                 </div>
-
+                                <div class="control-group">
+                                    <label class="control-label">买家留言</label>
+                                    <div class="controls">
+                                        $!orderDetail.message
+                                    </div>
+                                </div>
 
                                 <div class="form-actions">
                                     #if($!type==2 || $!type==1)

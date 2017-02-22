@@ -87,6 +87,7 @@ public class OrderController {
                 order == null ? null : order.getYoufulocalereduce(),
                 order == null ? null : order.getMchrmbreduce(),
                 order == null ? null : order.getMchlocalereduce(),
+                order == null ? null : order.getMessage(),
                 buyNum
         );
     }
@@ -244,11 +245,12 @@ public class OrderController {
             }
             order.setUser(user);
         }
-
-        List<PasUserProfile> users = pasUserProfileDao.findByUserid(userMap.keySet());
-        for (PasUserProfile user : users) {
-            PasUserProfile pasUserProfile = userMap.get(user.getUserid());
-            pasUserProfile.setNickname(user.getNickname());
+        if (!userMap.isEmpty()) {
+            List<PasUserProfile> users = pasUserProfileDao.findByUserid(userMap.keySet());
+            for (PasUserProfile user : users) {
+                PasUserProfile pasUserProfile = userMap.get(user.getUserid());
+                pasUserProfile.setNickname(user.getNickname());
+            }
         }
 
 
