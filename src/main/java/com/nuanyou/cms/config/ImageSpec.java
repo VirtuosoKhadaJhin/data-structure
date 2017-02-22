@@ -17,7 +17,7 @@ public enum ImageSpec {
     ICON(60, 60, 3, "png", null),
 
     MerchantDetail(Big43, ImageSpec.CLIP),
-    ItemShow(Mid43, ImageSpec.CLIP),
+    ItemShow(Big43, ImageSpec.CLIP),
     TuanShow(Big43, ImageSpec.CLIP),
 
     MerchantCatBG(ICON, ImageSpec.ZOMM),
