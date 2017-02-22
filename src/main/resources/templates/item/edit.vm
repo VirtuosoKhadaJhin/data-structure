@@ -88,23 +88,16 @@
                                 <div class="controls">
                                     <input name="sort" type="text" class="span11" value="$!entity.sort">
                                 </div>
-                                <label class="control-label">商品详情</label>
-                                <div class="controls">
-                                    <textarea name="intro" id="intro" class="span11">$!entity.intro</textarea>
-                                </div>
-                                <label class="control-label">展示图</label>
-                                <div class="controls">
-                                    <input type="text" class="span9" name="imgUrl" id="imgUrl" value="$!entity.imgUrl">
-                                    <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览</button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl" imageSpec="ItemShow">上传</button>
-                                    <p>尺寸: 320 * 240, 限制: 40k</p>
-                                </div>
                                 <label class="control-label">列表页展示图</label>
                                 <div class="controls">
                                     <input type="text" class="span9" name="indexImgUrl" id="indexImgUrl" value="$!entity.indexImgUrl">
                                     <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">预览</button>
                                     <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl" imageSpec="ItemList">上传</button>
                                     <p>尺寸: 320 * 240, 限制: 40k</p>
+                                </div>
+                                <label class="control-label">商品详情</label>
+                                <div class="controls">
+                                    <textarea name="intro" id="intro" class="span11">$!entity.intro</textarea>
                                 </div>
                             </div>
                             <div class="form-actions">
