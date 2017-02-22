@@ -5,7 +5,6 @@ import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.coupon.Coupon;
 import com.nuanyou.cms.entity.enums.*;
-import com.nuanyou.cms.entity.user.PasUserProfile;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -705,6 +704,16 @@ public class ViewOrderExport {
 
     public void setTel(String tel) {
         this.tel = tel;
+    }
+
+
+    @Transient
+    public String getCouponInfo(){
+        if(this.coupon==null){
+            return "";
+        }else{
+            return this.coupon.getTitle()+"/"+this.coupon.getPrice()+"/"+this.coupon.getLocalPrice();
+        }
     }
 
 

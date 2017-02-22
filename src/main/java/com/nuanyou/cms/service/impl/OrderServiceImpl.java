@@ -23,6 +23,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.velocity.tools.generic.DateTool;
 import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -214,10 +215,11 @@ public class OrderServiceImpl implements OrderService {
         for (int i = 0; i < page.getContent().size(); i++) {
             HSSFRow r = sheet.createRow(i + 1);
             ViewOrderExport each = page.getContent().get(i);
+           // r.createCell(0).setCellType(Cell.CELL_TYPE_STRING);
             r.createCell(0).setCellValue(i + 1);
             r.createCell(1).setCellValue(each.getId());
-            r.createCell(2).setCellValue(each.getOrdersn());
-            r.createCell(3).setCellValue(each.getTransactionid());
+            r.createCell(2).setCellType(Cell.CELL_TYPE_STRING);r.createCell(2).setCellValue(each.getOrdersn());
+            r.createCell(3).setCellValue(each.getTransactionid());r.createCell(3).setCellType(Cell.CELL_TYPE_STRING);
             r.createCell(4).setCellValue(each.getSceneid());
             r.createCell(5).setCellValue(each.getOrdertype() == null ? "" : each.getOrdertype().getName());
             r.createCell(6).setCellValue(each.getPaytype() == null ? "" : each.getPaytype().getName());

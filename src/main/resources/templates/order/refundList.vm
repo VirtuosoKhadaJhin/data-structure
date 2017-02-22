@@ -60,7 +60,7 @@
 
         <label>国家：</label>
         <select name="countryid" class="span11">
-            <option value="">请选择</option>
+            <option value="">全部</option>
             #foreach($country in $!countries)
                 <option value="$country.id" #if($!entity.countryid== $country.id) selected #end>$country.name</option>
             #end
@@ -85,7 +85,7 @@
 
         <div class="input-group-addon">退款状态</div>
         <select name="refundstatus" class="span11">
-            <option value="">请选择</option>
+            <option value="">全部</option>
             #foreach($o in $!refundStatuses)
                 <option value="$o" #if($!entity.refundstatus== $o) selected #end>$o.name</option>
             #end
