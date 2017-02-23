@@ -31,6 +31,8 @@ public class OrderItem {
     private BigDecimal mchprice;
     private BigDecimal mchrmbprice;
 
+    private String specific;
+
 
     @Id
     @Column(name = "id", nullable = false)
@@ -53,7 +55,7 @@ public class OrderItem {
         this.order = order;
     }
 
-    @Basic
+
     @Column(name = "itemid", nullable = true)
     public Integer getItemid() {
         return itemid;
@@ -63,7 +65,7 @@ public class OrderItem {
         this.itemid = itemid;
     }
 
-    @Basic
+
     @Column(name = "name", nullable = true, length = 255)
     public String getName() {
         return name;
@@ -73,7 +75,7 @@ public class OrderItem {
         this.name = name;
     }
 
-    @Basic
+
     @Column(name = "kpname", nullable = true, length = 255)
     public String getKpname() {
         return kpname;
@@ -83,7 +85,7 @@ public class OrderItem {
         this.kpname = kpname;
     }
 
-    @Basic
+
     @Column(name = "intro", nullable = true, length = 4000)
     public String getIntro() {
         return intro;
@@ -93,7 +95,7 @@ public class OrderItem {
         this.intro = intro;
     }
 
-    @Basic
+
     @Column(name = "outline", nullable = true, length = 200)
     public String getOutline() {
         return outline;
@@ -103,7 +105,7 @@ public class OrderItem {
         this.outline = outline;
     }
 
-    @Basic
+
     @Column(name = "price", nullable = true, precision = 2)
     public BigDecimal getPrice() {
         return price;
@@ -113,7 +115,7 @@ public class OrderItem {
         this.price = price;
     }
 
-    @Basic
+
     @Column(name = "kpprice", nullable = true, precision = 2)
     public BigDecimal getKpprice() {
         return kpprice;
@@ -123,7 +125,7 @@ public class OrderItem {
         this.kpprice = kpprice;
     }
 
-    @Basic
+
     @Column(name = "num", nullable = true)
     public Short getNum() {
         return num;
@@ -133,7 +135,7 @@ public class OrderItem {
         this.num = num;
     }
 
-    @Basic
+
     @Column(name = "oprice", nullable = true, precision = 2)
     public BigDecimal getOprice() {
         return oprice;
@@ -143,7 +145,7 @@ public class OrderItem {
         this.oprice = oprice;
     }
 
-    @Basic
+
     @Column(name = "okpprice", nullable = true, precision = 2)
     public BigDecimal getOkpprice() {
         return okpprice;
@@ -153,7 +155,7 @@ public class OrderItem {
         this.okpprice = okpprice;
     }
 
-    @Basic
+
     @Column(name = "imgurl", nullable = true, length = 200)
     public String getImgurl() {
         return imgurl;
@@ -175,7 +177,6 @@ public class OrderItem {
     }
 
 
-    @Basic
     @Column(name = "mchprice", nullable = true, precision = 2)
     public BigDecimal getMchprice() {
         return mchprice;
@@ -185,7 +186,7 @@ public class OrderItem {
         this.mchprice = mchprice;
     }
 
-    @Basic
+
     @Column(name = "mchrmbprice", nullable = true, precision = 2)
     public BigDecimal getMchrmbprice() {
         return mchrmbprice;
@@ -195,5 +196,13 @@ public class OrderItem {
         this.mchrmbprice = mchrmbprice;
     }
 
+    @Column(name = "specific")
+    public String getSpecific() {
+        return specific;
+    }
+
+    public void setSpecific(String specific) {
+        this.specific = specific;
+    }
 
 }

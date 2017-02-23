@@ -7,6 +7,7 @@
     <tr>
         <th>名称</th>
         <th>本地名称</th>
+        <th>规格</th>
         <th>数量</th>
         <th>单价(￥)</th>
         <th>单价(₩)</th>
@@ -17,6 +18,7 @@
         <tr class="odd gradeX">
             <td>$!entity.name</td>
             <td>$!entity.kpname</td>
+            <td>$!entity.specific</td>
             <td>$!entity.num</td>
             <td>$!entity.price</td>
             <td>$!entity.kpprice</td>
