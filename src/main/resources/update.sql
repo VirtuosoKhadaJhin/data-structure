@@ -1,4 +1,9 @@
 use nuanyou20;
+
+-- 2017-2-21
+ALTER TABLE `ny_item` ADD COLUMN `spec` VARCHAR(255) COMMENT '商品规格';
+
+-- 2017-2-20
 CREATE TABLE
 ny_item_detail_img
 (

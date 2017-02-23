@@ -8,6 +8,7 @@ import com.nuanyou.cms.entity.Item;
 import com.nuanyou.cms.entity.ItemDirectmail;
 import com.nuanyou.cms.entity.ItemStats;
 import com.nuanyou.cms.entity.ItemTuan;
+import com.nuanyou.cms.model.ItemVO;
 import com.nuanyou.cms.service.ItemService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public Item saveNotNull(Item entity) {
+    public Item saveNotNull(ItemVO vo) {
+        Item entity = BeanUtils.copyBeanNotNull(vo, new Item());
         // 如果商户价未录入 默认取现价
         BigDecimal mchPrice = entity.getMchPrice();
         if (mchPrice == null || mchPrice.compareTo(BigDecimal.ZERO) == 0) {
@@ -57,7 +59,7 @@ public class ItemServiceImpl implements ItemService {
 
             directmail.setPostage(entity.getDirectmail() != null ? entity.getDirectmail().getPostage() : null);
 
-            BeanUtils.copyBeanNotNull(entity, oldItem);
+            BeanUtils.copyBean(entity, oldItem);
             oldItem.setSupportType(entity.getSupportType());
             oldItem.setDirectmail(directmail);
             entity = itemDao.save(oldItem);

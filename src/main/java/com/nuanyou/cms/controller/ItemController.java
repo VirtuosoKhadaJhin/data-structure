@@ -6,6 +6,7 @@ import com.nuanyou.cms.entity.Item;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.enums.ItemSupportType;
 import com.nuanyou.cms.entity.enums.TuanType;
+import com.nuanyou.cms.model.ItemVO;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.ItemService;
 import com.nuanyou.cms.service.MerchantService;
@@ -68,10 +69,10 @@ public class ItemController {
     }
 
     @RequestMapping(path = "update", method = RequestMethod.POST)
-    public String update(Item entity, Model model) {
-        entity.setItemType(1);
-        entity = itemService.saveNotNull(entity);
-        model.addAttribute("entity", entity);
+    public String update(ItemVO vo, Model model) {
+        vo.setItemType(1);
+        Item item = itemService.saveNotNull(vo);
+        model.addAttribute("entity", item);
 
         List<Merchant> merchants = merchantService.getIdNameList();
         model.addAttribute("merchants", merchants);

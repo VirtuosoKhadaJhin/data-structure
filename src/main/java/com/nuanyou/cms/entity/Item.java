@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
-import com.nuanyou.cms.entity.enums.ItemSupportType;
-import com.nuanyou.cms.entity.enums.ItemSupportTypeConverter;
-import com.nuanyou.cms.entity.enums.TuanType;
-import com.nuanyou.cms.entity.enums.TuanTypeConverter;
+import com.nuanyou.cms.entity.enums.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -58,6 +55,8 @@ public class Item {
     private BigDecimal weight;
 
     private List<ItemDetailimg> detailimgs;
+
+    private List<String> spec;
 
     public Item() {
     }
@@ -361,4 +360,15 @@ public class Item {
     public void setDetailimgs(List<ItemDetailimg> detailimgs) {
         this.detailimgs = detailimgs;
     }
+
+    @Convert(converter = JsonListConverter.class)
+    @Column(name = "spec")
+    public List<String> getSpec() {
+        return spec;
+    }
+
+    public void setSpec(List<String> spec) {
+        this.spec = spec;
+    }
+
 }
