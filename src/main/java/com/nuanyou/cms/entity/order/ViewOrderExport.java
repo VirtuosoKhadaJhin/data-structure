@@ -5,6 +5,7 @@ import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.coupon.Coupon;
 import com.nuanyou.cms.entity.enums.*;
+import org.apache.velocity.tools.generic.NumberTool;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -211,11 +212,9 @@ public class ViewOrderExport {
     public BigDecimal getKpprice() {
         return kpprice;
     }
-
     public void setKpprice(BigDecimal kpprice) {
         this.kpprice = kpprice;
     }
-
 
 
     @Column(name = "orderstatus", nullable = true)
@@ -714,6 +713,40 @@ public class ViewOrderExport {
         }else{
             return this.coupon.getTitle()+"/"+this.coupon.getPrice()+"/"+this.coupon.getLocalPrice();
         }
+    }
+
+    @Transient
+    public String getKppriceF() {
+        return getFormatPrice(kpprice,decimalPattern);
+    }
+
+
+
+    @Transient
+    public String getOkppriceF() {
+        return getFormatPrice(okpprice,decimalPattern);
+    }
+
+
+    @Transient
+    public Double getPayableF() {
+        return payable==null?this.getPrice().doubleValue():payable.doubleValue();
+    }
+
+    @Transient
+    public String getOpriceF(){
+        return oprice == null ? "" : oprice.stripTrailingZeros().toPlainString();
+
+    }
+
+
+    private String decimalPattern = "#0.00";
+    private String getFormatPrice(BigDecimal price, String decimalPattern) {
+        if(kpprice==null){
+            return null;
+        }
+        NumberTool numberFormatter=new NumberTool();
+        return numberFormatter.format(decimalPattern, price);
     }
 
 
