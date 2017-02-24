@@ -172,7 +172,7 @@ public class OrderController {
         response.setHeader("Pragma", "public");
         response.setHeader("Cache-Control", "max-age=30");
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
-        BeanUtils.cleanEmpty(entity);
+        //BeanUtils.cleanEmpty(entity);
         Page<ViewOrderExport> page =this.orderService.findExportByCondition(index, entity, time, null);
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
         propertyHeaderMap.put("id", "ID");
@@ -192,8 +192,10 @@ public class OrderController {
         propertyHeaderMap.put("userId", "userId");
         propertyHeaderMap.put("user.nickname", "购买人");
         propertyHeaderMap.put("couponInfo", "优惠券/面值/本地面值");
-        propertyHeaderMap.put("opprice", "原价(本地)");
-        propertyHeaderMap.put("payable", "总价(人民币)");
+        propertyHeaderMap.put("kppriceF", "总价(本地)");
+        propertyHeaderMap.put("okppriceF", "原价(本地)");
+        propertyHeaderMap.put("payableF", "总价(人民币)");
+        propertyHeaderMap.put("opriceF", "原价(人民币)");
         propertyHeaderMap.put("usetime", "使用时间");
         propertyHeaderMap.put("address", "地址");
         propertyHeaderMap.put("postalcode", "邮编");
@@ -202,6 +204,14 @@ public class OrderController {
         propertyHeaderMap.put("city", "城市");
         propertyHeaderMap.put("tel", "电话");
         propertyHeaderMap.put("message", "评论");
+
+        //"总价(本地)", "原价(本地)", "总价(人民币)", "原价(人民币)
+        //r.createCell(14).setCellValue(numberFormatter.format(decimalPattern, each.getKpprice()));
+        //r.createCell(15).setCellValue(numberFormatter.format(decimalPattern, each.getOkpprice()));
+        //r.createCell(16).setCellValue(each.getPayable() == null ? each.getPrice().doubleValue() : each.getPayable().doubleValue());
+        //r.createCell(17).setCellValue(each.getOprice() == null ? "" : each.getOprice().toPlainString())
+
+
         XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, page.getContent());
         OutputStream os = response.getOutputStream();
         ex.write(os);
