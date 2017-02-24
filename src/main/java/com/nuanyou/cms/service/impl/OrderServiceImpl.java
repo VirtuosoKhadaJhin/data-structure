@@ -253,7 +253,6 @@ public class OrderServiceImpl implements OrderService {
         response.setHeader("Content-disposition", "attachment;filename=" + filename);
         workbook.write(response.getOutputStream());
     }
-
     @Override
     public Page<ViewOrderExport> findExportByCondition(Integer index, final ViewOrderExport entity, final TimeCondition time, Pageable pageable) {
         return viewOrderExportDao.findAll(new Specification() {

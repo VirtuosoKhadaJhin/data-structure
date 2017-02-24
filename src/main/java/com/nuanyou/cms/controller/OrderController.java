@@ -172,7 +172,7 @@ public class OrderController {
         response.setHeader("Pragma", "public");
         response.setHeader("Cache-Control", "max-age=30");
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
-        BeanUtils.cleanEmpty(entity);
+        //BeanUtils.cleanEmpty(entity);
         Page<ViewOrderExport> page =this.orderService.findExportByCondition(index, entity, time, null);
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
         propertyHeaderMap.put("id", "ID");
@@ -192,8 +192,10 @@ public class OrderController {
         propertyHeaderMap.put("userId", "userId");
         propertyHeaderMap.put("user.nickname", "购买人");
         propertyHeaderMap.put("couponInfo", "优惠券/面值/本地面值");
-        propertyHeaderMap.put("opprice", "原价(本地)");
-        propertyHeaderMap.put("payable", "总价(人民币)");
+        propertyHeaderMap.put("kppriceF", "总价(本地)");
+        propertyHeaderMap.put("okppriceF", "原价(本地)");
+        propertyHeaderMap.put("payableF", "总价(人民币)");
+        propertyHeaderMap.put("opriceF", "原价(人民币)");
         propertyHeaderMap.put("usetime", "使用时间");
         propertyHeaderMap.put("address", "地址");
         propertyHeaderMap.put("postalcode", "邮编");
@@ -202,24 +204,19 @@ public class OrderController {
         propertyHeaderMap.put("city", "城市");
         propertyHeaderMap.put("tel", "电话");
         propertyHeaderMap.put("message", "评论");
+
+        //"总价(本地)", "原价(本地)", "总价(人民币)", "原价(人民币)
+        //r.createCell(14).setCellValue(numberFormatter.format(decimalPattern, each.getKpprice()));
+        //r.createCell(15).setCellValue(numberFormatter.format(decimalPattern, each.getOkpprice()));
+        //r.createCell(16).setCellValue(each.getPayable() == null ? each.getPrice().doubleValue() : each.getPayable().doubleValue());
+        //r.createCell(17).setCellValue(each.getOprice() == null ? "" : each.getOprice().toPlainString())
+
+
         XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, page.getContent());
         OutputStream os = response.getOutputStream();
         ex.write(os);
         os.flush();
         os.close();
-
-
-
-
-//        String[] titles = new String[]{
-//                "序号", "ID", "订单编号", "订单流水号","渠道", "订单类型", "支付类型", "来源平台", "来源系统", "使用码", "商户ID", "商户中文名称",
-//                "商户本地名称", "用户ID", "总价(本地)", "原价(本地)", "总价(人民币)", "原价(人民币)", "订单状态", "下单时间", "使用时间", "地址",
-//                "邮编", "省会", "区", "城市", "电话"};
-//        String filename =URLEncoder.encode("订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss"));
-//        HSSFWorkbook workbook = new HSSFWorkbook();
-//        HSSFSheet firstSheet = workbook.createSheet("订单列表");
-//        HSSFRow firstRow = firstSheet.createRow(0);
-//        this.orderService.putOrderToExcel(index, request, response, entity, time, titles, filename, workbook, firstSheet, firstRow);
     }
 
     @RequestMapping("refundList/export")
@@ -261,7 +258,7 @@ public class OrderController {
         propertyHeaderMap.put("orderstatus.name", "订单状态");
         propertyHeaderMap.put("ordertype.name", "订单类型");
         propertyHeaderMap.put("merchant.name", "商户中文名称");
-        propertyHeaderMap.put("userId", "用户ID");
+        propertyHeaderMap.put("userId", "退款人");
         propertyHeaderMap.put("user.nickname", "退款人名称");
         propertyHeaderMap.put("refundstatus.name", "退款状态");
         propertyHeaderMap.put("refundreason", "退款理由");
@@ -306,14 +303,5 @@ public class OrderController {
         return null;
     }
 
-
-//    public static void main(String[] args) {
-//        List<String> list=new ArrayList<String>(Arrays.asList(("sdf,sdf2").split(",")));
-//        list.remove(0);
-//        System.out.println(list.get(0));
-//
-//        List<RefundStatus> refundStatuses = new ArrayList<RefundStatus>(Arrays.asList(RefundStatus.values()));
-//        refundStatuses.remove(0);
-//    }
 }
 
