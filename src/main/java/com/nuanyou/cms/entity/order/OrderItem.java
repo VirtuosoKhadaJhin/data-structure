@@ -31,7 +31,7 @@ public class OrderItem {
     private BigDecimal mchprice;
     private BigDecimal mchrmbprice;
 
-    private String specific;
+    private String spec;
 
 
     @Id
@@ -196,13 +196,13 @@ public class OrderItem {
         this.mchrmbprice = mchrmbprice;
     }
 
-    @Column(name = "specific")
-    public String getSpecific() {
-        return specific;
+    @Column(name = "spec")
+    public String getSpec() {
+        return spec;
     }
 
-    public void setSpecific(String specific) {
-        this.specific = specific;
+    public void setSpec(String spec) {
+        this.spec = spec;
     }
 
 }

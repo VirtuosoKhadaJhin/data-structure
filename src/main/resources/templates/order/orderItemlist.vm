@@ -18,7 +18,7 @@
         <tr class="odd gradeX">
             <td>$!entity.name</td>
             <td>$!entity.kpname</td>
-            <td>$!entity.specific</td>
+            <td>$!entity.spec</td>
             <td>$!entity.num</td>
             <td>$!entity.price</td>
             <td>$!entity.kpprice</td>
