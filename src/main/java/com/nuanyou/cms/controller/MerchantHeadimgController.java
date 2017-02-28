@@ -1,16 +1,20 @@
 package com.nuanyou.cms.controller;
 
 import com.nuanyou.cms.commons.APIResult;
+import com.nuanyou.cms.config.ImageSpec;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.dao.MerchantDao;
 import com.nuanyou.cms.dao.MerchantHeadimgDao;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.MerchantHeadimg;
+import com.nuanyou.cms.model.MerchantVO;
 import com.nuanyou.cms.model.PageUtil;
+import com.nuanyou.cms.service.FileUploadService;
 import com.nuanyou.cms.service.MerchantHeadimgService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.util.BeanUtils;
+import com.nuanyou.cms.util.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
@@ -20,6 +24,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
@@ -43,6 +53,8 @@ public class MerchantHeadimgController {
 
     @Autowired
     private MerchantService merchantService;
+
+
 
 
     @RequestMapping(path = "add", method = RequestMethod.POST)
@@ -77,11 +89,12 @@ public class MerchantHeadimgController {
 
     @RequestMapping(path = "setIndexImgUrl",method = RequestMethod.POST)
     @ResponseBody
-    public APIResult setIndexImgUrl(@RequestParam(required = true) String id,@RequestParam String detailImgUrl){
+    public APIResult setIndexImgUrl(@RequestParam(required = true) Long id,
+                                    @RequestParam String detailImgUrl,
+                                    @RequestParam ImageSpec imageSpec) throws Exception {
 
+        return merchantHeadimgService.setIndexImgUrl(id,detailImgUrl,imageSpec);
 
-
-        return new APIResult<>();
     }
 
 

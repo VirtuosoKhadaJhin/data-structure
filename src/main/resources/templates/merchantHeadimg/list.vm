@@ -25,10 +25,16 @@
                             #break
                         #end
                         <li class="span2">
-                            <img width="150px" height="100px" src="$!e.detailImgUrl">
+                            <img width="160px" height="100px" src="$!e.detailImgUrl">
                             <button type="button" class="btn btn-danger btn-mini remove" data-id="$!e.id">删除</button>
                             <button type="button" class="btn btn-success btn-mini top" data-id="$!e.id">置顶</button>
-                            <button type="button" class="btn btn-info btn-mini setIndexImgUrl" data-id="$!e.id" mch="$!entity.id" >设为列表图</button>
+                            #if($entity.listImgUrl =="")
+                                <button type="button" class="btn btn-info btn-mini setIndexImgUrl" detailImgUrl-id="$!e.detailImgUrl" listImgUrl = "$entity.listImgUrl"
+                                    mch="$!entity.id" imageSpec="MerchantList">设为列表图</button>
+                            #else
+                                <button type="button" class="btn btn-inverse btn-mini setIndexImgUrl" detailImgUrl-id="$!e.detailImgUrl" listImgUrl = "$entity.listImgUrl"
+                                        mch="$!entity.id" imageSpec="MerchantList">设为列表图</button>
+                            #end
                         </li>
                     #end
                 </ul>
@@ -115,18 +121,24 @@
 
         $(".setIndexImgUrl").each(function (i, o) {
             $(o).on("click", function () {
-                var detailImgUrl = $(this).attr("data-id");
+                var detailImgUrl = $(this).attr("detailImgUrl-id");
                 var id = $(this).attr("mch");
-                alert(imgid);
-                alert(id);
-                return ;
+                var imageSpec = $(this).attr("imageSpec");
+                var listImgUrl = $(this).attr("listImgUrl");
+
+                if(!listImgUrl==""){
+                    if (!confirm('列表图已存在，是否替换？'))
+                        return;
+                }
                 $.ajax({
                     url: 'setIndexImgUrl',
-                    data: {id: id,
-                           imgid:imgid },
+                    data: { id: id ,
+                            detailImgUrl:detailImgUrl ,
+                            imageSpec :imageSpec },
                     type: 'post',
                     success: function (result) {
                         if (result.code == 0) {
+                            alert(result.msg);
                             window.location.reload();
                         } else {
                             alert("失败:" + result.msg);
