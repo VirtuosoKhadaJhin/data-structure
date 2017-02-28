@@ -39,6 +39,8 @@ public enum ResultCodes {
 
     NotFoundMerchantCard(505, "找不到代金券"),
 
+    NotConformSize(506, "不符合指定尺寸"),
+
 
     /**
      * ----------order -----------
