@@ -75,6 +75,16 @@ public class MerchantHeadimgController {
         return "merchantHeadimg/edit";
     }
 
+    @RequestMapping(path = "setIndexImgUrl",method = RequestMethod.POST)
+    @ResponseBody
+    public APIResult setIndexImgUrl(@RequestParam(required = true) String id,@RequestParam String detailImgUrl){
+
+
+
+        return new APIResult<>();
+    }
+
+
     @RequestMapping("list")
     public String list(Merchant entity, @RequestParam(required = false, defaultValue = "1") int index, Model model) {
         Pageable pageable = new PageRequest(index - 1, 10, Sort.Direction.DESC, "id");

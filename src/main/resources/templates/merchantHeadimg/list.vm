@@ -25,9 +25,10 @@
                             #break
                         #end
                         <li class="span2">
-                            <img width="126px" height="100px" src="$!e.detailImgUrl">
+                            <img width="150px" height="100px" src="$!e.detailImgUrl">
                             <button type="button" class="btn btn-danger btn-mini remove" data-id="$!e.id">删除</button>
                             <button type="button" class="btn btn-success btn-mini top" data-id="$!e.id">置顶</button>
+                            <button type="button" class="btn btn-info btn-mini setIndexImgUrl" data-id="$!e.id" mch="$!entity.id" >设为列表图</button>
                         </li>
                     #end
                 </ul>
@@ -110,6 +111,34 @@
                 });
             });
         });
+
+
+        $(".setIndexImgUrl").each(function (i, o) {
+            $(o).on("click", function () {
+                var detailImgUrl = $(this).attr("data-id");
+                var id = $(this).attr("mch");
+                alert(imgid);
+                alert(id);
+                return ;
+                $.ajax({
+                    url: 'setIndexImgUrl',
+                    data: {id: id,
+                           imgid:imgid },
+                    type: 'post',
+                    success: function (result) {
+                        if (result.code == 0) {
+                            window.location.reload();
+                        } else {
+                            alert("失败:" + result.msg);
+                        }
+                    }
+                });
+            });
+        });
+
+
+
+
     });
 </script>
 #parse("common/list_end.vm")
