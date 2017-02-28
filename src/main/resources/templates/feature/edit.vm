@@ -141,7 +141,7 @@
             var val = $(this).val();
             if (val == "1") {
                 $(".uploadImgBtn").attr("imageSpec", "FeatureNormal");
-                $("#imgmsg").empty().append("尺寸: 240 * 240, 限制: 40k");
+                $("#imgmsg").empty().append("尺寸: 240 * 240, 限制: 30k");
             } else if (val == "2") {
                 $(".uploadImgBtn").attr("imageSpec", "FeatureGood");
                 $("#imgmsg").empty().append("尺寸: 640 * 400, 限制: 150k");

@@ -82,7 +82,7 @@
                                     <input type="text" class="span9" id="imageUrl" name="imageUrl" value='$!entity.imageUrl'/>
                                     <button type="button" class="btn btn-success previewBtn" data-id="imageUrl" imageSpec="MerchantCatBG">预览</button>
                                     <button type="button" class="btn btn-success uploadImgBtn" data-id="imageUrl">上传</button>
-                                    <p>尺寸: 60 * 60, 限制: 3k</p>
+                                    <p>尺寸: 60 * 60, 限制: 5k</p>
                                 </div>
 
 
@@ -91,7 +91,7 @@
                                     <input type="text" class="span9" id="mapimgurl" name="mapimgurl" value='$!entity.mapimgurl'/>
                                     <button type="button" class="btn btn-success previewBtn" data-id="mapimgurl">预览</button>
                                     <button type="button" class="btn btn-success uploadImgBtn" data-id="mapimgurl" imageSpec="MerchantCatMap">上传</button>
-                                    <p>尺寸: 60 * 60, 限制: 3k</p>
+                                    <p>尺寸: 60 * 60, 限制: 5k</p>
                                 </div>
                             </div>
                             <div class="form-actions">

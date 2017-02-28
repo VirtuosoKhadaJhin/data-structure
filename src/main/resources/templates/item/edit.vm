@@ -95,12 +95,12 @@
                                 <div class="controls">
                                     <input name="sort" type="text" class="span11" value="$!entity.sort">
                                 </div>
-                                <label class="control-label">列表页展示图</label>
+                                <label class="control-label">列表图</label>
                                 <div class="controls">
                                     <input type="text" class="span9" name="indexImgUrl" id="indexImgUrl" value="$!entity.indexImgUrl">
                                     <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">预览</button>
                                     <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl" imageSpec="ItemList">上传</button>
-                                    <p>尺寸: 320 * 240, 限制: 40k</p>
+                                    <p>尺寸: 640 * 480, 限制: 100k</p>
                                 </div>
                                 <label class="control-label">商品详情</label>
                                 <div class="controls">

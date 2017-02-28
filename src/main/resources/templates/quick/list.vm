@@ -91,7 +91,7 @@
         var val = $(this).val();
         if (val == "index" || val == "user" || val == "tool") {
             $("#quickImgBtn").attr("imageSpec", "Quick");
-            $("#quickMsg").empty().append("尺寸: 60 * 60, 限制: 3k");
+            $("#quickMsg").empty().append("尺寸: 60 * 60, 限制: 5k");
         } else if (val == "directship") {
             $("#quickImgBtn").attr("imageSpec", "");
             $("#quickMsg").empty().append("");
