@@ -77,7 +77,7 @@ public class MerchantHeadimgServiceImpl implements MerchantHeadimgService {
         merchantHeadimgDao.save(merchantHeadimgs);
     }
 
-    public APIResult setIndexImgUrl(Long id, String detailImgUrl, ImageSpec imageSpec) throws Exception{
+    public APIResult setListImgUrl(Long id, String detailImgUrl, ImageSpec imageSpec) throws Exception{
         APIResult result = new APIResult();
         String fileType = "";
         String callBackImgUrl = "";

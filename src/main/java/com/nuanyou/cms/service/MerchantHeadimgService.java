@@ -18,6 +18,6 @@ public interface MerchantHeadimgService {
 
     void setTop(Long id);
 
-    APIResult setIndexImgUrl(Long id,String detailImgUrl,ImageSpec imageSpec) throws Exception;
+    APIResult setListImgUrl(Long id,String detailImgUrl,ImageSpec imageSpec) throws Exception;
 
 }

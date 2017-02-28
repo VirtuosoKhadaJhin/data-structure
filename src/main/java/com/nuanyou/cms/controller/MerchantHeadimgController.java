@@ -93,7 +93,7 @@ public class MerchantHeadimgController {
                                     @RequestParam String detailImgUrl,
                                     @RequestParam ImageSpec imageSpec) throws Exception {
 
-        return merchantHeadimgService.setIndexImgUrl(id,detailImgUrl,imageSpec);
+        return merchantHeadimgService.setListImgUrl(id,detailImgUrl,imageSpec);
 
     }
 
