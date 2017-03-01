@@ -24,6 +24,7 @@ public class ExcelUtil {
         XSSFRow row = sheet.createRow(0);
         int i = 0;
         for (String key : titleMap.keySet()) {
+            sheet.autoSizeColumn(i,true);
             XSSFCell cell = row.createCell(i++);
             cell.setCellStyle(headerStyle);
             cell.setCellValue(new XSSFRichTextString(titleMap.get(key)));
@@ -37,7 +38,6 @@ public class ExcelUtil {
             for (String property : titleMap.keySet()) {
                 XSSFCell cell = row.createCell(cellNo++);
                 cell.setCellStyle(contentStyle);
-
                 String textValue = null;
 
 
@@ -69,7 +69,10 @@ public class ExcelUtil {
                 }
 
                 cell.setCellValue(new XSSFRichTextString(textValue));
+
+
             }
+
         }
         return workbook;
     }

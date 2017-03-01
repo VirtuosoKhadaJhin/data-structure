@@ -7,25 +7,16 @@ import com.nuanyou.cms.domain.NotificationPublisher;
 import com.nuanyou.cms.entity.UserCardItem;
 import com.nuanyou.cms.entity.coupon.Coupon;
 import com.nuanyou.cms.entity.enums.*;
-import com.nuanyou.cms.entity.order.Order;
-import com.nuanyou.cms.entity.order.OrderRefundLog;
-import com.nuanyou.cms.entity.order.OrderVouchCard;
-import com.nuanyou.cms.entity.order.ViewOrderExport;
+import com.nuanyou.cms.entity.order.*;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.OrderRefundLogService;
 import com.nuanyou.cms.service.OrderService;
 import com.nuanyou.cms.util.BeanUtils;
-import com.nuanyou.cms.util.ConvertFileEncoding;
 import com.nuanyou.cms.util.DateUtils;
 import com.nuanyou.cms.util.TimeCondition;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.velocity.tools.generic.DateTool;
-import org.apache.velocity.tools.generic.NumberTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,12 +30,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Felix on 2016/9/8.
@@ -69,9 +55,12 @@ public class OrderServiceImpl implements OrderService {
     private ViewOrderExportDao viewOrderExportDao;
     @Autowired
     private MerchantDao merchantDao;
+    @Autowired
+    private OrderItemDao orderItemDao;
 
     private static String timePattern = "yyyy-MM-dd HH:mm:ss";
     private static String decimalPattern = "#0.00";
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Override
     public Page<Order> findByCondition(Integer index, final Order entity, final TimeCondition time, Pageable pageable) {
@@ -191,71 +180,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
+
     @Override
-    public void putOrderToExcel(int index, HttpServletRequest request, HttpServletResponse response, ViewOrderExport entity,
-                                TimeCondition time, String[] titles, String filename, HSSFWorkbook workbook, HSSFSheet firstSheet, HSSFRow firstRow) throws IOException {
-        Long begin = System.currentTimeMillis();
-        Page<ViewOrderExport> page = findExportByCondition(index, entity, time, null);
-        Long end = System.currentTimeMillis();
-        System.out.println("读的时间差:" + (end - begin));
-        Long beginWrite = System.currentTimeMillis();
-        for (int i = 0; i < titles.length; i++) {
-            HSSFCell c = firstRow.createCell(i);
-            c.setCellValue(titles[i]);
-        }
-        NumberTool numberFormatter = new NumberTool();
-        DateTool dateFormatter = new DateTool();
-        FillContent(firstSheet, page, numberFormatter, dateFormatter);
-        setResponseOut(filename, workbook, request, response);
-        Long endWrite = System.currentTimeMillis();
-        System.out.println("写的时间差:" + (endWrite - beginWrite));
-    }
-
-    private void FillContent(HSSFSheet sheet, Page<ViewOrderExport> page, NumberTool numberFormatter, DateTool dateFormatter) {
-        for (int i = 0; i < page.getContent().size(); i++) {
-            HSSFRow r = sheet.createRow(i + 1);
-            ViewOrderExport each = page.getContent().get(i);
-           // r.createCell(0).setCellType(Cell.CELL_TYPE_STRING);
-            r.createCell(0).setCellValue(i + 1);
-            r.createCell(1).setCellValue(each.getId());
-            r.createCell(2).setCellType(Cell.CELL_TYPE_STRING);r.createCell(2).setCellValue(each.getOrdersn());
-            r.createCell(3).setCellValue(each.getTransactionid());r.createCell(3).setCellType(Cell.CELL_TYPE_STRING);
-            r.createCell(4).setCellValue(each.getSceneid());
-            r.createCell(5).setCellValue(each.getOrdertype() == null ? "" : each.getOrdertype().getName());
-            r.createCell(6).setCellValue(each.getPaytype() == null ? "" : each.getPaytype().getName());
-            r.createCell(7).setCellValue(each.getPlatform() == null ? "" : each.getPlatform().getName());
-            r.createCell(8).setCellValue(each.getOs() == null ? "" : each.getOs().getName());
-            r.createCell(9).setCellValue(each.getOrdercode());
-            r.createCell(10).setCellValue(each.getMerchant() == null || each.getMerchant().getId() == null ? "" : each.getMerchant().getId().toString());
-            r.createCell(11).setCellValue(each.getMerchant() == null || StringUtils.isEmpty(each.getMerchant().getName()) ? "" : each.getMerchant().getName());
-            r.createCell(12).setCellValue(each.getMerchant() == null || StringUtils.isEmpty(each.getMerchant().getKpname()) ? "" : each.getMerchant().getKpname());
-            r.createCell(13).setCellValue(each.getUserId() == null ? "" : each.getUserId().toString());
-            r.createCell(14).setCellValue(numberFormatter.format(decimalPattern, each.getKpprice()));
-            r.createCell(15).setCellValue(numberFormatter.format(decimalPattern, each.getOkpprice()));
-            r.createCell(16).setCellValue(each.getPayable() == null ? each.getPrice().doubleValue() : each.getPayable().doubleValue());
-            r.createCell(17).setCellValue(each.getOprice() == null ? "" : each.getOprice().toPlainString());
-            r.createCell(18).setCellValue(each.getOrderstatus().getName()== null ? "" :each.getOrderstatus().getName());
-            r.createCell(19).setCellValue(dateFormatter.format(timePattern, each.getCreatetime()));
-            r.createCell(20).setCellValue(dateFormatter.format(timePattern, each.getUsetime()));
-            r.createCell(21).setCellValue(each.getAddress() == null ? "" : each.getAddress());
-            r.createCell(22).setCellValue(each.getPostalcode() == null ? "" : each.getPostalcode());
-            r.createCell(23).setCellValue(each.getProvince() == null ? "" : each.getProvince());
-            r.createCell(24).setCellValue(each.getDistrict() == null ? "" : each.getDistrict());
-            r.createCell(25).setCellValue(each.getCity() == null ? "" : each.getCity());
-            r.createCell(26).setCellValue(each.getTel() == null ? "" : each.getTel());
-        }
-    }
-
-
-    private void setResponseOut(String filename, HSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        filename = ConvertFileEncoding.encodeFilename(filename, request);
-        response.setContentType("application/vnd.ms-excel");
-        response.setHeader("Content-disposition", "attachment;filename=" + filename);
-        workbook.write(response.getOutputStream());
-    }
-    @Override
-    public Page<ViewOrderExport> findExportByCondition(Integer index, final ViewOrderExport entity, final TimeCondition time, Pageable pageable) {
-        return viewOrderExportDao.findAll(new Specification() {
+    public List<ViewOrderExport> findExportByCondition(Integer index, final ViewOrderExport entity, final TimeCondition time, Pageable pageable) {
+        List<ViewOrderExport> orderList= viewOrderExportDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
@@ -267,6 +195,12 @@ public class OrderServiceImpl implements OrderService {
                     Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd());
                     predicate.add(p);
                 }
+//                if(true){
+//                    Predicate p = cb.equal(root.get("id"), 60);
+//                    predicate.add(p);
+//                }
+
+
                 if (entity.getMerchant() != null && !StringUtils.isEmpty(entity.getMerchant().getKpname())) {
                     Predicate p = cb.equal(root.get("merchant").get("kpname"), entity.getMerchant().getKpname());
                     predicate.add(p);
@@ -306,7 +240,95 @@ public class OrderServiceImpl implements OrderService {
                 Predicate[] pre = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(pre)).getRestriction();
             }
-        }, pageable);
+        }, new Sort(Sort.Direction.ASC,"id"));
+
+        List<OrderItem> itemList= orderItemDao.findAll(new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (time.getBegin() != null) {
+                    Predicate p = cb.greaterThanOrEqualTo(root.get("order").get("createtime").as(Date.class), time.getBegin());
+                    predicate.add(p);
+                }
+                if (time.getEnd() != null) {
+                    Predicate p = cb.lessThanOrEqualTo(root.get("order").get("createtime").as(Date.class), time.getEnd());
+                    predicate.add(p);
+                }
+
+//                if(true){
+//                    Predicate p = cb.equal(root.get("order").get("id"), 60);
+//                    predicate.add(p);
+//                }
+                if (entity.getMerchant() != null && !StringUtils.isEmpty(entity.getMerchant().getKpname())) {
+                    Predicate p = cb.equal(root.get("order").get("merchant").get("kpname"), entity.getMerchant().getKpname());
+                    predicate.add(p);
+                }
+                if (entity.getMerchant() != null && entity.getMerchant().getId() != null) {
+                    Predicate p = cb.equal(root.get("order").get("merchant").get("id"), entity.getMerchant().getId());
+                    predicate.add(p);
+                }
+                if (!StringUtils.isEmpty(entity.getSceneid())) {
+                    Predicate p = cb.equal(root.get("order").get("sceneid"), entity.getSceneid());
+                    predicate.add(p);
+                }
+                if (!StringUtils.isEmpty(entity.getOrdersn())) {
+                    Predicate p = cb.equal(root.get("order").get("ordersn"), entity.getOrdersn());
+                    predicate.add(p);
+                }
+                if (entity.getOrdertype() != null) {
+                    Predicate p = cb.equal(root.get("order").get("ordertype"), entity.getOrdertype());
+                    cb.or(p, p);
+                    predicate.add(p);
+                }
+                if (entity.getPaytype() != null) {
+                    Predicate p = cb.equal(root.get("order").get("paytype"), entity.getPaytype());
+                    predicate.add(p);
+                }
+                if (entity.getOrderstatus() != null) {
+                    Predicate p = cb.equal(root.get("order").get("orderstatus"), entity.getOrderstatus());
+                    predicate.add(p);
+                }
+
+
+
+
+                if (entity.getMerchant() != null && entity.getMerchant().getDistrict() != null && entity.getMerchant().getDistrict().getCountry() != null
+                        && entity.getMerchant().getDistrict().getCountry().getId() != null) {
+                    Predicate p = cb.equal(root.get("order").get("merchant").get("district").get("country").get("id"),
+                            entity.getMerchant().getDistrict().getCountry().getId());
+                    predicate.add(p);
+                }
+                Predicate[] pre = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(pre)).getRestriction();
+            }
+        }, new Sort(Sort.Direction.ASC,"order.id"));
+
+        log.info("count(item):"+itemList.size());
+        log.info("count(order):"+orderList.size());
+
+
+
+        relation(itemList,orderList);
+
+
+        return orderList;
+
+    }
+
+    private void relation(List<OrderItem> itemList, List<ViewOrderExport> orderList) {
+        int i=0;
+        for (ViewOrderExport order : orderList) {
+            List<OrderItem> orderItems=new ArrayList<>();
+            for (;i < itemList.size(); i++) {
+                if( order.getId().equals(itemList.get(i).getOrder().getId())){
+                    orderItems.add(itemList.get(i));
+                    continue;
+                }else{
+                    break;
+                }
+            }
+            order.setOrderItems(orderItems);
+        }
     }
 
     @Override

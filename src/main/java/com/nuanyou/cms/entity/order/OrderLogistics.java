@@ -33,7 +33,7 @@ public class OrderLogistics {
 
 
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orderid", nullable = true)
     public Order getOrder() {
         return order;
@@ -104,5 +104,16 @@ public class OrderLogistics {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+
+    @Transient
+    String getFullAddress(){
+        StringBuffer fullAddress=new StringBuffer();
+        fullAddress.append(country).append(" ")
+                    .append(province).append(" ")
+                    .append(city).append(" ")
+                    .append(address);
+        return  fullAddress.toString();
     }
 }

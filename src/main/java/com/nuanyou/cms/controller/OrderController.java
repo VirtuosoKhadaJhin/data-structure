@@ -20,6 +20,8 @@ import com.nuanyou.cms.util.ExcelUtil;
 import com.nuanyou.cms.util.TimeCondition;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
@@ -59,6 +61,9 @@ public class OrderController {
 
     @Autowired
     private PasUserProfileDao pasUserProfileDao;
+    @Autowired
+    private OrderDirectMailDao directMailDao;
+    private static final Logger log = LoggerFactory.getLogger(OrderController.class);
 
     @RequestMapping("add")
     public String add(Order entity) {
@@ -69,8 +74,16 @@ public class OrderController {
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
-        OrderDetail orderDetail = getOrderDetail(id);
-        model.addAttribute("orderDetail", orderDetail);
+        Order order = this.orderDao.findOne(id);
+        OrderSms sms = this.orderSmsDao.findByOrderId(id);
+        OrderLogistics logistics = this.orderLogisticsDao.findByOrderId(id);
+        Integer buyNum = this.orderService.getBuyNum(order);
+        OrderDirectMail directMail=this.directMailDao.findByOrderId(id);
+        model.addAttribute("order", order);
+        model.addAttribute("sms", sms);
+        model.addAttribute("logistics", logistics);
+        model.addAttribute("buyNum", buyNum);
+        model.addAttribute("directMail", directMail);
         return "order/edit";
     }
 
@@ -172,8 +185,10 @@ public class OrderController {
         response.setHeader("Pragma", "public");
         response.setHeader("Cache-Control", "max-age=30");
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
-        //BeanUtils.cleanEmpty(entity);
-        Page<ViewOrderExport> page =this.orderService.findExportByCondition(index, entity, time, null);
+        Long begin=System.currentTimeMillis();
+        List<ViewOrderExport> page =this.orderService.findExportByCondition(index, entity, time, null);
+        Long end=System.currentTimeMillis();
+        log.info("read data from sql:"+(end-begin)/1000+"s");
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
         propertyHeaderMap.put("id", "ID");
         propertyHeaderMap.put("ordersn", "订单编号");
@@ -190,7 +205,7 @@ public class OrderController {
         propertyHeaderMap.put("merchant.name", "商户中文名称");
         propertyHeaderMap.put("merchant.kpname", "商户本地名称");
         propertyHeaderMap.put("userId", "userId");
-        propertyHeaderMap.put("user.nickname", "购买人");
+        propertyHeaderMap.put("nickname", "购买人");
         propertyHeaderMap.put("couponInfo", "优惠券/面值/本地面值");
         propertyHeaderMap.put("kppriceF", "总价(本地)");
         propertyHeaderMap.put("okppriceF", "原价(本地)");
@@ -203,16 +218,14 @@ public class OrderController {
         propertyHeaderMap.put("district", "区");
         propertyHeaderMap.put("city", "城市");
         propertyHeaderMap.put("tel", "电话");
-        propertyHeaderMap.put("message", "评论");
-
-        //"总价(本地)", "原价(本地)", "总价(人民币)", "原价(人民币)
-        //r.createCell(14).setCellValue(numberFormatter.format(decimalPattern, each.getKpprice()));
-        //r.createCell(15).setCellValue(numberFormatter.format(decimalPattern, each.getOkpprice()));
-        //r.createCell(16).setCellValue(each.getPayable() == null ? each.getPrice().doubleValue() : each.getPayable().doubleValue());
-        //r.createCell(17).setCellValue(each.getOprice() == null ? "" : each.getOprice().toPlainString())
-
-
-        XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, page.getContent());
+        propertyHeaderMap.put("username", "收货人");
+        propertyHeaderMap.put("postagermb", "邮费(RMB)");
+        propertyHeaderMap.put("postage", "邮费(本地)");
+        propertyHeaderMap.put("fullOrderItems", "商品");
+        Long begin_w=System.currentTimeMillis();
+        XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, page);
+        Long end_w=System.currentTimeMillis();
+        log.info("write into excel:"+(end_w-begin_w)/1000+"s");
         OutputStream os = response.getOutputStream();
         ex.write(os);
         os.flush();
