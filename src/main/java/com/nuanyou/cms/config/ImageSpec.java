@@ -24,7 +24,7 @@ public enum ImageSpec {
     MerchantCatMap(ICON, ImageSpec.ZOMM),
 
     MerchantList(Mid43, ImageSpec.ZOMM),
-    ItemList(Big43, ImageSpec.ZOMM),
+    ItemList(Mid43, ImageSpec.ZOMM),
 
     Recommend(Mid43, ImageSpec.ZOMM),
     TuanList(Mid43, ImageSpec.ZOMM),
