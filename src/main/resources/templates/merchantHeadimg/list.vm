@@ -1,6 +1,6 @@
 #parse("common/list_start.vm")
 <div class="widget-title"><span class="icon"> <i class="icon-th"></i> </span>
-    <h5>商家详情图管理</h5>
+    <h5>商家图片管理</h5>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
