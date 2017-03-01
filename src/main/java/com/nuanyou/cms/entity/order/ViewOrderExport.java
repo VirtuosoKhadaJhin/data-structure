@@ -4,7 +4,7 @@ import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.enums.*;
-import org.apache.velocity.tools.generic.NumberTool;
+import com.nuanyou.cms.util.PriceUtil;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -740,14 +740,13 @@ public class ViewOrderExport {
 
     @Transient
     public String getKppriceF() {
-        return getFormatPrice(kpprice,decimalPattern);
+
+        return PriceUtil.getFormatPrice(kpprice);
     }
-
-
 
     @Transient
     public String getOkppriceF() {
-        return getFormatPrice(okpprice,decimalPattern);
+        return PriceUtil.getFormatPrice(okpprice);
     }
 
 
@@ -762,15 +761,6 @@ public class ViewOrderExport {
 
     }
 
-
-    private static String decimalPattern = "#0.00";
-    private String getFormatPrice(BigDecimal price, String decimalPattern) {
-        if(kpprice==null){
-            return null;
-        }
-        NumberTool numberFormatter=new NumberTool();
-        return numberFormatter.format(decimalPattern, price);
-    }
 
 
     public String getNickname() {
@@ -797,7 +787,6 @@ public class ViewOrderExport {
         this.postagermb = postagermb;
     }
 
-    //@OneToMany(mappedBy = "order",fetch = FetchType.LAZY)
     @Transient
     public List<OrderItem> getOrderItems() {
         return orderItems;
@@ -832,6 +821,11 @@ public class ViewOrderExport {
         }
         return sb.toString();
     }
+
+    private Integer buyTimes;
+    @Transient
+    public Integer getBuyTimes(){return buyTimes;}
+    public void setBuyTimes(Integer buyTimes){this.buyTimes=buyTimes;}
 
 
 

@@ -11,11 +11,9 @@ import com.nuanyou.cms.entity.enums.OrderType;
 import com.nuanyou.cms.entity.enums.RefundStatus;
 import com.nuanyou.cms.entity.order.*;
 import com.nuanyou.cms.entity.user.PasUserProfile;
-import com.nuanyou.cms.model.OrderDetail;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.OrderService;
-import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.ExcelUtil;
 import com.nuanyou.cms.util.TimeCondition;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -77,7 +75,7 @@ public class OrderController {
         Order order = this.orderDao.findOne(id);
         OrderSms sms = this.orderSmsDao.findByOrderId(id);
         OrderLogistics logistics = this.orderLogisticsDao.findByOrderId(id);
-        Integer buyNum = this.orderService.getBuyNum(order);
+        Integer buyNum = this.orderService.getBuyNum(order.getUser()==null?null:order.getUserId());
         OrderDirectMail directMail=this.directMailDao.findByOrderId(id);
         model.addAttribute("order", order);
         model.addAttribute("sms", sms);
@@ -87,23 +85,7 @@ public class OrderController {
         return "order/edit";
     }
 
-    private OrderDetail getOrderDetail(Long id) {
-        Order order = this.orderDao.findOne(id);
-        OrderSms sms = this.orderSmsDao.findByOrderId(id);
-        OrderLogistics logistics = this.orderLogisticsDao.findByOrderId(id);
-        Integer buyNum = this.orderService.getBuyNum(order);
-        return new OrderDetail(
-                sms == null ? null : sms.getCode(),
-                sms == null ? null : sms.getTimes(),
-                logistics == null ? null : logistics.getAddress(),
-                order == null ? null : order.getYoufurmbreduce(),
-                order == null ? null : order.getYoufulocalereduce(),
-                order == null ? null : order.getMchrmbreduce(),
-                order == null ? null : order.getMchlocalereduce(),
-                order == null ? null : order.getMessage(),
-                buyNum
-        );
-    }
+
 
 
     @RequestMapping("update")
@@ -206,6 +188,7 @@ public class OrderController {
         propertyHeaderMap.put("merchant.kpname", "商户本地名称");
         propertyHeaderMap.put("userId", "userId");
         propertyHeaderMap.put("nickname", "购买人");
+        propertyHeaderMap.put("buyTimes", "购买次数");
         propertyHeaderMap.put("couponInfo", "优惠券/面值/本地面值");
         propertyHeaderMap.put("kppriceF", "总价(本地)");
         propertyHeaderMap.put("okppriceF", "原价(本地)");
@@ -217,7 +200,7 @@ public class OrderController {
         propertyHeaderMap.put("province", "省会");
         propertyHeaderMap.put("district", "区");
         propertyHeaderMap.put("city", "城市");
-        propertyHeaderMap.put("tel", "电话");
+        propertyHeaderMap.put("tel", "订单手机号");
         propertyHeaderMap.put("username", "收货人");
         propertyHeaderMap.put("postagermb", "邮费(RMB)");
         propertyHeaderMap.put("postage", "邮费(本地)");
@@ -240,7 +223,7 @@ public class OrderController {
         response.setHeader("Cache-Control", "max-age=30");
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("退款订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
 
-        BeanUtils.cleanEmpty(entity);
+        //BeanUtils.cleanEmpty(entity);
         List<Order> list = orderService.findRefundByCondition(entity, time);
 
         Map<Long, PasUserProfile> userMap = new HashMap<>();
@@ -262,16 +245,16 @@ public class OrderController {
                 pasUserProfile.setNickname(user.getNickname());
             }
         }
-
-
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
         propertyHeaderMap.put("id", "ID");
         propertyHeaderMap.put("ordersn", "订单编号");
+        propertyHeaderMap.put("transactionid", "订单流水号");
         propertyHeaderMap.put("createtime", "下单时间");
         propertyHeaderMap.put("orderstatus.name", "订单状态");
         propertyHeaderMap.put("ordertype.name", "订单类型");
         propertyHeaderMap.put("merchant.name", "商户中文名称");
         propertyHeaderMap.put("userId", "退款人");
+        propertyHeaderMap.put("merchant.id", "商户ID");
         propertyHeaderMap.put("user.nickname", "退款人名称");
         propertyHeaderMap.put("refundstatus.name", "退款状态");
         propertyHeaderMap.put("refundreason", "退款理由");
@@ -279,10 +262,15 @@ public class OrderController {
         propertyHeaderMap.put("refundaudittime", "处理时间");
         propertyHeaderMap.put("refundsource.name", "来源");
         propertyHeaderMap.put("refundremark", "备注");
+        propertyHeaderMap.put("ordercode", "使用码");
+        propertyHeaderMap.put("paytype.name", "支付类型");
+        propertyHeaderMap.put("kppriceF", "总价(本地)");
+        propertyHeaderMap.put("okppriceF", "原价(本地)");
+        propertyHeaderMap.put("payableF", "总价(人民币)");
+        propertyHeaderMap.put("opriceF", "原价(人民币)");
         XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, list);
         OutputStream os = response.getOutputStream();
         ex.write(os);
-
         os.flush();
         os.close();
     }

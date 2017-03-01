@@ -180,10 +180,38 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-
     @Override
     public List<ViewOrderExport> findExportByCondition(Integer index, final ViewOrderExport entity, final TimeCondition time, Pageable pageable) {
-        List<ViewOrderExport> orderList= viewOrderExportDao.findAll(new Specification() {
+        List<ViewOrderExport> orderList = getViewOrderExports(entity, time);
+        List<OrderItem> itemList = getOrderItems(entity, time);
+        log.info("count(item):" + itemList.size());
+        log.info("count(order):" + orderList.size());
+        relationItem(itemList, orderList);
+        relationBuyTimes(orderList);
+        return orderList;
+
+    }
+
+    private void relationBuyTimes(List<ViewOrderExport> orderList) {
+
+        Map<Long, Integer> map = new HashMap<>();
+        for (ViewOrderExport viewOrderExport : orderList) {
+            Long userId = viewOrderExport.getUserId();
+            if (userId == null) {
+                continue;
+            }
+            Integer buyTimes = 0;
+            if (!map.containsKey(userId)) {
+                buyTimes = this.getBuyNum(viewOrderExport.getUserId());
+            }else {
+                buyTimes=map.get(userId);
+            }
+            viewOrderExport.setBuyTimes(buyTimes);
+        }
+    }
+
+    private List<ViewOrderExport> getViewOrderExports(final ViewOrderExport entity, final TimeCondition time) {
+        return viewOrderExportDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
@@ -195,11 +223,6 @@ public class OrderServiceImpl implements OrderService {
                     Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd());
                     predicate.add(p);
                 }
-//                if(true){
-//                    Predicate p = cb.equal(root.get("id"), 60);
-//                    predicate.add(p);
-//                }
-
 
                 if (entity.getMerchant() != null && !StringUtils.isEmpty(entity.getMerchant().getKpname())) {
                     Predicate p = cb.equal(root.get("merchant").get("kpname"), entity.getMerchant().getKpname());
@@ -240,9 +263,11 @@ public class OrderServiceImpl implements OrderService {
                 Predicate[] pre = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(pre)).getRestriction();
             }
-        }, new Sort(Sort.Direction.ASC,"id"));
+        }, new Sort(Sort.Direction.ASC, "id"));
+    }
 
-        List<OrderItem> itemList= orderItemDao.findAll(new Specification() {
+    private List<OrderItem> getOrderItems(final ViewOrderExport entity, final TimeCondition time) {
+        return orderItemDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
@@ -255,10 +280,6 @@ public class OrderServiceImpl implements OrderService {
                     predicate.add(p);
                 }
 
-//                if(true){
-//                    Predicate p = cb.equal(root.get("order").get("id"), 60);
-//                    predicate.add(p);
-//                }
                 if (entity.getMerchant() != null && !StringUtils.isEmpty(entity.getMerchant().getKpname())) {
                     Predicate p = cb.equal(root.get("order").get("merchant").get("kpname"), entity.getMerchant().getKpname());
                     predicate.add(p);
@@ -290,8 +311,6 @@ public class OrderServiceImpl implements OrderService {
                 }
 
 
-
-
                 if (entity.getMerchant() != null && entity.getMerchant().getDistrict() != null && entity.getMerchant().getDistrict().getCountry() != null
                         && entity.getMerchant().getDistrict().getCountry().getId() != null) {
                     Predicate p = cb.equal(root.get("order").get("merchant").get("district").get("country").get("id"),
@@ -301,29 +320,18 @@ public class OrderServiceImpl implements OrderService {
                 Predicate[] pre = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(pre)).getRestriction();
             }
-        }, new Sort(Sort.Direction.ASC,"order.id"));
-
-        log.info("count(item):"+itemList.size());
-        log.info("count(order):"+orderList.size());
-
-
-
-        relation(itemList,orderList);
-
-
-        return orderList;
-
+        }, new Sort(Sort.Direction.ASC, "order.id"));
     }
 
-    private void relation(List<OrderItem> itemList, List<ViewOrderExport> orderList) {
-        int i=0;
+    private void relationItem(List<OrderItem> itemList, List<ViewOrderExport> orderList) {
+        int i = 0;
         for (ViewOrderExport order : orderList) {
-            List<OrderItem> orderItems=new ArrayList<>();
-            for (;i < itemList.size(); i++) {
-                if( order.getId().equals(itemList.get(i).getOrder().getId())){
+            List<OrderItem> orderItems = new ArrayList<>();
+            for (; i < itemList.size(); i++) {
+                if (order.getId().equals(itemList.get(i).getOrder().getId())) {
                     orderItems.add(itemList.get(i));
                     continue;
-                }else{
+                } else {
                     break;
                 }
             }
@@ -332,11 +340,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Integer getBuyNum(Order order) {
-        if (order.getUser() == null) {
+    public Integer getBuyNum(Long userId) {
+        if (userId == null) {
             return 0;
         }
-        return this.orderDao.getBuyNum(order.getUser().getUserid().intValue());
+        return this.orderDao.getBuyNum(userId.intValue());
     }
 
 

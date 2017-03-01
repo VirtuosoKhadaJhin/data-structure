@@ -21,7 +21,7 @@ public interface OrderService {
 
     List<Order> findRefundByCondition(Order entity, TimeCondition time);
 
-    Integer getBuyNum(Order order);
+    Integer getBuyNum(Long userId);
 
     void refund(Order entity);
 
