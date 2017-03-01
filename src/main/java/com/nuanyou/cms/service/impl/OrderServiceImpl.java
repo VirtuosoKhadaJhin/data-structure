@@ -187,7 +187,7 @@ public class OrderServiceImpl implements OrderService {
         log.info("count(item):" + itemList.size());
         log.info("count(order):" + orderList.size());
         relationItem(itemList, orderList);
-        relationBuyTimes(orderList);
+        //relationBuyTimes(orderList);
         return orderList;
 
     }
