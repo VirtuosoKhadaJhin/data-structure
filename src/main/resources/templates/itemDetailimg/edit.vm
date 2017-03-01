@@ -14,7 +14,7 @@
                 <div class="widget-box">
                     <div class="widget-content nopadding">
                         <div class="widget-title"><span class="icon"> <i class="icon-th"></i> </span>
-                            <h5>商品详情图片</h5>
+                            <h5>商品详情图</h5>
                         </div>
                         <div class="widget-content">
                         ##    <div class="span10">
@@ -43,7 +43,7 @@
                                 <button class="btn btn-success previewBtn" type="button" data-id="add-img-url">预览</button>
                                 <button class="btn btn-success uploadImgBtn" type="button" data-id="add-img-url" imageSpec="ItemShow">上传</button>
                                 是否置顶 <input id="add-img-sort" type="checkbox">
-                                <p>尺寸: 640 * 480, 限制: 60k</p>
+                                <p>尺寸: 640 * 480, 限制: 100k</p>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>

@@ -150,7 +150,7 @@
                                     <input name="listImgUrl" type="text" class="span9" id="listImgUrl" placeholder="3.0列表图" value="$!entity.listImgUrl">
                                     <button class="btn btn-success previewBtn" type="button" data-id="listImgUrl">预览</button>
                                     <button class="btn btn-success uploadImgBtn" type="button" data-id="listImgUrl" imageSpec="MerchantList">上传</button>
-                                    <p>尺寸: 320 * 240, 限制: 40k</p>
+                                    <p>尺寸: 320 * 240, 限制: 50k</p>
                                 </div>
 
                                 <label class="control-label">经纬度</label>

@@ -5,16 +5,16 @@ package com.nuanyou.cms.config;
  */
 public enum ImageSpec {
 
-    Big43(640, 480, 60, "jpg", null),
-    Big11(480, 480, 50, "jpg", null),
+    Big43(640, 480, 100, "jpg", null),
+    Big11(480, 480, 100, "jpg", null),
 
-    Mid43(320, 240, 40, "jpg", null),
+    Mid43(320, 240, 50, "jpg", null),
     Mid11(240, 240, 30, "jpg", null),
 
     Small43(160, 120, 15, "jpg", null),
-    Small11(120, 120, 6, "jpg", null),
+    Small11(120, 120, 8, "jpg", null),
 
-    ICON(60, 60, 3, "png", null),
+    ICON(60, 60, 5, "png", null),
 
     MerchantDetail(Big43, ImageSpec.CLIP),
     ItemShow(Big43, ImageSpec.CLIP),
