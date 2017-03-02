@@ -108,7 +108,7 @@ public class OrderLogistics {
 
 
     @Transient
-    String getFullAddress(){
+    public String getFullAddress(){
         StringBuffer fullAddress=new StringBuffer();
         fullAddress.append(country).append(" ")
                     .append(province).append(" ")
