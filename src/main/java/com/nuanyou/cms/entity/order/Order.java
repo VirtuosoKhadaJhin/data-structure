@@ -642,6 +642,10 @@ public class Order {
         this.countryid = countryid;
     }
 
+
+
+
+  /****************Transient****************************/
     @Transient
     public Boolean getRefundQualified() {
         return getRefundQualified(this);
@@ -656,7 +660,6 @@ public class Order {
         return PriceUtil.getFormatPrice(okpprice);
     }
 
-
     @Transient
     public Double getPayableF() {
         return payable==null
@@ -670,7 +673,7 @@ public class Order {
 
     }
 
-    public static Boolean getRefundQualified(Order order) {
+    public  Boolean getRefundQualified(Order order) {
         if (order.getOrderstatus() == NewOrderStatus.Consumed || order.getOrderstatus() == NewOrderStatus.Commented ||
                 order.getOrderstatus() == NewOrderStatus.AutoVerification || order.getOrderstatus() == NewOrderStatus.MerchantVerfication) {
             if (order.getRefundstatus() == null || order.getRefundstatus() == RefundStatus.Unknown) {
@@ -682,5 +685,6 @@ public class Order {
             return false;
         }
     }
+    /****************Transient****************************/
 
 }
