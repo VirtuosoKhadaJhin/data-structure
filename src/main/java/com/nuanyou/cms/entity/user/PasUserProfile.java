@@ -5,7 +5,6 @@ import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.entity.enums.Sex;
 import com.nuanyou.cms.entity.enums.SexConverter;
-import com.nuanyou.cms.entity.order.UserTel;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -41,7 +40,6 @@ public class PasUserProfile implements Serializable {
     private Date scenetime;
 
     private Long userid;
-    private UserTel userTel;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -54,14 +52,8 @@ public class PasUserProfile implements Serializable {
         this.id = id;
     }
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
-    public UserTel getUserTel() {
-        return userTel;
-    }
 
-    public void setUserTel(UserTel userTel) {
-        this.userTel = userTel;
-    }
+
 
 
     @Column(name = "userid", nullable = false)

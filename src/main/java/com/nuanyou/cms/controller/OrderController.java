@@ -60,6 +60,8 @@ public class OrderController {
     @Autowired
     private PasUserProfileDao pasUserProfileDao;
     @Autowired
+    private UserTelDao userTelDao;
+    @Autowired
     private OrderDirectMailDao directMailDao;
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
 
@@ -75,13 +77,17 @@ public class OrderController {
         Order order = this.orderDao.findOne(id);
         OrderSms sms = this.orderSmsDao.findByOrderId(id);
         OrderLogistics logistics = this.orderLogisticsDao.findByOrderId(id);
-        Integer buyNum = this.orderService.getBuyNum(order.getUser()==null?null:order.getUserId());
+        Integer buyNum = this.orderService.getBuyNum(order.getUserId()==null?null:order.getUserId());
         OrderDirectMail directMail=this.directMailDao.findByOrderId(id);
+        PasUserProfile user = pasUserProfileDao.findPartsByUserid(order.getUserId());
+        UserTel userTel=userTelDao.findByUserid(user.getUserid());
         model.addAttribute("order", order);
         model.addAttribute("sms", sms);
         model.addAttribute("logistics", logistics);
         model.addAttribute("buyNum", buyNum);
         model.addAttribute("directMail", directMail);
+        model.addAttribute("user", user);
+        model.addAttribute("userTel", userTel);
         return "order/edit";
     }
 

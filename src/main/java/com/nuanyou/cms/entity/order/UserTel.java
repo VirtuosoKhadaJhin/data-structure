@@ -2,7 +2,6 @@ package com.nuanyou.cms.entity.order;
 
 import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
-import com.nuanyou.cms.entity.user.PasUserProfile;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,7 +14,7 @@ import java.util.Date;
 @Table(name = "ny_user_tel")
 public class UserTel {
     private Long id;
-    private PasUserProfile user;
+    private Long userid;
     private String tel;
     private Date createtime;
 
@@ -30,16 +29,17 @@ public class UserTel {
         this.id = id;
     }
 
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid")
-    public PasUserProfile getUser() {
-        return user;
+    @Column(name = "userid")
+    public Long getUserid() {
+        return userid;
     }
 
-    public void setUser(PasUserProfile user) {
-        this.user = user;
+    public void setUserid(Long userid) {
+        this.userid = userid;
     }
+
+
+
 
 
     @Column(name = "tel", nullable = true, length = 100)

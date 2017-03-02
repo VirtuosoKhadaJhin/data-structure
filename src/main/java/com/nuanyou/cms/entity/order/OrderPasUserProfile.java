@@ -18,7 +18,6 @@ public class OrderPasUserProfile implements Serializable {
     private String nickname;
     private String mobile;
     private Long userid;
-    private UserTel userTel;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -31,14 +30,6 @@ public class OrderPasUserProfile implements Serializable {
         this.id = id;
     }
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
-    public UserTel getUserTel() {
-        return userTel;
-    }
-
-    public void setUserTel(UserTel userTel) {
-        this.userTel = userTel;
-    }
 
 
     @Column(name = "userid", nullable = false)

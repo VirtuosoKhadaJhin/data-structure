@@ -150,7 +150,6 @@
                                 <div class="control-group">
                                     <label class="control-label">收货地址</label>
                                     <div class="controls">
-
                                         $!logistics.fullAddress
                                     </div>
                                 </div>
@@ -164,7 +163,7 @@
                                 <div class="control-group">
                                     <label class="control-label">购买人</label>
                                     <div class="controls">
-                                        $!order.user.nickname
+                                        $!user.nickname
                                     </div>
                                 </div>
 
@@ -172,7 +171,7 @@
                                 <div class="control-group">
                                     <label class="control-label">手机</label>
                                     <div class="controls">
-                                        $!order.user.userTel.tel
+                                        $!userTel.tel
                                     </div>
                                 </div>
 
