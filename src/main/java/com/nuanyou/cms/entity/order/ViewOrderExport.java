@@ -813,15 +813,16 @@ public class ViewOrderExport {
     public String getFullOrderItems(){
         StringBuffer sb=new StringBuffer();
         for (OrderItem orderItem : orderItems) {
+            //BigDecimal sum= orderItem.getPrice().multiply(new BigDecimal(orderItem.getNum())) ;
             if(!sb.toString().isEmpty()){
                 sb.append("\n\r");
             }
             sb.append(orderItem.getName())
-                    .append("--")
-                    .append(orderItem.getSpec()==null?"":orderItem.getSpec()+"*")
+                    .append("/")
+                    .append(orderItem.getSpec()==null?"":orderItem.getSpec()+"/")
                     .append(orderItem.getNum())
-                    .append("--")
-                    .append(orderItem.getPrice())
+                    .append("/")
+                    .append(orderItem.getPrice().stripTrailingZeros().toPlainString())
                     .append("￥")
             ;
         }
