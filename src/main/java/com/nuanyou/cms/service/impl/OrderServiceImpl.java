@@ -135,6 +135,12 @@ public class OrderServiceImpl implements OrderService {
                 if (entity.getRefundstatus() != null) {
                     Predicate pStatus = cb.equal(root.get("refundstatus"), entity.getRefundstatus());
                     predicate.add(pStatus);
+                }else{
+                    CriteriaBuilder.In<Integer> in = cb.in(root.get("refundstatus").as(Integer.class));
+                    in.value(RefundStatus.Failure.getValue());
+                    in.value(RefundStatus.RefundInProgress.getValue());
+                    in.value(RefundStatus.Success.getValue());
+                    predicate.add(in);
                 }
                 if (time.getBegin() != null) {
                     Predicate p = cb.greaterThanOrEqualTo(root.get("createtime").as(Date.class), time.getBegin());
@@ -187,10 +193,25 @@ public class OrderServiceImpl implements OrderService {
         log.info("count(item):" + itemList.size());
         log.info("count(order):" + orderList.size());
         relationItem(itemList, orderList);
-        //relationBuyTimes(orderList);
         return orderList;
 
     }
+    private void relationItem(List<OrderItem> itemList, List<ViewOrderExport> orderList) {
+        int i = 0;
+        for (ViewOrderExport order : orderList) {
+            List<OrderItem> orderItems = new ArrayList<>();
+            for (; i < itemList.size(); i++) {
+                if (order.getId().equals(itemList.get(i).getOrder().getId())) {
+                    orderItems.add(itemList.get(i));
+                    continue;
+                } else {
+                    break;
+                }
+            }
+            order.setOrderItems(orderItems);
+        }
+    }
+
 
     private void relationBuyTimes(List<ViewOrderExport> orderList) {
 
@@ -323,21 +344,7 @@ public class OrderServiceImpl implements OrderService {
         }, new Sort(Sort.Direction.ASC, "order.id"));
     }
 
-    private void relationItem(List<OrderItem> itemList, List<ViewOrderExport> orderList) {
-        int i = 0;
-        for (ViewOrderExport order : orderList) {
-            List<OrderItem> orderItems = new ArrayList<>();
-            for (; i < itemList.size(); i++) {
-                if (order.getId().equals(itemList.get(i).getOrder().getId())) {
-                    orderItems.add(itemList.get(i));
-                    continue;
-                } else {
-                    break;
-                }
-            }
-            order.setOrderItems(orderItems);
-        }
-    }
+
 
     @Override
     public Integer getBuyNum(Long userId) {

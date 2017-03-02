@@ -100,6 +100,9 @@ public class ViewOrderExport {
     private String coupontitle;
 
 
+    private Integer buyTimes;
+
+
 
 
 
@@ -800,6 +803,10 @@ public class ViewOrderExport {
 
     @Transient
     public String getCouponInfo(){
+        if(coupontitle==null){
+            return null;
+        }
+
         return coupontitle+"/"+couponprice+"/"+couponlocalprice;
     }
     @Transient
@@ -811,18 +818,16 @@ public class ViewOrderExport {
             }
             sb.append(orderItem.getName())
                     .append("--")
-                    .append(orderItem.getSpec())
-                    .append("*")
+                    .append(orderItem.getSpec()==null?"":orderItem.getSpec()+"*")
                     .append(orderItem.getNum())
                     .append("--")
                     .append(orderItem.getPrice())
-                    .append("rmb")
+                    .append("￥")
             ;
         }
         return sb.toString();
     }
 
-    private Integer buyTimes;
     @Transient
     public Integer getBuyTimes(){return buyTimes;}
     public void setBuyTimes(Integer buyTimes){this.buyTimes=buyTimes;}
