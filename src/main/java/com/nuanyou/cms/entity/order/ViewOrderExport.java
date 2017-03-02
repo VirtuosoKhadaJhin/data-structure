@@ -741,30 +741,6 @@ public class ViewOrderExport {
         this.coupontitle = coupontitle;
     }
 
-    @Transient
-    public String getKppriceF() {
-
-        return PriceUtil.getFormatPrice(kpprice);
-    }
-
-    @Transient
-    public String getOkppriceF() {
-        return PriceUtil.getFormatPrice(okpprice);
-    }
-
-
-    @Transient
-    public Double getPayableF() {
-        return payable==null?this.getPrice().doubleValue():payable.doubleValue();
-    }
-
-    @Transient
-    public String getOpriceF(){
-        return oprice == null ? "" : oprice.stripTrailingZeros().toPlainString();
-
-    }
-
-
 
     public String getNickname() {
         return nickname;
@@ -788,6 +764,61 @@ public class ViewOrderExport {
 
     public void setPostagermb(BigDecimal postagermb) {
         this.postagermb = postagermb;
+    }
+
+
+    /****************************************Transient**************************************/
+
+    @Transient
+    public String getYoufurmbreduceF() {
+
+        return PriceUtil.getFormatPrice(youfurmbreduce);
+    }
+
+    @Transient
+    public String getYoufulocalereduceF() {
+
+        return PriceUtil.getFormatPrice(youfulocalereduce);
+    }
+
+    @Transient
+    public String getMchrmbreduceF() {
+
+        return PriceUtil.getFormatPrice(mchrmbreduce);
+    }
+
+    @Transient
+    public String getMchlocalereduceF() {
+
+        return PriceUtil.getFormatPrice(mchlocalereduce);
+    }
+
+
+
+
+
+
+    @Transient
+    public String getKppriceF() {
+
+        return PriceUtil.getFormatPrice(kpprice);
+    }
+
+    @Transient
+    public String getOkppriceF() {
+        return PriceUtil.getFormatPrice(okpprice);
+    }
+
+
+    @Transient
+    public Double getPayableF() {
+        return payable==null?this.getPrice().doubleValue():payable.doubleValue();
+    }
+
+    @Transient
+    public String getOpriceF(){
+        return oprice == null ? "" : oprice.stripTrailingZeros().toPlainString();
+
     }
 
     @Transient
@@ -832,6 +863,7 @@ public class ViewOrderExport {
     @Transient
     public Integer getBuyTimes(){return buyTimes;}
     public void setBuyTimes(Integer buyTimes){this.buyTimes=buyTimes;}
+    /****************************************Transient**************************************/
 
 
 

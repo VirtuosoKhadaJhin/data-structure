@@ -194,6 +194,10 @@ public class OrderController {
         propertyHeaderMap.put("okppriceF", "原价(本地)");
         propertyHeaderMap.put("payableF", "总价(人民币)");
         propertyHeaderMap.put("opriceF", "原价(人民币)");
+        propertyHeaderMap.put("youfurmbreduceF", "优付优惠（人民币）");
+        propertyHeaderMap.put("youfulocalereduceF", "优付优惠（本地）");
+        propertyHeaderMap.put("mchrmbreduceF", "商户优惠（人民币）");
+        propertyHeaderMap.put("mchlocalereduceF", "商户优惠（本地）");
         propertyHeaderMap.put("usetime", "使用时间");
         propertyHeaderMap.put("address", "地址");
         propertyHeaderMap.put("postalcode", "邮编");
@@ -202,7 +206,7 @@ public class OrderController {
         propertyHeaderMap.put("city", "城市");
         propertyHeaderMap.put("tel", "订单手机号");
         propertyHeaderMap.put("username", "收货人");
-        propertyHeaderMap.put("postagermb", "邮费(RMB)");
+        propertyHeaderMap.put("postagermb", "邮费(人民币)");
         propertyHeaderMap.put("postage", "邮费(本地)");
         propertyHeaderMap.put("fullOrderItems", "商品");
         Long begin_w=System.currentTimeMillis();
