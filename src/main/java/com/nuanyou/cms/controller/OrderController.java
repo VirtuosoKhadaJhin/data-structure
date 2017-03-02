@@ -188,8 +188,7 @@ public class OrderController {
         propertyHeaderMap.put("merchant.name", "商户中文名称");
         propertyHeaderMap.put("merchant.kpname", "商户本地名称");
         propertyHeaderMap.put("userId", "userId");
-        propertyHeaderMap.put("nickname", "购买人");
-        propertyHeaderMap.put("buyTimes", "购买次数");
+        propertyHeaderMap.put("nickname", "用户名");
         propertyHeaderMap.put("couponInfo", "优惠券/面值/本地面值");
         propertyHeaderMap.put("kppriceF", "总价(本地)");
         propertyHeaderMap.put("okppriceF", "原价(本地)");
