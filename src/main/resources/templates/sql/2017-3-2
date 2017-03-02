@@ -1,0 +1,8 @@
+ALTER TABLE `ny_order_item`
+ADD INDEX `order_index` (`orderid`) USING BTREE ;
+
+ALTER TABLE `ny_order_logistics`
+ADD INDEX `order_index` (`orderid`) USING BTREE ;
+
+ALTER TABLE `ny_order_directmail`
+ADD INDEX `order_index` (`orderid`) USING BTREE ;
