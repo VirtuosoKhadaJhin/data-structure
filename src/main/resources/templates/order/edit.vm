@@ -28,66 +28,189 @@
                         <div class="widget-content nopadding">
                             <form action="update" method="post" class="form-horizontal featureValidate" role="form"
                                   id="">
+
+
+
+
+                                <div class="control-group">
+                                    <label class="control-label">订单编号</label>
+                                    <div class="controls">
+                                        $!order.ordersn
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">流水号</label>
+                                    <div class="controls">
+                                        $!order.transactionid
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">订单类型</label>
+                                    <div class="controls">
+                                        $!order.ordertype.name
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <label class="control-label">订单状态</label>
+                                    <div class="controls">
+                                        $!order.orderstatus.name
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <label class="control-label">商户</label>
+                                    <div class="controls">
+                                        $!order.merchant.name
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">下单时间</label>
+                                    <div class="controls">
+                                        $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!order.createtime)
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <label class="control-label">支付时间</label>
+                                    <div class="controls">
+                                        $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!order.paytime)
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <label class="control-label">使用时间</label>
+                                    <div class="controls">
+                                        $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!order.usetime)
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
                                 <div class="control-group">
                                     <label class="control-label">短信通知状态</label>
                                     <div class="controls">
-                                        $!orderDetail.sms_code
+                                        $!sms.code
                                     </div>
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label">短信通知次数</label>
                                     <div class="controls">
-                                        $!orderDetail.sms_times
+                                        $!sms.times
                                     </div>
 
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label">购买次数</label>
                                     <div class="controls">
-                                        $!orderDetail.buyNum
+                                        $!buyNum
                                     </div>
 
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label">优付优惠（本地）</label>
                                     <div class="controls">
-                                        $!orderDetail.subsidy_youfusubsidykpprice_Format
+                                        $!numberFormatter.format("#0.00",$!order.youfulocalereduce)
                                     </div>
 
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label">优付优惠（人民币）</label>
                                     <div class="controls">
-                                        $!orderDetail.subsidy_youfusubsidyprice_Format
+                                        $!numberFormatter.format("#0.00",$!order.youfurmbreduce)
+
                                     </div>
 
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label">商户优惠（本地）</label>
                                     <div class="controls">
-                                        $!orderDetail.subsidy_mchsubsidykpprice_Format
+                                        $!numberFormatter.format("#0.00",$!order.mchlocalereduce)
                                     </div>
 
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label">商户优惠（人民币）</label>
                                     <div class="controls">
-                                        $!orderDetail.subsidy_mchsubsidyprice_Format
+                                        $!numberFormatter.format("#0.00",$!order.mchrmbreduce)
                                     </div>
 
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label">收货地址</label>
                                     <div class="controls">
-                                        $!orderDetail.logistics_address
+
+                                        $!logistics.fullAddress
                                     </div>
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label">买家留言</label>
                                     <div class="controls">
-                                        $!orderDetail.message
+                                        $!order.message
                                     </div>
                                 </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">购买人</label>
+                                    <div class="controls">
+                                        $!order.user.nickname
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <label class="control-label">手机</label>
+                                    <div class="controls">
+                                        $!order.user.userTel.tel
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">邮费（RMB）</label>
+                                    <div class="controls">
+                                        $!numberFormatter.format("#0.00",$!directMail.postageRmb)
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <label class="control-label">邮费</label>
+                                    <div class="controls">
+                                        $!numberFormatter.format("#0.00",$!directMail.postage)
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <label class="control-label">邮编</label>
+                                    <div class="controls">
+                                        $!sms.code
+                                    </div>
+                                </div>
+
+
+
+
+
+                                <div class="control-group">
+                                    <label class="control-label">原价(本地)</label>
+                                    <div class="controls">
+                                        $!numberFormatter.format("#0.00",$!order.okpprice)
+                                    </div>
+                                </div>
+
+
 
                                 <div class="form-actions">
                                     #if($!type==2 || $!type==1)

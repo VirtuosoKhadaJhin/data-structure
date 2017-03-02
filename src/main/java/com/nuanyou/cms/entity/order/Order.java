@@ -6,6 +6,7 @@ import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.coupon.Coupon;
 import com.nuanyou.cms.entity.enums.*;
 import com.nuanyou.cms.entity.user.PasUserProfile;
+import com.nuanyou.cms.util.PriceUtil;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -645,7 +646,29 @@ public class Order {
     public Boolean getRefundQualified() {
         return getRefundQualified(this);
     }
+    @Transient
+    public String getKppriceF() {
+        return PriceUtil.getFormatPrice(kpprice);
+    }
 
+    @Transient
+    public String getOkppriceF() {
+        return PriceUtil.getFormatPrice(okpprice);
+    }
+
+
+    @Transient
+    public Double getPayableF() {
+        return payable==null
+                ?this.getPrice()==null?null:this.getPrice().doubleValue():
+                payable.doubleValue();
+    }
+
+    @Transient
+    public String getOpriceF(){
+        return oprice == null ? "" : oprice.stripTrailingZeros().toPlainString();
+
+    }
 
     public static Boolean getRefundQualified(Order order) {
         if (order.getOrderstatus() == NewOrderStatus.Consumed || order.getOrderstatus() == NewOrderStatus.Commented ||

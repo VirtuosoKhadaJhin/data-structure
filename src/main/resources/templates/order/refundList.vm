@@ -7,15 +7,19 @@
     <span class="icon"><i class="icon-th"></i></span>
     <h5>退款列表</h5>
 </div>
-<table class="table table-bordered table-striped">
+
+<div style="overflow: auto;width: 100%">
+<table class="table table-bordered table-striped" style="width: 2500px">
     <thead>
     <tr>
+        <th>操作</th>
         <th>ID</th>
-        <th>订单编号</th>
+        <th>订单编号和流水</th>
         <th>下单时间</th>
         <th>订单状态</th>
         <th>订单类型</th>
-        <th>商户中文名称</th>
+        <th>支付类型</th>
+        <th>商户</th>
         <th>退款人</th>
         <th>退款人名称</th>
         <th>退款状态</th>
@@ -24,20 +28,43 @@
         <th>处理时间</th>
         <th>来源</th>
         <th>备注</th>
-        <th>操作</th>
+
+
+
+        <th>总价(本地)</th>
+        <th>原价(本地)</th>
+        <th>总价(人民币)</th>
+        <th>原价(人民币)</th>
     </tr>
     </thead>
     <tbody>
         #foreach($e in $!page.content)
         <tr>
+            <!--操作-->
+            <td>
+                <a href="refundEdit?type=3&id=$!e.id" class="btn btn-success btn-mini">退款操作</a>
+            </td>
             <td>$!e.id</td>
             <td>
-                <a href="$!link.contextPath/order/list?ordersn=$!e.ordersn" class="alink">$!e.ordersn</a>
+                <a href="$!link.contextPath/order/list?ordersn=$!e.ordersn" class="alink">
+                    订单编号:$!e.ordersn<br>
+                    订单流水号:$!e.transactionid
+                </a>
             </td>
             <td> $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.createtime)</td>
             <td>$!e.orderstatus.name</td>
             <td>$!e.ordertype.name</td>
-            <td>$!e.merchant.name</td>
+            <td>$!e.paytype.name</td>
+            <td>
+
+
+                <a href="$!link.requestPath/merchant/detail?id=$!e.merchant.id" class="alink">
+                    ID $!e.merchant.id<br>
+                    名称 $!e.merchant.name<br>
+                    本地 $!e.merchant.kpname
+                </a>
+
+            </td>
             <td>$!e.userId</td>
             <td>$!e.user.nickname</td>
             <td>$!e.refundstatus.name</td>
@@ -45,15 +72,22 @@
             <td> $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.refundtime)</td>
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.refundaudittime)</td>
             <td>$!e.refundsource.name</td>
-            <td>$!e.refundremark</td>
-            <!--操作-->
+            <td><span title="$!e.refundremark">详细</span></td>
+            <td>$!numberFormatter.format("#0.00",$!e.kpprice)</td>
+            <td>$!numberFormatter.format("#0.00",$!e.okpprice)</td>
             <td>
-                <a href="refundEdit?type=3&id=$!e.id" class="btn btn-success btn-mini">退款操作</a>
+                #if($!e.payable)
+                        $!e.payable
+                    #else
+                    $!e.price
+                #end
             </td>
+            <td>$!e.oprice</td>
         </tr>
         #end
     </tbody>
 </table>
+    </div>
 #parse("common/list_mid.vm")
 <form class="form-horizontal " role="form" method="get">
     <div class="control-group">

@@ -3,13 +3,13 @@ package com.nuanyou.cms.entity.order;
 import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.entity.Merchant;
-import com.nuanyou.cms.entity.coupon.Coupon;
 import com.nuanyou.cms.entity.enums.*;
-import org.apache.velocity.tools.generic.NumberTool;
+import com.nuanyou.cms.util.PriceUtil;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Felix on 2016/9/8.
@@ -51,6 +51,7 @@ public class ViewOrderExport {
     private Date createtime;
     private Byte iscode;
     private BigDecimal couponprice;
+    private BigDecimal couponlocalprice;
     private BigDecimal rate;
     private BigDecimal merchantprice;
     private BigDecimal mchrmbprice;
@@ -70,7 +71,7 @@ public class ViewOrderExport {
     private BigDecimal youfulocalereduce;//优付优惠金额
     private BigDecimal mchrmbreduce;//商户优惠人民币金额
     private BigDecimal mchlocalereduce;//商户优惠金额
-    private Coupon coupon;
+   // private Coupon coupon;
     private Long userId;
 
     private String address;
@@ -80,6 +81,23 @@ public class ViewOrderExport {
     private String district;
     private String city;
     private String tel;
+
+    private String nickname;
+
+    private BigDecimal postage;
+    private BigDecimal postagermb;
+
+
+    private List<OrderItem> orderItems;
+    //private String items;
+
+    //private String coupontitle;
+
+    //private String itemname;
+
+    //private BigDecimal itemunitprice;
+
+    private String coupontitle;
 
 
 
@@ -176,16 +194,16 @@ public class ViewOrderExport {
     }
 
 
+//    @Transient
+//    public String getItems() {
+//        return items;
+//    }
+//
+//
+//    public void setItems(String items) {
+//        this.items = items;
+//    }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "couponid")
-    public Coupon getCoupon() {
-        return coupon;
-    }
-
-    public void setCoupon(Coupon coupon) {
-        this.coupon = coupon;
-    }
 
 
     @Column(name = "total", nullable = true)
@@ -372,6 +390,13 @@ public class ViewOrderExport {
     }
 
 
+    public BigDecimal getCouponlocalprice() {
+        return couponlocalprice;
+    }
+
+    public void setCouponlocalprice(BigDecimal couponlocalprice) {
+        this.couponlocalprice = couponlocalprice;
+    }
 
     @Column(name = "refundtime", nullable = true)
     public Date getRefundtime() {
@@ -705,26 +730,23 @@ public class ViewOrderExport {
         this.tel = tel;
     }
 
+    public String getCoupontitle() {
+        return coupontitle;
+    }
 
-    @Transient
-    public String getCouponInfo(){
-        if(this.coupon==null){
-            return "";
-        }else{
-            return this.coupon.getTitle()+"/"+this.coupon.getPrice()+"/"+this.coupon.getLocalPrice();
-        }
+    public void setCoupontitle(String coupontitle) {
+        this.coupontitle = coupontitle;
     }
 
     @Transient
     public String getKppriceF() {
-        return getFormatPrice(kpprice,decimalPattern);
+
+        return PriceUtil.getFormatPrice(kpprice);
     }
-
-
 
     @Transient
     public String getOkppriceF() {
-        return getFormatPrice(okpprice,decimalPattern);
+        return PriceUtil.getFormatPrice(okpprice);
     }
 
 
@@ -740,14 +762,71 @@ public class ViewOrderExport {
     }
 
 
-    private String decimalPattern = "#0.00";
-    private String getFormatPrice(BigDecimal price, String decimalPattern) {
-        if(kpprice==null){
-            return null;
-        }
-        NumberTool numberFormatter=new NumberTool();
-        return numberFormatter.format(decimalPattern, price);
+
+    public String getNickname() {
+        return nickname;
     }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public BigDecimal getPostage() {
+        return postage;
+    }
+
+    public void setPostage(BigDecimal postage) {
+        this.postage = postage;
+    }
+
+    public BigDecimal getPostagermb() {
+        return postagermb;
+    }
+
+    public void setPostagermb(BigDecimal postagermb) {
+        this.postagermb = postagermb;
+    }
+
+    @Transient
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+   }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+
+
+    @Transient
+    public String getCouponInfo(){
+        return coupontitle+"/"+couponprice+"/"+couponlocalprice;
+    }
+    @Transient
+    public String getFullOrderItems(){
+        StringBuffer sb=new StringBuffer();
+        for (OrderItem orderItem : orderItems) {
+            if(!sb.toString().isEmpty()){
+                sb.append("\n\r");
+            }
+            sb.append(orderItem.getName())
+                    .append("--")
+                    .append(orderItem.getSpec())
+                    .append("*")
+                    .append(orderItem.getNum())
+                    .append("--")
+                    .append(orderItem.getPrice())
+                    .append("rmb")
+            ;
+        }
+        return sb.toString();
+    }
+
+    private Integer buyTimes;
+    @Transient
+    public Integer getBuyTimes(){return buyTimes;}
+    public void setBuyTimes(Integer buyTimes){this.buyTimes=buyTimes;}
+
 
 
 }
