@@ -72,7 +72,7 @@
             <td> $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.refundtime)</td>
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.refundaudittime)</td>
             <td>$!e.refundsource.name</td>
-            <td><span title="$!e.refundremark">详细</span></td>
+            <td><span title="$!e.refundremark">$!e.refundremark</span></td>
             <td>$!numberFormatter.format("#0.00",$!e.kpprice)</td>
             <td>$!numberFormatter.format("#0.00",$!e.okpprice)</td>
             <td>
