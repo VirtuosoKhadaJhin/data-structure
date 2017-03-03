@@ -77,10 +77,14 @@ public class OrderController {
         Order order = this.orderDao.findOne(id);
         OrderSms sms = this.orderSmsDao.findByOrderId(id);
         OrderLogistics logistics = this.orderLogisticsDao.findByOrderId(id);
-        Integer buyNum = this.orderService.getBuyNum(order.getUserId()==null?null:order.getUserId());
-        OrderDirectMail directMail=this.directMailDao.findByOrderId(id);
-        PasUserProfile user = pasUserProfileDao.findPartsByUserid(order.getUserId());
-        UserTel userTel=userTelDao.findByUserid(user.getUserid());
+        Integer buyNum = this.orderService.getBuyNum(order.getUserId() == null ? null : order.getUserId());
+        OrderDirectMail directMail = this.directMailDao.findByOrderId(id);
+        PasUserProfile user=null;
+        UserTel userTel=null;
+        if (order.getUserId() != null) {
+            user = pasUserProfileDao.findPartsByUserid(order.getUserId());
+            userTel = userTelDao.findByUserid(order.getUserId());
+        }
         model.addAttribute("order", order);
         model.addAttribute("sms", sms);
         model.addAttribute("logistics", logistics);
@@ -90,8 +94,6 @@ public class OrderController {
         model.addAttribute("userTel", userTel);
         return "order/edit";
     }
-
-
 
 
     @RequestMapping("update")
@@ -173,10 +175,10 @@ public class OrderController {
         response.setHeader("Pragma", "public");
         response.setHeader("Cache-Control", "max-age=30");
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
-        Long begin=System.currentTimeMillis();
-        List<ViewOrderExport> page =this.orderService.findExportByCondition(index, entity, time, null);
-        Long end=System.currentTimeMillis();
-        log.info("read data from sql:"+(end-begin)/1000+"s");
+        Long begin = System.currentTimeMillis();
+        List<ViewOrderExport> page = this.orderService.findExportByCondition(index, entity, time, null);
+        Long end = System.currentTimeMillis();
+        log.info("read data from sql:" + (end - begin) / 1000 + "s");
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
         propertyHeaderMap.put("id", "ID");
         propertyHeaderMap.put("ordersn", "订单编号");
@@ -215,10 +217,10 @@ public class OrderController {
         propertyHeaderMap.put("postagermb", "邮费(人民币)");
         propertyHeaderMap.put("postage", "邮费(本地)");
         propertyHeaderMap.put("fullOrderItems", "商品");
-        Long begin_w=System.currentTimeMillis();
+        Long begin_w = System.currentTimeMillis();
         XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, page);
-        Long end_w=System.currentTimeMillis();
-        log.info("write into excel:"+(end_w-begin_w)/1000+"s");
+        Long end_w = System.currentTimeMillis();
+        log.info("write into excel:" + (end_w - begin_w) / 1000 + "s");
         OutputStream os = response.getOutputStream();
         ex.write(os);
         os.flush();
@@ -313,7 +315,6 @@ public class OrderController {
         response.sendRedirect("../order/refundEdit?refundEdit=3&id=" + id);
         return null;
     }
-
 
 
 }
