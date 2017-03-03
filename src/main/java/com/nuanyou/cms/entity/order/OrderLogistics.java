@@ -110,10 +110,11 @@ public class OrderLogistics {
     @Transient
     public String getFullAddress(){
         StringBuffer fullAddress=new StringBuffer();
-        fullAddress.append(country).append(" ")
-                    .append(province).append(" ")
-                    .append(city).append(" ")
-                    .append(address);
+        fullAddress.append(country==null?"":country).append(" ")
+                    .append(province==null?"":province).append(" ")
+                    .append(city==null?"":city).append(" ")
+                    .append(address==null?"":address);
         return  fullAddress.toString();
     }
+
 }
