@@ -173,7 +173,6 @@
         }
     </script>
     #include("common/image-support.vm")
-    #include("common/image-support.vm")
     <script src="/dist/js/cascade-select.js"></script>
 </body>
 </html>
