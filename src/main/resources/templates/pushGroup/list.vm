@@ -19,7 +19,7 @@
     </thead>
     <tbody>
         #foreach($entity in $!page.content)
-        <tr class="odd gradeX">
+        <tr class="odd gradeX"    #if(!$!entity.status)style="color: red"  #end>
             <td>$!entity.title</td>
             <td>$!entity.illustration</td>
             <td>$!entity.num</td>
