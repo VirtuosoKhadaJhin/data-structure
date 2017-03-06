@@ -14,14 +14,15 @@
                 <div class="widget-box">
                     <div id="breadcrumb">
                         <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
-                        <a href="../pushDetail/list?groupId=$!groupId" class="tip-bottom" data-original-title="">推送消息管理</a>
+                        <a href="../pushDetail/list?groupId=$!groupId" class="tip-bottom"
+                           data-original-title="">推送消息管理</a>
                         <a href="javascipt:void(0);" class="tip-bottom" data-original-title="">编辑/查看</a>
                     </div>
                     <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
                         <h5>推送消息管理</h5>
                     </div>
                     <div class="widget-content nopadding">
-                        <form class="form-horizontal commonValidate" action="update" method="post">
+                        <form class="form-horizontal pushDetailValidate" action="update" method="post">
                             <input name="id" type="hidden" value="$!entity.id">
                             <input name="groupId" type="hidden" value="$!groupId">
                             <div class="control-group">
@@ -60,11 +61,12 @@
                                     <textarea name="content"
                                               placeholder="当仅推送一条消息时将展示此内容（可选）">$!entity.content</textarea>
                                 </div>
-                                <label class="control-label">优惠类型</label>
+                                <label class="control-label">策略</label>
                                 <div class="controls">
-                                    <select id="type" name="type" class="span9">
+                                    <select id="type" name="type" class="span9" onchange="typeChange()">
                                         #foreach($p in $!pushTypes)
-                                            <option value="$!p.type"  #if($!p.type == $!entity.type)  selected #end>$!p.name</option>
+                                            <option value="$!p.type"  #if($!p.type == $!entity.type)
+                                                    selected #end>$!p.name</option>
                                         #end
                                     </select>
                                 </div>
@@ -78,7 +80,8 @@
                                 </div>
                                 <label class="control-label">链接</label>
                                 <div class="controls">
-                                    <input name="linkUrl" type="text" class="span11" value="$!entity.linkUrl"
+                                    <input name="linkUrl" id="linkUrl" type="text" class="span11"
+                                           value="$!entity.linkUrl"
                                            placeholder="推文跳转的链接，不用加source">
                                 </div>
                                 <label class="control-label">追踪码</label>
@@ -124,7 +127,17 @@
     </div>
     #include("common/js-support.vm")
     <script>
+        typeChange();
 
+        function typeChange() {
+            var type = $("#type").val();
+            if (type != 1) {
+                $("#linkUrl").val("");
+                $("#linkUrl").attr("disabled", "disabled");
+            } else {
+                $("#linkUrl").remove("disable");
+            }
+        }
     </script>
     #include("common/image-support.vm")
     #include("common/image-support.vm")

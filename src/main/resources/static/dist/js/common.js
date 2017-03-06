@@ -152,4 +152,26 @@ window.onload = function () {
         errorElement: "span"
     });
 
+
+    $(".pushDetailValidate").validate({
+        rules: {
+            sort: {
+                digits: true
+            },
+            title: {
+                required: true, maxlength: 50
+            },
+            source: {
+                required: true, maxlength: 20
+            }
+        },
+        errorPlacement: function (error, element) {
+            $(element)
+                .closest("form")
+                .find(element)
+                .after(error);
+        },
+        errorElement: "span"
+    });
+
 }

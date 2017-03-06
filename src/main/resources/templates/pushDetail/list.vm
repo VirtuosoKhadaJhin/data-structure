@@ -33,7 +33,7 @@
             <td>$!entity.title</td>
             <td>$!entity.typeName</td>
             <td><img width="126px" height="100px" src="$!entity.imgUrl"></td>
-            <td><a href="$!entity.linkUrl">$!entity.linkUrl</a></td>
+            <td><a href="$!entity.linkUrl" target="_blank">$!entity.linkUrl</a></td>
             <td>$!entity.source</td>
             <td>$!entity.sort</td>
             <td>$!entity.statusName</td>
