@@ -1,5 +1,8 @@
 package com.nuanyou.cms.service.impl;
 
+import com.nuanyou.cms.commons.APIException;
+import com.nuanyou.cms.commons.APIResult;
+import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.CityDao;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.dao.DistrictDao;
@@ -160,5 +163,13 @@ public class PushDetailServiceImpl implements PushDetailService {
         this.pushDetailDao.save(pushDetail);
         pushDetailVo = BeanUtils.copyBean(pushDetail, pushDetailVo);
         return pushDetailVo;
+    }
+
+    @Override
+    public void checkSource(Long id, String source) {
+        Long num = this.pushDetailDao.countForCheckSource(id, source);
+        if (num != null && num > 0) {
+            throw new APIException(ResultCodes.SourceRepeat);
+        }
     }
 }

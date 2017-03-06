@@ -16,4 +16,6 @@ public interface PushDetailService {
     PushDetailVo findById(Long id);
 
     PushDetailVo update(PushDetailVo pushDetailVo);
+
+    void checkSource(Long id, String source);
 }

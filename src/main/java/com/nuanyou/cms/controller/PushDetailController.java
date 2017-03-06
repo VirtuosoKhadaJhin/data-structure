@@ -1,5 +1,6 @@
 package com.nuanyou.cms.controller;
 
+import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.entity.City;
@@ -49,7 +50,7 @@ public class PushDetailController {
 
     @RequestMapping("deletePushDetail")
     @ResponseBody
-    public APIResult deletePushDetail(Long id, Model model) {
+    public APIResult deletePushDetail(Long id) {
         this.pushDetailService.deletePushDetail(id);
         return new APIResult<>(ResultCodes.Success);
     }
@@ -77,4 +78,16 @@ public class PushDetailController {
         String url = "edit?type=3&id=" + pushDetailVo.getId() + "&groupId=" + pushDetailVo.getGroupId();
         return "redirect:" + url;
     }
+
+    @RequestMapping("checkSource")
+    @ResponseBody
+    public APIResult checkSource(Long id, String source) {
+        try {
+            this.pushDetailService.checkSource(id, source);
+            return new APIResult<>(ResultCodes.Success);
+        } catch (APIException e) {
+            return new APIResult<>(e);
+        }
+    }
+
 }

@@ -23,7 +23,7 @@
                     </div>
                     <div class="widget-content nopadding">
                         <form class="form-horizontal pushDetailValidate" action="update" method="post">
-                            <input name="id" type="hidden" value="$!entity.id">
+                            <input id="id" name="id" type="hidden" value="$!entity.id">
                             <input name="groupId" type="hidden" value="$!groupId">
                             <div class="control-group">
                                 <label class="control-label">国家</label>
@@ -86,12 +86,13 @@
                                 </div>
                                 <label class="control-label">追踪码</label>
                                 <div class="controls">
-                                    <input name="source" type="text" class="span11" value="$!entity.source"
-                                           placeholder="即原链接中的source，填写后不可修改">
+                                    <input id="source" name="source" type="text" class="span6" value="$!entity.source"
+                                           placeholder="即原链接中的source，填写后不可修改" onblur="checkSource()"/>
+                                    <span id="sourceError" style="color: red"></span>
                                 </div>
                                 <label class="control-label">排序</label>
                                 <div class="controls">
-                                    <input name="sort" type="text" class="span11" value="$!entity.sort"
+                                    <input name="sort" type="text" class="span6" value="$!entity.sort"
                                            placeholder="排序值">
                                 </div>
                                 <label class="control-label">有效期</label>
@@ -128,6 +129,7 @@
     #include("common/js-support.vm")
     <script>
         typeChange();
+        checkSource();
 
         function typeChange() {
             var type = $("#type").val();
@@ -137,6 +139,24 @@
             } else {
                 $("#linkUrl").remove("disable");
             }
+        }
+
+
+        function checkSource() {
+            var id = $("#id").val();
+            var source = $("#source").val();
+            $.ajax({
+                url: "/pushDetail/checkSource",
+                async: false,
+                data: {id: id, source: source},
+                success: function (result) {
+                    if (result.code == 0) {
+                        $("#sourceError").text("");
+                    } else {
+                        $("#sourceError").text("追踪码有重复，建议保持唯一");
+                    }
+                }
+            });
         }
     </script>
     #include("common/image-support.vm")

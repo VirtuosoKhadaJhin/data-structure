@@ -16,4 +16,6 @@ public interface PushDetailDao extends JpaRepository<PushDetail, Long>, JpaSpeci
             "and (e.startTime is null or e.startTime<=?4) and (e.endTime is null or e.endTime>=?4)")
     Long countForGroup(Long groupId, Boolean status, Boolean deleted, Date now);
 
+    @Query("select count(e) from PushDetail e where e.id!=?1 and e.source=?2")
+    Long countForCheckSource(Long id, String source);
 }

@@ -40,6 +40,9 @@ public enum ResultCodes {
     NotFoundMerchantCard(505, "找不到代金券"),
 
 
+    SourceRepeat(506,"渠道码重复"),
+
+
     /**
      * ----------order -----------
      */
@@ -53,6 +56,7 @@ public enum ResultCodes {
     /**
      * ----------order -----------
      */
+
 
 
     public final Integer code;
