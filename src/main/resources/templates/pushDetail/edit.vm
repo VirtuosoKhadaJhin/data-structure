@@ -150,7 +150,7 @@
                 $("#linkUrl").val("");
                 $("#linkUrl").attr("disabled", "disabled");
             } else {
-                $("#linkUrl").removeAttr("disable");
+                $("#linkUrl").removeAttr("disabled");
             }
         }
 
