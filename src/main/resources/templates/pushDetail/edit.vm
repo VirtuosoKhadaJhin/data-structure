@@ -72,10 +72,10 @@
                                 </div>
                                 <label class="control-label">图片</label>
                                 <div class="controls">
-                                    <input type="text" class="span7" id="imgurl" name="imgUrl" value='$!entity.imgUrl'/>
-                                    <button type="button" class="btn btn-success previewBtn" data-id="imgurl">预览
+                                    <input type="text" class="span7" id="imgUrl" name="imgUrl" value='$!entity.imgUrl'/>
+                                    <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览
                                     </button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgurl">上传
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl">上传
                                     </button>
                                 </div>
                                 <label class="control-label">链接</label>
