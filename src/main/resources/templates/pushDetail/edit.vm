@@ -115,9 +115,9 @@
                             <div class="form-actions">
                                 #if($!type==2 || $!type==1)
                                     <button type="submit" class="btn btn-success">保存</button>
-                                    <a class="btn btn-primary" href="list">返回</a>
                                 #elseif($!type==3)
                                     <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
+                                    <a class="btn btn-primary" href="list?groupId=$!groupId">返回</a>
                                 #end
                             </div>
                         </form>
@@ -128,6 +128,19 @@
     </div>
     #include("common/js-support.vm")
     <script>
+        $(document).ready(function () {
+            var type = $!type;
+            //禁用所有表单
+            if (type == 3) {
+                $(":text").attr("disabled", "disabled");
+                $("select").attr("disabled", "disabled");
+                $("textarea").attr("readonly", "true");
+            }
+        });
+
+
+
+
         typeChange();
         checkSource();
 
@@ -137,7 +150,7 @@
                 $("#linkUrl").val("");
                 $("#linkUrl").attr("disabled", "disabled");
             } else {
-                $("#linkUrl").remove("disable");
+                $("#linkUrl").removeAttr("disable");
             }
         }
 
