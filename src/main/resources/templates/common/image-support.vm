@@ -69,8 +69,8 @@
 
     function validateImg() {
         var prex = $("#prex").val();
-        var reg = new RegExp("/.(" + prex + ")$/")
-        if (prex && reg.test($("#uploadFile").val())) {
+        var reg = new RegExp(".(" + prex + ")$")
+        if (prex && !reg.test($("#uploadFile").val())) {
             alert("图片类型必须是" + prex);
             return false;
         }
