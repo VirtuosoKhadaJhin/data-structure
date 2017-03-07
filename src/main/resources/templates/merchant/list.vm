@@ -164,6 +164,7 @@
         $(".export").on("click", function () {
             var form = $(document.forms[0]);
             form.attr("action", "export");
+            form.attr("target", "_blank");
             form.submit();
             form.attr("action", "");
             form.attr("target", "");

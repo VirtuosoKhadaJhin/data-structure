@@ -133,8 +133,11 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public Page<Order> findRefundByCondition(int index, final Order entity, final TimeCondition time) {
-        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "refundtime");
+    public Page<Order> findRefundByCondition(Integer index, final Order entity, final TimeCondition time) {
+        Pageable pageable = null;
+        if (index != null)
+            pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "refundtime");
+
         return orderDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
@@ -160,7 +163,7 @@ public class OrderServiceImpl implements OrderService {
                     predicate.add(p);
                 }
                 if (entity.getMerchant() != null && !StringUtils.isEmpty(entity.getMerchant().getName())) {
-                    Predicate pStatus = cb.like(root.get("merchant").get("name").as(String.class), entity.getMerchant().getName());
+                    Predicate pStatus = cb.like(root.get("merchant").get("name").as(String.class), "%" + entity.getMerchant().getName() + "%");
                     predicate.add(pStatus);
                 }
                 if (entity.getCountryid() != null) {
@@ -183,50 +186,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findRefundByCondition(final Order entity, final TimeCondition time) {
-        return orderDao.findAll(new Specification() {
-            @Override
-            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                List<Predicate> predicate = new ArrayList<Predicate>();
-                if (entity.getRefundstatus() != null) {
-                    Predicate pStatus = cb.equal(root.get("refundstatus"), entity.getRefundstatus());
-                    predicate.add(pStatus);
-                }
-                if (time.getBegin() != null) {
-                    Predicate p = cb.greaterThanOrEqualTo(root.get("createtime").as(Date.class), time.getBegin());
-                    predicate.add(p);
-                }
-                if (time.getEnd() != null) {
-                    Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd());
-                    predicate.add(p);
-                }
-                if (time.getBegin_2() != null) {
-                    Predicate p = cb.greaterThanOrEqualTo(root.get("refundtime").as(Date.class), time.getBegin_2());
-                    predicate.add(p);
-                }
-                if (time.getEnd_2() != null) {
-                    Predicate p = cb.lessThanOrEqualTo(root.get("refundtime").as(Date.class), time.getEnd_2());
-                    predicate.add(p);
-                }
-                if (entity.getMerchant() != null && !StringUtils.isEmpty(entity.getMerchant().getName())) {
-                    Predicate pStatus = cb.like(root.get("merchant").get("name").as(String.class), entity.getMerchant().getName());
-                    predicate.add(pStatus);
-                }
-                if (entity.getCountryid() != null) {
-                    Predicate p1 = cb.equal(root.get("countryid"), entity.getCountryid());
-                    predicate.add(p1);
-                }
-                if (entity.getId() != null) {
-                    Predicate p1 = cb.equal(root.get("id"), entity.getId());
-                    predicate.add(p1);
-                }
-                if (!StringUtils.isEmpty(entity.getOrdersn())) {
-                    Predicate p = cb.like(root.get("ordersn"), "%" + entity.getOrdersn() + "%");
-                    predicate.add(p);
-                }
-                Predicate[] pre = new Predicate[predicate.size()];
-                return query.where(predicate.toArray(pre)).getRestriction();
-            }
-        }, new Sort(Sort.Direction.DESC, "refundtime"));
+        return findRefundByCondition(null, entity, time).getContent();
     }
 
 
@@ -272,7 +232,7 @@ public class OrderServiceImpl implements OrderService {
             r.createCell(15).setCellValue(numberFormatter.format(decimalPattern, each.getOkpprice()));
             r.createCell(16).setCellValue(each.getPayable() == null ? each.getPrice().doubleValue() : each.getPayable().doubleValue());
             r.createCell(17).setCellValue(each.getOprice() == null ? "" : each.getOprice().toPlainString());
-            r.createCell(18).setCellValue(each.getStatusname());
+            r.createCell(18).setCellValue(each.getOrderstatus().getName()== null ? "" :each.getOrderstatus().getName());
             r.createCell(19).setCellValue(dateFormatter.format(timePattern, each.getCreatetime()));
             r.createCell(20).setCellValue(dateFormatter.format(timePattern, each.getUsetime()));
             r.createCell(21).setCellValue(each.getAddress() == null ? "" : each.getAddress());

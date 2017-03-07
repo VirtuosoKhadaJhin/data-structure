@@ -60,6 +60,12 @@
                 <option value="$!e.id" #if($!entity.district.country.id==$!e.id) selected #end>$!e.name</option>
             #end
         </select>
+        <label>合作情况</label>
+        <select name="issign" class="span11">
+            <option value="">全部</option>
+            <option value="1" #if($!entity.issign == 1) selected #end>已签约</option>
+            <option value="0" #if($!entity.issign == 0) selected #end>未签约</option>
+        </select>
         <button type="submit" class="btn btn-primary">查询</button>
     </div>
 </form>

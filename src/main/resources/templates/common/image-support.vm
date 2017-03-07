@@ -19,10 +19,9 @@
               enctype="multipart/form-data" method="post">
             <div class="input-group">
                 <input type="hidden" name="callbackId" id="callbackId"/>
-                <input type="hidden" name="width" id="width"/>
-                <input type="hidden" name="height" id="height"/>
                 <input type="hidden" name="size" id="size"/>
                 <input type="hidden" name="prex" id="prex"/>
+                <input type="hidden" name="imageSpec" id="imageSpec"/>
                 <div class="controls">
                     <input type="file" name="uploadFile" id="uploadFile"/>
                 </div>
@@ -48,10 +47,9 @@
         $(".uploadImgBtn").bind("click", function () {
             $("#uploadFile").val("");
             $("#callbackId").val($(this).attr("data-id"));
-            $("#width").val($(this).attr("data-width"));
-            $("#height").val($(this).attr("data-height"));
             $("#size").val($(this).attr("data-size"));
             $("#prex").val($(this).attr("data-prex"));
+            $("#imageSpec").val($(this).attr("imageSpec"));
             $('#modal-fileupload').modal();
         });
 
@@ -87,8 +85,12 @@
 
     // iframe中接收返回的图片url
     function callbackImg(id, imgUrl) {
-        $('#modal-fileupload').modal('hide');
-        $("#" + id).val(imgUrl);
+        if (!imgUrl) {
+            alert(id);
+        } else {
+            $('#modal-fileupload').modal('hide');
+            $("#" + id).val(imgUrl);
+        }
         $("#uploadBtn").removeAttr("disabled");
     }
 </script>

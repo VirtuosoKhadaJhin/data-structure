@@ -3,13 +3,13 @@
     <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
     <a href="javascript:void(0);" class="tip-bottom">评价管理</a>
 </div>
-<table class="table table-bordered table-striped">
+<table class="table table-bordered table-striped"style="table-layout: fixed">
     <thead>
     <tr>
         <th>订单编号</th>
         <th>店铺名称</th>
         <th>评分</th>
-        <th>商铺评价</th>
+        <th width="25%">商铺评价</th>
         <th>评论时间</th>
         <th>操作</th>
     </tr>
@@ -18,12 +18,11 @@
         #foreach($e in $!page.content)
         <tr>
             <td>$!e.order.ordersn</td>
-
             <td>
                 <a href="$!link.requestPath/merchant/detail?id=$!e.merchant.id" class="alink"> $!e.merchant.name</a>
             </td>
             <td>$!e.score</td>
-            <td>$!e.content</td>
+            <td style="word-break: break-all;word-wrap: break-word">$!e.content</td>
             <td>$!e.createTime</td>
             <td>
                 <button data-name="commentId" data-value="$!e.id" class="btn btn-info btn-mini add-item"
