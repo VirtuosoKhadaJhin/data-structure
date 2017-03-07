@@ -167,6 +167,9 @@ public class PushDetailServiceImpl implements PushDetailService {
 
     @Override
     public void checkSource(Long id, String source) {
+        if (id == null) {
+            id = 0L;
+        }
         Long num = this.pushDetailDao.countForCheckSource(id, source);
         if (num != null && num > 0) {
             throw new APIException(ResultCodes.SourceRepeat);

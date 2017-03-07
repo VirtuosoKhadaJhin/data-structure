@@ -75,7 +75,8 @@
                                     <input type="text" class="span7" id="imgUrl" name="imgUrl" value='$!entity.imgUrl'/>
                                     <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览
                                     </button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl">上传
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl"
+                                            data-prex="jpg" data-size="150">上传
                                     </button>
                                 </div>
                                 <label class="control-label">链接</label>
@@ -139,6 +140,10 @@
         });
 
 
+        var id = $("#id").val();
+        if (id) {
+            $("#source").attr("disabled", "disabled");
+        }
 
 
         typeChange();
