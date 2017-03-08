@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span6">
+                <div class="widget-box">
+                    <div id="breadcrumb">
+                        <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
+                        <a href="../pushDetail/list?groupId=$!groupId" class="tip-bottom"
+                           data-original-title="">推送消息管理</a>
+                        <a href="javascipt:void(0);" class="tip-bottom" data-original-title="">编辑/查看</a>
+                    </div>
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
+                        <h5>推送消息管理</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form class="form-horizontal pushDetailValidate" action="update" method="post">
+                            <input id="id" name="id" type="hidden" value="$!entity.id">
+                            <input name="groupId" type="hidden" value="$!groupId">
+                            <div class="control-group">
+                                <label class="control-label">国家</label>
+                                <div class="controls">
+                                    <select name="countryId" class="span11" target-name="cityId"
+                                            target-url="/city/api/getCitys">
+                                        <option value="0">全部</option>
+                                        #foreach($e in $!countries)
+                                            <option value="$!e.id" #if($!e.id == $!entity.countryId)
+                                                    selected #end>$!e.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <label class="control-label">城市</label>
+                                <div class="controls">
+                                    <select name="cityId" class="span11" def-value="$!entity.cityId"
+                                            target-name="districtId" target-url="/district/api/list">
+                                        <option value="0">全部</option>
+                                    </select>
+                                </div>
+                                <label class="control-label">商圈</label>
+                                <div class="controls">
+                                    <select name="districtId" class="span11" def-value="$!entity.districtId"
+                                            target-url="/district/api/getDistricts">
+                                        <option value="0">全部</option>
+                                    </select>
+                                </div>
+                                <label class="control-label">标题</label>
+                                <div class="controls">
+                                    <input name="title" type="text" class="span11" value="$!entity.title"
+                                           placeholder="建议不超过40个字符">
+                                </div>
+                                <label class="control-label">内容</label>
+                                <div class="controls">
+                                    <textarea name="content"
+                                              placeholder="当仅推送一条消息时将展示此内容（可选）">$!entity.content</textarea>
+                                </div>
+                                <label class="control-label">策略</label>
+                                <div class="controls">
+                                    <select id="type" name="type" class="span9" onchange="typeChange()">
+                                        #foreach($p in $!pushTypes)
+                                            <option value="$!p.type"  #if($!p.type == $!entity.type)
+                                                    selected #end>$!p.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <label class="control-label">图片</label>
+                                <div class="controls">
+                                    <input type="text" class="span7" id="imgUrl" name="imgUrl" value='$!entity.imgUrl'/>
+                                    <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览
+                                    </button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl"
+                                            data-prex="jpg" data-size="150">上传
+                                    </button>
+                                </div>
+                                <label class="control-label">链接</label>
+                                <div class="controls">
+                                    <input name="linkUrl" id="linkUrl" type="text" class="span11"
+                                           value="$!entity.linkUrl"
+                                           placeholder="推文跳转的链接，不用加source">
+                                </div>
+                                <label class="control-label">追踪码</label>
+                                <div class="controls">
+                                    <input id="source" name="source" type="text" class="span6" value="$!entity.source"
+                                           placeholder="即原链接中的source，填写后不可修改" onblur="checkSource()"/>
+                                    <span id="sourceError" style="color: red"></span>
+                                </div>
+                                <label class="control-label">排序</label>
+                                <div class="controls">
+                                    <input name="sort" type="text" class="span6" value="$!entity.sort"
+                                           placeholder="排序值">
+                                </div>
+                                <label class="control-label">有效期</label>
+                                <div class="controls">
+                                    <input name="startTime" type="text" class="span5 dateTimeFormat"
+                                           value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.startTime)"
+                                           id="startTime" placeholder="开始时间，不填表示立即开始">
+                                    <input name="endTime" type="text" class="span5 dateTimeFormat"
+                                           value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.endTime)"
+                                           id="endtTime" placeholder="结束时间，不填表示永不结束">
+                                </div>
+                                <label class="control-label">状态</label>
+                                <div class="controls">
+                                    <select id="status" name="status" class="span9">
+                                        <option value="true"  #if($!entity.status==true)  selected #end>启动</option>
+                                        <option value="false"  #if($!entity.status==false)  selected #end>禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                #if($!type==2 || $!type==1)
+                                    <button type="submit" class="btn btn-success">保存</button>
+                                #elseif($!type==3)
+                                    <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
+                                    <a class="btn btn-primary" href="list?groupId=$!groupId">返回</a>
+                                #end
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #include("common/js-support.vm")
+    <script>
+        $(document).ready(function () {
+            var type = $!type;
+            //禁用所有表单
+            if (type == 3) {
+                $(":text").attr("disabled", "disabled");
+                $("select").attr("disabled", "disabled");
+                $("textarea").attr("readonly", "true");
+            }
+        });
+
+
+        var id = $("#id").val();
+        if (id) {
+            $("#source").attr("disabled", "disabled");
+        }
+
+
+        typeChange();
+        checkSource();
+
+        function typeChange() {
+            var type = $("#type").val();
+            if (type != 1) {
+                $("#linkUrl").val("");
+                $("#linkUrl").attr("disabled", "disabled");
+            } else {
+                $("#linkUrl").removeAttr("disabled");
+            }
+        }
+
+
+        function checkSource() {
+            var id = $("#id").val();
+            var source = $("#source").val();
+            $.ajax({
+                url: "/pushDetail/checkSource",
+                async: false,
+                data: {id: id, source: source},
+                success: function (result) {
+                    if (result.code == 0) {
+                        $("#sourceError").text("");
+                    } else {
+                        $("#sourceError").text("追踪码有重复，建议保持唯一");
+                    }
+                }
+            });
+        }
+    </script>
+    #include("common/image-support.vm")
+    <script src="/dist/js/cascade-select.js"></script>
+</body>
+</html>

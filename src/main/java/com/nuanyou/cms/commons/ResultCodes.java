@@ -42,6 +42,9 @@ public enum ResultCodes {
     NotConformSize(506, "不符合指定尺寸"),
 
 
+    SourceRepeat(506,"渠道码重复"),
+
+
     /**
      * ----------order -----------
      */
@@ -55,6 +58,7 @@ public enum ResultCodes {
     /**
      * ----------order -----------
      */
+
 
 
     public final Integer code;

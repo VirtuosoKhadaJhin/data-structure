@@ -104,10 +104,10 @@ window.onload = function () {
                 required: true
             },
             postage: {
-                required: true, number:true
+                required: true, number: true
             },
             mailWeight: {
-                number:true
+                number: true
             }
         },
         errorPlacement: function (error, element) {
@@ -140,7 +140,32 @@ window.onload = function () {
                 required: true
             },
             weight: {
-                required: true, number:true
+                required: true, number: true
+            }
+        },
+        errorPlacement: function (error, element) {
+            $(element)
+                .closest("form")
+                .find(element)
+                .after(error);
+        },
+        errorElement: "span"
+    });
+
+
+    $(".pushDetailValidate").validate({
+        rules: {
+            sort: {
+                digits: true
+            },
+            title: {
+                required: true, maxlength: 50
+            },
+            source: {
+                required: true, maxlength: 20
+            },
+            imgUrl: {
+                required: true
             }
         },
         errorPlacement: function (error, element) {
