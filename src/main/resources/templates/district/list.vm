@@ -6,7 +6,11 @@
         <a href="/district/list" class="tip-bottom" data-original-title="">商圈管理</a>
     </div>
 </div>
-
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
+</div>
 <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
     <thead>
     <tr role="row">
@@ -41,7 +45,7 @@
                 <i class="icon-sort" onclick="sort('country.name','ASC')"></i>
             #end
         </th>
-        <th class="table-set">操作</th>
+        <th class="table-set" width="90px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -57,19 +61,14 @@
             <td>$!entity.city.name</td>
             <td>$!entity.country.name</td>
             <td>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
-                <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
             </td>
         </tr>
         #end
     </tbody>
 </table>
-
-<div class="form-actions">
-    <a class="btn btn-info" href="edit?type=1">新增</a>
-</div>
 #parse("common/list_mid.vm")
-
 <form>
     <div class="control-group">
         <div class="control-group">

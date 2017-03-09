@@ -7,6 +7,7 @@
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>关键词列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
@@ -19,7 +20,7 @@
         <th>是否热门</th>
         <th>创建时间</th>
         <th>国家</th>
-        <th class="table-set">操作</th>
+        <th class="table-set" width="90px">操作</th>
 
     </tr>
     </thead>
@@ -31,38 +32,19 @@
             <td>$!entity.url</td>
             <td>$!entity.sort</td>
             <td>
-                #if($!entity.display)
-                    显示
-                #else
-                    隐藏
-                #end
+                #if($!entity.display)显示#else 隐藏#end
             </td>
+            <td>#if($!entity.ishot)是#else 否#end</td>
+            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.createtime))</td>
+            <td>$!entity.country.name</td>
             <td>
-                #if($!entity.ishot)
-                    是
-                #else
-                    否
-                #end
-            </td>
-
-            <td>
-                $!dateFormatter.format(
-                    "yyyy-MM-dd HH:mm:ss",$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.createtime))
-            </td>
-            <td>
-                $!entity.country.name
-            </td>
-            <td>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
-                <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
             </td>
         </tr>
         #end
     </tbody>
 </table>
-<div class="form-actions">
-    <a class="btn btn-info" href="edit?type=1">新增</a>
-</div>
 #parse("common/list_mid.vm")
 <form class="am-form am-form-inline zy-search" role="form" id="itemCatForm" method="get">
     <div class="control-group">

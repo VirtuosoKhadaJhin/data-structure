@@ -7,6 +7,7 @@
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>城市列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
 </div>
 <div style="overflow: auto;width: 100%">
     <table class="table table-bordered table-striped" >
@@ -23,7 +24,7 @@
             <th>显示</th>
             <th>阅读量</th>
             <th>点赞数量</th>
-            <th class="table-set">操作</th>
+            <th class="table-set" width="90px">操作</th>
         </tr>
         </thead>
         <tbody>
@@ -37,52 +38,23 @@
                 <td>
                     <a href="$!entity.linkurl" target="_blank" title="$!entity.linkurl">链接</a></td>
                 <td>$!entity.content</td>
+                <td>#if($!entity.type==1)普通#else 精选#end</td>
+                <td>#if($!entity.city)$!entity.city.name ($!entity.city.id)#else 无#end</td>
                 <td>
-                    #if($!entity.type==1)
-                        普通
-                    #else
-                        精选
-                    #end
-                </td>
+                    #if($!entity.country)$!entity.country.name ($!entity.country.id)#else 无#end</td>
                 <td>
-
-                    #if($!entity.city)
-                        $!entity.city.name ($!entity.city.id)
-                    #else
-                        无
-                    #end
-
-                  </td>
-                <td>
-                    #if($!entity.country)
-                        $!entity.country.name ($!entity.country.id)
-                    #else
-                        无
-                    #end
-
-                    </td>
-                <td>
-                    #if($!entity.display)
-                        显示
-                    #else
-                        隐藏
-                    #end
+                    #if($!entity.display)显示#else 隐藏#end
                 </td>
                 <td>$!entity.readnum</td>
                 <td>$!entity.likenum</td>
-
-
                 <td>
-                    <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
-                    <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+                    <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
+                    <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
                 </td>
             </tr>
             #end
         </tbody>
     </table>
-</div>
-<div class="form-actions">
-    <a class="btn btn-info" href="edit?type=1">新增</a>
 </div>
 #parse("common/list_mid.vm")
 <form class="am-form am-form-inline zy-search" role="form" id="itemCatForm" method="get">

@@ -14,11 +14,11 @@
                 <div class="widget-box">
                     <div id="breadcrumb">
                         <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
-                        <a href="list" class="tip-bottom">商品单品管理</a>
+                        <a href="list" class="tip-bottom">商户卡券管理</a>
                         <a href="javascript:void(0);" class="tip-bottom">编辑/查看</a>
                     </div>
                     <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
-                        <h5>商品编辑</h5>
+                        <h5>卡券编辑</h5>
                     </div>
                     <div class="widget-content nopadding">
                         <form class="form-horizontal commonValidate" action="update" method="post">
@@ -26,7 +26,7 @@
                             <div class="control-group">
                                 <label class="control-label">商户</label>
                                 <div class="controls">
-                                    <select name="merchant.id" class="span11">
+                                    <select name="merchant.id" class="span11 select2">
                                         #foreach($e in $!merchants)
                                             <option value="$!e.id" #if($!e.id == $!entity.merchant.id) selected #end>$!e.name</option>
                                         #end
@@ -135,6 +135,15 @@
             #else
             $("#btn-edit").hide();
             #end
+
+        $("select[name='type']").on("change", function () {
+            $(this).find("option").each(function (i, o) {
+                var e = $("." + $(o).val());
+                e.hide();
+                e.find("input").val(null    );
+            });
+            $("." + $(this).val()).show();
+        }).trigger("change");
     </script>
     #include("common/image-support.vm")
     <script src="/dist/js/cascade-select.js"></script>

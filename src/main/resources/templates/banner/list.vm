@@ -1,6 +1,4 @@
 #parse("common/list_start.vm")
-
-
 <div id="breadcrumb">
     <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
     <a href="../banner/list" class="tip-bottom" data-original-title="">Banner管理</a>
@@ -9,6 +7,7 @@
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
 </div>
 <div style="overflow: auto;width: 100%">
     <table class="table table-bordered table-striped" style="500px">
@@ -25,7 +24,7 @@
             <th>国家</th>
             <th>城市</th>
             <th>是否热门</th>
-            <th class="table-set">操作</th>
+            <th class="table-set" width="90px">操作</th>
         </tr>
         </thead>
         <tbody>
@@ -67,9 +66,6 @@
             #end
         </tbody>
     </table>
-</div>
-<div class="form-actions">
-    <a class="btn btn-info" href="edit?type=1">新增</a>
 </div>
 #parse("common/list_mid.vm")
 <form>
