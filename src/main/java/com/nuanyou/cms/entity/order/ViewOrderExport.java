@@ -830,7 +830,10 @@ public class ViewOrderExport {
         this.orderItems = orderItems;
     }
 
-
+    @Transient
+    public String getMerchantpriceF() {
+        return PriceUtil.getFormatPrice(merchantprice);
+    }
 
     @Transient
     public String getCouponInfo(){

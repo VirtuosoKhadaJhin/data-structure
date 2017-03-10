@@ -661,6 +661,12 @@ public class Order {
     }
 
     @Transient
+    public String getMerchantpriceF() {
+        return PriceUtil.getFormatPrice(merchantprice);
+    }
+
+
+    @Transient
     public Double getPayableF() {
         return payable==null
                 ?this.getPrice()==null?null:this.getPrice().doubleValue():
