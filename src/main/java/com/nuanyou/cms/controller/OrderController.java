@@ -183,10 +183,14 @@ public class OrderController {
         propertyHeaderMap.put("id", "ID");
         propertyHeaderMap.put("ordersn", "订单编号");
         propertyHeaderMap.put("transactionid", "订单流水号");
+        propertyHeaderMap.put("transactionid", "订单流水号");
         propertyHeaderMap.put("orderstatus.name", "订单状态");
         propertyHeaderMap.put("refundstatus.name", "退款状态");
         propertyHeaderMap.put("createtime", "下单时间");
         propertyHeaderMap.put("sceneid", "渠道");
+        propertyHeaderMap.put("scenetime", "渠道时间");
+        propertyHeaderMap.put("tempsceneid", "临时渠道");
+        propertyHeaderMap.put("tempscenetime", "临时渠道时间");
         propertyHeaderMap.put("ordertype.name", "订单类型");
         propertyHeaderMap.put("paytype.name", "支付类型");
         propertyHeaderMap.put("platform.name", "来源平台");
