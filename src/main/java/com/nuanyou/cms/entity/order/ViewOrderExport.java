@@ -40,7 +40,6 @@ public class ViewOrderExport {
     private BigDecimal okpprice;
     private Platform platform;
     private Os os;
-    private String sceneid;
     private BigDecimal merchantsubsidy;
     private Byte paystatus;
     private Date refundtime;
@@ -58,7 +57,12 @@ public class ViewOrderExport {
     private String message;
     private Integer flightid;
     private Integer templateid;
+
+    private String sceneid;
+    private Date scenetime;
     private String tempsceneid;
+    private Date tempscenetime;
+
     private Byte source;
     private Integer appointstatus;
     private Byte isdelete;
@@ -89,13 +93,6 @@ public class ViewOrderExport {
 
 
     private List<OrderItem> orderItems;
-    //private String items;
-
-    //private String coupontitle;
-
-    //private String itemname;
-
-    //private BigDecimal itemunitprice;
 
     private String coupontitle;
 
@@ -766,6 +763,21 @@ public class ViewOrderExport {
         this.postagermb = postagermb;
     }
 
+    public Date getScenetime() {
+        return scenetime;
+    }
+
+    public void setScenetime(Date scenetime) {
+        this.scenetime = scenetime;
+    }
+
+    public Date getTempscenetime() {
+        return tempscenetime;
+    }
+
+    public void setTempscenetime(Date tempscenetime) {
+        this.tempscenetime = tempscenetime;
+    }
 
     /****************************************Transient**************************************/
 
