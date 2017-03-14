@@ -27,37 +27,37 @@
                     <div class="widget-content nopadding">
                         <form class="form-horizontal merchantValidate" role="form" action="update" method="post"
                               id="commonForm">
-                            <input name="id" type="hidden" class="span11" value="$!entity.id">
+                            <input name="id" type="hidden" class="span10" value="$!entity.id">
                             <div class="control-group">
                                 <label class="control-label">中文名称</label>
                                 <div class="controls">
-                                    <input for="name" name="name" type="text" class="span11" placeholder="中文名称"
+                                    <input for="name" name="name" type="text" class="span10" placeholder="中文名称"
                                            value="$!entity.name">
                                 </div>
                                 <label class="control-label">本地名称</label>
                                 <div class="controls">
-                                    <input name="kpname" type="text" class="span11" placeholder="本地名称"
+                                    <input name="kpname" type="text" class="span10" placeholder="本地名称"
                                            value="$!entity.kpname">
                                 </div>
                                 <label class="control-label">商家电话</label>
                                 <div class="controls">
-                                    <input name="telphone" type="text" class="span11" placeholder="商家电话"
+                                    <input name="telphone" type="text" class="span10" placeholder="商家电话"
                                            value="$!entity.telphone">
                                 </div>
                                 <label class="control-label">人均消费</label>
                                 <div class="controls">
-                                    <input name="consume" type="text" class="span11" placeholder="人均消费"
+                                    <input name="consume" type="text" class="span10" placeholder="人均消费"
                                            value="$!entity.consume">
                                 </div>
                                 <label class="control-label">营业开始时间</label>
                                 <div class="controls">
-                                    <input name="businessStart" type="text" class="span11 timeFormat"
+                                    <input name="businessStart" type="text" class="span10 timeFormat"
                                            placeholder="营业开始时间"
                                            value="$!dateFormatter.format("HH:mm:ss",$!entity.businessStart)">
                                 </div>
                                 <label class="control-label">营业结束时间</label>
                                 <div class="controls">
-                                    <input name="businessEnd" type="text" class="span11 timeFormat" placeholder="营业结束时间"
+                                    <input name="businessEnd" type="text" class="span10 timeFormat" placeholder="营业结束时间"
                                            value="$!dateFormatter.format("HH:mm:ss",$!entity.businessEnd)">
                                 </div>
                                 <label class="control-label">营业日</label>
@@ -72,7 +72,7 @@
                                 </div>
                                 <label class="control-label">核销方式</label>
                                 <div class="controls">
-                                    <select name="verifyType" class="span11">
+                                    <select name="verifyType" class="span10">
                                         #foreach($e in $!verifyTypes)
                                             <option value="$!e" #if($!e == $!entity.verifyType)selected#end>$!e.name</option>
                                         #end
@@ -95,12 +95,12 @@
                                 </div>
                                 <label class="control-label">商户评分</label>
                                 <div class="controls">
-                                    <input name="score" type="text" class="span11" placeholder="商户评分"
+                                    <input name="score" type="text" class="span10" placeholder="商户评分"
                                            value="$!entity.score">
                                 </div>
                                 <label class="control-label">商户分级</label>
                                 <div class="controls">
-                                    <select name="rank" class="span11">
+                                    <select name="rank" class="span10">
                                         <option value="3" #if($!entity.rank == 3) selected #end>三级商户(普通)</option>
                                         <option value="2" #if($!entity.rank == 2) selected #end>二级商户(优秀)</option>
                                         <option value="1" #if($!entity.rank == 1) selected #end>一级商户(重要)</option>
@@ -108,7 +108,7 @@
                                 </div>
                                 <label class="control-label">分类信息</label>
                                 <div class="controls">
-                                    <select name="mcat.id" class="span11" target-name="subcat.id"
+                                    <select name="mcat.id" class="span10" target-name="subcat.id"
                                             target-url="/merchantCat/api/list">
                                         #foreach($e in $!cats)
                                             <option value="$!e.id" #if($!e.id == $!entity.mcat.id)
@@ -118,11 +118,11 @@
                                 </div>
                                 <label class="control-label">子分类信息</label>
                                 <div class="controls">
-                                    <select name="subcat.id" class="span11" def-value="$!entity.subcat.id"></select>
+                                    <select name="subcat.id" class="span10" def-value="$!entity.subcat.id"></select>
                                 </div>
                                 <label class="control-label">2.0分类信息</label>
                                 <div class="controls">
-                                    <select name="catId" class="span11">
+                                    <select name="catId" class="span10">
                                         <option value="1" #if($!entity.catId==1) selected #end>美食</option>
                                         <option value="2" #if($!entity.catId==2) selected #end>购物</option>
                                         <option value="3" #if($!entity.catId==3) selected #end>景点</option>
@@ -130,12 +130,12 @@
                                 </div>
                                 <label class="control-label">中文地址</label>
                                 <div class="controls">
-                                    <input name="address" type="text" class="span11" placeholder="中文地址"
+                                    <input name="address" type="text" class="span10" placeholder="中文地址"
                                            value="$!entity.address">
                                 </div>
                                 <label class="control-label">本地地址</label>
                                 <div class="controls">
-                                    <input name="kpaddress" type="text" class="span11" placeholder="本地地址" value="$!entity.kpaddress">
+                                    <input name="kpaddress" type="text" class="span10" placeholder="本地地址" value="$!entity.kpaddress">
                                 </div>
                                 <label class="control-label">2.0列表图</label>
                                 <div class="controls">
@@ -162,7 +162,7 @@
 
                                 <label class="control-label">商圈信息</label>
                                 <div class="controls">
-                                    <select name="district.Id" class="span11">
+                                    <select name="district.Id" class="span10">
                                         #foreach($e in $!districts)
                                             <option value="$!e.id" #if($!e.id == $!entity.district.Id)
                                                     selected #end>$!e.name
@@ -182,7 +182,7 @@
 
                                 <label class="control-label">顺序</label>
                                 <div class="controls">
-                                    <input name="sort" type="text" class="span11" placeholder="顺序"
+                                    <input name="sort" type="text" class="span10" placeholder="顺序"
                                            value="$!entity.sort">
                                 </div>
                                 <label class="control-label">支付方式</label>
@@ -207,28 +207,29 @@
                                 </div>
                                 <label class="control-label">概述</label>
                                 <div class="controls">
-                                    <input name="outline" type="text" class="span11" placeholder="概述"
+                                    <input name="outline" type="text" class="span10" placeholder="概述"
                                            value="$!entity.outline">
                                 </div>
                                 <label class="control-label">小贴士</label>
                                 <div class="controls">
-                                    <textarea name="tips" class="span11">$!entity.tips</textarea>
+                                    <textarea name="tips" class="span10">$!entity.tips</textarea>
                                 </div>
                                 <label class="control-label">商户介绍</label>
                                 <div class="controls">
-                                    <textarea name="intro" id="intro" class="span11">$!entity.intro</textarea>
+                                    <textarea name="intro" id="intro" class="span10">$!entity.intro</textarea>
                                 </div>
                                 <div class="directMail" style="display: none">
                                     <label class="control-label">邮费</label>
                                     <div class="controls">
-                                        <input name="postage" id="postage" type="text" class="span11"
-                                               placeholder="请输入本地货币"
-                                               value="$!entity.postage">
+                                        <input name="postage" id="postage" type="text" class="span10" placeholder="请输入本地货币" value="$!entity.postage">
                                     </div>
                                     <label class="control-label">起邮重量</label>
                                     <div class="controls">
-                                        <input name="mailWeight" type="text" class="span11" placeholder="最小计算重量，可选"
-                                               value="$!entity.mailWeight">（KG）
+                                        <input name="mailWeight" type="text" class="span9" placeholder="最小计算重量，可选" value="$!entity.mailWeight">（KG）
+                                    </div>
+                                    <label class="control-label">直邮提示</label>
+                                    <div class="controls">
+                                        <input name="directmailRemind" type="text" class="span10" value="$!entity.directmailRemind">
                                     </div>
                                 </div>
                             </div>
