@@ -42,7 +42,7 @@ public class CommentOrderServiceImpl implements CommentOrderService {
                 if (order != null) {
                     String ordersn = order.getOrdersn();
                     if (StringUtils.isNotBlank(ordersn))
-                        predicate.add(cb.equal(root.get("order").get("ordersn").as(String.class), ordersn));
+                        predicate.add(cb.like(root.get("order").get("ordersn").as(String.class), "%" + ordersn + "%"));
                 }
                 Merchant merchant = entity.getMerchant();
                 if (merchant != null) {

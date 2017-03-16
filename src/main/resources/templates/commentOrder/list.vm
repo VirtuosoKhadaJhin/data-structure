@@ -3,7 +3,7 @@
     <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
     <a href="javascript:void(0);" class="tip-bottom">评价管理</a>
 </div>
-<table class="table table-bordered table-striped"style="table-layout: fixed">
+<table class="table table-bordered table-striped" style="table-layout: fixed">
     <thead>
     <tr>
         <th>订单编号</th>
@@ -45,15 +45,15 @@
     </div>
     <div class="control-group">
         <label>订单编号</label>
-        <input type="text" name="order.ordersn" class="span11" value="$!entity.order.ordersn" placeholder="ordersn"/>
+        <input type="text" name="order.ordersn" class="span11" value="$!entity.order.ordersn"/>
     </div>
     <div class="control-group">
         <label>商户编号</label>
-        <input type="text" name="merchant.id" class="span11" value="$!entity.merchant.id" placeholder="merchantId"/>
+        <input type="text" name="merchant.id" class="span11" value="$!entity.merchant.id"/>
     </div>
     <div class="control-group">
         <label>商户名称</label>
-        <input type="text" name="merchant.name" class="span11" value="$!entity.merchant.name" placeholder="merchantName"/>
+        <input type="text" name="merchant.name" class="span11" value="$!entity.merchant.name"/>
     </div>
 ##    <div class="control-group">
 ##        <label>是否评价</label>
@@ -64,11 +64,11 @@
 ##    </div>
     <div class="control-group">
         <label>开始时间</label>
-        <input name="beginDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.beginDate)" type="text" class="span11 dateFormat" placeholder="beginDate">
+        <input name="beginDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.beginDate)" type="text" class="span11 dateFormat">
     </div>
     <div class="control-group">
         <label>结束时间</label>
-        <input name="endDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.endDate)" type="text" class="span11 dateFormat" placeholder="endDate">
+        <input name="endDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.endDate)" type="text" class="span11 dateFormat">
     </div>
     <div class="control-group">
         <button type="submit" class="btn btn-primary">查询</button>
