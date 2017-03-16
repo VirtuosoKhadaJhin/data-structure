@@ -75,7 +75,7 @@ public class SearchKeyword {
     }
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,optional = true)
     @JoinColumn(name = "cityid")
     public City getCity() {
         return city;
