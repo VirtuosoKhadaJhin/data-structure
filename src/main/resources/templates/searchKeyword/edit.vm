@@ -49,7 +49,6 @@
                                         <select id="country-id" name="country.id" class="span7"  required="required"
                                                 target-name="city.id" target-url="/city/api/getCitys">
                                             <option value="">请选择</option>
-                                            <option value="0">0:全部</option>
                                             #foreach($e in $!countries)
                                                 <option value="$!e.id" #if($!entity.country.id==$!e.id)
                                                         selected #end>$!e.id:$!e.name</option>
@@ -60,10 +59,9 @@
                                 <div class="control-group">
                                     <label class="control-label">城市</label>
                                     <div class="controls">
-                                        <select id="city-id" name="city.id" class="span7" required="required"
+                                        <select id="city-id" name="city.id" class="span7"
                                                 def-value="$!entity.city.id">
-                                            <option value="">请选择</option>
-                                            <option value="0">0:全部</option>
+                                            <option value="">全部</option>
                                         </select>
                                     </div>
                                 </div>
@@ -140,14 +138,7 @@
             }
         });
 
-        $("select[name='country.id']").on("change",function () {
-            var val = $(this).val();
-            if(val == "0"){
-                var city = $("#city-id");
-                var all = $(city).find("option")[1];
-                $(city).val($(all).val());
-            }
-        }).trigger("change");
+
 
 
     </script>
