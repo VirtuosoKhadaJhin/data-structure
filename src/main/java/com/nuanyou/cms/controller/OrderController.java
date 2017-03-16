@@ -206,6 +206,7 @@ public class OrderController {
         propertyHeaderMap.put("okppriceF", "原价(本地)");
         propertyHeaderMap.put("payableF", "总价(人民币)");
         propertyHeaderMap.put("opriceF", "原价(人民币)");
+        propertyHeaderMap.put("merchantpriceF", "商户价（本地）");
         propertyHeaderMap.put("youfurmbreduceF", "优付优惠（人民币）");
         propertyHeaderMap.put("youfulocalereduceF", "优付优惠（本地）");
         propertyHeaderMap.put("mchrmbreduceF", "商户优惠（人民币）");
