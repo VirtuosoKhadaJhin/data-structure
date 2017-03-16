@@ -202,6 +202,7 @@ public class OrderController {
         propertyHeaderMap.put("userId", "userId");
         propertyHeaderMap.put("nickname", "用户名");
         propertyHeaderMap.put("couponInfo", "优惠券/面值/本地面值");
+        propertyHeaderMap.put("merchantpriceF", "商户价(本地)");
         propertyHeaderMap.put("kppriceF", "总价(本地)");
         propertyHeaderMap.put("okppriceF", "原价(本地)");
         propertyHeaderMap.put("payableF", "总价(人民币)");
@@ -277,6 +278,8 @@ public class OrderController {
         propertyHeaderMap.put("refundreason", "退款理由");
         propertyHeaderMap.put("refundtime", "申请退款时间");
         propertyHeaderMap.put("refundaudittime", "处理时间");
+        
+        propertyHeaderMap.put("usetime", "使用时间");
         propertyHeaderMap.put("refundsource.name", "来源");
         propertyHeaderMap.put("refundremark", "备注");
         propertyHeaderMap.put("ordercode", "使用码");

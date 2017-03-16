@@ -806,6 +806,10 @@ public class ViewOrderExport {
     }
 
 
+    @Transient
+    public String getMerchantpriceF() {
+        return PriceUtil.getFormatPrice(merchantprice);
+    }
 
 
 
