@@ -10,6 +10,13 @@
                 <img width="239px" height="189px" src="$!e.detailImgUrl">
                 <button type="button" class="btn btn-danger btn-mini remove" data-id="$!e.id">删除</button>
                 <button type="button" class="btn btn-success btn-mini top" data-id="$!e.id">置顶</button>
+                #if($e.listImgUrl =="")
+                    <button type="button" class="btn btn-info btn-mini setIndexImgUrl" detailImgUrl-id="$!e.detailImgUrl" listImgUrl = "$e.listImgUrl"
+                            mch="$!e.mchId" imageSpec="MerchantList">设为列表图</button>
+                #else
+                    <button type="button" class="btn btn-inverse btn-mini setIndexImgUrl" detailImgUrl-id="$!e.detailImgUrl" listImgUrl = "$e.listImgUrl"
+                            mch="$!e.mchId" imageSpec="MerchantList">设为列表图</button>
+                #end
             </li>
         #end
     </ul>
@@ -101,6 +108,36 @@
                 });
             });
         });
+
+        $(".setIndexImgUrl").each(function (i, o) {
+            $(o).on("click", function () {
+                var detailImgUrl = $(this).attr("detailImgUrl-id");
+                var id = $(this).attr("mch");
+                var imageSpec = $(this).attr("imageSpec");
+                var listImgUrl = $(this).attr("listImgUrl");
+
+                if(!listImgUrl==""){
+                    if (!confirm('列表图已存在，是否替换？'))
+                        return;
+                }
+                $.ajax({
+                    url: 'setIndexImgUrl',
+                    data: { id: id ,
+                        detailImgUrl:detailImgUrl ,
+                        imageSpec :imageSpec },
+                    type: 'post',
+                    success: function (result) {
+                        if (result.code == 0) {
+                            alert(result.msg);
+                            window.location.reload();
+                        } else {
+                            alert("失败:" + result.msg);
+                        }
+                    }
+                });
+            });
+        });
+
     });
 </script>
 #include("common/image-support.vm")
