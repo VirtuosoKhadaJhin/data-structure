@@ -84,6 +84,8 @@ public class OrderController {
     @RequestMapping(path = "virtual", method = RequestMethod.POST)
     @ResponseBody
     public APIResult virtual(Long id, Integer number) {
+        if (id == null)
+            return new APIResult(ResultCodes.MissingParameter);
         Item item = new Item();
         item.setId(id);
         item.setDisplay(true);

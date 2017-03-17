@@ -67,11 +67,14 @@
         });
 
         $("#btn-save").on("click", function () {
+            var btn = this;
+            btn.disabled = true;
             var form = $("#form-main");
             $.ajax({
                 url: $(form).attr('action'), type: 'post',
                 data: $(form).serialize(),
                 success: function (result) {
+                    btn.disabled = false;
                     if (result.code == 0) {
                         window.location.href = "edit?type=3&id=" + result.data.orderid;
                     } else {
