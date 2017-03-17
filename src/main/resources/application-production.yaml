@@ -49,6 +49,7 @@ aliyun:
 
 nuanyou-host: http://h5.m.91nuanyou.com
 withdrawurl: http://user.api.91nuanyou.com
+nuanyou-api: http://api30.91nuanyou.com
 
 AWS:
   sns:
