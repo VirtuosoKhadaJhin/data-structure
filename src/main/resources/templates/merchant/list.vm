@@ -180,14 +180,15 @@
         $("#copy-item-submit").on("click", function (event) {
             var sourceId = $("#copy-item-sourceId").val();
             var targetId = $("#copy-item-targetId").val();
-
+            $(this).attr("disabled", true);
             $.ajax({
                 url: 'copyItem',
                 data: {sourceId: sourceId, targetId: targetId},
                 type: 'post',
                 success: function (result) {
+                    $(this).attr("disabled", false);
                     if (result.code == 0) {
-                        alert("成功");
+                        $("#copy-item-modal").modal('hide');
                     } else {
                         alert("失败:" + result.msg);
                     }
