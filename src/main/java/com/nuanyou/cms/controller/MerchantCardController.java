@@ -73,9 +73,10 @@ public class MerchantCardController {
     }
 
     @RequestMapping(path = "remove", method = RequestMethod.POST)
-    public String remove(Long id) {
+    @ResponseBody
+    public APIResult remove(Long id) {
         merchantCardDao.delete(id);
-        return "merchantCard/list";
+        return new APIResult();
     }
 
     @RequestMapping("list")
