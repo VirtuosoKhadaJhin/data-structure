@@ -20,6 +20,7 @@ public class MerchantHeadimg {
     private Integer sort;
     private Date createTime;
     private Integer size;
+    private String listImgUrl;
 
     public MerchantHeadimg() {
     }
@@ -85,5 +86,14 @@ public class MerchantHeadimg {
 
     public void setSize(Integer size) {
         this.size = size;
+    }
+
+    @Transient
+    public String getListImgUrl() {
+        return listImgUrl;
+    }
+
+    public void setListImgUrl(String listImgUrl) {
+        this.listImgUrl = listImgUrl;
     }
 }

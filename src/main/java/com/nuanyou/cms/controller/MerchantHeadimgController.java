@@ -82,6 +82,10 @@ public class MerchantHeadimgController {
     @RequestMapping("edit")
     public String edit(MerchantHeadimg entity, Model model) {
         List<MerchantHeadimg> list = merchantHeadimgService.find(entity);
+        Merchant mch = merchantDao.getOne(entity.getMchId());
+        for (int i = 0; i <list.size() ; i++) {
+            list.get(i).setListImgUrl(mch.getListImgUrl());
+        }
         model.addAttribute("list", list);
         model.addAttribute("entity", entity);
         return "merchantHeadimg/edit";
