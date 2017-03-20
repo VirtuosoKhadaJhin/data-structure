@@ -4,6 +4,7 @@ import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.Country;
+import com.nuanyou.cms.entity.Item;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.enums.NewOrderStatus;
 import com.nuanyou.cms.entity.enums.OrderPayType;
@@ -11,7 +12,9 @@ import com.nuanyou.cms.entity.enums.OrderType;
 import com.nuanyou.cms.entity.enums.RefundStatus;
 import com.nuanyou.cms.entity.order.*;
 import com.nuanyou.cms.entity.user.PasUserProfile;
+import com.nuanyou.cms.model.OrderSave;
 import com.nuanyou.cms.model.PageUtil;
+import com.nuanyou.cms.remote.RemoteOrderService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.OrderService;
 import com.nuanyou.cms.util.ExcelUtil;
@@ -39,7 +42,8 @@ import java.util.*;
 @Controller
 @RequestMapping("order")
 public class OrderController {
-
+    @Autowired
+    private RemoteOrderService remoteOrderService;
     @Autowired
     private OrderService orderService;
     @Autowired
@@ -56,7 +60,8 @@ public class OrderController {
     private OrderSmsDao orderSmsDao;
     @Autowired
     private OrderLogisticsDao orderLogisticsDao;
-
+    @Autowired
+    private ItemDao itemDao;
     @Autowired
     private PasUserProfileDao pasUserProfileDao;
     @Autowired
@@ -71,6 +76,31 @@ public class OrderController {
         return "order/list";
     }
 
+    @RequestMapping(path = "virtual", method = RequestMethod.GET)
+    public String virtual() {
+        return "order/virtual";
+    }
+
+    @RequestMapping(path = "virtual", method = RequestMethod.POST)
+    @ResponseBody
+    public APIResult virtual(Long id, Integer number) {
+        if (id == null)
+            return new APIResult(ResultCodes.MissingParameter);
+        Item item = new Item();
+        item.setId(id);
+        item.setDisplay(true);
+        item.setItemType(2);
+        List<Item> items = itemDao.findAll(Example.of(item));
+        if (items.size() < 1)
+            return new APIResult(ResultCodes.NotFoundItem);
+        APIResult<OrderSave> orderSaveAPIResult = remoteOrderService.ordersSaveTuanPost(7, id, number);
+        OrderSave orderSave = orderSaveAPIResult.getData();
+        Order order = orderDao.findOne(orderSave.getId());
+        if (order != null)
+            remoteOrderService.ordersPayCallbackPost(order.getId());
+        return orderSaveAPIResult;
+    }
+
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
@@ -79,8 +109,8 @@ public class OrderController {
         OrderLogistics logistics = this.orderLogisticsDao.findByOrderId(id);
         Integer buyNum = this.orderService.getBuyNum(order.getUserId() == null ? null : order.getUserId());
         OrderDirectMail directMail = this.directMailDao.findByOrderId(id);
-        PasUserProfile user=null;
-        UserTel userTel=null;
+        PasUserProfile user = null;
+        UserTel userTel = null;
         if (order.getUserId() != null) {
             user = pasUserProfileDao.findPartsByUserid(order.getUserId());
             userTel = userTelDao.findByUserid(order.getUserId());

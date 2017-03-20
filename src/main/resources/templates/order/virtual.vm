@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 菜单管理</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <div id="breadcrumb">
+                <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+                <a href="list" class="tip-bottom" data-original-title="">订单管理</a>
+                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span9">
+                    <div class="widget-box">
+                        <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                            <h5>订单查看</h5>
+                        </div>
+                        <div class="widget-content nopadding">
+                            <form action="virtual" id="form-main" method="post" class="form-horizontal">
+                                <div class="control-group">
+                                    <label class="control-label">团购产品ID</label>
+                                    <div class="controls">
+                                        <span style="color: red" id="itemName"></span>
+                                        <br/>
+                                        <input id="id" name="id" type="number" class="span9" required>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">购买数量</label>
+                                    <div class="controls">
+                                        <input name="number" type="number" min="1" class="span9" required>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button class="btn btn-success" type="button" id="btn-save">保存</button>
+                                    <button class="btn btn-primary" type="button" onclick="window.history.go(-1);">返回</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #include("common/js-support.vm")
+    <script>
+        $("#id").on("change", function () {
+            var id = $(this).val();
+            $.ajax({
+                url: '/item/api/list', async: true, data: {id: id, itemType: 2, display: true},
+                success: function (result) {
+                    if (result.data.length > 0)
+                        $("#itemName").html(result.data[0].name);
+                    else
+                        $("#itemName").html("没有查询到对应团购产品。");
+                }
+            });
+        });
+
+        $("#btn-save").on("click", function () {
+            var btn = this;
+            btn.disabled = true;
+            var form = $("#form-main");
+            $.ajax({
+                url: $(form).attr('action'), type: 'post',
+                data: $(form).serialize(),
+                success: function (result) {
+                    btn.disabled = false;
+                    if (result.code == 0) {
+                        window.location.href = "edit?type=3&id=" + result.data.orderid;
+                    } else {
+                        alert(result.msg);
+                    }
+                }
+            });
+        });
+    </script>
+</html>
