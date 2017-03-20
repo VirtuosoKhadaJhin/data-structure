@@ -3,6 +3,11 @@
     <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
     <a href="javascript:void(0);" class="tip-bottom">评论美化</a>
 </div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
+</div>
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
@@ -14,7 +19,7 @@
         <th>支付时间</th>
         <th>评价时间</th>
         <th>创建时间</th>
-        <th class="table-set">操作</th>
+        <th class="table-set" width="90px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -29,19 +34,13 @@
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.commenttime)</td>
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.createtime)</td>
             <td>
-
                 <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
                 <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
             </td>
         </tr>
-
-
         #end
     </tbody>
 </table>
-<div class="form-actions ">
-    <a class="btn btn-info" href="edit?type=1">新增</a>
-</div>
 #parse("common/list_mid.vm")
 <form class="form-horizontal " role="form" method="get">
     <div class="control-group">

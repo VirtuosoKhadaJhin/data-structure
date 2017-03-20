@@ -6,6 +6,7 @@
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>推荐列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="add?cat.id=$!entity.cat.id">新增</a>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
@@ -14,7 +15,7 @@
         <th>类型</th>
         <th>分类</th>
         <th>名称</th>
-        <th>操作</th>
+        <th width="138px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -35,9 +36,6 @@
         #end
     </tbody>
 </table>
-<div class="form-actions ">
-    <a class="btn btn-info" href="add?cat.id=$!entity.cat.id">新增</a>
-</div>
 #parse("common/list_mid.vm")
 <form>
     <div class="control-group">

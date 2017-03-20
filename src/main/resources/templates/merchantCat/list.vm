@@ -6,6 +6,7 @@
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>商户分类列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
@@ -15,7 +16,7 @@
         <th>简称</th>
         <th>父节点分类</th>
         <th>是否显示</th>
-        <th>操作</th>
+        <th width="90px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -41,9 +42,6 @@
     </tbody>
 </table>
 
-<div class="form-actions">
-    <a class="btn btn-info" href="edit?type=1">新增</a>
-</div>
 #parse("common/list_mid.vm")
 <form class="form-horizontal " method="get">
     <div class="control-group">

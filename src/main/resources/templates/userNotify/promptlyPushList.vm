@@ -7,6 +7,7 @@
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>列表</h5>
+    <a class="btn btn-info" href="edit?type=1">新增</a>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
@@ -41,9 +42,6 @@
         #end
     </tbody>
 </table>
-<div class="form-actions">
-    <a class="btn btn-info" href="edit?type=1">新增</a>
-</div>
 #parse("common/list_mid.vm")
 <form class="form-horizontal " method="get">
     <div class="control-group">

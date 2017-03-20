@@ -7,6 +7,7 @@
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>推送消息列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="edit?type=1&groupId=$!condition.groupId">新增</a>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
@@ -21,7 +22,7 @@
         <th>追踪码</th>
         <th>排序</th>
         <th>状态</th>
-        <th class="table-set">操作</th>
+        <th class="table-set" width="90px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -65,9 +66,7 @@
         }
     }
 </script>
-<div class="form-actions">
-    <a class="btn btn-info" href="edit?type=1&groupId=$!condition.groupId">新增</a>
-</div>
+
 #parse("common/list_mid.vm")
 <form class="form-horizontal " role="form" method="get">
     <input type="hidden" name="groupId" value="$!condition.groupId">

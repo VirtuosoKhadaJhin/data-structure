@@ -7,6 +7,7 @@
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>榜单列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
@@ -17,7 +18,7 @@
         <th>显示</th>
         <th>类型</th>
         <th>类型名称</th>
-        <th class="table-set">操作</th>
+        <th class="table-set" width="90px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -29,13 +30,8 @@
             </td>
             <td>$!entity.sort</td>
             <td>
-                #if($!entity.display)
-                    显示
-                #else
-                    隐藏
-                #end
+                #if($!entity.display)显示#else 隐藏#end
             </td>
-
                 #if($!entity.objtype==1)
                     <td>商家</td>
                     <td>商家:$!entity.merchant.id : $!entity.merchant.name</td>
@@ -51,9 +47,6 @@
         #end
     </tbody>
 </table>
-<div class="form-actions">
-    <a class="btn btn-info" href="edit?type=1">新增</a>
-</div>
 #parse("common/list_mid.vm")
 <form class="am-form am-form-inline zy-search" role="form" id="itemCatForm" method="get">
     <div class="control-group">
