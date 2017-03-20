@@ -65,6 +65,8 @@ public class MerchantVO {
 
     private BigDecimal mailWeight;
 
+    private String directmailRemind;
+
 
     public Long getId() {
         return id;
@@ -436,5 +438,13 @@ public class MerchantVO {
 
     public void setMailWeight(BigDecimal mailWeight) {
         this.mailWeight = mailWeight;
+    }
+
+    public String getDirectmailRemind() {
+        return directmailRemind;
+    }
+
+    public void setDirectmailRemind(String directmailRemind) {
+        this.directmailRemind = directmailRemind;
     }
 }

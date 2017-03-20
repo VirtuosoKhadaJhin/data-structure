@@ -6,7 +6,6 @@ import com.nuanyou.cms.dao.ItemDetailimgDao;
 import com.nuanyou.cms.entity.Item;
 import com.nuanyou.cms.entity.ItemDetailimg;
 import com.nuanyou.cms.service.ItemDetailimgService;
-import com.nuanyou.cms.service.ItemService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -34,10 +33,6 @@ public class ItemDetailimgController {
 
     @Autowired
     private ItemDetailimgService itemDetailimgService;
-
-    @Autowired
-    private ItemService itemService;
-
 
     @RequestMapping(path = "add", method = RequestMethod.POST)
     @ResponseBody
