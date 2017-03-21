@@ -49,10 +49,10 @@
                                     <input name="display" type="radio" value="true"#if($entity.display)checked#end/>是
                                     <input name="display" type="radio" value="false"#if(!$entity.display)checked#end/>否
                                 </div>
-##                                <label class="control-label">数量</label>
-##                                <div class="controls">
-##                                    <input name="num" type="number" class="span8" placeholder="无限制" value="$!entity.num" required>
-##                                </div>
+                            ##                                <label class="control-label">数量</label>
+                            ##                                <div class="controls">
+                            ##                                    <input name="num" type="number" class="span8" placeholder="无限制" value="$!entity.num" required>
+                            ##                                </div>
                                 <label class="control-label">到期时间</label>
                                 <div class="controls">
                                     <input name="validTime" type="text" class="span8 dateTimeFormat" placeholder="" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.validTime)" required>
@@ -135,10 +135,14 @@
             #end
 
         $("select[name='type']").on("change", function () {
+            var value = this.value;
             $(this).find("option").each(function (i, o) {
-                var e = $("." + $(o).val());
-                e.hide();
-                e.find("input").val(null    );
+                var val = $(o).val();
+                if (val != value) {
+                    var e = $("." + val);
+                    e.hide();
+                    e.find("input").val(null);
+                }
             });
             $("." + $(this).val()).show();
         }).trigger("change");

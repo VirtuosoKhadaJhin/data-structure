@@ -10,7 +10,7 @@ public class CardTypeConverter implements AttributeConverter<CardType, Integer> 
     public Integer convertToDatabaseColumn(CardType attribute) {
         if (attribute == null)
             return null;
-        return attribute.value.intValue();
+        return attribute.value;
     }
 
     @Override
