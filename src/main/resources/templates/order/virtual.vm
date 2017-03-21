@@ -12,8 +12,7 @@
         <div id="breadcrumb">
             <div id="breadcrumb">
                 <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-                <a href="list" class="tip-bottom" data-original-title="">订单管理</a>
-                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
+                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">新增</a>
             </div>
         </div>
 
@@ -22,7 +21,7 @@
                 <div class="span9">
                     <div class="widget-box">
                         <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
-                            <h5>订单查看</h5>
+                            <h5>虚拟订单</h5>
                         </div>
                         <div class="widget-content nopadding">
                             <form action="virtual" id="form-main" method="post" class="form-horizontal">
