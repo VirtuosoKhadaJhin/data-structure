@@ -71,7 +71,7 @@
                                 <div class="control-group Gift">
                                     <label class="control-label">礼品券使用码</label>
                                     <div class="controls">
-                                        <input name="code" for="code" type="text" class="span8" placeholder="" value="$!entity.code" required>
+                                        <input for="code" type="text" class="span8" disabled value="$!entity.code" required>
                                     </div>
                                 </div>
                             #end
