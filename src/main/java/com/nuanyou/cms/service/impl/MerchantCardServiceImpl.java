@@ -31,22 +31,22 @@ import java.util.List;
 public class MerchantCardServiceImpl implements MerchantCardService {
 
     @Autowired
-    private MerchantCardDao merchantCardDao;
+    private MerchantCardDao dao;
 
     @Override
     public MerchantCard saveNotNull(MerchantCard entity) {
         if (entity.getId() == null) {
-            return merchantCardDao.save(entity);
+            return dao.save(entity);
         }
-        MerchantCard oldEntity = merchantCardDao.findOne(entity.getId());
+        MerchantCard oldEntity = dao.findOne(entity.getId());
         BeanUtils.copyBeanNotNull(entity, oldEntity);
-        return merchantCardDao.save(oldEntity);
+        return dao.save(oldEntity);
     }
 
     public Page<MerchantCard> findByCondition(Integer index, final MerchantCard entity, final TimeCondition validTime) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
 
-        return merchantCardDao.findAll(new Specification() {
+        return dao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<>();
@@ -89,4 +89,15 @@ public class MerchantCardServiceImpl implements MerchantCardService {
             }
         }, pageable);
     }
+
+    @Override
+    public void delete(Long id) {
+        MerchantCard entity = dao.findOne(id);
+        if (entity != null) {
+            entity.setDisplay(false);
+            entity.setDeleted(true);
+            dao.save(entity);
+        }
+    }
+
 }

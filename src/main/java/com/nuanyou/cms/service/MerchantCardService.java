@@ -13,4 +13,6 @@ public interface MerchantCardService {
 
     Page findByCondition(Integer index, final MerchantCard entity, final TimeCondition validTime);
 
+    void delete(Long id);
+
 }

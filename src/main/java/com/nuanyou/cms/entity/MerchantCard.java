@@ -35,6 +35,7 @@ public class MerchantCard {
     private Integer num;
     private Date validTime;
     private Date createTime;
+    private boolean deleted = false;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -209,4 +210,12 @@ public class MerchantCard {
         this.display = display;
     }
 
+    @Column(name = "deleted", nullable = true)
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 }

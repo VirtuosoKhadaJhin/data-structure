@@ -1,7 +1,7 @@
 #parse("common/list_start.vm")
 <div id="breadcrumb">
     <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
-    <a href="/item/list" class="tip-bottom" data-original-title="">商户卡券管理</a>
+    <a href="list" class="tip-bottom" data-original-title="">商户卡券管理</a>
 </div>
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
