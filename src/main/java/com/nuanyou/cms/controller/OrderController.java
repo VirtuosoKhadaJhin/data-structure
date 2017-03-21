@@ -86,6 +86,8 @@ public class OrderController {
     public APIResult virtual(Long id, Integer number) {
         if (id == null)
             return new APIResult(ResultCodes.MissingParameter);
+        if (number == null || number < 1)
+            return new APIResult(ResultCodes.MissingParameter);
         Item item = new Item();
         item.setId(id);
         item.setDisplay(true);
