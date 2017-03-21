@@ -67,7 +67,7 @@
                                 </div>
                             </div>
 
-                            #if(!$entity.code)
+                            #if($entity.code)
                                 <div class="control-group Gift">
                                     <label class="control-label">礼品券使用码</label>
                                     <div class="controls">
