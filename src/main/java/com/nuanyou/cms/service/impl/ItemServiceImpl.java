@@ -106,6 +106,12 @@ public class ItemServiceImpl implements ItemService {
             Long itemId = entity.getId();
             itemTuanDao.deleteByItemId(itemId);
             for (ItemTuan itemTuan : itemTuans) {
+                Item subItem = itemTuan.getSubItem();
+                if (subItem.getId() < 1) {
+                    subItem.setId(null);
+                    subItem.setItemType(4);
+                    itemTuan.setSubItem(itemDao.save(subItem));
+                }
                 itemTuan.setId(null);
                 itemTuan.setItemId(itemId);
             }

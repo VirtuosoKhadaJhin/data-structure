@@ -59,7 +59,7 @@ public class ItemTuanController {
         if (id != null) {
             Item entity = itemDao.findOne(id);
             BigDecimal price = itemService.calcItemTuanPrice(id);
-            if (price.compareTo(BigDecimal.ZERO) != 0) {//有单品时
+            if(price.compareTo(BigDecimal.ZERO)!=0){//有单品时
                 entity.setOkpPrice(price);
                 entity.setKpPrice(price);
                 entity.setMchPrice(price);
@@ -135,9 +135,19 @@ public class ItemTuanController {
         return "itemTuan/list";
     }
 
+    @RequestMapping(path = "api/saveItem", method = RequestMethod.POST)
+    @ResponseBody
+    public APIResult saveItem(Item item) {
+        itemDao.save(item);
+        return new APIResult();
+    }
+
     @RequestMapping(path = "api/list")
     @ResponseBody
-    public APIResult list(ItemTuan t) {
+    public APIResult list(Long itemId) {
+        ItemTuan t = new ItemTuan();
+        t.setItemId(itemId);
+
         List<ItemTuan> sourceList = itemTuanDao.findAll(Example.of(t));
         return new APIResult(sourceList);
     }
