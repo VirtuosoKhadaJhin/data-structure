@@ -39,6 +39,9 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
     @Override
     public SearchKeyword saveNotNull(SearchKeyword entity) {
         if (entity.getId() == null) {
+            if(entity.getCity().getId()==null){
+                entity.setCity(null);
+            }
             return searchKeywordDao.save(entity);
         }
         SearchKeyword oldEntity = searchKeywordDao.findOne(entity.getId());

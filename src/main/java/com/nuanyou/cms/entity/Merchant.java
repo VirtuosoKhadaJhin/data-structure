@@ -74,6 +74,8 @@ public class Merchant {
 
     private BigDecimal mailWeight;
 
+    private String directmailRemind;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -493,5 +495,14 @@ public class Merchant {
 
     public void setMailWeight(BigDecimal mailWeight) {
         this.mailWeight = mailWeight;
+    }
+
+    @Column(name = "directmailremind")
+    public String getDirectmailRemind() {
+        return directmailRemind;
+    }
+
+    public void setDirectmailRemind(String directmailRemind) {
+        this.directmailRemind = directmailRemind;
     }
 }

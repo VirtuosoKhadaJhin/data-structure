@@ -59,7 +59,7 @@ public class ItemTuanController {
         if (id != null) {
             Item entity = itemDao.findOne(id);
             BigDecimal price = itemService.calcItemTuanPrice(id);
-            if(price.compareTo(BigDecimal.ZERO)!=0){//有单品时
+            if (price.compareTo(BigDecimal.ZERO) != 0) {//有单品时
                 entity.setOkpPrice(price);
                 entity.setKpPrice(price);
                 entity.setMchPrice(price);
@@ -88,7 +88,6 @@ public class ItemTuanController {
 
     @RequestMapping(path = "update", method = RequestMethod.POST)
     public String update(Item entity, String itemTuans, Model model) {
-        System.out.println("itemTuans"+itemTuans);
         List<ItemTuan> itemTuanList = null;
         if (StringUtils.isNotBlank(itemTuans)) {
             itemTuanList = JsonUtils.toObj(itemTuans, new TypeReference<List<ItemTuan>>() {
@@ -138,10 +137,7 @@ public class ItemTuanController {
 
     @RequestMapping(path = "api/list")
     @ResponseBody
-    public APIResult list(Long itemId) {
-        ItemTuan t = new ItemTuan();
-        t.setItemId(itemId);
-
+    public APIResult list(ItemTuan t) {
         List<ItemTuan> sourceList = itemTuanDao.findAll(Example.of(t));
         return new APIResult(sourceList);
     }

@@ -50,7 +50,6 @@ public class MerchantCardServiceImpl implements MerchantCardService {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<>();
-                predicate.add(cb.equal(root.get("deleted").as(boolean.class), entity.isDeleted()));
 
                 SimpleMerchant merchant = entity.getMerchant();
                 if (merchant != null) {

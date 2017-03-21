@@ -3,6 +3,9 @@ use nuanyou20;
 -- 2017-3-21
 ALTER TABLE `ny_merchant_card` ADD COLUMN `deleted` TINYINT(1) DEFAULT 0 COMMENT '是否删除';
 
+-- 2017-3-13
+ALTER TABLE `ny_merchant` ADD COLUMN `directmailremind` VARCHAR(255) COMMENT '直邮提示';
+
 -- 2017-2-21
 ALTER TABLE `ny_item` ADD COLUMN `spec` VARCHAR(255) COMMENT '商品规格';
 

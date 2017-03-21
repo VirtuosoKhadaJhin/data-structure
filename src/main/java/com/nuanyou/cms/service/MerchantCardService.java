@@ -11,7 +11,7 @@ public interface MerchantCardService {
 
     MerchantCard saveNotNull(MerchantCard entity);
 
-    Page<MerchantCard> findByCondition(Integer index, final MerchantCard entity, final TimeCondition validTime);
+    Page findByCondition(Integer index, final MerchantCard entity, final TimeCondition validTime);
 
     void delete(Long id);
 
