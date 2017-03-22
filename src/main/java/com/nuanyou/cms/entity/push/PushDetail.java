@@ -3,7 +3,6 @@ package com.nuanyou.cms.entity.push;
 import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.commons.LastModified;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -51,6 +50,9 @@ public class PushDetail {
     private Date updateTime;
 
     private Date createTime;
+
+
+    private Integer consumeType;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -218,5 +220,15 @@ public class PushDetail {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    @CreatedAt
+    @Column(name = "consumetype", nullable = true)
+    public Integer getConsumeType() {
+        return consumeType;
+    }
+
+    public void setConsumeType(Integer consumeType) {
+        this.consumeType = consumeType;
     }
 }
