@@ -20,6 +20,7 @@
 package com.nuanyou.cms.sso.client.util;
 
 import com.nuanyou.cms.sso.client.validation.User;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +46,7 @@ import java.io.IOException;
  * @version $Revision: 11729 $ $Date: 2007-09-26 14:22:30 -0400 (Tue, 26 Sep 2007) $
  * @since 3.0
  */
+@Component
 public final class HttpServletRequestWrapperFilter extends AbstractConfigurationFilter {
 
     /** Name of the attribute used to answer role membership queries */

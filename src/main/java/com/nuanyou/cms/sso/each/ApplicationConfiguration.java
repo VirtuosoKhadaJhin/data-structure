@@ -18,9 +18,8 @@ import java.util.regex.Pattern;
 @Configuration
 public class ApplicationConfiguration {
     @Bean
-    public FilterRegistrationBean testFilterRegistration() {
+    public FilterRegistrationBean testFilterRegistration(SingleSignOutFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        SingleSignOutFilter filter=new SingleSignOutFilter();
         filter.setUrlExcludePattern(Pattern.compile("/test|^/dist.*|^/favicon.*"));
         registration.setFilter(filter);
         registration.addUrlPatterns("/*");
@@ -35,7 +34,7 @@ public class ApplicationConfiguration {
     public FilterRegistrationBean testFilterRegistration2(AuthenticationFilter authenticationFilter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         authenticationFilter.setUrlExcludePattern(Pattern.compile("/test|^/dist.*|^/favicon.*"));
-        authenticationFilter.setRelogin(true);
+        authenticationFilter.setRelogin(false);
         registration.setFilter(authenticationFilter);
         registration.addInitParameter("loginUrl","https://testuser.api.91nuanyou.com/oauth/corp");
         registration.addInitParameter("serverName","http://127.0.0.1:8085");
@@ -50,9 +49,8 @@ public class ApplicationConfiguration {
 
 
     @Bean
-    public FilterRegistrationBean testFilterRegistration3() {
+    public FilterRegistrationBean testFilterRegistration3(Cas20ProxyReceivingTicketValidationFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        Cas20ProxyReceivingTicketValidationFilter filter=new Cas20ProxyReceivingTicketValidationFilter();
         filter.setServerName("http://127.0.0.1:8085");
         registration.setFilter(filter);
         registration.addInitParameter("casServerUrlPrefix","https://testuser.api.91nuanyou.com/corp/oauth/access_token");
@@ -67,9 +65,9 @@ public class ApplicationConfiguration {
 
 
     @Bean
-    public FilterRegistrationBean testFilterRegistration4() {
+    public FilterRegistrationBean testFilterRegistration4(HttpServletRequestWrapperFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new HttpServletRequestWrapperFilter());
+        registration.setFilter(filter);
         registration.addUrlPatterns("/*");
         registration.setName("CAS HttpServletRequest Wrapper Filter");
         registration.setOrder(4);
@@ -80,9 +78,9 @@ public class ApplicationConfiguration {
 
 
     @Bean
-    public FilterRegistrationBean testFilterRegistration5() {
+    public FilterRegistrationBean testFilterRegistration5(UserThreadLocalFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new UserThreadLocalFilter());
+        registration.setFilter(filter);
         registration.addUrlPatterns("/*");
         registration.setName("CAS Assertion Thread Local Filter");
         registration.setOrder(6);

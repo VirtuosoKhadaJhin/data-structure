@@ -26,7 +26,7 @@ public final class MultiTimeUseOrTimeoutExpirationPolicy implements
     private static final long serialVersionUID = 3257844372614558261L;
 
     /** The time to kill in millseconds. */
-    private final long timeToKillInMilliSeconds=10000;
+    private final long timeToKillInMilliSeconds=100000;
 
     /** The maximum number of uses before expiration. */
     private final int numberOfUses=1;

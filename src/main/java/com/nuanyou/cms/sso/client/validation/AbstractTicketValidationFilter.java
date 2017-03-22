@@ -21,7 +21,7 @@ package com.nuanyou.cms.sso.client.validation;
 
 
 import com.nuanyou.cms.sso.client.ticket.StateTicket;
-import com.nuanyou.cms.sso.client.ticket.support.AbstractTicketRegistry;
+import com.nuanyou.cms.sso.client.ticket.support.DefaultTicketRegistry;
 import com.nuanyou.cms.sso.client.util.AbstractCasFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.sso.client.util.ReflectUtils;
@@ -44,7 +44,7 @@ import java.util.Enumeration;
  * <ul>
  * <li><code>redirectAfterValidation</code> - redirect the CAS client to the same URL without the ticket.</li>
  * <li><code>exceptionOnValidationFailure</code> - throw an exception if the validation fails.  Otherwise, continue
- *  processing.</li>
+ * processing.</li>
  * <li><code>useSession</code> - store any of the useful information in a session attribute.</li>
  * </ul>
  *
@@ -54,7 +54,9 @@ import java.util.Enumeration;
  */
 public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
 
-    /** The TicketValidator we will use to validate tickets. */
+    /**
+     * The TicketValidator we will use to validate tickets.
+     */
     private TicketValidator ticketValidator;
 
     /**
@@ -64,7 +66,9 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
      */
     private boolean redirectAfterValidation = false;
 
-    /** Determines whether an exception is thrown when there is a ticket validation failure. */
+    /**
+     * Determines whether an exception is thrown when there is a ticket validation failure.
+     */
     private boolean exceptionOnValidationFailure = true;
 
     private boolean useSession = true;
@@ -82,6 +86,7 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
     /**
      * Gets the configured {@link HostnameVerifier} to use for HTTPS connections
      * if one is configured for this filter.
+     *
      * @param filterConfig Servlet filter configuration.
      * @return Instance of specified host name verifier or null if none specified.
      */
@@ -119,11 +124,11 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
     /**
      * Pre-process the request before the normal filter process starts.  This could be useful for pre-empting code.
      *
-     * @param servletRequest The servlet request.
+     * @param servletRequest  The servlet request.
      * @param servletResponse The servlet response.
-     * @param filterChain the filter chain.
+     * @param filterChain     the filter chain.
      * @return true if processing should continue, false otherwise.
-     * @throws IOException if there is an I/O problem
+     * @throws IOException      if there is an I/O problem
      * @throws ServletException if there is a servlet problem.
      */
     protected boolean preFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
@@ -135,9 +140,9 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
      * if ticket validation succeeds.  This method is called after all ValidationFilter processing required for a successful authentication
      * occurs.
      *
-     * @param request the HttpServletRequest.
+     * @param request  the HttpServletRequest.
      * @param response the HttpServletResponse.
-     * @param user the successful Assertion from the server.
+     * @param user     the successful Assertion from the server.
      */
     protected void onSuccessfulValidation(final HttpServletRequest request, final HttpServletResponse response, final User user) {
         // nothing to do here.                                                                                            
@@ -147,45 +152,59 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
      * Template method that gets executed if validation fails.  This method is called right after the exception is caught from the ticket validator
      * but before any of the processing of the exception occurs.
      *
-     * @param request the HttpServletRequest.
+     * @param request  the HttpServletRequest.
      * @param response the HttpServletResponse.
      */
     protected void onFailedValidation(final HttpServletRequest request, final HttpServletResponse response) {
         // nothing to do here.
     }
 
-    @Autowired private AbstractTicketRegistry abstractTicketRegistry;
+    @Autowired
+    private DefaultTicketRegistry abstractTicketRegistry;
+
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         if (!preFilter(servletRequest, servletResponse, filterChain)) {
             return;
         }
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
-        log.info("AbstractTicketValidationFilter"+request.getRequestURL()+"?"+request.getQueryString());
+        log.info("AbstractTicketValidationFilter" + request.getRequestURL() + "?" + request.getQueryString());
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
         String artifactParameterName = getArtifactParameterName();
         final String ticket = CommonUtils.safeGetParameter(request, artifactParameterName);
-        final String state= CommonUtils.safeGetParameter(request, "state");
-        final StateTicket stateTicket = (StateTicket) this.abstractTicketRegistry.getTicket(state, StateTicket.class);
+        final String state = CommonUtils.safeGetParameter(request, "state");
+        if (CommonUtils.isNotBlank(state)) {
+            final StateTicket stateTicket = (StateTicket) this.abstractTicketRegistry.getTicket(state, StateTicket.class);
+            if(stateTicket==null){
+                throw new ServletException("stateTicket不存在");
+            }
+            try {
 
-        try{
+//                synchronized (stateTicket) {
+//                    if (stateTicket.isExpired()) {
+//                        log.info("stateTicket [" + state + "] has expired.");
+//                        throw new InvalidTicketException();
+//                    }
+//                }
 
-            synchronized (stateTicket) {
-                if (stateTicket.isExpired()) {
-                    log.info("stateTicket [" + state + "] has expired.");
-                    //throw new InvalidTicketException();
-                    return ;
-                }
-
-//            if (!serviceTicket.isValidFor(service)) {
-//                log.error("ServiceTicket [" + serviceTicketId + "] with service [" + serviceTicket.getService().getId() + " does not match supplied service [" + service + "]");
-//                throw new TicketValidationException(serviceTicket.getService());
+//                if (!serviceTicket.isValidFor(service)) {
+//                    log.error("ServiceTicket [" + serviceTicketId + "] with service [" + serviceTicket.getService().getId() + " does not match supplied service [" + service + "]");
+//                    throw new TicketValidationException(serviceTicket.getService());
+//                }
 //            }
+            } catch (Exception e) {
+                if (this.exceptionOnValidationFailure) {
+                    throw new ServletException(e);
+                }
+            } finally {
+                if (stateTicket.isExpired()) {
+                    this.abstractTicketRegistry.deleteTicket(state);
+                }
             }
-        }finally {
-            if (stateTicket.isExpired()) {
-                this.abstractTicketRegistry.deleteTicket(state);
-            }
+
         }
+
+
+
 
         if (CommonUtils.isNotBlank(ticket)) {
             if (log.isDebugEnabled()) {

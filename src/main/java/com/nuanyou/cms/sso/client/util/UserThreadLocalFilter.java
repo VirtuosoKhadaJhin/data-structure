@@ -20,6 +20,7 @@
 package com.nuanyou.cms.sso.client.util;
 
 import com.nuanyou.cms.sso.client.validation.User;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +34,7 @@ import java.io.IOException;
  * @version $Revision: 11728 $ $Date: 2007-09-26 14:20:43 -0400 (Tue, 26 Sep 2007) $
  * @since 3.0
  */
+@Component
 public final class UserThreadLocalFilter implements Filter {
 
     public void init(final FilterConfig filterConfig) throws ServletException {

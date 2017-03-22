@@ -22,6 +22,7 @@ package com.nuanyou.cms.sso.client.validation;
 import com.nuanyou.cms.sso.client.proxy.*;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.sso.client.util.ReflectUtils;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -42,6 +43,7 @@ import java.util.*;
  * @since 3.1
  *
  */
+@Component
 public class Cas20ProxyReceivingTicketValidationFilter extends AbstractTicketValidationFilter {
 
     private static final String[] RESERVED_INIT_PARAMS = new String[] {"proxyGrantingTicketStorageClass", "proxyReceptorUrl", "acceptAnyProxy", "allowedProxyChains", "casServerUrlPrefix", "proxyCallbackUrl", "renew", "exceptionOnValidationFailure", "redirectAfterValidation", "useSession", "serverName", "service", "artifactParameterName", "serviceParameterName", "encodeServiceUrl", "millisBetweenCleanUps", "hostnameVerifier", "encoding", "config"};

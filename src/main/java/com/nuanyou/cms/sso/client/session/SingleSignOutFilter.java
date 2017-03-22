@@ -22,6 +22,7 @@ import com.nuanyou.cms.sso.client.util.AbstractConfigurationFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +37,7 @@ import java.util.regex.Pattern;
  * @version $Revision$ $Date$
  * @since 3.1
  */
+@Component
 public final class SingleSignOutFilter extends AbstractConfigurationFilter {
 
 	private static final SingleSignOutHandler handler = new SingleSignOutHandler();
@@ -65,13 +67,14 @@ public final class SingleSignOutFilter extends AbstractConfigurationFilter {
 
 	public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 
+
 		final HttpServletRequest request = (HttpServletRequest) servletRequest;
 		final HttpServletResponse response = (HttpServletResponse) servletResponse;
+		log.info("SingleSignOutFilter"+request.getRequestURL()+"?"+request.getQueryString());
 		if(CommonUtils.isRequestExcluded(request,urlExcludePattern)){
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
 		}
-		log.info("SingleSignOutFilter"+request.getRequestURL()+"?"+request.getQueryString());
 
 		if (handler.isTokenRequest(request)) {
 			handler.recordSession(request);
