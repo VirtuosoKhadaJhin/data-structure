@@ -36,7 +36,7 @@
                                 <div class="control-group">
                                     <label class="control-label">购买数量</label>
                                     <div class="controls">
-                                        <input name="number" type="number" min="1" class="span9" required>
+                                        <input id="number" name="number" type="number" min="1" class="span9" required>
                                     </div>
                                 </div>
                                 <div class="form-actions">
@@ -66,6 +66,12 @@
         });
 
         $("#btn-save").on("click", function () {
+            var num = $("#number").val();
+            if (num % 1 != 0 || num < 1) {
+                alert("购买数量为正整数");
+                return;
+            }
+
             var btn = this;
             btn.disabled = true;
             var form = $("#form-main");
