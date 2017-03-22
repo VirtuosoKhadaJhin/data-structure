@@ -38,14 +38,6 @@
                                     </select>
                                 </div>
 
-                                <label class="control-label">消费类型</label>
-                                <div class="controls">
-                                    <select name="consumeType" class="span11">
-                                        <option value="0">全部</option>
-                                        <option value="1">B扫C</option>
-                                        <option value="2">C扫B</option>
-                                    </select>
-                                </div>
 
 
                                 <label class="control-label">城市</label>
@@ -62,6 +54,17 @@
                                         <option value="0">全部</option>
                                     </select>
                                 </div>
+
+
+                                <label class="control-label">支付类型</label>
+                                <div class="controls">
+                                    <select name="consumeType" class="span11">
+                                        <option value="0" #if($!entity.consumeType==0)  selected #end>全部</option>
+                                        <option value="1" #if($!entity.consumeType==1)  selected #end>B扫C</option>
+                                        <option value="2" #if($!entity.consumeType==2)  selected #end>C扫B</option>
+                                    </select>
+                                </div>
+
                                 <label class="control-label">标题</label>
                                 <div class="controls">
                                     <input name="title" type="text" class="span11" value="$!entity.title"
@@ -127,7 +130,7 @@
                             </div>
                             <div class="form-actions">
                                 #if($!type==2 || $!type==1)
-                                    <button type="submit" class="btn btn-success">保存</button>
+                                    <button type="button" id="btnSave" class="btnSave btn btn-success">保存</button>
                                 #elseif($!type==3)
                                     <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
                                     <a class="btn btn-primary" href="list?groupId=$!groupId">返回</a>
@@ -142,8 +145,33 @@
     #include("common/js-support.vm")
     <script>
         $(document).ready(function () {
+            $("#btnSave").click(function () {
+
+                var type=$("select[name='type']").val();
+                var imgUrl =$("input[name='imgUrl ']").val();
+                var linkUrl  =$("input[name='linkUrl  ']").val();
+                var source=$("input[name='source']").val();
+                if(type==0){
+                    if(imgUrl==""||linkUrl==""||source==""){
+                        return alert("自定义时图片、链接、追踪码不可为空");
+                    }
+                }else{
+                    if(source==""){
+                        return alert("非自定义时追踪码不可为空");
+                    }
+                }
+
+                if(!$( '.pushDetailValidate' ).validate){
+                    return false;
+                }else{
+                    $( '.pushDetailValidate' ).submit();
+                }
+
+
+            });
+
+
             var type = $!type;
-            //禁用所有表单
             if (type == 3) {
                 $(":text").attr("disabled", "disabled");
                 $("select").attr("disabled", "disabled");
@@ -152,24 +180,27 @@
         });
 
 
+
+
+
         var id = $("#id").val();
         if (id) {
             $("#source").attr("disabled", "disabled");
         }
 
 
-        typeChange();
+        //typeChange();
         checkSource();
 
-        function typeChange() {
-            var type = $("#type").val();
-            if (type != 1) {
-                $("#linkUrl").val("");
-                $("#linkUrl").attr("disabled", "disabled");
-            } else {
-                $("#linkUrl").removeAttr("disabled");
-            }
-        }
+//        function typeChange() {
+//            var type = $("#type").val();
+//            if (type != 1) {
+//                $("#linkUrl").val("");
+//                $("#linkUrl").attr("disabled", "disabled");
+//            } else {
+//                $("#linkUrl").removeAttr("disabled");
+//            }
+//        }
 
 
         function checkSource() {
