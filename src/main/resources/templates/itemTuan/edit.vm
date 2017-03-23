@@ -78,7 +78,7 @@
                                 <div class="controls">
                                     <input name="kpPrice" type="text" class="span9" value="$!entity.kpPrice">
                                 </div>
-                                <label class="control-label">商户价</label>
+                                <label class="control-label">暖游价</label>
                                 <div class="controls">
                                     <input name="mchPrice" type="text" class="span9" placeholder="$!entity.kpPrice"
                                            value="$!entity.mchPrice">
@@ -137,87 +137,81 @@
         </div>
     </div>
 
-    <div id="doc-modal-basic" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div id="modal-item-list">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3>明细编辑</h3>
+    <div id="modal-item-list" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>明细编辑</h3>
+        </div>
+        <div class="modal-body">
+            <div style="width:30%; float:left;">
+                <ul class="nav nav-pills nav-stacked" id="catList">
+                </ul>
             </div>
-            <div class="modal-body">
-                <div style="width:30%; float:left;">
-                    <ul class="nav nav-pills nav-stacked" id="catList">
-                    </ul>
-                </div>
-                <div style="width:70%; float:left;">
-                    <ul class="nav nav-list" id="itemList">
-                    </ul>
-                </div>
-                <div>
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                        <tr>
-                            <th>中文名称</th>
-                            <th>本地名称</th>
-                            <th>数量</th>
-                            <th>原价</th>
-                            <th>现价</th>
-                            <th>操作</th>
-                        </tr>
-                        </thead>
-                        <tbody id="selecteditemList">
-                        </tbody>
-                    </table>
-                </div>
+            <div style="width:70%; float:left;">
+                <ul class="nav nav-list" id="itemList">
+                </ul>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="btn-add-custom">自定义商品</button>
-                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-                <button class="btn btn-primary" id="detail-save">保存</button>
+            <div>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>中文名称</th>
+                        <th>本地名称</th>
+                        <th>数量</th>
+                        <th>原价</th>
+                        <th>现价</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="selecteditemList">
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div id="modal-add-custom" style="display: none;">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3>自定义商品</h3>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <form id="customItem" action="saveItem" method="post">
-                        <input name="itemType" type="hidden" type="4">
-                        <div class="control-group">
-                            <label class="control-label">中文名称</label>
-                            <div class="controls">
-                                <input name="name" for="name" type="text" class="span5">
-                            </div>
-                            <label class="control-label">本地名称</label>
-                            <div class="controls">
-                                <input name="kpname" for="kpname" type="text" class="span5">
-                            </div>
-                            <label class="control-label">原价(本地)</label>
-                            <div class="controls">
-                                <input name="okpPrice" type="text" class="span5">
-                            </div>
-                            <label class="control-label">数量</label>
-                            <div class="controls">
-                                <input name="num" type="number" class="span5">
-                            </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" id="btn-add-custom">自定义商品</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+            <button class="btn btn-primary" id="detail-save">保存</button>
+        </div>
+    </div>
 
-                            <label class="control-label">列表图</label>
-                            <div class="controls">
-                                <input type="text" class="span4" name="indexImgUrl" id="indexImgUrl">
-                                <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">预览</button>
-                                <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl" imageSpec="ItemList">上传</button>
-                                <p>尺寸: 320 * 240, 限制: 50k</p>
-                            </div>
+    <div id="modal-add-custom" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>自定义商品</h3>
+        </div>
+        <div class="modal-body">
+            <div>
+                <form id="customItem" action="saveItem" method="post">
+                    <input name="itemType" type="hidden" type="4">
+                    <div class="control-group">
+                        <label class="control-label">中文名称</label>
+                        <div class="controls">
+                            <input name="custom-name" type="text" class="span5">
                         </div>
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-save-custom">取消</button>
-                <button class="btn btn-primary btn-save-custom">保存</button>
-            </div>
+                        <label class="control-label">售价(本地)</label>
+                        <div class="controls">
+                            <input name="custom-price" type="text" class="span5">
+                        </div>
+                        <label class="control-label">数量</label>
+                        <div class="controls">
+                            <input name="custom-num" type="number" class="span5">
+                        </div>
 
+                        <label class="control-label">列表图</label>
+                        <div class="controls">
+                            <input type="text" class="span4" name="custom-imgUrl" id="itemImg">
+                            <button type="button" class="btn btn-success previewBtn" data-id="itemImg">预览</button>
+                            <button type="button" class="btn btn-success uploadImgBtn" data-id="itemImg" imageSpec="ItemList">上传</button>
+                            <p>尺寸: 320 * 240, 限制: 50k</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-close-custom">取消</button>
+            <button class="btn btn-primary btn-save-custom">保存</button>
         </div>
     </div>
 
@@ -240,43 +234,47 @@
             #else
             $("#btn-edit").hide();
             #end
-
+        var box = null;
         // 取得商户可选择的单品分类列表以及单品商品列表，弹出套餐产品设置页面
         $(".setDetail").on("click", function () {
-            var mchId = $("select[name='merchant.id']").val();
-            if (!mchId) {
-                alert("请选择商户!");
-                return false;
-            }
-            var itemcat = $("select[name='cat.id']").val();
-            if (!itemcat) {
-                alert("请选择套餐分类!");
-                return false;
-            }
+            if (box == null) {
+                var mchId = $("select[name='merchant.id']").val();
+                if (!mchId) {
+                    alert("请选择商户!");
+                    return false;
+                }
+                var itemcat = $("select[name='cat.id']").val();
+                if (!itemcat) {
+                    alert("请选择套餐分类!");
+                    return false;
+                }
 
-            $.ajax({
-                url: '/itemCat/api/list', async: false, data: {id: mchId},
-                success: function (result) {
-                    itemCats = result.data;
-                }
-            });
-            $.ajax({
-                url: '/item/api/list', async: false, data: {'merchant.id': mchId},
-                success: function (result) {
-                    items = result.data;
-                }
-            });
-            var itemId = $("input[name='id']").val();
-            var itemTuans = [];
-            if (itemId) {
                 $.ajax({
-                    url: '/itemTuan/api/list', async: false, data: {itemId: itemId},
+                    url: '/itemCat/api/list', async: false, data: {id: mchId},
                     success: function (result) {
-                        itemTuans = result.data;
+                        itemCats = result.data;
                     }
                 });
+                $.ajax({
+                    url: '/item/api/list', async: false, data: {'merchant.id': mchId, 'itemType': 1},
+                    success: function (result) {
+                        items = result.data;
+                    }
+                });
+                var itemId = $("input[name='id']").val();
+                var itemTuans = [];
+                if (itemId) {
+                    $.ajax({
+                        url: '/itemTuan/api/list', async: false, data: {itemId: itemId},
+                        success: function (result) {
+                            itemTuans = result.data;
+                        }
+                    });
+                }
+                box = new ItemDetailBox(itemCats, items, itemTuans);
+                box.initial();
             }
-            new ItemDetailBox(itemCats, items, itemTuans).initial();
+            box.show();
         });
 
 
@@ -309,11 +307,10 @@
                 catList.find("li").get(0).click();
 
                 renderSelecteditemList();
-                $("#doc-modal-basic").modal("show");
-
                 $("#detail-save").on("click", function () {
                     $("input[name='itemTuans']").val(JSON.stringify(itemTuans));
                     if (itemTuans.length > 0) {
+                        var hasCustom = false;
                         var total = 0;
                         for (var k in itemTuans) {
                             var itemTuan = itemTuans[k];
@@ -321,19 +318,32 @@
                             var num = parseFloat(itemTuan.num);
                             total += price * num;
 
+                            if (itemTuan.subItem.id < 0) {
+                                hasCustom = true;
+                            }
                         }
                         $("input[name=okpPrice]").attr("readonly", true).val(total);
-                        $("input[name=kpPrice]").attr("readonly", true).val(total);
-                        $("input[name=mchPrice]").attr("readonly", true).val(total);
+
+                        if (hasCustom) {
+                            $("input[name=kpPrice]").val(total);
+                            $("input[name=mchPrice]").val(total);
+                        } else {
+                            $("input[name=kpPrice]").attr("placeholder", "单品售价之和").val(null);
+                            $("input[name=mchPrice]").attr("placeholder", "单品暖游价之和").val(null);
+                        }
                     } else {
                         $("input[name=okpPrice]").attr("readonly", false).val(0);
-                        $("input[name=kpPrice]").attr("readonly", false).val(0);
-                        $("input[name=mchPrice]").attr("readonly", false).val(0);
+                        $("input[name=kpPrice]").val(0);
+                        $("input[name=mchPrice]").val(0);
                     }
 
-                    $("#doc-modal-basic").modal('hide');
+                    $("#modal-item-list").modal('hide');
                 });
             };
+
+            this.show = function () {
+                $("#modal-item-list").modal("show");
+            }
 
             catList.refreshItem = function () {
                 var catId = $(this).attr("cat-id");
@@ -409,29 +419,49 @@
                 $("#selecteditemList").find("a").on("click", selecteditemList.minus);
             };
 
-
             $("#btn-add-custom").on("click", function () {
-                $("#modal-item-list").hide();
-                $("#modal-add-custom").show();
+                $("#modal-item-list").modal("hide");
+                $("#modal-add-custom").modal("show");
+            });
+            $(".btn-close-custom").on("click", function () {
+                $("#modal-add-custom").modal("hide");
+                $("#modal-item-list").modal("show");
             });
             $(".btn-save-custom").on("click", function () {
                 var form = $($("#customItem"));
                 var itemTuan = {};
                 var item = {};
-                itemTuan.num = form.find("input[name='num']").val();
+                itemTuan.num = form.find("input[name='custom-num']").val();
                 itemTuan.subItem = item;
                 item.id = 0 - Math.round(Math.random() * 100000);
-                item.name = form.find("input[name='name']").val();
-                item.kpname = form.find("input[name='kpname']").val();
-                item.okpPrice = form.find("input[name='okpPrice']").val();
-                item.indexImgUrl = form.find("input[name='indexImgUrl']").val();
-                item.kpPrice = 0;
+                item.name = form.find("input[name='custom-name']").val();
+                item.kpname = "";
+                item.okpPrice = parseInt(form.find("input[name='custom-price']").val());
+                item.kpPrice = item.okpPrice;
+                item.indexImgUrl = form.find("input[name='custom-imgUrl']").val();
+                if (!itemTuan.num) {
+                    alert("数量不能为空");
+                    return;
+                }
+                if (!item.name) {
+                    alert("名称不能为空");
+                    return;
+                }
+                if (!item.okpPrice) {
+                    alert("原价不能为空");
+                    return;
+                }
+                if (!item.indexImgUrl) {
+                    alert("列表图不能为空");
+                    return;
+                }
+
                 itemTuans.push(itemTuan);
                 renderSelecteditemList();
                 $("#customItem")[0].reset();
 
-                $("#modal-add-custom").hide();
-                $("#modal-item-list").show();
+                $("#modal-add-custom").modal("hide");
+                $("#modal-item-list").modal("show");
             });
         }
     </script>
