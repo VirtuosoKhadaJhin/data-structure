@@ -27,7 +27,7 @@ targetCompatibility = 1.7
 
 repositories {
     maven {
-        url "http://maven.aliyun.com/nexus/content/repositories/central/"
+        url "http://nexus.hellobiz.cn/nexus/content/repositories/central/"
     }
     mavenCentral()
 }
@@ -64,6 +64,8 @@ dependencies {
     compile('net.coobird:thumbnailator:0.4.8')
     compile('com.google.zxing:core:3.2.1')
     compile('com.sun.mail:mailapi:1.5.2')
+    compile('com.fasterxml.jackson.core:jackson-core:2.6.3')
+//    compile('com.nuanyou:sso-client:1.1.2')
 
     compile('com.amazonaws:aws-java-sdk-sns:1.11.29')
     testCompile('org.springframework.boot:spring-boot-starter-test')

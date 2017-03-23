@@ -9,7 +9,7 @@ import org.springframework.data.domain.AuditorAware;
  * Created by kevin.shu on 9/01/2016.
  */
 @Configuration
-@ServletComponentScan("com.nuanyou.cms")
+@ServletComponentScan("com.nuanyou")
 public class JPAConfiguration {
     @Bean
     public AuditorAware nullAuditBean() {
