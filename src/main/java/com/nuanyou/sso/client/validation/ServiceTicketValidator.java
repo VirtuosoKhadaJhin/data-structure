@@ -21,9 +21,6 @@ package com.nuanyou.sso.client.validation;
 
 
 import com.alibaba.fastjson.JSON;
-import com.nuanyou.sso.client.proxy.Cas20ProxyRetriever;
-import com.nuanyou.sso.client.proxy.ProxyGrantingTicketStorage;
-import com.nuanyou.sso.client.proxy.ProxyRetriever;
 import com.nuanyou.sso.client.util.XmlUtils;
 
 import java.io.BufferedReader;
@@ -38,16 +35,8 @@ import java.util.*;
  * @version $Revision$ $Date$
  * @since 3.1
  */
-public class Cas20ServiceTicketValidator extends AbstractCasProtocolUrlBasedTicketValidator {
+public class ServiceTicketValidator extends AbstractCasProtocolUrlBasedTicketValidator {
 
-    /** The CAS 2.0 protocol proxy callback url. */
-    private String proxyCallbackUrl;
-
-    /** The storage location of the proxy granting tickets. */
-    private ProxyGrantingTicketStorage proxyGrantingTicketStorage;
-
-    /** Implementation of the proxy retriever. */
-    private ProxyRetriever proxyRetriever;
 
     /**
      * Constructs an instance of the CAS 2.0 Service Ticket Validator with the supplied
@@ -55,26 +44,17 @@ public class Cas20ServiceTicketValidator extends AbstractCasProtocolUrlBasedTick
      *
      * @param casServerUrlPrefix the CAS Server URL prefix.
      */
-    public Cas20ServiceTicketValidator(final String casServerUrlPrefix) {
+    public ServiceTicketValidator(final String casServerUrlPrefix) {
         super(casServerUrlPrefix);
-        this.proxyRetriever = new Cas20ProxyRetriever(casServerUrlPrefix, getEncoding());
     }
 
-    /**
-     * Adds the pgtUrl to the list of parameters to pass to the CAS server.
-     *
-     * @param urlParameters the Map containing the existing parameters to send to the server.
-     */
-    protected final void populateUrlAttributeMap(final Map<String,String> urlParameters) {
-        urlParameters.put("pgtUrl", encodeUrl(this.proxyCallbackUrl));
-    }
 
     protected String getUrlSuffix() {
         return "serviceValidate";
     }
 
     protected final User parseResponseFromServer(final String response) throws TicketValidationException {
-        Integer code=JSON.parseObject(response).getInteger("code");
+        Integer code= JSON.parseObject(response).getInteger("code");
         User user=null;
         if(code!=null&&code==0){
             user= JSON.parseObject(JSON.parseObject(response).get("data").toString(),User.class);
@@ -88,33 +68,6 @@ public class Cas20ServiceTicketValidator extends AbstractCasProtocolUrlBasedTick
         }
         return user;
 
-//        final String error = XmlUtils.getTextForElement(response,
-//                "authenticationFailure");
-//
-//        if (CommonUtils.isNotBlank(error)) {
-//            throw new TicketValidationException(error);
-//        }
-//
-//        final String principal = XmlUtils.getTextForElement(response, "user");
-//        final String proxyGrantingTicketIou = XmlUtils.getTextForElement(response, "proxyGrantingTicket");
-//        final String proxyGrantingTicket = this.proxyGrantingTicketStorage != null ? this.proxyGrantingTicketStorage.retrieve(proxyGrantingTicketIou) : null;
-//
-//        if (CommonUtils.isEmpty(principal)) {
-//            throw new TicketValidationException("No principal was found in the response from the CAS server.");
-//        }
-//
-//        final Assertion assertion;
-//        final Map<String,Object> attributes = extractCustomAttributes(response);
-//        if (CommonUtils.isNotBlank(proxyGrantingTicket)) {
-//            final AttributePrincipal attributePrincipal = new AttributePrincipalImpl(principal, attributes, proxyGrantingTicket, this.proxyRetriever);
-//            assertion = new AssertionImpl(attributePrincipal);
-//        } else {
-//            assertion = new AssertionImpl(new AttributePrincipalImpl(principal, attributes));
-//        }
-//
-//        customParseResponse(response, assertion);
-//
-//        return assertion;
     }
 
     /**
@@ -173,16 +126,4 @@ public class Cas20ServiceTicketValidator extends AbstractCasProtocolUrlBasedTick
     }
 
 
-
-    public final void setProxyCallbackUrl(final String proxyCallbackUrl) {
-        this.proxyCallbackUrl = proxyCallbackUrl;
-    }
-
-    public final void setProxyGrantingTicketStorage(final ProxyGrantingTicketStorage proxyGrantingTicketStorage) {
-        this.proxyGrantingTicketStorage = proxyGrantingTicketStorage;
-    }
-
-    public final void setProxyRetriever(final ProxyRetriever proxyRetriever) {
-        this.proxyRetriever = proxyRetriever;
-    }    
 }

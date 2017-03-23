@@ -21,12 +21,6 @@ package com.nuanyou.sso.client.validation;
 
 /**
  * Contract for a validator that will confirm the validity of a supplied ticket.
- * <p>
- * Validator makes no statement about how to validate the ticket or the format of the ticket (other than that it must be a String).
- *
- * @author Scott Battaglia
- * @version $Revision$ $Date$
- * @since 3.1
  */
 public interface TicketValidator {
 

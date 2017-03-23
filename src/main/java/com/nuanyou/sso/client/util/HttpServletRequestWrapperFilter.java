@@ -28,24 +28,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-/**
- * Implementation of a filter that wraps the normal HttpServletRequest with a
- * wrapper that overrides the following methods to provide data from the
- * CAS Assertion:
- * <ul>
- * <li>{@link HttpServletRequest#getUserPrincipal()}</li>
- * <li>{@link HttpServletRequest#getRemoteUser()}</li>
- * <li>{@link HttpServletRequest#isUserInRole(String)}</li>
- * </ul>
- * <p/>
- * This filter needs to be configured in the chain so that it executes after
- * both the authentication and the validation filters.
- *
- * @author Scott Battaglia
- * @author Marvin S. Addison
- * @version $Revision: 11729 $ $Date: 2007-09-26 14:22:30 -0400 (Tue, 26 Sep 2007) $
- * @since 3.0
- */
+
 @Component
 public final class HttpServletRequestWrapperFilter extends AbstractConfigurationFilter {
 
@@ -76,9 +59,6 @@ public final class HttpServletRequestWrapperFilter extends AbstractConfiguration
         final User user = (User) (session == null ?
                 request.getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION) :
                 session.getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION));
-//        final Assertion assertion = (Assertion) (session == null ?
-//                request.getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION) :
-//                session.getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION));
         return user;
     }
 

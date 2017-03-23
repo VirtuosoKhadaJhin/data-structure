@@ -4,7 +4,7 @@ import com.nuanyou.sso.client.authentication.AuthenticationFilter;
 import com.nuanyou.sso.client.session.SingleSignOutFilter;
 import com.nuanyou.sso.client.util.UserThreadLocalFilter;
 import com.nuanyou.sso.client.util.HttpServletRequestWrapperFilter;
-import com.nuanyou.sso.client.validation.Cas20ProxyReceivingTicketValidationFilter;
+import com.nuanyou.sso.client.validation.TicketValidationFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -57,11 +57,11 @@ public class ApplicationConfiguration {
 
 
     @Bean
-    public FilterRegistrationBean testFilterRegistration2(AuthenticationFilter authenticationFilter) {
+    public FilterRegistrationBean testFilterRegistration2(AuthenticationFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        authenticationFilter.setUrlExcludePattern(Pattern.compile("/test|^/dist.*|^/favicon.*"));
-        authenticationFilter.setRelogin(reLogin);
-        registration.setFilter(authenticationFilter);
+        filter.setUrlExcludePattern(Pattern.compile("/test|^/dist.*|^/favicon.*"));
+        filter.setRelogin(reLogin);
+        registration.setFilter(filter);
         registration.addInitParameter("loginUrl",loginUrl);
         registration.addInitParameter("serverName", serverName);
         registration.addInitParameter("serviceParameterName", "ret");
@@ -74,7 +74,7 @@ public class ApplicationConfiguration {
 
 
     @Bean
-    public FilterRegistrationBean testFilterRegistration3(Cas20ProxyReceivingTicketValidationFilter filter) {
+    public FilterRegistrationBean testFilterRegistration3(TicketValidationFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         filter.setServerName(serverName);
         registration.setFilter(filter);

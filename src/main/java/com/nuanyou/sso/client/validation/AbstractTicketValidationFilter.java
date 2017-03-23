@@ -25,10 +25,10 @@ import com.nuanyou.sso.client.ticket.support.DefaultTicketRegistry;
 import com.nuanyou.sso.client.ticket.support.InvalidTicketException;
 import com.nuanyou.sso.client.util.AbstractCasFilter;
 import com.nuanyou.sso.client.util.CommonUtils;
-import com.nuanyou.sso.client.util.ReflectUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -40,21 +40,11 @@ import java.util.Enumeration;
 
 /**
  * The filter that handles all the work of validating ticket requests.
- * <p>
- * This filter can be configured with the following values:
- * <ul>
- * <li><code>redirectAfterValidation</code> - redirect the CAS client to the same URL without the ticket.</li>
- * <li><code>exceptionOnValidationFailure</code> - throw an exception if the validation fails.  Otherwise, continue
- * processing.</li>
- * <li><code>useSession</code> - store any of the useful information in a session attribute.</li>
- * </ul>
  *
- * @author Scott Battaglia
- * @version $Revision$ $Date$
- * @since 3.1
  */
 public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
 
+    private static final Logger log = LoggerFactory.getLogger(AbstractTicketValidationFilter.class.getSimpleName());
     /**
      * The TicketValidator we will use to validate tickets.
      */
@@ -84,27 +74,7 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
         return this.ticketValidator;
     }
 
-    /**
-     * Gets the configured {@link HostnameVerifier} to use for HTTPS connections
-     * if one is configured for this filter.
-     *
-     * @param filterConfig Servlet filter configuration.
-     * @return Instance of specified host name verifier or null if none specified.
-     */
-    protected HostnameVerifier getHostnameVerifier(final FilterConfig filterConfig) {
-        final String className = getPropertyFromInitParams(filterConfig, "hostnameVerifier", null);
-        log.trace("Using hostnameVerifier parameter: " + className);
-        final String config = getPropertyFromInitParams(filterConfig, "hostnameVerifierConfig", null);
-        log.trace("Using hostnameVerifierConfig parameter: " + config);
-        if (className != null) {
-            if (config != null) {
-                return ReflectUtils.newInstance(className, config);
-            } else {
-                return ReflectUtils.newInstance(className);
-            }
-        }
-        return null;
-    }
+
 
     protected void initInternal(final FilterConfig filterConfig) throws ServletException {
         setExceptionOnValidationFailure(parseBoolean(getPropertyFromInitParams(filterConfig, "exceptionOnValidationFailure", "true")));
@@ -164,11 +134,7 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
     private DefaultTicketRegistry abstractTicketRegistry;
 
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("\n" +
-                "        System.out.println(\"initFilter\"+this.getClass().getName());"+this.getClass().getName());
-        if (!preFilter(servletRequest, servletResponse, filterChain)) {
-            return;
-        }
+        System.out.println("initFilter"+this.getClass().getName());
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         log.info("AbstractTicketValidationFilter" + request.getRequestURL() + "?" + request.getQueryString());
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
@@ -181,35 +147,21 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
                 throw new ServletException("stateTicket不存在");
             }
             try {
-
                 synchronized (stateTicket) {
                    if (stateTicket.isExpired()) {
                         log.info("stateTicket [" + state + "] has expired.");
                         throw new InvalidTicketException();
                     }
                }
-
-//                if (!serviceTicket.isValidFor(service)) {
-//                    log.error("ServiceTicket [" + serviceTicketId + "] with service [" + serviceTicket.getService().getId() + " does not match supplied service [" + service + "]");
-//                    throw new TicketValidationException(serviceTicket.getService());
-//                }
-//            }
             } catch (Exception e) {
                 if (this.exceptionOnValidationFailure) {
                     throw new ServletException(e);
                 }
             } finally {
                 this.abstractTicketRegistry.deleteTicket(state);
-//                if (stateTicket.isExpired()) {
-//                    this.abstractTicketRegistry.deleteTicket(state);
-//                }
             }
 
         }
-
-
-
-
         if (CommonUtils.isNotBlank(ticket)) {
             if (log.isDebugEnabled()) {
                 log.debug("Attempting to validate ticket: " + ticket);
@@ -217,17 +169,10 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
 
             try {
                 final User user = this.ticketValidator.validate(ticket, constructServiceUrl(request, response));
-
-
-                if (log.isDebugEnabled()) {
-                    log.debug("Successfully authenticated user: " + user.getName());
-                }
-
+                log.info("Successfully authenticated user: " + user.getName());
                 request.setAttribute(CONST_CAS_ASSERTION, user);
-
                 if (this.useSession) {
                     log.debug("\n" + "**************************************after validate tgt and st ********************************************");
-
                     log.debug("put the assertion to the session scope:key:" + CONST_CAS_ASSERTION + "value:" + user);
                     log.debug("assertion props" + user.toString());
                     if (request.getSession(false) != null) {
@@ -257,19 +202,17 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
 
                 if (this.redirectAfterValidation) {
                     log.debug("Redirecting after successful ticket validation.");
-                    response.sendRedirect(constructServiceUrl(request, response));//已经没有ticket了
+                    response.sendRedirect(constructServiceUrl(request, response));
                     return;
                 }
             } catch (final TicketValidationException e) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                log.warn(e, e);
 
                 onFailedValidation(request, response);
 
                 if (this.exceptionOnValidationFailure) {
                     throw new ServletException(e);
                 }
-
                 return;
             }
         }

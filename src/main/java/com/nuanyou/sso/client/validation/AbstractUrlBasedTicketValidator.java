@@ -33,10 +33,6 @@ import java.util.Map;
 
 /**
  * Abstract validator implementation for tickets that must be validated against a server.
- *
- * @author Scott Battaglia
- * @version $Revision$ $Date$
- * @since 3.1
  */
 public abstract class AbstractUrlBasedTicketValidator implements TicketValidator {
 

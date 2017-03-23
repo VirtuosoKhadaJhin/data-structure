@@ -7,10 +7,6 @@ package com.nuanyou.sso.client.ticket;
 
 /**
  * Generic ticket exception. Top of the TicketException heirarchy.
- * 
- * @author Scott Battaglia
- * @version $Revision$ $Date$
- * @since 3.0
  */
 public abstract class TicketException extends Exception {
 

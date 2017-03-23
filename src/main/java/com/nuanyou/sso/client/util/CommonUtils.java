@@ -19,9 +19,6 @@
 
 package com.nuanyou.sso.client.util;
 
-import com.nuanyou.sso.client.proxy.ProxyGrantingTicketStorage;
-import com.nuanyou.sso.client.validation.ProxyList;
-import com.nuanyou.sso.client.validation.ProxyListEditor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -30,7 +27,6 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
@@ -53,15 +49,7 @@ public final class CommonUtils {
     /** Instance of Commons Logging. */
     private static final Log LOG = LogFactory.getLog(CommonUtils.class);
     
-    /**
-     * Constant representing the ProxyGrantingTicket IOU Request Parameter.
-     */
-    private static final String PARAM_PROXY_GRANTING_TICKET_IOU = "pgtIou";
 
-    /**
-     * Constant representing the ProxyGrantingTicket Request Parameter.
-     */
-    private static final String PARAM_PROXY_GRANTING_TICKET = "pgtId";
 
     private CommonUtils() {
         // nothing to do
@@ -180,33 +168,7 @@ public final class CommonUtils {
         }
     }
     
-    public static void readAndRespondToProxyReceptorRequest(final HttpServletRequest request, final HttpServletResponse response, final ProxyGrantingTicketStorage proxyGrantingTicketStorage) throws IOException {
-        final String proxyGrantingTicketIou = request.getParameter(PARAM_PROXY_GRANTING_TICKET_IOU);
 
-		final String proxyGrantingTicket = request.getParameter(PARAM_PROXY_GRANTING_TICKET);
-
-		if (CommonUtils.isBlank(proxyGrantingTicket) || CommonUtils.isBlank(proxyGrantingTicketIou)) {
-		    response.getWriter().write("");
-		    return;
-		}
-
-		if (LOG.isDebugEnabled()) {
-		    LOG.debug("Received proxyGrantingTicketId ["
-		            + proxyGrantingTicket + "] for proxyGrantingTicketIou ["
-		            + proxyGrantingTicketIou + "]");
-		}
-
-		proxyGrantingTicketStorage.save(proxyGrantingTicketIou, proxyGrantingTicket);
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Successfully saved proxyGrantingTicketId ["
-		            + proxyGrantingTicket + "] for proxyGrantingTicketIou ["
-		            + proxyGrantingTicketIou + "]");
-        }
-		
-		response.getWriter().write("<?xml version=\"1.0\"?>");
-		response.getWriter().write("<casClient:proxySuccess xmlns:casClient=\"http://www.yale.edu/tp/casClient\" />");
-    }
     
 /**
      * Constructs a service url from the HttpServletRequest or from the given
@@ -360,15 +322,7 @@ public final class CommonUtils {
         }
     }
 
-    public static ProxyList createProxyList(final String proxies) {
-        if (CommonUtils.isBlank(proxies)) {
-            return new ProxyList();
-        }
 
-        final ProxyListEditor editor = new ProxyListEditor();
-        editor.setAsText(proxies);
-        return (ProxyList) editor.getValue();
-     }
 
     /**
      * Sends the redirect message and captures the exceptions that we can't possibly do anything with.

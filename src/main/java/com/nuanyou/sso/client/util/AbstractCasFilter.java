@@ -19,8 +19,8 @@
 
 package com.nuanyou.sso.client.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -47,13 +47,13 @@ public abstract class AbstractCasFilter extends AbstractConfigurationFilter {
     public static final String CONST_CAS_ASSERTION = "sso_user";
 
     /** Instance of commons logging for logging purposes. */
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Logger log = LoggerFactory.getLogger(AbstractCasFilter.class.getSimpleName());
 
     /** Defines the parameter to look for for the artifact. */
-    private String artifactParameterName = "ticket";
+    private String artifactParameterName = "code";
 
     /** Defines the parameter to look for for the service. */
-    private String serviceParameterName = "service";
+    private String serviceParameterName = "ret";
     
     /** Sets where response.encodeUrl should be called on service urls when constructed. */
     private boolean encodeServiceUrl = true;

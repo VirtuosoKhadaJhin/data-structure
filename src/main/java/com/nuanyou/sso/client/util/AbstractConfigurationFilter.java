@@ -29,10 +29,6 @@ import javax.servlet.FilterConfig;
 
 /**
  * Abstracts out the ability to configure the filters from the initial properties provided.
- *
- * @author Scott Battaglia
- * @version $Revision$ $Date$
- * @since 3.1
  */
 public abstract class AbstractConfigurationFilter implements Filter {
 	
