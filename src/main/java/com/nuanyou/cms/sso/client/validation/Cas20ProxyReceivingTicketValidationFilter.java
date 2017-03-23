@@ -119,7 +119,7 @@ public class Cas20ProxyReceivingTicketValidationFilter extends AbstractTicketVal
     protected final TicketValidator getTicketValidator(final FilterConfig filterConfig) {
         final String allowAnyProxy = getPropertyFromInitParams(filterConfig, "acceptAnyProxy", null);
         final String allowedProxyChains = getPropertyFromInitParams(filterConfig, "allowedProxyChains", null);
-        final String casServerUrlPrefix = getPropertyFromInitParams(filterConfig, "casServerUrlPrefix", null);
+        final String casServerUrlPrefix = getPropertyFromInitParams(filterConfig, "validateCodeUrl", null);
         final Cas20ServiceTicketValidator validator;
 
         if (CommonUtils.isNotBlank(allowAnyProxy) || CommonUtils.isNotBlank(allowedProxyChains)) {

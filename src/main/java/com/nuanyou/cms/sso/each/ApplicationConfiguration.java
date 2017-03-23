@@ -53,7 +53,7 @@ public class ApplicationConfiguration {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         filter.setServerName("http://127.0.0.1:8085");
         registration.setFilter(filter);
-        registration.addInitParameter("casServerUrlPrefix","https://testuser.api.91nuanyou.com/corp/oauth/access_token");
+        registration.addInitParameter("validateCodeUrl","https://testuser.api.91nuanyou.com/corp/oauth/access_token");
         registration.addInitParameter("serverName","http://127.0.0.1:8085");
         registration.addInitParameter("serviceParameterName","ret");
         registration.addInitParameter("artifactParameterName","code");

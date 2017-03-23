@@ -53,9 +53,19 @@ withdrawurl: http://testuser.api.91nuanyou.com
 upload:
   s3server: https://kr.file.91nuanyou.com
 
+
 AWS:
   sns:
     topic:
       refund: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refund
       refundSuccess: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refundSuccess
       refundFail: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refundFail
+
+
+SSO:
+  urlPatterns: /*
+  urlExcludePattern: /test|^/dist.*|^/favicon.*
+  loginUrl: https://testuser.api.91nuanyou.com/oauth/corp
+  serverName: http://127.0.0.1:8085
+  validateCodeUrl: https://testuser.api.91nuanyou.com/corp/oauth/access_token
+  stateExpiredInMilliSeconds: 10000
