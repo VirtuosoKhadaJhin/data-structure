@@ -37,6 +37,9 @@
                                         #end
                                     </select>
                                 </div>
+
+
+
                                 <label class="control-label">城市</label>
                                 <div class="controls">
                                     <select name="cityId" class="span11" def-value="$!entity.cityId"
@@ -51,6 +54,17 @@
                                         <option value="0">全部</option>
                                     </select>
                                 </div>
+
+
+                                <label class="control-label">支付类型</label>
+                                <div class="controls">
+                                    <select name="consumeType" class="span11">
+                                        <option value="0" #if($!entity.consumeType==0)  selected #end>全部</option>
+                                        <option value="1" #if($!entity.consumeType==1)  selected #end>B扫C</option>
+                                        <option value="2" #if($!entity.consumeType==2)  selected #end>C扫B</option>
+                                    </select>
+                                </div>
+
                                 <label class="control-label">标题</label>
                                 <div class="controls">
                                     <input name="title" type="text" class="span11" value="$!entity.title"
@@ -58,12 +72,12 @@
                                 </div>
                                 <label class="control-label">内容</label>
                                 <div class="controls">
-                                    <textarea name="content"
+                                    <textarea name="content" class="span11" style="height: 200px"
                                               placeholder="当仅推送一条消息时将展示此内容（可选）">$!entity.content</textarea>
                                 </div>
                                 <label class="control-label">策略</label>
                                 <div class="controls">
-                                    <select id="type" name="type" class="span9" onchange="typeChange()">
+                                    <select id="type" name="type" class="span11" onchange="typeChange()" >
                                         #foreach($p in $!pushTypes)
                                             <option value="$!p.type"  #if($!p.type == $!entity.type)
                                                     selected #end>$!p.name</option>
@@ -72,7 +86,7 @@
                                 </div>
                                 <label class="control-label">图片</label>
                                 <div class="controls">
-                                    <input type="text" class="span7" id="imgUrl" name="imgUrl" value='$!entity.imgUrl'/>
+                                    <input type="text" class="span11" id="imgUrl" name="imgUrl" class="span11" value='$!entity.imgUrl'/>
                                     <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览
                                     </button>
                                     <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl"
@@ -87,13 +101,14 @@
                                 </div>
                                 <label class="control-label">追踪码</label>
                                 <div class="controls">
-                                    <input id="source" name="source" type="text" class="span6" value="$!entity.source"
+                                    <input id="source" name="source" type="text" class="span11" value="$!entity.source"
                                            placeholder="即原链接中的source，填写后不可修改" onblur="checkSource()"/>
+                                    <br>
                                     <span id="sourceError" style="color: red"></span>
                                 </div>
                                 <label class="control-label">排序</label>
                                 <div class="controls">
-                                    <input name="sort" type="text" class="span6" value="$!entity.sort"
+                                    <input name="sort" type="text" class="span11" value="$!entity.sort"
                                            placeholder="排序值">
                                 </div>
                                 <label class="control-label">有效期</label>
@@ -107,7 +122,7 @@
                                 </div>
                                 <label class="control-label">状态</label>
                                 <div class="controls">
-                                    <select id="status" name="status" class="span9">
+                                    <select id="status" name="status" class="span11">
                                         <option value="true"  #if($!entity.status==true)  selected #end>启动</option>
                                         <option value="false"  #if($!entity.status==false)  selected #end>禁用</option>
                                     </select>
@@ -115,7 +130,7 @@
                             </div>
                             <div class="form-actions">
                                 #if($!type==2 || $!type==1)
-                                    <button type="submit" class="btn btn-success">保存</button>
+                                    <button type="button" id="btnSave" class="btnSave btn btn-success">保存</button>
                                 #elseif($!type==3)
                                     <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
                                     <a class="btn btn-primary" href="list?groupId=$!groupId">返回</a>
@@ -130,8 +145,33 @@
     #include("common/js-support.vm")
     <script>
         $(document).ready(function () {
+            $("#btnSave").click(function () {
+
+                var type=$("select[name='type']").val();
+                var imgUrl =$("input[name='imgUrl ']").val();
+                var linkUrl  =$("input[name='linkUrl  ']").val();
+                var source=$("input[name='source']").val();
+                if(type==0){
+                    if(imgUrl==""||linkUrl==""||source==""){
+                        return alert("自定义时图片、链接、追踪码不可为空");
+                    }
+                }else{
+                    if(source==""){
+                        return alert("非自定义时追踪码不可为空");
+                    }
+                }
+
+                if(!$( '.pushDetailValidate' ).validate){
+                    return false;
+                }else{
+                    $( '.pushDetailValidate' ).submit();
+                }
+
+
+            });
+
+
             var type = $!type;
-            //禁用所有表单
             if (type == 3) {
                 $(":text").attr("disabled", "disabled");
                 $("select").attr("disabled", "disabled");
@@ -140,24 +180,27 @@
         });
 
 
+
+
+
         var id = $("#id").val();
         if (id) {
             $("#source").attr("disabled", "disabled");
         }
 
 
-        typeChange();
+        //typeChange();
         checkSource();
 
-        function typeChange() {
-            var type = $("#type").val();
-            if (type != 1) {
-                $("#linkUrl").val("");
-                $("#linkUrl").attr("disabled", "disabled");
-            } else {
-                $("#linkUrl").removeAttr("disabled");
-            }
-        }
+//        function typeChange() {
+//            var type = $("#type").val();
+//            if (type != 1) {
+//                $("#linkUrl").val("");
+//                $("#linkUrl").attr("disabled", "disabled");
+//            } else {
+//                $("#linkUrl").removeAttr("disabled");
+//            }
+//        }
 
 
         function checkSource() {
