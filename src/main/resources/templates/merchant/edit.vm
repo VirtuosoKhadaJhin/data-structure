@@ -162,7 +162,7 @@
 
                                 <label class="control-label">商圈信息</label>
                                 <div class="controls">
-                                    <select name="district.Id" class="span10">
+                                        <select name="district.Id" class="span10">
                                         #foreach($e in $!districts)
                                             <option value="$!e.id" #if($!e.id == $!entity.district.Id)
                                                     selected #end>$!e.name

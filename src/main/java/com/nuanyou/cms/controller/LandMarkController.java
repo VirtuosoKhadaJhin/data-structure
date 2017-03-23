@@ -90,7 +90,9 @@ public class LandMarkController {
                           @RequestParam(required = false) final Double longitude,
                           @RequestParam(required = false) final Double latitude) {
         Landmark entity = new Landmark();
+        entity.setDisplay(true);
         District district = new District();
+        district.setDisplay(true);
         district.setId(id);
         entity.setDistrict(district);
         List<Landmark> sourceList = landMarkDao.findAll(Example.of(entity));
