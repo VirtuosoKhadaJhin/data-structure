@@ -78,12 +78,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public Item saveNotNull(Item entity, List<ItemTuan> itemTuans) {
-        boolean hasItems = itemTuans != null && !itemTuans.isEmpty();
-        if (hasItems) {
-            entity.setOkpPrice(null);
-            entity.setKpPrice(null);
-            entity.setMchPrice(null);
-        }
         // 如果商户价未录入 默认取现价
         BigDecimal mchPrice = entity.getMchPrice();
         if (mchPrice == null || mchPrice.compareTo(BigDecimal.ZERO) == 0) {

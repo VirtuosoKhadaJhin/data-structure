@@ -30,7 +30,7 @@
                             <div class="control-group">
                                 <label class="control-label">商户</label>
                                 <div class="controls">
-                                    <select name="merchant.id" class="span9 select2" target-name="cat.id" target-url="/itemCat/api/list">
+                                    <select name="merchant.id" class="span9 select2" target-name="cat.id" target-url="/itemCat/api/list?display=true">
                                         #foreach($e in $!merchants)
                                             <option value="$!e.id" #if($!e.id == $!entity.merchant.id)
                                                     selected #end>$!e.id:$!e.name</option>
@@ -250,13 +250,13 @@
                 }
 
                 $.ajax({
-                    url: '/itemCat/api/list', async: false, data: {id: mchId},
+                    url: '/itemCat/api/list', async: false, data: {id: mchId, display: true},
                     success: function (result) {
                         itemCats = result.data;
                     }
                 });
                 $.ajax({
-                    url: '/item/api/list', async: false, data: {'merchant.id': mchId, 'itemType': 1},
+                    url: '/item/api/list', async: false, data: {'merchant.id': mchId, 'itemType': 1, 'display': true},
                     success: function (result) {
                         items = result.data;
                     }
@@ -311,22 +311,26 @@
                     $("input[name='itemTuans']").val(JSON.stringify(itemTuans));
                     if (itemTuans.length > 0) {
                         var hasCustom = false;
-                        var total = 0;
+                        var kpTotal = 0;
+                        var okpTotal = 0;
                         for (var k in itemTuans) {
                             var itemTuan = itemTuans[k];
-                            var price = parseFloat(itemTuan.subItem.kpPrice);
-                            var num = parseFloat(itemTuan.num);
-                            total += price * num;
+                            var kpPrice = parseFloat(itemTuan.subItem.kpPrice);
+                            var okpPrice = parseFloat(itemTuan.subItem.okpPrice);
+
+                            var num = parseInt(itemTuan.num);
+                            kpTotal += kpPrice * num;
+                            okpTotal += okpPrice * num;
 
                             if (itemTuan.subItem.id < 0) {
                                 hasCustom = true;
                             }
                         }
-                        $("input[name=okpPrice]").attr("readonly", true).val(total);
+                        $("input[name=okpPrice]").attr("readonly", true).val(okpTotal.toFixed(2));
 
                         if (hasCustom) {
-                            $("input[name=kpPrice]").val(total);
-                            $("input[name=mchPrice]").val(total);
+                            $("input[name=kpPrice]").val(okpTotal.toFixed(2));
+                            $("input[name=mchPrice]").val(okpTotal.toFixed(2));
                         } else {
                             $("input[name=kpPrice]").attr("placeholder", "单品售价之和").val(null);
                             $("input[name=mchPrice]").attr("placeholder", "单品暖游价之和").val(null);

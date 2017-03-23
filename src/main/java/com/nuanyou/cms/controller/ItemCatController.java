@@ -69,8 +69,12 @@ public class ItemCatController {
 
     @RequestMapping(path = "api/list")
     @ResponseBody
-    public APIResult list(Long id) {
-        List<ItemCat> list = itemCatDao.findIdNameList(id);
+    public APIResult list(Long id, Boolean display) {
+        List<ItemCat> list;
+        if (display == null)
+            list = itemCatDao.findIdNameList(id);
+        else
+            list = itemCatDao.findIdNameList(id, display);
         return new APIResult(list);
     }
 
