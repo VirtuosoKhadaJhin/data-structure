@@ -77,11 +77,11 @@
                                 </div>
                                 <label class="control-label">现价(本地)</label>
                                 <div class="controls">
-                                    <input name="kpPrice" type="text" class="span9" value="$!entity.kpPrice" #if($hasItems)required#end placeholder="单品售价之和">
+                                    <input name="kpPrice" type="text" class="span9" value="$!entity.kpPrice" #if(!$hasItems)required#end placeholder="单品现价之和">
                                 </div>
                                 <label class="control-label">暖游价</label>
                                 <div class="controls">
-                                    <input name="mchPrice" type="text" class="span9" value="$!entity.mchPrice" #if($hasItems)required#end placeholder="单品暖游价之和">
+                                    <input name="mchPrice" type="text" class="span9" value="$!entity.mchPrice" #if(!$hasItems)required#end placeholder="单品暖游价之和">
                                 </div>
                                 <label class="control-label">是否推荐</label>
                                 <div class="controls">
@@ -232,7 +232,6 @@
         // 取得商户可选择的单品分类列表以及单品商品列表，弹出套餐产品设置页面
         var box = null;
         $(".setDetail").on("click", function () {
-            if (box == null) {
                 var mchId = $("select[name='merchant.id']").val();
                 if (!mchId) {
                     alert("请选择商户!");
@@ -266,7 +265,6 @@
                         box.initItemList(result.data);
                     }
                 });
-            }
             $("#modal-item-list").modal("show");
         });
 
@@ -328,16 +326,17 @@
 
                         //有自定义商品情况
                         if (hasCustom) {
-                            $("input[name=kpPrice]").attr("required", false).val(okpTotal.toFixed(2));
-                            $("input[name=mchPrice]").attr("required", false).val(okpTotal.toFixed(2));
+                            $("input[name=kpPrice]").attr("required", false).val(okpTotal.toFixed(2)).attr("placeholder","单品现价之和");
+                            $("input[name=mchPrice]").attr("required", false).val(okpTotal.toFixed(2)).attr("placeholder","单品暖游价之和");
                         } else {
-                            $("input[name=kpPrice]").attr("required", false).val(null);
-                            $("input[name=mchPrice]").attr("required", false).val(null);
+                            $("input[name=kpPrice]").attr("required", false).val(null).attr("placeholder","单品现价之和");
+                            $("input[name=mchPrice]").attr("required", false).val(null).attr("placeholder","单品暖游价之和");
                         }
                     } else {
                         $("input[name=okpPrice]").attr("required", true).attr("readonly", false);
-                        $("input[name=kpPrice]").attr("required", true);
-                        $("input[name=mchPrice]").attr("required", true);
+                        $("input[name=kpPrice]").attr("required", true).attr("placeholder","");
+                        $("input[name=mchPrice]").attr("required", true).attr("placeholder","");
+
                     }
 
                     $("#modal-item-list").modal('hide');
