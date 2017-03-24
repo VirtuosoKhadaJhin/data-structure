@@ -60,12 +60,12 @@ public class ItemTuanController {
 
         if (id != null) {
             Item entity = itemDao.findOne(id);
-//            BigDecimal price = itemService.calcItemTuanPrice(id);
-//            if(price.compareTo(BigDecimal.ZERO)!=0){//有单品时
-//                entity.setOkpPrice(price);
+            BigDecimal price = itemService.calcItemTuanPrice(id);
+            if (price.compareTo(BigDecimal.ZERO) != 0) {//有单品时
+                entity.setOkpPrice(price);
 //                entity.setKpPrice(price);
 //                entity.setMchPrice(price);
-//            }
+            }
 
             model.addAttribute("entity", entity);
             mchId = entity.getMerchant().getId();

@@ -71,6 +71,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public Item saveNotNull(ItemVO vo, List<ItemTuan> itemTuans) {
+        boolean hasItems = itemTuans != null && !itemTuans.isEmpty();
+        if (hasItems) {
+            vo.setOkpPrice(null);
+        }
         Item entity = BeanUtils.copyBeanNotNull(vo, new Item());
         Merchant merchant = vo.getMerchant();
         // 如果商户价未录入 默认取现价
@@ -116,7 +120,7 @@ public class ItemServiceImpl implements ItemService {
             Item item = itemTuan.getSubItem();
             if (item != null) {
                 Integer num = itemTuan.getNum();
-                BigDecimal kpPrice = item.getKpPrice();
+                BigDecimal kpPrice = item.getOkpPrice();
                 if (kpPrice != null) {
                     if (num == null)
                         num = 1;
