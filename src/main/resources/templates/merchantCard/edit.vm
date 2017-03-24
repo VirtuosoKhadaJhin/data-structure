@@ -99,7 +99,7 @@
                                 <div class="controls">
                                     <input name="oPrice" type="text" class="span8" placeholder="人民币(RMB)" value="$!entity.oPrice" required>
                                 </div>
-                                <label class="control-label">代金券商户价</label>
+                                <label class="control-label">代金券暖游价</label>
                                 <div class="controls">
                                     <input name="merchantPrice" type="text" class="span8" placeholder="当地货币(Local Currency)" value="$!entity.merchantPrice" required>
                                 </div>
