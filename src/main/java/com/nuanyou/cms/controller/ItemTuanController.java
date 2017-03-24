@@ -8,6 +8,7 @@ import com.nuanyou.cms.dao.ItemTuanDao;
 import com.nuanyou.cms.dao.TuanActivityTemplateDao;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.TuanType;
+import com.nuanyou.cms.model.ItemVO;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.ItemService;
 import com.nuanyou.cms.service.MerchantService;
@@ -54,16 +55,17 @@ public class ItemTuanController {
     public String edit(@RequestParam(required = false) Long id, Model model) {
         List<Merchant> merchants = merchantService.getIdNameList();
         model.addAttribute("merchants", merchants);
+
         Long mchId = merchants.get(0).getId();
 
         if (id != null) {
             Item entity = itemDao.findOne(id);
-            BigDecimal price = itemService.calcItemTuanPrice(id);
-            if(price.compareTo(BigDecimal.ZERO)!=0){//有单品时
-                entity.setOkpPrice(price);
-                entity.setKpPrice(price);
-                entity.setMchPrice(price);
-            }
+//            BigDecimal price = itemService.calcItemTuanPrice(id);
+//            if(price.compareTo(BigDecimal.ZERO)!=0){//有单品时
+//                entity.setOkpPrice(price);
+//                entity.setKpPrice(price);
+//                entity.setMchPrice(price);
+//            }
 
             model.addAttribute("entity", entity);
             mchId = entity.getMerchant().getId();
@@ -87,15 +89,15 @@ public class ItemTuanController {
     }
 
     @RequestMapping(path = "update", method = RequestMethod.POST)
-    public String update(Item entity, String itemTuans, Model model) {
+    public String update(ItemVO vo, String itemTuans, Model model) {
         List<ItemTuan> itemTuanList = null;
         if (StringUtils.isNotBlank(itemTuans)) {
             itemTuanList = JsonUtils.toObj(itemTuans, new TypeReference<List<ItemTuan>>() {
             });
         }
 
-        entity.setItemType(2);
-        itemService.saveNotNull(entity, itemTuanList);
+        vo.setItemType(2);
+        Item entity = itemService.saveNotNull(vo, itemTuanList);
         model.addAttribute("entity", entity);
 
         List<Merchant> merchants = merchantService.getIdNameList();

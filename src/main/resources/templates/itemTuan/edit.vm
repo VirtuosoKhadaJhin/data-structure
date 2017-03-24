@@ -76,12 +76,11 @@
                                 </div>
                                 <label class="control-label">现价(本地)</label>
                                 <div class="controls">
-                                    <input name="kpPrice" type="text" class="span9" value="$!entity.kpPrice">
+                                    <input name="kpPrice" type="text" class="span9" value="$!entity.kpPrice" placeholder="单品售价之和">
                                 </div>
                                 <label class="control-label">暖游价</label>
                                 <div class="controls">
-                                    <input name="mchPrice" type="text" class="span9" placeholder="$!entity.kpPrice"
-                                           value="$!entity.mchPrice">
+                                    <input name="mchPrice" type="text" class="span9" value="$!entity.mchPrice" placeholder="单品暖游价之和">
                                 </div>
                                 <label class="control-label">是否推荐</label>
                                 <div class="controls">
@@ -189,7 +188,7 @@
                         <div class="controls">
                             <input name="custom-name" type="text" class="span5">
                         </div>
-                        <label class="control-label">售价(本地)</label>
+                        <label class="control-label">原价(本地)</label>
                         <div class="controls">
                             <input name="custom-price" type="text" class="span5">
                         </div>
@@ -322,7 +321,7 @@
                             kpTotal += kpPrice * num;
                             okpTotal += okpPrice * num;
 
-                            if (itemTuan.subItem.id < 0) {
+                            if (itemTuan.subItem.id < 0 || itemTuan.subItem.itemType == 4) {
                                 hasCustom = true;
                             }
                         }
@@ -332,8 +331,8 @@
                             $("input[name=kpPrice]").val(okpTotal.toFixed(2));
                             $("input[name=mchPrice]").val(okpTotal.toFixed(2));
                         } else {
-                            $("input[name=kpPrice]").attr("placeholder", "单品售价之和").val(null);
-                            $("input[name=mchPrice]").attr("placeholder", "单品暖游价之和").val(null);
+                            $("input[name=kpPrice]").val(null);
+                            $("input[name=mchPrice]").val(null);
                         }
                     } else {
                         $("input[name=okpPrice]").attr("readonly", false).val(0);
@@ -440,6 +439,7 @@
                 item.id = 0 - Math.round(Math.random() * 100000);
                 item.name = form.find("input[name='custom-name']").val();
                 item.kpname = "";
+                item.itemType = 4;
                 item.okpPrice = parseInt(form.find("input[name='custom-price']").val());
                 item.kpPrice = item.okpPrice;
                 item.indexImgUrl = form.find("input[name='custom-imgUrl']").val();
