@@ -197,7 +197,7 @@ public class MerchantController {
         List<MerchantCat> cats = merchantCatDao.findByPcat(null);
         model.addAttribute("cats", cats);
 
-        List<District> districts = districtDao.getIdNameList();
+        List<District> districts = districtDao.getIdNameList(true);
         model.addAttribute("districts", districts);
 
         model.addAttribute("weeks", Week.values());

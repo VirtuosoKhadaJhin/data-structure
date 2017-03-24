@@ -13,6 +13,8 @@ public interface MerchantService {
 
     List<Merchant> getIdNameList();
 
+    List<Merchant> getIdNameList(Boolean display);
+
     void updateScore(Long id, double score);
 
     void copyItem(Long sourceId, Long targetId);

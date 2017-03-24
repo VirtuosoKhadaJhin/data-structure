@@ -27,7 +27,7 @@
                             <div class="control-group">
                                 <label class="control-label">商户</label>
                                 <div class="controls">
-                                    <select name="merchant.id" class="span11 select2" target-name="cat.id" target-url="/itemCat/api/list">
+                                    <select name="merchant.id" class="span11 select2" target-name="cat.id" target-url="/itemCat/api/list?display=true">
                                         #foreach($e in $!merchants)
                                             <option value="$!e.id" #if($!e.id == $!entity.merchant.id) selected #end>$!e.name</option>
                                         #end

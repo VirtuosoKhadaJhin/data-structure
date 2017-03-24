@@ -1,12 +1,15 @@
 #parse("common/list_start.vm")
-<div id="breadcrumb">
-    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-    <a href="../landMark/list" class="tip-bottom" data-original-title="">地标管理</a>
+
+<div id="content-header">
+    <div id="breadcrumb">
+        <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+        <a href="list" class="tip-bottom" data-original-title="">地标管理</a>
+    </div>
 </div>
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>地标列表</h5>
-    <a class="btn btn-info" href="edit?type=1">新增</a>
+    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
@@ -25,7 +28,7 @@
         </th>
         <th>排序</th>
         <th>显示</th>
-        <th class="table-set" width="90px">操作</th>
+        <th class="table-set" width="88px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -39,8 +42,8 @@
             <td>
                 #if($!entity.display)显示#else 隐藏#end</td>
             <td>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
-                <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
             </td>
         </tr>
         #end
@@ -49,24 +52,24 @@
 #parse("common/list_mid.vm")
 <form>
     <div class="control-group">
-        <label for="status">地标名称：</label>
-        <input type="text" class="span11" id="name" name="name"
-               value="$!entity.name" placeholder="地标名称"/>
+        <label for="status">地标</label>
+        <input type="text" class="span11" name="name" value="$!entity.name" placeholder="地标名称"/>
 
-
-        <label for="status">商圈：</label>
-        <select id="district.id" name="district.id" class="span11"
-                data-am-selected="{searchBox:1,btnWidth:'200px',maxHeight:'200px'}">
+        <label for="status">商圈</label>
+        <select class="span11" name="district.id">
             <option value="">全部</option>
             #foreach($district in $!districts)
-                <option value="$!district.id"
-                    #if($!entity.district.id == $!district.id)
-                        selected
-                    #end
-                >
+                <option value="$!district.id"#if($!entity.district.id == $!district.id) selected#end>
                     $!district.id:$!district.name
                 </option>
             #end
+        </select>
+
+        <label>状态</label>
+        <select id="display" name="display" class="span11">
+            <option value="">全部</option>
+            <option value="true"  #if($!entity.display==true)selected #end>显示</option>
+            <option value="false"  #if($!entity.display==false)selected #end>隐藏</option>
         </select>
 
         <button type="submit" class="btn btn-primary">查询</button>
