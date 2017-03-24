@@ -26,6 +26,7 @@
                         <form class="form-horizontal commonValidate" action="update" method="post" id="itemFrom">
                             <input name="id" type="hidden" value="$!entity.id">
                             <input name="itemType" type="hidden" type="2">
+                            <input name="type" type="hidden" type="2">
                             <input name="itemTuans" type="hidden">
                             <div class="control-group">
                                 <label class="control-label">商户</label>
@@ -72,15 +73,15 @@
                                 </div>
                                 <label class="control-label">原价(本地)</label>
                                 <div class="controls">
-                                    <input name="okpPrice" type="text" class="span9" value="$!entity.okpPrice">
+                                    <input name="okpPrice" type="text" class="span9" value="$!entity.okpPrice" #if($hasItems)required#end>
                                 </div>
                                 <label class="control-label">现价(本地)</label>
                                 <div class="controls">
-                                    <input name="kpPrice" type="text" class="span9" value="$!entity.kpPrice" placeholder="单品售价之和">
+                                    <input name="kpPrice" type="text" class="span9" value="$!entity.kpPrice" #if($hasItems)required#end placeholder="单品售价之和">
                                 </div>
                                 <label class="control-label">暖游价</label>
                                 <div class="controls">
-                                    <input name="mchPrice" type="text" class="span9" value="$!entity.mchPrice" placeholder="单品暖游价之和">
+                                    <input name="mchPrice" type="text" class="span9" value="$!entity.mchPrice" #if($hasItems)required#end placeholder="单品暖游价之和">
                                 </div>
                                 <label class="control-label">是否推荐</label>
                                 <div class="controls">
@@ -159,7 +160,7 @@
                         <th>数量</th>
                         <th>原价</th>
                         <th>现价</th>
-                        <th>操作</th>
+                        <th width="30px">操作</th>
                     </tr>
                     </thead>
                     <tbody id="selecteditemList">
@@ -168,7 +169,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" id="btn-add-custom">自定义商品</button>
+            <button class="btn btn-primary fl" id="btn-add-custom">自定义商品</button>
             <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
             <button class="btn btn-primary" id="detail-save">保存</button>
         </div>
@@ -215,20 +216,14 @@
     </div>
 
     #parse("common/js-support.vm")
-
-
     <script>
             #if($!disabled)
             $("#btn-save").hide();
-            $(":input").each(function (i, o) {
-                $(o).attr("disabled", true);
-            });
+            $(":input").attr("disabled", true);
             $("#btn-edit").on("click", function () {
-                $(":input").each(function (i, o) {
-                    $(o).attr("disabled", false);
-                    $("#btn-save").show();
-                    $("#btn-edit").hide();
-                });
+                $(":input").attr("disabled", false);
+                $("#btn-save").show();
+                $("#btn-edit").hide();
             });
             #else
             $("#btn-edit").hide();
@@ -255,7 +250,7 @@
                     }
                 });
                 $.ajax({
-                    url: '/item/api/list', async: false, data: {'merchant.id': mchId, 'itemType': 1, 'display': true},
+                    url: '/item/api/list', async: false, data: {'merchant.id': mchId, 'type': 1, 'display': true},
                     success: function (result) {
                         items = result.data;
                     }
@@ -273,7 +268,7 @@
                 box = new ItemDetailBox(itemCats, items, itemTuans);
                 box.initial();
             }
-            box.show();
+            $("#modal-item-list").modal("show");
         });
 
 
@@ -308,45 +303,44 @@
                 renderSelecteditemList();
                 $("#detail-save").on("click", function () {
                     $("input[name='itemTuans']").val(JSON.stringify(itemTuans));
+                    //有单品情况下
                     if (itemTuans.length > 0) {
                         var hasCustom = false;
                         var kpTotal = 0;
                         var okpTotal = 0;
                         for (var k in itemTuans) {
                             var itemTuan = itemTuans[k];
-                            var kpPrice = parseFloat(itemTuan.subItem.kpPrice);
-                            var okpPrice = parseFloat(itemTuan.subItem.okpPrice);
+                            var subItem = itemTuan.subItem;
+
+                            var kpPrice = parseFloat(subItem.kpPrice);
+                            var okpPrice = parseFloat(subItem.okpPrice);
 
                             var num = parseInt(itemTuan.num);
                             kpTotal += kpPrice * num;
                             okpTotal += okpPrice * num;
 
-                            if (itemTuan.subItem.id < 0 || itemTuan.subItem.itemType == 4) {
+                            if (subItem.type == 4)
                                 hasCustom = true;
-                            }
                         }
                         $("input[name=okpPrice]").attr("readonly", true).val(okpTotal.toFixed(2));
 
+                        //有自定义商品情况
                         if (hasCustom) {
-                            $("input[name=kpPrice]").val(okpTotal.toFixed(2));
-                            $("input[name=mchPrice]").val(okpTotal.toFixed(2));
+                            $("input[name=kpPrice]").attr("required", false).val(okpTotal.toFixed(2));
+                            $("input[name=mchPrice]").attr("required", false).val(okpTotal.toFixed(2));
                         } else {
-                            $("input[name=kpPrice]").val(null);
-                            $("input[name=mchPrice]").val(null);
+                            $("input[name=kpPrice]").attr("required", false).val(null);
+                            $("input[name=mchPrice]").attr("required", false).val(null);
                         }
                     } else {
-                        $("input[name=okpPrice]").attr("readonly", false).val(0);
-                        $("input[name=kpPrice]").val(0);
-                        $("input[name=mchPrice]").val(0);
+                        $("input[name=okpPrice]").attr("required", true).attr("readonly", false);
+                        $("input[name=kpPrice]").attr("required", true);
+                        $("input[name=mchPrice]").attr("required", true);
                     }
 
                     $("#modal-item-list").modal('hide');
                 });
             };
-
-            this.show = function () {
-                $("#modal-item-list").modal("show");
-            }
 
             catList.refreshItem = function () {
                 var catId = $(this).attr("cat-id");
@@ -439,7 +433,7 @@
                 item.id = 0 - Math.round(Math.random() * 100000);
                 item.name = form.find("input[name='custom-name']").val();
                 item.kpname = "";
-                item.itemType = 4;
+                item.type = 4;
                 item.okpPrice = parseInt(form.find("input[name='custom-price']").val());
                 item.kpPrice = item.okpPrice;
                 item.indexImgUrl = form.find("input[name='custom-imgUrl']").val();

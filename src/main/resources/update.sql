@@ -1,5 +1,11 @@
 use nuanyou20;
 
+-- 2017-3-22
+ALTER TABLE `ny_item` MODIFY COLUMN `type` tinyint(4) UNSIGNED COMMENT '商品类型: 1.普通商品 2.团购商品 3.优惠券 4.自定义商品';
+ALTER TABLE `ny_order` MODIFY COLUMN `ordertype` TINYINT(3) UNSIGNED COMMENT '订单类型: 1.惠购订单 2.优付订单 3.外卖订单 4.团购订单 5.POS收款 6.联盟订单 7.顺风购订单 8.代金券订单 9.直邮购订单 10.记账';
+ALTER TABLE `ny_order` MODIFY COLUMN `orderstatus` INT(10) UNSIGNED COMMENT '订单状态: 0.已下单 1.已支付 2.已消费 3.已评价 5.支付中 4.已关闭 104.自动核销 105.商户核销 203.退款成功';
+ALTER TABLE `ny_order` MODIFY COLUMN `newrefundstatus` INT(10) UNSIGNED COMMENT '退款状态: 201.退款中 202.退款失败 203.审核通过 204.退款完成';
+
 -- 2017-3-21
 ALTER TABLE `ny_merchant_card` ADD COLUMN `deleted` TINYINT(1) DEFAULT 0 COMMENT '是否删除';
 
