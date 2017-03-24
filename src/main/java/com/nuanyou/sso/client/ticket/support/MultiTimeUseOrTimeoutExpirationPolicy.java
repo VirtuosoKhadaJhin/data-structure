@@ -13,10 +13,6 @@ import org.springframework.stereotype.Component;
 /**
  * ExpirationPolicy that is based on certain number of uses of a ticket or a
  * certain time period for a ticket to exist.
- * 
- * @author Scott Battaglia
- * @version $Revision$ $Date$
- * @since 3.0
  */
 @Component
 public final class MultiTimeUseOrTimeoutExpirationPolicy implements

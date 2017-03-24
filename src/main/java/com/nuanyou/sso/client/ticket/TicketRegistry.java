@@ -14,13 +14,6 @@ import java.util.Collection;
  * registries. It is up to specific implementations to determine their clean up
  * strategy. Strategies can include a manual clean up by a RegistryCleaner or a
  * more sophisticated strategy such as LRU.
- * 
- * @author Scott Battaglia
- * @version $Revision$ $Date$
- * @since 3.0
- * <p>
- * This is a published and supported CAS Server 3 API.
- * </p>
  */
 public interface TicketRegistry {
 
@@ -38,7 +31,6 @@ public interface TicketRegistry {
      * @param ticketId the id of the ticket we wish to retrieve.
      * @param clazz The expected class of the ticket we wish to retrieve.
      * @return the requested ticket.
-     * @throws InvalidTicketClassException if the ticket does not match the
      * class provided.
      */
     Ticket getTicket(String ticketId, Class<? extends Ticket> clazz);

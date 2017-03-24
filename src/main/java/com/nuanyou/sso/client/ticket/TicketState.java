@@ -6,9 +6,7 @@
 package com.nuanyou.sso.client.ticket;
 
 /**
- * @author Scott Battaglia
- * @version $Revision$ $Date$
- * @since 3.0.5
+ * @author Felix
  */
 public interface TicketState {
 
