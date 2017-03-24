@@ -63,8 +63,7 @@ public class ItemTuanController {
             BigDecimal price = itemService.calcItemTuanPrice(id);
             if (price.compareTo(BigDecimal.ZERO) != 0) {//有单品时
                 entity.setOkpPrice(price);
-//                entity.setKpPrice(price);
-//                entity.setMchPrice(price);
+                model.addAttribute("hasItems", true);
             }
 
             model.addAttribute("entity", entity);
@@ -135,13 +134,6 @@ public class ItemTuanController {
 
         model.addAttribute("entity", entity);
         return "itemTuan/list";
-    }
-
-    @RequestMapping(path = "api/saveItem", method = RequestMethod.POST)
-    @ResponseBody
-    public APIResult saveItem(Item item) {
-        itemDao.save(item);
-        return new APIResult();
     }
 
     @RequestMapping(path = "api/list")
