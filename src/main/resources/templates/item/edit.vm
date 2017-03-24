@@ -70,7 +70,7 @@
                                 <div class="controls">
                                     <input name="kpPrice" type="text" class="span11" value="$!entity.kpPrice">
                                 </div>
-                                <label class="control-label">商户价</label>
+                                <label class="control-label">暖游价</label>
                                 <div class="controls">
                                     <input name="mchPrice" type="text" class="span11" placeholder="$!entity.kpPrice" value="$!entity.mchPrice">
                                 </div>

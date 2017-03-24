@@ -228,8 +228,9 @@
             #else
             $("#btn-edit").hide();
             #end
-        var box = null;
+
         // 取得商户可选择的单品分类列表以及单品商品列表，弹出套餐产品设置页面
+        var box = null;
         $(".setDetail").on("click", function () {
             if (box == null) {
                 var mchId = $("select[name='merchant.id']").val();
@@ -242,74 +243,75 @@
                     alert("请选择套餐分类!");
                     return false;
                 }
+                box = new ItemDetailBox();
 
-                $.ajax({
-                    url: '/itemCat/api/list', async: false, data: {id: mchId, display: true},
-                    success: function (result) {
-                        itemCats = result.data;
-                    }
-                });
-                $.ajax({
-                    url: '/item/api/list', async: false, data: {'merchant.id': mchId, 'type': 1, 'display': true},
-                    success: function (result) {
-                        items = result.data;
-                    }
-                });
                 var itemId = $("input[name='id']").val();
-                var itemTuans = [];
                 if (itemId) {
                     $.ajax({
-                        url: '/itemTuan/api/list', async: false, data: {itemId: itemId},
+                        url: '/itemTuan/api/list', async: true, data: {itemId: itemId},
                         success: function (result) {
-                            itemTuans = result.data;
+                            box.initSelecteditemList(result.data);
                         }
                     });
                 }
-                box = new ItemDetailBox(itemCats, items, itemTuans);
-                box.initial();
+                $.ajax({
+                    url: '/itemCat/api/list', async: true, data: {id: mchId, display: true},
+                    success: function (result) {
+                        box.initCatList(result.data);
+                    }
+                });
+                $.ajax({
+                    url: '/item/api/list', async: true, data: {'merchant.id': mchId, type: 1, display: true},
+                    success: function (result) {
+                        box.initItemList(result.data);
+                    }
+                });
             }
             $("#modal-item-list").modal("show");
         });
 
 
-        function ItemDetailBox(cats, items, itemTuans) {
+        function ItemDetailBox() {
             var catList = $("#catList");
             var itemList = $("#itemList");
             var selecteditemList = $("#selecteditemList");
 
-            this.initial = function () {
+            var itemTuans;
+
+
+            this.initCatList = function (cats) {
                 catList.empty();
-                itemList.empty();
-                selecteditemList.empty();
-
-                var temp = $("input[name='itemTuans']").val();
-                if (temp)
-                    itemTuans = $.parseJSON(temp);
-
                 for (var i in cats) {
                     var cat = cats[i];
                     catList.append("<li cat-id='" + cat.id + "'><a class='btn' href='javascript:void(0);'>" + cat.name + "</a></li>");
                 }
                 catList.find("li").on("click", catList.refreshItem);
-
+            };
+            this.initItemList = function (items) {
+                itemList.empty();
                 for (var i in items) {
                     var item = items[i];
                     itemList.append('<li style="display: none;" cat-id="' + item.cat.id + '" item-id="' + item.id + '" item-name="' + item.name + '" item-kpname="' + item.kpname + '" item-okpprice="' + item.okpPrice + '" item-kpprice="' + item.kpPrice + '"><a href="javascript:void(0);">' + item.name + '<i class="icon-plus"></i></a></li>');
                 }
                 itemList.find("li").on("click", itemList.addItem);
-
                 catList.find("li").get(0).click();
+            };
+            this.initSelecteditemList = function (itemTuansCall) {
+                itemTuans = itemTuansCall;
+                var temp = $("input[name='itemTuans']").val();
+                if (temp)
+                    itemTuansCall = $.parseJSON(temp);
 
                 renderSelecteditemList();
                 $("#detail-save").on("click", function () {
-                    $("input[name='itemTuans']").val(JSON.stringify(itemTuans));
+                    $("input[name='itemTuans']").val(JSON.stringify(itemTuansCall));
                     //有单品情况下
-                    if (itemTuans.length > 0) {
+                    if (itemTuansCall.length > 0) {
                         var hasCustom = false;
                         var kpTotal = 0;
                         var okpTotal = 0;
-                        for (var k in itemTuans) {
-                            var itemTuan = itemTuans[k];
+                        for (var k in itemTuansCall) {
+                            var itemTuan = itemTuansCall[k];
                             var subItem = itemTuan.subItem;
 
                             var kpPrice = parseFloat(subItem.kpPrice);
@@ -465,7 +467,6 @@
     </script>
     #include("common/image-support.vm")
     <script src="/dist/js/cascade-select.js"></script>
-
     <script charset="utf-8" src="/dist/kindeditor/kindeditor.js"></script>
     <script type="text/javascript">
         var editor;
