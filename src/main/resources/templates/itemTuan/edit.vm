@@ -30,7 +30,7 @@
                             <div class="control-group">
                                 <label class="control-label">商户</label>
                                 <div class="controls">
-                                    <select name="merchant.id" class="span9 select2" target-name="cat.id" target-url="/itemCat/api/list">
+                                    <select name="merchant.id" class="span9 select2" target-name="cat.id" target-url="/itemCat/api/list?display=true">
                                         #foreach($e in $!merchants)
                                             <option value="$!e.id" #if($!e.id == $!entity.merchant.id)
                                                     selected #end>$!e.id:$!e.name</option>
@@ -76,12 +76,11 @@
                                 </div>
                                 <label class="control-label">现价(本地)</label>
                                 <div class="controls">
-                                    <input name="kpPrice" type="text" class="span9" value="$!entity.kpPrice">
+                                    <input name="kpPrice" type="text" class="span9" value="$!entity.kpPrice" placeholder="单品售价之和">
                                 </div>
-                                <label class="control-label">商户价</label>
+                                <label class="control-label">暖游价</label>
                                 <div class="controls">
-                                    <input name="mchPrice" type="text" class="span9" placeholder="$!entity.kpPrice"
-                                           value="$!entity.mchPrice">
+                                    <input name="mchPrice" type="text" class="span9" value="$!entity.mchPrice" placeholder="单品暖游价之和">
                                 </div>
                                 <label class="control-label">是否推荐</label>
                                 <div class="controls">
@@ -137,7 +136,7 @@
         </div>
     </div>
 
-    <div id="doc-modal-basic" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div id="modal-item-list" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3>明细编辑</h3>
@@ -169,10 +168,52 @@
             </div>
         </div>
         <div class="modal-footer">
+            <button class="btn btn-primary" id="btn-add-custom">自定义商品</button>
             <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
             <button class="btn btn-primary" id="detail-save">保存</button>
         </div>
     </div>
+
+    <div id="modal-add-custom" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>自定义商品</h3>
+        </div>
+        <div class="modal-body">
+            <div>
+                <form id="customItem" action="saveItem" method="post">
+                    <input name="itemType" type="hidden" type="4">
+                    <div class="control-group">
+                        <label class="control-label">中文名称</label>
+                        <div class="controls">
+                            <input name="custom-name" type="text" class="span5">
+                        </div>
+                        <label class="control-label">原价(本地)</label>
+                        <div class="controls">
+                            <input name="custom-price" type="text" class="span5">
+                        </div>
+                        <label class="control-label">数量</label>
+                        <div class="controls">
+                            <input name="custom-num" type="number" class="span5">
+                        </div>
+
+                        <label class="control-label">列表图</label>
+                        <div class="controls">
+                            <input type="text" class="span4" name="custom-imgUrl" id="itemImg">
+                            <button type="button" class="btn btn-success previewBtn" data-id="itemImg">预览</button>
+                            <button type="button" class="btn btn-success uploadImgBtn" data-id="itemImg" imageSpec="ItemList">上传</button>
+                            <p>尺寸: 320 * 240, 限制: 50k</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-close-custom">取消</button>
+            <button class="btn btn-primary btn-save-custom">保存</button>
+        </div>
+    </div>
+
     #parse("common/js-support.vm")
 
 
@@ -192,43 +233,47 @@
             #else
             $("#btn-edit").hide();
             #end
-
+        var box = null;
         // 取得商户可选择的单品分类列表以及单品商品列表，弹出套餐产品设置页面
         $(".setDetail").on("click", function () {
-            var mchId = $("select[name='merchant.id']").val();
-            if (!mchId) {
-                alert("请选择商户!");
-                return false;
-            }
-            var itemcat = $("select[name='cat.id']").val();
-            if (!itemcat) {
-                alert("请选择套餐分类!");
-                return false;
-            }
+            if (box == null) {
+                var mchId = $("select[name='merchant.id']").val();
+                if (!mchId) {
+                    alert("请选择商户!");
+                    return false;
+                }
+                var itemcat = $("select[name='cat.id']").val();
+                if (!itemcat) {
+                    alert("请选择套餐分类!");
+                    return false;
+                }
 
-            $.ajax({
-                url: '/itemCat/api/list', async: false, data: {id: mchId},
-                success: function (result) {
-                    itemCats = result.data;
-                }
-            });
-            $.ajax({
-                url: '/item/api/list', async: false, data: {'merchant.id': mchId},
-                success: function (result) {
-                    items = result.data;
-                }
-            });
-            var itemId = $("input[name='id']").val();
-            var itemTuans = [];
-            if (itemId) {
                 $.ajax({
-                    url: '/itemTuan/api/list', async: false, data: {itemId: itemId},
+                    url: '/itemCat/api/list', async: false, data: {id: mchId, display: true},
                     success: function (result) {
-                        itemTuans = result.data;
+                        itemCats = result.data;
                     }
                 });
+                $.ajax({
+                    url: '/item/api/list', async: false, data: {'merchant.id': mchId, 'itemType': 1, 'display': true},
+                    success: function (result) {
+                        items = result.data;
+                    }
+                });
+                var itemId = $("input[name='id']").val();
+                var itemTuans = [];
+                if (itemId) {
+                    $.ajax({
+                        url: '/itemTuan/api/list', async: false, data: {itemId: itemId},
+                        success: function (result) {
+                            itemTuans = result.data;
+                        }
+                    });
+                }
+                box = new ItemDetailBox(itemCats, items, itemTuans);
+                box.initial();
             }
-            new ItemDetailBox(itemCats, items, itemTuans).initial();
+            box.show();
         });
 
 
@@ -261,31 +306,47 @@
                 catList.find("li").get(0).click();
 
                 renderSelecteditemList();
-                $("#doc-modal-basic").modal("show");
-
                 $("#detail-save").on("click", function () {
                     $("input[name='itemTuans']").val(JSON.stringify(itemTuans));
                     if (itemTuans.length > 0) {
-                        var total = 0;
+                        var hasCustom = false;
+                        var kpTotal = 0;
+                        var okpTotal = 0;
                         for (var k in itemTuans) {
                             var itemTuan = itemTuans[k];
-                            var price = parseFloat(itemTuan.subItem.kpPrice);
-                            var num = parseFloat(itemTuan.num);
-                            total += price * num;
+                            var kpPrice = parseFloat(itemTuan.subItem.kpPrice);
+                            var okpPrice = parseFloat(itemTuan.subItem.okpPrice);
 
+                            var num = parseInt(itemTuan.num);
+                            kpTotal += kpPrice * num;
+                            okpTotal += okpPrice * num;
+
+                            if (itemTuan.subItem.id < 0 || itemTuan.subItem.itemType == 4) {
+                                hasCustom = true;
+                            }
                         }
-                        $("input[name=okpPrice]").attr("readonly", true).val(total);
-                        $("input[name=kpPrice]").attr("readonly", true).val(total);
-                        $("input[name=mchPrice]").attr("readonly", true).val(total);
+                        $("input[name=okpPrice]").attr("readonly", true).val(okpTotal.toFixed(2));
+
+                        if (hasCustom) {
+                            $("input[name=kpPrice]").val(okpTotal.toFixed(2));
+                            $("input[name=mchPrice]").val(okpTotal.toFixed(2));
+                        } else {
+                            $("input[name=kpPrice]").val(null);
+                            $("input[name=mchPrice]").val(null);
+                        }
                     } else {
                         $("input[name=okpPrice]").attr("readonly", false).val(0);
-                        $("input[name=kpPrice]").attr("readonly", false).val(0);
-                        $("input[name=mchPrice]").attr("readonly", false).val(0);
+                        $("input[name=kpPrice]").val(0);
+                        $("input[name=mchPrice]").val(0);
                     }
 
-                    $("#doc-modal-basic").modal('hide');
+                    $("#modal-item-list").modal('hide');
                 });
             };
+
+            this.show = function () {
+                $("#modal-item-list").modal("show");
+            }
 
             catList.refreshItem = function () {
                 var catId = $(this).attr("cat-id");
@@ -323,12 +384,12 @@
 
             selecteditemList.minus = function () {
                 var li = $(this);
-                var subItemId = parseInt(li.attr("item-id"));
+                var subItemId = li.attr("item-id");
 
                 // 减少选择的单品，如果已经是最后一个，删除整条单品记录
                 for (var k in itemTuans) {
                     var itemTuan = itemTuans[k];
-                    if (itemTuan.subItem.id == subItemId) {
+                    if (itemTuan.subItem.id.toString() == subItemId) {
                         if (itemTuan.num == 1) {
                             itemTuans.splice(k, 1);
                         } else {
@@ -360,6 +421,52 @@
                 }
                 $("#selecteditemList").find("a").on("click", selecteditemList.minus);
             };
+
+            $("#btn-add-custom").on("click", function () {
+                $("#modal-item-list").modal("hide");
+                $("#modal-add-custom").modal("show");
+            });
+            $(".btn-close-custom").on("click", function () {
+                $("#modal-add-custom").modal("hide");
+                $("#modal-item-list").modal("show");
+            });
+            $(".btn-save-custom").on("click", function () {
+                var form = $($("#customItem"));
+                var itemTuan = {};
+                var item = {};
+                itemTuan.num = form.find("input[name='custom-num']").val();
+                itemTuan.subItem = item;
+                item.id = 0 - Math.round(Math.random() * 100000);
+                item.name = form.find("input[name='custom-name']").val();
+                item.kpname = "";
+                item.itemType = 4;
+                item.okpPrice = parseInt(form.find("input[name='custom-price']").val());
+                item.kpPrice = item.okpPrice;
+                item.indexImgUrl = form.find("input[name='custom-imgUrl']").val();
+                if (!itemTuan.num) {
+                    alert("数量不能为空");
+                    return;
+                }
+                if (!item.name) {
+                    alert("名称不能为空");
+                    return;
+                }
+                if (!item.okpPrice) {
+                    alert("原价不能为空");
+                    return;
+                }
+                if (!item.indexImgUrl) {
+                    alert("列表图不能为空");
+                    return;
+                }
+
+                itemTuans.push(itemTuan);
+                renderSelecteditemList();
+                $("#customItem")[0].reset();
+
+                $("#modal-add-custom").modal("hide");
+                $("#modal-item-list").modal("show");
+            });
         }
     </script>
     #include("common/image-support.vm")

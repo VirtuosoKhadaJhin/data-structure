@@ -14,7 +14,7 @@ public interface ItemService {
 
     Item saveNotNull(ItemVO vo);
 
-    Item saveNotNull(Item item, List<ItemTuan> itemTuans);
+    Item saveNotNull(ItemVO vo, List<ItemTuan> itemTuans);
 
     BigDecimal calcItemTuanPrice(Long id);
 

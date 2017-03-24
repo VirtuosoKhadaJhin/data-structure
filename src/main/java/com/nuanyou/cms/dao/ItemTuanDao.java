@@ -12,6 +12,8 @@ public interface ItemTuanDao extends JpaRepository<ItemTuan, Long> {
 
     List<ItemTuan> findByItemId(Long itemId);
 
+    Integer countByItemId(Long itemId);
+
     void deleteByItemId(Long itemId);
 
 }
