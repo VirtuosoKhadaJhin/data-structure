@@ -73,7 +73,7 @@
                                 </div>
                                 <label class="control-label">原价(本地)</label>
                                 <div class="controls">
-                                    <input name="okpPrice" type="text" class="span9" value="$!entity.okpPrice" #if($hasItems)required#end>
+                                    <input name="okpPrice" type="text" class="span9" value="$!entity.okpPrice" #if($hasItems)required readonly#end>
                                 </div>
                                 <label class="control-label">现价(本地)</label>
                                 <div class="controls">
@@ -232,6 +232,7 @@
         // 取得商户可选择的单品分类列表以及单品商品列表，弹出套餐产品设置页面
         var box = null;
         $(".setDetail").on("click", function () {
+            if (box == null) {
                 var mchId = $("select[name='merchant.id']").val();
                 if (!mchId) {
                     alert("请选择商户!");
@@ -265,6 +266,8 @@
                         box.initItemList(result.data);
                     }
                 });
+            }
+            box.reset();
             $("#modal-item-list").modal("show");
         });
 
@@ -275,6 +278,15 @@
             var selecteditemList = $("#selecteditemList");
 
             var itemTuans;
+
+            this.reset = function () {
+                var val = $("input[name='itemTuans']").val();
+                if (val)
+                    itemTuans = $.parseJSON(val);
+                else
+                    itemTuans = [];
+                renderSelecteditemList();
+            };
 
 
             this.initCatList = function (cats) {
@@ -296,20 +308,18 @@
             };
             this.initSelecteditemList = function (itemTuansCall) {
                 itemTuans = itemTuansCall;
-                var temp = $("input[name='itemTuans']").val();
-                if (temp)
-                    itemTuansCall = $.parseJSON(temp);
+                var temp = $("input[name='itemTuans']").val(JSON.stringify(itemTuansCall));
 
                 renderSelecteditemList();
                 $("#detail-save").on("click", function () {
-                    $("input[name='itemTuans']").val(JSON.stringify(itemTuansCall));
+                    $("input[name='itemTuans']").val(JSON.stringify(itemTuans));
                     //有单品情况下
-                    if (itemTuansCall.length > 0) {
+                    if (itemTuans.length > 0) {
                         var hasCustom = false;
                         var kpTotal = 0;
                         var okpTotal = 0;
-                        for (var k in itemTuansCall) {
-                            var itemTuan = itemTuansCall[k];
+                        for (var k in itemTuans) {
+                            var itemTuan = itemTuans[k];
                             var subItem = itemTuan.subItem;
 
                             var kpPrice = parseFloat(subItem.kpPrice);
@@ -326,16 +336,16 @@
 
                         //有自定义商品情况
                         if (hasCustom) {
-                            $("input[name=kpPrice]").attr("required", false).val(okpTotal.toFixed(2)).attr("placeholder","单品现价之和");
-                            $("input[name=mchPrice]").attr("required", false).val(okpTotal.toFixed(2)).attr("placeholder","单品暖游价之和");
+                            $("input[name=kpPrice]").attr("required", false).val(okpTotal.toFixed(2)).attr("placeholder", "单品现价之和");
+                            $("input[name=mchPrice]").attr("required", false).val(okpTotal.toFixed(2)).attr("placeholder", "单品暖游价之和");
                         } else {
-                            $("input[name=kpPrice]").attr("required", false).val(null).attr("placeholder","单品现价之和");
-                            $("input[name=mchPrice]").attr("required", false).val(null).attr("placeholder","单品暖游价之和");
+                            $("input[name=kpPrice]").attr("required", false).val(null).attr("placeholder", "单品现价之和");
+                            $("input[name=mchPrice]").attr("required", false).val(null).attr("placeholder", "单品暖游价之和");
                         }
                     } else {
                         $("input[name=okpPrice]").attr("required", true).attr("readonly", false);
-                        $("input[name=kpPrice]").attr("required", true).attr("placeholder","");
-                        $("input[name=mchPrice]").attr("required", true).attr("placeholder","");
+                        $("input[name=kpPrice]").attr("required", true).attr("placeholder", "");
+                        $("input[name=mchPrice]").attr("required", true).attr("placeholder", "");
 
                     }
 
