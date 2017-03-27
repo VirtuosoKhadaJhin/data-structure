@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * Created by Felix on 2016/9/12.
  */
 @Configuration
-@ServletComponentScan("com.nuanyou")
+@ServletComponentScan("com.nuanyou.cms")
 public class MyApplictionContext implements ApplicationContextAware {
 
     public static ApplicationContext myapp = null;
