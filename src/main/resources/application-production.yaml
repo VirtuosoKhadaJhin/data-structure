@@ -57,3 +57,13 @@ AWS:
       refund: arn:aws:sns:ap-northeast-2:904656167085:prod-ny-v3-refund
       refundSuccess: arn:aws:sns:ap-northeast-2:904656167085:prod-ny-v3-refundSuccess
       refundFail: arn:aws:sns:ap-northeast-2:904656167085:prod-ny-v3-refundFail
+
+
+sso:
+  urlPatterns: /*
+  urlExcludePattern: ^/test|^/dist.*|^/favicon.*
+  loginUrl: https://prod.ap-northeast-2.messages.91mice.cn/oauth/corp
+  reLogin: false
+  serverName: http://merchant30.91nuanyou.com
+  validateCodeUrl: https://prod.ap-northeast-2.messages.91mice.cn/corp/oauth/access_token
+  stateExpiredInMilliSeconds: 120000
