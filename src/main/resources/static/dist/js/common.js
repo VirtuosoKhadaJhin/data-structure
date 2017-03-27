@@ -163,9 +163,6 @@ window.onload = function () {
             },
             source: {
                 required: true, maxlength: 20
-            },
-            imgUrl: {
-                required: true
             }
         },
         errorPlacement: function (error, element) {

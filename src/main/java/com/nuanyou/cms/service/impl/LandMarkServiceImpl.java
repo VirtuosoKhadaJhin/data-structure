@@ -1,16 +1,14 @@
 package com.nuanyou.cms.service.impl;
 
 import com.nuanyou.cms.dao.LandMarkDao;
+import com.nuanyou.cms.entity.District;
 import com.nuanyou.cms.entity.Landmark;
-import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.LandMarkService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -36,14 +34,17 @@ public class LandMarkServiceImpl implements LandMarkService {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
-                if (!StringUtils.isEmpty(entity.getName())) {
-                    Predicate p = cb.like(root.get("name"), "%" + entity.getName() + "%");
-                    predicate.add(p);
-                }
-                if (entity.getDistrict() != null && entity.getDistrict().getId() != null) {
-                    Predicate p = cb.equal(root.get("district").get("id"), entity.getDistrict().getId());
-                    predicate.add(p);
-                }
+
+                if (entity.getDisplay() != null)
+                    predicate.add(cb.equal(root.get("display"), entity.getDisplay()));
+
+                if (StringUtils.isNotBlank(entity.getName()))
+                    predicate.add(cb.like(root.get("name"), "%" + entity.getName() + "%"));
+
+                District district = entity.getDistrict();
+                if (district != null && district.getId() != null)
+                    predicate.add(cb.equal(root.get("district").get("id"), district.getId()));
+
                 Predicate[] pre = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(pre)).getRestriction();
             }

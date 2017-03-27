@@ -67,41 +67,41 @@
                                 </div>
                             </div>
 
-                            #if($entity.code)
-                                <div class="control-group Gift">
-                                    <label class="control-label">礼品券使用码</label>
-                                    <div class="controls">
-                                        <input for="code" type="text" class="span8" disabled value="$!entity.code" required>
-                                    </div>
-                                </div>
-                            #end
+##                            #if($entity.code)
+##                                <div class="control-group Gift">
+##                                    <label class="control-label">礼品券使用码</label>
+##                                    <div class="controls">
+##                                        <input for="code" type="text" class="span8" disabled value="$!entity.code" required>
+##                                    </div>
+##                                </div>
+##                            #end
 
                             <div class="control-group Discount">
                                 <label class="control-label">折扣</label>
                                 <div class="controls">
-                                    <input name="discount" for="discount" type="text" class="span8" placeholder="" value="$!entity.discount" required>
+                                    <input name="discount" type="text" class="span8" placeholder="" value="$!entity.discount" required>
                                 </div>
-                            </div>
-                            <div class="control-group Voucher">
                                 <label class="control-label">起始限额</label>
                                 <div class="controls">
-                                    <input name="startPrice" type="text" class="span8" placeholder="" value="$!entity.startPrice" required>
+                                    <input name="startPrice" type="text" class="span8" placeholder="当地货币(Local Currency)" value="$!entity.startPrice" required>
                                 </div>
                                 <label class="control-label">上限</label>
                                 <div class="controls">
-                                    <input name="limitPrice" type="text" class="span8" placeholder="" value="$!entity.limitPrice" required>
+                                    <input name="limitPrice" type="text" class="span8" placeholder="当地货币(Local Currency)" value="$!entity.limitPrice" required>
                                 </div>
+                            </div>
+                            <div class="control-group Voucher">
                                 <label class="control-label">代金券现价</label>
                                 <div class="controls">
-                                    <input name="price" type="text" class="span8" placeholder="" value="$!entity.price" required>
+                                    <input name="price" type="text" class="span8" placeholder="人民币(RMB)" value="$!entity.price" required>
                                 </div>
                                 <label class="control-label">代金券原价</label>
                                 <div class="controls">
-                                    <input name="oPrice" type="text" class="span8" placeholder="" value="$!entity.oPrice" required>
+                                    <input name="oPrice" type="text" class="span8" placeholder="人民币(RMB)" value="$!entity.oPrice" required>
                                 </div>
-                                <label class="control-label">代金券商户价</label>
+                                <label class="control-label">代金券暖游价</label>
                                 <div class="controls">
-                                    <input name="merchantPrice" type="text" class="span8" placeholder="" value="$!entity.merchantPrice" required>
+                                    <input name="merchantPrice" type="text" class="span8" placeholder="当地货币(Local Currency)" value="$!entity.merchantPrice" required>
                                 </div>
                             </div>
 

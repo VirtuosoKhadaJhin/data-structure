@@ -38,14 +38,12 @@ public class ItemController {
 
     @RequestMapping(path = {"edit", "add"}, method = RequestMethod.GET)
     public String edit(@RequestParam(required = false) Long id, Model model) {
-        List<Merchant> merchants = merchantService.getIdNameList();
+        List<Merchant> merchants = merchantService.getIdNameList(true);
         model.addAttribute("merchants", merchants);
-        Long mchId = merchants.get(0).getId();
 
         if (id != null) {
             Item entity = itemDao.findOne(id);
             model.addAttribute("entity", entity);
-            mchId = entity.getMerchant().getId();
         }
 
         model.addAttribute("tuanTypes", TuanType.values());
@@ -55,7 +53,7 @@ public class ItemController {
 
     @RequestMapping(path = "detail", method = RequestMethod.GET)
     public String detail(Long id, Model model) {
-        List<Merchant> merchants = merchantService.getIdNameList();
+        List<Merchant> merchants = merchantService.getIdNameList(true);
         model.addAttribute("merchants", merchants);
 
         Item entity = itemDao.findOne(id);
@@ -74,7 +72,7 @@ public class ItemController {
         Item item = itemService.saveNotNull(vo);
         model.addAttribute("entity", item);
 
-        List<Merchant> merchants = merchantService.getIdNameList();
+        List<Merchant> merchants = merchantService.getIdNameList(true);
         model.addAttribute("merchants", merchants);
 
         model.addAttribute("tuanTypes", TuanType.values());

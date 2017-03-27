@@ -1,6 +1,5 @@
 package com.nuanyou.cms.dao;
 
-import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.District;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -19,6 +18,9 @@ public interface DistrictDao extends JpaRepository<District, Long>, JpaSpecifica
 
     @Query(value = "select new District(t.id,t.name) from District t")
     List<District> getIdNameList();
+
+    @Query(value = "select new District(t.id,t.name) from District t where t.display=?1")
+    List<District> getIdNameList(boolean display);
 
     @Query(value = "select new District(t.id,t.name) from District t where city.id=:id")
     List<District> findIdNameList(@Param("id") Long cityId);

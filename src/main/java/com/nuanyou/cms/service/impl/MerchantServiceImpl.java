@@ -59,8 +59,15 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public List<Merchant> getIdNameList() {
-        List<Merchant> merchants = merchantDao.getIdNameList();
-        return merchants;
+        return getIdNameList(null);
+    }
+
+    @Override
+    public List<Merchant> getIdNameList(Boolean display) {
+        if (display == null)
+            return merchantDao.getIdNameList();
+        else
+            return merchantDao.getIdNameList(display);
 
  /*       if (cacheManager.getValue(key)!=null){
             return cacheManager.getValue(key);

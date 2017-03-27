@@ -20,4 +20,7 @@ public interface ItemCatDao extends JpaRepository<ItemCat, Long>, JpaSpecificati
     @Query(value = "select new ItemCat(t.id, t.name, t.kpname) from ItemCat t where t.merchant.id=:id")
     List<ItemCat> findIdNameList(@Param("id") Long id);
 
+    @Query(value = "select new ItemCat(t.id, t.name, t.kpname) from ItemCat t where t.merchant.id=:id and t.display=:display")
+    List<ItemCat> findIdNameList(@Param("id") Long id, @Param("display") boolean display);
+
 }

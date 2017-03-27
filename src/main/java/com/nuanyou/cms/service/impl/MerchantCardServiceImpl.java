@@ -58,6 +58,8 @@ public class MerchantCardServiceImpl implements MerchantCardService {
                         predicate.add(cb.equal(root.get("merchant").get("id").as(Long.class), mchId));
                 }
 
+                predicate.add(cb.equal(root.get("deleted"), entity.isDeleted()));
+
                 Long id = entity.getId();
                 if (id != null)
                     predicate.add(cb.equal(root.get("id").as(Long.class), id));
