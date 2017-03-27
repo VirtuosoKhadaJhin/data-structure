@@ -6,9 +6,6 @@ buildscript {
         maven {
             url "http://nexus.hellobiz.cn/nexus/content/repositories/central/"
         }
-        maven {
-            url "http://nexus.hellobiz.cn/nexus/content/repositories/releases/"
-        }
         mavenCentral()
     }
     dependencies {
@@ -32,9 +29,6 @@ repositories {
     maven {
         url "http://nexus.hellobiz.cn/nexus/content/repositories/central/"
     }
-    maven {
-        url "http://nexus.hellobiz.cn/nexus/content/repositories/releases/"
-    }
     mavenCentral()
 }
 
@@ -54,7 +48,7 @@ dependencies {
     compile('mysql:mysql-connector-java')
     compile('ch.qos.logback:logback-core:1.1.7')
     compile('ch.qos.logback:logback-classic:1.1.7')
-//    compile('org.slf4j:slf4j-api:1.7.21')
+    compile('org.slf4j:slf4j-api:1.7.21')
     compile('org.codehaus.janino:janino:3.0.6')
     compile('io.dropwizard.metrics:metrics-core:3.1.2')
     compile('io.dropwizard.metrics:metrics-logback:3.1.2')
@@ -70,9 +64,6 @@ dependencies {
     compile('net.coobird:thumbnailator:0.4.8')
     compile('com.google.zxing:core:3.2.1')
     compile('com.sun.mail:mailapi:1.5.2')
-    compile('com.fasterxml.jackson.core:jackson-core:2.6.3')
-//    compile('com.nuanyou:sso-client:2.1.5')
-//   compile('com.nuanyou:sso-client:1.1.7:sources')
 
     compile('com.amazonaws:aws-java-sdk-sns:1.11.29')
     testCompile('org.springframework.boot:spring-boot-starter-test')

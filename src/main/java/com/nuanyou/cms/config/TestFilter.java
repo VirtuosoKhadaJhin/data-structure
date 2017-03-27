@@ -14,7 +14,7 @@ public class TestFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        System.out.println("initFilter"+this.getClass().getName());
+        System.out.println("TestFilter");
     }
 
     @Override
