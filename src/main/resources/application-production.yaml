@@ -62,8 +62,8 @@ AWS:
 sso:
   urlPatterns: /*
   urlExcludePattern: ^/test|^/dist.*|^/favicon.*
-  loginUrl: https://prod.ap-northeast-2.messages.91mice.cn/oauth/corp
+  loginUrl: https://testuser.api.91nuanyou.com/oauth/corp
   reLogin: false
   serverName: http://merchant30.91nuanyou.com
-  validateCodeUrl: https://prod.ap-northeast-2.messages.91mice.cn/corp/oauth/access_token
+  validateCodeUrl: https://testuser.api.91nuanyou.com/corp/oauth/access_token
   stateExpiredInMilliSeconds: 120000
