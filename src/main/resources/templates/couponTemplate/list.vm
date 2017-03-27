@@ -3,7 +3,11 @@
     <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
     <a href="#" class="tip-bottom">优惠券分类</a>
 </div>
-<!--列表开始-->
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>优惠券分类</h5>
+    <a class="btn btn-mini btn-info buttons" href="add">新增</a>
+</div>
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
@@ -14,7 +18,7 @@
         <th>价格</th>
         <th>有效天数</th>
         <th>起始限额</th>
-        <th class="table-set">操作</th>
+        <th class="table-set" width="42px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -34,9 +38,6 @@
 </table>
 <!--列表结束-->
 
-<div class="form-actions ">
-    <a href="add" class="btn btn-success">新建</a>
-</div>
 #parse("common/list_mid.vm")
 
 <form class="form-horizontal " method="get">

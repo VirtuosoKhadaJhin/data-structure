@@ -1,24 +1,23 @@
 #parse("common/list_start.vm")
 <div id="breadcrumb">
     <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
-    <a href="/item/list" class="tip-bottom" data-original-title="">商品单品管理</a>
+    <a href="list" class="tip-bottom" data-original-title="">商户卡券管理</a>
 </div>
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
-    <h5>商品列表</h5>
+    <h5>卡券列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="add">新增</a>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
         <th>ID</th>
-        <th>名称</th>
+        <th>标题</th>
         <th>类型</th>
         <th>商户</th>
-        <th>创建时间</th>
         <th>到期时间</th>
-        <th>数量</th>
         <th>是否显示</th>
-        <th>操作</th>
+        <th width="136px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -28,26 +27,22 @@
             <td>$!entity.title</td>
             <td>$!entity.type.name</td>
             <td>$!entity.merchant.name</td>
-            <td>$!entity.createTime</td>
-            <td>$!entity.validTime</td>
-            <td>$!entity.num</td>
+            <td #if($!entity.validTime.time < $now.time)style='color: red'#end>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.validTime)</td>
             <td>#if($!entity.display)显示#else 隐藏#end</td>
             <td>
                 <a class="btn btn-success btn-mini" data-id="$!entity.id" href="detail?id=$!entity.id">查看</a>
                 <a class="btn btn-info btn-mini" data-id="$!entity.id" href="edit?id=$!entity.id">编辑</a>
+                <button data-id="$!entity.id" class="btn btn-danger btn-mini remove-item">删除</button>
             </td>
         </tr>
         #end
     </tbody>
 </table>
-<div class="form-actions ">
-    <a class="btn btn-info" href="add">新增</a>
-</div>
 #parse("common/list_mid.vm")
-<form">
+<form>
     <div class="control-group">
         <label>商户</label>
-        <select name="merchant.id" class="span11">
+        <select name="merchant.id" class="span11 select2">
             <option value="">全部</option>
             #foreach($merchant in $!merchants)
                 <option value="$!merchant.id"
@@ -57,13 +52,28 @@
                 >$!merchant.id:$!merchant.name</option>
             #end
         </select>
-    </div>
-    <div class="control-group">
-        <span>商品分类名称:</span>
-        <input type="text" name="name" class="span11" value="$!entity.name" placeholder="商品分类名称"/>
+        <label class="control-label">卡券标题或ID</label>
+        <input type="text" name="nameOrId" class="span11" value="$!nameOrId"/>
+        <label class="control-label">类型</label>
+        <select name="type" class="span11">
+            <option value="">全部</option>
+            #foreach($e in $!cardTypes)
+                <option value="$!e" #if($!e == $!entity.type) selected #end>$!e.name</option>
+            #end
+        </select>
+        <label>是否显示</label>
+        <select name="display" class="span11">
+            <option value="">全部</option>
+            <option value="true" #if($!entity.display==true)selected#end>显示</option>
+            <option value="false" #if($!entity.display==false)selected#end>隐藏</option>
+        </select>
+        <label>到期时间</label>
+        <input name="beginDate" value="$!dateFormatter.format("yyyy-MM-dd",$!validTime.beginDate)" type="text" class="span11 dateFormat" placeholder="开始时间">
+        <input name="endDate" value="$!dateFormatter.format("yyyy-MM-dd",$!validTime.endDate)" type="text" class="span11 dateFormat" placeholder="结束时间">
     </div>
     <div class="control-group">
         <button type="submit" class="btn btn-primary">查询</button>
     </div>
 </form>
+<script src="/dist/js/curd.js"></script>
 #parse("common/list_end.vm")

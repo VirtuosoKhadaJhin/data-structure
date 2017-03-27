@@ -22,6 +22,7 @@ public class Order {
     private Long id;
     private String ordersn;
     private String ordercode;
+    private String verifyCode;
     private OrderType ordertype;
     private String transactionid;
     private OrderPayType paytype;
@@ -106,6 +107,14 @@ public class Order {
         this.ordercode = ordercode;
     }
 
+    @Column(name = "verifycode", nullable = true, length = 20)
+    public String getVerifyCode() {
+        return verifyCode;
+    }
+
+    public void setVerifyCode(String verifyCode) {
+        this.verifyCode = verifyCode;
+    }
 
     @Column(name = "ordertype", nullable = true)
     @Convert(converter = OrderTypeConverter.class)
@@ -643,13 +652,12 @@ public class Order {
     }
 
 
-
-
-  /****************Transient****************************/
+    /****************Transient****************************/
     @Transient
     public Boolean getRefundQualified() {
         return getRefundQualified(this);
     }
+
     @Transient
     public String getKppriceF() {
         return PriceUtil.getFormatPrice(kpprice);
@@ -668,18 +676,18 @@ public class Order {
 
     @Transient
     public Double getPayableF() {
-        return payable==null
-                ?this.getPrice()==null?null:this.getPrice().doubleValue():
+        return payable == null
+                ? this.getPrice() == null ? null : this.getPrice().doubleValue() :
                 payable.doubleValue();
     }
 
     @Transient
-    public String getOpriceF(){
+    public String getOpriceF() {
         return oprice == null ? "" : oprice.stripTrailingZeros().toPlainString();
 
     }
 
-    public  Boolean getRefundQualified(Order order) {
+    public Boolean getRefundQualified(Order order) {
         if (order.getOrderstatus() == NewOrderStatus.Consumed || order.getOrderstatus() == NewOrderStatus.Commented ||
                 order.getOrderstatus() == NewOrderStatus.AutoVerification || order.getOrderstatus() == NewOrderStatus.MerchantVerfication) {
             if (order.getRefundstatus() == null || order.getRefundstatus() == RefundStatus.Unknown) {

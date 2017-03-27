@@ -10,7 +10,7 @@
 <div id="content">
     <div class="container-fluid">
         <div class="row-fluid">
-            <div class="span6">
+            <div class="span8">
                 <div class="widget-box">
                     <div id="breadcrumb">
                         <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
@@ -26,15 +26,15 @@
                             <div class="control-group">
                                 <label class="control-label">商户</label>
                                 <div class="controls">
-                                    <select name="merchant.id" class="span11 select2">
+                                    <select name="merchant.id" class="span8 select2">
                                         #foreach($e in $!merchants)
-                                            <option value="$!e.id" #if($!e.id == $!entity.merchant.id) selected #end>$!e.name</option>
+                                            <option value="$!e.id" #if($!e.id == $!entity.merchant.id) selected #end>$!e.id:$!e.name</option>
                                         #end
                                     </select>
                                 </div>
                                 <label class="control-label">类型</label>
                                 <div class="controls">
-                                    <select name="type" class="span11" def-value="$!entity.type">
+                                    <select name="type" class="span8" def-value="$!entity.type">
                                         #foreach($e in $!cardTypes)
                                             <option value="$!e" #if($!e == $!entity.type) selected #end>$!e.name</option>
                                         #end
@@ -42,68 +42,66 @@
                                 </div>
                                 <label class="control-label">名称</label>
                                 <div class="controls">
-                                    <input name="title" for="title" type="text" class="span11" placeholder="名称" value="$!entity.title">
+                                    <input name="title" for="title" type="text" class="span8" placeholder="名称" value="$!entity.title" required>
                                 </div>
                                 <label class="control-label">是否显示</label>
                                 <div class="controls">
                                     <input name="display" type="radio" value="true"#if($entity.display)checked#end/>是
                                     <input name="display" type="radio" value="false"#if(!$entity.display)checked#end/>否
                                 </div>
-                                <label class="control-label">数量</label>
-                                <div class="controls">
-                                    <input name="num" type="text" class="span11" placeholder="" value="$!entity.num">
-                                </div>
-                                <label class="control-label">创建时间</label>
-                                <div class="controls">
-                                    <input name="createTime" type="text" class="span11 dateTimeFormat" placeholder="" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.createTime)">
-                                </div>
+##                                <label class="control-label">数量</label>
+##                                <div class="controls">
+##                                    <input name="num" type="number" class="span8" placeholder="无限制" value="$!entity.num" required>
+##                                </div>
                                 <label class="control-label">到期时间</label>
                                 <div class="controls">
-                                    <input name="validTime" type="text" class="span11 dateTimeFormat" placeholder="" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.validTime)">
+                                    <input name="validTime" type="text" class="span8 dateTimeFormat" placeholder="" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.validTime)" required>
                                 </div>
                                 <label class="control-label">描述</label>
                                 <div class="controls">
-                                    <input name="intro" type="text" class="span11" placeholder="" value="$!entity.intro">
+                                    <input name="intro" type="text" class="span8" placeholder="" value="$!entity.intro">
                                 </div>
                                 <label class="control-label">卡券说明</label>
                                 <div class="controls">
-                                    <textarea name="explains" class="span11">$!entity.explains</textarea>
+                                    <textarea name="explains" rows="5" class="span8">$!entity.explains</textarea>
                                 </div>
                             </div>
 
-
-                            <div class="control-group Gift">
-                                <label class="control-label">礼品券使用码</label>
-                                <div class="controls">
-                                    <input name="code" for="code" type="text" class="span11" placeholder="" value="$!entity.code">
+                            #if($entity.code)
+                                <div class="control-group Gift">
+                                    <label class="control-label">礼品券使用码</label>
+                                    <div class="controls">
+                                        <input for="code" type="text" class="span8" disabled value="$!entity.code" required>
+                                    </div>
                                 </div>
-                            </div>
+                            #end
+
                             <div class="control-group Discount">
                                 <label class="control-label">折扣</label>
                                 <div class="controls">
-                                    <input name="discount" for="discount" type="text" class="span11" placeholder="" value="$!entity.discount">
+                                    <input name="discount" for="discount" type="text" class="span8" placeholder="" value="$!entity.discount" required>
                                 </div>
                             </div>
                             <div class="control-group Voucher">
                                 <label class="control-label">起始限额</label>
                                 <div class="controls">
-                                    <input name="startPrice" type="text" class="span11" placeholder="" value="$!entity.startPrice">
+                                    <input name="startPrice" type="text" class="span8" placeholder="" value="$!entity.startPrice" required>
                                 </div>
                                 <label class="control-label">上限</label>
                                 <div class="controls">
-                                    <input name="limitPrice" type="text" class="span11" placeholder="" value="$!entity.limitPrice">
+                                    <input name="limitPrice" type="text" class="span8" placeholder="" value="$!entity.limitPrice" required>
                                 </div>
                                 <label class="control-label">代金券现价</label>
                                 <div class="controls">
-                                    <input name="price" type="text" class="span11" placeholder="" value="$!entity.price">
+                                    <input name="price" type="text" class="span8" placeholder="" value="$!entity.price" required>
                                 </div>
                                 <label class="control-label">代金券原价</label>
                                 <div class="controls">
-                                    <input name="oPrice" type="text" class="span11" placeholder="" value="$!entity.oPrice">
+                                    <input name="oPrice" type="text" class="span8" placeholder="" value="$!entity.oPrice" required>
                                 </div>
                                 <label class="control-label">代金券商户价</label>
                                 <div class="controls">
-                                    <input name="merchantPrice" type="text" class="span11" placeholder="" value="$!entity.merchantPrice">
+                                    <input name="merchantPrice" type="text" class="span8" placeholder="" value="$!entity.merchantPrice" required>
                                 </div>
                             </div>
 
@@ -122,7 +120,7 @@
     <script>
             #if($!disabled)
             $("#btn-save").hide();
-            $(".span11").each(function (i, o) {
+            $(".span8").each(function (i, o) {
                 $(o).attr("disabled", true);
             });
             $("#btn-edit").on("click", function () {
@@ -137,10 +135,14 @@
             #end
 
         $("select[name='type']").on("change", function () {
+            var value = this.value;
             $(this).find("option").each(function (i, o) {
-                var e = $("." + $(o).val());
-                e.hide();
-                e.find("input").val(null);
+                var val = $(o).val();
+                if (val != value) {
+                    var e = $("." + val);
+                    e.hide();
+                    e.find("input").val(null);
+                }
             });
             $("." + $(this).val()).show();
         }).trigger("change");

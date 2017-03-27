@@ -6,6 +6,7 @@
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>特色列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="add?group.id=$!entity.group.id">新增</a>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
@@ -14,7 +15,7 @@
         <th>内容</th>
         <th>专辑</th>
         <th>名称</th>
-        <th>操作</th>
+        <th width="90px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -24,7 +25,7 @@
             <td>$!e.content</td>
             <td>$!e.group.title</td>
             <td>$!e.title</td>
-            <td>
+            <td width="90px">
                 <a class="btn btn-success btn-mini" data-id="$!e.id" href="detail?id=$!e.id">查看</a>
                 <a class="btn btn-info btn-mini" data-id="$!e.id" href="edit?id=$!e.id">编辑</a>
            #*     #if($!e.display)
@@ -35,9 +36,6 @@
         #end
     </tbody>
 </table>
-<div class="form-actions ">
-    <a class="btn btn-info" href="add?group.id=$!entity.group.id">新增</a>
-</div>
 #parse("common/list_mid.vm")
 <form>
     <div class="control-group">

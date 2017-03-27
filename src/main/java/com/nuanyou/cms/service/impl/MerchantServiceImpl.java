@@ -6,6 +6,7 @@ import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.ChannelType;
 import com.nuanyou.cms.entity.enums.CodeType;
 import com.nuanyou.cms.model.MerchantVO;
+import com.nuanyou.cms.service.ItemDetailimgService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.MerchantStaffService;
 import com.nuanyou.cms.util.BeanUtils;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +45,9 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Autowired
     private MerchantStaffService merchantStaffService;
+
+    @Autowired
+    private ItemDetailimgService itemDetailimgService;
 
     @Value("${nuanyou-host}")
     private String nuanyouHost;
@@ -96,7 +99,6 @@ public class MerchantServiceImpl implements MerchantService {
         List<ItemCat> sourceCats = itemCatDao.findByMerchantId(sourceId);
         for (ItemCat sourceCat : sourceCats) {
             ItemCat targetCat = BeanUtils.copyBean(sourceCat, new ItemCat());
-
             targetCat.setMerchant(targetMerchant);
             targetCat.setId(null);
             targetCat = itemCatDao.save(targetCat);
@@ -104,16 +106,22 @@ public class MerchantServiceImpl implements MerchantService {
             List<Item> sourceItems = itemDao.findByMerchantIdAndCatId(sourceId, sourceCat.getId());
             if (!sourceItems.isEmpty()) {
 
-                List<Item> targetItems = new ArrayList<>(sourceItems.size());
                 for (Item sourceItem : sourceItems) {
                     Item targetItem = BeanUtils.copyBean(sourceItem, new Item());
-
                     targetItem.setMerchant(targetMerchant);
                     targetItem.setCat(targetCat);
                     targetItem.setId(null);
-                    targetItems.add(targetItem);
+                    itemDao.save(targetItem);
+
+                    List<ItemDetailimg> sourceImgs = itemDetailimgService.find(new ItemDetailimg(sourceItem.getId()));
+                    for (ItemDetailimg sourceImg : sourceImgs) {
+                        ItemDetailimg targetImg = BeanUtils.copyBean(sourceImg, new ItemDetailimg());
+
+                        targetImg.setReferId(targetItem.getId());
+                        targetImg.setId(null);
+                        itemDetailimgService.saveNotNull(targetImg);
+                    }
                 }
-                itemDao.save(targetItems);
             }
         }
     }

@@ -7,6 +7,7 @@
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>城市列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
@@ -33,7 +34,7 @@
 
         <th>排序</th>
         <th>是否显示</th>
-        <th class="table-set">操作</th>
+        <th class="table-set" width="90px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -52,9 +53,6 @@
         #end
     </tbody>
 </table>
-<div class="form-actions">
-    <a class="btn btn-info" href="edit?type=1">新增</a>
-</div>
 #parse("common/list_mid.vm")
 <form class="form-horizontal " method="get">
     <div class="control-group">

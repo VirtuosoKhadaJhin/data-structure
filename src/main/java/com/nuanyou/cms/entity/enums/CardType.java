@@ -18,16 +18,16 @@ public enum CardType {
      */
     Voucher(3, "代金券");//
 
-    public final Byte value;
+    public final int value;
 
     public final String name;
 
     CardType(int value, String name) {
-        this.value = (byte) value;
+        this.value = value;
         this.name = name;
     }
 
-    public Byte getValue() {
+    public int getValue() {
         return value;
     }
 
@@ -39,18 +39,14 @@ public enum CardType {
         return CardType.values();
     }
 
-    public static CardType toEnum(byte value) {
-        CardType[] values = CardType.values();
-        for (CardType type : values)
-            if ((value & type.value) == type.value)
-                return type;
-        throw new IllegalArgumentException("Cannot create evalue from value: " + value + "!");
-    }
-
     public static CardType toEnum(Integer value) {
         if (value == null)
             return null;
-        return toEnum(value.byteValue());
+        CardType[] values = CardType.values();
+        for (CardType type : values)
+            if (value.equals(type.value))
+                return type;
+        return null;
     }
 
 }

@@ -3,6 +3,11 @@
     <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
     <a href="javascript:void(0);" class="tip-bottom">商户补贴管理</a>
 </div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>列表</h5>
+    <button class="btn btn-mini btn-info buttons update-item" modal-id="update-modal">新增</button>
+</div>
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
@@ -12,7 +17,7 @@
         <th>商户补贴上限</th>
         <th>开始时间</th>
         <th>结束时间</th>
-        <th>操作</th>
+        <th width="90px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -25,16 +30,13 @@
             <td>$!e.startTime</td>
             <td>$!e.endTime</td>
             <td>
-                <button data-id="$!e.id" class="btn btn-info btn-mini update-item" modal-id="update-modal">编辑</button>
                 <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</button>
+                <button data-id="$!e.id" class="btn btn-info btn-mini update-item" modal-id="update-modal">编辑</button>
             </td>
         </tr>
         #end
     </tbody>
 </table>
-<div class="form-actions ">
-    <button class="btn btn-success update-item" modal-id="update-modal">新建</button>
-</div>
 #parse("common/list_mid.vm")
 <div id="update-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
