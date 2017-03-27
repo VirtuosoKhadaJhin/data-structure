@@ -24,17 +24,16 @@
                     </div>
                     <div class="widget-content nopadding">
                         <form class="form-horizontal commonValidate" action="update" method="post" id="itemFrom">
-                            <input name="id" type="hidden" value="$!entity.id">
-                            <input name="itemType" type="hidden" type="2">
-                            <input name="type" type="hidden" type="2">
-                            <input name="itemTuans" type="hidden">
+                            <input type="hidden" name="id" value="$!entity.id">
+                            <input type="hidden" name="itemType" value="2">
+                            <input type="hidden" name="type" value="2">
+                            <input type="hidden" name="itemTuans">
                             <div class="control-group">
                                 <label class="control-label">商户</label>
                                 <div class="controls">
                                     <select name="merchant.id" class="span9 select2" target-name="cat.id" target-url="/itemCat/api/list?display=true">
                                         #foreach($e in $!merchants)
-                                            <option value="$!e.id" #if($!e.id == $!entity.merchant.id)
-                                                    selected #end>$!e.id:$!e.name</option>
+                                            <option value="$!e.id" #if($!e.id == $!entity.merchant.id) selected #end>$!e.id:$!e.name</option>
                                         #end
                                     </select>
                                 </div>
@@ -45,11 +44,11 @@
                                 </div>
                                 <label class="control-label">中文名称</label>
                                 <div class="controls">
-                                    <input name="name" type="text" class="span9" value="$!entity.name">
+                                    <input name="name" type="text" class="span9" value="$!entity.name" maxlength="80">
                                 </div>
                                 <label class="control-label">本地名称</label>
                                 <div class="controls">
-                                    <input name="kpname" type="text" class="span9" value="$!entity.kpname">
+                                    <input name="kpname" type="text" class="span9" value="$!entity.kpname" maxlength="80">
                                 </div>
                                 <label class="control-label">团购类型</label>
                                 <div class="controls">
@@ -73,15 +72,15 @@
                                 </div>
                                 <label class="control-label">原价(本地)</label>
                                 <div class="controls">
-                                    <input name="okpPrice" type="text" class="span9" value="$!entity.okpPrice" #if($hasItems)required readonly#end>
+                                    <input name="okpPrice" type="number" class="span9" value="$!entity.okpPrice" #if($hasItems)readonly#else required#end>
                                 </div>
                                 <label class="control-label">现价(本地)</label>
                                 <div class="controls">
-                                    <input name="kpPrice" type="text" class="span9" value="$!entity.kpPrice" #if(!$hasItems)required#end placeholder="单品现价之和">
+                                    <input name="kpPrice" type="number" class="span9" value="$!entity.kpPrice" #if(!$hasItems)required#end placeholder="单品现价之和">
                                 </div>
                                 <label class="control-label">暖游价</label>
                                 <div class="controls">
-                                    <input name="mchPrice" type="text" class="span9" value="$!entity.mchPrice" #if(!$hasItems)required#end placeholder="单品暖游价之和">
+                                    <input name="mchPrice" type="number" class="span9" value="$!entity.mchPrice" #if(!$hasItems)required#end placeholder="单品暖游价之和">
                                 </div>
                                 <label class="control-label">是否推荐</label>
                                 <div class="controls">
@@ -100,11 +99,11 @@
                                          </div>*#
                                 <label class="control-label">顺序</label>
                                 <div class="controls">
-                                    <input name="sort" type="text" class="span9" value="$!entity.sort">
+                                    <input name="sort" type="number" class="span9" value="$!entity.sort">
                                 </div>
                                 <label class="control-label">概述</label>
                                 <div class="controls">
-                                    <input name="intro" type="text" class="span9" value="$!entity.intro">
+                                    <input name="intro" type="text" class="span9" value="$!entity.intro" maxlength="200">
                                 </div>
                                 <label class="control-label">展示图</label>
                                 <div class="controls">
