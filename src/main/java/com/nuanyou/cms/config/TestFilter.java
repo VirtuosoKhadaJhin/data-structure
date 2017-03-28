@@ -20,7 +20,7 @@ public class TestFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         PrintWriter out = response.getWriter();
-        out.write("TestFilter2017-1-51144");
+        out.write("TestFilter2017-3-28");
         out.close();
         return;
     }
