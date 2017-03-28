@@ -378,6 +378,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatusname("已申请退款");
         order.setRefundreason("匿名操作");
         order.setRefundstatus(RefundStatus.RefundInProgress);//退款中
+        order.setOldrefundstatus(0);
         order.setRefundtime(DateUtils.newDate());
         order.setRefundsource(RefundSource.CMS);//// 退款来源：1.客户端，2.cms，3.商户端
         this.orderDao.save(order);
