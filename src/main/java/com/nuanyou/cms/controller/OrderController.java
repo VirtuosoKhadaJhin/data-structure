@@ -95,12 +95,13 @@ public class OrderController {
         List<Item> items = itemDao.findAll(Example.of(item));
         if (items.size() < 1)
             return new APIResult(ResultCodes.NotFoundItem);
-        APIResult<OrderSave> orderSaveAPIResult = remoteOrderService.ordersSaveTuanPost(7, id, number);
-        OrderSave orderSave = orderSaveAPIResult.getData();
-        Order order = orderDao.findOne(orderSave.getId());
-        if (order != null)
-            remoteOrderService.ordersPayCallbackPost(order.getId());
-        return orderSaveAPIResult;
+
+        APIResult<OrderSave> result = remoteOrderService.ordersSaveTuanPost(7, id, number);
+        if (result.isSuccess()) {
+            OrderSave orderSave = result.getData();
+            result = remoteOrderService.ordersPayCallbackPost(orderSave.getId());
+        }
+        return result;
     }
 
 
