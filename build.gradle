@@ -6,6 +6,9 @@ buildscript {
         maven {
             url "http://nexus.hellobiz.cn/nexus/content/repositories/central/"
         }
+        maven {
+            url "http://nexus.hellobiz.cn/nexus/content/repositories/releases/"
+        }
         mavenCentral()
     }
     dependencies {
@@ -28,6 +31,9 @@ targetCompatibility = 1.7
 repositories {
     maven {
         url "http://nexus.hellobiz.cn/nexus/content/repositories/central/"
+    }
+    maven {
+        url "http://nexus.hellobiz.cn/nexus/content/repositories/releases/"
     }
     mavenCentral()
 }

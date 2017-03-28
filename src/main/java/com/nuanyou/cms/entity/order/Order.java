@@ -32,6 +32,7 @@ public class Order {
     private BigDecimal kpprice;
     private NewOrderStatus orderstatus;
     private RefundStatus refundstatus;
+    private Integer oldrefundstatus;
     private String statusname;
     private Date statustime;
     private Date paytime;
@@ -371,6 +372,15 @@ public class Order {
 
     public void setRefundstatus(RefundStatus refundstatus) {
         this.refundstatus = refundstatus;
+    }
+
+    @Column(name = "refundstatus", nullable = true)
+    public Integer getOldrefundstatus() {
+        return oldrefundstatus;
+    }
+
+    public void setOldrefundstatus(Integer oldrefundstatus) {
+        this.oldrefundstatus = oldrefundstatus;
     }
 
 
