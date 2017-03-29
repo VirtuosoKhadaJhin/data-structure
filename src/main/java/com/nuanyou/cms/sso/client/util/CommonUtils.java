@@ -21,6 +21,8 @@ package com.nuanyou.cms.sso.client.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -338,14 +340,18 @@ public final class CommonUtils {
 
     }
 
-
+    protected static final Logger log = LoggerFactory.getLogger(CommonUtils.class.getSimpleName());
     public static boolean isRequestExcluded(HttpServletRequest httpRequest, Pattern urlExcludePattern) {
         if(urlExcludePattern==null){
+            log.info("urlExcludePattern is null");
             return true;
         }
-        return urlExcludePattern != null
+        Boolean excluded=urlExcludePattern != null
                 && urlExcludePattern.matcher(
                 httpRequest.getRequestURI()
                         .substring(httpRequest.getContextPath().length())).matches();
+        log.info("httpRequest.getRequestURI():"+httpRequest.getRequestURI()+",urlExcludePattern"+urlExcludePattern.toString());
+        log.info("excluded"+excluded);
+        return excluded;
     }
 }
