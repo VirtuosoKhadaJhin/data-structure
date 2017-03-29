@@ -54,7 +54,7 @@ nuanyou-api: http://testapi30.99mice.com:8081
 
 sso:
   urlPatterns: /*
-  urlExcludePattern: ^/test|^/dist.*|^/favicon.*
+  urlExcludePattern: ^/test|^/dist/.*|^/favicon.*
   loginUrl: https://testuser.api.91nuanyou.com/oauth/corp
   reLogin: false
   serverName: http://testmerchant.99mice.com
