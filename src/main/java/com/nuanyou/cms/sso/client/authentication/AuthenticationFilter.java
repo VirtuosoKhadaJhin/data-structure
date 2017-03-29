@@ -2,7 +2,6 @@ package com.nuanyou.cms.sso.client.authentication;
 
 import com.nuanyou.cms.sso.client.ticket.ExpirationPolicy;
 import com.nuanyou.cms.sso.client.ticket.GrantTicketService;
-import com.nuanyou.cms.sso.client.ticket.StateTicket;
 import com.nuanyou.cms.sso.client.ticket.TicketRegistry;
 import com.nuanyou.cms.sso.client.util.AbstractCasFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
@@ -110,8 +109,8 @@ public class AuthenticationFilter extends AbstractCasFilter {
             state= RandomUtils.randomNumber(8);
         }
         setState(state);
-        StateTicket stateTicket=grantStateTicket.grantStateTicket(this.state,expirationPolicy,modifiedServiceUrl);
-        this.ticketRegistry.addTicket(stateTicket);
+        //StateTicket stateTicket=grantStateTicket.grantStateTicket(this.state,expirationPolicy,modifiedServiceUrl);
+        //this.ticketRegistry.addTicket(stateTicket);
         final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.loginUrl, getServiceParameterName(), modifiedServiceUrl,this.state,this.relogin, this.renew);
         log.info("First Step:redirecting to \"" + urlToRedirectTo + "\"");
         response.sendRedirect(urlToRedirectTo);

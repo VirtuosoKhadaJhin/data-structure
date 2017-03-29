@@ -354,4 +354,14 @@ public final class CommonUtils {
         log.info("excluded"+excluded);
         return excluded;
     }
+
+
+    public static void main(String[] args) {
+        String urlExcludePattern="^/test|^/dist/.*|^/favicon.*";
+        String url="/dist/list";
+        Pattern compile = Pattern.compile(urlExcludePattern);
+        Boolean excluded=compile != null
+            && compile.matcher(url).matches();
+        System.out.println(excluded);
+    }
 }

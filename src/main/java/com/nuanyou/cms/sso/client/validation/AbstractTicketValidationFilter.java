@@ -20,9 +20,7 @@
 package com.nuanyou.cms.sso.client.validation;
 
 
-import com.nuanyou.cms.sso.client.ticket.StateTicket;
 import com.nuanyou.cms.sso.client.ticket.support.DefaultTicketRegistry;
-import com.nuanyou.cms.sso.client.ticket.support.InvalidTicketException;
 import com.nuanyou.cms.sso.client.util.AbstractCasFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import org.slf4j.Logger;
@@ -140,8 +138,9 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
         String artifactParameterName = getArtifactParameterName();
         final String ticket = CommonUtils.safeGetParameter(request, artifactParameterName);
         final String state = CommonUtils.safeGetParameter(request, "state");
+        /*
         if (CommonUtils.isNotBlank(state)) {
-            log.info("Second Step:ticket found and validate code");
+            log.info("Second Step:state found and validate state");
             final StateTicket stateTicket = (StateTicket) this.abstractTicketRegistry.getTicket(state, StateTicket.class);
             if(stateTicket==null){
                 throw new ServletException("stateTicket不存在");
@@ -164,6 +163,7 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
         }else{
             log.info("Second Step:ticket not found");
         }
+        */
         if (CommonUtils.isNotBlank(ticket)) {
             log.info("Second Step:Attempting to validate ticket: " + ticket);
             try {
