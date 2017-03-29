@@ -74,7 +74,7 @@ public class AuthenticationFilter extends AbstractCasFilter {
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        log.info("dofilter of authenticationfilter" + request.getRequestURL() +""+ request.getQueryString());
+        log.info("dofilter of authenticationfilter" + request.getRequestURL() +"?"+ request.getQueryString());
         final HttpSession session = request.getSession(false);
         if (CommonUtils.isRequestExcluded(request, urlExcludePattern)) {
             filterChain.doFilter(request, response);
@@ -83,9 +83,9 @@ public class AuthenticationFilter extends AbstractCasFilter {
         final User
                 user = session != null ? (User) session.getAttribute(CONST_CAS_ASSERTION) : null;
         if (user != null) {
-            log.debug("user" + user.toString());
+            log.info("user" + user.toString());
         } else {
-            log.debug("user is null");
+            log.info("First Step:no user found");
         }
         if (user != null) {
             filterChain.doFilter(request, response);
@@ -95,16 +95,16 @@ public class AuthenticationFilter extends AbstractCasFilter {
         final String ticket = CommonUtils.safeGetParameter(request, getArtifactParameterName());
 
         if (CommonUtils.isNotBlank(ticket)) {
+            log.info("Second Step:ticket found and begin to valicate code");
             filterChain.doFilter(request, response);
             return;
+        }else{
+            log.info("Second Step:not ticket");
         }
         final String modifiedServiceUrl;
-        log.debug("no code and no user found");
-        modifiedServiceUrl = serviceUrl;
 
-        if (log.isDebugEnabled()) {
-            log.debug("Constructed service url: " + modifiedServiceUrl);
-        }
+        modifiedServiceUrl = serviceUrl;
+        log.info("First Step:Constructed service url: " + modifiedServiceUrl);
         String state= RandomUtils.randomNumber(8);
         while (ticketRegistry.getTicket(state)!=null){
             state= RandomUtils.randomNumber(8);
@@ -113,10 +113,7 @@ public class AuthenticationFilter extends AbstractCasFilter {
         StateTicket stateTicket=grantStateTicket.grantStateTicket(this.state,expirationPolicy,modifiedServiceUrl);
         this.ticketRegistry.addTicket(stateTicket);
         final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.loginUrl, getServiceParameterName(), modifiedServiceUrl,this.state,this.relogin, this.renew);
-        if (log.isDebugEnabled()) {
-            log.debug("redirecting to \"" + urlToRedirectTo + "\"");
-            log.debug("由于没有登录 所以重定向到服务器");
-        }
+        log.info("First Step:redirecting to \"" + urlToRedirectTo + "\"");
         response.sendRedirect(urlToRedirectTo);
     }
 

@@ -141,6 +141,7 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
         final String ticket = CommonUtils.safeGetParameter(request, artifactParameterName);
         final String state = CommonUtils.safeGetParameter(request, "state");
         if (CommonUtils.isNotBlank(state)) {
+            log.info("Second Step:ticket found and validate code");
             final StateTicket stateTicket = (StateTicket) this.abstractTicketRegistry.getTicket(state, StateTicket.class);
             if(stateTicket==null){
                 throw new ServletException("stateTicket不存在");
@@ -160,15 +161,14 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
                 this.abstractTicketRegistry.deleteTicket(state);
             }
 
+        }else{
+            log.info("Second Step:ticket not found");
         }
         if (CommonUtils.isNotBlank(ticket)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Attempting to validate ticket: " + ticket);
-            }
-
+            log.info("Second Step:Attempting to validate ticket: " + ticket);
             try {
                 final User user = this.ticketValidator.validate(ticket, constructServiceUrl(request, response));
-                log.info("Successfully authenticated user: " + user);
+                log.info("Second Step:Successfully authenticated user: " + user);
                 request.setAttribute(CONST_CAS_ASSERTION, user);
                 if (this.useSession) {
                     log.debug("\n" + "**************************************after validate tgt and st ********************************************");
