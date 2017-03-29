@@ -27,7 +27,7 @@
             <td>$!entity.title</td>
             <td>$!entity.type.name</td>
             <td>$!entity.merchant.name</td>
-            <td #if($!entity.validTime.time < $now.time)style='color: red'#end>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.validTime)</td>
+            <td #if($!entity.validTime.time < $now.time)style='color: red'#end>$!dateFormatter.format("yyyy-MM-dd",$!entity.validTime)</td>
             <td>#if($!entity.display)显示#else 隐藏#end</td>
             <td>
                 <a class="btn btn-success btn-mini" data-id="$!entity.id" href="detail?id=$!entity.id">查看</a>

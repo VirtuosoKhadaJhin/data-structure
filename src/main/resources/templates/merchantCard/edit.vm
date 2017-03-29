@@ -55,7 +55,7 @@
 ##                                </div>
                                 <label class="control-label">到期时间</label>
                                 <div class="controls">
-                                    <input name="validTime" type="text" class="span8 dateTimeFormat" placeholder="" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.validTime)" required>
+                                    <input name="validTime" type="text" class="span8 dateFormat" value="$!dateFormatter.format("yyyy-MM-dd",$!entity.validTime)" required>
                                 </div>
                                 <label class="control-label">描述</label>
                                 <div class="controls">
