@@ -17,10 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -52,6 +49,15 @@ public class MerchantController {
     @Autowired
     private MerchantStatsDao merchantStatsDao;
 
+    private static final Map<String, Long> countryMap = new HashMap<>();
+
+    static {
+        countryMap.put("kr", 1L);
+        countryMap.put("jp", 2L);
+        countryMap.put("th", 3L);
+        countryMap.put("de", 4L);
+    }
+
     @Value("${nuanyou-host}")
     private String nuanyouHost;
 
@@ -82,6 +88,19 @@ public class MerchantController {
         setEnums(model);
         model.addAttribute("disabled", true);
         return "merchant/edit";
+    }
+
+    @RequestMapping("{countryCode}/list")
+    public String list(Merchant entity,
+                       @PathVariable("countryCode") String countryCode,
+                       @RequestParam(required = false, defaultValue = "1") int index,
+                       Model model) {
+        Long id = countryMap.get(countryCode);
+        if (id != null) {
+            entity.setDistrict(new District(new Country(id)));
+            list(entity, index, model);
+        }
+        return "merchant/list_country";
     }
 
     @RequestMapping("list")

@@ -143,6 +143,10 @@ public class City {
         this.name = name;
     }
 
+    public City(Country country) {
+        this.country = country;
+    }
+
     public City() {
     }
 }

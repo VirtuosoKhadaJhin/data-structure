@@ -30,6 +30,10 @@ public class Country {
     public Country() {
     }
 
+    public Country(Long id) {
+        this.id = id;
+    }
+
     public Country(Long id, String name) {
         this.id = id;
         this.name = name;
