@@ -62,46 +62,56 @@ public class MerchantController {
     private String nuanyouHost;
 
     @RequestMapping(path = {"edit", "add"}, method = RequestMethod.GET)
-    public String edit(@RequestParam(required = false) Long id, Model model) {
+    public String edit(@RequestParam(required = false) Long id, Long countryId, Model model) {
         if (id != null) {
             Merchant entity = merchantDao.findOne(id);
             model.addAttribute("entity", entity);
         }
-        setEnums(model);
+        setEnums(model, countryId);
+        return "merchant/edit";
+    }
+
+    @RequestMapping(path = {"{countryCode}/edit", "{countryCode}/add"}, method = RequestMethod.GET)
+    public String edit_country(@RequestParam(required = false) Long id, @PathVariable("countryCode") String countryCode, Model model) {
+        Long countryId = countryMap.get(countryCode);
+        edit(id, countryId, model);
         return "merchant/edit";
     }
 
     @RequestMapping(path = "detail", method = RequestMethod.GET)
-    public String detail(Long id, Model model) {
+    public String detail(Long id, Long countryId, Model model) {
         Merchant entity = merchantDao.findOne(id);
         model.addAttribute("entity", entity);
 
-        setEnums(model);
+        setEnums(model, countryId);
         model.addAttribute("disabled", true);
+        return "merchant/edit";
+    }
+
+
+    @RequestMapping(path = "{countryCode}/detail", method = RequestMethod.GET)
+    public String detail_country(Long id, @PathVariable("countryCode") String countryCode, Model model) {
+        Long countryId = countryMap.get(countryCode);
+        detail(id, countryId, model);
         return "merchant/edit";
     }
 
     @RequestMapping(path = "update", method = RequestMethod.POST)
-    public String update(MerchantVO vo, Model model) {
+    public String update(MerchantVO vo, Long countryId, Model model) {
         MerchantVO entity = merchantService.saveNotNull(vo);
         model.addAttribute("entity", entity);
-        setEnums(model);
+        setEnums(model, countryId);
         model.addAttribute("disabled", true);
         return "merchant/edit";
     }
 
-    @RequestMapping("{countryCode}/list")
-    public String list(Merchant entity,
-                       @PathVariable("countryCode") String countryCode,
-                       @RequestParam(required = false, defaultValue = "1") int index,
-                       Model model) {
-        Long id = countryMap.get(countryCode);
-        if (id != null) {
-            entity.setDistrict(new District(new Country(id)));
-            list(entity, index, model);
-        }
-        return "merchant/list_country";
+    @RequestMapping(path = "{countryCode}/update", method = RequestMethod.POST)
+    public String update_country(MerchantVO vo, @PathVariable("countryCode") String countryCode, Model model) {
+        Long countryId = countryMap.get(countryCode);
+        update(vo, countryId, model);
+        return "merchant/edit";
     }
+
 
     @RequestMapping("list")
     public String list(Merchant entity, @RequestParam(required = false, defaultValue = "1") int index, Model model) {
@@ -121,6 +131,21 @@ public class MerchantController {
 
         model.addAttribute("entity", entity);
         model.addAttribute("YouFu", SupportType.YouFu);
+        return "merchant/list";
+    }
+
+
+    @RequestMapping("{countryCode}/list")
+    public String list(Merchant entity,
+                       @PathVariable("countryCode") String countryCode,
+                       @RequestParam(required = false, defaultValue = "1") int index,
+                       Model model) {
+        Long id = countryMap.get(countryCode);
+        if (id != null) {
+            entity.setDistrict(new District(new Country(id)));
+            list(entity, index, model);
+            model.addAttribute("countryHide", true);
+        }
         return "merchant/list";
     }
 
@@ -150,8 +175,12 @@ public class MerchantController {
         return new APIResult(channel);
     }
 
-    @RequestMapping("export")
-    public void export(Merchant entity, HttpServletResponse response) throws IOException {
+    @RequestMapping(path = {"export", "{countryCode}/export"})
+    public void export(Merchant entity, @PathVariable("countryCode") String countryCode, HttpServletResponse response) throws IOException {
+        Long id = countryMap.get(countryCode);
+        if (id != null) {
+            entity.setDistrict(new District(new Country(id)));
+        }
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=" + "UTF-8");
         response.setHeader("Pragma", "public");
@@ -212,11 +241,15 @@ public class MerchantController {
         os.close();
     }
 
-    private void setEnums(Model model) {
+    private void setEnums(Model model, Long countryId) {
         List<MerchantCat> cats = merchantCatDao.findByPcat(null);
         model.addAttribute("cats", cats);
 
-        List<District> districts = districtDao.getIdNameList(true);
+        List<District> districts;
+        if (countryId == null)
+            districts = districtDao.getIdNameList(true);
+        else
+            districts = districtDao.getIdNameList(true, countryId);
         model.addAttribute("districts", districts);
 
         model.addAttribute("weeks", Week.values());

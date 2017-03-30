@@ -1,10 +1,7 @@
 #parse("common/list_start.vm")
-<div class="widget-title"><span class="icon"> <i class="icon-th"></i> </span>
-    <h5>商家列表</h5>
-</div>
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
-    <h5>商户分类列表</h5>
+    <h5>商家列表</h5>
     <a class="btn btn-mini btn-info buttons" href="add">新增</a>
 </div>
 <table class="table table-bordered table-striped">
@@ -86,6 +83,7 @@
             <option value="true" #if($!entity.display == true) selected #end>显示</option>
             <option value="false" #if($!entity.display == false) selected #end>隐藏</option>
         </select>
+        #if(!$countryHide)
         <label>国家</label>
         <select name="district.country.id" class="span11">
             <option value="">全部</option>
@@ -93,6 +91,7 @@
                 <option value="$!e.id" #if($!entity.district.country.id==$!e.id) selected #end>$!e.name</option>
             #end
         </select>
+        #end
         <label>合作情况</label>
         <select name="issign" class="span11">
             <option value="">全部</option>
