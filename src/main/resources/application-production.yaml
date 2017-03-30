@@ -51,6 +51,11 @@ nuanyou-host: http://h5.m.91nuanyou.com
 withdrawurl: http://user.api.91nuanyou.com
 nuanyou-api: http://api30.91nuanyou.com
 
+upload:
+  s3server: https://kr.file.91nuanyou.com
+
+
+
 AWS:
   sns:
     topic:
@@ -62,8 +67,8 @@ AWS:
 sso:
   urlPatterns: /*
   urlExcludePattern: ^/test|^/dist/.*|^/favicon.*
-  loginUrl: https://testuser.api.91nuanyou.com/oauth/corp
+  loginUrl: https://sso.91nuanyou.com/oauth/corp
   reLogin: false
   serverName: http://merchant30.91nuanyou.com
-  validateCodeUrl: https://testuser.api.91nuanyou.com/corp/oauth/access_token
+  validateCodeUrl: https://sso.91nuanyou.com/corp/oauth/access_token
   stateExpiredInMilliSeconds: 120000
