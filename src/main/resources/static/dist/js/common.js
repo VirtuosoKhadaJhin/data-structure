@@ -159,7 +159,7 @@ window.onload = function () {
                 digits: true
             },
             title: {
-                required: true, maxlength: 50
+                maxlength: 50
             },
             source: {
                 required: true, maxlength: 20
