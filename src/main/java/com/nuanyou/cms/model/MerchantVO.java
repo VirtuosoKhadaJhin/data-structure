@@ -34,6 +34,7 @@ public class MerchantVO {
     private BigDecimal consume;
     private Integer sort;
     private Boolean display;
+    private BigDecimal ratio;
     private District district;
     private List<PayType> payTypes;
 
@@ -67,6 +68,14 @@ public class MerchantVO {
 
     private String directmailRemind;
 
+
+    public BigDecimal getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(BigDecimal ratio) {
+        this.ratio = ratio;
+    }
 
     public Long getId() {
         return id;
