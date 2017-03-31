@@ -22,6 +22,9 @@ public interface DistrictDao extends JpaRepository<District, Long>, JpaSpecifica
     @Query(value = "select new District(t.id,t.name) from District t where t.display=?1")
     List<District> getIdNameList(boolean display);
 
+    @Query(value = "select new District(t.id,t.name) from District t where t.display=?1 and city.country.id=?2")
+    List<District> getIdNameList(boolean display, Long countryId);
+
     @Query(value = "select new District(t.id,t.name) from District t where city.id=:id")
     List<District> findIdNameList(@Param("id") Long cityId);
 

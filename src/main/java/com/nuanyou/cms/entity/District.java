@@ -223,6 +223,10 @@ public class District {
         this.name = name;
     }
 
+    public District(Country country) {
+        this.country = country;
+    }
+
     public District() {
     }
 }
