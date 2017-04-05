@@ -41,16 +41,12 @@ import java.util.regex.Pattern;
 
 /**
  * Common utilities so that we don't need to include Commons Lang.
- *
- * @author Scott Battaglia
- * @version $Revision: 11729 $ $Date: 2007-09-26 14:22:30 -0400 (Tue, 26 Sep 2007) $
- * @since 3.0
  */
 public final class CommonUtils {
 
     /** Instance of Commons Logging. */
     private static final Log LOG = LogFactory.getLog(CommonUtils.class);
-    
+
 
 
     private CommonUtils() {
@@ -158,7 +154,7 @@ public final class CommonUtils {
      * */
     public static String constructRedirectUrl(final String loginUrl, final String serviceParameterName, final String serviceUrl, final String state, Boolean relogin, final boolean renew) {
         try {
-        String url= loginUrl + (loginUrl.indexOf("?") != -1 ? "&" : "?") + serviceParameterName + "="
+            String url= loginUrl + (loginUrl.indexOf("?") != -1 ? "&" : "?") + serviceParameterName + "="
                     + URLEncoder.encode(serviceUrl, "UTF-8")
                     +(state!=null ? "&state=#state" : "")
                     +(relogin!=null ? "&relogin=#relogin" : "")
@@ -168,10 +164,10 @@ public final class CommonUtils {
             throw new RuntimeException(e);
         }
     }
-    
 
-    
-/**
+
+
+    /**
      * Constructs a service url from the HttpServletRequest or from the given
      * serviceUrl. Prefers the serviceUrl provided if both a serviceUrl and a
      * serviceName.
@@ -253,7 +249,7 @@ public final class CommonUtils {
             LOG.debug("safeGetParameter called on a POST HttpServletRequest for LogoutRequest.  Cannot complete check safely.  Reverting to standard behavior for this Parameter");
             return request.getParameter(parameter);
         }
-        return request.getQueryString() == null || request.getQueryString().indexOf(parameter) == -1 ? null : request.getParameter(parameter);       
+        return request.getQueryString() == null || request.getQueryString().indexOf(parameter) == -1 ? null : request.getParameter(parameter);
     }
 
     /**

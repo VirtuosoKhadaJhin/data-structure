@@ -44,7 +44,7 @@ import javax.servlet.http.HttpServletResponse;
 public abstract class AbstractCasFilter extends AbstractConfigurationFilter {
 
     /** Represents the constant for where the assertion will be located in memory. */
-    public static final String CONST_CAS_ASSERTION = "sso_user";
+    public static final String SSO_USER = "sso_user";
 
     /** Instance of commons logging for logging purposes. */
     protected static final Logger log = LoggerFactory.getLogger(AbstractCasFilter.class.getSimpleName());

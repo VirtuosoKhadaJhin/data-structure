@@ -80,7 +80,7 @@ public class AuthenticationFilter extends AbstractCasFilter {
             return;
         }
         final User
-                user = session != null ? (User) session.getAttribute(CONST_CAS_ASSERTION) : null;
+                user = session != null ? (User) session.getAttribute(SSO_USER) : null;
         if (user != null) {
             log.info("user" + user.toString());
         } else {

@@ -169,10 +169,10 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
             try {
                 final User user = this.ticketValidator.validate(ticket, constructServiceUrl(request, response));
                 log.info("Second Step:Successfully authenticated user: " + user);
-                request.setAttribute(CONST_CAS_ASSERTION, user);
+                request.setAttribute(SSO_USER, user);
                 if (this.useSession) {
                     log.debug("\n" + "**************************************after validate tgt and st ********************************************");
-                    log.debug("put the assertion to the session scope:key:" + CONST_CAS_ASSERTION + "value:" + user);
+                    log.debug("put the assertion to the session scope:key:" + SSO_USER + "value:" + user);
                     log.debug("assertion props" + user.toString());
                     if (request.getSession(false) != null) {
                         log.debug("Session Create Time: " + new Date(request.getSession(false).getCreationTime()).toString());
@@ -195,7 +195,7 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
                     }
                     log.debug("**************************************after validate tgt and st ********************************************" + "\n");
 
-                    request.getSession().setAttribute(CONST_CAS_ASSERTION, user);
+                    request.getSession().setAttribute(SSO_USER, user);
                 }
                 onSuccessfulValidation(request, response, user);
 

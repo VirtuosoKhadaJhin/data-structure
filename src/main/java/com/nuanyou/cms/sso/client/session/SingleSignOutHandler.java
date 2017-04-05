@@ -20,7 +20,6 @@
 package com.nuanyou.cms.sso.client.session;
 
 import com.nuanyou.cms.sso.client.util.CommonUtils;
-import com.nuanyou.cms.sso.client.util.XmlUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -136,8 +135,8 @@ public final class SingleSignOutHandler {
             log.trace ("Logout request:\n" + logoutMessage);
         }
         log.debug("logoutMessage:  "+logoutMessage);
-        
-        final String token = XmlUtils.getTextForElement(logoutMessage, "SessionIndex");
+        final String token="";
+        //final String token = XmlUtils.getTextForElement(logoutMessage, "SessionIndex");
         if (CommonUtils.isNotBlank(token)) {
             final HttpSession session = this.sessionMappingStorage.removeSessionByMappingId(token);
 

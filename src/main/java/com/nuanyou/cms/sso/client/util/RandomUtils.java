@@ -23,6 +23,7 @@ public class RandomUtils {
         return random(NUMERIC, length);
     }
 
+
     public static String random(String source, int length) {
         Random random = ThreadLocalRandom.current();
 

@@ -21,10 +21,6 @@ package com.nuanyou.cms.sso.client.validation;
 
 /**
  * Generic exception to be thrown when ticket validation fails.
- *
- * @author Scott Battaglia
- * @version $Revision$ $Date$
- * @since 3.1
  */
 public class TicketValidationException extends Exception {
 

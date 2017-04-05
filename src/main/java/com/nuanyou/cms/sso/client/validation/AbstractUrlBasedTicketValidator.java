@@ -42,7 +42,7 @@ public abstract class AbstractUrlBasedTicketValidator implements TicketValidator
 
 
     /**
-     * Prefix for the CAS server.   Should be everything up to the url endpoint, including the /.
+     * Prefix for the SSO server.   Should be everything up to the url endpoint, including the /.
      *
      * i.e. https://../
      */

@@ -40,7 +40,7 @@ public final class UserThreadLocalFilter implements Filter {
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpSession session = request.getSession(false);
-        final User user = (User) (session == null ? request.getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION) : session.getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION));
+        final User user = (User) (session == null ? request.getAttribute(AbstractCasFilter.SSO_USER) : session.getAttribute(AbstractCasFilter.SSO_USER));
 
         try {
             UserHolder.setUser(user);
