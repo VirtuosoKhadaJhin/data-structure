@@ -175,12 +175,8 @@ public class MerchantController {
         return new APIResult(channel);
     }
 
-    @RequestMapping(path = {"export", "{countryCode}/export"})
-    public void export(Merchant entity, @PathVariable("countryCode") String countryCode, HttpServletResponse response) throws IOException {
-        Long id = countryMap.get(countryCode);
-        if (id != null) {
-            entity.setDistrict(new District(new Country(id)));
-        }
+    @RequestMapping(path = "export")
+    public void export(Merchant entity, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=" + "UTF-8");
         response.setHeader("Pragma", "public");
@@ -239,6 +235,15 @@ public class MerchantController {
 
         os.flush();
         os.close();
+    }
+
+    @RequestMapping(path = "{countryCode}/export")
+    public void export(Merchant entity, @PathVariable("countryCode") String countryCode, HttpServletResponse response) throws IOException {
+        Long id = countryMap.get(countryCode);
+        if (id != null) {
+            entity.setDistrict(new District(new Country(id)));
+        }
+        export(entity, response);
     }
 
     private void setEnums(Model model, Long countryId) {
