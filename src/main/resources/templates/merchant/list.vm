@@ -11,13 +11,13 @@
         <th>商家名称</th>
         <th>本地名称</th>
         <th>商家电话</th>
-        <th>地址</th>
-        <th>地址（本地）</th>
-        <th>支付方式</th>
-        <th>支持类型</th>
         <th>商圈信息</th>
         <th>一级分类</th>
         <th>二级分类</th>
+        <th width="70px">支持类型</th>
+        <th width="160px">支付方式</th>
+        <th width="200px">地址</th>
+        <th width="200px">地址（本地）</th>
         <th>操作</th>
     </tr>
     </thead>
@@ -28,22 +28,13 @@
             <td>$!entity.name</td>
             <td>$!entity.kpname</td>
             <td>$!entity.telphone</td>
-            <td>$!entity.address</td>
-            <td>$!entity.kpaddress</td>
-            <td>
-                #foreach($payType in $!entity.payTypes)
-                $payType.name
-            #end
-            </td>
-            <td>
-                #foreach($type in $!entity.supportType)
-                $type.name
-            #end
-            </td>
             <td>$!entity.district.name</td>
             <td>$!entity.mcat.name</td>
             <td>$!entity.subcat.name</td>
-
+            <td>#foreach($type in $!entity.supportType) $type.name#end</td>
+            <td>#foreach($payType in $!entity.payTypes) $payType.name#end</td>
+            <td>$!entity.address</td>
+            <td>$!entity.kpaddress</td>
             <td>
                 <div class="dropdown">
                     <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="javascript:(0);">操 作 <b class="caret"></b>
@@ -60,7 +51,7 @@
                         #if(!$entity.issign)
                             <li><a class="updateScore" data-id="$!entity.id" href="javascript:void(0);">修改商户评分</a></li>
                         #end
-                        <li><a href="javascript:void(0);" class="update-item" modal-id="lookCode" action-get="lookCode" data-id="$!entity.id">查看优付URL</a></li>
+                        <li><a href="javascript:void(0);" class="update-item" modal-id="lookCode" action-get="/merchant/lookCode" data-id="$!entity.id">查看优付URL</a></li>
                     </ul>
                 </div>
             </td>
@@ -84,13 +75,13 @@
             <option value="false" #if($!entity.display == false) selected #end>隐藏</option>
         </select>
         #if(!$countryHide)
-        <label>国家</label>
-        <select name="district.country.id" class="span11">
-            <option value="">全部</option>
-            #foreach($e in $!countries)
-                <option value="$!e.id" #if($!entity.district.country.id==$!e.id) selected #end>$!e.name</option>
-            #end
-        </select>
+            <label>国家</label>
+            <select name="district.country.id" class="span11">
+                <option value="">全部</option>
+                #foreach($e in $!countries)
+                    <option value="$!e.id" #if($!entity.district.country.id==$!e.id) selected #end>$!e.name</option>
+                #end
+            </select>
         #end
         <label>合作情况</label>
         <select name="issign" class="span11">
@@ -183,7 +174,7 @@
             var targetId = $("#copy-item-targetId").val();
             $(this).attr("disabled", true);
             $.ajax({
-                url: 'copyItem',
+                url: '/merchant/copyItem',
                 data: {sourceId: sourceId, targetId: targetId},
                 type: 'post',
                 success: function (result) {
@@ -208,7 +199,7 @@
             var id = $("#update-score-mchId").val();
             var score = $("#update-score-score").val();
             $.ajax({
-                url: 'updateScore',
+                url: '/merchant/updateScore',
                 data: {id: id, score: score},
                 type: 'post',
                 success: function (result) {
@@ -224,30 +215,12 @@
             $(o).on("click", function (event) {
                 var id = $(this).attr("data-id");
                 $.ajax({
-                    url: 'updateScore',
+                    url: '/merchant/updateScore',
                     data: {id: id},
                     type: 'get',
                     success: function (result) {
                         if (result.code == 0) {
                             alert("成功");
-                        } else {
-                            alert("失败:" + result.msg);
-                        }
-                    }
-                });
-            });
-        });
-        $(".genCode").each(function (i, o) {
-            $(o).on("click", function (event) {
-                var id = $(this).attr("data-id");
-                $.ajax({
-                    url: 'genCode',
-                    data: {id: id},
-                    type: 'get',
-                    success: function (result) {
-                        if (result.code == 0) {
-                            alert("成功");
-                            window.location.reload();
                         } else {
                             alert("失败:" + result.msg);
                         }

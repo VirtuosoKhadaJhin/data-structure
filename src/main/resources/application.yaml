@@ -1,7 +1,7 @@
 spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://rdsw9r566jxer973wqi2.mysql.rds.aliyuncs.com:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://rdsw9r566jxer973wqi2.mysql.rds.aliyuncs.com:3306/nuanyou30?useUnicode=true&characterEncoding=UTF-8
     username: dev
     password: 1qaz2wsxE
     test-on-borrow: true
@@ -65,7 +65,7 @@ AWS:
 
 
 sso:
-  urlPatterns: /*
+  urlPatterns: /test
   urlExcludePattern: ^/test|^/dist/.*|^/favicon.*
   loginUrl: https://testuser.api.91nuanyou.com/oauth/corp
   reLogin: false
