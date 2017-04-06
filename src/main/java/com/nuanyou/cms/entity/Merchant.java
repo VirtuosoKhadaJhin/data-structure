@@ -43,7 +43,7 @@ public class Merchant {
     private District district;
     private List<PayType> payTypes;
     private Date updateTime;
-    private BigDecimal ratio;
+    //private BigDecimal ratio;
 
     //2.0地址 600*200
     private String indexImgUrl;
@@ -508,12 +508,12 @@ public class Merchant {
     }
 
 
-    @Column(name = "radio")
-    public BigDecimal getRatio() {
-        return ratio;
-    }
-
-    public void setRatio(BigDecimal ratio) {
-        this.ratio = ratio;
-    }
+//    @Column(name = "ratio")
+//    public BigDecimal getRatio() {
+//        return ratio;
+//    }
+//
+//    public void setRatio(BigDecimal ratio) {
+//        this.ratio = ratio;
+//    }
 }
