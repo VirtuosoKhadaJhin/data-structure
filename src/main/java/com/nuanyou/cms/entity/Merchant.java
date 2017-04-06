@@ -77,6 +77,8 @@ public class Merchant {
 
     private String directmailRemind;
 
+    private BigDecimal ratio;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -508,12 +510,12 @@ public class Merchant {
     }
 
 
-//    @Column(name = "ratio")
-//    public BigDecimal getRatio() {
-//        return ratio;
-//    }
-//
-//    public void setRatio(BigDecimal ratio) {
-//        this.ratio = ratio;
-//    }
+    @Column(name = "ratio")
+    public BigDecimal getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(BigDecimal ratio) {
+        this.ratio = ratio;
+    }
 }
