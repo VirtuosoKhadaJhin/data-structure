@@ -98,10 +98,10 @@
 ##                                </div>
 
 
-##                                <label class="control-label">商户汇率</label>
-##                                <div class="controls">
-##                                    <input type="text" class="span10" placeholder="商户汇率" name="ratio" value="$!entity.ratio">
-##                                </div>
+                                <label class="control-label">商户汇率</label>
+                                <div class="controls">
+                                    <input type="text" class="span10" placeholder="商户汇率" name="ratio" value="$!entity.ratio">
+                                </div>
 
                                 <label class="control-label">分类信息</label>
                                 <div class="controls">
