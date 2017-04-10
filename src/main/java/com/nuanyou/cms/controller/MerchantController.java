@@ -74,6 +74,7 @@ public class MerchantController {
     @RequestMapping(path = {"{countryCode}/edit", "{countryCode}/add"}, method = RequestMethod.GET)
     public String edit_country(@RequestParam(required = false) Long id, @PathVariable("countryCode") String countryCode, Model model) {
         Long countryId = countryMap.get(countryCode);
+        model.addAttribute("countryHide", true);
         edit(id, countryId, model);
         return "merchant/edit";
     }

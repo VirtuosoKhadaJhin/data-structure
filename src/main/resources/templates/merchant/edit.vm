@@ -88,20 +88,16 @@
                                 <div class="controls">
                                     <input type="text" class="span10" placeholder="商户评分" name="score" value="$!entity.score">
                                 </div>
-##                                <label class="control-label">商户分级</label>
-##                                <div class="controls">
-##                                    <select class="span10" name="rank">
-##                                        <option value="3" #if($!entity.rank == 3) selected #end>三级商户(普通)</option>
-##                                        <option value="2" #if($!entity.rank == 2) selected #end>二级商户(优秀)</option>
-##                                        <option value="1" #if($!entity.rank == 1) selected #end>一级商户(重要)</option>
-##                                    </select>
-##                                </div>
 
 
-                                <label class="control-label">商户汇率</label>
-                                <div class="controls">
-                                    <input type="text" class="span10" placeholder="商户汇率" name="ratio" value="$!entity.ratio">
-                                </div>
+                                #if(!$countryHide)
+                                    <label class="control-label">商户汇率</label>
+                                    <div class="controls">
+                                        <input type="text" class="span10" placeholder="商户汇率" name="ratio" value="$!entity.ratio">
+                                    </div>
+                                #end
+
+
 
                                 <label class="control-label">分类信息</label>
                                 <div class="controls">
