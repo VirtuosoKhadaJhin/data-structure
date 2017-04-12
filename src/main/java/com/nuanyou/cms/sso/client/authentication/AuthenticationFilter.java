@@ -1,13 +1,9 @@
 package com.nuanyou.cms.sso.client.authentication;
 
-import com.nuanyou.cms.sso.client.ticket.ExpirationPolicy;
-import com.nuanyou.cms.sso.client.ticket.GrantTicketService;
-import com.nuanyou.cms.sso.client.ticket.TicketRegistry;
 import com.nuanyou.cms.sso.client.util.AbstractCasFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.sso.client.util.RandomUtils;
 import com.nuanyou.cms.sso.client.validation.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -40,12 +36,6 @@ public class AuthenticationFilter extends AbstractCasFilter {
      */
     private Boolean relogin;
 
-    @Autowired
-    private TicketRegistry ticketRegistry;
-    @Autowired
-    private ExpirationPolicy expirationPolicy;
-    @Autowired
-    private GrantTicketService grantStateTicket;
 
 
     protected void initInternal(final FilterConfig filterConfig) throws ServletException {
@@ -105,9 +95,9 @@ public class AuthenticationFilter extends AbstractCasFilter {
         modifiedServiceUrl = serviceUrl;
         log.info("First Step:Constructed service url: " + modifiedServiceUrl);
         String state= RandomUtils.randomNumber(8);
-        while (ticketRegistry.getTicket(state)!=null){
-            state= RandomUtils.randomNumber(8);
-        }
+//        while (ticketRegistry.getTicket(state)!=null){
+//            state= RandomUtils.randomNumber(8);
+//        }
         setState(state);
         //StateTicket stateTicket=grantStateTicket.grantStateTicket(this.state,expirationPolicy,modifiedServiceUrl);
         //this.ticketRegistry.addTicket(stateTicket);

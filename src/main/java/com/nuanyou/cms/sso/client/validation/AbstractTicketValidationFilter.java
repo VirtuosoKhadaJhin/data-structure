@@ -20,13 +20,11 @@
 package com.nuanyou.cms.sso.client.validation;
 
 
-import com.nuanyou.cms.sso.client.ticket.support.DefaultTicketRegistry;
 import com.nuanyou.cms.sso.client.util.AbstractCasFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.sso.client.util.OperationLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -128,9 +126,6 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
     protected void onFailedValidation(final HttpServletRequest request, final HttpServletResponse response) {
         // nothing to do here.
     }
-
-    @Autowired
-    private DefaultTicketRegistry abstractTicketRegistry;
 
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
