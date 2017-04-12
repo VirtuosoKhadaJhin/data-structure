@@ -28,18 +28,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *  Abstract filter that contains code that is common to all CAS filters.
+ *  Abstract filter that contains code that is common to all related filters.
  *  <p>
- * The following filter options can be configured (either at the context-level or filter-level).
  * <ul>
- * <li><code>serverName</code> - the name of the CAS client server, in the format: localhost:8080 or localhost:8443 or localhost or https://localhost:8443</li>
+ * <li><code>serverName</code> - the name of the SSO client server, in the format: localhost:8080 or localhost:8443 or localhost or https://localhost:8443</li>
  * <li><code>service</code> - the completely qualified service url, i.e. https://localhost/cas-client/app</li>
  * </ul>
  * <p>Please note that one of the two above parameters must be set.</p>
- *
- * @author Scott Battaglia
- * @version $Revision$ $Date$
- * @since 3.1
  */
 public abstract class AbstractCasFilter extends AbstractConfigurationFilter {
 

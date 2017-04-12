@@ -44,7 +44,7 @@ public class ApplicationFilterConfiguration {
 
 
     @Bean
-    public FilterRegistrationBean testFilterRegistration(SingleSignOutFilter filter) {
+    public FilterRegistrationBean singleSignOut(SingleSignOutFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         filter.setUrlExcludePattern(Pattern.compile(urlExcludePattern));
         registration.setFilter(filter);
@@ -57,7 +57,7 @@ public class ApplicationFilterConfiguration {
 
 
     @Bean
-    public FilterRegistrationBean testFilterRegistration2(AuthenticationFilter filter) {
+    public FilterRegistrationBean authentication(AuthenticationFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         filter.setUrlExcludePattern(Pattern.compile(urlExcludePattern));
         filter.setRelogin(reLogin);
@@ -74,7 +74,7 @@ public class ApplicationFilterConfiguration {
 
 
     @Bean
-    public FilterRegistrationBean testFilterRegistration3(TicketValidationFilter filter) {
+    public FilterRegistrationBean ticketValidation(TicketValidationFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         filter.setServerName(serverName);
         registration.setFilter(filter);
@@ -90,7 +90,7 @@ public class ApplicationFilterConfiguration {
 
 
     @Bean
-    public FilterRegistrationBean testFilterRegistration4(HttpServletRequestWrapperFilter filter) {
+    public FilterRegistrationBean httpServletRequestWrapper(HttpServletRequestWrapperFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(filter);
         registration.addUrlPatterns(urlPatterns);
@@ -101,7 +101,7 @@ public class ApplicationFilterConfiguration {
 
 
     @Bean
-    public FilterRegistrationBean testFilterRegistration5(UserThreadLocalFilter filter) {
+    public FilterRegistrationBean userThreadLocal(UserThreadLocalFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(filter);
         registration.addUrlPatterns(urlPatterns);

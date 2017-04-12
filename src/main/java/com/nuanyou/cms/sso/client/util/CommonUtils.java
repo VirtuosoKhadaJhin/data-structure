@@ -346,8 +346,6 @@ public final class CommonUtils {
                 && urlExcludePattern.matcher(
                 httpRequest.getRequestURI()
                         .substring(httpRequest.getContextPath().length())).matches();
-        log.info("httpRequest.getRequestURI():"+httpRequest.getRequestURI()+",urlExcludePattern"+urlExcludePattern.toString());
-        log.info("excluded"+excluded);
         return excluded;
     }
 

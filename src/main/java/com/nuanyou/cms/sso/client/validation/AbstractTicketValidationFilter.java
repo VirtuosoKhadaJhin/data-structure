@@ -23,6 +23,7 @@ package com.nuanyou.cms.sso.client.validation;
 import com.nuanyou.cms.sso.client.ticket.support.DefaultTicketRegistry;
 import com.nuanyou.cms.sso.client.util.AbstractCasFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
+import com.nuanyou.cms.sso.client.util.OperationLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,7 +115,7 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
      * @param user     the successful Assertion from the server.
      */
     protected void onSuccessfulValidation(final HttpServletRequest request, final HttpServletResponse response, final User user) {
-        // nothing to do here.                                                                                            
+        OperationLog.log(user.getUserid(), user.getName(),request.getRequestURI(), OperationLog.Action.Login,null);
     }
 
     /**
