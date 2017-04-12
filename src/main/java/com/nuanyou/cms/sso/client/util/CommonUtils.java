@@ -339,7 +339,7 @@ public final class CommonUtils {
     protected static final Logger log = LoggerFactory.getLogger(CommonUtils.class.getSimpleName());
     public static boolean isRequestExcluded(HttpServletRequest httpRequest, Pattern urlExcludePattern) {
         if(urlExcludePattern==null){
-            log.info("urlExcludePattern is null");
+            log.debug("urlExcludePattern is null");
             return true;
         }
         Boolean excluded=urlExcludePattern != null

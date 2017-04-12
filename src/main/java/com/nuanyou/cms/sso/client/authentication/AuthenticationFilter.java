@@ -1,6 +1,6 @@
 package com.nuanyou.cms.sso.client.authentication;
 
-import com.nuanyou.cms.sso.client.util.AbstractCasFilter;
+import com.nuanyou.cms.sso.client.util.AbstractFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.sso.client.util.RandomUtils;
 import com.nuanyou.cms.sso.client.validation.User;
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 
 @Component
-public class AuthenticationFilter extends AbstractCasFilter {
+public class AuthenticationFilter extends AbstractFilter {
     /**
      * The URL to the ssp Server login.
      */
@@ -63,7 +63,6 @@ public class AuthenticationFilter extends AbstractCasFilter {
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        log.info("dofilter of authenticationfilter" + request.getRequestURL() +"?"+ request.getQueryString());
         final HttpSession session = request.getSession(false);
         if (CommonUtils.isRequestExcluded(request, urlExcludePattern)) {
             filterChain.doFilter(request, response);
@@ -72,9 +71,9 @@ public class AuthenticationFilter extends AbstractCasFilter {
         final User
                 user = session != null ? (User) session.getAttribute(SSO_USER) : null;
         if (user != null) {
-            log.info("user" + user.toString());
+            log.debug("user" + user.toString());
         } else {
-            log.info("First Step:no user found");
+            log.debug("First Step:no user found");
         }
         if (user != null) {
             filterChain.doFilter(request, response);
@@ -84,16 +83,16 @@ public class AuthenticationFilter extends AbstractCasFilter {
         final String ticket = CommonUtils.safeGetParameter(request, getArtifactParameterName());
 
         if (CommonUtils.isNotBlank(ticket)) {
-            log.info("Second Step:ticket found and begin to valicate code");
+            log.debug("Second Step:ticket found and begin to valicate code");
             filterChain.doFilter(request, response);
             return;
         }else{
-            log.info("Second Step:not ticket");
+            log.debug("Second Step:not ticket");
         }
         final String modifiedServiceUrl;
 
         modifiedServiceUrl = serviceUrl;
-        log.info("First Step:Constructed service url: " + modifiedServiceUrl);
+        log.debug("First Step:Constructed service url: " + modifiedServiceUrl);
         String state= RandomUtils.randomNumber(8);
 //        while (ticketRegistry.getTicket(state)!=null){
 //            state= RandomUtils.randomNumber(8);
@@ -102,7 +101,7 @@ public class AuthenticationFilter extends AbstractCasFilter {
         //StateTicket stateTicket=grantStateTicket.grantStateTicket(this.state,expirationPolicy,modifiedServiceUrl);
         //this.ticketRegistry.addTicket(stateTicket);
         final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.loginUrl, getServiceParameterName(), modifiedServiceUrl,this.state,this.relogin, this.renew);
-        log.info("First Step:redirecting to \"" + urlToRedirectTo + "\"");
+        log.debug("First Step:redirecting to \"" + urlToRedirectTo + "\"");
         response.sendRedirect(urlToRedirectTo);
     }
 

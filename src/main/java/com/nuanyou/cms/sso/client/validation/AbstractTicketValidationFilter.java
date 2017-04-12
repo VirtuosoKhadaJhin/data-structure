@@ -20,7 +20,7 @@
 package com.nuanyou.cms.sso.client.validation;
 
 
-import com.nuanyou.cms.sso.client.util.AbstractCasFilter;
+import com.nuanyou.cms.sso.client.util.AbstractFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.sso.client.util.OperationLog;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ import java.util.Enumeration;
  * The filter that handles all the work of validating ticket requests.
  *
  */
-public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
+public abstract class AbstractTicketValidationFilter extends AbstractFilter {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractTicketValidationFilter.class.getSimpleName());
     /**
@@ -129,7 +129,6 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
 
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
-        log.info("AbstractTicketValidationFilter" + request.getRequestURL() + "?" + request.getQueryString());
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
         String artifactParameterName = getArtifactParameterName();
         final String ticket = CommonUtils.safeGetParameter(request, artifactParameterName);

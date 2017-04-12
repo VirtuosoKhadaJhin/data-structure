@@ -29,20 +29,14 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *  Abstract filter that contains code that is common to all related filters.
- *  <p>
- * <ul>
- * <li><code>serverName</code> - the name of the SSO client server, in the format: localhost:8080 or localhost:8443 or localhost or https://localhost:8443</li>
- * <li><code>service</code> - the completely qualified service url, i.e. https://localhost/cas-client/app</li>
- * </ul>
- * <p>Please note that one of the two above parameters must be set.</p>
  */
-public abstract class AbstractCasFilter extends AbstractConfigurationFilter {
+public abstract class AbstractFilter extends AbstractConfigurationFilter {
 
     /** Represents the constant for where the assertion will be located in memory. */
     public static final String SSO_USER = "sso_user";
 
     /** Instance of commons logging for logging purposes. */
-    protected static final Logger log = LoggerFactory.getLogger(AbstractCasFilter.class.getSimpleName());
+    protected static final Logger log = LoggerFactory.getLogger(AbstractFilter.class.getSimpleName());
 
     /** Defines the parameter to look for for the artifact. */
     private String artifactParameterName = "code";

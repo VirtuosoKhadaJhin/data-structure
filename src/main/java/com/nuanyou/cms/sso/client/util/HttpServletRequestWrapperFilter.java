@@ -57,8 +57,8 @@ public final class HttpServletRequestWrapperFilter extends AbstractConfiguration
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpSession session = request.getSession(false);
         final User user = (User) (session == null ?
-                request.getAttribute(AbstractCasFilter.SSO_USER) :
-                session.getAttribute(AbstractCasFilter.SSO_USER));
+                request.getAttribute(AbstractFilter.SSO_USER) :
+                session.getAttribute(AbstractFilter.SSO_USER));
         return user;
     }
 
