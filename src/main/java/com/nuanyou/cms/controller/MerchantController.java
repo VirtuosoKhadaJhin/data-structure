@@ -109,6 +109,7 @@ public class MerchantController {
     @RequestMapping(path = "{countryCode}/update", method = RequestMethod.POST)
     public String update_country(MerchantVO vo, @PathVariable("countryCode") String countryCode, Model model) {
         Long countryId = countryMap.get(countryCode);
+        model.addAttribute("countryHide", true);
         update(vo, countryId, model);
         return "merchant/edit";
     }
