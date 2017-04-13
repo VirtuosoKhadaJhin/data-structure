@@ -20,12 +20,11 @@
 package com.nuanyou.cms.sso.client.validation;
 
 
-import com.nuanyou.cms.sso.client.ticket.support.DefaultTicketRegistry;
-import com.nuanyou.cms.sso.client.util.AbstractCasFilter;
+import com.nuanyou.cms.sso.client.util.AbstractFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
+import com.nuanyou.cms.sso.client.util.OperationLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -40,7 +39,7 @@ import java.util.Enumeration;
  * The filter that handles all the work of validating ticket requests.
  *
  */
-public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
+public abstract class AbstractTicketValidationFilter extends AbstractFilter {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractTicketValidationFilter.class.getSimpleName());
     /**
@@ -114,7 +113,7 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
      * @param user     the successful Assertion from the server.
      */
     protected void onSuccessfulValidation(final HttpServletRequest request, final HttpServletResponse response, final User user) {
-        // nothing to do here.                                                                                            
+        OperationLog.log(user.getUserid(), user.getName(),request.getRequestURI(), OperationLog.Action.Login,null);
     }
 
     /**
@@ -128,12 +127,8 @@ public abstract class AbstractTicketValidationFilter extends AbstractCasFilter {
         // nothing to do here.
     }
 
-    @Autowired
-    private DefaultTicketRegistry abstractTicketRegistry;
-
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
-        log.info("AbstractTicketValidationFilter" + request.getRequestURL() + "?" + request.getQueryString());
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
         String artifactParameterName = getArtifactParameterName();
         final String ticket = CommonUtils.safeGetParameter(request, artifactParameterName);

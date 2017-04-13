@@ -50,15 +50,15 @@ public final class HttpServletRequestWrapperFilter extends AbstractConfiguration
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         final User user = retrievePrincipalFromSessionOrRequest(servletRequest);
 
-        filterChain.doFilter(new CasHttpServletRequestWrapper((HttpServletRequest) servletRequest, user), servletResponse);
+        filterChain.doFilter(new HttpServletRequestWrapperSSO((HttpServletRequest) servletRequest, user), servletResponse);
     }
 
     protected User retrievePrincipalFromSessionOrRequest(final ServletRequest servletRequest) {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpSession session = request.getSession(false);
         final User user = (User) (session == null ?
-                request.getAttribute(AbstractCasFilter.SSO_USER) :
-                session.getAttribute(AbstractCasFilter.SSO_USER));
+                request.getAttribute(AbstractFilter.SSO_USER) :
+                session.getAttribute(AbstractFilter.SSO_USER));
         return user;
     }
 
@@ -68,11 +68,11 @@ public final class HttpServletRequestWrapperFilter extends AbstractConfiguration
         this.ignoreCase = Boolean.parseBoolean(getPropertyFromInitParams(filterConfig, "ignoreCase", "false"));
     }
 
-    final class CasHttpServletRequestWrapper extends HttpServletRequestWrapper {
+    final class HttpServletRequestWrapperSSO extends HttpServletRequestWrapper {
 
         private final User user;
 
-        CasHttpServletRequestWrapper(final HttpServletRequest request, final User user) {
+        HttpServletRequestWrapperSSO(final HttpServletRequest request, final User user) {
             super(request);
             this.user = user;
         }
@@ -81,10 +81,11 @@ public final class HttpServletRequestWrapperFilter extends AbstractConfiguration
             return this.user;
         }
 
+        @Override
         public String getRemoteUser() {
             return user != null ? this.user.getName() : null;
         }
-
+        @Override
         public boolean isUserInRole(final String role) {
             if (CommonUtils.isBlank(role)) {
                 log.debug("No valid role provided.  Returning false.");

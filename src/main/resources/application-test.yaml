@@ -57,6 +57,6 @@ sso:
   urlExcludePattern: ^/test|^/dist/.*|^/favicon.*
   loginUrl: https://testuser.api.91nuanyou.com/oauth/corp
   reLogin: false
-  serverName: http://testmerchant.99mice.com
+  serverName: http://172.16.0.104:8085
   validateCodeUrl: https://testuser.api.91nuanyou.com/corp/oauth/access_token
   stateExpiredInMilliSeconds: 120000

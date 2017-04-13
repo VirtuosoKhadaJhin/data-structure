@@ -68,7 +68,7 @@ public final class SingleSignOutFilter extends AbstractConfigurationFilter {
 
 		final HttpServletRequest request = (HttpServletRequest) servletRequest;
 		final HttpServletResponse response = (HttpServletResponse) servletResponse;
-		log.info("SingleSignOutFilter"+request.getRequestURL()+"?"+request.getQueryString());
+//		log.info("SingleSignOutFilter"+request.getRequestURL()+"?"+request.getQueryString());
 		if(CommonUtils.isRequestExcluded(request,urlExcludePattern)){
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
