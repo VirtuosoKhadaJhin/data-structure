@@ -91,7 +91,7 @@
 
 
                                 #if(!$countryHide)
-                                    <label class="control-label">商户汇率</label>
+                                    <label class="control-label">商户汇率系数</label>
                                     <div class="controls">
                                         <input type="text" class="span10" placeholder="商户汇率" name="ratio" value="$!entity.ratio">
                                     </div>
@@ -331,7 +331,6 @@
                     number: true
                 },
                 ratio:{
-                    required:true,
                     isPositive:true,
                     number:true
                 }
@@ -362,6 +361,9 @@
 
 
         $.validator.addMethod("isPositive",function(value,element){
+            if(value==""){
+                return true;
+            }
             if(value<=0){
                 return false;
             }else{
