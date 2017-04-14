@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span6">
+                <div class="widget-box">
+                    <div id="breadcrumb">
+                        <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
+                        <a href="list" class="tip-bottom" data-original-title="">日志管理</a>
+                        <a href="javascipt:void(0);" class="tip-bottom" data-original-title="">查看</a>
+                    </div>
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
+                        <h5>日志详情</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form class="form-horizontal commonValidate" action="update" method="post">
+                            <input name="id" type="hidden" value="$!vo.id">
+                            <div class="control-group">
+
+
+
+                                <label class="control-label">用户ID</label>
+                                <div class="controls">
+                                    <input name="userId" type="text" class="span11" value="$!vo.userId">
+                                </div>
+                                <label class="control-label">用户名</label>
+                                <div class="controls">
+                                    <input name="userName" type="text" class="span11" value="$!vo.userName">
+                                </div>
+                                <label class="control-label">日期</label>
+                                <div class="controls">
+                                    <input type="text" class="span11 dateTimeFormat" name="date" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.date)">
+                                </div>
+
+                                <label class="control-label">类型</label>
+                                <div class="controls">
+                                    <select name="type" class="span11">
+                                        <option value="1" #if($!vo.type == 1) selected#end>日志报道</option>
+                                        <option value="2" #if($!vo.type == 2) selected#end>大记事</option>
+                                    </select>
+                                </div>
+                                <label class="control-label">是否显示</label>
+                                <div class="controls">
+                                    <select name="display" class="span11">
+                                        <option value="true"  #if($!vo.display==true)  selected #end>显示</option>
+                                        <option value="false"  #if($!vo.display==false)  selected #end>隐藏</option>
+                                    </select>
+                                </div>
+                                <label class="control-label">顺序</label>
+                                <div class="controls">
+                                    <input name="sort" type="text" class="span11" value="$!vo.sort">
+                                </div>
+                                <label class="control-label">详细内容</label>
+                                <div class="controls">
+                                    <textarea name="content" class="span11" rows="20">$!vo.content</textarea>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-success" type="submit" id="btn-save">保存</button>
+                                <a class="btn btn-warning" type="button" id="btn-edit">编辑</a>
+                                <a class="btn btn-primary" href="list?cat.id=$!vo.cat.id">返回</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #include("common/js-support.vm")
+    <script>
+            #if($!disabled)
+            $("#btn-save").hide();
+            $(":input").each(function (i, o) {
+                $(o).attr("disabled", true);
+            });
+            $("#btn-edit").on("click", function () {
+                $(":input").each(function (i, o) {
+                    $(o).attr("disabled", false);
+                    $("#btn-save").show();
+                    $("#btn-edit").hide();
+                });
+            });
+            #else
+            $("#btn-edit").hide();
+            #end
+        var attr = $('.btn-primary').attr("href");
+        if (attr.indexOf("?") == -1) {
+            attr += '?index=' + localStorage['index'];
+        } else {
+            attr += '&index=' + localStorage['index'];
+        }
+        $('.btn-primary').attr("href", attr);
+    </script>
+</body>
+</html>
