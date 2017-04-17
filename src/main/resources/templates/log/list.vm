@@ -1,0 +1,67 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
+    <a href="javascipt:void(0);" class="tip-bottom" data-original-title="">日志管理</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>日志列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th width="120px">日期</th>
+        <th>角色ID</th>
+        <th>角色名</th>
+        <th>用户ID</th>
+        <th>用户名</th>
+        <th>动作</th>
+        <th>功能模块</th>
+    ##    <th>目标类</th>
+    ##    <th width="90px">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($e in $!page.hits.hits)
+        <tr class="odd gradeX">
+            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.source.date)</td>
+            <td>$!e.source.roleId</td>
+            <td>$!e.source.roleName</td>
+            <td>$!e.source.userId</td>
+            <td>$!e.source.userName</td>
+            <td>$!e.source.action.name</td>
+            <td>$!e.source.uri</td>
+        ##        <td>$!e.source.targetClass</td>
+        ##        <td><a class="btn btn-success btn-mini" data-id="$!e.id" href="detail?id=$!e.id">查看</a></td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#parse("common/list_mid.vm")
+<form>
+    <div class="control-group">
+        <label>用户名或ID：</label>
+        <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
+        <label>功能模块：</label>
+        <select name="uri" class="span11 select2">
+            <option value="">全部</option>
+            #foreach($e in  $uriMap.entrySet())
+                <option value="$!e.key" #if($!vo.uri==$!e.key) selected #end>$!e.value:$!e.key</option>
+            #end
+        </select>
+        <label>动作：</label>
+        <select name="action" class="span11">
+            <option value="">全部</option>
+            #foreach($e in $!actions)
+                <option value="$!e" #if($!vo.aciotn==$!e) selected #end>$!e.name</option>
+            #end
+        </select>
+    ##        <label>目标类：</label>
+    ##        <input type="text" class="span11" name="targetClass" value="$!vo.targetClass">
+        <label>起止时间</label>
+        <input type="text" class="span11 dateTimeFormat" name="begin" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!time.beginDate)" placeholder="起始时间">
+        <input type="text" class="span11 dateTimeFormat" name="end" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!time.endDate)" placeholder="结束时间">
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+#parse("common/list_end.vm")

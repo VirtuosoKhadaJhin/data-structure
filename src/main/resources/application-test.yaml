@@ -34,6 +34,9 @@ server:
       enabled: true
       directory: /var/log/accesslog/
 
+logging:
+  config: classpath:logback-test.xml
+
 aliyun:
  oss:
   access-key-id: OgdPMXR4cLyeIxEW
@@ -51,6 +54,18 @@ nuanyou-host: http://testh5.91nuanyou.com
 withdrawurl: http://testuser.api.91nuanyou.com
 nuanyou-api: http://testapi30.99mice.com:8081
 
+upload:
+  s3server: https://kr.file.91nuanyou.com
+elasticsearch:
+  host: search-nyesearch-cgkyq332tvpvbi7q4n7nv4o5pe.ap-northeast-2.es.amazonaws.com
+  index: test-cms-operation
+
+AWS:
+  sns:
+    topic:
+      refund: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refund
+      refundSuccess: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refundSuccess
+      refundFail: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refundFail
 
 sso:
   urlPatterns: /*

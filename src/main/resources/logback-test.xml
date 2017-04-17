@@ -18,7 +18,7 @@
     <appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
             <evaluator>
-                <expression><![CDATA[event.getLoggerName().contains("com.nuanyou.cms.commons.DateEntityListener")]]></expression>
+                <expression><![CDATA[event.getLoggerName().equals("OperationLog")]]></expression>
             </evaluator>
             <OnMismatch>NEUTRAL</OnMismatch>
             <OnMatch>DENY</OnMatch>
@@ -32,21 +32,20 @@
         </rollingPolicy>
     </appender>
 
-    <appender name="operationLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %msg%n</pattern>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${LOG_APP_HOME}/cms_merchant_operation-%d{yyyy-MM-dd}.30de.log</FileNamePattern>
-            <MaxHistory>30</MaxHistory>
-        </rollingPolicy>
+    <appender name="operationLog" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator>
+                <expression><![CDATA[event.getLoggerName().equals("OperationLog")]]></expression>
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+            <OnMatch>ACCEPT</OnMatch>
+        </filter>
+        <destination>ec2-52-78-222-79.ap-northeast-2.compute.amazonaws.com:4560</destination>
+        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder"/>
     </appender>
 
-    <logger name="com.nuanyou.cms.commons.DateEntityListener" level="INFO" additivity="true">
-        <appender-ref ref="operationLog"/>
-    </logger>
-
     <root level="INFO">
+        <appender-ref ref="operationLog"/>
         <appender-ref ref="logfile"/>
         <appender-ref ref="console"/>
     </root>

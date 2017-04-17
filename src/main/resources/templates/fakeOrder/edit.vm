@@ -12,7 +12,7 @@
         <div id="breadcrumb">
             <div id="breadcrumb">
                 <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-                <a href="../city/list" class="tip-bottom" data-original-title="">城市管理</a>
+                <a href="../city/list" class="tip-bottom" data-original-title="">评论美化</a>
                 <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
             </div>
         </div>
