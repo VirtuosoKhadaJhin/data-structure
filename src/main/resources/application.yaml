@@ -65,7 +65,7 @@ AWS:
 
 
 sso:
-  urlPatterns: /*
+  urlPatterns: /test
   urlExcludePattern: ^/test|^/dist/.*|^/favicon.*
   loginUrl: https://testuser.api.91nuanyou.com/oauth/corp
   reLogin: false

@@ -35,12 +35,17 @@ public class FeatureServiceImpl implements FeatureService {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
-                if (entity.getCountry() != null &&entity.getCountry().getId()!=null) {
+                if (entity.getCountry() != null && entity.getCountry().getId() != null) {
                     Predicate p = cb.equal(root.get("country").get("id"), entity.getCountry().getId());
                     predicate.add(p);
                 }
-                if (entity.getCity() != null && entity.getCity().getId()!=null) {
+                if (entity.getCity() != null && entity.getCity().getId() != null) {
                     Predicate p = cb.equal(root.get("city").get("id"), entity.getCity().getId());
+                    predicate.add(p);
+                }
+
+                if (entity.getCat() != null) {
+                    Predicate p = cb.equal(root.get("cat"), entity.getCat());
                     predicate.add(p);
                 }
                 Predicate[] pre = new Predicate[predicate.size()];
@@ -56,9 +61,10 @@ public class FeatureServiceImpl implements FeatureService {
         }
         Feature oldEntity = featureDao.findOne(entity.getId());
         BeanUtils.copyBeanNotNull(entity, oldEntity);
-        if (oldEntity.getCity().getId()==null){
+        if (oldEntity.getCity().getId() == null) {
             oldEntity.setCity(null);
-        }if(oldEntity.getCountry().getId()==null){
+        }
+        if (oldEntity.getCountry().getId() == null) {
             oldEntity.setCountry(null);
         }
         return featureDao.save(oldEntity);

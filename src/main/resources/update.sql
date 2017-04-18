@@ -1,4 +1,9 @@
 use nuanyou20;
+-- 2017-4-14
+ALTER TABLE `ny_feature` ADD COLUMN `cat` tinyint(4) DEFAULT 0 COMMENT '分类: 0.全部 1.美食 2.购物 3.娱乐' AFTER `type`;
+
+ALTER TABLE `ny_feature` ADD COLUMN `sort` INT(4) DEFAULT 999 COMMENT '排序';
+ALTER TABLE `ny_quick` ADD COLUMN `sort` INT(4) DEFAULT 999 COMMENT '排序';
 
 -- 2017-3-22
 ALTER TABLE `ny_item` MODIFY COLUMN `type` tinyint(4) UNSIGNED COMMENT '商品类型: 1.普通商品 2.团购商品 3.优惠券 4.自定义商品';

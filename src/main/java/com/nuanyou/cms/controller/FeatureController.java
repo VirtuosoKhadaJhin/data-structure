@@ -4,6 +4,7 @@ import com.nuanyou.cms.dao.FeatureDao;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.entity.Feature;
 import com.nuanyou.cms.entity.Country;
+import com.nuanyou.cms.entity.enums.FeatureCat;
 import com.nuanyou.cms.service.FeatureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,7 +35,6 @@ public class FeatureController {
         return "feature/list";
     }
 
-
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
         List<Country> countries = this.countryDao.findAll();
@@ -45,6 +45,7 @@ public class FeatureController {
         model.addAttribute("entity", entity);
         model.addAttribute("type", type);
         model.addAttribute("countries", countries);
+        model.addAttribute("cats", FeatureCat.values());
         return "feature/edit";
     }
 
@@ -62,9 +63,8 @@ public class FeatureController {
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
         model.addAttribute("countries", countries);
+        model.addAttribute("cats", FeatureCat.values());
         return "feature/list";
     }
 
-
 }
-

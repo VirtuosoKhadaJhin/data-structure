@@ -6,11 +6,11 @@
 </div>
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
-    <h5>城市列表</h5>
+    <h5>列表</h5>
     <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
 </div>
 <div style="overflow: auto;width: 100%">
-    <table class="table table-bordered table-striped" >
+    <table class="table table-bordered table-striped">
         <thead>
         <tr>
             <th>ID</th>
@@ -66,12 +66,17 @@
                 <option value="$!e.id" #if($!entity.country.id==$!e.id) selected #end>$!e.id:$!e.name</option>
             #end
         </select>
-    </div>
 
-    <div class="control-group">
         <label>城市</label>
         <select name="city.id" class="span11 child" def-value="$!entity.city.id">
             <option value="">全部</option>
+        </select>
+
+        <label>分类</label>
+        <select name="cat" class="span11">
+            #foreach($e in $!cats)
+                <option value="$!e" #if($!entity.cat==$!e) selected #end>$!e.name</option>
+            #end
         </select>
     </div>
     <button type="submit" class="btn btn-primary">查询</button>
