@@ -40,7 +40,7 @@
 #parse("common/list_mid.vm")
 <form>
     <div class="control-group">
-        <label>用户名或ID：</label>
+        <label>用户ID或Email：</label>
         <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
         <label>功能模块：</label>
         <select name="uri" class="span11 select2">
@@ -53,7 +53,7 @@
         <select name="action" class="span11">
             <option value="">全部</option>
             #foreach($e in $!actions)
-                <option value="$!e" #if($!vo.aciotn==$!e) selected #end>$!e.name</option>
+                <option value="$!e" #if($!vo.action==$e) selected #end>$!e.name</option>
             #end
         </select>
     ##        <label>目标类：</label>
