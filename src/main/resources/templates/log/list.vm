@@ -40,7 +40,7 @@
 #parse("common/list_mid.vm")
 <form>
     <div class="control-group">
-        <label>用户ID或Email：</label>
+        <label>用户名或ID：</label>
         <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
         <label>功能模块：</label>
         <select name="uri" class="span11 select2">
