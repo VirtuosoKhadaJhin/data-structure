@@ -96,20 +96,20 @@ public class LogController {
     }
 
     @RequestMapping("list")
-    public String list(@ModelAttribute("vo") LogVO entity,
+    public String list(@ModelAttribute("vo") LogVO vo,
                        @RequestParam(required = false) String nameOrId,
                        @RequestParam(required = false, defaultValue = "1") int index,
                        TimeCondition time,
                        Model model) {
         if (StringUtils.isNotBlank(nameOrId)) {
             if (StringUtils.isNumeric(nameOrId)) {
-                entity.setUserId(NumberUtils.toLong(nameOrId));
+                vo.setUserId(NumberUtils.toLong(nameOrId));
             } else {
-                entity.setUserName(nameOrId);
+                vo.setUserName(nameOrId);
             }
         }
 
-        ESResult page = logService.find(entity, time, index - 1, PageUtil.pageSize);
+        ESResult page = logService.find(vo, time, index - 1, PageUtil.pageSize);
         List<ESResult.HitsSum.Hit> hits = page.getHits().getHits();
         if (hits != null && !hits.isEmpty())
             for (ESResult.HitsSum.Hit hit : hits) {

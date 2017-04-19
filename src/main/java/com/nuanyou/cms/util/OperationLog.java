@@ -29,14 +29,14 @@ public class OperationLog {
         User user = UserHolder.getUser();
         if (user != null) {
             sb.append(user.getUserid()).append(",");
-            sb.append(user.getName()).append(",");
-            sb.append("").append(",");
-            sb.append("").append(",");
+            sb.append(user.getEmail()).append(",");
+            sb.append("0").append(",");
+            sb.append("0").append(",");
         } else {
-            sb.append(",");
-            sb.append(",");
-            sb.append(",");
-            sb.append(",");
+            sb.append("0,");
+            sb.append("0,");
+            sb.append("0,");
+            sb.append("0,");
         }
         sb.append(DateUtils.format(new Date())).append(",");
         sb.append(request.getRequestURI()).append(",");
