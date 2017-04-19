@@ -51,6 +51,7 @@ public class LogController {
         uriMapper.put("/item", "单品管理");
         uriMapper.put("/itemCat", "单品分类管理");
         uriMapper.put("/itemTuan", "团购商品管理");
+        uriMapper.put("/itemDetailimg", "商品图片管理");
         uriMapper.put("/landMark", "地标管理");
         uriMapper.put("/merchant", "商户管理");
         uriMapper.put("/merchantCard", "商户卡券管理");
@@ -62,6 +63,7 @@ public class LogController {
         uriMapper.put("/merchantSubsidy", "商户补贴管理");
         uriMapper.put("/news", "新闻管理");
         uriMapper.put("/orderRefundLog", "");
+        uriMapper.put("/order", "订单管理");
         uriMapper.put("/pasUserProfile", "用户管理");
         uriMapper.put("/pushDetail", "推送消息管理");
         uriMapper.put("/pushGroup", "推送管理");
@@ -72,6 +74,8 @@ public class LogController {
         uriMapper.put("/searchKeyword", "关键词管理");
         uriMapper.put("/userNotify", "用户推送管理");
         uriMapper.put("/userSubsidy", "用户补贴管理");
+        uriMapper.put("/quick", "工具栏");
+        uriMapper.put("/fakeUser", "用户美化");
 
         Map<RequestMappingInfo, HandlerMethod> map = handlerMapping.getHandlerMethods();
         Iterator<Map.Entry<RequestMappingInfo, HandlerMethod>> iterator = map.entrySet().iterator();
