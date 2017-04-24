@@ -1,6 +1,5 @@
 package com.nuanyou.cms.controller;
 
-import com.nuanyou.cms.config.SystemContext;
 import com.nuanyou.cms.dao.BannerDao;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.entity.Banner;
@@ -61,7 +60,6 @@ public class BannerController {
     protected HttpServletRequest request;
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index, Banner entity, Model model) {
-        System.out.println("request"+request);
         List<Country> countries = this.countryDao.findAll();
         Page<Banner> page = bannerService.findByCondition(index, entity);
         model.addAttribute("page", page);

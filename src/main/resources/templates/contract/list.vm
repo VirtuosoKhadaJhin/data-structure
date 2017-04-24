@@ -1,0 +1,105 @@
+#parse("common/list_start.vm")
+
+<div id="content-header">
+    <div id="breadcrumb">
+        <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+        <a href="/contract/list" class="tip-bottom" data-original-title="">待审核合同</a>
+    </div>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>列表</h5>
+</div>
+<table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+    <thead>
+    <tr role="row">
+        <th>ID</th>
+        <th>商家名称</th>
+        <th>合同上传日期</th>
+        <th>合同类型</th>
+        <th>合同编号</th>
+        <th>上传人</th>
+        <th>国家</th>
+        <th>合同起始日</th>
+        <th>合同截止日</th>
+        <th>电子合同</th>
+        <th>营业执照上传日期</th>
+        <th>纸质合同上传日期</th>
+        <th>生效</th>
+        <th class="table-set" width="90px">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.id</td>
+            <td>$!entity.merchantName</td>
+            <td>$!entity.merchantName</td>
+            <td>$!entity.type</td>
+            <td>$!entity.typeName</td>
+            <td>$!entity.userId</td>
+            <td>$!entity.startTime</td>
+            <td>$!entity.endTime</td>
+            <td>$!entity.pdfurl</td>
+            <td>$!entity.approveTime</td>
+            <td>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a>
+            </td>
+
+            <td>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">驳回</a>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">通过</a>
+            </td>
+
+        </tr>
+        #end
+    </tbody>
+</table>
+#parse("common/list_mid.vm")
+<form>
+        <div class="control-group">
+            <label>ID</label>
+            <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
+        </div>
+
+
+        <div class="control-group">
+            <label>本地名称</label>
+            <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
+        </div>
+
+
+        <div class="control-group">
+            <label>合同类型</label>
+            <select id="country.id" name="country.id" class="span7">
+                <option value="">全部</option>
+                <option value="">主合同</option>
+                <option value="">附加合同</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>营业执照</label>
+            <select id="country.id" name="country.id" class="span7">
+                <option value="">全部</option>
+                <option value="">有</option>
+                <option value="">没有</option>
+            </select>
+        </div>
+
+
+        <div class="control-group">
+            <label>纸质合同</label>
+            <select id="display" name="display" class="span11">
+                <option value="">全部</option>
+                <option value="">有</option>
+                <option value="">没有</option>
+            </select>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">查询</button>
+</form>
+#parse("common/list_end.vm")
+
