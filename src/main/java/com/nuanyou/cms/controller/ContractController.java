@@ -20,14 +20,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.*;
 
 /**
  * Created by Felix on 2017/4/24.
@@ -40,6 +43,13 @@ public class ContractController {
 
     @Autowired
     private ContractService contractService;
+    @Autowired
+    private AccountService accountService;
+    @Value("${merchantSettlement.default.daytype}")
+    private Integer daytype;
+    @Value("${merchantSettlement.default.startprice}")
+    private BigDecimal startprice;
+
 
     @RequestMapping("list")
     public String list(Model model,
@@ -107,23 +117,10 @@ public class ContractController {
         return "contract/filedList";
     }
 
-    static Map<Integer, MerchantSettlementParamConfig> config = new HashMap<>();
-
-    static {
-        config.put(1, new MerchantSettlementParamConfig(1L, "poundage_huigou", "account_period_huigou"));
-        config.put(5, new MerchantSettlementParamConfig(5L, "poundage_radio", "settle_day"));
-        config.put(6, new MerchantSettlementParamConfig(6L, "poundage_radio", "settle_day"));
-
-    }
 
 
-    @Value("${merchantSettlement.default.daytype}")
-    private Integer daytype;
-    @Value("${merchantSettlement.default.startprice}")
-    private BigDecimal startprice;
 
-    @Autowired
-    private AccountService accountService;
+
 
     @RequestMapping(path = "verify", method = RequestMethod.GET)
     @ResponseBody
@@ -174,6 +171,17 @@ public class ContractController {
             throw new APIException(ResultCodes.PoundageOrPayDaysIsNull);
         }
 
+
+    }
+
+
+
+    static Map<Integer, MerchantSettlementParamConfig> config = new HashMap<>();
+
+    static {
+        config.put(1, new MerchantSettlementParamConfig(1L, "poundage_huigou", "account_period_huigou"));
+        config.put(5, new MerchantSettlementParamConfig(5L, "poundage_radio", "settle_day"));
+        config.put(6, new MerchantSettlementParamConfig(6L, "poundage_radio", "settle_day"));
 
     }
 
