@@ -51,7 +51,11 @@
                 <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
                 <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a>
             </td>
-            <td>$!entity.approveTime</td>
+            <td>$!entity.approveTime
+                <a  class="btn btn-success btn-mini verify" data-id="$!entity.id" flag="fail">驳回</a>
+                <a  class="btn btn-info btn-mini verify" data-id="$!entity.id" flag="success">通过</a>
+
+            </td>
 
         </tr>
         #end
@@ -100,7 +104,38 @@
 <script src="/dist/js/curd.js"></script>
 <script type="text/javascript">
     $(function () {
-
+        $(".verify").each(function (i, o) {
+            $(o).on("click", function (event) {
+                var id = $(this).attr("data-id");
+                var flag = $(this).attr("flag");
+                var message;
+                var type;
+                if(flag=="fail"){
+                    message="确定驳回此合同吗?";
+                    type=2;
+                }else if(flag="success"){
+                    type=1;
+                    message="确定通过此合同吗?";
+                }else{
+                    return alert("操作失败");
+                }
+                if(confirm(message)){
+                    $.ajax({
+                        url: 'verify',
+                        data: {contractId: id, type:type},
+                        type: 'get',
+                        success: function (result) {
+                            if (result.code == 0) {
+                                alert("操作成功");
+                                window.location.reload();
+                            } else {
+                                alert("Fail Code: " + result.code + " MSG: " + result.msg);
+                            }
+                        }
+                    });
+                }
+            })
+        });
     });
 </script>
 #parse("common/list_end.vm")

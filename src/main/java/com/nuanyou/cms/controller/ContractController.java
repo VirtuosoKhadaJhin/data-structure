@@ -136,12 +136,6 @@ public class ContractController {
     @RequestMapping(path = "verify", method = RequestMethod.GET)
     @ResponseBody
     public APIResult verify(Long id, Integer type,Long contractId) throws ParseException {
-//        if(true){
-//            APIResult res= accountService.add(333L,true,daytype,new BigDecimal(3.4),4L,startprice,new DateTime().toString("yyyy-MM-dd"));
-//            System.out.println(res.getCode()+"felix");
-//            return  null;
-//        }
-
         //1 通过
         boolean valid=false;
         if(type==1){
@@ -151,9 +145,10 @@ public class ContractController {
         }else{
             throw new APIException(ResultCodes.TypeMismatch);
         }
-        APIResult approve = this.contractService.approve(UserHolder.getUser().getUserid(), contractId, valid);
+        Long userid=UserHolder.getUser().getUserid();
+        APIResult approve = this.contractService.approve(userid, contractId, valid);
         if(approve.getCode()!=0){
-            throw new APIException(ResultCodes.Fail);
+            throw new APIException(approve.getCode(),approve.getMsg());
         }
         if(type==1){
             //2 得到合同信息
@@ -176,7 +171,7 @@ public class ContractController {
             Long merchantId=detail.getMchid();
             APIResult res= accountService.add(merchantId,true,daytype,poundage,paymentDays,startprice,new DateTime().toString("yyyy-MM-dd"));
             if(res.getCode()!=0){
-                throw new APIException(ResultCodes.AddMerchantSettlementError);
+                throw new APIException(res.getCode(),res.getMsg());
             }
         }else{
             throw new APIException(ResultCodes.PoundageOrPayDaysIsNull);
@@ -192,6 +187,12 @@ public class ContractController {
 
 
 
+
+//        if(true){
+//            APIResult res= accountService.add(333L,true,daytype,new BigDecimal(3.4),4L,startprice,new DateTime().toString("yyyy-MM-dd"));
+//            System.out.println(res.getCode()+"felix");
+//            return  null;
+//        }
 
 
 }

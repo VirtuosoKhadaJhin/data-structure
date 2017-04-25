@@ -18,6 +18,11 @@ public class APIException extends RuntimeException {
         this.code = code.code;
     }
 
+    public APIException(Integer code, String message) {
+        super(message);
+        this.code = code;
+    }
+
     public int getCode() {
         return code;
     }
