@@ -9,11 +9,8 @@ import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.Contracts;
 import com.nuanyou.cms.remote.AccountService;
 import com.nuanyou.cms.remote.ContractService;
-import io.swagger.annotations.ApiOperation;
 import com.nuanyou.cms.sso.client.util.UserHolder;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +28,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -204,10 +200,7 @@ public class ContractController {
     }
 
 
-    @Value("${merchantSettlement.default.daytype}")
-    private Integer daytype;
-    @Value("${merchantSettlement.default.startprice}")
-    private Integer startprice;
+
 
     @RequestMapping(path = "verify", method = RequestMethod.POST)
     @ResponseBody
