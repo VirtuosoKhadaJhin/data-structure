@@ -45,11 +45,9 @@
             <td><a href="/contract/preview?id=$!entity.id" target="_blank" class="btn btn-success btn-mini">查看</a></td>
             <td>未知
                 <a href="$!entity.businessLicense" class="btn btn-success btn-mini">查看</a>
-                $!entity.businessLicense
             </td>
             <td>未知
-                <a href="$!entity.paperContract" class="btn btn-success btn-mini">查看</a>
-                $!entity.paperContract
+                <a href="$!entity.pdfUrl" class="btn btn-success btn-mini">查看</a>
             </td>
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.approveTime)</td>
 
