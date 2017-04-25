@@ -123,4 +123,14 @@ public interface ContractService {
             @ApiParam(value = "用户id", required = true) @RequestParam(value = "userid", required = true) Long userId,
             @ApiParam(value = "商户id", required = true) @RequestParam(value = "merchantid", required = true) Long merchantId,
             @ApiParam(value = "合同id", required = true) @PathVariable(value = "id") Long id) ;
+
+    @ApiOperation(value = "合同审批.", notes = "合同审批", response = APIResult.class)
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "操作结果（成功：200，其他：）", response = APIResult.class)})
+    @RequestMapping(value = "/{id}/_approve", produces = MimeTypes.MIME_TYPE_JSON, consumes = MimeTypes.MIME_TYPE_FORM_DATA, method = RequestMethod.POST)
+    public APIResult approve(
+            @ApiParam(value = "用户id", required = true) @RequestParam(value = "userid") Long userId,
+            @ApiParam(value = "合同id", required = true) @PathVariable(value = "id") Long id,
+            @ApiParam(value = "是否生效", required = true) @RequestParam(value = "valid") boolean valid);
+
+
 }
