@@ -33,7 +33,7 @@ public interface AccountService {
     @ApiOperation(value = "合同模版详情.", notes = "合同模版详情", response = ContractTemplate.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "合同模版详情", response = ContractTemplate.class)})
     @RequestMapping(value = "/template", method = RequestMethod.GET)
-    public APIResult<ContractTemplate> getContractConfig(@ApiParam(value = "模版id", required = true) @RequestParam(value = "id", required = true) Long id) ;
+    public APIResult<ContractTemplate> getContractConfig(@ApiParam(value = "模版id", required = true) @RequestParam(value = "id", required = true) Long id);
 
     @ApiOperation(value = "获取合同列表.", notes = "获取合同列表", response = Contracts.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "合同列表", response = Contracts.class)})
@@ -47,7 +47,7 @@ public interface AccountService {
             @ApiParam(value = "开始时间(yyyy-MM-dd)") @RequestParam(value = "starttime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startTime,
             @ApiParam(value = "结束时间(yyyy-MM-dd)") @RequestParam(value = "endtime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endTime,
             @ApiParam(value = "页序号，默认从1开始") @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-            @ApiParam(value = "每页条目数,默认20条") @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit) ;
+            @ApiParam(value = "每页条目数,默认20条") @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit);
 
     @ApiOperation(value = "合同新增", notes = "合同新增", response = ContractSave.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "录入后的id与pdfurl", response = ContractSave.class)})
@@ -57,7 +57,7 @@ public interface AccountService {
             @ApiParam(value = "模板id", required = true) @RequestParam(value = "templateid", required = true) Long templateId,
             @ApiParam(value = "主合同id", required = false) @RequestParam(value = "parentid", required = false) Long parentid,
             @ApiParam(value = "商户id", required = false) @RequestParam(value = "merchantid", required = false) Long merchantId,
-            @ApiParam(value = "参数集合json字符串", required = true) @RequestParam(value = "parameters", required = true) String parameters) ;
+            @ApiParam(value = "参数集合json字符串", required = true) @RequestParam(value = "parameters", required = true) String parameters);
 
 
     @ApiOperation(value = "合同更新", notes = "合同更新", response = ContractSave.class)
@@ -66,18 +66,18 @@ public interface AccountService {
     public APIResult<ContractSave> update(
             @ApiParam(value = "用户id", required = true) @RequestParam(value = "userid", required = true) Long userId,
             @ApiParam(value = "合同id", required = true) @PathVariable(value = "id") Long id,
-            @ApiParam(value = "参数集合json字符串", required = true) @RequestParam(value = "parameters", required = true) String parameters) ;
+            @ApiParam(value = "参数集合json字符串", required = true) @RequestParam(value = "parameters", required = true) String parameters);
 
 
     @ApiOperation(value = "获取合同详情.", notes = "获取合同详情", response = Contract.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "合同详情", response = Contract.class)})
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public APIResult<Contract> detail(@ApiParam(value = "合同id", required = true) @PathVariable(value = "id") long id) ;
+    public APIResult<Contract> detail(@ApiParam(value = "合同id", required = true) @PathVariable(value = "id") long id);
 
     @ApiOperation(value = "合同预览.", notes = "合同预览", response = String.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Html", response = String.class)})
     @RequestMapping(value = "/preview", method = RequestMethod.GET)
-    public APIResult<String> preview(@ApiParam(value = "合同id", required = true) @RequestParam(value = "id", required = true) long id) ;
+    public APIResult<String> preview(@ApiParam(value = "合同id", required = true) @RequestParam(value = "id", required = true) long id);
 
 
     @ApiOperation(value = "发送邮件.", notes = "新发送邮件 若存在错误的邮箱地址 则仅发送正确的地址，返回错误的", response = NullData.class)
@@ -114,7 +114,7 @@ public interface AccountService {
     public APIResult relateMerchantContract(
             @ApiParam(value = "用户id", required = true) @RequestParam(value = "userid", required = true) Long userId,
             @ApiParam(value = "商户id", required = true) @RequestParam(value = "merchantid", required = true) Long merchantId,
-            @ApiParam(value = "合同id(多个值以,分隔)", required = true) @RequestParam(value = "id", required = true) String id) ;
+            @ApiParam(value = "合同id(多个值以,分隔)", required = true) @RequestParam(value = "id", required = true) String id);
 
     @ApiOperation(value = "商户合同取消关联.", notes = "商户合同取消关联", response = NullData.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "操作结果（成功：200，其他：）", response = NullData.class)})
@@ -122,5 +122,5 @@ public interface AccountService {
     public APIResult cancelRelateMerchantContract(
             @ApiParam(value = "用户id", required = true) @RequestParam(value = "userid", required = true) Long userId,
             @ApiParam(value = "商户id", required = true) @RequestParam(value = "merchantid", required = true) Long merchantId,
-            @ApiParam(value = "合同id", required = true) @PathVariable(value = "id") Long id) ;
+            @ApiParam(value = "合同id", required = true) @PathVariable(value = "id") Long id);
 }

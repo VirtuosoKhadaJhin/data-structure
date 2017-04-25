@@ -14,8 +14,9 @@
     <thead>
     <tr role="row">
         <th>ID</th>
-        <th>商家名称</th>
+        <th>本地名称</th>
         <th>合同上传日期</th>
+        <th>合同模版</th>
         <th>合同类型</th>
         <th>合同编号</th>
         <th>上传人</th>
@@ -32,21 +33,24 @@
         #foreach($entity in $!page.content)
         <tr class="odd gradeX">
             <td>$!entity.id</td>
-            <td>$!entity.merchantName</td>
-            <td>$!entity.submitTime</td>
-            <td>$!entity.type</td>
+            <td>$!entity.mchName</td>
+            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.submitTime)</td>
             <td>$!entity.templateTitle</td>
+            <td>#if($!entity.type == 1)主合同#else 附加合同#end</td>
+            <td>$!entity.contractNo</td>
             <td>$!entity.username</td>
-            <td>$!entity.username</td>
+            <td>$!entity.countryId</td>
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.startTime)</td>
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.endTime)</td>
-            <td>$!entity.pdfurl</td>
+            <td><a class="copyItem" data-id="$!entity.id" href="javascript:void(0);">查看</a></td>
             <td>未知
                 <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a></td>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a>
+            </td>
             <td>未知
                 <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a></td>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a>
+            </td>
             <td>$!entity.approveTime</td>
 
         </tr>
@@ -57,20 +61,19 @@
 <form>
     <div class="control-group">
         <label>ID</label>
-        <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
+        <input type="text" class="span11" name="id" value="$!id">
 
 
         <label>本地名称</label>
         <input type="text" class="span11" name="merchantname" value="$!merchantname">
 
 
-
         <label>合同名称</label>
-        <input type="text" class="span11" name="merchantname" value="$!merchantname">
+        <input type="text" class="span11" name="" value="$!merchantname">
 
 
         <label>合同编号</label>
-        <input type="text" class="span11" name="merchantname" value="$!merchantname">
+        <input type="text" class="span11" name="" value="$!merchantname">
 
         <label>合同模板</label>
         <select id="templateid" name="templateid" class="span7">
@@ -80,25 +83,54 @@
         </select>
 
 
-
         <label>合同类型</label>
-        <select id="country.id" name="templateid" class="span7">
+        <select name="type" class="span7">
             <option value="">全部</option>
             <option value="1">主合同</option>
             <option value="2">附加合同</option>
         </select>
 
-        <label>合同生效开始时间：</label>
-        <input type="text" class="span11 dateTimeFormat" name="startTime" id="startTime" value="$!startTime"
-               placeholder="开始时间">
-
-        <label>结束时间：</label>
-        <input type="text" class="span11 dateTimeFormat" name="endTime" value="$!endTime" id="endTime"
-               placeholder="结束时间">
-
+        <label>合同起止时间：</label>
+        <input type="text" class="span11 dateFormat" name="starttime" value="$!starttime" placeholder="开始时间">
+        <input type="text" class="span11 dateFormat" name="endtime" value="$!endtime" placeholder="结束时间">
 
         <button type="submit" class="btn btn-primary">查询</button>
     </div>
 </form>
+<div id="copy-item-modal" class="modal hide fade" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>商品复制</h3>
+    </div>
+    <div class="modal-body">
+        <div class="input-group">
+            <label class="control-label">源商户</label>
+            <select id="copy-item-sourceId" class="select2">
+                #foreach($e in $!merchants)
+                    <option value="$!e.id">$!e.name（$!e.kpname）</option>
+                #end
+            </select>
+        </div>
+        <div class="input-group">
+            <label class="control-label">目标商户</label>
+            <input id="copy-item-targetId" type="text" class="span11" readonly>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        <a href="javascript:void(0);" id="copy-item-submit" class="btn btn-primary">保存</a>
+    </div>
+</div>
+<script src="/dist/js/curd.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".copyItem").each(function (i, o) {
+            $(o).on("click", function (event) {
+                var id = $(this).attr("data-id");
+                $("#copy-item-targetId").attr("value", id);
+                $("#copy-item-modal").modal();
+            });
+        });
+</script>
 #parse("common/list_end.vm")
 

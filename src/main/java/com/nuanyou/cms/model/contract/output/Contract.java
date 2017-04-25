@@ -26,6 +26,7 @@ public class Contract {
     private boolean read;
     private String pdfUrl;
     private String htmlContent;
+    private String parameters;
     private Date updateTime;
     private Date createTime;
     private Long userId;
@@ -36,6 +37,7 @@ public class Contract {
     private String businessLicense;
     private String paperContract;
     private String remark;
+    private String contractNo;
 
 
     @ApiModelProperty(value = "合同id")
@@ -129,6 +131,16 @@ public class Contract {
 
     public void setHtmlContent(String htmlContent) {
         this.htmlContent = htmlContent;
+    }
+
+    @ApiModelProperty(value = "参数列表")
+    @JsonProperty("parameters")
+    public String getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(String parameters) {
+        this.parameters = parameters;
     }
 
     @ApiModelProperty(value = "状态")
@@ -286,5 +298,15 @@ public class Contract {
 
     public void setRejectTime(Date rejectTime) {
         this.rejectTime = rejectTime;
+    }
+
+    @ApiModelProperty(value = "合同编号")
+    @JsonProperty("contractno")
+    public String getContractNo() {
+        return contractNo;
+    }
+
+    public void setContractNo(String contractNo) {
+        this.contractNo = contractNo;
     }
 }
