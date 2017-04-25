@@ -27,6 +27,7 @@
         <th>营业执照上传日期</th>
         <th>纸质合同上传日期</th>
         <th>生效</th>
+        <th>操作</th>
     </tr>
     </thead>
     <tbody>
@@ -43,15 +44,14 @@
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.startTime)</td>
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.endTime)</td>
             <td><a href="/contract/preview?id=$!entity.id" target="_blank" class="btn btn-success btn-mini">查看</a></td>
-            <td>未知
-                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a>
+            <td>
+                <a href="$!entity.businessLicense" target="_blank" class="btn btn-success btn-mini">查看</a>
             </td>
-            <td>未知
-                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a>
+            <td>
+                <a href="$!entity.pdfUrl" target="_blank" class="btn btn-success btn-mini">查看</a>
             </td>
-            <td>$!entity.approveTime
+            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.approveTime)</td>
+            <td>
                 <a  class="btn btn-success btn-mini verify" data-id="$!entity.id" flag="fail">驳回</a>
                 <a  class="btn btn-info btn-mini verify" data-id="$!entity.id" flag="success">通过</a>
 
@@ -94,7 +94,7 @@
             <option value="2">附加合同</option>
         </select>
 
-        <label>合同起止时间：</label>
+        <label>合同上传起止时间：</label>
         <input type="text" class="span11 dateFormat" name="starttime" value="$!starttime" placeholder="开始时间">
         <input type="text" class="span11 dateFormat" name="endtime" value="$!endtime" placeholder="结束时间">
 

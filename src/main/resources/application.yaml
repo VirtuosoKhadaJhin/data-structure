@@ -74,7 +74,7 @@ sso:
   stateExpiredInMilliSeconds: 120000
 
 
-contractService: http://172.16.0.144:8200
+contractService: http://172.16.0.195:8200
 
 
 

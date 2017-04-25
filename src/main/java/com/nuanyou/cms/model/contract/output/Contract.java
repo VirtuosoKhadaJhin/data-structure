@@ -60,9 +60,8 @@ public class Contract {
         this.mchName = mchName;
     }
 
-    //    @ApiModelProperty(value = "商户ID")
-//    @JsonProperty("merchantid")
-    @JsonIgnore
+    @ApiModelProperty(value = "商户ID")
+    @JsonProperty("merchantid")
     public Long getMchid() {
         return mchid;
     }
@@ -71,8 +70,8 @@ public class Contract {
         this.mchid = mchid;
     }
 
-    //     @ApiModelProperty(value = "BDid")
-//     @JsonProperty("userid")
+    @ApiModelProperty(value = "BDid")
+    @JsonProperty("userid")
     @JsonIgnore
     public Long getUserId() {
         return userId;
@@ -92,9 +91,9 @@ public class Contract {
         this.username = username;
     }
 
-    //    @ApiModelProperty(value = "模版ID")
-//    @JsonProperty("templateid")
-    @JsonIgnore
+    @ApiModelProperty(value = "模版ID")
+    @JsonProperty("templateid")
+
     public Long getTemplateId() {
         return templateId;
     }

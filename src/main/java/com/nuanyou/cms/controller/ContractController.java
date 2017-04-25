@@ -65,7 +65,7 @@ public class ContractController {
                        @RequestParam(value = "index", required = false, defaultValue = "1") Integer index,
                        @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit) {
 
-        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, status, templateid, type, startTime, endTime, index, limit);
+        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, "2", templateid, type, startTime, endTime, index, limit);
         Contracts contractsData = contracts.getData();
         Pageable pageable = new PageRequest(index - 1, limit);
         List<Contract> list = contractsData.getList();
@@ -102,18 +102,26 @@ public class ContractController {
             @ApiParam(value = "结束时间(yyyy-MM-dd)") @RequestParam(value = "endtime", required = false) String endTime,
             @ApiParam(value = "页序号，默认从1开始") @RequestParam(value = "page", required = false, defaultValue = "1") Integer index,
             @ApiParam(value = "每页条目数,默认20条") @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit) {
-        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, status, templateid, type, startTime, endTime, index, limit);
-        Contracts contractsData = (Contracts) contracts.getData();
-        Pageable pageable = new PageRequest(index, limit);
-        Page<Contract> page = new PageImpl<Contract>(
-                contractsData.getList(),
-                pageable,
-                contractsData.getTotal()
-        );
+
+        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, "4", templateid, type, startTime, endTime, index, limit);
+        Contracts contractsData = contracts.getData();
+        Pageable pageable = new PageRequest(index - 1, limit);
+        List<Contract> list = contractsData.getList();
+        if (list == null)
+            list = new ArrayList(0);
+        Page<Contract> page = new PageImpl(list, pageable, contractsData.getTotal());
         model.addAttribute("page", page);
+
+        model.addAttribute("userid", userId);
         model.addAttribute("merchantname", merchantName);
-        model.addAttribute("merchantname", merchantName);
-        model.addAttribute("merchantname", merchantName);
+        model.addAttribute("merchantid", merchantId);
+        model.addAttribute("status", status);
+        model.addAttribute("templateid", templateid);
+        model.addAttribute("type", type);
+        model.addAttribute("starttime", startTime);
+        model.addAttribute("endtime", endTime);
+        model.addAttribute("index", index);
+        model.addAttribute("limit", limit);
         return "contract/filedList";
     }
 
@@ -148,7 +156,7 @@ public class ContractController {
         Long userid=UserHolder.getUser().getUserid();
         APIResult approve = this.contractService.approve(userid, contractId, valid);
         if(approve.getCode()!=0){
-            throw new APIException(approve.getCode(),approve.getMsg());
+            //throw new APIException(approve.getCode(),approve.getMsg());
         }
         if(type==1){
             //2 得到合同信息
@@ -164,7 +172,9 @@ public class ContractController {
     private void addForAccount(Contract detail) {
         JSONObject result=JSONObject.parseObject(detail.getParameters());
         BigDecimal poundage=result.getBigDecimal("poundage_huigou")!=null?result.getBigDecimal("poundage_huigou"):
-                result.getBigDecimal("account_period_huigou")!=null?result.getBigDecimal("account_period_huigou"):null;
+                result.getBigDecimal("account_period_huigou")!=null?result.getBigDecimal("account_period_huigou"):
+                        result.getBigDecimal("poundage")!=null?result.getBigDecimal("poundage"):null
+                ;
         Long paymentDays=result.getBigDecimal("poundage_radio")!=null?result.getLong("poundage_radio"):
                 result.getLong("settle_day")!=null?result.getLong("settle_day"):null;
         if(poundage!=null&&paymentDays!=null){
