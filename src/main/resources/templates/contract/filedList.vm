@@ -3,13 +3,12 @@
 <div id="content-header">
     <div id="breadcrumb">
         <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-        <a href="/contract/filedList" class="tip-bottom" data-original-title="">待审核合同</a>
+        <a href="/contract/filedList" class="tip-bottom" data-original-title="">归档合同</a>
     </div>
 </div>
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>列表</h5>
-    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
 </div>
 <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
     <thead>
@@ -34,23 +33,21 @@
         <tr class="odd gradeX">
             <td>$!entity.id</td>
             <td>$!entity.merchantName</td>
-            <td>$!entity.merchantName</td>
+            <td>$!entity.submitTime</td>
             <td>$!entity.type</td>
-            <td>$!entity.typeName</td>
-            <td>$!entity.userId</td>
-            <td>$!entity.startTime</td>
-            <td>$!entity.endTime</td>
+            <td>$!entity.templateTitle</td>
+            <td>$!entity.username</td>
+            <td>$!entity.username</td>
+            <td> $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.startTime)</td>
+            <td> $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.endTime)</td>
             <td>$!entity.pdfurl</td>
-            <td>$!entity.approveTime</td>
-            <td>
+            <td>未知
                 <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a>
-            </td>
-
-            <td>
-                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">驳回</a>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">通过</a>
-            </td>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a></td>
+            <td>未知
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a></td>
+            <td>$!entity.approveTime</td>
 
         </tr>
         #end
@@ -59,42 +56,49 @@
 #parse("common/list_mid.vm")
 <form>
     <div class="control-group">
-        <div class="control-group">
-            <label>ID</label>
-            <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
-        </div>
+        <label>ID</label>
+        <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
 
 
-        <div class="control-group">
-            <label>本地名称</label>
-            <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
-        </div>
-
-
-        <div class="control-group">
-            <label>合同类型</label>
-            <select id="country.id" name="country.id" class="span7">
-                <option value="">全部</option>
-                <option value="">主合同</option>
-                <option value="">附加合同</option>
-            </select>
-        </div>
-
-        <div class="control-group">
-            <label>合同生效开始时间：</label>
-            <input type="text" class="span11 dateTimeFormat" name="begin" id="beginTime" value="$!time.beginStr" placeholder="开始时间">
-
-            <label>结束时间：</label>
-            <input type="text" class="span11 dateTimeFormat" name="end"  value="$!time.endStr" id="endTime" placeholder="结束时间">
-        </div>
+        <label>本地名称</label>
+        <input type="text" class="span11" name="merchantname" value="$!merchantname">
 
 
 
+        <label>合同名称</label>
+        <input type="text" class="span11" name="merchantname" value="$!merchantname">
+
+
+        <label>合同编号</label>
+        <input type="text" class="span11" name="merchantname" value="$!merchantname">
+
+        <label>合同模板</label>
+        <select id="templateid" name="templateid" class="span7">
+            <option value="">全部</option>
+            <option value="1">主合同</option>
+            <option value="2">附加合同</option>
+        </select>
 
 
 
+        <label>合同类型</label>
+        <select id="country.id" name="templateid" class="span7">
+            <option value="">全部</option>
+            <option value="1">主合同</option>
+            <option value="2">附加合同</option>
+        </select>
+
+        <label>合同生效开始时间：</label>
+        <input type="text" class="span11 dateTimeFormat" name="startTime" id="startTime" value="$!startTime"
+               placeholder="开始时间">
+
+        <label>结束时间：</label>
+        <input type="text" class="span11 dateTimeFormat" name="endTime" value="$!endTime" id="endTime"
+               placeholder="结束时间">
+
+
+        <button type="submit" class="btn btn-primary">查询</button>
     </div>
-    <button type="submit" class="btn btn-primary">查询</button>
 </form>
 #parse("common/list_end.vm")
 

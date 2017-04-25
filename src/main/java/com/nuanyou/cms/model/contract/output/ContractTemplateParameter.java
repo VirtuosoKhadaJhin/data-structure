@@ -1,4 +1,4 @@
-package com.nuanyou.cms.model.contract;
+package com.nuanyou.cms.model.contract.output;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;

@@ -50,6 +50,8 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-cache')
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-velocity")
+    compile('io.springfox:springfox-swagger2:2.5.0')
+    compile('io.springfox:springfox-swagger-ui:2.5.0')
 
     compile('mysql:mysql-connector-java')
     compile('ch.qos.logback:logback-core:1.1.7')
@@ -72,6 +74,14 @@ dependencies {
     compile('com.sun.mail:mailapi:1.5.2')
 
     compile('com.amazonaws:aws-java-sdk-sns:1.11.29')
+
+
+
+    compile('org.springframework.cloud:spring-cloud-starter-feign:1.2.6.RELEASE') {
+        exclude(group: "org.springframework.cloud", module: "spring-cloud-starter-archaius")
+        exclude(group: "io.github.openfeign", module: "feign-hystrix")
+    }
+    compile('io.github.openfeign:feign-jackson:9.4.0')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 task wrapper(type: Wrapper) {

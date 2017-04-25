@@ -1,4 +1,4 @@
-package com.nuanyou.cms.model.contract;
+package com.nuanyou.cms.model.contract.output;
 
 
 import io.swagger.annotations.ApiModel;

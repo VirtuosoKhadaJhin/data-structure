@@ -2,13 +2,9 @@ package com.nuanyou.cms.service;
 
 
 import com.nuanyou.cms.commons.APIResult;
-import com.nuanyou.cms.model.contract.Contract;
-import com.nuanyou.cms.model.contract.ContractSave;
-import com.nuanyou.cms.model.contract.ContractTemplate;
-import com.nuanyou.cms.model.contract.NullData;
+import com.nuanyou.cms.model.contract.output.*;
 import com.nuanyou.cms.util.MimeTypes;
 import io.swagger.annotations.*;
-import org.hibernate.validator.internal.util.Contracts;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
