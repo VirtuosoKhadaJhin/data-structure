@@ -37,6 +37,7 @@ public class Contract {
     private String businessLicense;
     private String paperContract;
     private String remark;
+    private String contractNo;
 
 
     @ApiModelProperty(value = "合同id")
@@ -297,5 +298,15 @@ public class Contract {
 
     public void setRejectTime(Date rejectTime) {
         this.rejectTime = rejectTime;
+    }
+
+    @ApiModelProperty(value = "合同编号")
+    @JsonProperty("contractno")
+    public String getContractNo() {
+        return contractNo;
+    }
+
+    public void setContractNo(String contractNo) {
+        this.contractNo = contractNo;
     }
 }
