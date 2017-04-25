@@ -8,7 +8,10 @@ import com.nuanyou.cms.model.MerchantSettlementParamConfig;
 import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.Contracts;
 import com.nuanyou.cms.remote.ContractService;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -19,6 +22,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 /**
@@ -97,6 +103,17 @@ public class ContractController {
         model.addAttribute("merchantname", merchantName);
         model.addAttribute("merchantname", merchantName);
         return "contract/filedList";
+    }
+
+    @RequestMapping(value = "/preview", method = RequestMethod.GET)
+    @ResponseBody
+    public void preview(@RequestParam(value = "id", required = true) long id,
+                        HttpServletResponse response) throws IOException {
+        response.setHeader("Content-type", "text/html;charset=UTF-8");
+        APIResult<String> preview = contractService.preview(id);
+        PrintWriter writer = response.getWriter();
+        writer.write(preview.getData());
+        writer.close();
     }
 
     static Map<Integer, MerchantSettlementParamConfig> config = new HashMap<>();

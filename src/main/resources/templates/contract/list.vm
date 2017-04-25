@@ -42,7 +42,7 @@
             <td>$!entity.countryId</td>
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.startTime)</td>
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.endTime)</td>
-            <td><a class="copyItem" data-id="$!entity.id" href="javascript:void(0);">查看</a></td>
+            <td><a href="/contract/preview?id=$!entity.id" target="_blank" class="btn btn-success btn-mini">查看</a></td>
             <td>未知
                 <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
                 <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a>
@@ -97,40 +97,11 @@
         <button type="submit" class="btn btn-primary">查询</button>
     </div>
 </form>
-<div id="copy-item-modal" class="modal hide fade" role="dialog" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>商品复制</h3>
-    </div>
-    <div class="modal-body">
-        <div class="input-group">
-            <label class="control-label">源商户</label>
-            <select id="copy-item-sourceId" class="select2">
-                #foreach($e in $!merchants)
-                    <option value="$!e.id">$!e.name（$!e.kpname）</option>
-                #end
-            </select>
-        </div>
-        <div class="input-group">
-            <label class="control-label">目标商户</label>
-            <input id="copy-item-targetId" type="text" class="span11" readonly>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-        <a href="javascript:void(0);" id="copy-item-submit" class="btn btn-primary">保存</a>
-    </div>
-</div>
 <script src="/dist/js/curd.js"></script>
 <script type="text/javascript">
     $(function () {
-        $(".copyItem").each(function (i, o) {
-            $(o).on("click", function (event) {
-                var id = $(this).attr("data-id");
-                $("#copy-item-targetId").attr("value", id);
-                $("#copy-item-modal").modal();
-            });
-        });
+
+    });
 </script>
 #parse("common/list_end.vm")
 
