@@ -1,8 +1,8 @@
 spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://rdsw9r566jxer973wqi2.mysql.rds.aliyuncs.com:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
-    username: dev
+    url: jdbc:mysql://nuanyou20db.91nuanyou.com:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
+    username: nuanyou20
     password: 1qaz2wsxE
     test-on-borrow: true
     validation-query: select 1
@@ -72,3 +72,16 @@ sso:
   serverName: http://172.16.0.104:8085
   validateCodeUrl: https://testuser.api.91nuanyou.com/corp/oauth/access_token
   stateExpiredInMilliSeconds: 120000
+
+
+contractService: http://172.16.0.195:8200
+
+
+accountService: http://127.0.0.1:8086
+
+
+
+merchantSettlement:
+  default:
+    daytype: 1
+    startprice: 1

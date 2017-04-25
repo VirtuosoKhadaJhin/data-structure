@@ -1,4 +1,4 @@
-package com.nuanyou.cms.service;
+package com.nuanyou.cms.remote;
 
 
 import com.nuanyou.cms.commons.APIResult;
@@ -16,11 +16,11 @@ import java.util.List;
 /**
  * Created by Alan.ye on 2017/4/20.
  */
-@FeignClient(url = "${contractService}", name = "RemoteContractService")
+@FeignClient(url = "${accountService}", name = "RemoteAccountService")
 @RestController
-@RequestMapping(value = "/contracts", produces = MimeTypes.MIME_TYPE_JSON)
-@Api(value = "/contracts", description = "the contract API")
-public interface ContractService {
+@RequestMapping(value = "/account", produces = MimeTypes.MIME_TYPE_JSON)
+@Api(value = "/account", description = "the account API")
+public interface AccountService {
 
 
     @ApiOperation(value = "合同模版列表.", notes = "合同模版列表", response = ContractTemplate.class)

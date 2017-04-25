@@ -1,6 +1,6 @@
 package com.nuanyou.cms.config;
 
-import com.nuanyou.cms.service.ContractService;
+import com.nuanyou.cms.remote.ContractService;
 import com.nuanyou.cms.util.JsonUtils;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
