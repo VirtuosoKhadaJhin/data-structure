@@ -1,7 +1,7 @@
 #parse("common/list_start.vm")
 <div id="breadcrumb">
     <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-    <a href="../feature/list" class="tip-bottom" data-original-title="">特色频道管理</a>
+    <a href="../feature/list" class="tip-bottom" data-original-title="">发现管理</a>
     <a href="#" class="tip-bottom" data-original-title="">列表</a>
 </div>
 <div class="widget-title">
@@ -24,7 +24,8 @@
             <th>显示</th>
             <th>阅读量</th>
             <th>点赞数量</th>
-            <th class="table-set" width="90px">操作</th>
+            <th width="110px">排序</th>
+            <th class="table-set" width="120px">操作</th>
         </tr>
         </thead>
         <tbody>
@@ -48,6 +49,11 @@
                 <td>$!entity.readnum</td>
                 <td>$!entity.likenum</td>
                 <td>
+                    <input type="number" class="sort" style="width: 50px" value="$!entity.sort" data-id="$!entity.id" tabindex="$!{velocityCount}">
+                    <button class="btn btn-mini sort-btn">确定</button>
+                </td>
+                <td>
+                    <button data-id="$!entity.id" class="btn btn-danger btn-mini remove-item">删除</button>
                     <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
                     <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
                 </td>
@@ -82,8 +88,45 @@
     <button type="submit" class="btn btn-primary">查询</button>
 </form>
 #parse("common/list_end.vm")
+<script src="/dist/js/curd.js"></script>
 <script src="/dist/js/cascade-select.js"></script>
+<script type="text/javascript">
+    $(".sort-btn").on("click", function () {
+        var previousNode = $(this).prev();
+        var value = $(previousNode).val();
+        var id = $(previousNode).attr("data-id");
 
+        $.ajax({
+            url: 'sort',
+            data: {id: id, value: value},
+            type: 'post',
+            success: function (result) {
+                if (result.code == 0) {
+                    window.location.reload();
+                } else {
+                    alert("Fail Code: " + result.code + " MSG: " + result.msg);
+                }
+            }
+        });
+    });
 
+    $(".sort").on("keydown", function (e) {
+        if (e.keyCode == 13) {
+            var value = $(this).val();
+            var id = $(this).attr("data-id");
 
-
+            $.ajax({
+                url: 'sort',
+                data: {id: id, value: value},
+                type: 'post',
+                success: function (result) {
+                    if (result.code == 0) {
+                        window.location.reload();
+                    } else {
+                        alert("Fail Code: " + result.code + " MSG: " + result.msg);
+                    }
+                }
+            });
+        }
+    });
+</script>

@@ -13,7 +13,7 @@
         <div id="breadcrumb">
             <div id="breadcrumb">
                 <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-                <a href="../city/list" class="tip-bottom" data-original-title="">特色频道管理</a>
+                <a href="../city/list" class="tip-bottom" data-original-title="">发现管理</a>
                 <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
             </div>
         </div>
@@ -23,7 +23,7 @@
                 <div class="span6">
                     <div class="widget-box">
                         <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
-                            <h5>特色频道编辑&查看</h5>
+                            <h5>发现编辑&查看</h5>
                         </div>
                         <div class="widget-content nopadding">
                             <form action="update" method="post" class="form-horizontal featureValidate" role="form" id="">

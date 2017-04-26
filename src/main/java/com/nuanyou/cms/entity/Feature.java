@@ -25,6 +25,7 @@ public class Feature {
     private City city;
     private Country country;
     private Boolean display;
+    private Boolean deleted = false;
     private Date updatetime;
     private Date createtime;
     private Integer readnum;
@@ -131,6 +132,14 @@ public class Feature {
         this.display = display;
     }
 
+    @Column(name = "deleted", nullable = true)
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
     @LastModified
     @Column(name = "updatetime", nullable = true)

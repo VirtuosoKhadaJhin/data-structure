@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -26,15 +27,18 @@ import java.util.List;
 public class FeatureServiceImpl implements FeatureService {
 
     @Autowired
-    private FeatureDao featureDao;
+    private FeatureDao dao;
 
     @Override
     public Page<Feature> findByCondition(Integer index, final Feature entity) {
-        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
-        return featureDao.findAll(new Specification() {
+        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, new Sort(Sort.Direction.ASC, "sort", "id"));
+        return dao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
+
+                predicate.add(cb.equal(root.get("deleted"), false));
+
                 if (entity.getCountry() != null && entity.getCountry().getId() != null) {
                     Predicate p = cb.equal(root.get("country").get("id"), entity.getCountry().getId());
                     predicate.add(p);
@@ -57,9 +61,9 @@ public class FeatureServiceImpl implements FeatureService {
     @Override
     public Feature saveNotNull(Feature entity) {
         if (entity.getId() == null) {
-            return featureDao.save(entity);
+            return dao.save(entity);
         }
-        Feature oldEntity = featureDao.findOne(entity.getId());
+        Feature oldEntity = dao.findOne(entity.getId());
         BeanUtils.copyBeanNotNull(entity, oldEntity);
         if (oldEntity.getCity().getId() == null) {
             oldEntity.setCity(null);
@@ -67,8 +71,17 @@ public class FeatureServiceImpl implements FeatureService {
         if (oldEntity.getCountry().getId() == null) {
             oldEntity.setCountry(null);
         }
-        return featureDao.save(oldEntity);
+        return dao.save(oldEntity);
     }
 
+    @Override
+    public void delete(Long id) {
+        Feature entity = dao.findOne(id);
+        if (entity != null) {
+            entity.setDisplay(false);
+            entity.setDeleted(true);
+            dao.save(entity);
+        }
+    }
 
 }
