@@ -74,7 +74,7 @@ public class ItemCatController {
         if (display == null)
             list = itemCatDao.findIdNameList(id);
         else
-            list = itemCatDao.findIdNameList(id, display);
+            list = itemCatDao.findIdNameList(id);
         return new APIResult(list);
     }
 
