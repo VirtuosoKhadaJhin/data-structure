@@ -52,8 +52,8 @@
             </td>
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.approveTime)</td>
             <td>
-                <a  class="btn btn-success btn-mini verify" data-id="$!entity.id" flag="fail">驳回</a>
-                <a  class="btn btn-info btn-mini verify" data-id="$!entity.id" flag="success">通过</a>
+                <a class="btn btn-success btn-mini verify" data-id="$!entity.id" flag="fail">驳回</a>
+                <a class="btn btn-info btn-mini verify" data-id="$!entity.id" flag="success">通过</a>
 
             </td>
 
@@ -68,31 +68,65 @@
         <input type="text" class="span11" name="id" value="$!id">
 
 
+        <label>国家</label>
+        <select id="country.id" name="countryId" class="span7"
+        <option value="">请选择</option>
+        #foreach($e in $!countries)
+            <option value="$!e.id" #if($!countryId==$!e.id)
+                    selected #end>$!e.id:$!e.name</option>
+        #end
+        </select>
+
+
         <label>本地名称</label>
         <input type="text" class="span11" name="merchantname" value="$!merchantname">
 
 
-        <label>合同名称</label>
-        <input type="text" class="span11" name="" value="$!merchantname">
-
 
         <label>合同编号</label>
-        <input type="text" class="span11" name="" value="$!merchantname">
+        <input type="text" class="span11" name="" value="$!contractNum">
 
         <label>合同模板</label>
         <select id="templateid" name="templateid" class="span7">
-            <option value="">全部</option>
-            <option value="1">主合同</option>
-            <option value="2">附加合同</option>
+            <option value="">请选择</option>
+            #foreach($e in $!templates)
+                <option value="$!e.id" #if($!templateid==$!e.id)
+                        selected #end>$!e.id:$!e.title</option>
+            #end
         </select>
 
 
         <label>合同类型</label>
         <select name="type" class="span7">
             <option value="">全部</option>
-            <option value="1">主合同</option>
-            <option value="2">附加合同</option>
+            <option value="1" #if($!type==1)
+                    selected #end>主合同</option>
+            <option value="2" #if($!type==2)
+                    selected #end>附加合同</option>
         </select>
+
+        <label>纸质合同</label>
+        <select name="paperContract" class="span7">
+            <option value="">全部</option>
+            <option value="true" #if($!paperContract==true)
+                    selected #end>有</option>
+            <option value="false" #if($!paperContract==false)
+                    selected #end>没有</option>
+        </select>
+
+        <label>营业执照</label>
+        <select name="businessLicense" class="span7">
+            <option value="">全部</option>
+            <option value="true" #if($!businessLicense==true)
+                    selected #end>有</option>
+            <option value="false" #if($!businessLicense==false)
+                    selected #end>没有</option>
+        </select>
+
+
+
+
+
 
         <label>合同上传起止时间：</label>
         <input type="text" class="span11 dateFormat" name="starttime" value="$!starttime" placeholder="开始时间">
@@ -110,19 +144,19 @@
                 var flag = $(this).attr("flag");
                 var message;
                 var type;
-                if(flag=="fail"){
-                    message="确定驳回此合同吗?";
-                    type=2;
-                }else if(flag="success"){
-                    type=1;
-                    message="确定通过此合同吗?";
-                }else{
+                if (flag == "fail") {
+                    message = "确定驳回此合同吗?";
+                    type = 2;
+                } else if (flag = "success") {
+                    type = 1;
+                    message = "确定通过此合同吗?";
+                } else {
                     return alert("操作失败");
                 }
-                if(confirm(message)){
+                if (confirm(message)) {
                     $.ajax({
                         url: 'verify',
-                        data: {contractId: id, type:type},
+                        data: {contractId: id, type: type},
                         type: 'get',
                         success: function (result) {
                             if (result.code == 0) {

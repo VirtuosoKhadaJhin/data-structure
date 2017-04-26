@@ -4,10 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
+import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.contract.output.Contract;
+import com.nuanyou.cms.model.contract.output.ContractTemplate;
 import com.nuanyou.cms.model.contract.output.Contracts;
 import com.nuanyou.cms.remote.AccountService;
 import com.nuanyou.cms.remote.ContractService;
+import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
 import io.swagger.annotations.ApiParam;
 import org.joda.time.DateTime;
@@ -45,6 +48,8 @@ public class ContractController {
     private ContractService contractService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private CountryService countryService;
     @Value("${merchantSettlement.default.daytype}")
     private Integer daytype;
     @Value("${merchantSettlement.default.startprice}")
@@ -56,6 +61,7 @@ public class ContractController {
                        @RequestParam(value = "userid", required = false) Long userId,
                        @RequestParam(value = "id", required = false) Long id,
                        @RequestParam(value = "merchantname", required = false) String merchantName,
+                       @RequestParam(value = "countryId", required = false) Long countryId,
                        @RequestParam(value = "merchantid", required = false) Long merchantId,
                        @RequestParam(value = "status", required = false) String status,
                        @RequestParam(value = "templateid", required = false) Long templateid,
@@ -63,24 +69,39 @@ public class ContractController {
                        @RequestParam(value = "starttime", required = false) String startTime,
                        @RequestParam(value = "endtime", required = false) String endTime,
                        @RequestParam(value = "index", required = false, defaultValue = "1") Integer index,
-                       @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit) {
+                       @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
+                       @RequestParam(value = "businessLicense", required = false) Boolean businessLicense,
+                       @RequestParam(value = "contractNum", required = false) Boolean contractNum,
+                       @RequestParam(value = "paperContract", required = false) Boolean paperContract) {
 
-        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, "2", templateid, type, startTime, endTime, index, limit);
+        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, status, templateid, type, startTime, endTime,businessLicense,paperContract, index, limit);
         Contracts contractsData = contracts.getData();
         Pageable pageable = new PageRequest(index - 1, limit);
         List<Contract> list = contractsData.getList();
         if (list == null)
             list = new ArrayList(0);
         Page<Contract> page = new PageImpl(list, pageable, contractsData.getTotal());
+
+        List<Country> countries = countryService.getIdNameList();
+
+        APIResult<List<ContractTemplate>>contractConfig = this.contractService.getContractConfig(countryId,type);
+        List<ContractTemplate> templates= contractConfig.getData();
+
         model.addAttribute("page", page);
+        model.addAttribute("countries", countries);
+        model.addAttribute("countryId", countryId);
 
         model.addAttribute("userid", userId);
         model.addAttribute("merchantname", merchantName);
         model.addAttribute("merchantid", merchantId);
         model.addAttribute("status", status);
+        model.addAttribute("templates", templates);
         model.addAttribute("templateid", templateid);
+        model.addAttribute("businessLicense", businessLicense);
+        model.addAttribute("paperContract", paperContract);
         model.addAttribute("type", type);
         model.addAttribute("starttime", startTime);
+        model.addAttribute("contractNum", contractNum);
         model.addAttribute("endtime", endTime);
         model.addAttribute("index", index);
         model.addAttribute("limit", limit);
@@ -103,7 +124,7 @@ public class ContractController {
             @ApiParam(value = "页序号，默认从1开始") @RequestParam(value = "page", required = false, defaultValue = "1") Integer index,
             @ApiParam(value = "每页条目数,默认20条") @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit) {
 
-        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, "4", templateid, type, startTime, endTime, index, limit);
+        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, "4", templateid, type, startTime, endTime,null,null, index, limit);
         Contracts contractsData = contracts.getData();
         Pageable pageable = new PageRequest(index - 1, limit);
         List<Contract> list = contractsData.getList();

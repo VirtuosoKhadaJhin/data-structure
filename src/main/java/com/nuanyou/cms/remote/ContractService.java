@@ -25,7 +25,7 @@ public interface ContractService {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "合同配置", response = ContractTemplate.class)})
     @RequestMapping(value = "/templates", method = RequestMethod.GET)
     APIResult<List<ContractTemplate>> getContractConfig(
-            @ApiParam(value = "国家id", required = true) @RequestParam(value = "countryid", required = true) Long countryId,
+            @ApiParam(value = "国家id", required = false) @RequestParam(value = "countryid", required = false) Long countryId,
             @ApiParam(value = "模版类型: 1.主合同 2.附加合同", required = false) @RequestParam(value = "type", required = false) Integer type);
 
     @ApiOperation(value = "合同模版详情.", notes = "合同模版详情", response = ContractTemplate.class)
@@ -46,6 +46,8 @@ public interface ContractService {
             @ApiParam(value = "合同类型: 1.主合 2.附加合同") @RequestParam(value = "type", required = false) Integer type,
             @ApiParam(value = "开始时间(yyyy-MM-dd)") @RequestParam(value = "starttime", required = false) String startTime,
             @ApiParam(value = "结束时间(yyyy-MM-dd)") @RequestParam(value = "endtime", required = false) String endTime,
+            @ApiParam(value = "是否有营业执照") @RequestParam(value = "hasbusinesslicense", required = false) Boolean hasBusinessLicense,
+            @ApiParam(value = "是否有纸质合同") @RequestParam(value = "haspapercontract", required = false) Boolean hasPaperContract,
             @ApiParam(value = "页序号，默认从1开始") @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @ApiParam(value = "每页条目数,默认20条") @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit);
 
