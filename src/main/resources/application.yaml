@@ -61,6 +61,7 @@ elasticsearch:
   index: test-cms-operation
 
 AWS:
+  region: ap-northeast-2
   sns:
     topic:
       refund: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refund
