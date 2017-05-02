@@ -56,7 +56,7 @@ public enum ResultCodes {
     OrderOther(2006, "其他订单错误"),
 
 
-
+    ContractNotAssignedForMerchant(603,"合同未关联商户"),
     PoundageOrPayDaysIsNull(601,"手续费或者账期为NULL"),
 
     AddMerchantSettlementError(602,"访问Account增加一个商户清算时出现错误"),

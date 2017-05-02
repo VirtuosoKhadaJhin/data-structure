@@ -87,3 +87,9 @@ merchantSettlement:
   default:
     daytype: 1
     startprice: 1
+
+
+
+contractConfig:
+  poundageNames: poundage_huigou,poundage_radio,poundage
+  paymentDaysNames: settle_day,account_period_huigou

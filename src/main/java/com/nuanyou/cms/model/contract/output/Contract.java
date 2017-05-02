@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by Alan.ye on 2017/4/20.
@@ -26,7 +27,7 @@ public class Contract {
     private boolean read;
     private String pdfUrl;
     private String htmlContent;
-    private String parameters;
+    private Map<String, String> parameters;
     private Date updateTime;
     private Date createTime;
     private Long userId;
@@ -134,11 +135,11 @@ public class Contract {
 
     @ApiModelProperty(value = "参数列表")
     @JsonProperty("parameters")
-    public String getParameters() {
+    public Map<String, String> getParameters() {
         return parameters;
     }
 
-    public void setParameters(String parameters) {
+    public void setParameters(Map<String, String> parameters) {
         this.parameters = parameters;
     }
 

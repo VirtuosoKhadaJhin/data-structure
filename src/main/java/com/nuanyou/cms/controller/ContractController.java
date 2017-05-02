@@ -1,6 +1,5 @@
 package com.nuanyou.cms.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
@@ -34,6 +33,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Felix on 2017/4/24.
@@ -54,6 +54,13 @@ public class ContractController {
     private Integer daytype;
     @Value("${merchantSettlement.default.startprice}")
     private BigDecimal startprice;
+
+
+    @Value("${contractConfig.poundageNames}")
+    private String poundageNames;
+
+    @Value("${contractConfig.paymentDaysNames}")
+    private String paymentDaysNames;
 
 
     @RequestMapping("list")
@@ -191,13 +198,31 @@ public class ContractController {
     }
 
     private void addForAccount(Contract detail) {
-        JSONObject result=JSONObject.parseObject(detail.getParameters());
-        BigDecimal poundage=result.getBigDecimal("poundage_huigou")!=null?result.getBigDecimal("poundage_huigou"):
-                result.getBigDecimal("account_period_huigou")!=null?result.getBigDecimal("account_period_huigou"):
-                        result.getBigDecimal("poundage")!=null?result.getBigDecimal("poundage"):null
-                ;
-        Long paymentDays=result.getBigDecimal("poundage_radio")!=null?result.getLong("poundage_radio"):
-                result.getLong("settle_day")!=null?result.getLong("settle_day"):null;
+        if(detail.getMchid()==null){
+            throw new APIException(ResultCodes.ContractNotAssignedForMerchant);
+        }
+        Map<String, String> result = detail.getParameters();
+        //JSONObject result=JSONObject.parseObject(detail.getParameters(), Map.class);
+        String[] poundageNamesList=poundageNames.split(",");
+        BigDecimal poundage=null;
+        for (String p : poundageNamesList) {
+            BigDecimal temp=result.get(p)==null?null:new BigDecimal(result.get(p));
+            if(temp!=null){
+                poundage=temp;
+                break;
+            }
+        }
+        String[] paymentDaysNamesList=paymentDaysNames.split(",");
+        Long paymentDays=null;
+        for (String p : paymentDaysNamesList) {
+            Long temp=result.get(p)==null?null:new Long(result.get(p));
+            if(temp!=null){
+                paymentDays=temp;
+                break;
+            }
+        }
+
+
         if(poundage!=null&&paymentDays!=null){
             Long merchantId=detail.getMchid();
             APIResult res= accountService.add(merchantId,true,daytype,poundage,paymentDays,startprice,new DateTime().toString("yyyy-MM-dd"));
