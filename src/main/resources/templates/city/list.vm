@@ -54,7 +54,7 @@
     </tbody>
 </table>
 #parse("common/list_mid.vm")
-<form class="form-horizontal " method="get">
+<form class="form-horizontal " method="post">
     <div class="control-group">
         <label>城市名称 或ID</label>
         <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
@@ -71,5 +71,11 @@
     <div class="control-group">
         <button type="submit" class="btn btn-primary">查询</button>
     </div>
+
+    <input type="text" name="name1" value="1">
+    <input type="text" name="name1" value="2">
 </form>
+
 #parse("common/list_end.vm")
+
+

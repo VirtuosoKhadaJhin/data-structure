@@ -23,6 +23,10 @@ public class JsonUtils {
         mapper.setSerializationInclusion(Include.NON_NULL);
     }
 
+    public static ObjectMapper getMapper(){
+        return mapper;
+    }
+
     public static <T> void register(Class<T> type, JsonDeserializer<? extends T> deserializer) {
         SimpleModule module = new SimpleModule();
         module.addDeserializer(type, deserializer);
@@ -64,5 +68,7 @@ public class JsonUtils {
             throw new RuntimeException(e);
         }
     }
+
+
 
 }

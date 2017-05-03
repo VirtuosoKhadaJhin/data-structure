@@ -1,7 +1,7 @@
 spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://test20-db.9ny.me:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://nr1drh9d42rpt58.cyryr1bfrd0e.ap-southeast-1.rds.amazonaws.com:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
     username: nuanyou20
     password: 1qaz2wsxE
     test-on-borrow: true

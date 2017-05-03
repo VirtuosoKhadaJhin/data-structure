@@ -53,7 +53,16 @@ public enum ResultCodes {
     RefundingFail(2002, "退款已经失败"),
     Audited(2004, "已经审核完毕"),
     OrderNotFound(2005, "未发现订单"),
-    OrderOther(2006, "其他订单错误");
+    OrderOther(2006, "其他订单错误"),
+
+
+    ContractNotAssignedForMerchant(603,"合同未关联商户"),
+    PoundageOrPayDaysIsNull(601,"手续费或者账期为NULL"),
+
+    AddMerchantSettlementError(602,"访问Account增加一个商户清算时出现错误"),
+
+
+    ;
 
     /**
      * ----------order -----------

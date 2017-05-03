@@ -97,7 +97,7 @@ public final class SingleSignOutHandler {
      * @return True if request is logout request, false otherwise.
      */
     public boolean isLogoutRequest(final HttpServletRequest request) {
-        return "POST".equals(request.getMethod()) && !isMultipartRequest(request) &&
+        return "GET".equals(request.getMethod()) && !isMultipartRequest(request) &&
             CommonUtils.isNotBlank(CommonUtils.safeGetParameter(request, this.logoutParameterName));
     }
 

@@ -1,0 +1,139 @@
+#parse("common/list_start.vm")
+
+<div id="content-header">
+    <div id="breadcrumb">
+        <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+        <a href="/contract/filedList" class="tip-bottom" data-original-title="">归档合同</a>
+    </div>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>列表</h5>
+</div>
+<table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+    <thead>
+    <tr role="row">
+        <th>ID</th>
+        <th>本地名称</th>
+        <th>合同上传日期</th>
+        <th>合同模版</th>
+        <th>合同类型</th>
+        <th>合同编号</th>
+        <th>上传人</th>
+        <th>国家</th>
+        <th>合同起始日</th>
+        <th>合同截止日</th>
+        <th>电子合同</th>
+        <th>营业执照上传日期</th>
+        <th>纸质合同上传日期</th>
+        <th>生效日期</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.id</td>
+            <td>$!entity.mchName</td>
+            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.submitTime)</td>
+            <td>$!entity.templateTitle</td>
+            <td>#if($!entity.type == 1)主合同#else 附加合同#end</td>
+            <td>$!entity.contractNo</td>
+            <td>$!entity.username</td>
+            <td>$!entity.countryId</td>
+            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.startTime)</td>
+            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.endTime)</td>
+            <td><a href="/contract/preview?id=$!entity.id" target="_blank" class="btn btn-success btn-mini">查看</a></td>
+            <td>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a>
+            </td>
+            <td>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a>
+            </td>
+            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.approveTime)
+            </td>
+
+        </tr>
+        #end
+    </tbody>
+</table>
+#parse("common/list_mid.vm")
+<form>
+    <div class="control-group">
+        <label>ID</label>
+        <input type="text" class="span11" name="id" value="$!id">
+
+
+        <label>本地名称</label>
+        <input type="text" class="span11" name="merchantname" value="$!merchantname">
+
+
+        <label>合同名称</label>
+        <input type="text" class="span11" name="" value="$!merchantname">
+
+
+        <label>合同编号</label>
+        <input type="text" class="span11" name="" value="$!merchantname">
+
+        <label>合同模板</label>
+        <select id="templateid" name="templateid" class="span7">
+            <option value="">全部</option>
+            <option value="1">主合同</option>
+            <option value="2">附加合同</option>
+        </select>
+
+
+        <label>合同类型</label>
+        <select name="type" class="span7">
+            <option value="">全部</option>
+            <option value="1">主合同</option>
+            <option value="2">附加合同</option>
+        </select>
+
+        <label>合同生效起止时间：</label>
+        <input type="text" class="span11 dateFormat" name="starttime" value="$!starttime" placeholder="开始时间">
+        <input type="text" class="span11 dateFormat" name="endtime" value="$!endtime" placeholder="结束时间">
+
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+<script src="/dist/js/curd.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".verify").each(function (i, o) {
+            $(o).on("click", function (event) {
+                var id = $(this).attr("data-id");
+                var flag = $(this).attr("flag");
+                var message;
+                var type;
+                if(flag=="fail"){
+                    message="确定驳回此合同吗?";
+                    type=2;
+                }else if(flag="success"){
+                    type=1;
+                    message="确定通过此合同吗?";
+                }else{
+                    return alert("操作失败");
+                }
+                if(confirm(message)){
+                    $.ajax({
+                        url: 'verify',
+                        data: {contractId: id, type:type},
+                        type: 'get',
+                        success: function (result) {
+                            if (result.code == 0) {
+                                alert("操作成功");
+                                window.location.reload();
+                            } else {
+                                alert("Fail Code: " + result.code + " MSG: " + result.msg);
+                            }
+                        }
+                    });
+                }
+            })
+        });
+    });
+</script>
+#parse("common/list_end.vm")
+

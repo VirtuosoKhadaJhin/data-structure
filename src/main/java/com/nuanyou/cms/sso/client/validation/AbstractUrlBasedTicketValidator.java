@@ -178,7 +178,7 @@ public abstract class AbstractUrlBasedTicketValidator implements TicketValidator
 
 
             if (serverResponse == null) {
-                throw new TicketValidationException("The CAS server returned no response.");
+                throw new TicketValidationException("The SSO server returned no response.");
             }
             
             if (log.isDebugEnabled()) {
