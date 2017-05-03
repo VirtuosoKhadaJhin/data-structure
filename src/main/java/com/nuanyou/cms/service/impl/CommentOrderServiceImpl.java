@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +69,7 @@ public class CommentOrderServiceImpl implements CommentOrderService {
 
                 return query.where(predicate.toArray(new Predicate[predicate.size()])).getRestriction();
             }
-        }, new PageRequest(index - 1, PageUtil.pageSize));
+        }, new PageRequest(index - 1, PageUtil.pageSize,new Sort(Sort.Direction.DESC,"id")));
     }
 
     @Override

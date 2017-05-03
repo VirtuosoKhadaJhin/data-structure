@@ -67,7 +67,7 @@ public class MerchantServiceImpl implements MerchantService {
         if (display == null)
             return merchantDao.getIdNameList();
         else
-            return merchantDao.getIdNameList(display);
+            return merchantDao.getIdNameList();
 
  /*       if (cacheManager.getValue(key)!=null){
             return cacheManager.getValue(key);

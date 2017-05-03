@@ -13,10 +13,7 @@ import com.nuanyou.cms.service.CommentOrderService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.util.TimeCondition;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -121,7 +118,7 @@ public class CommentOrderController {
      */
     @RequestMapping("listFake")
     public String listFake(CommentOrder entity, @RequestParam(required = false, defaultValue = "1") int index, Model model) {
-        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
+        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize,new Sort(Sort.Direction.DESC,"id"));
         entity.setType(2);
         Page<CommentOrder> page = commentOrderDao.findAll(Example.of(entity), pageable);
         model.addAttribute("page", page);
