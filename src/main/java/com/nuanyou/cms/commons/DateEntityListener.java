@@ -1,27 +1,18 @@
 package com.nuanyou.cms.commons;
 
-import com.nuanyou.cms.config.SystemContext;
 import com.nuanyou.cms.util.BeanUtils;
-import com.nuanyou.cms.util.DateUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.nuanyou.cms.util.OperationLog;
 
 import javax.persistence.*;
-import javax.servlet.http.HttpServletRequest;
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Date;
 
 /**
- * Created by xiejing on 2016/7/25.
+ * Created by Alan.ye on 2017/4/14.
  */
 public class DateEntityListener {
-
-
-    private static final Logger log = LoggerFactory.getLogger(DateEntityListener.class);
 
     @PrePersist
     public void touchForCreate(Object target) throws IllegalAccessException {
@@ -53,34 +44,18 @@ public class DateEntityListener {
 
     @PostPersist
     public void logForCreate(Object target) {
-        log("create", target);
+        OperationLog.log(OperationLog.Action.create, target);
     }
 
     @PostUpdate
     public void logForUpdate(Object target) {
-        log("update", target);
+        OperationLog.log(OperationLog.Action.update, target);
     }
 
     @PostRemove
     public void logForRemove(Object target) {
-        log("remove", target);
+        OperationLog.log(OperationLog.Action.remove, target);
     }
 
-    private static void log(String action, Object target) {
-        HttpServletRequest request = SystemContext.getRequest();
-        if (request == null)
-            return;
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        sb.append("null").append(",");
-        sb.append(DateUtils.format(new Date())).append(",");
-        sb.append(request.getRequestURI()).append(",");
-        sb.append(action).append(",");
-        sb.append(target.getClass().getCanonicalName()).append(",");
-        sb.append(ToStringBuilder.reflectionToString(target, ToStringStyle.SHORT_PREFIX_STYLE));
-        sb.append("]");
-        log.info(sb.toString());
-    }
 
 }

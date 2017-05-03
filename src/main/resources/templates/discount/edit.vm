@@ -15,7 +15,7 @@
                 <div class="widget-box">
                     <div id="breadcrumb">
                         <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
-                        <a href="list" class="tip-bottom">推荐管理</a>
+                        <a href="list" class="tip-bottom">优惠管理</a>
                         <a href="javascript:void(0);" class="tip-bottom">编辑/查看</a>
                     </div>
                     <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>

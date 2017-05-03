@@ -3,8 +3,8 @@ package com.nuanyou.cms.entity.enums;
 
 public enum VerifyType {
 
-    User(1, "用户"),
-    Merchant(2, "商家");
+    Merchant(2, "商家"),
+    User(1, "用户");
 
     public final int value;
 
