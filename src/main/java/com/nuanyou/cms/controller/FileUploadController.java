@@ -50,7 +50,7 @@ public class FileUploadController {
 
         String callBackImgUrl = fileUploadService.commonUpdateImg(is, fileType);
 //        String callBackImgUrl = writeDisk(is, imageSpec);
-        response.getWriter().println("<script>parent.callback('" + callbackId + "', '" + callBackImgUrl + "')</script>");
+        response.getWriter().println("<script>parent.callbackImg('" + callbackId + "', '" + callBackImgUrl + "')</script>");
     }
 
 
