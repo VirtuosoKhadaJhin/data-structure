@@ -114,7 +114,7 @@
     });
 
     // iframe中接收返回的图片url
-    function callback(id, imgUrl) {
+    function callbackImg(id, imgUrl) {
         var htm = '<li class="bg_lb"><img height="120" width="150" src="' + imgUrl + '">' +
                 '<input type="hidden" name="imgs" value="' + imgUrl + '">' +
                 '<a href="javascript:void(0);" class="remove-img"><i class="icon-remove"></i></a></li>';
