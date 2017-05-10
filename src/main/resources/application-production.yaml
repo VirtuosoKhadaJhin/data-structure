@@ -37,18 +37,17 @@ server:
 logging:
   config: classpath:logback-prod.xml
 
-aliyun:
- oss:
-  access-key-id: OgdPMXR4cLyeIxEW
-  secret-access-key: zgSa3pBpQEo4EPQt1sVBF4U66QJZ21
+oss:
+  bucketName: nuanyou-image
+  domain: http://img.91nuanyou.com
   endpoint: http://oss-cn-hangzhou.aliyuncs.com
- nuanyou:
-  image-server: https://img.91nuanyou.com
-  bucketname: nuanyou-image
-  cms-basepath: cms
-  fake-image-server: http://image.hellodfs.com/nuanyou20opt
-  fakeuser-basepath: nuanyou20opt/user
-  fakercomment-basepath: nuanyou20opt/comment
+  accessKeyId: OgdPMXR4cLyeIxEW
+  secretAccessKey: zgSa3pBpQEo4EPQt1sVBF4U66QJZ21
+
+s3:
+  bucketName: nuanyou-file-prod-ap-northeast-2
+  domain: https://kr.file.91nuanyou.com
+  region: ap-northeast-2
 
 nuanyou-host: http://h5.m.91nuanyou.com
 withdrawurl: http://user.api.91nuanyou.com
