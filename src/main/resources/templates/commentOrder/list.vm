@@ -3,31 +3,35 @@
     <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
     <a href="javascript:void(0);" class="tip-bottom">评价管理</a>
 </div>
-<table class="table table-bordered table-striped" style="table-layout: fixed">
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>评价列表</h5>
+</div>
+<table class="table table-bordered table-striped">
     <thead>
     <tr>
-        <th>订单编号</th>
+        <th width="175px">订单编号</th>
+        <th width="40px">评分</th>
         <th>店铺名称</th>
-        <th>评分</th>
-        <th width="25%">商铺评价</th>
-        <th>评论时间</th>
-        <th>操作</th>
+        <th width="35%">商铺评价</th>
+        <th width="140px">评论时间</th>
+        <th width="140px">回复时间</th>
+        <th width="130px">操作</th>
     </tr>
     </thead>
     <tbody>
         #foreach($e in $!page.content)
         <tr>
             <td>$!e.order.ordersn</td>
-            <td>
-                <a href="$!link.requestPath/merchant/detail?id=$!e.merchant.id" class="alink"> $!e.merchant.name</a>
-            </td>
             <td>$!e.score</td>
+            <td><a href="$!link.requestPath/merchant/detail?id=$!e.merchant.id" class="alink"> $!e.merchant.name</a></td>
             <td style="word-break: break-all;word-wrap: break-word">$!e.content</td>
             <td>$!e.createTime</td>
+            <td>$!e.replyTime</td>
             <td>
-                <button data-name="commentId" data-value="$!e.id" class="btn btn-info btn-mini add-item"
-                        modal-id="reply-modal">回复
-                </button>
+                <button data-id="$!e.id" class="btn btn-success btn-mini detail-item" modal-id="detail-modal">查看</button>
+                <button data-name="commentId" data-value="$!e.id" class="btn btn-info btn-mini add-item" modal-id="reply-modal">回复</button>
+                <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</button>
             </td>
         </tr>
         #end
@@ -42,33 +46,20 @@
             <option #if($!scoreStr == "high") selected #end value="high">高分</option>
             <option #if($!scoreStr == "low") selected #end value="low">低分</option>
         </select>
-    </div>
-    <div class="control-group">
         <label>订单编号</label>
         <input type="text" name="order.ordersn" class="span11" value="$!entity.order.ordersn"/>
-    </div>
-    <div class="control-group">
         <label>商户编号</label>
         <input type="text" name="merchant.id" class="span11" value="$!entity.merchant.id"/>
-    </div>
-    <div class="control-group">
         <label>商户名称</label>
         <input type="text" name="merchant.name" class="span11" value="$!entity.merchant.name"/>
-    </div>
-##    <div class="control-group">
-##        <label>是否评价</label>
-##        <select name="isComment" class="span11">
-##            <option value="true">已评价</option>
-##            <option value="false">未评价</option>
-##        </select>
-##    </div>
-    <div class="control-group">
-        <label>开始时间</label>
-        <input name="beginDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.beginDate)" type="text" class="span11 dateFormat">
-    </div>
-    <div class="control-group">
-        <label>结束时间</label>
-        <input name="endDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.endDate)" type="text" class="span11 dateFormat">
+    ##        <label>是否评价</label>
+    ##        <select name="isComment" class="span11">
+    ##            <option value="true">已评价</option>
+    ##            <option value="false">未评价</option>
+    ##        </select>
+        <label>评论时间</label>
+        <input type="text" class="span11 dateFormat" placeholder="开始时间" name="beginDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.beginDate)">
+        <input type="text" class="span11 dateFormat" placeholder="结束时间" name="endDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.endDate)">
     </div>
     <div class="control-group">
         <button type="submit" class="btn btn-primary">查询</button>
@@ -95,5 +86,37 @@
         <button class="btn btn-primary submit-item" type="button" modal-id="reply-modal">保存</button>
     </div>
 </div>
+<div id="detail-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>回复列表</h3>
+    </div>
+    <div class="modal-body controls" id="replies">
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
 <script src="/dist/js/curd.js"></script>
+<script>
+    $(".detail-item").on("click", function () {
+        var modal = $("#" + $(this).attr("modal-id"));
+        var id = $(this).attr("data-id");
+
+        $.ajax({
+            url: "replies", type: 'get',
+            data: {id: id},
+            success: function (result) {
+                html = "";
+                for (var i in result.data) {
+                    var reply = result.data[i];
+                    html += '<label>' + reply.createTime + '</label>';
+                    html += '<textarea class="span10" disabled>' + reply.content + '</textarea>';
+                }
+                $("#replies").empty().append(html);
+                $(modal).modal();
+            }
+        });
+    });
+</script>
 #parse("common/list_end.vm")
