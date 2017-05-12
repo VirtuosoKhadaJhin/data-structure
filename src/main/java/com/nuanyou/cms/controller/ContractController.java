@@ -228,7 +228,7 @@ public class ContractController {
 
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main1(String[] args) throws Exception {
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("merchantId", "7456"));
         params.add(new BasicNameValuePair("enabled", "true"));
