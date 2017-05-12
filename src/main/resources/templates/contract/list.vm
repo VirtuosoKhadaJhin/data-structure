@@ -35,28 +35,35 @@
         <tr class="odd gradeX">
             <td>$!entity.id</td>
             <td>$!entity.mchName</td>
-            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.submitTime)</td>
+            <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.submitTime)</td>
             <td>$!entity.templateTitle</td>
             <td>#if($!entity.type == 1)主合同#else 附加合同#end</td>
             <td>$!entity.contractNo</td>
             <td>$!entity.username</td>
-            <td>$!entity.countryId</td>
-            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.startTime)</td>
-            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.endTime)</td>
+            <td>
+            #foreach($e in $!countries)
+                #if($!entity.countryId==$!e.id) $!e.name #end
+            #end
+            </td>
+            <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.startTime)</td>
+            <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.endTime)</td>
             <td><a href="/contract/preview?id=$!entity.id" target="_blank" class="btn btn-success btn-mini">查看</a></td>
             <td>
-                <a href="$!entity.businessLicense" target="_blank" class="btn btn-success btn-mini">查看</a>
+            #if($!entity.businessLicense)
+                #if($!entity.type == 1)<a href="$!entity.businessLicense" target="_blank" class="btn btn-success btn-mini">查看</a>
+                #else 无需上传#end
+            #end
             </td>
             <td>
-                <a href="$!entity.pdfUrl" target="_blank" class="btn btn-success btn-mini">查看</a>
+                #if($!entity.pdfUrl)
+                    <a href="$!entity.pdfUrl" target="_blank" class="btn btn-success btn-mini">查看</a>
+                #end
             </td>
-            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.approveTime)</td>
+            <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.approveTime)</td>
             <td>
                 <a class="btn btn-success btn-mini verify" data-id="$!entity.id" flag="fail">驳回</a>
                 <a class="btn btn-info btn-mini verify" data-id="$!entity.id" flag="success">通过</a>
-
             </td>
-
         </tr>
         #end
     </tbody>
@@ -67,27 +74,34 @@
         <label>ID</label>
         <input type="text" class="span11" name="id" value="$!id">
 
-
-        <label>国家</label>
-        <select id="country.id" name="countryId" class="span7"
-        <option value="">请选择</option>
-        #foreach($e in $!countries)
-            <option value="$!e.id" #if($!countryId==$!e.id)
-                    selected #end>$!e.id:$!e.name</option>
-        #end
-        </select>
-
-
         <label>本地名称</label>
         <input type="text" class="span11" name="merchantname" value="$!merchantname">
-
 
 
         <label>合同编号</label>
         <input type="text" class="span11" name="" value="$!contractNum">
 
+        <label>国家</label>
+        <select id="country.id" name="countryId" class="span11" target-name="templateid" target-url="api/templates">
+        <option value="">请选择</option>
+        #foreach($e in $!countries)
+            <option value="$!e.id" #if($!countryId==$!e.id) selected #end>$!e.id:$!e.name</option>
+        #end
+        </select>
+
+        <label>合同类型</label>
+        <select name="type" class="span11">
+            <option value="">全部</option>
+            <option value="1" #if($!type==1)
+                    selected #end>主合同
+            </option>
+            <option value="2" #if($!type==2)
+                    selected #end>附加合同
+            </option>
+        </select>
+
         <label>合同模板</label>
-        <select id="templateid" name="templateid" class="span7">
+        <select id="templateid" name="templateid" class="span11">
             <option value="">请选择</option>
             #foreach($e in $!templates)
                 <option value="$!e.id" #if($!templateid==$!e.id)
@@ -95,38 +109,27 @@
             #end
         </select>
 
-
-        <label>合同类型</label>
-        <select name="type" class="span7">
-            <option value="">全部</option>
-            <option value="1" #if($!type==1)
-                    selected #end>主合同</option>
-            <option value="2" #if($!type==2)
-                    selected #end>附加合同</option>
-        </select>
-
         <label>纸质合同</label>
-        <select name="paperContract" class="span7">
+        <select name="paperContract" class="span11">
             <option value="">全部</option>
             <option value="true" #if($!paperContract==true)
-                    selected #end>有</option>
+                    selected #end>有
+            </option>
             <option value="false" #if($!paperContract==false)
-                    selected #end>没有</option>
+                    selected #end>没有
+            </option>
         </select>
 
         <label>营业执照</label>
-        <select name="businessLicense" class="span7">
+        <select name="businessLicense" class="span11">
             <option value="">全部</option>
             <option value="true" #if($!businessLicense==true)
-                    selected #end>有</option>
+                    selected #end>有
+            </option>
             <option value="false" #if($!businessLicense==false)
-                    selected #end>没有</option>
+                    selected #end>没有
+            </option>
         </select>
-
-
-
-
-
 
         <label>合同上传起止时间：</label>
         <input type="text" class="span11 dateFormat" name="starttime" value="$!starttime" placeholder="开始时间">
@@ -136,6 +139,7 @@
     </div>
 </form>
 <script src="/dist/js/curd.js"></script>
+<script src="/dist/js/cascade-select.js"></script>
 <script type="text/javascript">
     $(function () {
         $(".verify").each(function (i, o) {
