@@ -49,6 +49,7 @@ public class AwsS3Client extends FileClient {
     public String uploadFile(String filePath, InputStream is) throws IOException {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(is.available());
+        metadata.setContentType(getContentType(filePath));
         client.putObject(bucketName, filePath, is, metadata);
 
         AccessControlList acl = client.getObjectAcl(bucketName, filePath);

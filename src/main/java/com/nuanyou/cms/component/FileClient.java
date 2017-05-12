@@ -31,4 +31,14 @@ public abstract class FileClient {
         filePath.append(suffix);
         return filePath.toString();
     }
+
+    public static String getContentType(String filePath) {
+        if (filePath.endsWith("pdf"))
+            return "application/pdf";
+        else if (filePath.endsWith("jpg"))
+            return "image/jpeg";
+        else if (filePath.endsWith("png"))
+            return "image/png";
+        return null;
+    }
 }
