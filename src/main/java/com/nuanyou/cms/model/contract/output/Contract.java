@@ -24,7 +24,7 @@ public class Contract {
     private Date rejectTime;
     private Date approveTime;
     private String status;
-    private boolean read;
+    private Boolean read;
     private String pdfUrl;
     private String htmlContent;
     private Map<String, String> parameters;
@@ -33,6 +33,7 @@ public class Contract {
     private Long userId;
     private String username;
     private Long mchid;
+    private Long countryId;
     private String mchName;
     private String signImgUrl;
     private String businessLicense;
@@ -71,9 +72,18 @@ public class Contract {
         this.mchid = mchid;
     }
 
+    @ApiModelProperty(value = "国家ID")
+    @JsonProperty("countryId")
+    public Long getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(Long countryId) {
+        this.countryId = countryId;
+    }
+
     @ApiModelProperty(value = "BDid")
     @JsonProperty("userid")
-    @JsonIgnore
     public Long getUserId() {
         return userId;
     }
@@ -175,11 +185,11 @@ public class Contract {
 
     @ApiModelProperty(value = "是否已读")
     @JsonProperty("read")
-    public boolean isRead() {
+    public Boolean getRead() {
         return read;
     }
 
-    public void setRead(boolean read) {
+    public void setRead(Boolean read) {
         this.read = read;
     }
 

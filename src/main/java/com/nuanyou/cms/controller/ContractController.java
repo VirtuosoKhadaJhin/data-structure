@@ -92,7 +92,7 @@ public class ContractController {
                        @RequestParam(value = "contractNum", required = false) Boolean contractNum,
                        @RequestParam(value = "paperContract", required = false) Boolean paperContract) {
 
-        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, JsonUtils.toJson(status), JsonUtils.toJson(templateid), JsonUtils.toJson(type), businessLicense, paperContract, startTime, endTime, index, limit);
+        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, "[2]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), businessLicense, paperContract, startTime, endTime, index, limit);
         Contracts contractsData = contracts.getData();
         Pageable pageable = new PageRequest(index - 1, limit);
         List<Contract> list = contractsData.getList();
@@ -102,9 +102,6 @@ public class ContractController {
 
         List<Country> countries = countryService.getIdNameList();
 
-        APIResult<List<ContractTemplate>> contractConfig = this.contractService.getContractConfig(countryId, type);
-        List<ContractTemplate> templates = contractConfig.getData();
-
         model.addAttribute("page", page);
         model.addAttribute("countries", countries);
         model.addAttribute("countryId", countryId);
@@ -113,7 +110,6 @@ public class ContractController {
         model.addAttribute("merchantname", merchantName);
         model.addAttribute("merchantid", merchantId);
         model.addAttribute("status", status);
-        model.addAttribute("templates", templates);
         model.addAttribute("templateid", templateid);
         model.addAttribute("businessLicense", businessLicense);
         model.addAttribute("paperContract", paperContract);
@@ -263,6 +259,13 @@ public class ContractController {
             }
 
         }
+    }
+
+    @RequestMapping("api/templates")
+    @ResponseBody
+    public APIResult templates(Long id, Integer type) {
+        APIResult<List<ContractTemplate>> contractConfig = this.contractService.getContractConfig(id, type);
+        return contractConfig;
     }
 
 }
