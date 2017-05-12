@@ -1,5 +1,6 @@
 package com.nuanyou.cms.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
@@ -13,6 +14,13 @@ import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.JsonUtils;
 import io.swagger.annotations.ApiParam;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +39,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -229,6 +239,30 @@ public class ContractController {
             throw new APIException(ResultCodes.PoundageOrPayDaysIsNull);
         }
 
+    }
+
+    public static void main1(String[] args) throws Exception {
+        List<NameValuePair> params = new ArrayList<>();
+        params.add(new BasicNameValuePair("merchantId", "7456"));
+        params.add(new BasicNameValuePair("enabled", "true"));
+        params.add(new BasicNameValuePair("dayType", "1"));
+        params.add(new BasicNameValuePair("poundage", "1"));
+        params.add(new BasicNameValuePair("startPrice", "1"));
+        params.add(new BasicNameValuePair("startTime", "2017-05-12"));
+        params.add(new BasicNameValuePair("paymentDays", "1"));
+        String url = "http://testaccount.99mice.com/merchantSettlement/add" ;
+        URI uri = new URI(url);
+        HttpPost post = new HttpPost(uri);
+        post.setEntity(new UrlEncodedFormEntity(params, StandardCharsets.UTF_8));
+        try (CloseableHttpResponse response = HttpClientBuilder.create().build().execute(post)) {
+            String responseText = EntityUtils.toString(response.getEntity());
+            System.out.println(responseText);
+            Integer status = JSONObject.parseObject(responseText).getInteger("code");
+            if (status == null || status != 0) {
+
+            }
+
+        }
     }
 
 }
