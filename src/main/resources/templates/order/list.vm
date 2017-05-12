@@ -131,11 +131,11 @@
 
 
         <label for="status">国家：</label>
-        <select id="merchant.district.country.id" name="merchant.district.country.id" class="span11">
+        <select id="countryid" name="countryid" class="span11">
             <option value="">全部</option>
             #foreach($c in $!countries)
                 <option value="$!c.id"
-                    #if($!entity.merchant.district.country.id == $!c.id)
+                    #if($!entity.countryid== $!c.id)
                         selected
                     #end
                 >

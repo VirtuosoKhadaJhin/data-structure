@@ -15,7 +15,7 @@ public interface OrderService {
 
     Page<Order> findByCondition(Integer index, Order entity, TimeCondition time, Pageable pageable);
 
-    List<ViewOrderExport> findExportByCondition(Integer index, ViewOrderExport entity, TimeCondition time, Pageable o);
+    List<ViewOrderExport> findExportByCondition(Integer index, Order entity, TimeCondition time, Pageable o);
 
     Page<Order> findRefundByCondition(Integer index, Order entity, TimeCondition time);
 

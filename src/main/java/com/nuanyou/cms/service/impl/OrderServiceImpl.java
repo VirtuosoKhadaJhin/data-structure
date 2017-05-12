@@ -110,9 +110,8 @@ public class OrderServiceImpl implements OrderService {
                     Predicate p = cb.equal(root.get("merchant").get("id"), entity.getMerchant().getId());
                     predicate.add(p);
                 }
-                if (entity.getMerchant() != null && entity.getMerchant().getDistrict() != null && entity.getMerchant().getDistrict().getCountry() != null
-                        && entity.getMerchant().getDistrict().getCountry().getId() != null) {
-                    Predicate p = cb.equal(root.get("merchant").get("district").get("country").get("id"), entity.getMerchant().getDistrict().getCountry().getId());
+                if (entity.getCountryid()!=null) {
+                    Predicate p = cb.equal(root.get("countryid"), entity.getCountryid());
                     predicate.add(p);
                 }
                 Predicate[] pre = new Predicate[predicate.size()];
@@ -187,12 +186,27 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public List<ViewOrderExport> findExportByCondition(Integer index, final ViewOrderExport entity, final TimeCondition time, Pageable pageable) {
+    public List<ViewOrderExport> findExportByCondition(Integer index, final Order entity, final TimeCondition time, Pageable pageable) {
+
+        Long begin_exportOrder = System.currentTimeMillis();
         List<ViewOrderExport> orderList = getViewOrderExports(entity, time);
-        List<OrderItem> itemList = getOrderItems(entity, time);
-        log.info("count(item):" + itemList.size());
+        Long end_exportOrder = System.currentTimeMillis();
         log.info("count(order):" + orderList.size());
+        log.info("read data from ViewOrderExport:" + (end_exportOrder - begin_exportOrder) / 1000 + "s");
+
+
+        Long begin_items = System.currentTimeMillis();
+        List<OrderItem> itemList = getOrderItems(entity, time);
+        Long end_items= System.currentTimeMillis();
+        log.info("count(item):" + itemList.size());
+        log.info("read data from OrderItem:" + (end_items - begin_items) / 1000 + "s");
+
+
+
+        Long begin_relation = System.currentTimeMillis();
         relationItem(itemList, orderList);
+        Long end_relation= System.currentTimeMillis();
+        log.info("read data from relationItem:" + (end_relation - begin_relation) / 1000 + "s");
         return orderList;
 
     }
@@ -231,7 +245,7 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private List<ViewOrderExport> getViewOrderExports(final ViewOrderExport entity, final TimeCondition time) {
+    private List<ViewOrderExport> getViewOrderExports(final Order entity, final TimeCondition time) {
         return viewOrderExportDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
@@ -246,11 +260,11 @@ public class OrderServiceImpl implements OrderService {
                 }
 
                 if (entity.getMerchant() != null && !StringUtils.isEmpty(entity.getMerchant().getKpname())) {
-                    Predicate p = cb.equal(root.get("merchant").get("kpname"), entity.getMerchant().getKpname());
+                    Predicate p = cb.equal(root.get("merchantkpname"), entity.getMerchant().getKpname());
                     predicate.add(p);
                 }
                 if (entity.getMerchant() != null && entity.getMerchant().getId() != null) {
-                    Predicate p = cb.equal(root.get("merchant").get("id"), entity.getMerchant().getId());
+                    Predicate p = cb.equal(root.get("mchid"), entity.getMerchant().getId());
                     predicate.add(p);
                 }
                 if (!StringUtils.isEmpty(entity.getSceneid())) {
@@ -274,12 +288,9 @@ public class OrderServiceImpl implements OrderService {
                     Predicate p = cb.equal(root.get("orderstatus"), entity.getOrderstatus());
                     predicate.add(p);
                 }
-
-                if (entity.getMerchant() != null && entity.getMerchant().getDistrict() != null && entity.getMerchant().getDistrict().getCountry() != null
-                        && entity.getMerchant().getDistrict().getCountry().getId() != null) {
-                    Predicate p = cb.equal(root.get("merchant").get("district").get("country").get("id"),
-                            entity.getMerchant().getDistrict().getCountry().getId());
-                    predicate.add(p);
+                if (entity.getCountryid() != null) {
+                    Predicate p1 = cb.equal(root.get("countryid"), entity.getCountryid());
+                    predicate.add(p1);
                 }
                 Predicate[] pre = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(pre)).getRestriction();
@@ -287,7 +298,7 @@ public class OrderServiceImpl implements OrderService {
         }, new Sort(Sort.Direction.ASC, "id"));
     }
 
-    private List<OrderItem> getOrderItems(final ViewOrderExport entity, final TimeCondition time) {
+    private List<OrderItem> getOrderItems(final Order entity, final TimeCondition time) {
         return orderItemDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {

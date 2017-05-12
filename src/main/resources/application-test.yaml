@@ -68,7 +68,7 @@ AWS:
       refundFail: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refundFail
 
 sso:
-  urlPatterns: /*
+  urlPatterns: /dd
   urlExcludePattern: ^/test|^/dist/.*|^/favicon.*
   loginUrl: https://testuser.api.91nuanyou.com/oauth/corp
   reLogin: false
