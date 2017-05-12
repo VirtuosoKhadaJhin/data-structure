@@ -173,28 +173,19 @@ public class ContractController {
 
     @RequestMapping(path = "verify", method = RequestMethod.GET)
     @ResponseBody
-    public APIResult verify(Long id, Integer type, Long contractId) throws ParseException {
-        //1 通过
-        boolean valid = false;
-        if (type == 1) {
-            valid = true;
-        } else if (type == 2) {
-            valid = false;
-        } else {
-            throw new APIException(ResultCodes.TypeMismatch);
-        }
+    public APIResult verify(Long id,Boolean valid, Long contractId) throws ParseException {
         Long userid = UserHolder.getUser().getUserid();
+        //审核
         APIResult approve = this.contractService.approve(userid, contractId, valid);
         if (approve.getCode() != 0) {
-            //throw new APIException(approve.getCode(),approve.getMsg());
+            throw new APIException(approve.getCode(),approve.getMsg());
         }
-        if (type == 1) {
+        if (valid) {
             //2 得到合同信息
             APIResult<Contract> resDetail = this.contractService.detail(contractId);
             //3插入对账系统
-            Contract detail = (Contract) resDetail.getData();
+            Contract detail =  resDetail.getData();
             this.addForAccount(detail);
-
         }
         return new APIResult<>(ResultCodes.Success);
     }
@@ -237,7 +228,7 @@ public class ContractController {
 
     }
 
-    public static void main1(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("merchantId", "7456"));
         params.add(new BasicNameValuePair("enabled", "true"));
@@ -254,6 +245,7 @@ public class ContractController {
             String responseText = EntityUtils.toString(response.getEntity());
             System.out.println(responseText);
             Integer status = JSONObject.parseObject(responseText).getInteger("code");
+            System.out.println(status+"felix");
             if (status == null || status != 0) {
 
             }

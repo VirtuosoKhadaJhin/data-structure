@@ -61,8 +61,8 @@
             </td>
             <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.approveTime)</td>
             <td>
-                <a class="btn btn-success btn-mini verify" data-id="$!entity.id" flag="fail">驳回</a>
-                <a class="btn btn-info btn-mini verify" data-id="$!entity.id" flag="success">通过</a>
+                <a class="btn btn-success btn-mini verify" data-id="$!entity.id" valid="false">驳回</a>
+                <a class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</a>
             </td>
         </tr>
         #end
@@ -145,22 +145,17 @@
         $(".verify").each(function (i, o) {
             $(o).on("click", function (event) {
                 var id = $(this).attr("data-id");
-                var flag = $(this).attr("flag");
+                var valid = $(this).attr("valid");
                 var message;
-                var type;
-                if (flag == "fail") {
+                if (valid=="false") {
                     message = "确定驳回此合同吗?";
-                    type = 2;
-                } else if (flag = "success") {
-                    type = 1;
-                    message = "确定通过此合同吗?";
                 } else {
-                    return alert("操作失败");
+                    message = "确定通过此合同吗?";
                 }
                 if (confirm(message)) {
                     $.ajax({
                         url: 'verify',
-                        data: {contractId: id, type: type},
+                        data: {contractId: id, valid: valid},
                         type: 'get',
                         success: function (result) {
                             if (result.code == 0) {
