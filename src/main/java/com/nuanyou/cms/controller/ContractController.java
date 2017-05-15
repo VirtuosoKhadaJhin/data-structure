@@ -242,31 +242,6 @@ public class ContractController {
 
     }
 
-    public static void main1(String[] args) throws Exception {
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("merchantId", "7456"));
-        params.add(new BasicNameValuePair("enabled", "true"));
-        params.add(new BasicNameValuePair("dayType", "1"));
-        params.add(new BasicNameValuePair("poundage", "1"));
-        params.add(new BasicNameValuePair("startPrice", "1"));
-        params.add(new BasicNameValuePair("startTime", "2017-05-12"));
-        params.add(new BasicNameValuePair("paymentDays", "1"));
-        String url = "http://testaccount.99mice.com/merchantSettlement/add" ;
-        URI uri = new URI(url);
-        HttpPost post = new HttpPost(uri);
-        post.setEntity(new UrlEncodedFormEntity(params, StandardCharsets.UTF_8));
-        try (CloseableHttpResponse response = HttpClientBuilder.create().build().execute(post)) {
-            String responseText = EntityUtils.toString(response.getEntity());
-            System.out.println(responseText);
-            Integer status = JSONObject.parseObject(responseText).getInteger("code");
-            System.out.println(status+"felix");
-            if (status == null || status != 0) {
-
-            }
-
-        }
-    }
-
     @RequestMapping("api/templates")
     @ResponseBody
     public APIResult templates(Long id, Integer type) {
