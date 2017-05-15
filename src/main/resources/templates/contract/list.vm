@@ -41,22 +41,27 @@
             <td>$!entity.contractNo</td>
             <td>$!entity.username</td>
             <td>
-            #foreach($e in $!countries)
-                #if($!entity.countryId==$!e.id) $!e.name #end
-            #end
+                #foreach($e in $!countries)#if($!entity.countryId==$!e.id) $!e.name#end#end
             </td>
             <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.startTime)</td>
             <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.endTime)</td>
             <td><a href="/contract/preview?id=$!entity.id" target="_blank" class="btn btn-success btn-mini">查看</a></td>
             <td>
-            #if($!entity.businessLicense)
-                #if($!entity.type == 1)<a href="$!entity.businessLicense" target="_blank" class="btn btn-success btn-mini">查看</a>
-                #else 无需上传#end
-            #end
+                #if($!entity.type == 1)
+                    #if($!entity.businessLicense)
+                        <a href="$!entity.businessLicense" target="_blank" class="btn btn-success btn-mini">查看</a>
+                    #else
+                        <a class="btn btn-warning btn-mini new-img" data-type="1" data-id="$!entity.id" href="javascript:void(0);">上传</a>
+                    #end
+                #else
+                    无需上传
+                #end
             </td>
             <td>
-                #if($!entity.pdfUrl)
-                    <a href="$!entity.pdfUrl" target="_blank" class="btn btn-success btn-mini">查看</a>
+                #if($!entity.paperContract)
+                    <a href="$!entity.paperContract" target="_blank" class="btn btn-success btn-mini">查看</a>
+                #else
+                    <a class="btn btn-warning btn-mini new-img" data-type="2" data-id="$!entity.id" href="javascript:void(0);">上传</a>
                 #end
             </td>
             <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.approveTime)</td>
@@ -83,10 +88,10 @@
 
         <label>国家</label>
         <select id="country.id" name="countryId" class="span11" target-name="templateid" target-url="api/templates">
-        <option value="">请选择</option>
-        #foreach($e in $!countries)
-            <option value="$!e.id" #if($!countryId==$!e.id) selected #end>$!e.id:$!e.name</option>
-        #end
+            <option value="">请选择</option>
+            #foreach($e in $!countries)
+                <option value="$!e.id" #if($!countryId==$!e.id) selected #end>$!e.id:$!e.name</option>
+            #end
         </select>
 
         <label>合同类型</label>
@@ -138,10 +143,40 @@
         <button type="submit" class="btn btn-primary">查询</button>
     </div>
 </form>
+<div id="new-img-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <form action="upload" target="hidden_frame" enctype="multipart/form-data" method="post">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>新增图片</h3>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" class="span11" id="img-id" name="id">
+            <input type="hidden" class="span11" id="img-type" name="type">
+            <iframe style="display:none" name='hidden_frame' id="hidden_frame"></iframe>
+            <div id="filelist" style="width: 90%;align-content: center">
+                <div class="controls">
+                    <input type="file" name="file">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+            <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+    </form>
+</div>
 <script src="/dist/js/curd.js"></script>
 <script src="/dist/js/cascade-select.js"></script>
 <script type="text/javascript">
     $(function () {
+        $(".new-img").on("click", function (event) {
+            var id = $(this).attr("data-id");
+            var type = $(this).attr("data-type");
+            $("#img-id").attr("value", id);
+            $("#img-type").attr("value", type);
+            $("#new-img-modal").modal();
+        });
+
         $(".verify").each(function (i, o) {
             $(o).on("click", function (event) {
                 var id = $(this).attr("data-id");

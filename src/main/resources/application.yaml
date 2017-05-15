@@ -77,7 +77,7 @@ sso:
   stateExpiredInMilliSeconds: 120000
 
 
-contractService: http://test.contract.91nuanyou.com
+contractService: http://127.0.0.1:8200
 accountService: http://testaccount.99mice.com
 merchantSettlement:
   default:

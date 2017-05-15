@@ -1,9 +1,9 @@
 package com.nuanyou.cms.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
+import com.nuanyou.cms.component.FileClient;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
@@ -14,15 +14,9 @@ import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.JsonUtils;
 import io.swagger.annotations.ApiParam;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,13 +28,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +47,9 @@ import java.util.Map;
 @RequestMapping("contract")
 public class ContractController {
 
+    @Autowired
+    @Qualifier("s3")
+    private FileClient fileClient;
 
     @Autowired
     private ContractService contractService;
@@ -188,6 +184,24 @@ public class ContractController {
             this.addForAccount(detail);
         }
         return new APIResult<>(ResultCodes.Success);
+    }
+
+    @RequestMapping(path = "upload", method = RequestMethod.POST)
+    public void upload(@RequestParam("file") MultipartFile file,
+                       @ApiParam(value = "合同id", required = true) @RequestParam(value = "id", required = true) Long id,
+                       @ApiParam(value = "附件类型: 1.营业执照 2.纸质合同 3.签名", required = true) @RequestParam(value = "type", required = true) int type,
+                       HttpServletResponse response) throws IOException {
+        String filename = file.getOriginalFilename();
+        String format = filename.substring(filename.lastIndexOf("."), filename.length());
+        String url = fileClient.uploadFile(file.getInputStream(), format);
+
+        APIResult apiResult = contractService.addComponent(id, type, url);
+
+        response.setContentType("text/html;charset=UTF-8");
+        if (apiResult.isSuccess())
+            response.getWriter().println("<script>parent.window.location.reload();</script>");
+        else
+            response.getWriter().println("<script>parent.alert('" + apiResult.getMsg() + "');</script>");
     }
 
     private void addForAccount(Contract detail) {

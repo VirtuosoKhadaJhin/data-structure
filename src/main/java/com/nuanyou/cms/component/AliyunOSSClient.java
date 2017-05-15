@@ -38,6 +38,7 @@ public class AliyunOSSClient extends FileClient {
     public String uploadFile(String filePath, InputStream is) throws IOException {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(is.available());
+        metadata.setContentType(getContentType(filePath));
         client.putObject(bucketName, filePath, is, metadata);
         return new StringBuilder(domain).append("/").append(filePath).toString();
     }
