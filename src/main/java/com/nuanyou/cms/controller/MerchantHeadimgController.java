@@ -1,6 +1,7 @@
 package com.nuanyou.cms.controller;
 
 import com.nuanyou.cms.commons.APIResult;
+import com.nuanyou.cms.component.FileClient;
 import com.nuanyou.cms.config.ImageSpec;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.dao.MerchantDao;
@@ -8,14 +9,12 @@ import com.nuanyou.cms.dao.MerchantHeadimgDao;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.MerchantHeadimg;
-import com.nuanyou.cms.model.MerchantVO;
-import com.nuanyou.cms.model.PageUtil;
-import com.nuanyou.cms.service.FileUploadService;
 import com.nuanyou.cms.service.MerchantHeadimgService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,13 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
@@ -54,8 +50,30 @@ public class MerchantHeadimgController {
     @Autowired
     private MerchantService merchantService;
 
+    @Autowired
+    @Qualifier("s3")
+    private FileClient fileClient;
 
+    @RequestMapping(path = "upload", method = RequestMethod.POST)
+    public String upload(@RequestParam("file") MultipartFile[] files, @RequestParam("id") Long id) {
+        for (MultipartFile file : files) {
+            try {
+                ImageUtils.File imgFile = ImageUtils.process(file.getInputStream(), ImageSpec.MerchantDetail);
+                String fileType = imgFile.getFileType();
+                InputStream is = new ByteArrayInputStream(imgFile.getData());
+                String url = fileClient.uploadFile(is, fileType);
 
+                MerchantHeadimg entity = new MerchantHeadimg();
+                entity.setMchId(id);
+                entity.setSize(1);
+                entity.setDetailImgUrl(url);
+                merchantHeadimgService.saveNotNull(entity);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return "redirect:edit?mchId=" + id;
+    }
 
     @RequestMapping(path = "add", method = RequestMethod.POST)
     @ResponseBody
@@ -83,7 +101,7 @@ public class MerchantHeadimgController {
     public String edit(MerchantHeadimg entity, Model model) {
         List<MerchantHeadimg> list = merchantHeadimgService.find(entity);
         Merchant mch = merchantDao.getOne(entity.getMchId());
-        for (int i = 0; i <list.size() ; i++) {
+        for (int i = 0; i < list.size(); i++) {
             list.get(i).setListImgUrl(mch.getListImgUrl());
         }
         model.addAttribute("list", list);
@@ -91,14 +109,12 @@ public class MerchantHeadimgController {
         return "merchantHeadimg/edit";
     }
 
-    @RequestMapping(path = "setIndexImgUrl",method = RequestMethod.POST)
+    @RequestMapping(path = "setIndexImgUrl", method = RequestMethod.POST)
     @ResponseBody
     public APIResult setIndexImgUrl(@RequestParam(required = true) Long id,
                                     @RequestParam String detailImgUrl,
                                     @RequestParam ImageSpec imageSpec) throws Exception {
-
-        return merchantHeadimgService.setListImgUrl(id,detailImgUrl,imageSpec);
-
+        return merchantHeadimgService.setListImgUrl(id, detailImgUrl, imageSpec);
     }
 
 

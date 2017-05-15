@@ -1,9 +1,10 @@
 package com.nuanyou.cms.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
+import com.nuanyou.cms.component.FileClient;
+import com.nuanyou.cms.dao.MerchantDao;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
@@ -14,15 +15,9 @@ import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.JsonUtils;
 import io.swagger.annotations.ApiParam;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,13 +29,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +48,9 @@ import java.util.Map;
 @RequestMapping("contract")
 public class ContractController {
 
+    @Autowired
+    @Qualifier("s3")
+    private FileClient fileClient;
 
     @Autowired
     private ContractService contractService;
@@ -61,6 +58,8 @@ public class ContractController {
     private AccountService accountService;
     @Autowired
     private CountryService countryService;
+    @Autowired
+    private MerchantDao merchantDao;
     @Value("${merchantSettlement.default.daytype}")
     private Integer daytype;
     @Value("${merchantSettlement.default.startprice}")
@@ -98,6 +97,13 @@ public class ContractController {
         List<Contract> list = contractsData.getList();
         if (list == null)
             list = new ArrayList(0);
+
+        // 本地名称显示商户本地名称
+        for (Contract contract : list) {
+            Long mchid = contract.getMchid();
+            String localName = merchantDao.getLocalName(mchid);
+            contract.setMchName(localName);
+        }
         Page<Contract> page = new PageImpl(list, pageable, contractsData.getTotal());
 
         List<Country> countries = countryService.getIdNameList();
@@ -173,21 +179,39 @@ public class ContractController {
 
     @RequestMapping(path = "verify", method = RequestMethod.GET)
     @ResponseBody
-    public APIResult verify(Long id,Boolean valid, Long contractId) throws ParseException {
+    public APIResult verify(Long id, Boolean valid, Long contractId) throws ParseException {
         Long userid = UserHolder.getUser().getUserid();
         //审核
         APIResult approve = this.contractService.approve(userid, contractId, valid);
         if (approve.getCode() != 0) {
-            throw new APIException(approve.getCode(),approve.getMsg());
+            throw new APIException(approve.getCode(), approve.getMsg());
         }
         if (valid) {
             //2 得到合同信息
             APIResult<Contract> resDetail = this.contractService.detail(contractId);
             //3插入对账系统
-            Contract detail =  resDetail.getData();
+            Contract detail = resDetail.getData();
             this.addForAccount(detail);
         }
         return new APIResult<>(ResultCodes.Success);
+    }
+
+    @RequestMapping(path = "upload", method = RequestMethod.POST)
+    public void upload(@RequestParam("file") MultipartFile file,
+                       @ApiParam(value = "合同id", required = true) @RequestParam(value = "id", required = true) Long id,
+                       @ApiParam(value = "附件类型: 1.营业执照 2.纸质合同 3.签名", required = true) @RequestParam(value = "type", required = true) int type,
+                       HttpServletResponse response) throws IOException {
+        String filename = file.getOriginalFilename();
+        String format = filename.substring(filename.lastIndexOf("."), filename.length());
+        String url = fileClient.uploadFile(file.getInputStream(), format);
+
+        APIResult apiResult = contractService.addComponent(id, type, url);
+
+        response.setContentType("text/html;charset=UTF-8");
+        if (apiResult.isSuccess())
+            response.getWriter().println("<script>parent.window.location.reload();</script>");
+        else
+            response.getWriter().println("<script>parent.alert('" + apiResult.getMsg() + "');</script>");
     }
 
     private void addForAccount(Contract detail) {
@@ -226,31 +250,6 @@ public class ContractController {
             throw new APIException(ResultCodes.PoundageOrPayDaysIsNull);
         }
 
-    }
-
-    public static void main1(String[] args) throws Exception {
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("merchantId", "7456"));
-        params.add(new BasicNameValuePair("enabled", "true"));
-        params.add(new BasicNameValuePair("dayType", "1"));
-        params.add(new BasicNameValuePair("poundage", "1"));
-        params.add(new BasicNameValuePair("startPrice", "1"));
-        params.add(new BasicNameValuePair("startTime", "2017-05-12"));
-        params.add(new BasicNameValuePair("paymentDays", "1"));
-        String url = "http://testaccount.99mice.com/merchantSettlement/add" ;
-        URI uri = new URI(url);
-        HttpPost post = new HttpPost(uri);
-        post.setEntity(new UrlEncodedFormEntity(params, StandardCharsets.UTF_8));
-        try (CloseableHttpResponse response = HttpClientBuilder.create().build().execute(post)) {
-            String responseText = EntityUtils.toString(response.getEntity());
-            System.out.println(responseText);
-            Integer status = JSONObject.parseObject(responseText).getInteger("code");
-            System.out.println(status+"felix");
-            if (status == null || status != 0) {
-
-            }
-
-        }
     }
 
     @RequestMapping("api/templates")

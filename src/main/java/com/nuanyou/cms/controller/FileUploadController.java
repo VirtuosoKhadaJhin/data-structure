@@ -1,9 +1,10 @@
 package com.nuanyou.cms.controller;
 
+import com.nuanyou.cms.component.FileClient;
 import com.nuanyou.cms.config.ImageSpec;
-import com.nuanyou.cms.service.FileUploadService;
 import com.nuanyou.cms.util.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,7 +18,8 @@ import java.io.*;
 public class FileUploadController {
 
     @Autowired
-    private FileUploadService fileUploadService;
+    @Qualifier("s3")
+    private FileClient fileClient;
 
     @RequestMapping(value = "upload",
             consumes = {"multipart/form-data"},
@@ -48,7 +50,7 @@ public class FileUploadController {
         }
 
 
-        String callBackImgUrl = fileUploadService.commonUpdateImg(is, fileType);
+        String callBackImgUrl = fileClient.uploadFile(is, fileType);
 //        String callBackImgUrl = writeDisk(is, imageSpec);
         response.getWriter().println("<script>parent.callbackImg('" + callbackId + "', '" + callBackImgUrl + "')</script>");
     }
@@ -67,18 +69,15 @@ public class FileUploadController {
     }
 
 
-    @RequestMapping(value = "upload/editor",
-            consumes = {"multipart/form-data"},
-            method = RequestMethod.POST)
+    @RequestMapping(value = "upload/editor", consumes = {"multipart/form-data"}, method = RequestMethod.POST)
     public void editorImgUpload(@RequestParam("imgFile") MultipartFile file, String callbackId, HttpServletResponse response) throws Exception {
         String fileType = "";
         String originalFilename = file.getOriginalFilename();
         if (originalFilename.contains(".")) {
             fileType = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
         }
-        String callBackImgUrl = fileUploadService.commonUpdateImg(file.getInputStream(), fileType);
+        String callBackImgUrl = fileClient.uploadFile(file.getInputStream(), fileType);
         response.getWriter().println("<script>parent.callback('" + callbackId + "', '" + callBackImgUrl + "')</script>");
     }
-
 
 }
