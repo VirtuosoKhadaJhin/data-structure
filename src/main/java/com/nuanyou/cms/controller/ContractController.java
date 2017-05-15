@@ -4,6 +4,7 @@ import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.component.FileClient;
+import com.nuanyou.cms.dao.MerchantDao;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
@@ -57,6 +58,8 @@ public class ContractController {
     private AccountService accountService;
     @Autowired
     private CountryService countryService;
+    @Autowired
+    private MerchantDao merchantDao;
     @Value("${merchantSettlement.default.daytype}")
     private Integer daytype;
     @Value("${merchantSettlement.default.startprice}")
@@ -94,6 +97,13 @@ public class ContractController {
         List<Contract> list = contractsData.getList();
         if (list == null)
             list = new ArrayList(0);
+
+        // 本地名称显示商户本地名称
+        for (Contract contract : list) {
+            Long mchid = contract.getMchid();
+            String localName = merchantDao.getLocalName(mchid);
+            contract.setMchName(localName);
+        }
         Page<Contract> page = new PageImpl(list, pageable, contractsData.getTotal());
 
         List<Country> countries = countryService.getIdNameList();
@@ -169,18 +179,18 @@ public class ContractController {
 
     @RequestMapping(path = "verify", method = RequestMethod.GET)
     @ResponseBody
-    public APIResult verify(Long id,Boolean valid, Long contractId) throws ParseException {
+    public APIResult verify(Long id, Boolean valid, Long contractId) throws ParseException {
         Long userid = UserHolder.getUser().getUserid();
         //审核
         APIResult approve = this.contractService.approve(userid, contractId, valid);
         if (approve.getCode() != 0) {
-            throw new APIException(approve.getCode(),approve.getMsg());
+            throw new APIException(approve.getCode(), approve.getMsg());
         }
         if (valid) {
             //2 得到合同信息
             APIResult<Contract> resDetail = this.contractService.detail(contractId);
             //3插入对账系统
-            Contract detail =  resDetail.getData();
+            Contract detail = resDetail.getData();
             this.addForAccount(detail);
         }
         return new APIResult<>(ResultCodes.Success);

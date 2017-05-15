@@ -24,8 +24,8 @@
         <th>合同起始日</th>
         <th>合同截止日</th>
         <th>电子合同</th>
-        <th>营业执照上传日期</th>
-        <th>纸质合同上传日期</th>
+        <th>营业执照</th>
+        <th>纸质合同</th>
         <th>生效</th>
         <th>操作</th>
     </tr>
@@ -67,7 +67,9 @@
             <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.approveTime)</td>
             <td>
                 <a class="btn btn-success btn-mini verify" data-id="$!entity.id" valid="false">驳回</a>
-                <a class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</a>
+                #if($!entity.businessLicense && $!entity.paperContract)
+                    <a class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</a>
+                #end
             </td>
         </tr>
         #end
@@ -182,7 +184,7 @@
                 var id = $(this).attr("data-id");
                 var valid = $(this).attr("valid");
                 var message;
-                if (valid=="false") {
+                if (valid == "false") {
                     message = "确定驳回此合同吗?";
                 } else {
                     message = "确定通过此合同吗?";
