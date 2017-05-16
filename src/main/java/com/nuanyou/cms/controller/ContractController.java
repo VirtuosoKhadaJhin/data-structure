@@ -191,7 +191,7 @@ public class ContractController {
             APIResult<Contract> resDetail = this.contractService.detail(contractId);
             //3插入对账系统
             Contract detail = resDetail.getData();
-            this.addForAccount(detail);
+            this.addSettlementForAccount(detail);
         }
         return new APIResult<>(ResultCodes.Success);
     }
@@ -214,12 +214,14 @@ public class ContractController {
             response.getWriter().println("<script>parent.alert('" + apiResult.getMsg() + "');</script>");
     }
 
-    private void addForAccount(Contract detail) {
+    private void addSettlementForAccount(Contract detail) {
+
         if (detail.getMchid() == null) {
             throw new APIException(ResultCodes.ContractNotAssignedForMerchant);
         }
         Map<String, String> result = detail.getParameters();
-        //JSONObject result=JSONObject.parseObject(detail.getParameters(), Map.class);
+
+
         String[] poundageNamesList = poundageNames.split(",");
         BigDecimal poundage = null;
         for (String p : poundageNamesList) {
@@ -229,6 +231,7 @@ public class ContractController {
                 break;
             }
         }
+
         String[] paymentDaysNamesList = paymentDaysNames.split(",");
         Long paymentDays = null;
         for (String p : paymentDaysNamesList) {
