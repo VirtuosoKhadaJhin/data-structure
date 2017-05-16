@@ -199,17 +199,25 @@ public class OrderController {
         return "order/refundList";
     }
 
+    @RequestMapping(value = "count", method = RequestMethod.POST)
+    @ResponseBody
+    public APIResult count(ViewOrderExport entity, TimeCondition time) throws IOException {
+        long size = this.orderService.countViewOrderExports(entity, time);
+        if (size > 2000)
+            return new APIResult(ResultCodes.Fail, ": 数据大于2000条，请缩小筛选范围后导出。");
+        return new APIResult();
+    }
+
+
     @RequestMapping("export")
-    public void export(@RequestParam(required = false, defaultValue = "1") int index, Model model,
-                       HttpServletRequest request, HttpServletResponse response,
-                       ViewOrderExport entity, TimeCondition time) throws IOException {
+    public void export(ViewOrderExport entity, TimeCondition time, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/csv; charset=" + "UTF-8");
+        response.setContentType("text/csv; charset=UTF-8");
         response.setHeader("Pragma", "public");
         response.setHeader("Cache-Control", "max-age=30");
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
         Long begin = System.currentTimeMillis();
-        List<ViewOrderExport> page = this.orderService.findExportByCondition(index, entity, time, null);
+        List<ViewOrderExport> page = this.orderService.findExportByCondition(entity, time, null);
         Long end = System.currentTimeMillis();
         log.info("read data from sql:" + (end - begin) / 1000 + "s");
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
