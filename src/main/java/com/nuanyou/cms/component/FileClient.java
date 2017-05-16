@@ -26,8 +26,8 @@ public abstract class FileClient {
 
     public static String buildPath(String suffix) {
         StringBuilder filePath = new StringBuilder();
-        filePath.append(new DateTime().toString("yyyy/MM/dd/HH/mm/ss/"));
-        filePath.append(Math.abs(ThreadLocalRandom.current().nextLong()));
+        filePath.append(System.currentTimeMillis());
+        filePath.append(String.valueOf(Math.abs(ThreadLocalRandom.current().nextLong())).substring(0, 7));
 
         if (!suffix.startsWith("."))
             filePath.append(".");
