@@ -18,10 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
@@ -119,7 +116,8 @@ public class MerchantHeadimgController {
 
 
     @RequestMapping("list")
-    public String list(Merchant entity, @RequestParam(required = false, defaultValue = "1") int index, Model model) {
+    public String list(@ModelAttribute("entity") Merchant entity,
+                       @RequestParam(required = false, defaultValue = "1") int index, Model model) {
         Pageable pageable = new PageRequest(index - 1, 10, Sort.Direction.DESC, "id");
 
         ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("name", contains().ignoreCase()).withMatcher("kpname", contains().ignoreCase());

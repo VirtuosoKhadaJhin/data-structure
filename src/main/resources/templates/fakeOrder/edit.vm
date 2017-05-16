@@ -44,8 +44,7 @@
                                 <div class="control-group">
                                     <label class="control-label">店铺</label>
                                     <div class="controls">
-                                        <select id="merchant.id" name="merchant.id" class="span11 select2"
-                                                data-am-selected="{searchBox:1,btnWidth:'200px',maxHeight:'200px'}">
+                                        <select id="merchant.id" name="merchant.id" class="span11 select2">
                                             <option value="">全部</option>
                                             #foreach($merchant in $!merchants)
                                                 <option value="$!merchant.id"

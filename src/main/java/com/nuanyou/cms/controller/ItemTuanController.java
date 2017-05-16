@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.startsWith;
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
 
 
 @Controller
@@ -123,7 +123,10 @@ public class ItemTuanController {
     @RequestMapping("list")
     public String list(Item entity, @RequestParam(required = false, defaultValue = "1") int index, Model model) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
-        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("name", startsWith().ignoreCase());
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withMatcher("cat.name", contains().ignoreCase())
+                .withMatcher("merchant.name", contains().ignoreCase())
+                .withMatcher("name", contains().ignoreCase());
 
         entity.setItemType(2);
         Page<Item> page = itemDao.findAll(Example.of(entity, matcher), pageable);

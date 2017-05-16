@@ -91,7 +91,7 @@
                                     <div class="controls">
                                         <select name="merchants" class="select2" multiple required>
                                             #foreach($e in $!merchants)
-                                                <option value="$!e.id">$!e.name</option>
+                                                <option value="$!e.id">$!e.id:$!e.name</option>
                                             #end
                                         </select>
                                     </div>

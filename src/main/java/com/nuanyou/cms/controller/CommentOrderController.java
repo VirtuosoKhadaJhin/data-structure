@@ -108,9 +108,13 @@ public class CommentOrderController {
                        @RequestParam(required = false) String scoreStr,
                        TimeCondition time, CommentOrder entity, Model model) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "replyTime", "createTime");
-        Page<CommentOrder> page = commentOrderService.findByCondition(entity, time, scoreStr, pageable);
 
+        Page<CommentOrder> page = commentOrderService.findByCondition(entity, time, scoreStr, pageable);
         model.addAttribute("page", page);
+
+        List<Merchant> merchants = merchantService.getIdNameList();
+        model.addAttribute("merchants", merchants);
+
         model.addAttribute("entity", entity);
         model.addAttribute("scoreStr", scoreStr);
         model.addAttribute("time", time);
