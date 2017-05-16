@@ -4,6 +4,7 @@ import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.entity.enums.JsonListConverter;
 import com.nuanyou.cms.entity.order.Order;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -23,10 +24,14 @@ public class CommentOrder {
     private Long userId;
     private Double score;
     private String content;
-    private Boolean anonymous=false;
+    private Boolean anonymous;
     private List<String> imgs;
+    private Date replyTime;
     private Date createTime;
+    private Double commentScore;
     private Integer type;
+    private Boolean display;
+    private boolean deleted = false;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -132,4 +137,40 @@ public class CommentOrder {
         this.type = type;
     }
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "replytime", nullable = false)
+    public Date getReplyTime() {
+        return replyTime;
+    }
+
+    public void setReplyTime(Date replyTime) {
+        this.replyTime = replyTime;
+    }
+
+    @Column(name = "commentscore", nullable = false)
+    public Double getCommentScore() {
+        return commentScore;
+    }
+
+    public void setCommentScore(Double commentScore) {
+        this.commentScore = commentScore;
+    }
+
+    @Column(name = "display", nullable = false)
+    public Boolean getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(Boolean display) {
+        this.display = display;
+    }
+
+    @Column(name = "deleted", nullable = false)
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 }

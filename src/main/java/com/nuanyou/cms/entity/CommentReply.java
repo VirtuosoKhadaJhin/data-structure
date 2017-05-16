@@ -1,5 +1,6 @@
 package com.nuanyou.cms.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
 
@@ -17,9 +18,16 @@ public class CommentReply {
     private Long id;
     private String content;
     private String imgs;
-    private Integer commentId;
-    private boolean delete;
+    private Long commentId;
+    private boolean deleted;
     private Date createTime;
+
+    public CommentReply() {
+    }
+
+    public CommentReply(Long commentId) {
+        this.commentId = commentId;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,23 +62,24 @@ public class CommentReply {
 
 
     @Column(name = "commentid", nullable = true)
-    public Integer getCommentId() {
+    public Long getCommentId() {
         return commentId;
     }
 
-    public void setCommentId(Integer commentId) {
+    public void setCommentId(Long commentId) {
         this.commentId = commentId;
     }
 
     @Column(name = "isdelete", nullable = true)
-    public boolean isDelete() {
-        return delete;
+    public boolean isDeleted() {
+        return deleted;
     }
 
-    public void setDelete(boolean delete) {
-        this.delete = delete;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @CreatedAt
     @Column(name = "createtime", nullable = true)
     public Date getCreateTime() {
