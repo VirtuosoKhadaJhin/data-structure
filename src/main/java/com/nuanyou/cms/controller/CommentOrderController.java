@@ -63,6 +63,9 @@ public class CommentOrderController {
     @RequestMapping(path = "update", method = RequestMethod.POST)
     public String update(CommentOrder entity, Model model) {
         entity.setAnonymous(false);
+        if (entity.getDisplay() == null)
+            entity.setDisplay(true);
+
         if (entity.getType() == null) {
             entity.setType(2);
         }

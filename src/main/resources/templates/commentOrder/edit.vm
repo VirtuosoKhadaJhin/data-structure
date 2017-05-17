@@ -59,10 +59,10 @@
                                 </div>
                             </div>
                             <div class="form-actions">
-                                <button class="btn btn-success btn-save" type="submit">保存</button>
-                                <button class="btn btn-warning btn-edit" type="button">编辑</button>
-                                <button class="btn btn-warning uploadImgBtn btn-save" type="button">添加图片</button>
-                                <a class="btn btn-primary goback" href="list">返回</a>
+                                <button type="submit" class="btn btn-success btn-save">保存</button>
+                                <a href="javascript:void(0)" class="btn btn-warning btn-edit">编辑</a>
+                                <button type="button" class="btn btn-warning uploadImgBtn btn-save">添加图片</button>
+                                <a href="javascript:window.history.go(-1);" class="btn btn-primary">返 回</a>
                             </div>
                         </div>
                     </div>
@@ -94,16 +94,12 @@
     #include("common/image-support.vm")
 <script>
         #if($!disabled)
-        $(".btn-save").hide();
-        $(".span11").each(function (i, o) {
-            $(o).attr("disabled", true);
-        });
+        $("#btn-save").hide();
+        $(":input").attr("disabled", true);
         $(".btn-edit").on("click", function () {
-            $(":input").each(function (i, o) {
-                $(o).attr("disabled", false);
-                $(".btn-save").show();
-                $(".btn-edit").hide();
-            });
+            $(":input").attr("disabled", false);
+            $(".btn-save").show();
+            $(".btn-edit").hide();
         });
         #else
         $(".btn-edit").hide();
