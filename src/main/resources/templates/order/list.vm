@@ -130,19 +130,9 @@
     <input type="text" class="span11 dateTimeFormat" name="end" value="$!time.endStr" id="endTime" placeholder="结束时间">
 
 
-    <label for="status">国家：</label>
-    <select id="merchant.district.country.id" name="merchant.district.country.id" class="span11">
-        <option value="">全部</option>
-        #foreach($c in $!countries)
-            <option value="$!c.id"
-                #if($!entity.merchant.district.country.id == $!c.id)
-                    selected
-                #end
-            >
-                $!c.name
-            </option>
-        #end
-    </select>
+
+
+
         <label for="status">国家：</label>
         <select id="countryid" name="countryid" class="span11">
             <option value="">全部</option>
