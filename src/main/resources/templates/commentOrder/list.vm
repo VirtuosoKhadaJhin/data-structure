@@ -38,33 +38,41 @@
     </tbody>
 </table>
 #parse("common/list_mid.vm")
-<form class="form-horizontal " role="form" method="get">
+<form method="get">
     <div class="control-group">
+        <label>商户</label>
+        <select class="span11 select2" name="merchant.id">
+            <option value="">全部</option>
+            #foreach($merchant in $!merchants)
+                <option value="$!merchant.id"
+                    #if($!entity.merchant.id == $!merchant.id)
+                        selected
+                    #end
+                >$!merchant.id:$!merchant.name</option>
+            #end
+        </select>
+
+        <label>商户名称</label>
+        <input type="text" class="span11" name="merchant.name" value="$!entity.merchant.name">
+
+        <label>订单编号</label>
+        <input type="text" class="span11" name="order.ordersn" value="$!entity.order.ordersn">
+
         <label>评分高低</label>
         <select name="scoreStr" class="span11">
             <option value="">所有</option>
             <option #if($!scoreStr == "high") selected #end value="high">高分</option>
             <option #if($!scoreStr == "low") selected #end value="low">低分</option>
         </select>
-        <label>订单编号</label>
-        <input type="text" name="order.ordersn" class="span11" value="$!entity.order.ordersn"/>
-        <label>商户编号</label>
-        <input type="text" name="merchant.id" class="span11" value="$!entity.merchant.id"/>
-        <label>商户名称</label>
-        <input type="text" name="merchant.name" class="span11" value="$!entity.merchant.name"/>
-    ##        <label>是否评价</label>
-    ##        <select name="isComment" class="span11">
-    ##            <option value="true">已评价</option>
-    ##            <option value="false">未评价</option>
-    ##        </select>
+
         <label>评论时间</label>
-        <input type="text" class="span11 dateFormat" placeholder="开始时间" name="beginDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.beginDate)">
-        <input type="text" class="span11 dateFormat" placeholder="结束时间" name="endDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.endDate)">
-    </div>
-    <div class="control-group">
+        <input type="text" class="span11 dateFormat" name="beginDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.beginDate)" placeholder="开始时间">
+        <input type="text" class="span11 dateFormat" name="endDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.endDate)" placeholder="结束时间">
+
         <button type="submit" class="btn btn-primary">查询</button>
     </div>
 </form>
+
 <div id="reply-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

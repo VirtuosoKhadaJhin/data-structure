@@ -29,11 +29,13 @@
                             <button type="button" class="btn btn-danger btn-mini remove" data-id="$!e.id">删除</button>
                             <button type="button" class="btn btn-success btn-mini top" data-id="$!e.id">置顶</button>
                             #if($entity.listImgUrl =="")
-                                <button type="button" class="btn btn-info btn-mini setIndexImgUrl" detailImgUrl-id="$!e.detailImgUrl" listImgUrl = "$entity.listImgUrl"
-                                    mch="$!entity.id" imageSpec="MerchantList">设为列表图</button>
+                                <button type="button" class="btn btn-info btn-mini setIndexImgUrl" detailImgUrl-id="$!e.detailImgUrl" listImgUrl="$entity.listImgUrl"
+                                        mch="$!entity.id" imageSpec="MerchantList">设为列表图
+                                </button>
                             #else
-                                <button type="button" class="btn btn-inverse btn-mini setIndexImgUrl" detailImgUrl-id="$!e.detailImgUrl" listImgUrl = "$entity.listImgUrl"
-                                        mch="$!entity.id" imageSpec="MerchantList">设为列表图</button>
+                                <button type="button" class="btn btn-inverse btn-mini setIndexImgUrl" detailImgUrl-id="$!e.detailImgUrl" listImgUrl="$entity.listImgUrl"
+                                        mch="$!entity.id" imageSpec="MerchantList">设为列表图
+                                </button>
                             #end
                         </li>
                     #end
@@ -46,33 +48,48 @@
 </table>
 
 #parse("common/list_mid.vm")
-<form>
+<form method="get">
     <div class="control-group">
-        <label>ID：</label>
-        <input name="id" value="$!entity.id" type="text" placeholder="ID" class="span11">
-        <label>名称：</label>
-        <input name="name" value="$!entity.name" type="text" placeholder="名称" class="span11">
-        <label>本地名称：</label>
-        <input name="kpname" value="$!entity.kpname" type="text" placeholder="本地名称" class="span11">
+        <label>商户</label>
+        <select class="span11 select2" name="id">
+            <option value="">全部</option>
+            #foreach($merchant in $!merchants)
+                <option value="$!merchant.id"
+                    #if($!entity.id == $!merchant.id)
+                        selected
+                    #end
+                >$!merchant.id:$!merchant.name</option>
+            #end
+        </select>
+
+        <label>商户名称</label>
+        <input type="text" class="span11" name="name" value="$!entity.name"/>
+
+        <label>本地名称</label>
+        <input type="text" class="span11" name="kpname" value="$!entity.kpname">
+
         <label>状态</label>
-        <select name="display" class="span11">
+        <select class="span11" name="display">
             <option value="">全部</option>
             <option value="true" #if($!entity.display == true) selected #end>显示</option>
             <option value="false" #if($!entity.display == false) selected #end>隐藏</option>
         </select>
+
         <label>国家</label>
-        <select name="district.country.id" class="span11">
+        <select class="span11" name="district.country.id">
             <option value="">全部</option>
             #foreach($e in $!countries)
                 <option value="$!e.id" #if($!entity.district.country.id==$!e.id) selected #end>$!e.name</option>
             #end
         </select>
+
         <label>合作情况</label>
-        <select name="issign" class="span11">
+        <select class="span11" name="issign">
             <option value="">全部</option>
             <option value="1" #if($!entity.issign == 1) selected #end>已签约</option>
             <option value="0" #if($!entity.issign == 0) selected #end>未签约</option>
         </select>
+
         <button type="submit" class="btn btn-primary">查询</button>
     </div>
 </form>
@@ -126,15 +143,17 @@
                 var imageSpec = $(this).attr("imageSpec");
                 var listImgUrl = $(this).attr("listImgUrl");
 
-                if(!listImgUrl==""){
+                if (!listImgUrl == "") {
                     if (!confirm('列表图已存在，是否替换？'))
                         return;
                 }
                 $.ajax({
                     url: 'setIndexImgUrl',
-                    data: { id: id ,
-                            detailImgUrl:detailImgUrl ,
-                            imageSpec :imageSpec },
+                    data: {
+                        id: id,
+                        detailImgUrl: detailImgUrl,
+                        imageSpec: imageSpec
+                    },
                     type: 'post',
                     success: function (result) {
                         if (result.code == 0) {
@@ -147,8 +166,6 @@
                 });
             });
         });
-
-
 
 
     });

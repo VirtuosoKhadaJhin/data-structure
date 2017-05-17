@@ -39,20 +39,7 @@
 #parse("common/list_mid.vm")
 <form>
     <div class="control-group">
-        <label>商户：</label>
-        <select name="merchant.id" class="span11">
-            <option value="">全部</option>
-            #foreach($merchant in $!merchants)
-                <option value="$!merchant.id"
-                    #if($!entity.merchant.id == $!merchant.id)
-                        selected
-                    #end
-                >$!merchant.id:$!merchant.name</option>
-            #end
-        </select>
-    </div>
-    <div class="control-group">
-        <label>状态：</label>
+        <label>状态</label>
         <select name="display" class="span11">
             <option value="">全部</option>
             <option value="true" #if($!entity.display==true)selected#end>显示</option>
@@ -60,7 +47,7 @@
         </select>
     </div>
     <div class="control-group">
-        <label>商品分类名称：</label>
+        <label>商品分类名称</label>
         <input type="text" name="name" class="span11" value="$!entity.name" placeholder="商品分类名称"/>
     </div>
     <div class="control-group">

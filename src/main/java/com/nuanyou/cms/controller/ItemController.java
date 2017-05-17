@@ -85,7 +85,10 @@ public class ItemController {
     @RequestMapping("list")
     public String list(Item entity, @RequestParam(required = false, defaultValue = "1") int index, Model model) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
-        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("cat.name", contains().ignoreCase()).withMatcher("name", contains().ignoreCase());
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withMatcher("cat.name", contains().ignoreCase())
+                .withMatcher("merchant.name", contains().ignoreCase())
+                .withMatcher("name", contains().ignoreCase());
 
         entity.setItemType(1);
         Page<Item> page = itemDao.findAll(Example.of(entity, matcher), pageable);
