@@ -191,7 +191,7 @@ public class ContractController {
             APIResult<Contract> resDetail = this.contractService.detail(contractId);
             //3插入对账系统
             Contract detail = resDetail.getData();
-            this.addForAccount(detail);
+            this.addSettlementForAccount(detail);
         }
         return new APIResult<>(ResultCodes.Success);
     }
@@ -214,32 +214,13 @@ public class ContractController {
             response.getWriter().println("<script>parent.alert('" + apiResult.getMsg() + "');</script>");
     }
 
-    private void addForAccount(Contract detail) {
+    private void addSettlementForAccount(Contract detail) {
         if (detail.getMchid() == null) {
             throw new APIException(ResultCodes.ContractNotAssignedForMerchant);
         }
         Map<String, String> result = detail.getParameters();
-        //JSONObject result=JSONObject.parseObject(detail.getParameters(), Map.class);
-        String[] poundageNamesList = poundageNames.split(",");
-        BigDecimal poundage = null;
-        for (String p : poundageNamesList) {
-            BigDecimal temp = result.get(p) == null ? null : new BigDecimal(result.get(p));
-            if (temp != null) {
-                poundage = temp;
-                break;
-            }
-        }
-        String[] paymentDaysNamesList = paymentDaysNames.split(",");
-        Long paymentDays = null;
-        for (String p : paymentDaysNamesList) {
-            Long temp = result.get(p) == null ? null : new Long(result.get(p));
-            if (temp != null) {
-                paymentDays = temp;
-                break;
-            }
-        }
-
-
+        BigDecimal poundage = getPoundage(result);
+        Long paymentDays = getPaymentDays(result);
         if (poundage != null && paymentDays != null) {
             Long merchantId = detail.getMchid();
             APIResult res = accountService.add(merchantId, true, daytype, poundage, paymentDays, startprice, new DateTime().toString("yyyy-MM-dd"));
@@ -249,7 +230,32 @@ public class ContractController {
         } else {
             throw new APIException(ResultCodes.PoundageOrPayDaysIsNull);
         }
+    }
 
+    private Long getPaymentDays(Map<String, String> result) {
+        String[] paymentDaysNamesList = paymentDaysNames.split(",");
+        Long paymentDays = null;
+        for (String p : paymentDaysNamesList) {
+            Long temp = result.get(p) == null ? null : new Long(result.get(p));
+            if (temp != null) {
+                paymentDays = temp;
+                break;
+            }
+        }
+        return paymentDays;
+    }
+
+    private BigDecimal getPoundage(Map<String, String> result) {
+        String[] poundageNamesList = poundageNames.split(",");
+        BigDecimal poundage = null;
+        for (String p : poundageNamesList) {
+            BigDecimal temp = result.get(p) == null ? null : new BigDecimal(result.get(p));
+            if (temp != null) {
+                poundage = temp;
+                break;
+            }
+        }
+        return poundage;
     }
 
     @RequestMapping("api/templates")
