@@ -186,7 +186,8 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public List<ViewOrderExport> findExportByCondition(final ViewOrderExport entity, final TimeCondition time, Pageable pageable) {
+    public List<ViewOrderExport> findExportByCondition(final Order entity, final TimeCondition time, Pageable pageable) {
+        Long begin_exportOrder = System.currentTimeMillis();
         List<ViewOrderExport> orderList = getViewOrderExports(entity, time);
         Long end_exportOrder = System.currentTimeMillis();
         log.info("count(order):" + orderList.size());
@@ -245,7 +246,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long countViewOrderExports(final ViewOrderExport entity, final TimeCondition time) {
+    public long countViewOrderExports(final Order entity, final TimeCondition time) {
         return viewOrderExportDao.count(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
@@ -289,19 +290,20 @@ public class OrderServiceImpl implements OrderService {
                     predicate.add(p);
                 }
 
-                if (entity.getMerchant() != null && entity.getMerchant().getDistrict() != null && entity.getMerchant().getDistrict().getCountry() != null
-                        && entity.getMerchant().getDistrict().getCountry().getId() != null) {
-                    Predicate p = cb.equal(root.get("merchant").get("district").get("country").get("id"),
-                            entity.getMerchant().getDistrict().getCountry().getId());
-                    predicate.add(p);
+
+                if (entity.getCountryid() != null) {
+                    Predicate p1 = cb.equal(root.get("countryid"), entity.getCountryid());
+                    predicate.add(p1);
                 }
+
+
                 Predicate[] pre = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(pre)).getRestriction();
             }
         });
     }
 
-    private List<ViewOrderExport> getViewOrderExports(final ViewOrderExport entity, final TimeCondition time) {
+    private List<ViewOrderExport> getViewOrderExports(final Order entity, final TimeCondition time) {
         return viewOrderExportDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {

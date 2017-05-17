@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -201,7 +200,7 @@ public class OrderController {
 
     @RequestMapping(value = "count", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult count(ViewOrderExport entity, TimeCondition time) throws IOException {
+    public APIResult count(Order entity, TimeCondition time) throws IOException {
         long size = this.orderService.countViewOrderExports(entity, time);
         if (size > 2000)
             return new APIResult(ResultCodes.Fail, ": 数据大于2000条，请缩小筛选范围后导出。");
@@ -210,7 +209,7 @@ public class OrderController {
 
 
     @RequestMapping("export")
-    public void export(ViewOrderExport entity, TimeCondition time, HttpServletResponse response) throws IOException {
+    public void export(Order entity, TimeCondition time, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=UTF-8");
         response.setHeader("Pragma", "public");
@@ -274,7 +273,7 @@ public class OrderController {
     }
 
     @RequestMapping("refundList/export")
-    public void export(Order entity, TimeCondition time, HttpServletResponse response) throws IOException {
+    public void exportRefund(Order entity, TimeCondition time, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=" + "UTF-8");
         response.setHeader("Pragma", "public");
