@@ -46,13 +46,12 @@
                                 <label class="control-label">类型值(商户/团购))</label>
                                 <div class="controls">
                                     <input type="hidden" class="span6" name="objid" value="$!entity.objid">
-
                                     #if($!entity.objtype == 1)
-                                        <input type="text" class="span6" name="value" value="商家:$!entity.merchant.id : $!entity.merchant.name" readonly>
+                                        <input type="text" class="span6" name="value" value="商家:$!entity.merchant.id : $!entity.merchant.name" readonly required>
                                     #elseif($!entity.objtype == 2)
-                                        <input type="text" class="span6" name="value" value="团购:$!entity.item.id : $!entity.item.name" readonly>
+                                        <input type="text" class="span6" name="value" value="团购:$!entity.item.id : $!entity.item.name" readonly required>
                                     #else
-                                        <input type="text" class="span6" name="value" readonly>
+                                        <input type="text" class="span6" name="value" readonly required>
                                     #end
                                     <button class="btn btn-success setDetail" type="button">设置值</button>
                                 </div>
