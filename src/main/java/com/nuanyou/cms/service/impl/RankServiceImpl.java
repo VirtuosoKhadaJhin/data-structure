@@ -36,10 +36,12 @@ public class RankServiceImpl implements RankService {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
-                if (entity.getCity() != null && entity.getCity().getId() != null) {
-                    Predicate p = cb.equal(root.get("city").get("id"), entity.getCity().getId());
-                    predicate.add(p);
-                }
+                if (entity.getCountry() != null && entity.getCountry().getId() != null)
+                    predicate.add(cb.equal(root.get("city").get("country").get("id"), entity.getCountry().getId()));
+
+                if (entity.getCity() != null && entity.getCity().getId() != null)
+                    predicate.add(cb.equal(root.get("city").get("id"), entity.getCity().getId()));
+
                 Predicate[] pre = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(pre)).getRestriction();
             }

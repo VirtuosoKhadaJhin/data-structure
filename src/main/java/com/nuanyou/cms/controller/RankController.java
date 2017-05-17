@@ -32,8 +32,6 @@ public class RankController {
     @Autowired
     private MerchantCatDao merchantCatDao;
     @Autowired
-    private ItemTuanDao  itemTuanDao;
-    @Autowired
     private ItemService itemService;
 
     @RequestMapping("add")
@@ -45,9 +43,9 @@ public class RankController {
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
-        List<MerchantCat> cats=this.merchantCatDao.getIdNameList();
-        List<Item> tuans=this.itemService.findItemTuans();
-        List<Country> countries=this.countryDao.findAll();
+        List<MerchantCat> cats = this.merchantCatDao.getIdNameList();
+        List<Item> tuans = this.itemService.findItemTuans();
+        List<Country> countries = this.countryDao.findAll();
         Rank entity = null;
         if (id != null) {
             entity = rankDao.findOne(id);
@@ -65,14 +63,13 @@ public class RankController {
     @RequestMapping("update")
     public String update(Rank entity) throws IOException {
         rankDao.save(entity);
-        String url="edit?type=3&id="+entity.getId();
-        return "redirect:"+url;
+        return "redirect:edit?type=3&id=" + entity.getId();
     }
 
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index, Rank entity, Model model) {
-        Page<Rank> page = rankService.findByCondition(index,entity);
-        List<Country> countries=this.countryDao.findAll();
+        Page<Rank> page = rankService.findByCondition(index, entity);
+        List<Country> countries = this.countryDao.findAll();
 
         for (Rank rank : page) {
             setExtra(rank);
@@ -84,22 +81,14 @@ public class RankController {
         return "rank/list";
     }
 
-
-    @RequestMapping("selectTuan")
-    public String selectTuan() {
-        return "rank/selectTuan";
-    }
-
-
     private void setExtra(Rank rank) {
         rank.setCountry(rank.getCity().getCountry());
-        if(rank.getObjtype()==1){
+        if (rank.getObjtype() == 1) {
             rank.setMerchant(this.merchantDao.getOne(rank.getObjid()));
-        }else if(rank.getObjtype()==2){
+        } else if (rank.getObjtype() == 2) {
             rank.setItem(this.itemDao.getOne(rank.getObjid()));
         }
     }
 
 
 }
-
