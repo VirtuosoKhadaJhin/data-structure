@@ -43,6 +43,11 @@ public class ContractTemplate {
         this.title = title;
     }
 
+    @JsonProperty("name")
+    public String getName() {
+        return title;
+    }
+
     @ApiModelProperty(value = "模板参数集合")
     @JsonProperty("parameters")
     public List<ContractTemplateParameter> getParameters() {

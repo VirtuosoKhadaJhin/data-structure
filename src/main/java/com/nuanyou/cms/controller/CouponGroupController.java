@@ -44,6 +44,7 @@ public class CouponGroupController {
     @RequestMapping(path = "remove", method = RequestMethod.POST)
     @ResponseBody
     public APIResult remove(Long id) {
+
         couponGroupDao.delete(id);
         return new APIResult();
     }

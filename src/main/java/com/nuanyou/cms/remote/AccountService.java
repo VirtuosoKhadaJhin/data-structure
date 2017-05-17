@@ -18,7 +18,7 @@ import java.math.BigDecimal;
  */
 @FeignClient(url = "${accountService}", name = "RemoteAccountService")
 @RestController
-@RequestMapping(value = "/", produces = MimeTypes.MIME_TYPE_JSON)
+@RequestMapping(value = "merchantSettlement", produces = MimeTypes.MIME_TYPE_JSON)
 @Api(value = "/", description = "the account API")
 public interface AccountService {
 
@@ -26,7 +26,7 @@ public interface AccountService {
 
     @ApiOperation(value = "插入清算.", notes = "插入清算", response = NullData.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "插入清算", response = NullData.class)})
-    @RequestMapping(value="merchantSettlement/add", method = RequestMethod.POST)
+    @RequestMapping(value="add", method = RequestMethod.POST)
     public APIResult<NullData> add(
             @ApiParam(value = "") @RequestParam(value = "merchantId", required = true) Long merchantId,
             @ApiParam(value = "") @RequestParam(value = "enabled", required = true) Boolean enabled,

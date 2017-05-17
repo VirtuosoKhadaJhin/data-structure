@@ -1,5 +1,9 @@
 use nuanyou20;
 
+-- 2017-5-11
+ALTER TABLE `ny_comment_order` ADD COLUMN `replytime` DATETIME COMMENT '回复时间' AFTER `imgs`;
+ALTER TABLE `ny_comment_order` ADD COLUMN `deleted` TINYINT(1) DEFAULT 0 COMMENT '是否删除';
+
 -- 2017-3-22
 ALTER TABLE `ny_item` MODIFY COLUMN `type` tinyint(4) UNSIGNED COMMENT '商品类型: 1.普通商品 2.团购商品 3.优惠券 4.自定义商品';
 ALTER TABLE `ny_order` MODIFY COLUMN `ordertype` TINYINT(3) UNSIGNED COMMENT '订单类型: 1.惠购订单 2.优付订单 3.外卖订单 4.团购订单 5.POS收款 6.联盟订单 7.顺风购订单 8.代金券订单 9.直邮购订单 10.记账';

@@ -34,24 +34,30 @@
         <tr class="odd gradeX">
             <td>$!entity.id</td>
             <td>$!entity.mchName</td>
-            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.submitTime)</td>
+            <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.submitTime)</td>
             <td>$!entity.templateTitle</td>
             <td>#if($!entity.type == 1)主合同#else 附加合同#end</td>
             <td>$!entity.contractNo</td>
             <td>$!entity.username</td>
-            <td>$!entity.countryId</td>
-            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.startTime)</td>
-            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.endTime)</td>
+            <td>
+                #foreach($e in $!countries)
+                    #if($!entity.countryId==$!e.id) $!e.name #end
+                #end
+            </td>
+            <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.startTime)</td>
+            <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.endTime)</td>
             <td><a href="/contract/preview?id=$!entity.id" target="_blank" class="btn btn-success btn-mini">查看</a></td>
             <td>
-                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a>
+                #if($!entity.type == 1)
+                    <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
+                    <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a>
+                #else 无需上传#end
             </td>
             <td>
                 <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
                 <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">下载</a>
             </td>
-            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.approveTime)
+            <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.approveTime)
             </td>
 
         </tr>
@@ -77,7 +83,7 @@
         <input type="text" class="span11" name="" value="$!merchantname">
 
         <label>合同模板</label>
-        <select id="templateid" name="templateid" class="span7">
+        <select id="templateid" name="templateid" class="span11">
             <option value="">全部</option>
             <option value="1">主合同</option>
             <option value="2">附加合同</option>
@@ -85,7 +91,7 @@
 
 
         <label>合同类型</label>
-        <select name="type" class="span7">
+        <select name="type" class="span11">
             <option value="">全部</option>
             <option value="1">主合同</option>
             <option value="2">附加合同</option>
@@ -107,19 +113,19 @@
                 var flag = $(this).attr("flag");
                 var message;
                 var type;
-                if(flag=="fail"){
-                    message="确定驳回此合同吗?";
-                    type=2;
-                }else if(flag="success"){
-                    type=1;
-                    message="确定通过此合同吗?";
-                }else{
+                if (flag == "fail") {
+                    message = "确定驳回此合同吗?";
+                    type = 2;
+                } else if (flag = "success") {
+                    type = 1;
+                    message = "确定通过此合同吗?";
+                } else {
                     return alert("操作失败");
                 }
-                if(confirm(message)){
+                if (confirm(message)) {
                     $.ajax({
                         url: 'verify',
-                        data: {contractId: id, type:type},
+                        data: {contractId: id, type: type},
                         type: 'get',
                         success: function (result) {
                             if (result.code == 0) {

@@ -3,72 +3,63 @@
     <h5>商户详情图3.0</h5>
 </div>
 <div class="widget-content">
-##    <div class="span10">
     <ul class="thumbnails">
         #foreach($e in $!list)
             <li class="span2">
                 <img width="239px" height="189px" src="$!e.detailImgUrl">
                 <button type="button" class="btn btn-danger btn-mini remove" data-id="$!e.id">删除</button>
                 <button type="button" class="btn btn-success btn-mini top" data-id="$!e.id">置顶</button>
-                #if($e.listImgUrl =="")
-                    <button type="button" class="btn btn-info btn-mini setIndexImgUrl" detailImgUrl-id="$!e.detailImgUrl" listImgUrl = "$e.listImgUrl"
-                            mch="$!e.mchId" imageSpec="MerchantList">设为列表图</button>
-                #else
-                    <button type="button" class="btn btn-inverse btn-mini setIndexImgUrl" detailImgUrl-id="$!e.detailImgUrl" listImgUrl = "$e.listImgUrl"
-                            mch="$!e.mchId" imageSpec="MerchantList">设为列表图</button>
-                #end
+                <button type="button" class="btn btn-mini setIndexImgUrl #if($e.listImgUrl =="")btn-info#else btn-inverse#end"
+                        detailImgUrl-id="$!e.detailImgUrl" listImgUrl="$e.listImgUrl" mch="$!e.mchId" imageSpec="MerchantList">设为列表图
+                </button>
             </li>
         #end
     </ul>
-##    </div>
 </div>
 
-<div id="add-img-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>新增图片</h3>
-    </div>
-    <div class="modal-body">
-        <input id="add-img-mchId" type="hidden" class="span11">
-        <input id="add-img-url" type="text" class="span11">
-        <button class="btn btn-success previewBtn" type="button" data-id="add-img-url">预览</button>
-        <button class="btn btn-success uploadImgBtn" type="button" data-id="add-img-url" imageSpec="MerchantDetail">上传</button>
-        是否置顶 <input id="add-img-sort" type="checkbox">
-        <p>尺寸: 640 * 480, 限制: 100k</p>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-        <a href="javascript:void(0);" id="add-img-submit" class="btn btn-primary">保存</a>
-    </div>
+<div id="new-img-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <form action="upload" enctype="multipart/form-data" method="post">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>新增图片</h3>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" class="span11" id="img-id" name="id">
+            <div id="filelist" style="width: 90%;align-content: center">
+                <div class="controls">
+                    <input type="file" name="file" multiple>
+                    <button class="btn btn-danger btn-mini fr" onclick="remove(this)">删除</button>
+                </div>
+            </div>
+            <br>
+            <button type="button" class="btn btn-success btn-mini" id="add-img">继续添加</button>
+        </div>
+        <div class="modal-footer">
+            <div class="controls">
+                <p>尺寸: 640 * 480, 限制: 100k</p>
+            </div>
+            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+            <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+    </form>
 </div>
 #parse("common/list_mid.vm")
-<a class="btn btn-success" id="add-img" data-mchId="$!entity.mchId" href="javascript:void(0);">新增</a>
+<a class="btn btn-success" id="new-img" data-id="$!entity.mchId" href="javascript:void(0);">新增</a>
+<button class="btn btn-primary" href="list" onclick="window.history.go(-1);">返回</button>
 <script>
+    function remove(e) {
+        $(e).parent().remove();
+    }
+
     $(function () {
-        $("#add-img").on("click", function (event) {
-            var mchId = $(this).attr("data-mchId");
-            $("#add-img-mchId").attr("value", mchId);
-            $("#add-img-modal").modal();
+        $("#add-img").on("click", function () {
+            $("#filelist").append('<div class="controls"><input type="file" name="file" multiple><button class="btn btn-danger btn-mini fr" onclick="remove(this)">删除</button></div>');
         });
 
-        $("#add-img-submit").on("click", function (event) {
-            var detailImgUrl = $("#add-img-url").val();
-            var mchId = $("#add-img-mchId").val();
-            if ($("#add-img-sort").prop("checked"))
-                var sort = 0;
-
-            $.ajax({
-                url: 'add',
-                data: {detailImgUrl: detailImgUrl, mchId: mchId, sort: sort},
-                type: 'post',
-                success: function (result) {
-                    if (result.code == 0) {
-                        window.location.reload();
-                    } else {
-                        alert("失败:" + result.msg);
-                    }
-                }
-            });
+        $("#new-img").on("click", function (event) {
+            var mchId = $(this).attr("data-id");
+            $("#img-id").attr("value", mchId);
+            $("#new-img-modal").modal();
         });
 
         $(".remove").each(function (i, o) {
@@ -116,15 +107,17 @@
                 var imageSpec = $(this).attr("imageSpec");
                 var listImgUrl = $(this).attr("listImgUrl");
 
-                if(!listImgUrl==""){
+                if (!listImgUrl == "") {
                     if (!confirm('列表图已存在，是否替换？'))
                         return;
                 }
                 $.ajax({
                     url: 'setIndexImgUrl',
-                    data: { id: id ,
-                        detailImgUrl:detailImgUrl ,
-                        imageSpec :imageSpec },
+                    data: {
+                        id: id,
+                        detailImgUrl: detailImgUrl,
+                        imageSpec: imageSpec
+                    },
                     type: 'post',
                     success: function (result) {
                         if (result.code == 0) {
@@ -140,6 +133,5 @@
 
     });
 </script>
-#include("common/image-support.vm")
 #parse("common/list_end.vm")
 #include("common/js-support.vm")

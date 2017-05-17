@@ -1,17 +1,22 @@
 package com.nuanyou.cms.service.impl;
 
+import com.nuanyou.cms.commons.APIException;
+import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.CommentOrderDao;
+import com.nuanyou.cms.dao.CommentReplyDao;
 import com.nuanyou.cms.entity.CommentOrder;
+import com.nuanyou.cms.entity.CommentReply;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.order.Order;
-import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.CommentOrderService;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.TimeCondition;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -32,12 +37,17 @@ public class CommentOrderServiceImpl implements CommentOrderService {
     @Autowired
     private CommentOrderDao commentOrderDao;
 
+    @Autowired
+    private CommentReplyDao commentReplyDao;
+
     @Override
-    public Page<CommentOrder> findByCondition(Integer index, final CommentOrder entity, final TimeCondition time, final String scoreStr) {
+    public Page<CommentOrder> findByCondition(final CommentOrder entity, final TimeCondition time, final String scoreStr, Pageable pageable) {
         return commentOrderDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<>();
+                predicate.add(cb.lessThanOrEqualTo(root.get("deleted"), Boolean.FALSE));
+
                 Order order = entity.getOrder();
                 if (order != null) {
                     String ordersn = order.getOrdersn();
@@ -68,7 +78,7 @@ public class CommentOrderServiceImpl implements CommentOrderService {
 
                 return query.where(predicate.toArray(new Predicate[predicate.size()])).getRestriction();
             }
-        }, new PageRequest(index - 1, PageUtil.pageSize));
+        }, pageable);
     }
 
     @Override
@@ -80,4 +90,37 @@ public class CommentOrderServiceImpl implements CommentOrderService {
         BeanUtils.copyBeanNotNull(entity, oldEntity);
         return commentOrderDao.save(oldEntity);
     }
+
+    @Override
+    public void delete(Long id) {
+        CommentOrder entity = commentOrderDao.findOne(id);
+        if (entity != null) {
+            entity.setDeleted(true);
+            entity.setDisplay(false);
+            commentOrderDao.save(entity);
+        }
+    }
+
+    @Override
+    public void reply(CommentReply entity) {
+        Long commentId = entity.getCommentId();
+        if (commentId == null)
+            throw new APIException(ResultCodes.MissingParameter, "评论ID不能为空");
+
+        CommentOrder commentOrder = commentOrderDao.findOne(commentId);
+        if (commentOrder == null)
+            throw new APIException(ResultCodes.Fail, "找不到该评论ID＝" + commentId);
+
+        commentReplyDao.save(entity);
+
+        commentOrder.setReplyTime(new Date());
+        commentOrderDao.save(commentOrder);
+    }
+
+    @Override
+    public List<CommentReply> findReply(Long id) {
+        List<CommentReply> list = commentReplyDao.findAll(Example.of(new CommentReply(id)), new Sort(Sort.Direction.DESC, "createTime"));
+        return list;
+    }
+
 }

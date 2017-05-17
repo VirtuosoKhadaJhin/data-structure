@@ -3,6 +3,8 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
+import com.nuanyou.cms.component.FileClient;
+import com.nuanyou.cms.dao.MerchantDao;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
@@ -15,6 +17,7 @@ import com.nuanyou.cms.util.JsonUtils;
 import io.swagger.annotations.ApiParam;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -44,6 +48,9 @@ import java.util.Map;
 @RequestMapping("contract")
 public class ContractController {
 
+    @Autowired
+    @Qualifier("s3")
+    private FileClient fileClient;
 
     @Autowired
     private ContractService contractService;
@@ -51,6 +58,8 @@ public class ContractController {
     private AccountService accountService;
     @Autowired
     private CountryService countryService;
+    @Autowired
+    private MerchantDao merchantDao;
     @Value("${merchantSettlement.default.daytype}")
     private Integer daytype;
     @Value("${merchantSettlement.default.startprice}")
@@ -67,13 +76,13 @@ public class ContractController {
     @RequestMapping("list")
     public String list(Model model,
                        @RequestParam(value = "userid", required = false) Long userId,
+                       @RequestParam(value = "merchantid", required = false) Long merchantId,
                        @RequestParam(value = "id", required = false) Long id,
                        @RequestParam(value = "merchantname", required = false) String merchantName,
                        @RequestParam(value = "countryId", required = false) Long countryId,
-                       @RequestParam(value = "merchantid", required = false) Long merchantId,
                        @RequestParam(value = "status", required = false) Integer[] status,
                        @RequestParam(value = "templateid", required = false) Long[] templateid,
-                       @RequestParam(value = "type", required = false) Integer[] type,
+                       @RequestParam(value = "type", required = false) Integer type,
                        @RequestParam(value = "starttime", required = false) String startTime,
                        @RequestParam(value = "endtime", required = false) String endTime,
                        @RequestParam(value = "index", required = false, defaultValue = "1") Integer index,
@@ -82,18 +91,22 @@ public class ContractController {
                        @RequestParam(value = "contractNum", required = false) Boolean contractNum,
                        @RequestParam(value = "paperContract", required = false) Boolean paperContract) {
 
-        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, JsonUtils.toJson(status), JsonUtils.toJson(templateid), JsonUtils.toJson(type), startTime, endTime, businessLicense, paperContract, index, limit);
+        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, "[2]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), businessLicense, paperContract, startTime, endTime, index, limit);
         Contracts contractsData = contracts.getData();
         Pageable pageable = new PageRequest(index - 1, limit);
         List<Contract> list = contractsData.getList();
         if (list == null)
             list = new ArrayList(0);
+
+        // 本地名称显示商户本地名称
+        for (Contract contract : list) {
+            Long mchid = contract.getMchid();
+            String localName = merchantDao.getLocalName(mchid);
+            contract.setMchName(localName);
+        }
         Page<Contract> page = new PageImpl(list, pageable, contractsData.getTotal());
 
         List<Country> countries = countryService.getIdNameList();
-
-        APIResult<List<ContractTemplate>> contractConfig = this.contractService.getContractConfig(countryId, type.length > 0 ? type[0] : null);
-        List<ContractTemplate> templates = contractConfig.getData();
 
         model.addAttribute("page", page);
         model.addAttribute("countries", countries);
@@ -103,7 +116,6 @@ public class ContractController {
         model.addAttribute("merchantname", merchantName);
         model.addAttribute("merchantid", merchantId);
         model.addAttribute("status", status);
-        model.addAttribute("templates", templates);
         model.addAttribute("templateid", templateid);
         model.addAttribute("businessLicense", businessLicense);
         model.addAttribute("paperContract", paperContract);
@@ -131,7 +143,7 @@ public class ContractController {
             @ApiParam(value = "页序号，默认从1开始") @RequestParam(value = "page", required = false, defaultValue = "1") Integer index,
             @ApiParam(value = "每页条目数,默认20条") @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit) {
 
-        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, "[4]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), startTime, endTime, null, null, index, limit);
+        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, "[4]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), null, null, startTime, endTime, index, limit);
         Contracts contractsData = contracts.getData();
         Pageable pageable = new PageRequest(index - 1, limit);
         List<Contract> list = contractsData.getList();
@@ -165,90 +177,92 @@ public class ContractController {
     }
 
 
-
-
-
-
     @RequestMapping(path = "verify", method = RequestMethod.GET)
     @ResponseBody
-    public APIResult verify(Long id, Integer type,Long contractId) throws ParseException {
-        //1 通过
-        boolean valid=false;
-        if(type==1){
-            valid=true;
-        }else if(type==2){
-            valid=false;
-        }else{
-            throw new APIException(ResultCodes.TypeMismatch);
-        }
-        Long userid=UserHolder.getUser().getUserid();
+    public APIResult verify(Long id, Boolean valid, Long contractId) throws ParseException {
+        Long userid = UserHolder.getUser().getUserid();
+        //审核
         APIResult approve = this.contractService.approve(userid, contractId, valid);
-        if(approve.getCode()!=0){
-            //throw new APIException(approve.getCode(),approve.getMsg());
+        if (approve.getCode() != 0) {
+            throw new APIException(approve.getCode(), approve.getMsg());
         }
-        if(type==1){
+        if (valid) {
             //2 得到合同信息
             APIResult<Contract> resDetail = this.contractService.detail(contractId);
             //3插入对账系统
-            Contract detail=(Contract)resDetail.getData();
-            this.addForAccount(detail);
-
+            Contract detail = resDetail.getData();
+            this.addSettlementForAccount(detail);
         }
         return new APIResult<>(ResultCodes.Success);
     }
 
-    private void addForAccount(Contract detail) {
-        if(detail.getMchid()==null){
+    @RequestMapping(path = "upload", method = RequestMethod.POST)
+    public void upload(@RequestParam("file") MultipartFile file,
+                       @ApiParam(value = "合同id", required = true) @RequestParam(value = "id", required = true) Long id,
+                       @ApiParam(value = "附件类型: 1.营业执照 2.纸质合同 3.签名", required = true) @RequestParam(value = "type", required = true) int type,
+                       HttpServletResponse response) throws IOException {
+        String filename = file.getOriginalFilename();
+        String format = filename.substring(filename.lastIndexOf("."), filename.length());
+        String url = fileClient.uploadFile(file.getInputStream(), format);
+
+        APIResult apiResult = contractService.addComponent(id, type, url);
+
+        response.setContentType("text/html;charset=UTF-8");
+        if (apiResult.isSuccess())
+            response.getWriter().println("<script>parent.window.location.reload();</script>");
+        else
+            response.getWriter().println("<script>parent.alert('" + apiResult.getMsg() + "');</script>");
+    }
+
+    private void addSettlementForAccount(Contract detail) {
+        if (detail.getMchid() == null) {
             throw new APIException(ResultCodes.ContractNotAssignedForMerchant);
         }
         Map<String, String> result = detail.getParameters();
-        //JSONObject result=JSONObject.parseObject(detail.getParameters(), Map.class);
-        String[] poundageNamesList=poundageNames.split(",");
-        BigDecimal poundage=null;
-        for (String p : poundageNamesList) {
-            BigDecimal temp=result.get(p)==null?null:new BigDecimal(result.get(p));
-            if(temp!=null){
-                poundage=temp;
-                break;
+        BigDecimal poundage = getPoundage(result);
+        Long paymentDays = getPaymentDays(result);
+        if (poundage != null && paymentDays != null) {
+            Long merchantId = detail.getMchid();
+            APIResult res = accountService.add(merchantId, true, daytype, poundage, paymentDays, startprice, new DateTime().toString("yyyy-MM-dd"));
+            if (res.getCode() != 0) {
+                throw new APIException(res.getCode(), res.getMsg());
             }
-        }
-        String[] paymentDaysNamesList=paymentDaysNames.split(",");
-        Long paymentDays=null;
-        for (String p : paymentDaysNamesList) {
-            Long temp=result.get(p)==null?null:new Long(result.get(p));
-            if(temp!=null){
-                paymentDays=temp;
-                break;
-            }
-        }
-
-
-        if(poundage!=null&&paymentDays!=null){
-            Long merchantId=detail.getMchid();
-            APIResult res= accountService.add(merchantId,true,daytype,poundage,paymentDays,startprice,new DateTime().toString("yyyy-MM-dd"));
-            if(res.getCode()!=0){
-                throw new APIException(res.getCode(),res.getMsg());
-            }
-        }else{
+        } else {
             throw new APIException(ResultCodes.PoundageOrPayDaysIsNull);
         }
-
-
     }
 
+    private Long getPaymentDays(Map<String, String> result) {
+        String[] paymentDaysNamesList = paymentDaysNames.split(",");
+        Long paymentDays = null;
+        for (String p : paymentDaysNamesList) {
+            Long temp = result.get(p) == null ? null : new Long(result.get(p));
+            if (temp != null) {
+                paymentDays = temp;
+                break;
+            }
+        }
+        return paymentDays;
+    }
 
+    private BigDecimal getPoundage(Map<String, String> result) {
+        String[] poundageNamesList = poundageNames.split(",");
+        BigDecimal poundage = null;
+        for (String p : poundageNamesList) {
+            BigDecimal temp = result.get(p) == null ? null : new BigDecimal(result.get(p));
+            if (temp != null) {
+                poundage = temp;
+                break;
+            }
+        }
+        return poundage;
+    }
 
-
-
-
-
-
-
-//        if(true){
-//            APIResult res= accountService.add(333L,true,daytype,new BigDecimal(3.4),4L,startprice,new DateTime().toString("yyyy-MM-dd"));
-//            System.out.println(res.getCode()+"felix");
-//            return  null;
-//        }
-
+    @RequestMapping("api/templates")
+    @ResponseBody
+    public APIResult templates(Long id, Integer type) {
+        APIResult<List<ContractTemplate>> contractConfig = this.contractService.getContractConfig(id, type);
+        return contractConfig;
+    }
 
 }

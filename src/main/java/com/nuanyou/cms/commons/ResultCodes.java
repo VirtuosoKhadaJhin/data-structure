@@ -7,7 +7,7 @@ public enum ResultCodes {
 
     Success(0, "成功"),
 
-    Fail(1, "失败"),
+    Fail(1, "操作失败"),
 
     NotFound(404, "找不到页面"),
 
