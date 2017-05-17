@@ -237,9 +237,9 @@ public class OrderController {
         propertyHeaderMap.put("platform.name", "来源平台");
         propertyHeaderMap.put("os.name", "来源系统");
         propertyHeaderMap.put("ordercode", "使用码");
-        propertyHeaderMap.put("merchant.id", "商户ID");
-        propertyHeaderMap.put("merchant.name", "商户中文名称");
-        propertyHeaderMap.put("merchant.kpname", "商户本地名称");
+        propertyHeaderMap.put("mchid", "商户ID");
+        propertyHeaderMap.put("merchantname", "商户中文名称");
+        propertyHeaderMap.put("merchantkpname", "商户本地名称");
         propertyHeaderMap.put("userId", "userId");
         propertyHeaderMap.put("nickname", "用户名");
         propertyHeaderMap.put("couponInfo", "优惠券/面值/本地面值");

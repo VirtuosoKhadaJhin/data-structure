@@ -2,7 +2,6 @@ package com.nuanyou.cms.entity.order;
 
 import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
-import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.enums.*;
 import com.nuanyou.cms.util.PriceUtil;
 
@@ -24,7 +23,10 @@ public class ViewOrderExport {
     private OrderType ordertype;
     private String transactionid;
     private OrderPayType paytype;
-    private Merchant merchant;
+    private Long mchid;
+    private String merchantname;
+    private String merchantkpname;
+    private Long countryid;
     private Short total;
     private BigDecimal price;
     private BigDecimal kpprice;
@@ -171,18 +173,29 @@ public class ViewOrderExport {
         this.paytype = paytype;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "mchid", nullable = true)
-    public Merchant getMerchant() {
-        return merchant;
+    public Long getMchid() {
+        return mchid;
     }
 
-    public void setMerchant(Merchant merchant) {
-        this.merchant = merchant;
+    public void setMchid(Long mchid) {
+        this.mchid = mchid;
     }
 
+    public String getMerchantname() {
+        return merchantname;
+    }
 
+    public void setMerchantname(String merchantname) {
+        this.merchantname = merchantname;
+    }
 
+    public String getMerchantkpname() {
+        return merchantkpname;
+    }
+
+    public void setMerchantkpname(String merchantkpname) {
+        this.merchantkpname = merchantkpname;
+    }
 
     @Column(name = "userid")
     public Long getUserId() {
@@ -777,6 +790,14 @@ public class ViewOrderExport {
 
     public void setTempscenetime(Date tempscenetime) {
         this.tempscenetime = tempscenetime;
+    }
+
+    public Long getCountryid() {
+        return countryid;
+    }
+
+    public void setCountryid(Long countryid) {
+        this.countryid = countryid;
     }
 
     /****************************************Transient**************************************/

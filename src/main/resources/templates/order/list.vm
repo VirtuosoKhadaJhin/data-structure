@@ -143,6 +143,19 @@
             </option>
         #end
     </select>
+        <label for="status">国家：</label>
+        <select id="countryid" name="countryid" class="span11">
+            <option value="">全部</option>
+            #foreach($c in $!countries)
+                <option value="$!c.id"
+                    #if($!entity.countryid== $!c.id)
+                        selected
+                    #end
+                >
+                    $!c.name
+                </option>
+            #end
+        </select>
 
     <label for="status">订单类型：</label>
     <select id="ordertype" name="ordertype" class="span11">
