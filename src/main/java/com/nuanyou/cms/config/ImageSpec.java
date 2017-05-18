@@ -33,10 +33,11 @@ public enum ImageSpec {
     FeatureNormal(Mid11, ImageSpec.ZOMM),
     Quick(ICON, ImageSpec.ZOMM),
     BannerYoufu(Small43, ImageSpec.ZOMM),
+    BannerTuanFood(720, 400, 120, "jpg", ImageSpec.LIMIT),
 
     CulturalRecommendationsIndex(Mid11, 60, ImageSpec.LIMIT),
 
-    BannerIndex(640, 400, 150, "jpg", ImageSpec.LIMIT),
+    BannerIndex(640, 400, 120, "jpg", ImageSpec.LIMIT),
     BannerUp(640, 268, 100, "jpg", ImageSpec.LIMIT),
     BannerDown(270, 134, 50, "jpg", ImageSpec.LIMIT);
 
