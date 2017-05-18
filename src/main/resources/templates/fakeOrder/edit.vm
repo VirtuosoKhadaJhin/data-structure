@@ -61,8 +61,7 @@
                                 <div class="control-group">
                                     <label class="control-label">用户</label>
                                     <div class="controls">
-                                        <select id="fakeUser.id" name="fakeUser.id" class="span11 select2"
-                                                data-am-selected="{searchBox:1,btnWidth:'200px',maxHeight:'200px'}">
+                                        <select id="fakeUser.id" name="fakeUser.id" class="span11 select2">
                                             <option value="">全部</option>
                                             #foreach($fakeUser in $!fakeUsers)
                                                 <option value="$!fakeUser.id"

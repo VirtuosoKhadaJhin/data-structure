@@ -57,7 +57,7 @@
     </table>
 </div>
 #parse("common/list_mid.vm")
-<form class="am-form am-form-inline zy-search" role="form" id="itemCatForm" method="get">
+<form id="itemCatForm" method="get">
     <div class="control-group">
         <label>国家</label>
         <select name="country.id" class="span11 parent" target-name="city.id" target-url="/city/api/getCitys">

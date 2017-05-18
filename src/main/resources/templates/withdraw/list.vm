@@ -64,8 +64,7 @@
     </table>
 </div>
 #parse("common/list_mid.vm")
-<form class="am-form am-form-inline zy-search" role="form"
-      method="get">
+<form method="get">
     <div class="control-group">
 
         <label>用户id:</label>
