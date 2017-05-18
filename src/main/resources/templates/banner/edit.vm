@@ -4,7 +4,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>暖游 后台管理系统 菜单管理</title>
-
     #include("common/css-support.vm")
 </head>
 <body>
@@ -13,7 +12,7 @@
         <div id="breadcrumb">
             <div id="breadcrumb">
                 <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-                <a href="../banner/list" class="tip-bottom" data-original-title="">Banner管理</a>
+                <a href="/list" class="tip-bottom" data-original-title="">Banner管理</a>
                 <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
             </div>
         </div>
@@ -26,18 +25,9 @@
                             <h5>广告编辑&查看</h5>
                         </div>
                         <div class="widget-content nopadding">
-                            <form action="update" method="post" class="form-horizontal " role="form" id="bannerForm">
+                            <form action="update" method="post" class="form-horizontal" id="bannerForm">
                                 <div class="control-group">
-                                    <span class="control-label">ID</span>
-                                    <div class="controls">
-                                        #if($!type==2)
-                                            <input name="id" readonly type="text" class="span9" placeholder="ID" value="$!entity.id">
-                                        #end
-                                        #if($!type==3)
-                                            <label>$!entity.id</label>
-                                        #end
-                                    </div>
-
+                                    <input type="hidden" name="id" value="$!entity.id">
                                     <label class="control-label">国家</label>
                                     <div class="controls">
                                         <select id="country.id" for="country.id" name="country.id" class="span9" target-name="city.id" target-url="/city/api/getCitys">
@@ -80,7 +70,7 @@
                                             <option value="youfu">youfu</option>
                                             <option value="index"  #if($!entity.page=="index") selected #end>index</option>
                                             <option value="up"  #if($!entity.page=="up") selected #end>up</option>
-                                            <option value="down"  #if($!entity.page=="down") selected #end>down</option>
+                                            <option value="tuanFood"  #if($!entity.page=="tuanFood") selected #end>美食团购</option>
                                         </select>
                                     </div>
                                     <label class="control-label">开始时间</label>
@@ -104,23 +94,23 @@
                                         <button type="button" class="btn btn-success previewBtn" data-id="appbannerurl">预览</button>
                                         <button type="button" class="btn btn-success uploadImgBtn" data-id="appbannerurl">上传</button>
                                     </div>
-                                </div>
 
-                                <label class="control-label">是否热门</label>
-                                <div class="controls">
-                                    <select id="ishot" name="ishot" class="span9">
-                                        <option value="true"  #if($!entity.ishot==true)  selected #end>是</option>
-                                        <option value="false"  #if($!entity.ishot==false)  selected #end>否</option>
-                                    </select>
+                                    <label class="control-label">是否热门</label>
+                                    <div class="controls">
+                                        <select id="ishot" name="ishot" class="span9">
+                                            <option value="true"  #if($!entity.ishot==true)  selected #end>是</option>
+                                            <option value="false"  #if($!entity.ishot==false)  selected #end>否</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <div class="form-actions">
                                     #if($!type==2 || $!type==1)
                                         <button type="submit" class="btn btn-success">保存</button>
-                                        <a class="btn btn-primary" href="list">返回</a>
                                     #elseif($!type==3)
                                         <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
                                     #end
+                                    <a class="btn btn-primary" href="list">返回</a>
                                 </div>
                             </form>
                         </div>
@@ -145,13 +135,16 @@
             var val = $(this).val();
             if (val == "index") {
                 $("#bannerImgBtn").attr("imageSpec", "BannerIndex");
-                $("#bannermsg").empty().append("尺寸: 640 * 400, 限制: 150k");
+                $("#bannermsg").empty().append("尺寸: 640 * 400, 限制: 120k");
             } else if (val == "up") {
                 $("#bannerImgBtn").attr("imageSpec", "BannerUp");
                 $("#bannermsg").empty().append("尺寸: 640 * 268, 限制: 100k");
             } else if (val == "down") {
                 $("#bannerImgBtn").attr("imageSpec", "BannerDown");
                 $("#bannermsg").empty().append("尺寸: 270 * 134, 限制: 50k");
+            } else if (val == "tuanFood") {
+                $("#bannerImgBtn").attr("imageSpec", "BannerTuanFood");
+                $("#bannermsg").empty().append("尺寸: 720 * 400, 限制: 120k");
             } else {
                 $("#bannerImgBtn").attr("imageSpec", "BannerYoufu");
                 $("#bannermsg").empty().append("尺寸: 160 * 120, 限制: 15k");
