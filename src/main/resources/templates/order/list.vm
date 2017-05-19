@@ -11,6 +11,7 @@
         <tr role="row">
         <tr>
             <th class="table-set">操作</th>
+            <th>ID</th>
             <th>订单编号和流水</th>
             <th>订单状态</th>
             <th>订单类型</th>
@@ -35,6 +36,7 @@
         <tbody>
             #foreach($order in $!page.content)
             <tr>
+                <td>$!order.id</td>
                 <td>
                     <a href="edit?type=3&id=$!order.id" data-id="$!order.id" class="btn btn-success btn-mini">详情</a>
                     <a href="itemList?id=$!order.id" class="btn btn-success btn-mini">商品</a>
