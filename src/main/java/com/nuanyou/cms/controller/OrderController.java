@@ -202,8 +202,8 @@ public class OrderController {
     @ResponseBody
     public APIResult count(Order entity, TimeCondition time) throws IOException {
         long size = this.orderService.countViewOrderExports(entity, time);
-        if (size > 2000)
-            return new APIResult(ResultCodes.Fail, ": 数据大于2000条，请缩小筛选范围后导出。");
+        if (size > 10000)
+            return new APIResult(ResultCodes.Fail, ": 数据大于10000条，请缩小筛选范围后导出。");
         return new APIResult();
     }
 
