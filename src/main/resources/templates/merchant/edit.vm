@@ -93,9 +93,9 @@
                                 #if(!$countryHide)
                                     <label class="control-label">商户汇率系数</label>
                                     <div class="controls">
-                                        <input type="radio" name="hasratio" value="false" />不填写
-                                        <input type="radio" name="hasratio" value="true" />填写
-                                        <input type="text" class="span9 hide" placeholder="商户汇率" name="ratio" value="$!entity.ratio">
+                                        <input type="radio" name="hasratio" value="false" #if(!$!entity.ratio)checked#end/>不填写
+                                        <input type="radio" name="hasratio" value="true" #if($!entity.ratio)checked#end/>填写
+                                        <input type="text" class="span9 #if(!$!entity.ratio) hide #end" placeholder="商户汇率" name="ratio" value="$!entity.ratio">
                                     </div>
                                 #end
 
@@ -252,10 +252,16 @@
             if($(this).val() == 'true'){
                 if (confirm('确定要输入商品汇率系数吗?')){
                     $("input[name='ratio']").removeClass('hide');
+                }else {
+                    $(this).removeAttr("checked");
+                    $("input[name='hasratio']:first").prop("checked",true);
                 }
             }else {
                 if (confirm('确定要使用默认商品汇率系数吗?')){
                     $("input[name='ratio']").addClass('hide');
+                }else {
+                    $(this).removeAttr("checked");
+                    $("input[name='hasratio']:last").prop("checked",true);
                 }
             }
         });
