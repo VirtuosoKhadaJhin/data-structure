@@ -1,0 +1,88 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://sg.nuanyou20db.91nuanyou.com:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
+    username: nuanyou20
+    password: 1qaz2wsxE
+    test-on-borrow: true
+    validation-query: select 1
+
+  jpa:
+    database: MYSQL
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+  http:
+    multipart:
+      max-file-size: 9Mb
+      max-request-size: 20Mb
+
+  velocity:
+    charset: utf-8
+    resource-loader-path: classpath:/templates/
+    suffix: .vm
+    toolbox-config-location: /velocity_toolbox.xml
+    prefix:
+    allow-request-override: false
+    check-template-location: false
+
+server:
+  port: 8085
+  tomcat:
+    accesslog:
+      enabled: true
+      directory: /var/log/accesslog/
+
+logging:
+  config: classpath:logback-prod.xml
+
+oss:
+  bucketName: nuanyou-image
+  domain: http://img.91nuanyou.com
+  endpoint: http://oss-cn-hangzhou.aliyuncs.com
+  accessKeyId: OgdPMXR4cLyeIxEW
+  secretAccessKey: zgSa3pBpQEo4EPQt1sVBF4U66QJZ21
+
+s3:
+  bucketName: nuanyou-file-prod-ap-northeast-2
+  domain: https://kr.file.91nuanyou.com
+  region: ap-northeast-2
+
+nuanyou-host: http://h5.m.91nuanyou.com
+withdrawurl: http://user.api.91nuanyou.com
+nuanyou-api: http://api30.91nuanyou.com
+
+upload:
+  s3server: https://kr.file.91nuanyou.com
+elasticsearch:
+  host: search-nyesearch-cgkyq332tvpvbi7q4n7nv4o5pe.ap-northeast-2.es.amazonaws.com
+  index: prod-cms-operation
+
+AWS:
+  sns:
+    topic:
+      refund: arn:aws:sns:ap-southeast-1:904656167085:prod-ny-v3-refund
+      refundSuccess: arn:aws:sns:ap-southeast-1:904656167085:prod-ny-v3-refundSuccess
+      refundFail: arn:aws:sns:ap-southeast-1:904656167085:prod-ny-v3-refundFail
+
+sso:
+  urlPatterns: /*
+  urlExcludePattern: ^/test|^/dist/.*|^/favicon.*
+  loginUrl: https://sso.91nuanyou.com/oauth/corp
+  reLogin: false
+  serverName: http://sg.merchant30.91nuanyou.com
+  validateCodeUrl: https://sso.91nuanyou.com/corp/oauth/access_token
+  stateExpiredInMilliSeconds: 120000
+
+
+
+contractService: http://test.contract.91nuanyou.com
+accountService: http://testaccount.99mice.com
+merchantSettlement:
+  default:
+    daytype: 1
+    startprice: 1
+contractConfig:
+  poundageNames: poundage_huigou,poundage_radio,poundage
+  paymentDaysNames: settle_day,account_period_huigou
