@@ -43,10 +43,10 @@
     </tbody>
 </table>
 #parse("common/list_mid.vm")
-<form class="form-horizontal " role="form" method="get">
+<form method="get">
     <div class="control-group">
         <label>商户</label>
-        <select name="merchant.id" class="span11 select2">
+        <select class="span11 select2" name="merchant.id">
             <option value="">全部</option>
             #foreach($merchant in $!merchants)
                 <option value="$!merchant.id"
@@ -56,16 +56,16 @@
                 >$!merchant.id:$!merchant.name</option>
             #end
         </select>
-    </div>
-    <div class="control-group">
-        <label>商品分类名称：</label>
-        <input type="text" name="cat.name" class="span11" value="$!entity.cat.name" placeholder="商品分类名称"/>
-    </div>
-    <div class="control-group">
-        <label>商品名称：</label>
-        <input type="text" name="name" class="span11" value="$!entity.name" placeholder="商品名称"/>
-    </div>
-    <div class="control-group">
+
+        <label>商户名称</label>
+        <input type="text" class="span11" name="merchant.name" value="$!entity.merchant.name"/>
+
+        <label>商品分类名称</label>
+        <input type="text" class="span11" name="cat.name" value="$!entity.cat.name"/>
+
+        <label>商品名称</label>
+        <input type="text" class="span11" name="name" value="$!entity.name"/>
+
         <button type="submit" class="btn btn-primary">查询</button>
     </div>
 </form>

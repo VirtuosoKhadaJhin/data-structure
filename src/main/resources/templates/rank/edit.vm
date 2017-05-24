@@ -12,7 +12,7 @@
         <div id="breadcrumb">
             <div id="breadcrumb">
                 <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-                <a href="../rank/list" class="tip-bottom" data-original-title="">榜单管理</a>
+                <a href="list" class="tip-bottom" data-original-title="">榜单管理</a>
                 <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
             </div>
         </div>
@@ -20,149 +20,95 @@
 
     <div class="container-fluid">
         <div class="row-fluid">
-            <form action="update" method="post" class="form-horizontal commonValidate" role="form" id="cityform">
-                <div class="span6">
-                    <div class="widget-box">
-                        <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
-                            <h5>榜单编辑&查看</h5>
-                        </div>
-                        <div class="widget-content nopadding">
+            <div class="span6">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                        <h5>榜单编辑&查看</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form action="update" method="post" class="form-horizontal commonValidate">
+                            <div class="control-group">
+                                <input type="hidden" class="form-control" name="id" value="$!entity.id">
 
-                            <div class="control-group">
-                                <span class="col-sm-2 control-label">ID</span>
-                                <div class="controls">
-                                    #if($!type==2)
-                                        <input name="id" readonly type="text" class="form-control" placeholder="ID" value="$!entity.id">
-                                    #end
-                                    #if($!type==3)
-                                        <label>$!entity.id</label>
-                                    #end
-                                </div>
-                            </div>
-                            <div class="control-group">
                                 <label class="control-label">排行</label>
                                 <div class="controls">
-                                    <input for="sort" name="sort" type="text" class="span7" placeholder="排行"
-                                           value="$!entity.sort">
+                                    <input type="number" class="span7" name="sort" value="$!entity.sort" placeholder="排行">
                                 </div>
-                            </div>
 
-
-                            <div class="control-group">
                                 <label class="control-label">类型</label>
                                 <div class="controls">
-                                    <select id="objtype" name="objtype">
+                                    <select class="span7" name="objtype">
                                         <option value="1" #if($!entity.objtype == 1) selected #end>商户</option>
                                         <option value="2" #if($!entity.objtype == 2) selected #end>团购</option>
                                     </select>
                                 </div>
-                            </div>
 
-
-                            <div class="control-group">
                                 <label class="control-label">类型值(商户/团购))</label>
                                 <div class="controls">
-
-                                    <input for="objid" name="objid" type="hidden" class="span7" placeholder="ID"
-                                           value="$!entity.objid">
+                                    <input type="hidden" class="span6" name="objid" value="$!entity.objid">
                                     #if($!entity.objtype == 1)
-                                        <input for="value" name="value" type="text" class="span7"
-                                               placeholder="类型值"
-                                               value="商家:$!entity.merchant.id : $!entity.merchant.name">
-
-
+                                        <input type="text" class="span6" name="value" value="商家:$!entity.merchant.id : $!entity.merchant.name" readonly required>
                                     #elseif($!entity.objtype == 2)
-                                        <input for="value" name="value" type="text" class="span7"
-                                               placeholder="类型值"
-                                               value="团购:$!entity.item.id : $!entity.item.name">
-
-                                        #else
-
-                                        <input for="value" name="value" type="text" class="span7"
-                                               placeholder="类型值"
-                                               value="">
-
+                                        <input type="text" class="span6" name="value" value="团购:$!entity.item.id : $!entity.item.name" readonly required>
+                                    #else
+                                        <input type="text" class="span6" name="value" readonly required>
                                     #end
                                     <button class="btn btn-success setDetail" type="button">设置值</button>
-
-
                                 </div>
-                            </div>
 
-
-                            <div class="control-group">
                                 <label class="control-label">国家</label>
                                 <div class="controls">
-                                    <select id="country.id" name="country.id"  class="span7" target-name="city.id"  target-url="/city/api/getCitys" >
+                                    <select class="span7" name="country.id" target-name="city.id" target-url="/city/api/getCitys">
                                         <option value="">请选择</option>
                                         #foreach($e in $!countries)
-                                            <option value="$!e.id" #if($!entity.country.id==$!e.id)
-                                                    selected #end>$!e.id:$!e.name</option>
+                                            <option value="$!e.id" #if($!entity.country.id==$!e.id) selected #end>$!e.id:$!e.name</option>
                                         #end
                                     </select>
                                 </div>
-                            </div>
 
-
-                            <div class="control-group">
                                 <label class="control-label">城市</label>
                                 <div class="controls">
-                                    <select id="city.id" name="city.id" class="span7"
-                                            def-value="$!entity.city.id">
+                                    <select class="span7" name="city.id" def-value="$!entity.city.id">
                                         <option value="">请选择</option>
                                     </select>
                                 </div>
-                            </div>
 
-
-                            <div class="control-group">
                                 <label class="control-label">是否显示</label>
                                 <div class="controls">
-                                    <select id="display" name="display" >
-                                        <option value="true"  #if($!entity.display==true)  selected #end>显示</option>
-                                        <option value="false"  #if($!entity.display==false)  selected #end>隐藏
-                                        </option>
+                                    <select class="span7" name="display">
+                                        <option value="true" #if($!entity.display==true)selected #end>显示</option>
+                                        <option value="false" #if($!entity.display==false)selected #end>隐藏</option>
                                     </select>
                                 </div>
                             </div>
-
-
 
                             <div class="form-actions">
                                 #if($!type==2 || $!type==1)
                                     <button type="submit" class="btn btn-success">保存</button>
-                                #end
-                                #if($!type==3)
+                                #elseif($!type==3)
                                     <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
                                 #end
-
                                 <a class="btn btn-primary goback" href="list">返回</a>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
 
-
 <!--***************************************模态框begin*************************************************************-->
-
-#*<div id="modal-merchant" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">*#
 <div id="modal-merchant" class="modal hide fade" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3>商户选择</h3>
     </div>
     <div class="modal-body">
-
-
         <div class="control-group">
             <label class="control-label">商户分类</label>
             <div class="controls">
-                <select id="merchantCatId" name="merchantCatId"  class="span7 select2"
-                        style="width: 200px" target-url="/merchant/api/list" target-name="merchantId">
+                <select class="span5 select2" name="merchantCatId" target-url="/merchant/api/list" target-name="merchantId">
                     <option value="0">全部</option>
                     #foreach($e in $!cats)
                         <option value="$!e.id">$!e.id:$!e.name</option>
@@ -171,17 +117,14 @@
             </div>
         </div>
 
-
-
         <div class="control-group">
             <label class="control-label">商户</label>
             <div class="controls">
-                <select id="merchantId" name="merchantId" class="span7 child select2" style="width: 200px">
+                <select class="span5 child select2" name="merchantId" id="merchantId">
                     <option value="0">全部</option>
                 </select>
             </div>
         </div>
-
     </div>
     <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
@@ -189,12 +132,7 @@
     </div>
 </div>
 
-<!--***************************************模态框end*************************************************************-->
-
-
-<!--***************************************模态框begin*************************************************************-->
-
-<div id="modal-tuan" class="modal hide fade"  role="dialog" aria-hidden="true">
+<div id="modal-tuan" class="modal hide fade" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3>团购选择</h3>
@@ -203,7 +141,7 @@
         <div class="control-group">
             <label class="control-label">团购</label>
             <div class="controls">
-                <select id="tuanId" name="tuanId"  class="select2" style="width: 200px">
+                <select class="span5 select2" name="tuanId" id="tuanId">
                     <option value="0">全部</option>
                     #foreach($e in $!tuans)
                         <option value="$!e.id">$!e.id:$!e.name</option>
@@ -218,11 +156,9 @@
     </div>
 </div>
 
-<!--***************************************模态框end*************************************************************-->
-#include("common/js-support.vm")
+    #include("common/js-support.vm")
 <script src="/dist/js/cascade-select.js"></script>
 <script>
-
     $(document).ready(function () {
         var type = $!type;
         if (type == 3) {
@@ -231,6 +167,10 @@
         }
     });
 
+    $("select[name='objtype']").on("change", function () {
+        $("input[name='objid']").val("");
+        $("input[name='value']").val("");
+    });
 
     $(".setDetail").bind("click", function () {
         var objtype = $("select[name='objtype']").val();
@@ -239,8 +179,9 @@
         } else {
             $("#modal-tuan").modal("show");
         }
+        $("input[name='objid']").val("");
+        $("input[name='value']").val("");
     });
-
 
     $("#merchant-save").bind("click", function () {
         var merchantId = $("#merchantId").val();
@@ -254,8 +195,6 @@
         }
     });
 
-
-
     $("#tuan-save").bind("click", function () {
         var tuanId = $("#tuanId").val();
         var value = $("#tuanId").find("option:selected").text();
@@ -267,10 +206,6 @@
             $("#modal-tuan").modal("hide");
         }
     });
-    $('.select2').select2();
 </script>
-
-
-
 </body>
 </html>

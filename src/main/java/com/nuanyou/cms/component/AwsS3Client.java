@@ -4,10 +4,10 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
+import com.nuanyou.cms.util.ContentTypeUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -32,24 +32,11 @@ public class AwsS3Client extends FileClient {
         client.setRegion(Region.getRegion(Regions.fromName(this.region)));
     }
 
-    @Override
-    public String uploadFile(String filePath, File file) {
-        client.putObject(bucketName, filePath, file);
 
-        AccessControlList acl = client.getObjectAcl(bucketName, filePath);
-
-        acl.revokeAllPermissions(GroupGrantee.AllUsers);
-        acl.grantPermission(GroupGrantee.AllUsers, Permission.Read);
-        SetObjectAclRequest request = new SetObjectAclRequest(bucketName, filePath, acl);
-        client.setObjectAcl(request);
-        return new StringBuilder(domain).append("/").append(filePath).toString();
-    }
-
-    @Override
     public String uploadFile(String filePath, InputStream is) throws IOException {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(is.available());
-        metadata.setContentType(getContentType(filePath));
+        metadata.setContentType(ContentTypeUtils.getContentType(filePath));
         client.putObject(bucketName, filePath, is, metadata);
 
         AccessControlList acl = client.getObjectAcl(bucketName, filePath);

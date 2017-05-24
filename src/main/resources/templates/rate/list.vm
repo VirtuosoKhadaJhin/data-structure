@@ -38,6 +38,6 @@
     </tbody>
 </table>
 #parse("common/list_mid.vm")
-<form class="am-form am-form-inline zy-search" role="form" id="itemCatForm" method="get">
+<form id="itemCatForm" method="get">
 </form>
 #parse("common/list_end.vm")

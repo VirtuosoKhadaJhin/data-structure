@@ -39,12 +39,12 @@
 #parse("common/list_mid.vm")
 <form >
     <div class="control-group">
-        <label for="status">ID：</label>
+        <label for="status">ID</label>
         <input type="text" class="span11" name="id" value="$!entity.id"
                placeholder="ID">
 
-        <label for="status">商户：</label>
-        <select id="merchant.id" class="span11 select2" name="merchant.id" data-am-selected="{searchBox:1,btnWidth:'200px',maxHeight:'200px'}">
+        <label for="status">商户</label>
+        <select id="merchant.id" class="span11 select2" name="merchant.id">
             <option value="">全部</option>
             #foreach($merchant in $!merchants)
                 <option value="$!merchant.id"

@@ -7,8 +7,6 @@ import com.nuanyou.cms.commons.LastModified;
 import javax.persistence.*;
 import java.util.Date;
 
-
-
 /**
  * Created by Alan.ye on 2016/9/5.
  */
@@ -27,7 +25,7 @@ public class CulturalRecommendations {
     private Boolean display;
     private Date createTime;
     private Date updateTime;
-    private Boolean deleted=false;
+    private boolean deleted;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,8 +59,6 @@ public class CulturalRecommendations {
     }
 
 
-
-
     @Column(name = "title", nullable = true, length = 40)
     public String getTitle() {
         return title;
@@ -71,8 +67,6 @@ public class CulturalRecommendations {
     public void setTitle(String title) {
         this.title = title;
     }
-
-
 
 
     @Column(name = "sort", nullable = true)
@@ -131,12 +125,13 @@ public class CulturalRecommendations {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
     @Column(name = "deleted")
-    public Boolean getDeleted() {
+    public boolean isDeleted() {
         return deleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
 }

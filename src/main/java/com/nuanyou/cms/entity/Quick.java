@@ -23,6 +23,7 @@ public class Quick {
     private String position;
     private Date updateTime;
     private Date createTime;
+    private Integer sort;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -107,4 +108,13 @@ public class Quick {
         this.createTime = createTime;
     }
 
+    @OrderBy("ASC")
+    @Column(name = "sort", nullable = true)
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 }

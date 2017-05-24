@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -201,16 +200,16 @@ public class OrderController {
 
     @RequestMapping(value = "count", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult count(ViewOrderExport entity, TimeCondition time) throws IOException {
+    public APIResult count(Order entity, TimeCondition time) throws IOException {
         long size = this.orderService.countViewOrderExports(entity, time);
-        if (size > 2000)
-            return new APIResult(ResultCodes.Fail, ": 数据大于2000条，请缩小筛选范围后导出。");
+        if (size > 10000)
+            return new APIResult(ResultCodes.Fail, ": 数据大于10000条，请缩小筛选范围后导出。");
         return new APIResult();
     }
 
 
     @RequestMapping("export")
-    public void export(ViewOrderExport entity, TimeCondition time, HttpServletResponse response) throws IOException {
+    public void export(Order entity, TimeCondition time, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=UTF-8");
         response.setHeader("Pragma", "public");
@@ -237,9 +236,9 @@ public class OrderController {
         propertyHeaderMap.put("platform.name", "来源平台");
         propertyHeaderMap.put("os.name", "来源系统");
         propertyHeaderMap.put("ordercode", "使用码");
-        propertyHeaderMap.put("merchant.id", "商户ID");
-        propertyHeaderMap.put("merchant.name", "商户中文名称");
-        propertyHeaderMap.put("merchant.kpname", "商户本地名称");
+        propertyHeaderMap.put("mchid", "商户ID");
+        propertyHeaderMap.put("merchantname", "商户中文名称");
+        propertyHeaderMap.put("merchantkpname", "商户本地名称");
         propertyHeaderMap.put("userId", "userId");
         propertyHeaderMap.put("nickname", "用户名");
         propertyHeaderMap.put("couponInfo", "优惠券/面值/本地面值");
@@ -274,7 +273,7 @@ public class OrderController {
     }
 
     @RequestMapping("refundList/export")
-    public void export(Order entity, TimeCondition time, HttpServletResponse response) throws IOException {
+    public void exportRefund(Order entity, TimeCondition time, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=" + "UTF-8");
         response.setHeader("Pragma", "public");

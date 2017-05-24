@@ -24,7 +24,7 @@
             <input type="hidden" class="span11" id="img-id" name="id">
             <div id="filelist" style="width: 90%;align-content: center">
                 <div class="controls">
-                    <input type="file" name="file" multiple>
+                    <input type="file" name="file">
                     <button class="btn btn-danger btn-mini fr" onclick="remove(this)">删除</button>
                 </div>
             </div>
@@ -43,18 +43,25 @@
 <a class="btn btn-success" id="new-img" data-id="$!entity.referId" href="javascript:void(0);">新增</a>
 <button class="btn btn-primary" href="list" onclick="window.history.go(-1);">返回</button>
 <script>
+    var count = 1;
     function remove(e) {
         $(e).parent().remove();
+        count--;
+        if (count < 3)
+            $("#add-img").show();
     }
-
     $(function () {
         $("#add-img").on("click", function () {
-            $("#filelist").append('<div class="controls"><input type="file" name="file" multiple><button class="btn btn-danger btn-mini fr" onclick="remove(this)">删除</button></div>');
+            $("#filelist").append('<div class="controls"><input type="file" name="file"><button class="btn btn-danger btn-mini fr" onclick="remove(this)">删除</button></div>');
+            count++;
+            if (count > 2)
+                $(this).hide();
         });
 
         $("#new-img").on("click", function (event) {
             var mchId = $(this).attr("data-id");
             $("#img-id").attr("value", mchId);
+            $("#new-img-modal").find("form")[0].reset();
             $("#new-img-modal").modal();
         });
 

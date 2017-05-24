@@ -11,6 +11,7 @@
         <tr role="row">
         <tr>
             <th class="table-set">操作</th>
+            <th>ID</th>
             <th>订单编号和流水</th>
             <th>订单状态</th>
             <th>订单类型</th>
@@ -35,6 +36,7 @@
         <tbody>
             #foreach($order in $!page.content)
             <tr>
+                <td>$!order.id</td>
                 <td>
                     <a href="edit?type=3&id=$!order.id" data-id="$!order.id" class="btn btn-success btn-mini">详情</a>
                     <a href="itemList?id=$!order.id" class="btn btn-success btn-mini">商品</a>
@@ -130,19 +132,22 @@
     <input type="text" class="span11 dateTimeFormat" name="end" value="$!time.endStr" id="endTime" placeholder="结束时间">
 
 
-    <label for="status">国家：</label>
-    <select id="merchant.district.country.id" name="merchant.district.country.id" class="span11">
-        <option value="">全部</option>
-        #foreach($c in $!countries)
-            <option value="$!c.id"
-                #if($!entity.merchant.district.country.id == $!c.id)
-                    selected
-                #end
-            >
-                $!c.name
-            </option>
-        #end
-    </select>
+
+
+
+        <label for="status">国家：</label>
+        <select id="countryid" name="countryid" class="span11">
+            <option value="">全部</option>
+            #foreach($c in $!countries)
+                <option value="$!c.id"
+                    #if($!entity.countryid== $!c.id)
+                        selected
+                    #end
+                >
+                    $!c.name
+                </option>
+            #end
+        </select>
 
     <label for="status">订单类型：</label>
     <select id="ordertype" name="ordertype" class="span11">
