@@ -29,16 +29,16 @@ public enum ImageSpec {
     Recommend(Mid43, ImageSpec.ZOMM),
     TuanList(Mid43, ImageSpec.ZOMM),
 
-    FeatureGood(Big43, ImageSpec.ZOMM),
+    FeatureGood(680, 300, 100, "jpg", ImageSpec.ZOMM),
     FeatureNormal(Mid11, ImageSpec.ZOMM),
     Quick(ICON, ImageSpec.ZOMM),
     BannerYoufu(Small43, ImageSpec.ZOMM),
     BannerTuanFood(720, 400, 120, "jpg", ImageSpec.LIMIT),
 
-    CulturalRecommendationsIndex(Mid11, 60, ImageSpec.LIMIT),
+    CulturalRecommendationsIndex(222, 200, 60, "jpg", ImageSpec.LIMIT),
 
-    BannerIndex(640, 400, 120, "jpg", ImageSpec.LIMIT),
-    BannerUp(640, 268, 100, "jpg", ImageSpec.LIMIT),
+    BannerIndex(720, 400, 150, "jpg", ImageSpec.LIMIT),
+    BannerUp(338, 128, 80, "jpg", ImageSpec.LIMIT),
     BannerDown(270, 134, 50, "jpg", ImageSpec.LIMIT);
 
     public static final String CLIP = "CLIP";

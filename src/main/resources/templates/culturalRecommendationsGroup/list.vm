@@ -15,7 +15,7 @@
         <th>标题</th>
         <th>城市</th>
         <th>链接</th>
-        <th width="160px">操作</th>
+        <th width="200px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -28,6 +28,7 @@
             </td>
             <td>$!e.linkUrl</td>
             <td>
+                <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</button>
                 <a class="btn btn-success btn-mini" data-id="$!e.id" href="detail?id=$!e.id">查看</a>
                 <a class="btn btn-info btn-mini" data-id="$!e.id" href="edit?id=$!e.id">编辑</a>
              #*   #if($!e.display)

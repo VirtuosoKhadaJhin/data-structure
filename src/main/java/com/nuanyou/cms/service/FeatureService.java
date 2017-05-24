@@ -11,4 +11,6 @@ public interface FeatureService {
 
     Feature saveNotNull(Feature entity);
 
+    void delete(Long id);
+
 }
