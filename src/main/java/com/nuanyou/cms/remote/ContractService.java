@@ -21,6 +21,11 @@ import java.util.List;
 public interface ContractService {
 
 
+    @ApiOperation(value = "模版参数列表.", notes = "模版参数列表")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "模版参数列表")})
+    @RequestMapping(value = "/template/parameters", method = RequestMethod.GET)
+    public APIResult<List<ContractTemplateParameter>> findAllTemplateParameters();
+
     @ApiOperation(value = "合同模版列表.", notes = "合同模版列表", response = ContractTemplate.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "合同配置", response = ContractTemplate.class)})
     @RequestMapping(value = "/templates", method = RequestMethod.GET)

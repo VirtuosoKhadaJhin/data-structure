@@ -7,9 +7,6 @@ import com.nuanyou.cms.commons.LastModified;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * Created by yangkai on 2016/9/12.
- */
 @Entity
 @Table(name = "bd_contract_template_parameter",catalog = "bd")
 @EntityListeners(DateEntityListener.class)

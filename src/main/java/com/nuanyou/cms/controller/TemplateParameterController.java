@@ -1,10 +1,13 @@
 package com.nuanyou.cms.controller;
 
+import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.dao.TemplateParameterDao;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.TemplateParameter;
 import com.nuanyou.cms.model.PageUtil;
+import com.nuanyou.cms.model.contract.output.ContractTemplateParameter;
+import com.nuanyou.cms.remote.ContractService;
 import com.nuanyou.cms.service.TemplateParameterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,9 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("templateParameter")
+@RequestMapping("templateParameter1")
 public class TemplateParameterController {
 
+    @Autowired
+    private ContractService contractService;
     @Autowired
     private TemplateParameterService templateParameterService;
     @Autowired
@@ -61,6 +66,9 @@ public class TemplateParameterController {
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index,
                        TemplateParameter entity, Model model) {
+
+
+        APIResult<List<ContractTemplateParameter>> allTemplateParameters = this.contractService.findAllTemplateParameters();
         List<Sort.Order> orders=new ArrayList<>();
         orders.add( new Sort.Order(Sort.Direction.ASC, "templateid"));
         orders.add( new Sort.Order(Sort.Direction.ASC, "sort"));
@@ -71,7 +79,7 @@ public class TemplateParameterController {
         model.addAttribute("entity", entity);
         List<Country> countries = this.countryDao.findAll();
         model.addAttribute("countries", countries);
-        return "templateParameter/list";
+        return "contractParameter/list";
     }
 
 

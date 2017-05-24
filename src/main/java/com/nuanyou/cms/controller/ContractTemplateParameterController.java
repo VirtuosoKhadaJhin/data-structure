@@ -45,12 +45,13 @@ import java.util.Map;
  */
 
 @Controller
-@RequestMapping("contract")
-public class ContractController {
+@RequestMapping("contract1")
+public class ContractTemplateParameterController {
 
     @Autowired
     @Qualifier("s3")
     private FileClient fileClient;
+
     @Autowired
     private ContractService contractService;
     @Autowired
@@ -63,8 +64,11 @@ public class ContractController {
     private Integer daytype;
     @Value("${merchantSettlement.default.startprice}")
     private BigDecimal startprice;
+
+
     @Value("${contractConfig.poundageNames}")
     private String poundageNames;
+
     @Value("${contractConfig.paymentDaysNames}")
     private String paymentDaysNames;
 

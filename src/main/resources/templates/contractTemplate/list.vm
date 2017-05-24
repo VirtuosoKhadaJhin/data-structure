@@ -1,0 +1,58 @@
+#parse("common/list_start.vm")
+
+<div id="content-header">
+    <div id="breadcrumb">
+        <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+        <a href="/templateParameter/list" class="tip-bottom" data-original-title="">模板管理</a>
+    </div>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
+</div>
+<table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+    <thead>
+    <tr role="row">
+        <th>ID
+        </th>
+        <th>templateid</th>
+        <th>key</th>
+        <th>remark</th>
+        <th>sort</th>
+
+        <th class="table-set" width="90px">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.id</td>
+            <td>$!entity.templateid</td>
+            <td>$!entity.key</td>
+            <td>$!entity.remark</td>
+            <td>$!entity.sort</td>
+            <td>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#parse("common/list_mid.vm")
+<form>
+    <div class="control-group">
+        <label>templateid</label>
+        <input type="text" class="span11" name="templateid" value="$!entity.templateid">
+    </div>
+
+
+    <div class="control-group">
+        <label>id</label>
+        <input type="text" class="span11" name="id" value="$!entity.id">
+    </div>
+    <button type="submit" class="btn btn-primary">查询</button>
+</form>
+#parse("common/list_end.vm")
+

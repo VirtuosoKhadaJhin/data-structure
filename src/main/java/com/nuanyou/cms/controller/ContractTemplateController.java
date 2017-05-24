@@ -45,8 +45,8 @@ import java.util.Map;
  */
 
 @Controller
-@RequestMapping("contract")
-public class ContractController {
+@RequestMapping("templateParameter")
+public class ContractTemplateController {
 
     @Autowired
     @Qualifier("s3")
