@@ -3,7 +3,7 @@
 <div id="content-header">
     <div id="breadcrumb">
         <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-        <a href="/templateParameter/list" class="tip-bottom" data-original-title="">模板管理</a>
+        <a href="/templateParameter/list" class="tip-bottom" data-original-title="">商圈管理</a>
     </div>
 </div>
 <div class="widget-title">
@@ -43,48 +43,16 @@
 #parse("common/list_mid.vm")
 <form>
     <div class="control-group">
-        <label for="status">国家：</label>
-        <select  name="countryId" class="span11">
-            <option value="">全部</option>
-            #foreach($c in $!countries)
-                <option value="$!c.id"
-                    #if($!countryId== $!c.id)
-                        selected
-                    #end
-                >
-                    $!c.name
-                </option>
-            #end
-        </select>
+        <label>templateid</label>
+        <input type="text" class="span11" name="templateid" value="$!entity.templateid">
+    </div>
 
 
-        <label for="status">$!status 状态：</label>
-        <select id="status" name="status" class="span11">
-            <option value="">全部</option>
-            #foreach($c in $!templateStatuses)
-                <option value="$!c"
-                    #if($!status== $!c)
-                        selected
-                    #end
-                >
-                    $!c.name
-                </option>
-            #end
-        </select>
-
-
-
-
-        <label>合同类型</label>
-        <select name="type">
-            <option value="">全部</option>
-            <option value="1"  #if($!type==1)selected #end>主合同</option>
-            <option value="2"  #if($!type==2)selected #end>附合同</option>
-        </select>
+    <div class="control-group">
+        <label>id</label>
+        <input type="text" class="span11" name="id" value="$!entity.id">
     </div>
     <button type="submit" class="btn btn-primary">查询</button>
 </form>
 #parse("common/list_end.vm")
-
-
 

@@ -4,180 +4,149 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>暖游 后台管理系统 菜单管理</title>
+
     #include("common/css-support.vm")
 </head>
 <body>
 <div id="content">
     <div id="content-header">
         <div id="breadcrumb">
-            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-            <a href="/templateParameter/list" class="tip-bottom" data-original-title="">商圈管理</a>
-            <a href="#" class="tip-bottom" data-original-title="">编辑</a>
+            <div id="breadcrumb">
+                <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+                <a href="../city/list" class="tip-bottom" data-original-title="">合同参数管理</a>
+                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
+            </div>
         </div>
-    </div>
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span6">
-                <div class="widget-box">
-                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
-                        <h5>编辑&查看</h5>
-                        <input id="type" name="type" type="hidden" value="$!type">
-                    </div>
-                    <div class="widget-content nopadding">
-                        <form id="districtForm" action="update" method="post" class="form-horizontal commonValidate"
-                              role="form">
-                            <div class="control-group">
-                                <label class="control-label">ID</label>
-                                <div class="controls">
-                                    #if($!type==2)
-                                        <input name="id" readonly type="text" class="form-control"
-                                               value="$!entity.id">
-                                    #end
-                                    #if($!type==3)
-                                        <label>$!entity.id</label>
-                                    #end
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span6">
+                    <div class="widget-box">
+                        <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                            <h5>城市编辑&查看</h5>
+                        </div>
+                        <div class="widget-content nopadding">
+                            <form action="update" method="post" class="form-horizontal commonValidate" role="form"
+                                  id="cityform">
+                                <div class="control-group">
+                                    <span class="col-sm-2 control-label">ID</span>
+                                    <div class="controls">
+                                        #if($!type==2)
+                                            <input name="id" readonly type="text" class="form-control" placeholder="ID"
+                                                   value="$!entity.id">
+                                        #end
+                                        #if($!type==3)
+                                            <label>$!entity.id</label>
+                                        #end
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="control-group">
-                                <label class="control-label" style="color: red">templateid</label>
-                                <div class="controls">
-                                    <input name="templateid" type="text" class="span11"
-                                           value="$!entity.templateid">
+                                <div class="control-group">
+                                    <label class="control-label">name</label>
+                                    <div class="controls">
+                                        <input name="name" type="text" class="span7" value="$!entity.name">
+                                    </div>
                                 </div>
-                            </div>
-
-
-                            <div class="control-group">
-                                <label class="control-label" style="color: red">name</label>
-                                <div class="controls">
-                                    <input name="name" type="text" class="span11"
-                                           value="$!entity.name">
+                                <div class="control-group">
+                                    <label class="control-label">key</label>
+                                    <div class="controls">
+                                        <input name="key" type="text" class="span7"  value="$!entity.key">
+                                    </div>
                                 </div>
-                            </div>
-
-
-                            <div class="control-group">
-                                <label class="control-label">zhcn</label>
-                                <div class="controls">
-                                    <input name="zhcn" type="text" class="span11"
-                                           value="$!entity.zhcn">
-                                </div>
-
-                            </div>
-
-
-                            <div class="control-group">
-                                <label class="control-label">jajp</label>
-                                <div class="controls">
-                                    <input name="jajp" type="text" class="span11"
-                                           value="$!entity.jajp">
-                                </div>
-                            </div>
 
 
                                 <div class="control-group">
-                                    <label class="control-label">kokr</label>
+                                    <label class="control-label">defaultValue</label>
                                     <div class="controls">
-                                        <input name="kokr" type="text" class="span11"
-                                               value="$!entity.kokr">
+                                        <input name="defaultValue" type="text" class="span7" value="$!entity.defaultValue">
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">type</label>
+                                    <div class="controls">
+                                        <input name="type" type="text" class="span7" value="$!entity.type">
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">sort</label>
+                                    <div class="controls">
+                                        <input name="sort" type="text" class="span7" value="$!entity.sort">
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">editable</label>
+                                    <div class="controls">
+                                        <input name="editable" type="text" class="span7" value="$!entity.editable">
                                     </div>
                                 </div>
 
 
-                                    <div class="control-group">
-                                        <label class="control-label">th</label>
-                                        <div class="controls">
-                                            <input name="th" type="text" class="span11"
-                                                   value="$!entity.th">
-                                        </div>
+                                <div class="control-group">
+                                    <label class="control-label">nullable</label>
+                                    <div class="controls">
+                                        <input name="nullable" type="text" class="span7" value="$!entity.nullable">
                                     </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">hint</label>
+                                    <div class="controls">
+                                        <input name="hint" type="text" class="span7" value="$!entity.hint">
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">remark</label>
+                                    <div class="controls">
+                                        <input name="remark" type="text" class="span7" value="$!entity.remark">
+                                    </div>
+                                </div>
 
 
-                                        <div class="control-group">
-                                            <label class="control-label">dede</label>
-                                            <div class="controls">
-                                                <input name="dede" type="text" class="span11"
-                                                       value="$!entity.dede">
-                                            </div>
-                                        </div>
+                                <div class="control-group">
+                                    <label class="control-label">multiValuable</label>
+                                    <div class="controls">
+                                        <input name="multiValuable" type="text" class="span7" value="$!entity.multiValuable">
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">regex</label>
+                                    <div class="controls">
+                                        <input name="regex" type="text" class="span7" value="$!entity.regex">
+                                    </div>
+                                </div>
 
 
-                                            <div class="control-group">
-                                                <label class="control-label" style="color: red">key</label>
-                                                <div class="controls">
-                                                    <input name="key" type="text" class="span11"
-                                                           value="$!entity.key">
-                                                </div>
-
-                                            </div>
-
-                                                <div class="control-group">
-                                                    <label class="control-label" style="color: red">remark</label>
-                                                    <div class="controls">
-                                                        <input name="remark" type="text" class="span11"
-                                                               value="$!entity.remark">
-                                                    </div>
-                                                </div>
 
 
-                                                    <div class="control-group">
-                                                        <label class="control-label">defaultValue</label>
-                                                        <div class="controls">
-                                                            <input name="defaultValue" type="text" class="span11"
-                                                                   value="$!entity.defaultValue">
-                                                        </div>
-                                                    </div>
-
-                                                        <div class="control-group">
-                                                            <label class="control-label" style="color: red">type</label>
-                                                            <div class="controls">
-                                                                <input name="type" type="text" class="span11"
-                                                                       value="$!entity.type">
-                                                            </div>
-                                                        </div>
-
-                                                            <div class="control-group">
-                                                                <label class="control-label" style="color: red">sort</label>
-                                                                <div class="controls">
-                                                                    <input name="sort" type="text" class="span11"
-                                                                           value="$!entity.sort">
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div class="form-actions">
-                                                                #if($!type==2 || $!type==1)
-                                                                    <button type="submit" class="btn btn-success">保存
-                                                                    </button>
-                                                                #elseif($!type==3)
-                                                                    <a href="edit?type=2&id=$!entity.id"
-                                                                       class="btn btn-info">编辑</a>
-                                                                    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
-                                                                    <a class="btn btn-primary" href="list">返回</a>
-                                                                #end
-                                                            </div>
-                        </form>
+                                <div class="form-actions">
+                                    #if($!type==2 || $!type==1)
+                                        <button type="submit" class="btn btn-success">保存</button>
+                                        <a class="btn btn-primary" href="list">返回</a>
+                                    #elseif($!type==3)
+                                        <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
+                                    #end
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-</body>
     #include("common/js-support.vm")
-    #include("common/image-support.vm")
-<script src="/dist/js/cascade-select.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        var type = $!type;
-        //禁用所有表单
-        if (type == 3) {
-            $(":text").attr("disabled", "disabled");
-            $("select").attr("disabled", "disabled");
 
-        }
-    });
-
-</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var type = $!type;
+            if (type == 3) {
+                $(":text").attr("disabled", "disabled");
+                $("select").attr("disabled", "disabled");
+            }
+        });
+    </script>
+</body>
 </html>

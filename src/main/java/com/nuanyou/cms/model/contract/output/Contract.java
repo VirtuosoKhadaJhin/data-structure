@@ -32,7 +32,7 @@ public class Contract {
     private Date createTime;
     private Long userId;
     private String username;
-    private Long mchid;
+    private Long mchId;
     private Long countryId;
     private String mchName;
     private String signImgUrl;
@@ -64,12 +64,12 @@ public class Contract {
 
     @ApiModelProperty(value = "商户ID")
     @JsonProperty("merchantid")
-    public Long getMchid() {
-        return mchid;
+    public Long getMchId() {
+        return mchId;
     }
 
-    public void setMchid(Long mchid) {
-        this.mchid = mchid;
+    public void setMchId(Long mchId) {
+        this.mchId = mchId;
     }
 
     @ApiModelProperty(value = "国家ID")
@@ -84,6 +84,7 @@ public class Contract {
 
     @ApiModelProperty(value = "BDid")
     @JsonProperty("userid")
+    @JsonIgnore
     public Long getUserId() {
         return userId;
     }

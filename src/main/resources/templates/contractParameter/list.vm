@@ -16,11 +16,20 @@
     <tr role="row">
         <th>ID
         </th>
-        <th>templateid</th>
+        <th>name</th>
         <th>key</th>
-        <th>remark</th>
+        <th>defaultValue</th>
+        <th>type</th>
         <th>sort</th>
-
+        <th>source</th>
+        <th>editable</th>
+        <th>nullable</th>
+        <th>regex</th>
+        <th>hint</th>
+        <th>remark</th>
+        <th>multiValuable</th>
+        <th>common</th>
+        <th>custom</th>
         <th class="table-set" width="90px">操作</th>
     </tr>
     </thead>
@@ -28,10 +37,20 @@
         #foreach($entity in $!page.content)
         <tr class="odd gradeX">
             <td>$!entity.id</td>
-            <td>$!entity.templateid</td>
+            <td>$!entity.name</td>
             <td>$!entity.key</td>
-            <td>$!entity.remark</td>
+            <td>$!entity.defaultValue</td>
+            <td>$!entity.type</td>
             <td>$!entity.sort</td>
+            <td>$!entity.source</td>
+            <td>$!entity.editable</td>
+            <td>$!entity.nullable</td>
+            <td>$!entity.regex</td>
+            <td>$!entity.hint</td>
+            <td>$!entity.remark</td>
+            <td>$!entity.multiValuable</td>
+            <td>$!entity.common</td>
+            <td>$!entity.custom</td>
             <td>
                 <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
                 <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
@@ -42,16 +61,6 @@
 </table>
 #parse("common/list_mid.vm")
 <form>
-    <div class="control-group">
-        <label>templateid</label>
-        <input type="text" class="span11" name="templateid" value="$!entity.templateid">
-    </div>
-
-
-    <div class="control-group">
-        <label>id</label>
-        <input type="text" class="span11" name="id" value="$!entity.id">
-    </div>
     <button type="submit" class="btn btn-primary">查询</button>
 </form>
 #parse("common/list_end.vm")

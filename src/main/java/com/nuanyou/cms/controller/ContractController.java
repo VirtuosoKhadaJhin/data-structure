@@ -8,6 +8,7 @@ import com.nuanyou.cms.dao.MerchantDao;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
+import com.nuanyou.cms.model.contract.output.ContractTemplates;
 import com.nuanyou.cms.model.contract.output.Contracts;
 import com.nuanyou.cms.remote.AccountService;
 import com.nuanyou.cms.remote.ContractService;
@@ -96,7 +97,7 @@ public class ContractController {
 
         // 本地名称显示商户本地名称
         for (Contract contract : list) {
-            Long mchid = contract.getMchid();
+            Long mchid = contract.getMchId();
             String localName = merchantDao.getLocalName(mchid);
             contract.setMchName(localName);
         }
@@ -211,14 +212,14 @@ public class ContractController {
     }
 
     private void addSettlementForAccount(Contract detail) {
-        if (detail.getMchid() == null) {
+        if (detail.getMchId() == null) {
             throw new APIException(ResultCodes.ContractNotAssignedForMerchant);
         }
         Map<String, String> result = detail.getParameters();
         BigDecimal poundage = getPoundage(result);
         Long paymentDays = getPaymentDays(result);
         if (poundage != null && paymentDays != null) {
-            Long merchantId = detail.getMchid();
+            Long merchantId = detail.getMchId();
             APIResult res = accountService.add(merchantId, true, daytype, poundage, paymentDays, startprice, new DateTime().toString("yyyy-MM-dd"));
             if (res.getCode() != 0) {
                 throw new APIException(res.getCode(), res.getMsg());
@@ -256,8 +257,9 @@ public class ContractController {
 
     @RequestMapping("api/templates")
     @ResponseBody
-    public APIResult templates(Long id, Integer type) {
-        APIResult<List<ContractTemplate>> contractConfig = this.contractService.getContractConfig(id, type);
+    public List<ContractTemplate> templates(Long id, Integer type) {
+        APIResult<ContractTemplates> contractTemplateList = this.contractService.findContractTemplateList(id, null, null, 1, 1000);
+        List<ContractTemplate> contractConfig =  contractTemplateList.getData().getList();
         return contractConfig;
     }
 

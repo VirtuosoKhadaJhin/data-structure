@@ -1,19 +1,11 @@
 package com.nuanyou.cms.controller;
 
-import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.dao.TemplateParameterDao;
-import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.TemplateParameter;
-import com.nuanyou.cms.model.PageUtil;
-import com.nuanyou.cms.model.contract.output.ContractTemplateParameter;
 import com.nuanyou.cms.remote.ContractService;
 import com.nuanyou.cms.service.TemplateParameterService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping("templateParameter1")
@@ -68,17 +58,17 @@ public class TemplateParameterController {
                        TemplateParameter entity, Model model) {
 
 
-        APIResult<List<ContractTemplateParameter>> allTemplateParameters = this.contractService.findAllTemplateParameters();
-        List<Sort.Order> orders=new ArrayList<>();
-        orders.add( new Sort.Order(Sort.Direction.ASC, "templateid"));
-        orders.add( new Sort.Order(Sort.Direction.ASC, "sort"));
-        Sort sort=new Sort(orders);
-        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize,sort);
-        Page<TemplateParameter> page = templateParameterService.findByCondition(entity, pageable);
-        model.addAttribute("page", page);
-        model.addAttribute("entity", entity);
-        List<Country> countries = this.countryDao.findAll();
-        model.addAttribute("countries", countries);
+//        APIResult<List<ContractTemplateParameter>> allTemplateParameters = this.contractService.findAllTemplateParameters();
+//        List<Sort.Order> orders=new ArrayList<>();
+//        orders.add( new Sort.Order(Sort.Direction.ASC, "templateid"));
+//        orders.add( new Sort.Order(Sort.Direction.ASC, "sort"));
+//        Sort sort=new Sort(orders);
+//        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize,sort);
+//        Page<TemplateParameter> page = templateParameterService.findByCondition(entity, pageable);
+//        model.addAttribute("page", page);
+//        model.addAttribute("entity", entity);
+//        List<Country> countries = this.countryDao.findAll();
+//        model.addAttribute("countries", countries);
         return "contractParameter/list";
     }
 
