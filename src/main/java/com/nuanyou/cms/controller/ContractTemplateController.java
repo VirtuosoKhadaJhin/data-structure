@@ -11,6 +11,7 @@ import com.nuanyou.cms.model.contract.request.TemplateParameterRequest;
 import com.nuanyou.cms.model.contract.request.TemplateParameterRequests;
 import com.nuanyou.cms.model.contract.request.TemplateRequest;
 import com.nuanyou.cms.remote.ContractService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,10 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -114,6 +112,32 @@ public class ContractTemplateController {
         return selectedIds;
     }
 
+    @RequestMapping(value = "validateTemplate", method = RequestMethod.POST)
+    @ResponseBody
+    public APIResult validateTemplate(Long[] selectedParamIds,
+                           TemplateParameterRequests templateParameterRequests,
+                           Integer type,
+                           String title,
+                           Long countryId) throws IOException {
+        validate(selectedParamIds,templateParameterRequests,type,title,countryId);
+        return new APIResult();
+    }
+
+    private void validate(Long[] selectedParamIds, TemplateParameterRequests templateParameterRequests, Integer type, String title, Long countryId) {
+        if(type==null){
+            throw  new RuntimeException("");
+        }else if(StringUtils.isEmpty(title)){
+            throw  new RuntimeException("");
+        }else if(countryId==null){
+            throw  new RuntimeException("");
+        }
+        boolean res= templateParameterRequests.validateTemplate();
+        if(res==false){
+            throw  new RuntimeException("");
+        }
+
+    }
+
 
     @RequestMapping("update")
     public String update(HttpServletResponse response,
@@ -144,6 +168,8 @@ public class ContractTemplateController {
         String url = "edit?type=3&id=" + contractTemplateAPIResult.getData().getId();
         return "redirect:" + url;
     }
+
+
 
     private List<TemplateParameterRequest> toListTemplateParameter(TemplateParameterRequests templateParameterRequests) {
         Integer size = templateParameterRequests.getKey().length;

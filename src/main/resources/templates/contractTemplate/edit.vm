@@ -218,28 +218,19 @@
         var ids =${selectedIds};
         $('#selectedParamIds').val(ids);
         $("#btnSave").click(function () {
-            var type = $("select[name='type']").val();
-            var imgUrl = $("input[name='imgUrl ']").val();
-            var linkUrl = $("input[name='linkUrl  ']").val();
-            var source = $("input[name='source']").val();
-            var title = $("input[name='title']").val();
-            if (type == 1) {
-                if (imgUrl == "" || linkUrl == "" || source == "" || title == "") {
-                    return alert("自定义时标题、图片、链接、追踪码不可为空");
+            var form = $(".templateFormValidate");
+            $.ajax({
+                url: 'count',
+                data: $(form).serialize(),
+                type: 'post',
+                success: function (result) {
+                    if (result.code == 0) {
+                        form.submit();
+                    } else {
+                        alert(result.msg);
+                    }
                 }
-            } else {
-                if (source == "") {
-                    return alert("非自定义时追踪码不可为空");
-                }
-            }
-
-            if (!$('.templateFormValidate').validate) {
-                return false;
-            } else {
-                $('.templateFormValidate').submit();
-            }
-
-
+            });
         });
 
 

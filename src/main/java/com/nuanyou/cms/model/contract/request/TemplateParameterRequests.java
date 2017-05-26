@@ -1,5 +1,7 @@
 package com.nuanyou.cms.model.contract.request;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Created by young on 2017/5/24.
  */
@@ -114,5 +116,58 @@ public class TemplateParameterRequests {
 
     public void setRegex(String[] regex) {
         this.regex = regex;
+    }
+
+    public boolean validateTemplate(){
+        for (int i = 0; i < name.length; i++) {
+            String one = name[i];
+            if(StringUtils.isBlank(one)){
+                return false;
+            }
+        }
+        for (int i = 0; i < key.length; i++) {
+            String one = key[i];
+            if(StringUtils.isBlank(one)){
+                return false;
+            }
+        }
+        for (int i = 0; i < defaultValue.length; i++) {
+            String one = defaultValue[i];
+            if(StringUtils.isBlank(one)){
+                return false;
+            }
+        }
+
+        for (int i = 0; i < type.length; i++) {
+            Integer one = type[i];
+            if(one==null){
+                return false;
+            }
+        }
+
+        for (int i = 0; i < hint.length; i++) {
+            String one = hint[i];
+            if(one==null){
+                return false;
+            }
+        }
+
+        for (int i = 0; i < remark.length; i++) {
+            String one = remark[i];
+            if(one==null){
+                return false;
+            }
+        }
+
+        for (int i = 0; i < regex.length; i++) {
+            String one = regex[i];
+            if(one==null){
+                return false;
+            }
+        }
+
+        return true;
+
+
     }
 }
