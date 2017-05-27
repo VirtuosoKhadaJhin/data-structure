@@ -125,6 +125,37 @@ public class ContractController {
         return "contract/list";
     }
 
+    @RequestMapping("detail")
+    public String getDetail(Model model,
+                            @RequestParam(value = "id", required = true) Long id){
+        APIResult<Contract> result = contractService.detail(id);
+        Contract detail = result.getData();
+        if(detail!=null){
+            Long mchid = detail.getMchId();
+            String localName = merchantDao.getLocalName(mchid);
+
+            model.addAttribute("id",detail.getId());
+            model.addAttribute("mchName",localName);
+            model.addAttribute("approveTime",detail.getApproveTime());
+            model.addAttribute("templateTitle",detail.getTemplateTitle());
+            model.addAttribute("startTime",detail.getStartTime());
+            model.addAttribute("type",detail.getType());
+            model.addAttribute("endTime",detail.getEndTime());
+            model.addAttribute("submitTime",detail.getSubmitTime());
+            model.addAttribute("rejectTime",detail.getRejectTime());
+            model.addAttribute("status",detail.getStatus());
+            model.addAttribute("pdfUrl",detail.getPdfUrl());
+            model.addAttribute("htmlContent",detail.getHtmlContent());
+            model.addAttribute("username",detail.getUsername());
+            model.addAttribute("signImgUrl",detail.getSignImgUrl());
+            model.addAttribute("businessLicense",detail.getBusinessLicense());
+            model.addAttribute("paperContract",detail.getPaperContract());
+            model.addAttribute("remark",detail.getRemark());
+            model.addAttribute("contractNo",detail.getContractNo());
+        }
+        return "contract/detail";
+    }
+
     @RequestMapping("filedList")
     public String filedList(
             Model model,
