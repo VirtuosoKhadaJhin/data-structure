@@ -2,172 +2,184 @@ package com.nuanyou.cms.model.contract.request;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashSet;
+import java.util.List;
+
 /**
  * Created by young on 2017/5/24.
  */
 public class TemplateParameterRequests {
 
-    private String[] name;
+    private List<Long> paramId;
 
-    private String[] key;
+    private  List<String> name;
 
-    private String[] defaultValue;
+    private List<String> key;
 
-    private Integer[] type;
+    private List<String> defaultValue;
 
-    private Integer[] sort;
+    private List<Integer> dataType;
 
-    private boolean[] editable;
+    private List<Boolean> editable;
 
-    private boolean[] nullable;
+    private List<Boolean> nullable;
 
-    private String[] hint;
+    private List<String> hint;
 
-    private String[] remark;
+    private List<String> remark;
 
-    private boolean[] multiValuable;
+    private List<Boolean> multiValuable;
 
-    private String[] regex;
+    private  List<String> regex;
 
+    public List<Long> getParamId() {
+        return paramId;
+    }
 
-    public String[] getName() {
+    public void setParamId(List<Long> paramId) {
+        this.paramId = paramId;
+    }
+
+    public List<String> getName() {
         return name;
     }
 
-    public void setName(String[] name) {
+    public void setName(List<String> name) {
         this.name = name;
     }
 
-    public String[] getKey() {
+    public List<String> getKey() {
         return key;
     }
 
-    public void setKey(String[] key) {
+    public void setKey(List<String> key) {
         this.key = key;
     }
 
-    public String[] getDefaultValue() {
+    public List<String> getDefaultValue() {
         return defaultValue;
     }
 
-    public void setDefaultValue(String[] defaultValue) {
+    public void setDefaultValue(List<String> defaultValue) {
         this.defaultValue = defaultValue;
     }
 
-    public Integer[] getType() {
-        return type;
+    public List<Integer> getDataType() {
+        return dataType;
     }
 
-    public void setType(Integer[] type) {
-        this.type = type;
+    public void setDataType(List<Integer> dataType) {
+        this.dataType = dataType;
     }
 
-    public Integer[] getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer[] sort) {
-        this.sort = sort;
-    }
-
-    public boolean[] getEditable() {
+    public List<Boolean> getEditable() {
         return editable;
     }
 
-    public void setEditable(boolean[] editable) {
+    public void setEditable(List<Boolean> editable) {
         this.editable = editable;
     }
 
-    public boolean[] getNullable() {
+    public List<Boolean> getNullable() {
         return nullable;
     }
 
-    public void setNullable(boolean[] nullable) {
+    public void setNullable(List<Boolean> nullable) {
         this.nullable = nullable;
     }
 
-    public String[] getHint() {
+    public List<String> getHint() {
         return hint;
     }
 
-    public void setHint(String[] hint) {
+    public void setHint(List<String> hint) {
         this.hint = hint;
     }
 
-    public String[] getRemark() {
+    public List<String> getRemark() {
         return remark;
     }
 
-    public void setRemark(String[] remark) {
+    public void setRemark(List<String> remark) {
         this.remark = remark;
     }
 
-    public boolean[] getMultiValuable() {
+    public List<Boolean> getMultiValuable() {
         return multiValuable;
     }
 
-    public void setMultiValuable(boolean[] multiValuable) {
+    public void setMultiValuable(List<Boolean> multiValuable) {
         this.multiValuable = multiValuable;
     }
 
-    public String[] getRegex() {
+    public List<String> getRegex() {
         return regex;
     }
 
-    public void setRegex(String[] regex) {
+    public void setRegex(List<String> regex) {
         this.regex = regex;
     }
 
+    public boolean validateKeys(){
+        if(key==null){
+            return true;
+        }
+        List<String> key = this.key;
+        if(key.size()!=new HashSet<>(key).size()){
+            return  false;
+        }
+        return  true;
+
+
+    }
+
+
     public boolean validateTemplate(){
-        for (int i = 0; i < name.length; i++) {
-            String one = name[i];
+        if(name==null){
+            return true;
+        }
+        Integer size=name.size();
+        if(key.size()!=size||
+                defaultValue.size()!=size||
+                dataType.size()!=size||
+                hint.size()!=size||
+                remark.size()!=size||
+                regex.size()!=size){
+            return false;
+
+        }
+
+        for (int i = 0; i < name.size(); i++) {
+            String one = name.get(i);
             if(StringUtils.isBlank(one)){
                 return false;
             }
         }
-        for (int i = 0; i < key.length; i++) {
-            String one = key[i];
+        for (int i = 0; i < key.size(); i++) {
+            String one = key.get(i);
             if(StringUtils.isBlank(one)){
                 return false;
             }
         }
-        for (int i = 0; i < defaultValue.length; i++) {
-            String one = defaultValue[i];
-            if(StringUtils.isBlank(one)){
-                return false;
-            }
-        }
+//        for (int i = 0; i < defaultValue.size(); i++) {
+//            String one = defaultValue.get(i);
+//            if(StringUtils.isBlank(one)){
+//                return false;
+//            }
+//        }
 
-        for (int i = 0; i < type.length; i++) {
-            Integer one = type[i];
+        for (int i = 0; i < dataType.size(); i++) {
+            Integer one = dataType.get(i);
             if(one==null){
                 return false;
             }
         }
 
-        for (int i = 0; i < hint.length; i++) {
-            String one = hint[i];
-            if(one==null){
-                return false;
-            }
-        }
 
-        for (int i = 0; i < remark.length; i++) {
-            String one = remark[i];
-            if(one==null){
-                return false;
-            }
-        }
 
-        for (int i = 0; i < regex.length; i++) {
-            String one = regex[i];
-            if(one==null){
-                return false;
-            }
-        }
+
+
 
         return true;
-
-
     }
 }

@@ -6,10 +6,7 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.component.FileClient;
 import com.nuanyou.cms.dao.MerchantDao;
 import com.nuanyou.cms.entity.Country;
-import com.nuanyou.cms.model.contract.output.Contract;
-import com.nuanyou.cms.model.contract.output.ContractTemplate;
-import com.nuanyou.cms.model.contract.output.ContractTemplates;
-import com.nuanyou.cms.model.contract.output.Contracts;
+import com.nuanyou.cms.model.contract.output.*;
 import com.nuanyou.cms.remote.AccountService;
 import com.nuanyou.cms.remote.ContractService;
 import com.nuanyou.cms.service.CountryService;
@@ -174,6 +171,19 @@ public class ContractController {
     }
 
 
+    @RequestMapping(path = "edit", method = RequestMethod.GET)
+    public String edit(Long id, Model model, Integer type) {
+        Contract entity = null;
+        if (id != null) {
+            APIResult<Contract> res = this.contractService.getContract(id);
+            entity = res.getData();
+        }
+        model.addAttribute("entity", entity);
+        model.addAttribute("type", type);
+        return "contract/edit";
+    }
+
+
     @RequestMapping(path = "verify", method = RequestMethod.GET)
     @ResponseBody
     public APIResult verify(Long id, Boolean valid, Long contractId) throws ParseException {
@@ -185,7 +195,7 @@ public class ContractController {
         }
         if (valid) {
             //2 得到合同信息
-            APIResult<Contract> resDetail = this.contractService.detail(contractId);
+            APIResult<Contract> resDetail = this.contractService.getContract(contractId);
             //3插入对账系统
             Contract detail = resDetail.getData();
             this.addSettlementForAccount(detail);
@@ -259,7 +269,7 @@ public class ContractController {
     @ResponseBody
     public List<ContractTemplate> templates(Long id, Integer type) {
         APIResult<ContractTemplates> contractTemplateList = this.contractService.findContractTemplateList(id, null, null, 1, 1000);
-        List<ContractTemplate> contractConfig =  contractTemplateList.getData().getList();
+        List<ContractTemplate> contractConfig = contractTemplateList.getData().getList();
         return contractConfig;
     }
 

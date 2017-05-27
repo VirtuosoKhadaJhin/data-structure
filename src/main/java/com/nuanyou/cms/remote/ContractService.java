@@ -3,9 +3,7 @@ package com.nuanyou.cms.remote;
 
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.model.contract.output.*;
-import com.nuanyou.cms.model.contract.request.BatchTemplateParameterRequest;
-import com.nuanyou.cms.model.contract.request.TemplateParameterRequest;
-import com.nuanyou.cms.model.contract.request.TemplateRequest;
+import com.nuanyou.cms.model.contract.request.*;
 import com.nuanyou.cms.util.MimeTypes;
 import io.swagger.annotations.*;
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -22,6 +20,34 @@ import java.util.List;
 @RequestMapping(value = "/contracts", produces = MimeTypes.MIME_TYPE_JSON)
 @Api(value = "/contracts", description = "the contract API")
 public interface ContractService {
+
+
+
+
+    @ApiOperation(value = "获取合同详情.", notes = "获取合同详情")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "合同详情")})
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public APIResult<Contract> getContract(@ApiParam(value = "合同id", required = true) @PathVariable(value = "id") long id) ;
+
+
+
+    @ApiOperation(value = "模版参数详情", notes = "模版参数详情")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "模版参数详情")})
+    @RequestMapping(value = "/template/paramter/{id}",method = RequestMethod.GET)
+    public APIResult<ContractParameter> saveTemplateParamter(@PathVariable(value ="id" ) Long id) ;
+
+
+    @ApiOperation(value = "编辑合同模版", notes = "编辑合同模版")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "编辑合同模版")})
+    @RequestMapping(value = "/template/{id}",method = {RequestMethod.POST})
+    public APIResult<ContractTemplate> updateTemplate(@PathVariable(value = "id") Long id,@RequestBody TemplateUpdateRequest request);
+
+
+//
+//    @ApiOperation(value = "编辑模版参数", notes = "编辑模版参数")
+//    @ApiResponses(value = {@ApiResponse(code = 200, message = "编辑模版参数")})
+//    @RequestMapping(value = "/template/paramter/{id}",method = {RequestMethod.POST,RequestMethod.PUT})
+//    public APIResult<ContractParameter> updateContractParameter(@PathVariable Long id,@RequestBody UpdateParameterRequest request);
 
 
 
@@ -102,10 +128,7 @@ public interface ContractService {
             @ApiParam(value = "参数集合json字符串", required = true) @RequestParam(value = "parameters", required = true) String parameters);
 
 
-    @ApiOperation(value = "获取合同详情.", notes = "获取合同详情", response = Contract.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "合同详情", response = Contract.class)})
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    APIResult<Contract> detail(@ApiParam(value = "合同id", required = true) @PathVariable(value = "id") long id);
+
 
     @ApiOperation(value = "合同预览.", notes = "合同预览", response = String.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Html", response = String.class)})
@@ -164,6 +187,12 @@ public interface ContractService {
             @ApiParam(value = "用户id", required = true) @RequestParam(value = "userid") Long userId,
             @ApiParam(value = "合同id", required = true) @PathVariable(value = "id") Long id,
             @ApiParam(value = "是否生效", required = true) @RequestParam(value = "valid") boolean valid);
+
+
+    @ApiOperation(value = "编辑模版参数", notes = "编辑模版参数")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "编辑模版参数")})
+    @RequestMapping(value = "/template/paramter/{id}",method = {RequestMethod.POST})
+    public APIResult<ContractParameter> updateContractParameter(@PathVariable(value = "id") Long id,@RequestBody UpdateParameterRequest request);
 
 
 }
