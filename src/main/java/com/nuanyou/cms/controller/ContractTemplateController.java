@@ -71,12 +71,7 @@ public class ContractTemplateController {
                     Country one = countryDao.findOne(list.get(i).getCountryId());
                     contractTemplate.setCountryName(one.getName());
                 }
-
             }
-
-           
-            
-
         }
     }
 
@@ -138,9 +133,9 @@ public class ContractTemplateController {
         return selectedIds;
     }
 
-    @RequestMapping(value = "validateTemplate", method = RequestMethod.POST)
+    @RequestMapping(value = "saveTemplate", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult validateTemplate(Long[] selectedParamIds,
+    public APIResult saveTemplate(Long[] selectedParamIds,
                                       TemplateParameterRequests templateParameterRequests,
                                       Integer templateType,
                                       String title,
@@ -150,7 +145,7 @@ public class ContractTemplateController {
 
     ) throws IOException {
         validate(selectedParamIds, templateParameterRequests, templateType, title, countryId);
-        APIResult res= save1(selectedParamIds, templateParameterRequests, templateType, title, countryId, id);
+        APIResult res= save(selectedParamIds, templateParameterRequests, templateType, title, countryId, id);
         return res;
     }
 
@@ -166,18 +161,14 @@ public class ContractTemplateController {
         if (res == false) {
             throw new APIException(ResultCodes.Fail, "模板参数key name defaultvalue 不能有空");
         }
-
         boolean validateKeys = templateParameterRequests.validateKeys();
         if (validateKeys == false) {
             throw new APIException(ResultCodes.Fail, "模板key不能重复");
         }
-
-
     }
 
 
-    @RequestMapping("save")
-    public APIResult save1(
+    public APIResult save(
                        Long[] selectedParamIds,
                        TemplateParameterRequests templateParameterRequests,
                        Integer templateType,

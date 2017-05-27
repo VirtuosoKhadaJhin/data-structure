@@ -40,85 +40,121 @@
                                         #end
                                     </div>
                                 </div>
+
+
+
+                                #if($!type==1 || $!type==3)
+
+
+                                    <div class="control-group">
+                                        <label class="control-label">key</label>
+                                        <div class="controls">
+                                            <input name="key" type="text" class="span7"  value="$!entity.key">
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group">
+                                        <label class="control-label">默认值</label>
+                                        <div class="controls">
+                                            <input name="defaultValue" type="text" class="span7" value="$!entity.defaultValue">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="control-group">
+                                        <label class="control-label">类型</label>
+                                        <div class="controls">
+                                            <select name="dataType" style="width: 70px" readonly>
+                                                <option value="1"  #if($!param.type==1)selected #end>
+                                                    文本
+                                                </option>
+                                                <option value="2" #if($!param.type==2)selected #end>整型
+                                                </option>
+                                                <option value="3" #if($!param.type==3)selected #end>
+                                                    浮点型
+                                                </option>
+                                                <option value="4" #if($!param.type==4)selected #end>日期
+                                                </option>
+                                                <option value="5" #if($!param.type==5)selected #end>
+                                                    备选数据
+                                                </option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="control-group">
+                                        <label class="control-label">是否可编辑</label>
+                                        <div class="controls">
+                                            <select  name="editable" class="span7">
+                                                <option value="true"  #if($!entity.editable==true)  selected #end>是</option>
+                                                <option value="false"  #if($!entity.editable==false)  selected #end>否
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="control-group">
+                                        <label class="control-label">是否多值</label>
+                                        <div class="controls">
+                                            <select  name="multiValuable" class="span7">
+                                                <option value="true"  #if($!entity.multiValuable==true)  selected #end>是</option>
+                                                <option value="false"  #if($!entity.multiValuable==false)  selected #end>否
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                #end
+
+
                                 <div class="control-group">
-                                    <label class="control-label">name</label>
+                                    <label class="control-label">名称</label>
                                     <div class="controls">
                                         <input name="name" type="text" class="span7" value="$!entity.name">
                                     </div>
                                 </div>
-                                <div class="control-group">
-                                    <label class="control-label">key</label>
-                                    <div class="controls">
-                                        <input name="key" type="text" class="span7"  value="$!entity.key">
-                                    </div>
-                                </div>
 
 
-                                <div class="control-group">
-                                    <label class="control-label">defaultValue</label>
-                                    <div class="controls">
-                                        <input name="defaultValue" type="text" class="span7" value="$!entity.defaultValue">
-                                    </div>
-                                </div>
 
-                                <div class="control-group">
-                                    <label class="control-label">type</label>
-                                    <div class="controls">
-                                        <input name="type" type="text" class="span7" value="$!entity.type">
-                                    </div>
-                                </div>
+
+
+
+##                                <div class="control-group">
+##                                    <label class="control-label">是否是NULL值</label>
+##                                    <div class="controls">
+##                                        <select  name="nullable" class="span7">
+##                                            <option value="true"  #if($!entity.nullable==true)  selected #end>是</option>
+##                                            <option value="false"  #if($!entity.nullable==false)  selected #end>否
+##                                            </option>
+##                                        </select>
+##
+##                                    </div>
+##                                </div>
 
                                 <div class="control-group">
-                                    <label class="control-label">sort</label>
-                                    <div class="controls">
-                                        <input name="sort" type="text" class="span7" value="$!entity.sort">
-                                    </div>
-                                </div>
-
-                                <div class="control-group">
-                                    <label class="control-label">editable</label>
-                                    <div class="controls">
-                                        <input name="editable" type="text" class="span7" value="$!entity.editable">
-                                    </div>
-                                </div>
-
-
-                                <div class="control-group">
-                                    <label class="control-label">nullable</label>
-                                    <div class="controls">
-                                        <input name="nullable" type="text" class="span7" value="$!entity.nullable">
-                                    </div>
-                                </div>
-
-                                <div class="control-group">
-                                    <label class="control-label">hint</label>
+                                    <label class="control-label">校验提示</label>
                                     <div class="controls">
                                         <input name="hint" type="text" class="span7" value="$!entity.hint">
                                     </div>
                                 </div>
 
                                 <div class="control-group">
-                                    <label class="control-label">remark</label>
+                                    <label class="control-label">输入提示</label>
                                     <div class="controls">
                                         <input name="remark" type="text" class="span7" value="$!entity.remark">
                                     </div>
                                 </div>
 
 
-                                <div class="control-group">
-                                    <label class="control-label">multiValuable</label>
-                                    <div class="controls">
-                                        <input name="multiValuable" type="text" class="span7" value="$!entity.multiValuable">
-                                    </div>
-                                </div>
 
                                 <div class="control-group">
-                                    <label class="control-label">regex</label>
+                                    <label class="control-label">正则表达式</label>
                                     <div class="controls">
                                         <input name="regex" type="text" class="span7" value="$!entity.regex">
                                     </div>
                                 </div>
-
 
 
 

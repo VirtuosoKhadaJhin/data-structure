@@ -73,17 +73,3 @@
 #parse("common/list_end.vm")
 #include("common/js-support.vm")
 
-<script type="text/javascript">
-    $(document).ready(function () {
-
-        $(".selectOne").on("click", function () {
-            if(window.opener) {
-                //window.opener 找到打开该窗体的父窗体
-                parentWindowElement = window.opener.document.getElementById("test");
-                parentWindowElement.value = "I am return value";
-                window.close();
-            }
-        });
-    });
-
-</script>

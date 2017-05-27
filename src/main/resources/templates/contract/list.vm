@@ -72,7 +72,7 @@
                 </td>
                 <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.approveTime)</td>
                 <td>
-                    <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">详情</a>
+                    <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">审核</a>
 
                 </td>
             </tr>

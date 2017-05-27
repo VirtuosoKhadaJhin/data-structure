@@ -24,6 +24,13 @@ public interface ContractService {
 
 
 
+    @ApiOperation(value = "删除模版参数", notes = "删除模版参数")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "删除模版参数")})
+    @RequestMapping(value = "/template/paramter/{id}",method = RequestMethod.DELETE)
+    public APIResult deleteContractParameter(@PathVariable(value = "id") Long id);
+
+
+
     @ApiOperation(value = "获取合同详情.", notes = "获取合同详情")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "合同详情")})
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)

@@ -28,27 +28,21 @@
                               class="form-horizontal templateFormValidate"
                               role="form">
                             <div class="control-group">
-
                                 <input name="id" type="hidden" class="form-control" placeholder="ID"
                                        value="$!entity.id">
-
-
                                 <label class="control-label">国家</label>
                                 <div class="controls">
                                     <select name="countryId" class="span5">
-                                        <option value="">全部</option>
                                         #foreach($e in $!countries)
                                             <option value="$!e.id" #if($!e.id == $!entity.countryId)
                                                     selected #end>$!e.name</option>
                                         #end
                                     </select>
                                 </div>
-
                                 <label class="control-label">标题</label>
                                 <div class="controls">
                                     <input name="title" type="text" class="span5" value="$!entity.title"">
                                 </div>
-
                                 <label class="control-label">类型</label>
                                 <div class="controls">
                                     <select class="span5" name="templateType">
@@ -56,8 +50,6 @@
                                         <option value="2"  #if($!entity.type==2)selected #end>附加合同</option>
                                     </select>
                                 </div>
-
-
                                 <label class="control-label">选择已有参数</label>
                                 <div class="controls">
                                     <select class="span5 select2" id="selectedParamIds" name="selectedParamIds"
@@ -70,8 +62,6 @@
                                         #end
                                     </select>
                                 </div>
-
-
                                 <label class="control-label">自定义参数</label>
                                 <div class="controls">
                                     <div style="overflow: auto;width: 100%">
@@ -93,10 +83,6 @@
                                                 <th id="roleSuperid0">remark</th>
                                                 <th>行操作</th>
                                             </tr>
-
-
-
-
                                                 #if($!type==2)
                                                     #foreach($param in $!entity.parameters)
                                                     <tr>
@@ -171,7 +157,6 @@
                                                         </td>
                                                     </tr>
                                                     #end
-
                                                 #elseif($!type==1)
                                                     #foreach($param in $!commonParams)
                                                     <tr>
@@ -200,9 +185,7 @@
                                                                     备选数据
                                                                 </option>
                                                             </select>
-
                                                         </td>
-
                                                         <td>
                                                             <select name="editable" style="width: 70px" readonly>
                                                                 <option value="true"
@@ -247,7 +230,6 @@
                                                     </tr>
                                                     #end
                                                 #end
-
                                             <tr name="firstRow">
                                                 <td><input name="key" style="width: 200px"><input name="paramId"
                                                                                                   value=""
@@ -264,7 +246,6 @@
                                                         <option value="5">备选数据</option>
                                                     </select>
                                                 </td>
-
                                                 <td>
                                                     <select name="editable" style="width: 70px">
                                                         <option value="true">true</option>
@@ -291,28 +272,20 @@
                                                     <input type='button' value="删除行" class="removeRow btn-warning">
                                                 </td>
                                             </tr>
-
-
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
-
-
                                 <div class="form-actions">
-
                                     #if($!type==2 || $!type==1)
                                         <button type="button" class="btn btnSave btn-success">保存
                                         </button>
                                     #elseif($!type==3)
-                                        <button type="button" class="btn btnUpdate btn-success">保存
+                                        <button type="button" class="btn btnSave btn-success">保存
                                         </button>
-                                    ##                                        <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
                                     #end
                                     <a class="btn btn-primary" href="list">返回</a>
                                 </div>
-
-
                         </form>
                     </div>
                 </div>
@@ -327,27 +300,18 @@
 <script src="/dist/js/cascade-select.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        if ("$!selectedIds" != "") {
-            var ids =$!selectedIds;
-            //$('#selectedParamIds').val(ids);
-        }
 
 
         $(".btnSave").click(function () {
             var form = $(".templateFormValidate");
             $.ajax({
-                url: 'validateTemplate',
+                url: 'saveTemplate',
                 data: $(form).serialize(),
                 type: 'post',
                 success: function (result) {
                     if (result.code == 0) {
-                        alert("操作成功 此模板最新的版本是" + result.data);
+                        alert("操作成功");
                         window.location.href = "/contractTemplate/edit?type=2&id=" + result.data;
-                        //form.attr("action", "save");
-                        //form.attr("target", "_blank");
-                        //form.submit();
-                        //form.attr("action", "");
-                        //form.attr("target", "");
                     } else {
                         alert(result.msg);
                     }
@@ -355,33 +319,6 @@
             });
         });
 
-
-        $(".btnUpdate").click(function () {
-            var form = $(".templateFormValidate");
-            $.ajax({
-                url: 'validateTemplate',
-                data: $(form).serialize(),
-                type: 'post',
-                success: function (result) {
-                    if (result.code == 0) {
-                        form.attr("action", "save");
-                        form.attr("target", "_blank");
-                        form.submit();
-                        form.attr("action", "");
-                        form.attr("target", "");
-                    } else {
-                        alert(result.msg);
-                    }
-                }
-            });
-        });
-
-
-        $(".selectOne").on("click", function () {
-            window.open("/item/list", "", "height=900, width=900");
-        });
-
-        var tr_index = 0;
 
 
         $("#mytable").delegate(".removeRow", "click", function (e) {
@@ -418,16 +355,7 @@
             errorElement: "span"
         });
 
-        $(".selectParams").bind("click", function () {
-            var objtype = $("select[name='objtype']").val();
-            if (objtype == 1) {
-                $("#modal-merchant").modal("show");
-            } else {
-                $("#modal-tuan").modal("show");
-            }
-            $("input[name='objid']").val("");
-            $("input[name='value']").val("");
-        });
+
 
 
     });

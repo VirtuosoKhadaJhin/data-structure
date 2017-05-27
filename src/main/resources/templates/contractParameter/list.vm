@@ -16,20 +16,19 @@
     <tr role="row">
         <th>ID
         </th>
-        <th>name</th>
+        <th>名称(</th>
         <th>key</th>
-        <th>defaultValue</th>
-        <th>type</th>
-        <th>sort</th>
-        <th>source</th>
-        <th>editable</th>
-        <th>nullable</th>
-        <th>regex</th>
-        <th>hint</th>
-        <th>remark</th>
-        <th>multiValuable</th>
-        <th>common</th>
-        <th>custom</th>
+        <th>默认值</th>
+        <th>类型</th>
+        <th>备选数据</th>
+        <th>是否可编辑</th>
+        <th>是否为空</th>
+        <th>正则表达式</th>
+        <th>校验提示</th>
+        <th>输入提示</th>
+        <th>是否多值</th>
+        <th>是否是公共字段</th>
+        <th>是否自定义参数</th>
         <th class="table-set" width="90px">操作</th>
     </tr>
     </thead>
@@ -40,20 +39,21 @@
             <td>$!entity.name</td>
             <td>$!entity.key</td>
             <td>$!entity.defaultValue</td>
-            <td>$!entity.type</td>
-            <td>$!entity.sort</td>
+            <td> #if($!entity.type==1)主合同#else 附加合同#end</td>
             <td>$!entity.source</td>
-            <td>$!entity.editable</td>
-            <td>$!entity.nullable</td>
+            <td>#if($!entity.editable)是#else 否#end</td>
+            <td>#if($!entity.nullable)是#else 否#end</td>
             <td>$!entity.regex</td>
             <td>$!entity.hint</td>
             <td>$!entity.remark</td>
-            <td>$!entity.multiValuable</td>
-            <td>$!entity.common</td>
-            <td>$!entity.custom</td>
+            <td>#if($!entity.multiValuable)是#else 否#end</td>
+            <td>#if($!entity.common)是#else 否#end</td>
+            <td>#if($!entity.custom)是#else 否#end</td>
             <td>
                 <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
                 <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
+                <a data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</a>
+##                <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</button>
             </td>
         </tr>
         #end
@@ -64,4 +64,26 @@
     <button type="submit" class="btn btn-primary">查询</button>
 </form>
 #parse("common/list_end.vm")
+
+<script>
+    $(".remove-item").each(function (i, o) {
+        $(o).on("click", function (event) {
+            if (!confirm('确实要删除该内容吗?'))
+                return;
+            var dataId = $(this).attr("data-id");
+            $.ajax({
+                url: 'remove',
+                data: {id: dataId},
+                type: 'get',
+                success: function (result) {
+                    if (result.code == 0) {
+                        window.location.reload();
+                    } else {
+                        alert("操作失败:" + result.msg);
+                    }
+                }
+            });
+        });
+    });
+</script>
 

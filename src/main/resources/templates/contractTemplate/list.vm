@@ -14,13 +14,10 @@
 <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
     <thead>
     <tr role="row">
-        <th>ID
-        </th>
-        <th>templateid</th>
-        <th>key</th>
-        <th>remark</th>
-        <th>sort</th>
-
+        <th>ID</th>
+        <th>国家</th>
+        <th>标题</th>
+        <th>类型</th>
         <th class="table-set" width="90px">操作</th>
     </tr>
     </thead>
@@ -28,12 +25,10 @@
         #foreach($entity in $!page.content)
         <tr class="odd gradeX">
             <td>$!entity.id</td>
-            <td>$!entity.templateid</td>
-            <td>$!entity.key</td>
-            <td>$!entity.remark</td>
-            <td>$!entity.sort</td>
+            <td>$!entity.countryName</td>
+            <td>$!entity.title</td>
+            <td>#if($!entity.type)主合同#else 附加合同#end</td>
             <td>
-                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
                 <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
             </td>
         </tr>
@@ -76,7 +71,7 @@
 
 
         <label>合同类型</label>
-        <select name="type">
+        <select name="type"  class="span11">
             <option value="">全部</option>
             <option value="1"  #if($!type==1)selected #end>主合同</option>
             <option value="2"  #if($!type==2)selected #end>附合同</option>

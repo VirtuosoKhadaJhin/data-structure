@@ -13,4 +13,6 @@ public interface CountryService {
 
     Country saveNotNull(Country entity);
 
+
+    Country findOne(Long countryId);
 }
