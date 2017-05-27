@@ -30,6 +30,7 @@
             <td>#if($!entity.type)主合同#else 附加合同#end</td>
             <td>
                 <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
+                <a data-id="$!entity.id" class="btn btn-danger btn-mini publish">发布</a>
             </td>
         </tr>
         #end
@@ -66,10 +67,6 @@
                 </option>
             #end
         </select>
-
-
-
-
         <label>合同类型</label>
         <select name="type"  class="span11">
             <option value="">全部</option>
@@ -80,6 +77,28 @@
     <button type="submit" class="btn btn-primary">查询</button>
 </form>
 #parse("common/list_end.vm")
+
+<script>
+    $(".publish").each(function (i, o) {
+        $(o).on("click", function (event) {
+            if (!confirm('确实要发布吗?'))
+                return;
+            var dataId = $(this).attr("data-id");
+            $.ajax({
+                url: 'publish',
+                data: {id: dataId},
+                type: 'get',
+                success: function (result) {
+                    if (result.code == 0) {
+                        window.location.reload();
+                    } else {
+                        alert("操作失败:" + result.msg);
+                    }
+                }
+            });
+        });
+    });
+</script>
 
 
 

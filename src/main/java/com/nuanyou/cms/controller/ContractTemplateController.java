@@ -261,6 +261,18 @@ public class ContractTemplateController {
 
     }
 
+
+    @RequestMapping(path = "publish", method = RequestMethod.GET)
+    @ResponseBody
+    public APIResult publish(Long id) {
+        APIResult res = this.contractService.releaseContractTemplate(id);
+        if (res.getCode() != 0) {
+            throw new APIException(res.getCode(), res.getMsg());
+        }
+        return new APIResult();
+    }
+
+
     @InitBinder("params")
     public void initAccountBinder(WebDataBinder binder) {
         // @ModelAttribute("params")

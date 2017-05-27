@@ -3,7 +3,7 @@
 <div id="content-header">
     <div id="breadcrumb">
         <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-        <a href="/templateParameter/list" class="tip-bottom" data-original-title="">商圈管理</a>
+        <a href="list" class="tip-bottom" data-original-title="">参数管理</a>
     </div>
 </div>
 <div class="widget-title">
@@ -52,8 +52,7 @@
             <td>
                 <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
                 <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
-                <a data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</a>
-##                <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</button>
+                <a data-id="$!entity.id" class="btn btn-danger btn-mini remove-item">删除</a>
             </td>
         </tr>
         #end

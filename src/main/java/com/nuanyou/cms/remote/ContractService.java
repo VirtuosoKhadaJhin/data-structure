@@ -29,7 +29,10 @@ public interface ContractService {
     @RequestMapping(value = "/template/paramter/{id}",method = RequestMethod.DELETE)
     public APIResult deleteContractParameter(@PathVariable(value = "id") Long id);
 
-
+    @ApiOperation(value = "发布合同模版", notes = "发布合同模版")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "发布合同模版")})
+    @RequestMapping(value = "/template/{id}/release",method = RequestMethod.POST)
+    public APIResult releaseContractTemplate(@PathVariable(value = "id") Long id);
 
     @ApiOperation(value = "获取合同详情.", notes = "获取合同详情")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "合同详情")})
