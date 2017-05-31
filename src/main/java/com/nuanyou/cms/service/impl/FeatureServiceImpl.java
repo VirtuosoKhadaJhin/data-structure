@@ -48,6 +48,10 @@ public class FeatureServiceImpl implements FeatureService {
                     predicate.add(p);
                 }
 
+                if (entity.getType() != null) {
+                    predicate.add(cb.equal(root.get("type"), entity.getType()));
+                }
+
                 if (entity.getCat() != null) {
                     Predicate p = cb.equal(root.get("cat"), entity.getCat());
                     predicate.add(p);

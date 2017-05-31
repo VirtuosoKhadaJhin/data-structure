@@ -67,6 +67,9 @@ public class FeatureController {
 
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index, Feature entity, Model model) {
+        if (entity.getType() == null)
+            entity.setType((byte) 1 );
+
         Page<Feature> page = featureService.findByCondition(index, entity);
         List<Country> countries = this.countryDao.findAll();
         model.addAttribute("page", page);

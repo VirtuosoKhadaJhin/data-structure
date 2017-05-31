@@ -86,22 +86,9 @@
                                     </div>
                                     <label class="control-label">城市</label>
                                     <div class="controls">
-                                        <select id="city.id" name="city.id" class="span11 child"
-                                                def-value="$!entity.city.id">
+                                        <select id="city.id" name="city.id" class="span11 child" def-value="$!entity.city.id" required>
                                             <option value="">全部</option>
                                         </select>
-                                    </div>
-                                    <label class="control-label">阅读量</label>
-                                    <div class="controls">
-                                        <input name="readnum" for="readnum" type="text" class="span11"
-                                               placeholder="阅读量"
-                                               value="$!entity.readnum">
-                                    </div>
-                                    <label class="control-label">点赞数量</label>
-                                    <div class="controls">
-                                        <input name="likenum" for="likenum" type="text" class="span11"
-                                               placeholder="英文名称"
-                                               value="$!entity.likenum">
                                     </div>
                                     <label class="control-label">是否显示</label>
                                     <div class="controls">
