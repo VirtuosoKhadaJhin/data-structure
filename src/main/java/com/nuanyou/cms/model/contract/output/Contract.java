@@ -40,6 +40,8 @@ public class Contract {
     private String paperContract;
     private String remark;
     private String contractNo;
+    private Long approverId;
+    private String approverName;
 
 
     @ApiModelProperty(value = "合同id")
@@ -319,5 +321,24 @@ public class Contract {
 
     public void setContractNo(String contractNo) {
         this.contractNo = contractNo;
+    }
+
+    @ApiModelProperty(value = "审核人id")
+    @JsonProperty("approverid")
+    @JsonIgnore
+    public Long getApproverId() {
+        return approverId;
+    }
+
+    public void setApproverId(Long approverId) {
+        this.approverId = approverId;
+    }
+
+    public String getApproverName() {
+        return approverName;
+    }
+
+    public void setApproverName(String approverName) {
+        this.approverName = approverName;
     }
 }

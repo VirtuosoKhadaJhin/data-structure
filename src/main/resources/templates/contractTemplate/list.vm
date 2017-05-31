@@ -18,6 +18,7 @@
         <th>国家</th>
         <th>标题</th>
         <th>类型</th>
+        <th>发布状态</th>
         <th class="table-set" width="90px">操作</th>
     </tr>
     </thead>
@@ -28,6 +29,7 @@
             <td>$!entity.countryName</td>
             <td>$!entity.title</td>
             <td>#if($!entity.type)主合同#else 附加合同#end</td>
+            <td>$!entity.status.name</td>
             <td>
                 <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
                 <a data-id="$!entity.id" class="btn btn-danger btn-mini publish">发布</a>

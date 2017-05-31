@@ -5,11 +5,16 @@ import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.component.FileClient;
 import com.nuanyou.cms.dao.MerchantDao;
+import com.nuanyou.cms.entity.CmsUser;
 import com.nuanyou.cms.entity.Country;
-import com.nuanyou.cms.model.contract.output.*;
+import com.nuanyou.cms.model.contract.output.Contract;
+import com.nuanyou.cms.model.contract.output.ContractTemplate;
+import com.nuanyou.cms.model.contract.output.ContractTemplates;
 import com.nuanyou.cms.remote.AccountService;
 import com.nuanyou.cms.remote.ContractService;
+import com.nuanyou.cms.service.ContractModuleService;
 import com.nuanyou.cms.service.CountryService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.JsonUtils;
 import io.swagger.annotations.ApiParam;
@@ -18,9 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +36,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +52,10 @@ public class ContractController {
     private FileClient fileClient;
     @Autowired
     private ContractService contractService;
+
+    @Autowired
+    private ContractModuleService contractModuleService;
+
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -85,23 +90,8 @@ public class ContractController {
                        @RequestParam(value = "contractNum", required = false) Boolean contractNum,
                        @RequestParam(value = "paperContract", required = false) Boolean paperContract) {
 
-        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, "[2]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), businessLicense, paperContract, startTime, endTime, index, limit);
-        Contracts contractsData = contracts.getData();
-        Pageable pageable = new PageRequest(index - 1, limit);
-        List<Contract> list = contractsData.getList();
-        if (list == null)
-            list = new ArrayList(0);
-
-        // 本地名称显示商户本地名称
-        for (Contract contract : list) {
-            Long mchid = contract.getMchId();
-            String localName = merchantDao.getLocalName(mchid);
-            contract.setMchName(localName);
-        }
-        Page<Contract> page = new PageImpl(list, pageable, contractsData.getTotal());
-
+        Page<Contract> page = contractModuleService.getContracts(userId, merchantId, id, merchantName, "[2]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), businessLicense, paperContract, startTime, endTime, index, limit);
         List<Country> countries = countryService.getIdNameList();
-
         model.addAttribute("page", page);
         model.addAttribute("countries", countries);
         model.addAttribute("countryId", countryId);
@@ -121,6 +111,8 @@ public class ContractController {
         model.addAttribute("limit", limit);
         return "contract/list";
     }
+
+
 
     @RequestMapping("detail")
     public String getDetail(Model model,
@@ -168,16 +160,8 @@ public class ContractController {
             @ApiParam(value = "结束时间(yyyy-MM-dd)") @RequestParam(value = "endtime", required = false) String endTime,
             @ApiParam(value = "页序号，默认从1开始") @RequestParam(value = "page", required = false, defaultValue = "1") Integer index,
             @ApiParam(value = "每页条目数,默认20条") @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit) {
-
-        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, "[4]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), null, null, startTime, endTime, index, limit);
-        Contracts contractsData = contracts.getData();
-        Pageable pageable = new PageRequest(index - 1, limit);
-        List<Contract> list = contractsData.getList();
-        if (list == null)
-            list = new ArrayList(0);
-        Page<Contract> page = new PageImpl(list, pageable, contractsData.getTotal());
+        Page<Contract> page = contractModuleService.getContracts(userId, merchantId, id, merchantName, "[4]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), null, null, startTime, endTime, index, limit);
         model.addAttribute("page", page);
-
         model.addAttribute("userid", userId);
         model.addAttribute("merchantname", merchantName);
         model.addAttribute("merchantid", merchantId);
@@ -215,13 +199,18 @@ public class ContractController {
         return "contract/edit";
     }
 
+    @Autowired
+    private UserService  userService;
 
     @RequestMapping(path = "verify", method = RequestMethod.GET)
     @ResponseBody
     public APIResult verify(Long id, Boolean valid, Long contractId) throws ParseException {
         Long userid = UserHolder.getUser().getUserid();
+        String email=UserHolder.getUser().getEmail();
+        CmsUser user=userService.getUserByEmail(email);
+
         //审核
-        APIResult approve = this.contractService.approve(userid, contractId, valid);
+        APIResult approve = this.contractService.approve(user.getId(), contractId, valid);
         if (approve.getCode() != 0) {
             throw new APIException(approve.getCode(), approve.getMsg());
         }

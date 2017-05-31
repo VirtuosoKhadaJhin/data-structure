@@ -1,6 +1,7 @@
 package com.nuanyou.cms.model.contract.output;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.nuanyou.cms.model.contract.enums.TemplateStatus;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
@@ -13,11 +14,15 @@ public class ContractTemplate {
 
     private Long countryId;
 
+    private String countryName;
+
     private String title;
 
     private Integer type;
 
-    private String countryName;
+    private Integer status;
+
+    private TemplateStatus templateStatus;
 
     private List<ContractParameter> parameters;
 
@@ -70,6 +75,14 @@ public class ContractTemplate {
         this.type = type;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     @ApiModelProperty(value = "模板参数集合")
     @JsonProperty("parameters")
     public List<ContractParameter> getParameters() {
@@ -80,11 +93,19 @@ public class ContractTemplate {
         this.parameters = parameters;
     }
 
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
+    }
+
     public String getCountryName() {
         return countryName;
     }
 
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
+    public TemplateStatus getTemplateStatus() {
+        return templateStatus;
+    }
+
+    public void setTemplateStatus(TemplateStatus templateStatus) {
+        this.templateStatus = templateStatus;
     }
 }
