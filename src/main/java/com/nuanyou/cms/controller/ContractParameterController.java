@@ -1,11 +1,12 @@
 package com.nuanyou.cms.controller;
 
+import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
-import com.nuanyou.cms.entity.TemplateParameter;
 import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractParameter;
 import com.nuanyou.cms.model.contract.output.ContractParameters;
 import com.nuanyou.cms.model.contract.request.TemplateParameterRequest;
+import com.nuanyou.cms.model.contract.request.UpdateParameterRequest;
 import com.nuanyou.cms.remote.ContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -49,27 +51,50 @@ public class ContractParameterController {
 
 
     @RequestMapping("update")
-    public String update(TemplateParameter entity, HttpServletResponse response, TemplateParameterRequest request) throws IOException {
-        APIResult<ContractParameter> contractParameterAPIResult = this.contractService.saveTemplateParamter(request);
-        String url = "list";
-        return "redirect:" + url;
+    public String update( HttpServletResponse response, TemplateParameterRequest request,Long id,Integer dataType) throws IOException {
+        request.setType(dataType);
+        if(id==null){
+            APIResult<ContractParameter> res = this.contractService.saveTemplateParamter(request);
+            if (res.getCode() != 0) {
+                throw new APIException(res.getCode(), res.getMsg());
+            }
+            ContractParameter data = res.getData();
+            String url = "edit?type=3&id=" + data.getId();
+            return "redirect:" + url;
+        }else{
+            UpdateParameterRequest updateParameterRequest=new UpdateParameterRequest();
+            updateParameterRequest.setHint(request.getHint());
+            updateParameterRequest.setRegex(request.getRegex());
+            updateParameterRequest.setName(request.getName());
+            updateParameterRequest.setRemark(request.getRemark());
+            APIResult<ContractParameter> res = this.contractService.updateContractParameter(id,updateParameterRequest);
+            if (res.getCode() != 0) {
+                throw new APIException(res.getCode(), res.getMsg());
+            }
+            String url = "edit?type=3&id=" +id;
+            return "redirect:" + url;
+        }
     }
+
+    @RequestMapping(path = "remove", method = RequestMethod.GET)
+    @ResponseBody
+    public APIResult remove(Long id) {
+        APIResult res = this.contractService.deleteContractParameter(id);
+        if (res.getCode() != 0) {
+            throw new APIException(res.getCode(), res.getMsg());
+        }
+        return new APIResult();
+    }
+
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
-        TemplateParameterRequest entity = new TemplateParameterRequest();
-        entity.setKey("1");
-        entity.setDefaultValue("2");
-        entity.setEditable(true);
-        entity.setHint("3");
-        entity.setRegex("4");
-        entity.setNullable(true);
-        entity.setMultiValuable(true);
-        entity.setSort(3);
-        entity.setName("5");
-        entity.setType(2);
-        //entity = cityDao.findOne(id);
-        model.addAttribute("entity", entity);
+        ContractParameter data=null;
+        if (id != null) {
+            APIResult<ContractParameter> res = this.contractService.saveTemplateParamter(id);
+            data = res.getData();
+        }
+        model.addAttribute("entity", data);
         model.addAttribute("type", type);
         return "contractParameter/edit";
     }

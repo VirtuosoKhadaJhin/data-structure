@@ -10,71 +10,76 @@
     <span class="icon"><i class="icon-th"></i></span>
     <h5>列表</h5>
 </div>
-<table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
-    <thead>
-    <tr role="row">
-        <th>ID</th>
-        <th>本地名称</th>
-        <th>合同上传日期</th>
-        <th>合同模版</th>
-        <th>合同类型</th>
-        <th>合同编号</th>
-        <th>上传人</th>
-        <th>国家</th>
-        <th>合同起始日</th>
-        <th>合同截止日</th>
-        <th>电子合同</th>
-        <th>营业执照</th>
-        <th>纸质合同</th>
-        <th>生效</th>
-        <th>操作</th>
-    </tr>
-    </thead>
-    <tbody>
-        #foreach($entity in $!page.content)
-        <tr class="odd gradeX">
-            <td>$!entity.id</td>
-            <td>$!entity.mchName</td>
-            <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.submitTime)</td>
-            <td>$!entity.templateTitle</td>
-            <td>#if($!entity.type == 1)主合同#else 附加合同#end</td>
-            <td>$!entity.contractNo</td>
-            <td>$!entity.username</td>
-            <td>
-                #foreach($e in $!countries)#if($!entity.countryId==$!e.id) $!e.name#end#end
-            </td>
-            <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.startTime)</td>
-            <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.endTime)</td>
-            <td><a href="/contract/preview?id=$!entity.id" target="_blank" class="btn btn-success btn-mini">查看</a></td>
-            <td>
-                #if($!entity.type == 1)
-                    #if($!entity.businessLicense)
-                        <a href="$!entity.businessLicense" target="_blank" class="btn btn-success btn-mini">查看</a>
-                    #else
-                        <a class="btn btn-warning btn-mini new-img" data-type="1" data-id="$!entity.id" href="javascript:void(0);">上传</a>
-                    #end
-                #else
-                    无需上传
-                #end
-            </td>
-            <td>
-                #if($!entity.paperContract)
-                    <a href="$!entity.paperContract" target="_blank" class="btn btn-success btn-mini">查看</a>
-                #else
-                    <a class="btn btn-warning btn-mini new-img" data-type="2" data-id="$!entity.id" href="javascript:void(0);">上传</a>
-                #end
-            </td>
-            <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.approveTime)</td>
-            <td>
-                <a class="btn btn-success btn-mini verify" data-id="$!entity.id" valid="false">驳回</a>
-                #if($!entity.businessLicense && $!entity.paperContract)
-                    <a class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</a>
-                #end
-            </td>
+
+<div style="overflow: auto;width: 100%">
+
+    <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+        <thead>
+        <tr role="row">
+            <th>ID</th>
+            <th>本地名称</th>
+            <th>合同上传日期</th>
+            <th>合同模版</th>
+            <th>合同类型</th>
+            <th>合同编号</th>
+            <th>上传人</th>
+            <th>国家</th>
+            <th>合同起始日</th>
+            <th>合同截止日</th>
+            <th>电子合同</th>
+            <th>营业执照</th>
+            <th>纸质合同</th>
+            <th>生效</th>
+            <th>操作</th>
         </tr>
-        #end
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            #foreach($entity in $!page.content)
+            <tr class="odd gradeX">
+                <td>$!entity.id</td>
+                <td>$!entity.mchName</td>
+                <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.submitTime)</td>
+                <td>$!entity.templateTitle</td>
+                <td>#if($!entity.type == 1)主合同#else 附加合同#end</td>
+                <td>$!entity.contractNo</td>
+                <td>$!entity.username</td>
+                <td>
+                    #foreach($e in $!countries)#if($!entity.countryId==$!e.id) $!e.name#end#end
+                </td>
+                <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.startTime)</td>
+                <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.endTime)</td>
+                <td><a href="/contract/preview?id=$!entity.id" target="_blank" class="btn btn-success btn-mini">查看</a>
+                </td>
+                <td>
+                    #if($!entity.type == 1)
+                        #if($!entity.businessLicense)
+                            <a href="$!entity.businessLicense" target="_blank" class="btn btn-success btn-mini">查看</a>
+                        #else
+                            <a class="btn btn-warning btn-mini new-img" data-type="1" data-id="$!entity.id"
+                               href="javascript:void(0);">上传</a>
+                        #end
+                    #else
+                        无需上传
+                    #end
+                </td>
+                <td>
+                    #if($!entity.paperContract)
+                        <a href="$!entity.paperContract" target="_blank" class="btn btn-success btn-mini">查看</a>
+                    #else
+                        <a class="btn btn-warning btn-mini new-img" data-type="2" data-id="$!entity.id"
+                           href="javascript:void(0);">上传</a>
+                    #end
+                </td>
+                <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.approveTime)</td>
+                <td>
+                    <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">审核</a>
+
+                </td>
+            </tr>
+            #end
+        </tbody>
+    </table>
+</div>
 #parse("common/list_mid.vm")
 <form>
     <div class="control-group">
@@ -179,33 +184,7 @@
             $("#new-img-modal").modal();
         });
 
-        $(".verify").each(function (i, o) {
-            $(o).on("click", function (event) {
-                var id = $(this).attr("data-id");
-                var valid = $(this).attr("valid");
-                var message;
-                if (valid == "false") {
-                    message = "确定驳回此合同吗?";
-                } else {
-                    message = "确定通过此合同吗?";
-                }
-                if (confirm(message)) {
-                    $.ajax({
-                        url: 'verify',
-                        data: {contractId: id, valid: valid},
-                        type: 'get',
-                        success: function (result) {
-                            if (result.code == 0) {
-                                alert("操作成功");
-                                window.location.reload();
-                            } else {
-                                alert("Fail Code: " + result.code + " MSG: " + result.msg);
-                            }
-                        }
-                    });
-                }
-            })
-        });
+
     });
 </script>
 #parse("common/list_end.vm")

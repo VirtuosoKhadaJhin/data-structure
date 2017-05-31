@@ -32,4 +32,9 @@ public class CountryServiceImpl implements CountryService {
         BeanUtils.copyBeanNotNull(entity, oldEntity);
         return countryDao.save(oldEntity);
     }
+
+    @Override
+    public Country findOne(Long countryId) {
+        return this.countryDao.findOne(countryId);
+    }
 }

@@ -11,14 +11,18 @@ import java.util.List;
 public class ContractTemplate {
     private Long id;
 
+    private Long countryId;
+
     private String title;
 
     private Integer type;
 
+    private String countryName;
+
     private List<ContractParameter> parameters;
 
-    public ContractTemplate(Long id, String title, Integer type) {
-        this.id = id;
+    public ContractTemplate(Long countryId, String title, Integer type) {
+        this.countryId = countryId;
         this.title = title;
         this.type = type;
     }
@@ -34,6 +38,16 @@ public class ContractTemplate {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @ApiModelProperty(value = "国家")
+    @JsonProperty("countryid")
+    public Long getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(Long countryId) {
+        this.countryId = countryId;
     }
 
     @ApiModelProperty(value = "模板标题")
@@ -64,5 +78,13 @@ public class ContractTemplate {
 
     public void setParameters(List<ContractParameter> parameters) {
         this.parameters = parameters;
+    }
+
+    public String getCountryName() {
+        return countryName;
+    }
+
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
     }
 }
