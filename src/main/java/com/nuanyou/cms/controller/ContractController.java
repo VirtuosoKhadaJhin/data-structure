@@ -125,14 +125,15 @@ public class ContractController {
     @RequestMapping("detail")
     public String getDetail(Model model,
                             @RequestParam(value = "id", required = true) Long id){
-        APIResult<Contract> result = contractService.detail(id);
+        APIResult<Contract> result = contractService.getContract(id);
         Contract detail = result.getData();
         if(detail!=null){
             Long mchid = detail.getMchId();
             String localName = merchantDao.getLocalName(mchid);
 
             model.addAttribute("id",detail.getId());
-            model.addAttribute("mchName",localName);
+            model.addAttribute("mchName",localName);//企业名称
+            model.addAttribute("merchantname", detail.getMchName());//商户名称
             model.addAttribute("approveTime",detail.getApproveTime());
             model.addAttribute("templateTitle",detail.getTemplateTitle());
             model.addAttribute("startTime",detail.getStartTime());
