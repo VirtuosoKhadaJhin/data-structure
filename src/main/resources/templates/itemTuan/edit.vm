@@ -230,6 +230,10 @@
 
         // 取得商户可选择的单品分类列表以及单品商品列表，弹出套餐产品设置页面
         var box = null;
+        $("select[name='merchant.id']").on("change", function () {
+            box = null;
+        });
+
         $(".setDetail").on("click", function () {
             if (box == null) {
                 var mchId = $("select[name='merchant.id']").val();
@@ -252,6 +256,8 @@
                             box.initSelecteditemList(result.data);
                         }
                     });
+                }else{
+                    box.initSelecteditemList([]);
                 }
                 $.ajax({
                     url: '/itemCat/api/list', async: true, data: {id: mchId, display: true},
