@@ -33,11 +33,11 @@ import java.util.List;
 @Controller
 @RequestMapping("contractTemplate")
 public class ContractTemplateController {
+
     @Autowired
     private ContractService contractService;
     @Autowired
     private CountryService countryService;
-
     @Autowired
     private ContractTemplateService contractTemplateService;
 
@@ -103,9 +103,9 @@ public class ContractTemplateController {
             selectedParams = template.getParameters();
         }
         setSelectableParams(selectedParams, params);
+        model.addAttribute("entity", template);
         model.addAttribute("selectableParams", params);
         model.addAttribute("countries", countries);
-        model.addAttribute("entity", template);
         model.addAttribute("selectedParams", selectedParams);
         model.addAttribute("type", type);
         return "contractTemplate/edit";
