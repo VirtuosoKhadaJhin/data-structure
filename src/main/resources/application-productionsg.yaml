@@ -1,7 +1,7 @@
 spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://test20-db.9ny.me:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://sg.nuanyou20db.91nuanyou.com:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
     username: nuanyou20
     password: 1qaz2wsxE
     test-on-borrow: true
@@ -35,7 +35,7 @@ server:
       directory: /var/log/accesslog/
 
 logging:
-  config: classpath:logback-test.xml
+  config: classpath:logback-prod.xml
 
 oss:
   bucketName: nuanyou-image
@@ -49,30 +49,30 @@ s3:
   domain: https://kr.file.91nuanyou.com
   region: ap-northeast-2
 
-nuanyou-host: http://testh5.91nuanyou.com
-withdrawurl: http://testuser.api.91nuanyou.com
-nuanyou-api: http://testapi30.99mice.com:8081
+nuanyou-host: http://h5.m.91nuanyou.com
+withdrawurl: http://user.api.91nuanyou.com
+nuanyou-api: http://api30.91nuanyou.com
 
 upload:
   s3server: https://kr.file.91nuanyou.com
 elasticsearch:
   host: search-nyesearch-cgkyq332tvpvbi7q4n7nv4o5pe.ap-northeast-2.es.amazonaws.com
-  index: test-cms-operation
+  index: prod-cms-operation
 
 AWS:
   sns:
     topic:
-      refund: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refund
-      refundSuccess: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refundSuccess
-      refundFail: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refundFail
+      refund: arn:aws:sns:ap-southeast-1:904656167085:prod-ny-v3-refund
+      refundSuccess: arn:aws:sns:ap-southeast-1:904656167085:prod-ny-v3-refundSuccess
+      refundFail: arn:aws:sns:ap-southeast-1:904656167085:prod-ny-v3-refundFail
 
 sso:
-  urlPatterns: /dd
+  urlPatterns: /*
   urlExcludePattern: ^/test|^/dist/.*|^/favicon.*
-  loginUrl: https://testuser.api.91nuanyou.com/oauth/corp
+  loginUrl: https://sso.91nuanyou.com/oauth/corp
   reLogin: false
-  serverName: http://127.0.0.1:8085
-  validateCodeUrl: https://testuser.api.91nuanyou.com/corp/oauth/access_token
+  serverName: http://sg.merchant30.91nuanyou.com
+  validateCodeUrl: https://sso.91nuanyou.com/corp/oauth/access_token
   stateExpiredInMilliSeconds: 120000
 
 

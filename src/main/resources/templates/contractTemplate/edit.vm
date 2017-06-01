@@ -1,0 +1,290 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 菜单管理</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+            <a href="/contractTemplate/list" class="tip-bottom" data-original-title="">模板参数管理</a>
+            <a href="#" class="tip-bottom" data-original-title="">编辑</a>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                        <h5>编辑&查看</h5>
+                        <input id="type" name="type" type="hidden" value="$!type">
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form action="update" method="post" a
+                              class="form-horizontal templateFormValidate"
+                              role="form">
+                            <div class="control-group">
+                                <input name="id" type="hidden" class="form-control" placeholder="ID"
+                                       value="$!entity.id">
+                                <label class="control-label">国家</label>
+                                <div class="controls">
+                                    <select name="countryId" class="span5">
+                                        #foreach($e in $!countries)
+                                            <option value="$!e.id" #if($!e.id == $!entity.countryId)
+                                                    selected #end>$!e.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                                <label class="control-label">标题</label>
+                                <div class="controls">
+                                    <input name="title" type="text" class="span5" value="$!entity.title"">
+                                </div>
+                                <label class="control-label">类型</label>
+                                <div class="controls">
+                                    <select class="span5" name="templateType">
+                                        <option value="1"  #if($!entity.type==1)selected #end>主合同</option>
+                                        <option value="2"  #if($!entity.type==2)selected #end>附加合同</option>
+                                    </select>
+                                </div>
+                                <label class="control-label">选择已有参数</label>
+                                <div class="controls">
+                                    <select class="span5 select2" id="selectedParamIds" name="selectedParamIds"
+                                            multiple>
+                                        <option value="0">全部</option>
+                                        #foreach($param in $!allParams)
+                                            <option value="$!param.id">
+                                                $!param.id  >>  $!param.key >>  $!param.name >> $!param.remark
+                                            </option>
+                                        #end
+                                    </select>
+                                </div>
+                                <label class="control-label">自定义参数</label>
+                                <div class="controls">
+                                    <div style="overflow: auto;width: 100%">
+
+                                        <table class="table table-bordered data-table dataTable" id="mytable"
+                                               style="width: 80%">
+                                            <tbody>
+                                            <tr id="0">
+                                                <th id="roleSuperid0">key</th>
+                                                <th id="roleSuperid0">name</th>
+                                                <th id="roleSuperid0">默认值</th>
+                                                <th id="roleSuperid0">数据类型</th>
+                                                <th id="roleSuperid0">是否可编辑</th>
+                                                <th id="roleSuperid0">是否可NULL</th>
+                                                <th id="roleSuperid0">弹出提示</th>
+                                                <th id="roleSuperid0">是否多选</th>
+                                                <th id="roleSuperid0">正则</th>
+                                                <th id="roleSuperid0">默认提示</th>
+                                                <th><input type="button" value="添加行" class="addRow btn-info"></th>
+                                            </tr>
+
+                                                #foreach($param in $!selectedParams)
+                                                <tr>
+                                                    <td><input name="key" value="$!param.key" style="width: 200px"
+                                                               readonly>
+                                                        <input name="paramId" value="$!param.id" style="width: 90px"
+                                                               type="hidden"
+                                                               readonly>
+                                                    </td>
+                                                    <td><input name="name" value="$!param.name" style="width: 50px"
+                                                               readonly></td>
+                                                    <td><input name="defaultValue" value="$!param.defaultValue"
+                                                               style="width: 50px" readonly></td>
+                                                    <td>
+                                                        <select name="dataType" style="width: 70px" readonly>
+                                                            <option value="1"  #if($!param.type==1)selected #end>
+                                                                文本
+                                                            </option>
+                                                            <option value="2" #if($!param.type==2)selected #end>整型
+                                                            </option>
+                                                            <option value="3" #if($!param.type==3)selected #end>
+                                                                浮点型
+                                                            </option>
+                                                            <option value="4" #if($!param.type==4)selected #end>日期
+                                                            </option>
+                                                            <option value="5" #if($!param.type==5)selected #end>
+                                                                备选数据
+                                                            </option>
+                                                        </select>
+
+                                                    </td>
+
+                                                    <td>
+                                                        <select name="editable" style="width: 70px" readonly>
+                                                            <option value="true"
+                                                                    #if($!param.editable==true)selected #end>true
+                                                            </option>
+                                                            <option value="false"
+                                                                    #if($!param.editable==false)selected #end>false
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select name="nullable" style="width: 70px" readonly>
+                                                            <option value="true"
+                                                                    #if($!param.nullable==true)selected #end>true
+                                                            </option>
+                                                            <option value="false"
+                                                                    #if($!param.nullable==true)selected #end>false
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input name="hint" style="width: 50px" readonly
+                                                               value="$!param.hint"></td>
+                                                    <td>
+                                                        <select name="multiValuable" style="width: 70px" readonly>
+                                                            <option value="true"
+                                                                    #if($!param.nullable==true)selected #end>true
+                                                            </option>
+                                                            <option value="false"
+                                                                    #if($!param.nullable==true)selected #end>false
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input name="regex" readonly style="width: 100px"
+                                                               value="$!param.regex"></td>
+                                                    <td><input name="remark" readonly style="width: 100px"
+                                                               value="$!param.remark"></td>
+                                                    <td style="text-align: center">
+
+                                                        <input type='button' value="删除行"
+                                                               class="removeRow btn-warning">
+                                                    </td>
+                                                </tr>
+                                                #end
+
+                                            <tr class="firstRow" disabled="disabled" style="display: none">
+                                                <td>
+                                                    <input name="key" style="width: 200px">
+                                                    <input name="paramId"type="hidden" value="" style="width: 90px" readonly>
+                                                </td>
+                                                <td><input name="name" style="width: 50px"></td>
+                                                <td><input name="defaultValue" style="width: 50px"></td>
+                                                <td>
+                                                    <select name="dataType" style="width: 70px" readonly>
+                                                        <option value="1">文本</option>
+                                                        <option value="2">整型</option>
+                                                        <option value="3">浮点型</option>
+                                                        <option value="4">日期</option>
+                                                        <option value="5">备选数据</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select name="editable" style="width: 70px">
+                                                        <option value="true">true</option>
+                                                        <option value="false">false</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select name="nullable" style="width: 70px">
+                                                        <option value="true">true</option>
+                                                        <option value="false">false</option>
+                                                    </select>
+                                                </td>
+                                                <td><input name="hint" style="width: 50px"></td>
+                                                <td>
+                                                    <select name="multiValuable" style="width: 70px">
+                                                        <option value="true">true</option>
+                                                        <option value="false">false</option>
+                                                    </select>
+                                                </td>
+                                                <td><input name="regex" style="width: 100px"></td>
+                                                <td><input name="remark" style="width: 100px"></td>
+                                                <td style="text-align: center">
+                                                    <input type='button' value="删除行" class="removeRow btn-warning">
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    #if($!type==2 || $!type==1)
+                                        <button type="button" class="btn btnSave btn-success">保存
+                                        </button>
+                                    #elseif($!type==3)
+                                        <button type="button" class="btn btnSave btn-success">保存
+                                        </button>
+                                    #end
+                                    <a class="btn btn-primary" href="list">返回</a>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+    #include("common/js-support.vm")
+    #include("common/image-support.vm")
+<script src="/dist/js/cascade-select.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        var tr=$(".firstRow").html();
+        $(".btnSave").click(function () {
+            var form = $(".templateFormValidate");
+            $(".firstRow").remove();
+            $.ajax({
+                url: 'saveTemplate',
+                data: $(form).serialize(),
+                type: 'post',
+                success: function (result) {
+                    if (result.code == 0) {
+                        alert("操作成功");
+                        window.location.href = "/contractTemplate/edit?type=2&id=" + result.data;
+                    } else {
+                        alert(result.msg);
+                    }
+                }
+            });
+        });
+
+
+        $("#mytable").delegate(".removeRow", "click", function (e) {
+            var currEle = e.currentTarget;
+            $(currEle).parent().parent().remove();
+        });
+
+        $("#mytable").delegate(".addRow", "click", function (e) {
+            var table = $("#mytable");
+            //var trHTML=$("tr[name='firstRow']").eq(0).prop('outerHTML');
+            var trHTML = "<tr>" + tr + "</tr>";
+            table.append(trHTML);
+        });
+
+
+        $(".templateFormValidate").validate({
+            rules: {
+                sort: {
+                    digits: true
+                },
+                title: {
+                    maxlength: 50
+                },
+                source: {
+                    required: true, maxlength: 20
+                }
+            },
+            errorPlacement: function (error, element) {
+                $(element)
+                        .closest("form")
+                        .find(element)
+                        .after(error);
+            },
+            errorElement: "span"
+        });
+
+
+    });
+
+</script>
+</html>

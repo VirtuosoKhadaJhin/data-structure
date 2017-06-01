@@ -3,10 +3,12 @@ package com.nuanyou.cms.model.contract.output;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.List;
+
 /**
  * Created by Alan.ye on 2016/9/12.
  */
-public class ContractTemplateParameter implements Comparable<ContractTemplateParameter> {
+public class ContractParameter implements Comparable<ContractParameter> {
 
     private Long id;
 
@@ -20,7 +22,7 @@ public class ContractTemplateParameter implements Comparable<ContractTemplatePar
 
     private Integer sort = 0;
 
-    private String source;
+    private List<CodeAndName> source;
 
     private boolean editable;
 
@@ -68,7 +70,7 @@ public class ContractTemplateParameter implements Comparable<ContractTemplatePar
         this.defaultValue = defaultValue;
     }
 
-    @ApiModelProperty(value = "类型：1、文本，2：数字")
+    @ApiModelProperty(value = "类型：1、文本，2、整型 ，3、浮点型，4、日期，5、备选数据")
     @JsonProperty("type")
     public Integer getType() {
         return type;
@@ -91,11 +93,11 @@ public class ContractTemplateParameter implements Comparable<ContractTemplatePar
     }
     @ApiModelProperty(value = "备选数据源")
     @JsonProperty("source")
-    public String getSource() {
+    public List<CodeAndName>  getSource() {
         return source;
     }
 
-    public void setSource(String source) {
+    public void setSource(List<CodeAndName>  source) {
         this.source = source;
     }
     @ApiModelProperty(value = "是否可编辑")
@@ -180,9 +182,13 @@ public class ContractTemplateParameter implements Comparable<ContractTemplatePar
     }
 
     @Override
-    public int compareTo(ContractTemplateParameter that) {
+    public int compareTo(ContractParameter that) {
         return this.sort.compareTo(that.sort);
     }
 
+    public static class CodeAndName{
+        public String code;
+        public String name;
+    }
 
 }

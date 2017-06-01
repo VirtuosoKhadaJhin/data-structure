@@ -1,0 +1,106 @@
+#parse("common/list_start.vm")
+
+<div id="content-header">
+    <div id="breadcrumb">
+        <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+        <a href="/templateParameter/list" class="tip-bottom" data-original-title="">模板管理</a>
+    </div>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
+</div>
+<table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+    <thead>
+    <tr role="row">
+        <th>ID</th>
+        <th>国家</th>
+        <th>标题</th>
+        <th>类型</th>
+        <th>发布状态</th>
+        <th class="table-set" width="90px">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.id</td>
+            <td>$!entity.countryName</td>
+            <td>$!entity.title</td>
+            <td>#if($!entity.type==1)主合同#else 附加合同#end</td>
+            <td>$!entity.templateStatus.name</td>
+            <td>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
+                <a data-id="$!entity.id" class="btn btn-danger btn-mini publish">发布</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#parse("common/list_mid.vm")
+<form>
+    <div class="control-group">
+        <label for="status">国家：</label>
+        <select  name="countryId" class="span11">
+            <option value="">全部</option>
+            #foreach($c in $!countries)
+                <option value="$!c.id"
+                    #if($!countryId== $!c.id)
+                        selected
+                    #end
+                >
+                    $!c.name
+                </option>
+            #end
+        </select>
+
+
+        <label for="status">$!status 状态：</label>
+        <select id="status" name="status" class="span11">
+            <option value="">全部</option>
+            #foreach($c in $!templateStatuses)
+                <option value="$!c"
+                    #if($!status== $!c)
+                        selected
+                    #end
+                >
+                    $!c.name
+                </option>
+            #end
+        </select>
+        <label>合同类型</label>
+        <select name="type"  class="span11">
+            <option value="">全部</option>
+            <option value="1"  #if($!type==1)selected #end>主合同</option>
+            <option value="2"  #if($!type==2)selected #end>附加合同</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">查询</button>
+</form>
+#parse("common/list_end.vm")
+
+<script>
+    $(".publish").each(function (i, o) {
+        $(o).on("click", function (event) {
+            if (!confirm('确实要发布吗?'))
+                return;
+            var dataId = $(this).attr("data-id");
+            $.ajax({
+                url: 'publish',
+                data: {id: dataId},
+                type: 'get',
+                success: function (result) {
+                    if (result.code == 0) {
+                        window.location.reload();
+                    } else {
+                        alert("操作失败:" + result.msg);
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
+
