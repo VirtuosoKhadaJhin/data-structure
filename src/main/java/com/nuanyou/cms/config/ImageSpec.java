@@ -39,6 +39,7 @@ public enum ImageSpec {
 
     BannerIndex(720, 400, 150, "jpg", ImageSpec.LIMIT),
     BannerUp(338, 128, 80, "jpg", ImageSpec.LIMIT),
+    HotActivity(338, 128, 80, "jpg", ImageSpec.LIMIT),
     BannerDown(270, 134, 50, "jpg", ImageSpec.LIMIT);
 
     public static final String CLIP = "CLIP";

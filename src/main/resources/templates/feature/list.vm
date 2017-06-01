@@ -82,6 +82,7 @@
 
         <label>类型</label>
         <select name="type" class="span11">
+            <option value="">全部</option>
             <option value="1" #if($!entity.type==1) selected #end>普通</option>
             <option value="2" #if($!entity.type==2) selected #end>精选</option>
         </select>
