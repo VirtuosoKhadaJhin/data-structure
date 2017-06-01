@@ -54,8 +54,7 @@
                                 <div class="controls">
                                     <select class="span5 select2" id="selectedParamIds" name="selectedParamIds"
                                             multiple>
-                                        <option value="0">全部</option>
-                                        #foreach($param in $!allParams)
+                                        #foreach($param in $!selectableParams)
                                             <option value="$!param.id">
                                                 $!param.id  >>  $!param.key >>  $!param.name >> $!param.remark
                                             </option>
@@ -87,8 +86,8 @@
                                                 <tr>
                                                     <td><input name="key" value="$!param.key" style="width: 200px"
                                                                readonly>
-                                                        <input name="paramId" value="$!param.id" style="width: 90px"
-                                                               type="hidden"
+                                                        <input name="paramId" value="$!param.id" style="width: 200px"
+                                                               type="text"
                                                                readonly>
                                                     </td>
                                                     <td><input name="name" value="$!param.name" style="width: 50px"
@@ -161,7 +160,7 @@
                                             <tr class="firstRow" disabled="disabled" style="display: none">
                                                 <td>
                                                     <input name="key" style="width: 200px">
-                                                    <input name="paramId"type="hidden" value="" style="width: 90px" readonly>
+                                                    <input name="paramId"type="text" value="" style="width: 200px" readonly>
                                                 </td>
                                                 <td><input name="name" style="width: 50px"></td>
                                                 <td><input name="defaultValue" style="width: 50px"></td>

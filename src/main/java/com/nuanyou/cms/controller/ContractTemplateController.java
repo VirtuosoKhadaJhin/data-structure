@@ -61,9 +61,6 @@ public class ContractTemplateController {
     }
 
 
-
-
-
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
 
@@ -99,17 +96,29 @@ public class ContractTemplateController {
             template = contractConfig.getData();
         }
 
-
-        model.addAttribute("allParams", params);
+        List<ContractParameter> selectedParams = null;
+        if (type == 1) {
+            selectedParams = commonParams;
+        } else {
+            selectedParams = template.getParameters();
+        }
+        setSelectableParams(selectedParams, params);
+        model.addAttribute("selectableParams", params);
         model.addAttribute("countries", countries);
         model.addAttribute("entity", template);
-        if(type==1){
-            model.addAttribute("selectedParams", commonParams);
-        }else{
-            model.addAttribute("selectedParams", template.getParameters());
-        }
+        model.addAttribute("selectedParams", selectedParams);
         model.addAttribute("type", type);
         return "contractTemplate/edit";
+    }
+
+    private void setSelectableParams(List<ContractParameter> selectedParams, List<ContractParameter> params) {
+        for (int i = params.size() - 1; i >= 0; i--) {
+            for (int j = 0; j < selectedParams.size(); j++) {
+                if (params.get(i).getId().equals(selectedParams.get(j).getId())) {
+                    params.remove(i);
+                }
+            }
+        }
     }
 
 
@@ -145,15 +154,6 @@ public class ContractTemplateController {
             throw new APIException(ResultCodes.Fail, "模板key不能重复");
         }
     }
-
-
-
-
-
-
-
-
-
 
 
     @RequestMapping(path = "publish", method = RequestMethod.GET)
