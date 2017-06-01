@@ -2,6 +2,7 @@ package com.nuanyou.cms.service.impl;
 
 import com.nuanyou.cms.dao.FeatureDao;
 import com.nuanyou.cms.entity.Feature;
+import com.nuanyou.cms.entity.enums.FeatureCat;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.FeatureService;
 import com.nuanyou.cms.util.BeanUtils;
@@ -52,7 +53,7 @@ public class FeatureServiceImpl implements FeatureService {
                     predicate.add(cb.equal(root.get("type"), entity.getType()));
                 }
 
-                if (entity.getCat() != null) {
+                if (entity.getCat() != null && entity.getCat() != FeatureCat.All) {
                     Predicate p = cb.equal(root.get("cat"), entity.getCat());
                     predicate.add(p);
                 }
