@@ -95,7 +95,6 @@ public class ContractController {
         model.addAttribute("page", page);
         model.addAttribute("countries", countries);
         model.addAttribute("countryId", countryId);
-
         model.addAttribute("userid", userId);
         model.addAttribute("merchantname", merchantName);
         model.addAttribute("merchantid", merchantId);
@@ -113,35 +112,33 @@ public class ContractController {
     }
 
 
-
     @RequestMapping("detail")
     public String getDetail(Model model,
-                            @RequestParam(value = "id", required = true) Long id){
+                            @RequestParam(value = "id", required = true) Long id) {
         APIResult<Contract> result = contractService.getContract(id);
         Contract detail = result.getData();
-        if(detail!=null){
+        if (detail != null) {
             Long mchid = detail.getMchId();
             String localName = merchantDao.getLocalName(mchid);
-
-            model.addAttribute("id",detail.getId());
-            model.addAttribute("mchName",localName);//企业名称
-            model.addAttribute("merchantname", detail.getMchName());//商户名称
-            model.addAttribute("approveTime",detail.getApproveTime());
-            model.addAttribute("templateTitle",detail.getTemplateTitle());
-            model.addAttribute("startTime",detail.getStartTime());
-            model.addAttribute("type",detail.getType());
-            model.addAttribute("endTime",detail.getEndTime());
-            model.addAttribute("submitTime",detail.getSubmitTime());
-            model.addAttribute("rejectTime",detail.getRejectTime());
-            model.addAttribute("status",detail.getStatus());
-            model.addAttribute("pdfUrl",detail.getPdfUrl());
-            model.addAttribute("htmlContent",detail.getHtmlContent());
-            model.addAttribute("username",detail.getUsername());
-            model.addAttribute("signImgUrl",detail.getSignImgUrl());
-            model.addAttribute("businessLicense",detail.getBusinessLicense());
-            model.addAttribute("paperContract",detail.getPaperContract());
-            model.addAttribute("remark",detail.getRemark());
-            model.addAttribute("contractNo",detail.getContractNo());
+            model.addAttribute("id", detail.getId());
+            model.addAttribute("relatedMchName", localName); //商户本地名称
+            model.addAttribute("mchName", detail.getMchName());//企业名称
+            model.addAttribute("approveTime", detail.getApproveTime());
+            model.addAttribute("templateTitle", detail.getTemplateTitle());
+            model.addAttribute("startTime", detail.getStartTime());
+            model.addAttribute("type", detail.getType());
+            model.addAttribute("endTime", detail.getEndTime());
+            model.addAttribute("submitTime", detail.getSubmitTime());
+            model.addAttribute("rejectTime", detail.getRejectTime());
+            model.addAttribute("status", detail.getStatus());
+            model.addAttribute("pdfUrl", detail.getPdfUrl());
+            model.addAttribute("htmlContent", detail.getHtmlContent());
+            model.addAttribute("username", detail.getUsername());
+            model.addAttribute("signImgUrl", detail.getSignImgUrl());
+            model.addAttribute("businessLicense", detail.getBusinessLicense());
+            model.addAttribute("paperContract", detail.getPaperContract());
+            model.addAttribute("remark", detail.getRemark());
+            model.addAttribute("contractNo", detail.getContractNo());
         }
         return "contract/detail";
     }
@@ -191,8 +188,7 @@ public class ContractController {
     public String edit(Long id, Model model, Integer type) {
         Contract entity = null;
         if (id != null) {
-            APIResult<Contract> res = this.contractService.getContract(id);
-            entity = res.getData();
+            entity = this.contractModuleService.getContract(id);
         }
         model.addAttribute("entity", entity);
         model.addAttribute("type", type);
@@ -200,14 +196,14 @@ public class ContractController {
     }
 
     @Autowired
-    private UserService  userService;
+    private UserService userService;
 
     @RequestMapping(path = "verify", method = RequestMethod.GET)
     @ResponseBody
     public APIResult verify(Long id, Boolean valid, Long contractId) throws ParseException {
         Long userid = UserHolder.getUser().getUserid();
-        String email=UserHolder.getUser().getEmail();
-        CmsUser user=userService.getUserByEmail(email);
+        String email = UserHolder.getUser().getEmail();
+        CmsUser user = userService.getUserByEmail(email);
 
         //审核
         APIResult approve = this.contractService.approve(user.getId(), contractId, valid);

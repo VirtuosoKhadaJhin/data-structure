@@ -38,11 +38,20 @@
 
 
                                 <div class="control-group">
-                                    <label class="control-label">商户名</label>
+                                    <label class="control-label">商户本地名称</label>
+                                    <div class="controls">
+                                        $!entity.relatedMchName
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">企业名称</label>
                                     <div class="controls">
                                         $!entity.mchName
                                     </div>
                                 </div>
+
+
                                 <div class="control-group">
                                     <label class="control-label">合同模版</label>
                                     <div class="controls">
@@ -93,10 +102,12 @@
 
 
                                 <div class="form-actions">
+                                    <a class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</a>
                                     <a class="btn btn-success btn-mini verify" data-id="$!entity.id" valid="false">驳回</a>
                                     #if($!entity.businessLicense && $!entity.paperContract)
                                         <a class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</a>
                                     #end
+                                    <a class="btn btn-success btn-mini" href="list">返回</a>
                                 </div>
                             </form>
                         </div>
@@ -105,6 +116,9 @@
             </div>
         </div>
     </div>
+
+
+
     #include("common/js-support.vm")
 
     <script type="text/javascript">
@@ -115,7 +129,7 @@
                 var valid = $(this).attr("valid");
                 var message;
                 if (valid == "false") {
-                    message = "确定驳回该合同嘛？";
+                    message = "确定驳回该合同吗？";
                 } else {
                     message = "确定该合同通过审核，通过审核后，合同字段将正式生效?";
                 }

@@ -41,7 +41,7 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
         ContractTemplates data = api.getData();
         Pageable pageable = new PageRequest(index - 1, limit);
         List<ContractTemplate> list = data.getList();
-        setCountryName(list);
+        setOtherProperties(list);
         return (Page<Contract>) new PageImpl(list, pageable, data.getTotal());
     }
 
@@ -128,7 +128,7 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
         return new ArrayList<>(longs);
 
     }
-    private void setCountryName(List<ContractTemplate> list) {
+    private void setOtherProperties(List<ContractTemplate> list) {
         for (int i = 0; i < list.size(); i++) {
             ContractTemplate contractTemplate = list.get(i);
             if (contractTemplate != null) {

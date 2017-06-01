@@ -91,34 +91,27 @@ public class ContractTemplateController {
 
         //vo info
         ContractTemplate template = null;
-        List<Long> selectedIds = new ArrayList<>();
         if (id != null) {
             APIResult<ContractTemplate> contractConfig = this.contractService.getContractConfig(id);
             if (contractConfig.getCode() != 0) {
                 throw new APIException(contractConfig.getCode(), contractConfig.getMsg());
             }
             template = contractConfig.getData();
-            //vo selectedIds
-            selectedIds = getSelectedIds(template.getParameters());
         }
 
 
-        model.addAttribute("params", params);
+        model.addAttribute("allParams", params);
         model.addAttribute("countries", countries);
         model.addAttribute("entity", template);
-        model.addAttribute("selectedIds", selectedIds);
-        model.addAttribute("commonParams", commonParams);
+        if(type==1){
+            model.addAttribute("selectedParams", commonParams);
+        }else{
+            model.addAttribute("selectedParams", template.getParameters());
+        }
         model.addAttribute("type", type);
         return "contractTemplate/edit";
     }
 
-    private List<Long> getSelectedIds(List<ContractParameter> parameters) {
-        List<Long> selectedIds = new ArrayList<>();
-        for (int i = 0; i < parameters.size(); i++) {
-            selectedIds.add(parameters.get(i).getId());
-        }
-        return selectedIds;
-    }
 
     @RequestMapping(value = "saveTemplate", method = RequestMethod.POST)
     @ResponseBody

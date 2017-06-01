@@ -85,7 +85,7 @@ public class Rate {
     @Transient
     public BigDecimal getNyrate() {
         BigDecimal midrate = this.midrate;
-        if (midrate != null && this != null && this.country.getRadio().doubleValue() != 0) {
+        if (midrate != null && this != null &&this.country!=null&& this.country.getRadio().doubleValue() != 0) {
             BigDecimal nyrate = midrate.divide(this.country.getRadio(), 4, BigDecimal.ROUND_HALF_UP);
             return this.ChangeRate(nyrate);
         }

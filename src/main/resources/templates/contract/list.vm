@@ -17,7 +17,8 @@
         <thead>
         <tr role="row">
             <th>ID</th>
-            <th>本地名称</th>
+            <th>商户本地名称</th>
+            <th>企业名称</th>
             <th>合同上传日期</th>
             <th>合同模版</th>
             <th>合同类型</th>
@@ -37,6 +38,7 @@
             #foreach($entity in $!page.content)
             <tr class="odd gradeX">
                 <td>$!entity.id</td>
+                <td>$!entity.relatedMchName</td>
                 <td>$!entity.mchName</td>
                 <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.submitTime)</td>
                 <td>$!entity.templateTitle</td>
