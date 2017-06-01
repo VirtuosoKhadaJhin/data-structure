@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -29,6 +30,7 @@ import java.util.List;
 /**
  * Created by Byron on 2017/5/27.
  */
+@Service
 public class LangsCategoryServiceImpl implements LangsCategoryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger ( LangsCategoryServiceImpl.class );

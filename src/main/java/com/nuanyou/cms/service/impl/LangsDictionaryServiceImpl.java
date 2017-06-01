@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -26,6 +27,7 @@ import java.util.Locale;
 /**
  * Created by Byron on 2017/5/26.
  */
+@Service
 public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger ( LangsDictionaryServiceImpl.class );
