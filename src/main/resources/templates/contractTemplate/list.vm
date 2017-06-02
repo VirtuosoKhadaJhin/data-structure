@@ -9,7 +9,7 @@
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>列表</h5>
-    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
+    <a class="btn btn-mini btn-info buttons" href="edit?optype=1">新增</a>
 </div>
 <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
     <thead>
@@ -31,7 +31,7 @@
             <td>#if($!entity.type==1)主合同#else 附加合同#end</td>
             <td>$!entity.templateStatus.name</td>
             <td>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
+                <a href="edit?optype=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
                 <a data-id="$!entity.id" class="btn btn-danger btn-mini publish">发布</a>
             </td>
         </tr>

@@ -8,7 +8,6 @@ import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.LangsCategoryService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +52,7 @@ public class LangsCategoryServiceImpl implements LangsCategoryService {
                     Predicate p1 = cb.like ( root.get ( "name" ), "%" + request.getName () + "%" );
                     predicate.add ( p1 );
                 }
-                if (BooleanUtils.isTrue ( request.getIsGlobal () )) {
+                if (request.getIsGlobal ()!=null) {
                     Predicate p2 = cb.equal ( root.get ( "isGlobal" ), request.getIsGlobal () );
                     predicate.add ( p2 );
                 }

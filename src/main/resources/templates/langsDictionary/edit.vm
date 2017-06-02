@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 菜单管理</title>
+
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <div id="breadcrumb">
+                <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+                <a href="list" class="tip-bottom" data-original-title="">分类管理</a>
+                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span6">
+                    <div class="widget-box">
+                        <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                            <h5>编辑&查看</h5>
+                        </div>
+                        <div class="widget-content nopadding">
+                            <form action="update" method="post" class="form-horizontal commonValidate" role="form"
+                                  id="cityform">
+                                <div class="control-group">
+                                    <span class="col-sm-2 control-label">ID</span>
+                                    <div class="controls">
+                                        #if($!type==2)
+                                            <input name="id" readonly type="text" class="form-control" placeholder="ID"
+                                                   value="$!entity.id">
+                                        #end
+                                        #if($!type==3)
+                                            <label>$!entity.id</label>
+                                        #end
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">keyCode</label>
+                                    <div class="controls">
+                                        <input for="name" name="keyCode" type="text" class="span7"
+                                               value="$!entity.keyCode" >
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">baseName</label>
+                                    <div class="controls">
+                                        <input for="name" name="baseName" type="text" class="span7"
+                                               value="$!entity.baseName" >
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">message</label>
+                                    <div class="controls">
+                                        <input for="name" name="message" type="text" class="span7"
+                                               value="$!entity.message" >
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">language</label>
+                                    <div class="controls">
+                                        <input for="name" name="language" type="text" class="span7"
+                                               value="$!entity.language" >
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">country</label>
+                                    <div class="controls">
+                                        <input for="name" name="country" type="text" class="span7"
+                                               value="$!entity.country" >
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <label class="control-label">variant</label>
+                                    <div class="controls">
+                                        <input for="name" name="variant" type="text" class="span7"
+                                               value="$!entity.variant" >
+                                    </div>
+                                </div>
+
+
+                                <div class="form-actions">
+                                    #if($!type==2 || $!type==1)
+                                        <button type="submit" class="btn btn-success">保存</button>
+                                        <a class="btn btn-primary" href="list">返回</a>
+                                    #elseif($!type==3)
+                                        <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
+                                    #end
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #include("common/js-support.vm")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var type = $!type;
+            if (type == 3) {
+                $(":text").attr("disabled", "disabled");
+                $("select").attr("disabled", "disabled");
+            }
+        });
+    </script>
+</body>
+</html>

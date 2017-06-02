@@ -24,7 +24,7 @@ public class EntityNyLangsCategory {
     @Column(name = "IS_GLOBAL")
     private Boolean isGlobal;
 
-    @Column(name = "DESC")
+    @Column(name = "`DESC`")
     private String desc;
 
     @Column(name = "CREATE_DT")

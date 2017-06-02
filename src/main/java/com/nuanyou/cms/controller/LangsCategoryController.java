@@ -1,102 +1,60 @@
 package com.nuanyou.cms.controller;
 
-import com.nuanyou.cms.commons.APIResult;
-import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.model.LangsCategory;
 import com.nuanyou.cms.service.LangsCategoryService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-/**
- * Created by Byron on 2017/5/31.
- */
+import java.io.IOException;
+
 @Controller
-@RequestMapping("/category")
+@RequestMapping("langsCategory")
 public class LangsCategoryController {
-
-    private final static Logger _LOGGER = LoggerFactory.getLogger ( LangsCategoryController.class );
 
     @Autowired
     private LangsCategoryService categoryService;
 
-    /**
-     * 分类管理首页（查询）
-     *
-     * @param langsCategory
-     * @return
-     */
-    @RequestMapping("/index")
-    @ResponseBody
-    public APIResult index(@RequestBody LangsCategory langsCategory) {
-        APIResult result = new APIResult ( ResultCodes.Success );
-        Page<LangsCategory> categoryPage = categoryService.findAllCategories ( langsCategory );
-        result.setData ( categoryPage );
-        return result;
+    @RequestMapping("list")
+    public String list(@RequestParam(required = false, defaultValue = "1") int index,
+                       String name,
+                       Boolean isGlobal, Model model) {
+        LangsCategory example=new LangsCategory();
+        example.setName(name);example.setIsGlobal(isGlobal);example.setIndex(index);
+        Page<LangsCategory> categoryPage = this.categoryService.findAllCategories(example);
+        model.addAttribute("page", categoryPage);
+        model.addAttribute("entity", example);
+        return "langsCategory/list";
     }
 
-    /**
-     * 查詢分类详情
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping("/findCategoryDetail")
-    @ResponseBody
-    public APIResult findCategoryDetail(Long id) {
-        APIResult result = new APIResult ( ResultCodes.Success );
-        LangsCategory category = categoryService.findLangsCategory ( id );
-        result.setData ( category );
-        return result;
+    @RequestMapping(path = "edit", method = RequestMethod.GET)
+    public String edit(Long id, Model model, Integer type) {
+        LangsCategory entity = null;
+        if (id != null) {
+            entity = categoryService.findLangsCategory(id);
+        }
+        model.addAttribute("entity", entity);
+        model.addAttribute("type", type);
+        return "langsCategory/edit";
     }
 
-    /**
-     * 新增分类信息
-     *
-     * @param langsCategory
-     * @return
-     */
-    @RequestMapping("/addCategory")
-    @ResponseBody
-    public APIResult addCategory(@RequestBody LangsCategory langsCategory) {
-        APIResult result = new APIResult ( ResultCodes.Success );
-        LangsCategory category = categoryService.save ( langsCategory );
-        result.setData ( category );
-        return result;
+    @RequestMapping("update")
+    public String update(LangsCategory entity) throws IOException {
+        LangsCategory category;
+        if (entity.getId() == null) {
+            category = categoryService.save(entity);
+        } else {
+
+
+            category = categoryService.update(entity);
+        }
+        String url = "edit?type=3&id=" + category.getId();
+        return "redirect:" + url;
     }
 
-    /**
-     * 更新分类信息
-     *
-     * @param langsCategory
-     * @return
-     */
-    @RequestMapping("/updateCategory")
-    @ResponseBody
-    public APIResult updateCategory(@RequestBody LangsCategory langsCategory) {
-        APIResult result = new APIResult ( ResultCodes.Success );
-        LangsCategory category = categoryService.update ( langsCategory );
-        result.setData ( category );
-        return result;
-    }
-
-    /**
-     * 更新分类信息
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping("/deleteCategory")
-    @ResponseBody
-    public APIResult deleteCategory(Long id) {
-        APIResult result = new APIResult ( ResultCodes.Success );
-        categoryService.delete ( id );
-        return result;
-    }
 
 }

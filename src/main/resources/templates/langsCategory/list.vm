@@ -1,0 +1,58 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="list" class="tip-bottom" data-original-title="">多语言分类管理</a>
+    <a href="#" class="tip-bottom" data-original-title="">列表</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>语言分类列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>名称</th>
+        <th>是否全局</th>
+        <th>描述</th>
+        <th class="table-set" width="90px">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.id</td>
+            <td>$!entity.name</td>
+            <td> #if($!entity.isGlobal==true) 是 #else 否 #end</td>
+            <td>$!entity.desc</td>
+            <td>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#parse("common/list_mid.vm")
+<form class="form-horizontal " method="get">
+    <div class="control-group">
+        <label>名称</label>
+        <input type="text" class="span11" name="name" value="$!entity.name">
+    </div>
+    <div class="control-group">
+        <label>是否全局</label>
+        <select id="country.id" name="isGlobal" class="span11">
+            <option value="">全部</option>
+            <option value="true"  #if($!entity.isGlobal==true) selected #end >是</option>
+            <option value="false" #if($!entity.isGlobal==false) selected #end>否</option>
+        </select>
+    </div>
+    <div class="control-group">
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+
+#parse("common/list_end.vm")
+
+

@@ -9,6 +9,7 @@ import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractParameter;
 import com.nuanyou.cms.model.contract.output.ContractParameters;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
+import com.nuanyou.cms.model.contract.request.Template;
 import com.nuanyou.cms.model.contract.request.TemplateParameterRequests;
 import com.nuanyou.cms.remote.ContractService;
 import com.nuanyou.cms.service.ContractTemplateService;
@@ -16,6 +17,7 @@ import com.nuanyou.cms.service.CountryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -62,7 +64,7 @@ public class ContractTemplateController {
 
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
-    public String edit(Long id, Model model, Integer type) {
+    public String edit(Long id, Model model, Integer optype) {
 
         //all params
         APIResult<ContractParameters> allTemplateParameters = this.contractService.findAllTemplateParameters(1, 100000);
@@ -97,7 +99,7 @@ public class ContractTemplateController {
         }
 
         List<ContractParameter> selectedParams = null;
-        if (type == 1) {
+        if (optype == 1) {
             selectedParams = commonParams;
         } else {
             selectedParams = template.getParameters();
@@ -107,7 +109,7 @@ public class ContractTemplateController {
         model.addAttribute("selectableParams", params);
         model.addAttribute("countries", countries);
         model.addAttribute("selectedParams", selectedParams);
-        model.addAttribute("type", type);
+        model.addAttribute("optype", optype);
         return "contractTemplate/edit";
     }
 
@@ -122,7 +124,24 @@ public class ContractTemplateController {
     }
 
 
-    @RequestMapping(value = "saveTemplate", method = RequestMethod.POST)
+    @RequestMapping(value = "saveTemplate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public APIResult saveTemplate(
+            @RequestBody Template template
+    ) throws IOException {
+
+        return this.contractTemplateService.saveTemplate(
+                template.getSelectedParamIds(),
+                template.getParamIds(),
+                template.getList(),
+                template.getTemplateType(),
+                template.getTitle(),
+                template.getCountryId(),
+                template.getId());
+    }
+
+
+    @RequestMapping(value = "saveTemplate1", method = RequestMethod.POST)
     @ResponseBody
     public APIResult saveTemplate(Long[] selectedParamIds,
                                   TemplateParameterRequests templateParameterRequests,
@@ -134,7 +153,7 @@ public class ContractTemplateController {
 
     ) throws IOException {
         validate(selectedParamIds, templateParameterRequests, templateType, title, countryId);
-        return this.contractTemplateService.saveTemplate(selectedParamIds, templateParameterRequests, templateType, title, countryId, id);
+        return this.contractTemplateService.saveTemplate1(selectedParamIds, templateParameterRequests, templateType, title, countryId, id);
     }
 
     private void validate(Long[] selectedParamIds, TemplateParameterRequests templateParameterRequests, Integer type, String title, Long countryId) {
@@ -145,9 +164,12 @@ public class ContractTemplateController {
         } else if (countryId == null) {
             throw new APIException(ResultCodes.Fail, "国家不能为空");
         }
+//        if(templateParameterRequests.getKey()==null||templateParameterRequests.getKey().size()==0){
+//            throw new APIException(ResultCodes.Fail, "您并未选择");
+//        }
         boolean res = templateParameterRequests.validateTemplate();
         if (res == false) {
-            throw new APIException(ResultCodes.Fail, "模板参数key name defaultvalue 不能有空");
+            throw new APIException(ResultCodes.Fail, "key和参数名不能为空");
         }
         boolean validateKeys = templateParameterRequests.validateKeys();
         if (validateKeys == false) {

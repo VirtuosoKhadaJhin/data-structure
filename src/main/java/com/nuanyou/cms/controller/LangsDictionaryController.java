@@ -1,99 +1,60 @@
 package com.nuanyou.cms.controller;
 
-import com.nuanyou.cms.commons.APIResult;
-import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.model.LangsDictionary;
 import com.nuanyou.cms.service.LangsDictionaryService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-/**
- * Created by Byron on 2017/6/1.
- */
+import java.io.IOException;
+
 @Controller
-@RequestMapping("/langsDictionary")
+@RequestMapping("langsDictionary")
 public class LangsDictionaryController {
-
-    private final static Logger _LOGGER = LoggerFactory.getLogger ( LangsDictionaryController.class );
 
     @Autowired
     private LangsDictionaryService dictionaryService;
 
-    /**
-     * 多元化字典项首页
-     *
-     * @param langsDictionary
-     * @return
-     */
-    @RequestMapping("/index")
-    @ResponseBody
-    public APIResult index(@RequestBody LangsDictionary langsDictionary) {
-        APIResult result = new APIResult ( ResultCodes.Success );
-        dictionaryService.findAllDictionary ( langsDictionary );
-        return result;
+    @RequestMapping("list")
+    public String list(@RequestParam(required = false, defaultValue = "1") int index,
+                       String baseName,
+                       String keyCode,
+                       String message,
+                       Model model) {
+        LangsDictionary example=new LangsDictionary();
+        example.setBaseName(baseName);example.setKeyCode(keyCode);example.setIndex(index);example.setMessage(message);
+        Page<LangsDictionary> allDictionary = dictionaryService.findAllDictionary(example);
+        model.addAttribute("page", allDictionary);
+        model.addAttribute("entity", example);
+        return "langsDictionary/list";
     }
 
-    /**
-     * 多元化字典项详情
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping("/findDictionaryDetail")
-    @ResponseBody
-    public APIResult findDictionaryDetail(Long id) {
-        APIResult result = new APIResult ( ResultCodes.Success );
-        LangsDictionary dictionary = dictionaryService.findLangsDictionary ( id );
-        result.setData ( dictionary );
-        return result;
+    @RequestMapping(path = "edit", method = RequestMethod.GET)
+    public String edit(Long id, Model model, Integer type) {
+        LangsDictionary entity = null;
+        if (id != null) {
+            entity = dictionaryService.findLangsDictionary(id);
+        }
+        model.addAttribute("entity", entity);
+        model.addAttribute("type", type);
+        return "langsDictionary/edit";
     }
 
-    /**
-     * 新增多元化字典项
-     *
-     * @param dictionary
-     * @return
-     */
-    @RequestMapping("/addDictionary")
-    @ResponseBody
-    public APIResult addDictionary(@RequestBody LangsDictionary dictionary) {
-        APIResult result = new APIResult ( ResultCodes.Success );
-        dictionary = dictionaryService.addLangsDictionary ( dictionary );
-        result.setData ( dictionary );
-        return result;
+    @RequestMapping("update")
+    public String update(LangsDictionary entity) throws IOException {
+        LangsDictionary category;
+        if (entity.getId() == null) {
+            category = dictionaryService.addLangsDictionary(entity);
+        } else {
+            category = dictionaryService.updateLangsDictionary(entity);
+        }
+        String url = "edit?type=3&id=" + category.getId();
+        return "redirect:" + url;
     }
 
-    /**
-     * 更新多元化字典项
-     *
-     * @param dictionary
-     * @return
-     */
-    @RequestMapping("/updateDictionary")
-    @ResponseBody
-    public APIResult updateDictionary(@RequestBody LangsDictionary dictionary) {
-        APIResult result = new APIResult ( ResultCodes.Success );
-        dictionary = dictionaryService.updateLangsDictionary ( dictionary );
-        result.setData ( dictionary );
-        return result;
-    }
 
-    /**
-     * 删除多元化字典项
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping("/deleteDictionary")
-    @ResponseBody
-    public APIResult deleteDictionary(Long id) {
-        APIResult result = new APIResult ( ResultCodes.Success );
-        dictionaryService.deleteLangsDictionary ( id );
-        return result;
-    }
 }
