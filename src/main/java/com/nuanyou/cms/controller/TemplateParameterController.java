@@ -3,7 +3,7 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.dao.TemplateParameterDao;
 import com.nuanyou.cms.entity.TemplateParameter;
-import com.nuanyou.cms.remote.ContractService;
+import com.nuanyou.cms.remote.service.RemoteContractService;
 import com.nuanyou.cms.service.TemplateParameterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,7 @@ import java.io.IOException;
 public class TemplateParameterController {
 
     @Autowired
-    private ContractService contractService;
+    private RemoteContractService contractService;
     @Autowired
     private TemplateParameterService templateParameterService;
     @Autowired

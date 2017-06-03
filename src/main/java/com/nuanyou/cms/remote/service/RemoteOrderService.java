@@ -1,4 +1,4 @@
-package com.nuanyou.cms.remote;
+package com.nuanyou.cms.remote.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.nuanyou.cms.commons.APIResult;

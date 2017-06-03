@@ -1,6 +1,5 @@
 package com.nuanyou.cms.controller;
 
-import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.component.FileClient;
@@ -9,17 +8,15 @@ import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
 import com.nuanyou.cms.model.contract.output.ContractTemplates;
-import com.nuanyou.cms.remote.AccountService;
-import com.nuanyou.cms.remote.ContractService;
+import com.nuanyou.cms.remote.service.RemoteContractService;
+import com.nuanyou.cms.service.AccountHandleService;
 import com.nuanyou.cms.service.ContractModuleService;
 import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.JsonUtils;
 import io.swagger.annotations.ApiParam;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,10 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Felix on 2017/4/24.
@@ -49,36 +44,15 @@ public class ContractController {
     @Qualifier("s3")
     private FileClient fileClient;
     @Autowired
-    private ContractService contractService;
-
+    private RemoteContractService contractService;
     @Autowired
     private ContractModuleService contractModuleService;
-
     @Autowired
-    private AccountService accountService;
+   private AccountHandleService accountHandleService;
     @Autowired
     private CountryService countryService;
     @Autowired
     private MerchantDao merchantDao;
-    //    @Value("${merchantSettlement.default.daytype}")
-//    private Integer daytype;
-    @Value("${merchantSettlement.default.startprice}")
-    private BigDecimal startprice;
-
-
-    @Value("${contractConfig.dayTypeNames}")
-    private String dayTypeNames;
-    @Value("${contractConfig.poundageNames}")
-    private String poundageNames;
-    @Value("${contractConfig.paymentDaysNames}")
-    private String paymentDaysNames;
-    @Value("${contractConfig.startTimeNames}")
-    private String startTimeNames;
-    @Value("${contractConfig.startPriceNames}")
-    private String startPriceNames;
-    @Value("${contractConfig.commissionNames}")
-    private String commissionNames;
-
 
 
     @RequestMapping("list")
@@ -224,7 +198,7 @@ public class ContractController {
             APIResult<Contract> resDetail = this.contractService.getContract(contractId);
             //3插入对账系统
             Contract detail = resDetail.getData();
-            this.addSettlementForAccount(detail);
+            this.accountHandleService.addSettlementForAccount(detail);
         }
         return new APIResult<>(ResultCodes.Success);
     }
@@ -237,9 +211,7 @@ public class ContractController {
         String filename = file.getOriginalFilename();
         String format = filename.substring(filename.lastIndexOf("."), filename.length());
         String url = fileClient.uploadFile(file.getInputStream(), format);
-
         APIResult apiResult = contractService.addComponent(id, type, url);
-
         response.setContentType("text/html;charset=UTF-8");
         if (apiResult.isSuccess())
             response.getWriter().println("<script>parent.window.location.reload();</script>");
@@ -247,97 +219,12 @@ public class ContractController {
             response.getWriter().println("<script>parent.alert('" + apiResult.getMsg() + "');</script>");
     }
 
-    private void addSettlementForAccount(Contract detail) {
-        if (detail.getMchId() == null) {
-            throw new APIException(ResultCodes.ContractNotAssignedForMerchant);
-        }
-        Map<String, String> result = detail.getParameters();
-        String poundageStr = getValue(result, poundageNames);//手续费
-        String paymentDaysStr =getValue(result, paymentDaysNames);//账期
-        String dateTypeStr = getValue(result, dayTypeNames);//类型
-        String startTimeStr = getValue(result, startTimeNames);//开始时间
-        String startPriceStr = getValue(result, startPriceNames);//起结金额
-        String commission= getValue(result, commissionNames);//佣金
-        if (detail.getParentId() == null) {//主合同时不能为空
-            validate(poundageStr, paymentDaysStr, dateTypeStr, startTimeStr,startPriceStr);
-            startTimeStr = getValue(result, startTimeNames) == null ?
-                    new DateTime().toString("yyyy-MM-dd") :
-                    (String) getValue(result, startTimeNames);//开始时间
-        }{
-            //commission
-        }
-        Long merchantId = detail.getMchId();
-        BigDecimal poundage=poundageStr==null?null:new BigDecimal(poundageStr);
-        Integer dateType=dateTypeStr==null?null:new Integer(dateTypeStr);
-        Long paymentDays=paymentDaysStr==null?null:Long.valueOf(paymentDaysStr);
-        String startTime=startTimeStr==null?null:startTimeStr;
-        APIResult res = accountService.add(merchantId, true, dateType, poundage, paymentDays, startprice, startTime);
-        if (res.getCode() != 0) {
-            throw new APIException(res.getCode(), res.getMsg());
-        }
-    }
-
-    private void validate(String poundageStr, String paymentDaysStr, String dateTypeStr, String startTimeStr, String startPriceStr) {
-        if (poundageStr == null || paymentDaysStr == null || dateTypeStr == null || startPriceStr == null) {
-            throw new APIException(ResultCodes.PoundageOrPayDaysIsNull);
-        }
-    }
 
 
 
-    private String getValue(Map<String, String> result, String names) {
-        String[] nameList = names.split(",");
-        String value = null;
-        for (String p : nameList) {
-            String temp = result.get(p) == null ? null : result.get(p);
-            if (temp != null) {
-                value = temp;
-                break;
-            }
-        }
-        return value;
-    }
 
 
-    private Integer getDateType(Map<String, String> result) {
 
-        String[] dayTypeNameList = dayTypeNames.split(",");
-        Integer dayType = null;
-        for (String p : dayTypeNameList) {
-            Integer temp = result.get(p) == null ? null : new Integer(result.get(p));
-            if (temp != null) {
-                dayType = temp;
-                break;
-            }
-        }
-        return dayType;
-    }
-
-    private Long getPaymentDays(Map<String, String> result) {
-        String[] paymentDaysNamesList = paymentDaysNames.split(",");
-        Long paymentDays = null;
-        for (String p : paymentDaysNamesList) {
-            Long temp = result.get(p) == null ? null : new Long(result.get(p));
-            if (temp != null) {
-                paymentDays = temp;
-                break;
-            }
-        }
-        return paymentDays;
-    }
-
-    private BigDecimal getPoundage(Map<String, String> result) {
-        String[] poundageNamesList = poundageNames.split(",");
-        BigDecimal poundage = null;
-        for (String p : poundageNamesList) {
-            BigDecimal temp = result.get(p) == null ? null : new BigDecimal(result.get(p));
-            if (temp != null) {
-                poundage = temp;
-                break;
-            }
-        }
-        return poundage;
-    }
 
     @RequestMapping("api/templates")
     @ResponseBody

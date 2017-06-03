@@ -11,7 +11,7 @@ import com.nuanyou.cms.model.contract.output.ContractParameters;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
 import com.nuanyou.cms.model.contract.request.Template;
 import com.nuanyou.cms.model.contract.request.TemplateParameterRequests;
-import com.nuanyou.cms.remote.ContractService;
+import com.nuanyou.cms.remote.service.RemoteContractService;
 import com.nuanyou.cms.service.ContractTemplateService;
 import com.nuanyou.cms.service.CountryService;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +37,7 @@ import java.util.List;
 public class ContractTemplateController {
 
     @Autowired
-    private ContractService contractService;
+    private RemoteContractService contractService;
     @Autowired
     private CountryService countryService;
     @Autowired

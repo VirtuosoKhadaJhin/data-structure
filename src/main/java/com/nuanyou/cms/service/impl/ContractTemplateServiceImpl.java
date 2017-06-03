@@ -10,7 +10,7 @@ import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
 import com.nuanyou.cms.model.contract.output.ContractTemplates;
 import com.nuanyou.cms.model.contract.request.*;
-import com.nuanyou.cms.remote.ContractService;
+import com.nuanyou.cms.remote.service.RemoteContractService;
 import com.nuanyou.cms.service.ContractTemplateService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ import java.util.*;
 @Service
 public class ContractTemplateServiceImpl implements ContractTemplateService {
     @Autowired
-    private ContractService contractService;
+    private RemoteContractService contractService;
     @Autowired
     private CountryDao countryDao;
 

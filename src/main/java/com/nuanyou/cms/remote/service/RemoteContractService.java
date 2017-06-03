@@ -1,4 +1,4 @@
-package com.nuanyou.cms.remote;
+package com.nuanyou.cms.remote.service;
 
 
 import com.nuanyou.cms.commons.APIResult;
@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/contracts", produces = MimeTypes.MIME_TYPE_JSON)
 @Api(value = "/contracts", description = "the contract API")
-public interface ContractService {
+public interface RemoteContractService {
 
 
 

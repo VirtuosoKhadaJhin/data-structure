@@ -3,8 +3,6 @@ package com.nuanyou.cms.model.contract.output;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.List;
-
 /**
  * Created by Alan.ye on 2016/9/12.
  */
@@ -22,7 +20,7 @@ public class ContractParameter implements Comparable<ContractParameter> {
 
     private Integer sort = 0;
 
-    private List<CodeAndName> source;
+    private String source;
 
     private boolean editable;
 
@@ -93,11 +91,11 @@ public class ContractParameter implements Comparable<ContractParameter> {
     }
     @ApiModelProperty(value = "备选数据源")
     @JsonProperty("source")
-    public List<CodeAndName>  getSource() {
+    public String  getSource() {
         return source;
     }
 
-    public void setSource(List<CodeAndName>  source) {
+    public void setSource(String  source) {
         this.source = source;
     }
     @ApiModelProperty(value = "是否可编辑")

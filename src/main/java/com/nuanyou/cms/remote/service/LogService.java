@@ -1,4 +1,4 @@
-package com.nuanyou.cms.remote;
+package com.nuanyou.cms.remote.service;
 
 import com.google.common.collect.ImmutableMap;
 import com.nuanyou.cms.model.LogVO;

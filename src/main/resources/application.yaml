@@ -87,6 +87,7 @@ contractConfig:
   poundageNames: poundage_huigou,poundage_radio,poundage
   paymentDaysNames: settle_day,account_period_huigou
   dayTypeNames: dayType
-  startTimeNames: startTime
+  youfuStartTimeNames: youfuStartTime
   startPriceNames: startPrice
   commissionNames: commission
+  groupBuyingStartTimeNames: groupBuyingStartTime

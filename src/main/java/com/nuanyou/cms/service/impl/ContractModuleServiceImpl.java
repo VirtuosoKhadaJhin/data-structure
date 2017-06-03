@@ -5,7 +5,7 @@ import com.nuanyou.cms.dao.CmsUserDao;
 import com.nuanyou.cms.dao.MerchantDao;
 import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.Contracts;
-import com.nuanyou.cms.remote.ContractService;
+import com.nuanyou.cms.remote.service.RemoteContractService;
 import com.nuanyou.cms.service.ContractModuleService;
 import com.nuanyou.cms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 public class ContractModuleServiceImpl implements ContractModuleService {
     @Autowired
-    private ContractService contractService;
+    private RemoteContractService contractService;
     @Autowired
     private MerchantDao merchantDao;
     @Autowired

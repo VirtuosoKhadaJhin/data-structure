@@ -17,7 +17,7 @@
     </div>
     <div class="container-fluid">
         <div class="row-fluid">
-            <div class="span12">
+            <div class="span20">
                 <div class="widget-box">
                     <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                         <h5>编辑&查看</h5>
@@ -66,7 +66,7 @@
                                     <div style="overflow: auto;width: 100%">
 
                                         <table class="table table-bordered data-table dataTable" id="mytable"
-                                               style="width: 80%">
+                                        >
                                             <tbody>
                                             <tr id="0">
                                                 <th id="roleSuperid0">key</th>
@@ -76,13 +76,19 @@
                                                 <th id="roleSuperid0">是否可编辑</th>
                                                 <th id="roleSuperid0">是否可为空</th>
                                                 <th id="roleSuperid0">栏位提示</th>
-                                                <th><input type="button" value="添加参数" class="addRow btn-info"></th>
+                                                <th style="text-align: left">
+
+                                                    <a class="btn btn-info btn-mini addRow">手动添加</a>
+                                                    <a class="btn btn-info btn-mini selectParameter">选择添加</a>
+
+                                                </th>
                                             </tr>
 
                                                 #foreach($param in $!selectedParams)
                                                 <tr>
                                                     <td>$!param.id : $!param.key
-                                                        <input name="paramId"type="hidden" value="$!param.id" style="width: 200px" readonly>
+                                                        <input name="paramId" type="hidden" value="$!param.id"
+                                                               style="width: 200px" readonly>
                                                     </td>
                                                     <td>$!param.name</td>
                                                     <td>$!param.defaultValue</td>
@@ -117,10 +123,12 @@
 
                                                     </td>
                                                     <td>$!param.remark</td>
-                                                    <td style="text-align: center">
+                                                    <td style="text-align: left">
 
-                                                        <input type='button' value="删除参数"
-                                                               class="removeRow btn-warning">
+
+                                                        <a class="btn btn-info btn-mini removeRow">删除</a>
+
+
                                                     </td>
                                                 </tr>
                                                 #end
@@ -128,7 +136,8 @@
                                             <tr class="firstRow" disabled="disabled" style="display: none">
                                                 <td>
                                                     <input name="key" style="width: 200px">
-                                                    <input name="paramId"type="hidden" value="" style="width: 200px" readonly>
+                                                    <input name="paramId" type="hidden" value="" style="width: 200px"
+                                                           readonly>
                                                 </td>
                                                 <td><input name="name" style="width: 90px"></td>
                                                 <td><input name="defaultValue" style="width: 90px"></td>
@@ -153,10 +162,47 @@
                                                     </select>
                                                 </td>
                                                 <td><input name="remark" style="width: 100px"></td>
-                                                <td style="text-align: center">
-                                                    <input type='button' value="删除参数" class="removeRow btn-warning">
+                                                <td style="text-align: left;width: 300px">
+                                                    <a class="btn btn-info btn-mini removeRow">删除</a>
                                                 </td>
                                             </tr>
+
+                                            <tr class="spanRow" disabled="disabled" style="display: none">
+                                                <td>
+                                                    <input name="key" style="width: 200px">
+                                                    <label name="key"></label>
+                                                    <input name="paramId" type="hidden" value="" style="width: 200px"
+                                                           readonly>
+                                                </td>
+                                                <td><input name="name" style="width: 90px"></td>
+                                                <td><input name="defaultValue" style="width: 90px"></td>
+                                                <td>
+                                                    <select name="dataType" style="width: 90px" readonly>
+                                                        <option value="1">文本</option>
+                                                        <option value="2">整数</option>
+                                                        <option value="3">小数</option>
+                                                        <option value="4">日期</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select name="editable" style="width: 90px">
+                                                        <option value="true">是</option>
+                                                        <option value="false">否</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select name="nullable" style="width: 90px">
+                                                        <option value="true">是</option>
+                                                        <option value="false">否</option>
+                                                    </select>
+                                                </td>
+                                                <td><input name="remark" style="width: 100px"></td>
+                                                <td style="text-align: left;width: 300px">
+                                                    <a class="btn btn-info btn-mini removeRow">删除</a>
+                                                </td>
+                                            </tr>
+
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -179,48 +225,70 @@
     </div>
 </div>
 </div>
+
+<!--***************************************模态框begin*************************************************************-->
+<div id="parameterModal" class="modal hide fade" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>参数选择</h3>
+    </div>
+    <div class="modal-body">
+        <div class="control-group">
+            <label class="control-label">可选参数列表</label>
+            <div class="controls">
+                <select class="span5 select2" id="selectedParamIds" name="selectedParamIds"
+                >
+                    #foreach($param in $!selectableParams)
+                        <option value="$!param.id">
+                            $!param.id  >>  $!param.key >>  $!param.name
+                        </option>
+                    #end
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" id="parameterSave" class="btn btn-primary">保存</a>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+
 </body>
     #include("common/js-support.vm")
     #include("common/image-support.vm")
 <script src="/dist/js/cascade-select.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        var tr=$(".firstRow").html();
+        var tr = $(".firstRow").html();
         $(".btnSave").click(function () {
             var form = $(".templateFormValidate");
-            var request={};
-            var list=[];
-            $(".oneRow").each(function (i,o) {
-                var templateParameterRequest={};
-                templateParameterRequest.name=$(o).find("input[name='name']").val();
-                templateParameterRequest.key=$(o).find("input[name='key']").val();
-                templateParameterRequest.defaultValue=$(o).find("input[name='defaultValue']").val();
-                templateParameterRequest.type=$(o).find("select[name='dataType']").val();
-                templateParameterRequest.editable=$(o).find("select[name='editable']").val();
-                templateParameterRequest.nullable=$(o).find("select[name='nullable']").val();
-                templateParameterRequest.remark=$(o).find("input[name='remark']").val();
+            var request = {};
+            var list = [];
+            var paramIds = [];
+            $(".oneRow").each(function (i, o) {
+                var templateParameterRequest = {};
+                templateParameterRequest.name = $(o).find("input[name='name']").val();
+                templateParameterRequest.key = $(o).find("input[name='key']").val();
+                templateParameterRequest.defaultValue = $(o).find("input[name='defaultValue']").val();
+                templateParameterRequest.type = $(o).find("select[name='dataType']").val();
+                templateParameterRequest.editable = $(o).find("select[name='editable']").val();
+                templateParameterRequest.nullable = $(o).find("select[name='nullable']").val();
+                templateParameterRequest.remark = $(o).find("input[name='remark']").val();
                 list.push(templateParameterRequest);
             });
-
-
-
-
-            var paramIds=[];
-            $("input[name='paramId']").each(function (i,o) {
+            $("input[name='paramId']").each(function (i, o) {
                 paramIds.push($(o).val());
             });
-
-            $("select[name='selectedParamIds']").each(function (i,o) {
-                request.selectedParamIds=$(o).val();
+            $("select[name='selectedParamIds']").each(function (i, o) {
+                request.selectedParamIds = $(o).val();
             });
-
-            request.title=$("input[name='title']").val();
-            request.countryId=$("select[name='countryId']").val();
-            request.templateType=$("select[name='templateType']").val();
-            request.type=$("input[name='type']").val();
-            request.id=$("input[name='id']").val();
-            request.paramIds=paramIds;
-            request.list=list;
+            request.title = $("input[name='title']").val();
+            request.countryId = $("select[name='countryId']").val();
+            request.templateType = $("select[name='templateType']").val();
+            request.type = $("input[name='type']").val();
+            request.id = $("input[name='id']").val();
+            request.paramIds = paramIds;
+            request.list = list;
             $(".firstRow").remove();
             $.ajax({
                 url: 'saveTemplate',
@@ -250,6 +318,50 @@
             //var trHTML=$("tr[name='firstRow']").eq(0).prop('outerHTML');
             var trHTML = "<tr class='oneRow'>" + tr + "</tr>";
             table.append(trHTML);
+        });
+
+        var currTr;
+        $("#mytable").delegate(".selectParameter", "click", function (e) {
+            var currEle = e.currentTarget;
+            currTr = $(currEle).parent().parent();
+            $('#parameterModal').modal('show');
+
+        });
+
+
+        $("#parameterSave").on("click", function () {
+
+            $(currTr).find("input[name='name']").val("sdf");
+            $(currTr).find("input[name='key']").val("sdf");
+            $(currTr).find("input[name='defaultValue']").val();
+            $(currTr).find("select[name='dataType']").val();
+            $(currTr).find("select[name='editable']").val();
+            $(currTr).find("select[name='nullable']").val();
+            $(currTr).find("input[name='remark']").val();
+
+
+            $('#parameterModal').modal('hide');
+            if (true) {
+                return false;
+            }
+
+            $.ajax({
+                url: 'saveTemplate',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        alert("操作成功");
+                        window.location.href = "/contractTemplate/edit?optype=2&id=" + result.data;
+                    } else {
+                        alert(result.msg);
+                    }
+                }
+            });
+
+
         });
 
 

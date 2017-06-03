@@ -1,6 +1,6 @@
 package com.nuanyou.cms.controller;
 
-import com.nuanyou.cms.remote.ContractService;
+import com.nuanyou.cms.remote.service.RemoteContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("contractTemplateParameter")
 public class ContractTemplateParameterController {
     @Autowired
-    private ContractService contractService;
+    private RemoteContractService contractService;
 
 
     @RequestMapping("list")

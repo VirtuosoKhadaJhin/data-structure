@@ -7,7 +7,7 @@ import com.nuanyou.cms.model.contract.output.ContractParameter;
 import com.nuanyou.cms.model.contract.output.ContractParameters;
 import com.nuanyou.cms.model.contract.request.TemplateParameterRequest;
 import com.nuanyou.cms.model.contract.request.UpdateParameterRequest;
-import com.nuanyou.cms.remote.ContractService;
+import com.nuanyou.cms.remote.service.RemoteContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,7 +33,7 @@ import java.util.List;
 public class ContractParameterController {
 
     @Autowired
-    private ContractService contractService;
+    private RemoteContractService contractService;
 
 
     @RequestMapping("list")
