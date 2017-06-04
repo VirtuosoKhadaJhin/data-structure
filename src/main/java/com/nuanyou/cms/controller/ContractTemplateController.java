@@ -2,19 +2,17 @@ package com.nuanyou.cms.controller;
 
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
-import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.contract.enums.TemplateStatus;
 import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractParameter;
 import com.nuanyou.cms.model.contract.output.ContractParameters;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
+import com.nuanyou.cms.model.contract.request.ParamDetail;
 import com.nuanyou.cms.model.contract.request.Template;
-import com.nuanyou.cms.model.contract.request.TemplateParameterRequests;
 import com.nuanyou.cms.remote.service.RemoteContractService;
 import com.nuanyou.cms.service.ContractTemplateService;
 import com.nuanyou.cms.service.CountryService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -141,41 +139,23 @@ public class ContractTemplateController {
     }
 
 
-    @RequestMapping(value = "saveTemplate1", method = RequestMethod.POST)
+
+    @RequestMapping(value = "getParameterDetail", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public APIResult saveTemplate(Long[] selectedParamIds,
-                                  TemplateParameterRequests templateParameterRequests,
-                                  Integer templateType,
-                                  String title,
-                                  Long countryId,
-                                  Integer type,
-                                  Long id
+    public APIResult getParameterDetail(
+            @RequestBody ParamDetail detail ) throws IOException {
+        APIResult<ContractParameter> res = this.contractService.saveTemplateParamter(detail.getSelectedParamId());
+        if (res.getCode() != 0) {
+            throw new APIException(res.getCode(), res.getMsg());
+        }
 
-    ) throws IOException {
-        validate(selectedParamIds, templateParameterRequests, templateType, title, countryId);
-        return this.contractTemplateService.saveTemplate1(selectedParamIds, templateParameterRequests, templateType, title, countryId, id);
+        return new APIResult(res.getData());
     }
 
-    private void validate(Long[] selectedParamIds, TemplateParameterRequests templateParameterRequests, Integer type, String title, Long countryId) {
-        if (type == null) {
-            throw new APIException(ResultCodes.Fail, "类型不能为空");
-        } else if (StringUtils.isEmpty(title)) {
-            throw new APIException(ResultCodes.Fail, "title不能为空");
-        } else if (countryId == null) {
-            throw new APIException(ResultCodes.Fail, "国家不能为空");
-        }
-//        if(templateParameterRequests.getKey()==null||templateParameterRequests.getKey().size()==0){
-//            throw new APIException(ResultCodes.Fail, "您并未选择");
-//        }
-        boolean res = templateParameterRequests.validateTemplate();
-        if (res == false) {
-            throw new APIException(ResultCodes.Fail, "key和参数名不能为空");
-        }
-        boolean validateKeys = templateParameterRequests.validateKeys();
-        if (validateKeys == false) {
-            throw new APIException(ResultCodes.Fail, "模板key不能重复");
-        }
-    }
+
+
+
+
 
 
     @RequestMapping(path = "publish", method = RequestMethod.GET)

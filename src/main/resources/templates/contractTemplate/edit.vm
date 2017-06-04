@@ -50,24 +50,24 @@
                                         <option value="2"  #if($!entity.type==2)selected #end>附加合同</option>
                                     </select>
                                 </div>
-                                <label class="control-label">选择已有参数</label>
-                                <div class="controls">
-                                    <select class="span5 select2" id="selectedParamIds" name="selectedParamIds"
-                                            multiple>
-                                        #foreach($param in $!selectableParams)
-                                            <option value="$!param.id">
-                                                $!param.id  >>  $!param.key >>  $!param.name >> $!param.remark
-                                            </option>
-                                        #end
-                                    </select>
-                                </div>
+##                                <label class="control-label">选择已有参数</label>
+##                                <div class="controls">
+##                                    <select class="span5 select2" id="selectedParamIds" name="selectedParamIds"
+##                                            multiple>
+##                                        #foreach($param in $!selectableParams)
+##                                            <option value="$!param.id">
+##                                                $!param.id  >>  $!param.key >>  $!param.name >> $!param.remark
+##                                            </option>
+##                                        #end
+##                                    </select>
+##                                </div>
                                 <label class="control-label">自定义参数</label>
                                 <div class="controls">
                                     <div style="overflow: auto;width: 100%">
 
                                         <table class="table table-bordered data-table dataTable" id="mytable"
                                         >
-                                            <tbody>
+                                            <thead>
                                             <tr id="0">
                                                 <th id="roleSuperid0">key</th>
                                                 <th id="roleSuperid0">参数名</th>
@@ -76,13 +76,18 @@
                                                 <th id="roleSuperid0">是否可编辑</th>
                                                 <th id="roleSuperid0">是否可为空</th>
                                                 <th id="roleSuperid0">栏位提示</th>
-                                                <th style="text-align: left">
+                                                <th style="text-align: left" style="width: 15%">
 
                                                     <a class="btn btn-info btn-mini addRow">手动添加</a>
                                                     <a class="btn btn-info btn-mini selectParameter">选择添加</a>
 
                                                 </th>
                                             </tr>
+                                            </thead>
+                                            <tbody>
+
+
+
 
                                                 #foreach($param in $!selectedParams)
                                                 <tr>
@@ -133,7 +138,7 @@
                                                 </tr>
                                                 #end
 
-                                            <tr class="firstRow" disabled="disabled" style="display: none">
+                                            <tr class="inputRowExample" style="display: none">
                                                 <td>
                                                     <input name="key" style="width: 200px">
                                                     <input name="paramId" type="hidden" value="" style="width: 200px"
@@ -142,42 +147,7 @@
                                                 <td><input name="name" style="width: 90px"></td>
                                                 <td><input name="defaultValue" style="width: 90px"></td>
                                                 <td>
-                                                    <select name="dataType" style="width: 90px" readonly>
-                                                        <option value="1">文本</option>
-                                                        <option value="2">整数</option>
-                                                        <option value="3">小数</option>
-                                                        <option value="4">日期</option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <select name="editable" style="width: 90px">
-                                                        <option value="true">是</option>
-                                                        <option value="false">否</option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <select name="nullable" style="width: 90px">
-                                                        <option value="true">是</option>
-                                                        <option value="false">否</option>
-                                                    </select>
-                                                </td>
-                                                <td><input name="remark" style="width: 100px"></td>
-                                                <td style="text-align: left;width: 300px">
-                                                    <a class="btn btn-info btn-mini removeRow">删除</a>
-                                                </td>
-                                            </tr>
-
-                                            <tr class="spanRow" disabled="disabled" style="display: none">
-                                                <td>
-                                                    <input name="key" style="width: 200px">
-                                                    <label name="key"></label>
-                                                    <input name="paramId" type="hidden" value="" style="width: 200px"
-                                                           readonly>
-                                                </td>
-                                                <td><input name="name" style="width: 90px"></td>
-                                                <td><input name="defaultValue" style="width: 90px"></td>
-                                                <td>
-                                                    <select name="dataType" style="width: 90px" readonly>
+                                                    <select name="dataType" style="width: 90px">
                                                         <option value="1">文本</option>
                                                         <option value="2">整数</option>
                                                         <option value="3">小数</option>
@@ -203,6 +173,43 @@
                                             </tr>
 
 
+
+                                            <tr class="inputRowExample1" style="display: none">
+                                                <td>
+
+                                                    <span class="paramId"></span> : <span class="key"></span>
+                                                    <input name="paramId" type="hidden" value="$!param.id"
+                                                           style="width: 200px" readonly>
+                                                </td>
+                                                <td><span class="name">sdfsdfs</span></td>
+                                                <td><span class="defaultValue"></span></td>
+                                                <td>
+                                                    <select name="dataType" style="width: 90px" disabled>
+                                                        <option value="1">文本</option>
+                                                        <option value="2">整数</option>
+                                                        <option value="3">小数</option>
+                                                        <option value="4">日期</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select name="editable" style="width: 90px" disabled>
+                                                        <option value="true">是</option>
+                                                        <option value="false">否</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select name="nullable" style="width: 90px" disabled>
+                                                        <option value="true">是</option>
+                                                        <option value="false">否</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <span class="remark"></span>
+                                                </td>
+                                                <td style="text-align: left;width: 300px">
+                                                    <a class="btn btn-info btn-mini removeRow">删除</a>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -212,8 +219,7 @@
                                         <button type="button" class="btn btnSave btn-success">保存
                                         </button>
                                     #elseif($!optype==3)
-                                        <button type="button" class="btn btnSave btn-success">保存
-                                        </button>
+                                        <a href="edit?optype=2&id=$!entity.id" class="btn btn-info">编辑</a>
                                     #end
                                     <a class="btn btn-primary" href="list">返回</a>
                                 </div>
@@ -236,7 +242,7 @@
         <div class="control-group">
             <label class="control-label">可选参数列表</label>
             <div class="controls">
-                <select class="span5 select2" id="selectedParamIds" name="selectedParamIds"
+                <select class="span5 select2" id="selectedParamId" name="selectedParamId"
                 >
                     #foreach($param in $!selectableParams)
                         <option value="$!param.id">
@@ -253,19 +259,33 @@
     </div>
 </div>
 
+
+
+
 </body>
     #include("common/js-support.vm")
     #include("common/image-support.vm")
 <script src="/dist/js/cascade-select.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        var tr = $(".firstRow").html();
+
+        var type = $!optype;
+        if (type == 3) {
+            $(":text").attr("disabled", "disabled");
+            $("select").attr("disabled", "disabled");
+            $(".removeRow").css("display",  "none");
+            $(".addRow").css("display", "none");
+            $(".selectParameter").css("display", "none");
+        }
+
+        var inputRowExample = $(".inputRowExample").html();
+        var spanRowExample = $(".inputRowExample1").html();
         $(".btnSave").click(function () {
             var form = $(".templateFormValidate");
             var request = {};
             var list = [];
             var paramIds = [];
-            $(".oneRow").each(function (i, o) {
+            $(".editRow").each(function (i, o) {
                 var templateParameterRequest = {};
                 templateParameterRequest.name = $(o).find("input[name='name']").val();
                 templateParameterRequest.key = $(o).find("input[name='key']").val();
@@ -289,7 +309,8 @@
             request.id = $("input[name='id']").val();
             request.paramIds = paramIds;
             request.list = list;
-            $(".firstRow").remove();
+            $(".inputRowExample").remove();
+            $(".inputRowExample1").remove();
             $.ajax({
                 url: 'saveTemplate',
                 data: JSON.stringify(request),
@@ -299,7 +320,7 @@
                 success: function (result) {
                     if (result.code == 0) {
                         alert("操作成功");
-                        window.location.href = "/contractTemplate/edit?optype=2&id=" + result.data;
+                        window.location.href = "/contractTemplate/edit?optype=3&id=" + result.data;
                     } else {
                         alert(result.msg);
                     }
@@ -316,7 +337,7 @@
         $("#mytable").delegate(".addRow", "click", function (e) {
             var table = $("#mytable");
             //var trHTML=$("tr[name='firstRow']").eq(0).prop('outerHTML');
-            var trHTML = "<tr class='oneRow'>" + tr + "</tr>";
+            var trHTML = "<tr class='editRow'>" + inputRowExample + "</tr>";
             table.append(trHTML);
         });
 
@@ -327,41 +348,40 @@
             $('#parameterModal').modal('show');
 
         });
-
-
         $("#parameterSave").on("click", function () {
-
-            $(currTr).find("input[name='name']").val("sdf");
-            $(currTr).find("input[name='key']").val("sdf");
-            $(currTr).find("input[name='defaultValue']").val();
-            $(currTr).find("select[name='dataType']").val();
-            $(currTr).find("select[name='editable']").val();
-            $(currTr).find("select[name='nullable']").val();
-            $(currTr).find("input[name='remark']").val();
-
-
-            $('#parameterModal').modal('hide');
-            if (true) {
-                return false;
-            }
-
+            var table = $("#mytable");
+            var trHTML = "<tr>" + spanRowExample + "</tr>";
+            table.append(trHTML);
+            var selectedParamId=$("select[name='selectedParamId']").val();
+            console.log(selectedParamId);
+            var request={};
+            request.selectedParamId=selectedParamId;
             $.ajax({
-                url: 'saveTemplate',
+                url: 'getParameterDetail',
                 data: JSON.stringify(request),
                 type: 'post',
                 dataType: 'json',
                 contentType: 'application/json',
                 success: function (result) {
                     if (result.code == 0) {
-                        alert("操作成功");
-                        window.location.href = "/contractTemplate/edit?optype=2&id=" + result.data;
+                        var parameter=result.data;
+                        console.log(result.data.name)
+                        var lastTr= $('#mytable tr:last');
+                        lastTr.find("span[class='key']").html(parameter.key);
+                        lastTr.find("span[class='paramId']").html(parameter.id);
+                        lastTr.find("input[name='paramId']").val(parameter.id);
+                        lastTr.find("span[class='name']").html(parameter.name);
+                        lastTr.find("span[class='defaultValue']").html(parameter.defaultValue);
+                        lastTr.find("select[name='dataType']").val(parameter.type);
+                        lastTr.find("select[name='editable']").val(parameter.editable+"");
+                        lastTr.find("select[name='nullable']").val(parameter.nullable+"");
+                        lastTr.find("span[class='remark']").html(parameter.remark);
+                        $('#parameterModal').modal('hide');
                     } else {
                         alert(result.msg);
                     }
                 }
             });
-
-
         });
 
 
