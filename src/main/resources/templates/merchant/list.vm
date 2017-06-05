@@ -41,7 +41,7 @@
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <li><a href="edit?id=$!entity.id">基础信息编辑</a></li>
-                        <li><a href="/merchantHeadimgOld/list?mchId=$!entity.id"">商家详情页图片编辑2.0</a></li>
+##                        <li><a href="/merchantHeadimgOld/list?mchId=$!entity.id"">商家详情页图片编辑2.0</a></li>
                         <li><a href="/merchantHeadimg/edit?mchId=$!entity.id"">商家详情页图片编辑3.0</a></li>
                         <li><a href="/merchantSubsidy/list?mchId=$!entity.id"">商户补贴编辑</a></li>
                         <li><a href="/userSubsidy/list?mchId=$!entity.id"">用户补贴编辑</a></li>

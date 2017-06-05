@@ -113,14 +113,14 @@
                                 <div class="controls">
                                     <select class="span10" name="subcat.id" def-value="$!entity.subcat.id"></select>
                                 </div>
-                                <label class="control-label">2.0分类信息</label>
-                                <div class="controls">
-                                    <select class="span10" name="catId">
-                                        <option value="1" #if($!entity.catId==1) selected #end>美食</option>
-                                        <option value="2" #if($!entity.catId==2) selected #end>购物</option>
-                                        <option value="3" #if($!entity.catId==3) selected #end>景点</option>
-                                    </select>
-                                </div>
+##                                <label class="control-label">2.0分类信息</label>
+##                                <div class="controls">
+##                                    <select class="span10" name="catId">
+##                                        <option value="1" #if($!entity.catId==1) selected #end>美食</option>
+##                                        <option value="2" #if($!entity.catId==2) selected #end>购物</option>
+##                                        <option value="3" #if($!entity.catId==3) selected #end>景点</option>
+##                                    </select>
+##                                </div>
                                 <label class="control-label">中文地址</label>
                                 <div class="controls">
                                     <input type="text" class="span10" placeholder="中文地址" name="address" value="$!entity.address" maxlength="200">
@@ -129,13 +129,13 @@
                                 <div class="controls">
                                     <input type="text" class="span10" placeholder="本地地址" name="kpaddress" value="$!entity.kpaddress" maxlength="200">
                                 </div>
-                                <label class="control-label">2.0列表图</label>
-                                <div class="controls">
-                                    <input type="text" class="span9" id="indexImgUrl" placeholder="2.0列表图" name="indexImgUrl" value="$!entity.indexImgUrl">
-                                    <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">预览</button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl" data-width="600" data-height="200">上传
-                                    </button>
-                                </div>
+##                                <label class="control-label">2.0列表图</label>
+##                                <div class="controls">
+##                                    <input type="text" class="span9" id="indexImgUrl" placeholder="2.0列表图" name="indexImgUrl" value="$!entity.indexImgUrl">
+##                                    <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">预览</button>
+##                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl" data-width="600" data-height="200">上传
+##                                    </button>
+##                                </div>
 
                                 <label class="control-label">3.0列表图</label>
                                 <div class="controls">
