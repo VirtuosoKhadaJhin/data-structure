@@ -3,6 +3,7 @@ package com.nuanyou.cms.service;
 import com.nuanyou.cms.model.LangsDictionary;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -21,4 +22,6 @@ public interface LangsDictionaryService {
     LangsDictionary updateLangsDictionary(LangsDictionary entity);
 
     void deleteLangsDictionary(Long id);
+
+    List<LangsDictionary> findIdNameListByCat(Long id);
 }

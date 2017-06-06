@@ -71,6 +71,8 @@ public class LangsCategory implements Serializable {
 
     private int index;
 
+    private int size;
+
     public Long getId() {
         return id;
     }
@@ -141,6 +143,14 @@ public class LangsCategory implements Serializable {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 
     @Override

@@ -105,9 +105,9 @@
 
                                     <a class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</a>
                                     <a class="btn btn-success btn-mini verify" data-id="$!entity.id" valid="false">驳回</a>
-                                    #if($!entity.businessLicense && $!entity.paperContract)
-                                        <a class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</a>
-                                    #end
+##                                    #if($!entity.businessLicense && $!entity.paperContract)
+##                                        <a class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</a>
+##                                    #end
                                     <a class="btn btn-success btn-mini" href="list">返回</a>
                                 </div>
                             </form>

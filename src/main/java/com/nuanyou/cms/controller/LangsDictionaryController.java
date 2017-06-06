@@ -1,5 +1,6 @@
 package com.nuanyou.cms.controller;
 
+import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.model.LangsDictionary;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping("langsDictionary")
@@ -54,6 +57,14 @@ public class LangsDictionaryController {
         }
         String url = "edit?type=3&id=" + category.getId();
         return "redirect:" + url;
+    }
+
+
+    @RequestMapping("api/list")
+    @ResponseBody
+    public APIResult list(Long id) {
+        List<LangsDictionary> list = dictionaryService.findIdNameListByCat(id);
+        return new APIResult(list);
     }
 
 

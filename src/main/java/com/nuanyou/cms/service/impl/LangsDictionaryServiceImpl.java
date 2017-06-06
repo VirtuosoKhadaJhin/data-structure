@@ -109,6 +109,13 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         dictionaryDao.delete ( id );
     }
 
+    @Override
+    public List<LangsDictionary> findIdNameListByCat(Long id) {
+        List<EntityNyLangsDictionary> list=this.dictionaryDao.findByCategoryId(id);
+        List<LangsDictionary> langsDictionaries = convertToMultipleLangsCategories(list);
+        return langsDictionaries;
+    }
+
     private EntityNyLangsDictionary convertToEntityLangsDictionary(LangsDictionary dictionary) {
         return BeanUtils.copyBean ( dictionary, new EntityNyLangsDictionary () );
     }

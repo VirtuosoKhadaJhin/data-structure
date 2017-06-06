@@ -3,6 +3,7 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.entity.Country;
+import com.nuanyou.cms.model.LangsCategory;
 import com.nuanyou.cms.model.contract.enums.TemplateStatus;
 import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractParameter;
@@ -13,6 +14,7 @@ import com.nuanyou.cms.model.contract.request.Template;
 import com.nuanyou.cms.remote.service.RemoteContractService;
 import com.nuanyou.cms.service.ContractTemplateService;
 import com.nuanyou.cms.service.CountryService;
+import com.nuanyou.cms.service.LangsCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -40,6 +42,8 @@ public class ContractTemplateController {
     private CountryService countryService;
     @Autowired
     private ContractTemplateService contractTemplateService;
+    @Autowired
+    private LangsCategoryService categoryService;
 
     @RequestMapping("list")
     public String list(Model model,
@@ -76,7 +80,6 @@ public class ContractTemplateController {
         //all common params
         List<ContractParameter> commonParams = new ArrayList<>();
         for (ContractParameter param : params) {
-
             if (param.isCommon()) {
                 commonParams.add(param);
             }
@@ -84,6 +87,12 @@ public class ContractTemplateController {
 
         //all countries
         List<Country> countries = this.countryService.getIdNameList();
+
+
+        //add selectable langs
+        LangsCategory example=new LangsCategory();
+        example.setIndex(1);example.setSize(100000);
+        Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
 
 
         //vo info

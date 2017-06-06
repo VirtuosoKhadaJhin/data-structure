@@ -1,6 +1,7 @@
 package com.nuanyou.cms.controller;
 
 import com.nuanyou.cms.model.LangsCategory;
+import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.LangsCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,7 +25,7 @@ public class LangsCategoryController {
                        String name,
                        Boolean isGlobal, Model model) {
         LangsCategory example=new LangsCategory();
-        example.setName(name);example.setIsGlobal(isGlobal);example.setIndex(index);
+        example.setName(name);example.setIsGlobal(isGlobal);example.setIndex(index);example.setSize(PageUtil.pageSize);
         Page<LangsCategory> categoryPage = this.categoryService.findAllCategories(example);
         model.addAttribute("page", categoryPage);
         model.addAttribute("entity", example);

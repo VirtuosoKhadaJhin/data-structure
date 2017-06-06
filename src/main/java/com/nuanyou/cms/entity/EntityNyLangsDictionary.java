@@ -21,8 +21,10 @@ public class EntityNyLangsDictionary {
     @Column(name = "KEY_CODE")
     private String keyCode;
 
-    @Column(name = "BASE_NAME")
-    private String baseName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "BASE_NAME")
+    private EntityNyLangsCategory category;
 
     @Column(name = "LANGUAGE")
     private String language;
@@ -74,12 +76,13 @@ public class EntityNyLangsDictionary {
         this.keyCode = keyCode;
     }
 
-    public String getBaseName() {
-        return baseName;
+
+    public EntityNyLangsCategory getCategory() {
+        return category;
     }
 
-    public void setBaseName(String baseName) {
-        this.baseName = baseName;
+    public void setCategory(EntityNyLangsCategory category) {
+        this.category = category;
     }
 
     public String getLanguage() {

@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.nuanyou.cms.dao.EntityNyLangsCategoryDao;
 import com.nuanyou.cms.entity.EntityNyLangsCategory;
 import com.nuanyou.cms.model.LangsCategory;
-import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.LangsCategoryService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -40,7 +39,7 @@ public class LangsCategoryServiceImpl implements LangsCategoryService {
     @Override
     public Page<LangsCategory> findAllCategories(final LangsCategory request) {
 
-        Pageable pageable = new PageRequest ( request.getIndex () - 1, PageUtil.pageSize );
+        Pageable pageable = new PageRequest ( request.getIndex () - 1,request.getSize() );
 
         Page<EntityNyLangsCategory> categories = categoryDao.findAll ( new Specification () {
 

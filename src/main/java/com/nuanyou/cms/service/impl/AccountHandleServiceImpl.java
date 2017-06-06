@@ -41,7 +41,7 @@ public class AccountHandleServiceImpl implements AccountHandleService {
     private String commissionNames;
     @Value("${contractConfig.groupBuyingStartTimeNames}")
     private String groupBuyingStartTime;
-    DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd");
+    private static DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
     @Autowired
     private RemoteSettlementService remoteAccountSettlementService;
 
@@ -54,7 +54,7 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         AcMerchantSettlementCommission settlementCommissionRequest =new  AcMerchantSettlementCommission();
         setMerchantSettlementRequest(result, settlementRequest, detail.getMchId());
         setMerchantSettlementCommissionRequest(result, settlementCommissionRequest);
-        if (detail.getParentId() == null) {
+        if (detail.getParentId() == null) {//主合同
             validate(settlementRequest.getPoundage(), settlementRequest.getDay(), settlementRequest.getDayType(), settlementRequest.getStartTime(), settlementRequest.getStartPrice());
         }
         APIResult<AcMerchantSettlement> res = remoteAccountSettlementService.getSettlement(settlementRequest.getMerchantId());
@@ -63,7 +63,7 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         }
         AcMerchantSettlement settlement = res.getData();
         Long settlementId=null;
-        if(settlement==null){
+        if(settlement==null){//若商家已经存在清算记录
             if(settlementRequest.getStartTime()==null){
                 settlementRequest.setStartTime(DateUtils.getTodayDate());
             }
@@ -84,7 +84,7 @@ public class AccountHandleServiceImpl implements AccountHandleService {
             settlementId=updateSettlementRes.getData().getId();
         }
         settlementCommissionRequest.setSettlementId(settlementId);
-        if(settlementCommissionRequest.getGroupon()!=null){
+        if(settlementCommissionRequest.getGroupon()!=null){//团购佣金
             APIResult<AcMerchantSettlement> settlementCommissionRes = remoteAccountSettlementService.addOrUpdateCommission(settlementCommissionRequest);
             if (settlementCommissionRes.getCode() != 0) {
                 throw new APIException(res.getCode(), res.getMsg());
@@ -102,7 +102,7 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         String startTimeStr = getValue(result, groupBuyingStartTime);//开始时间
         String commissionStr= getValue(result, commissionNames);//佣金
         BigDecimal commission=commissionStr==null?null:new BigDecimal(commissionStr);
-        Date dateTime= startTimeStr==null?null: DateTime.parse(startTimeStr,format).toDate();
+        Date dateTime= startTimeStr==null?null: DateTime.parse(startTimeStr, dateFormat).toDate();
         settlementCommissionRequest.setGroupon(commission);
         settlementCommissionRequest.setStartTime(dateTime);
     }
@@ -129,7 +129,7 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         BigDecimal poundage=poundageStr==null?null:new BigDecimal(poundageStr);
         Integer dateType=dateTypeStr==null?null:new Integer(dateTypeStr);
         Long paymentDays=paymentDaysStr==null?null:Long.valueOf(paymentDaysStr);
-        Date dateTime= startTimeStr==null?null:DateTime.parse(startTimeStr,format).toDate();
+        Date dateTime= startTimeStr==null?null:DateTime.parse(startTimeStr, dateFormat).toDate();
         BigDecimal startPrice=startPriceStr==null?null:new BigDecimal(startPriceStr);
         request.setEnabled(true);
         request.setDayType( DayType.toEnum(dateType));

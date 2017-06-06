@@ -1,9 +1,11 @@
 package com.nuanyou.cms.controller;
 
+import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.component.FileClient;
 import com.nuanyou.cms.dao.MerchantDao;
+import com.nuanyou.cms.entity.CmsUser;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
@@ -13,6 +15,7 @@ import com.nuanyou.cms.service.AccountHandleService;
 import com.nuanyou.cms.service.ContractModuleService;
 import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.UserService;
+import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.JsonUtils;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +75,6 @@ public class ContractController {
                        @RequestParam(value = "businessLicense", required = false) Boolean businessLicense,
                        @RequestParam(value = "contractNum", required = false) Boolean contractNum,
                        @RequestParam(value = "paperContract", required = false) Boolean paperContract) {
-
         Page<Contract> page = contractModuleService.getContracts(userId, merchantId, id, merchantName, "[2]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), businessLicense, paperContract, startTime, endTime, index, limit);
         List<Country> countries = countryService.getIdNameList();
         model.addAttribute("page", page);
@@ -183,16 +185,19 @@ public class ContractController {
 
     @RequestMapping(path = "verify", method = RequestMethod.GET)
     @ResponseBody
-    public APIResult verify(Long id, Boolean valid, Long contractId) throws ParseException {
-        //Long userid = UserHolder.getUser().getUserid();
-        //String email = UserHolder.getUser().getEmail();
-       // CmsUser user = userService.getUserByEmail(email);
-
-//        //审核
-//        APIResult approve = this.contractService.approve(user.getId(), contractId, valid);
-//        if (approve.getCode() != 0) {
-//            throw new APIException(approve.getCode(), approve.getMsg());
-//        }
+    public APIResult verify( Boolean valid, Long contractId) throws ParseException {
+//        User ssoUser=new User();
+//        ssoUser.setName("f");
+//        ssoUser.setAccess_token("sdfsdf");
+//        ssoUser.setEmail("felix.zhao@91nuanyou.com");
+//        UserHolder.setUser(ssoUser);
+        String email = UserHolder.getUser().getEmail();
+        CmsUser user = userService.getUserByEmail(email);
+        //审核
+        APIResult approve = this.contractService.approve(user.getId(), contractId, valid);
+        if (approve.getCode() != 0) {
+            throw new APIException(approve.getCode(), approve.getMsg());
+        }
         if (valid) {
             //2 得到合同信息
             APIResult<Contract> resDetail = this.contractService.getContract(contractId);
