@@ -61,4 +61,12 @@ public enum LangsCountry {
     public void setValue(String value) {
         this.value = value;
     }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
 }
