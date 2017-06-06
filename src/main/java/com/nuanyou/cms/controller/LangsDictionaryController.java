@@ -1,7 +1,9 @@
 package com.nuanyou.cms.controller;
 
 import com.nuanyou.cms.commons.APIResult;
+import com.nuanyou.cms.model.LangsCategory;
 import com.nuanyou.cms.model.LangsDictionary;
+import com.nuanyou.cms.service.LangsCategoryService;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,8 @@ public class LangsDictionaryController {
 
     @Autowired
     private LangsDictionaryService dictionaryService;
+    @Autowired
+    private LangsCategoryService categoryService;
 
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index,
@@ -38,11 +42,15 @@ public class LangsDictionaryController {
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
+        LangsCategory example=new LangsCategory();
+        example.setIndex(1);example.setSize(100000);
+        Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
         LangsDictionary entity = null;
         if (id != null) {
             entity = dictionaryService.findLangsDictionary(id);
         }
         model.addAttribute("entity", entity);
+        model.addAttribute("selectableLangsCategory", selectableLangsCategory);
         model.addAttribute("type", type);
         return "langsDictionary/edit";
     }

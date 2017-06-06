@@ -102,11 +102,6 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
 
         validateBasic(templateType,title,countryId);
 
-
-
-
-
-
         //fetch param ids
         BatchTemplateParameterRequest batch = new BatchTemplateParameterRequest();
         batch.setParameterRequests(requests);
@@ -115,10 +110,6 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
             throw new APIException(idList.getCode(), idList.getMsg());
         }
         List<Long> idsSum = idList.getData();//ids from added param ids
-//        if (selectedParamIds != null && selectedParamIds.size() > 0) {
-//            idsSum.addAll(selectedParamIds);//ids from selectedParam ids
-//        }
-
         List<Long> originalParamIds = paramIds;
         if (originalParamIds != null && !originalParamIds.isEmpty()) {
             idsSum.addAll(originalParamIds);//ids from original param ids

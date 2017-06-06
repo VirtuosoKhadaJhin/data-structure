@@ -69,6 +69,9 @@ public class DateUtils {
         }
         return age;
     }
+    static {
+
+    }
 
     public static Date newDate() {
         return new Date();

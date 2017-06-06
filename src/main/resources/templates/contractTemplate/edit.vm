@@ -80,7 +80,7 @@
                                                         <input name="paramId" type="hidden" value="$!param.id"
                                                                style="width: 200px" readonly>
                                                     </td>
-                                                    <td>$!param.name</td>
+                                                    <td>$!param.name.key</td>
                                                     <td>$!param.defaultValue</td>
                                                     <td>
                                                         #if($!param.type==1)
@@ -109,21 +109,22 @@
                                                             否
                                                         #end
                                                     </td>
-                                                    <td>$!param.remark</td>
+                                                    <td>$!param.remark.key</td>
                                                     <td style="text-align: left">
                                                         <a class="btn btn-info btn-mini removeRow">删除</a>
                                                     </td>
                                                 </tr>
                                                 #end
-                                            <tr class="inputRowExample" style="display: none">
+                                            <tr class="inputRowExample editRow" style="display: none">
                                                 <td>
                                                     <input name="key" style="width: 200px">
-                                                    <input name="paramId" type="hidden" value="" style="width: 200px" readonly>
+                                                    <input name="paramId" type="hidden" value="" style="width: 150px" readonly>
 
                                                 </td>
                                                 <td>
-                                                   <input name="name" style="width: 90px">
-                                                    <a class="btn btn-info btn-mini selectLang">选择多语言</a>
+                                                   <input name="name" style="width: 150px" readonly><br>
+                                                    <a class="btn btn-info btn-mini selectLang" inputLangsName="name">选择</a>
+                                                    <a class="btn btn-info btn-mini addLang" inputLangsName="name">添加</a>
                                                 </td>
                                                 <td><input name="defaultValue" style="width: 90px"></td>
                                                 <td>
@@ -146,7 +147,12 @@
                                                         <option value="false">否</option>
                                                     </select>
                                                 </td>
-                                                <td><input name="remark" style="width: 100px"></td>
+                                                <td>
+                                                    <input name="remark" style="width: 150px" readonly><br>
+
+                                                    <a class="btn btn-info btn-mini selectLang" inputLangsName="remark">选择</a>
+                                                    <a class="btn btn-info btn-mini addLang" inputLangsName="remark">添加</a>
+                                                </td>
                                                 <td style="text-align: left;width: 300px">
                                                     <a class="btn btn-info btn-mini removeRow">删除</a>
                                                 </td>
@@ -154,7 +160,7 @@
 
 
 
-                                            <tr class="spanRowExample" style="display: none">
+                                            <tr class="rowSpanExample" style="display: none">
                                                 <td>
                                                     <span class="paramId"></span> : <span class="key"></span>
                                                     <input name="paramId" type="hidden" value="$!param.id"
@@ -215,7 +221,7 @@
                 >
                     #foreach($param in $!selectableParams)
                         <option value="$!param.id">
-                            id:$!param.id  ; key:  $!param.key ; 属性名:  $!param.name
+                            id:$!param.id  ; key:  $!param.key ; 属性名:  $!param.name.key
                         </option>
                     #end
                 </select>
@@ -231,7 +237,7 @@
 
 
 
-<div id="langsModal" class="modal hide fade" role="dialog" aria-hidden="true">
+<div id="selectLangsModal" class="modal hide fade" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3>多语言选择</h3>
@@ -244,40 +250,120 @@
                 <select class="span5 select2"  name="langsCategoryId" target-url="/langsDictionary/api/list" target-name="langs">
                     <option value="0">全部</option>
                     #foreach($e in $!selectableLangsCategory)
-                        <option value="$!e.id">
-                            id:$!e.id ;
-                            :$!e.name</option>
+                        <option value="$!e.id">$!e.name</option>
                     #end
                 </select>
             </div>
         </div>
 
         <div class="control-group">
-            <label class="control-label">商户</label>
+            <label class="control-label">多语言列表</label>
             <div class="controls">
-                <select class="span5 child select2"  name="langs" id="langs">
-
-                </select>
-            </div>
-        </div>
-
-
-        <div class="control-group">
-            <label class="control-label">可选多语言列表</label>
-            <div class="controls">
-                <select class="span5 select2" id="selectedLangsKey" name="selectedLangsKey"
-                >
+                <select class="span5 select2" id="langsKey" name="selectedLangsKey">
                     #foreach($lang in $!selectableLangs)
+                        <option value="11">全部</option>
                         <option value="$!lang.id">
-                            id:$!lang.id  ; key:  $!lang.key ; 属性名:  $!lang.name
+                           key:
                         </option>
                     #end
                 </select>
             </div>
         </div>
+
     </div>
     <div class="modal-footer">
-        <a href="javascript:void(0);" id="parameterSave" class="btn btn-primary">保存</a>
+        <a href="javascript:void(0);" id="selectLangSave" class="btn btn-primary">保存</a>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div id="addLangsModal" class="modal hide fade" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>多语言添加</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class="control-group">
+            <label class="control-label">多语言分类</label>
+            <div class="controls">
+                <select class="span5 select2"  name="langsCategoryId" >
+                    <option value="0">全部</option>
+                    #foreach($e in $!selectableLangsCategory)
+                        <option value="$!e.id">$!e.name</option>
+                    #end
+                </select>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">多语言列表</label>
+            <div class="controls">
+                <select class="span5 select2" id="keyCode" name="selectedLangsKey">
+                    #foreach($lang in $!selectableLangs)
+                        <option value="11">全部</option>
+                        <option value="$!lang.id">
+                            key:
+                        </option>
+                    #end
+                </select>
+            </div>
+        </div>
+
+
+        <div class="control-group">
+            <label class="control-label">keyCode</label>
+            <div class="controls">
+                <input for="name" name="keyCode" type="text" class="span5"
+                       value="$!entity.keyCode" >
+            </div>
+        </div>
+
+
+        <div class="control-group">
+            <label class="control-label">message</label>
+            <div class="controls">
+                <input for="name" name="message" type="text" class="span5"
+                       value="$!entity.message" >
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">language</label>
+            <div class="controls">
+                <input for="name" name="language" type="text" class="span5"
+                       value="$!entity.language" >
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">country</label>
+            <div class="controls">
+                <input for="name" name="country" type="text" class="span5"
+                       value="$!entity.country" >
+            </div>
+        </div>
+
+
+        <div class="control-group">
+            <label class="control-label">variant</label>
+            <div class="controls">
+                <input for="name" name="variant" type="text" class="span5"
+                       value="$!entity.variant" >
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" id="addLangSave" class="btn btn-primary">保存</a>
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
     </div>
 </div>
@@ -291,7 +377,12 @@
 <script src="/dist/js/cascade-select.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+
         var type = $!optype;
+        var currLangInput;
+        var inputRowExample = $(".inputRowExample").html();
+        var spanRowExample = $(".rowSpanExample").html();
+
         if (type == 3) {
             $(":text").attr("disabled", "disabled");
             $("select").attr("disabled", "disabled");
@@ -300,10 +391,9 @@
             $(".selectParameter").css("display", "none");
         }
 
-        var inputRowExample = $(".inputRowExample").html();
-        var spanRowExample = $(".spanRowExample").html();
-
         $(".btnSave").click(function () {
+            $(".inputRowExample").remove();
+            $(".rowSpanExample").remove();
             var form = $(".templateFormValidate");
             var request = {};
             var list = [];
@@ -332,8 +422,6 @@
             request.id = $("input[name='id']").val();
             request.paramIds = paramIds;
             request.list = list;
-            $(".inputRowExample").remove();
-            $(".inputRowExample1").remove();
             $.ajax({
                 url: 'saveTemplate',
                 data: JSON.stringify(request),
@@ -356,7 +444,6 @@
             $(currEle).parent().parent().remove();
         });
 
-
         $("#mytable").delegate(".addRow", "click", function (e) {
             var table = $("#mytable");
             //var trHTML=$("tr[name='firstRow']").eq(0).prop('outerHTML');
@@ -364,10 +451,7 @@
             table.append(trHTML);
         });
 
-        var currTr;
         $("#mytable").delegate(".selectParameter", "click", function (e) {
-            var currEle = e.currentTarget;
-            currTr = $(currEle).parent().parent();
             $('#parameterModal').modal('show');
 
         });
@@ -418,7 +502,7 @@
                         lastTr.find("span[class='key']").html(parameter.key);
                         lastTr.find("span[class='paramId']").html(parameter.id);
                         lastTr.find("input[name='paramId']").val(parameter.id);
-                        lastTr.find("span[class='name']").html(parameter.name);
+                        lastTr.find("span[class='name']").html(parameter.name.key);
                         lastTr.find("span[class='defaultValue']").html(parameter.defaultvalue);
                         lastTr.find("span[class='dataType']").html(dateTypeText);
                         lastTr.find("span[class='editable']").html(editableText);
@@ -431,6 +515,56 @@
                 }
             });
         });
+
+        $("#mytable").delegate(".selectLang", "click", function (e) {
+            var currEle = e.currentTarget;
+            var name=$(currEle).attr("inputLangsName");
+            var td = $(currEle).parent().parent();
+            currLangInput = td.find("input[name='"+name+"']");
+            $('#selectLangsModal').modal('show');
+        });
+
+        $("#selectLangSave").on("click", function () {
+            var langsKey=$("#langsKey").val();
+            console.log(langsKey);
+            langsKey="select";
+            currLangInput.val(langsKey);
+            $('#selectLangsModal').modal('hide');
+        });
+
+        $("#mytable").delegate(".addLang", "click", function (e) {
+            var currEle = e.currentTarget;
+            var name=$(currEle).attr("inputLangsName");
+            var td = $(currEle).parent().parent();
+            currLangInput = td.find("input[name='"+name+"']");
+            $('#addLangsModal').modal('show');
+        });
+
+        $("#addLangSave").on("click", function () {
+            var langsKey="add";
+            currLangInput.val(langsKey);
+            $('#addLangsModal').modal('hide');
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         $(".templateFormValidate").validate({
@@ -453,6 +587,8 @@
             },
             errorElement: "span"
         });
+
+
     });
 
 </script>

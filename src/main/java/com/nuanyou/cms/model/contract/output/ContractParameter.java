@@ -3,8 +3,6 @@ package com.nuanyou.cms.model.contract.output;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.List;
-
 /**
  * Created by Alan.ye on 2016/9/12.
  */
@@ -12,7 +10,7 @@ public class ContractParameter implements Comparable<ContractParameter> {
 
     private Long id;
 
-    private String name;
+    private MLString name;
 
     private String key;
 
@@ -22,7 +20,7 @@ public class ContractParameter implements Comparable<ContractParameter> {
 
     private Integer sort = 0;
 
-    private List<CodeAndName> source;
+    private String source;
 
     private boolean editable;
 
@@ -30,9 +28,9 @@ public class ContractParameter implements Comparable<ContractParameter> {
 
     private String regex;
 
-    private String hint;
+    private MLString hint;
 
-    private String remark;
+    private MLString remark;
 
     private boolean multiValuable;
 
@@ -42,11 +40,11 @@ public class ContractParameter implements Comparable<ContractParameter> {
 
     @ApiModelProperty(value = "参数名称")
     @JsonProperty("name")
-    public String getName() {
+    public MLString getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(MLString name) {
         this.name = name;
     }
 
@@ -91,24 +89,15 @@ public class ContractParameter implements Comparable<ContractParameter> {
             sort = 0;
         this.sort = sort;
     }
-//    @ApiModelProperty(value = "备选数据源")
-//    @JsonProperty("source")
-//    public String  getSource() {
-//        return source;
-//    }
-//
-//    public void setSource(String  source) {
-//        this.source = source;
-//    }
 
 
     @ApiModelProperty(value = "备选数据源")
     @JsonProperty("source")
-    public List<CodeAndName>  getSource() {
+    public String  getSource() {
         return source;
     }
 
-    public void setSource(List<CodeAndName>  source) {
+    public void setSource(String  source) {
         this.source = source;
     }
 
@@ -142,20 +131,20 @@ public class ContractParameter implements Comparable<ContractParameter> {
     }
     @ApiModelProperty(value = "格式校验提示")
     @JsonProperty("hint")
-    public String getHint() {
+    public MLString getHint() {
         return hint;
     }
 
-    public void setHint(String hint) {
+    public void setHint(MLString hint) {
         this.hint = hint;
     }
     @ApiModelProperty(value = "属性说明")
     @JsonProperty("remark")
-    public String getRemark() {
+    public MLString getRemark() {
         return remark;
     }
 
-    public void setRemark(String remark) {
+    public void setRemark(MLString remark) {
         this.remark = remark;
     }
     @ApiModelProperty(value = "是否多值")
@@ -202,6 +191,27 @@ public class ContractParameter implements Comparable<ContractParameter> {
     public static class CodeAndName{
         public String code;
         public String name;
+    }
+
+    public static class MLString{
+        private  String key;
+        private  String content;
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
     }
 
 }

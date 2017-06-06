@@ -114,6 +114,7 @@ public class ContractTemplateController {
         setSelectableParams(selectedParams, params);
         model.addAttribute("entity", template);
         model.addAttribute("selectableParams", params);
+        model.addAttribute("selectableLangsCategory", selectableLangsCategory);
         model.addAttribute("countries", countries);
         model.addAttribute("selectedParams", selectedParams);
         model.addAttribute("optype", optype);

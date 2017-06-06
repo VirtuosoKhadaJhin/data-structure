@@ -52,6 +52,8 @@
                                             <input name="defaultValue" type="text" class="span7" value="$!entity.defaultValue" #if($!type==2) disabled #end>
                                         </div>
                                     </div>
+
+
                                     <div class="control-group">
                                         <label class="control-label">类型</label>
                                         <div class="controls">
