@@ -3,6 +3,7 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.model.LangsCategory;
 import com.nuanyou.cms.model.LangsDictionary;
+import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsCategoryService;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class LangsDictionaryController {
         Page<LangsDictionary> allDictionary = dictionaryService.findAllDictionary(example);
         model.addAttribute("page", allDictionary);
         model.addAttribute("entity", example);
+        model.addAttribute ( "langsCountries", LangsCountry.values () );
         return "langsDictionary/list";
     }
 
