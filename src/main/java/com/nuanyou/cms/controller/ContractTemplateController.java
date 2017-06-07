@@ -11,6 +11,7 @@ import com.nuanyou.cms.model.contract.output.ContractParameters;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
 import com.nuanyou.cms.model.contract.request.ParamDetail;
 import com.nuanyou.cms.model.contract.request.Template;
+import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.remote.service.RemoteContractService;
 import com.nuanyou.cms.service.ContractTemplateService;
 import com.nuanyou.cms.service.CountryService;
@@ -111,6 +112,12 @@ public class ContractTemplateController {
         } else {
             selectedParams = template.getParameters();
         }
+
+
+
+
+
+
         setSelectableParams(selectedParams, params);
         model.addAttribute("entity", template);
         model.addAttribute("selectableParams", params);
@@ -118,6 +125,7 @@ public class ContractTemplateController {
         model.addAttribute("countries", countries);
         model.addAttribute("selectedParams", selectedParams);
         model.addAttribute("optype", optype);
+        model.addAttribute ( "langsCountries", LangsCountry.values () );
         return "contractTemplate/edit";
     }
 

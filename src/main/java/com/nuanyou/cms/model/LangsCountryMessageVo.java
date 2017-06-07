@@ -35,4 +35,7 @@ public class LangsCountryMessageVo implements Serializable {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public LangsCountryMessageVo() {
+    }
 }

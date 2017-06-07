@@ -26,13 +26,13 @@
                             <h5>编辑&查看</h5>
                         </div>
                         <div class="widget-content nopadding">
-                            <form action="update" method="post" class="form-horizontal commonValidate" role="form"
+                            <form action="update" method="post" class="form-horizontal langsDicFormValidate" role="form"
                                   id="cityform">
                                 <div class="control-group">
                                     <span class="col-sm-2 control-label">ID</span>
                                     <div class="controls">
                                         #if($!type==2)
-                                            <input name="id" readonly type="text" class="form-control" placeholder="ID"
+                                            <input name="id" readonly type="text" class="form-control span7" placeholder="ID"
                                                    value="$!entity.id">
                                         #end
                                         #if($!type==3)
@@ -44,15 +44,14 @@
                                     <label class="control-label">keyCode</label>
                                     <div class="controls">
                                         <input for="name" name="keyCode" type="text" class="span7"
-                                               value="$!entity.keyCode" >
+                                               value="$!entity.keyCode">
                                     </div>
                                 </div>
 
                                 <div class="control-group">
                                     <label class="control-label">多语言分类</label>
                                     <div class="controls">
-                                        <select class="span5 select2"  name="category.id" >
-                                            <option value="0">全部</option>
+                                        <select class="span7 select2 " name="categoryId">
                                             #foreach($e in $!selectableLangsCategory)
                                                 <option value="$!e.id">$!e.name</option>
                                             #end
@@ -60,43 +59,20 @@
                                     </div>
                                 </div>
 
-                                <div class="control-group">
-                                    <label class="control-label">内容</label>
-                                    <div class="controls">
-                                        <input for="name" name="message" type="text" class="span7"
-                                               value="$!entity.message" >
-                                    </div>
-                                </div>
 
-                                <div class="control-group">
-                                    <label class="control-label">中文</label>
-                                    <div class="controls">
-                                        <input for="name" name="language" type="text" class="span7"
-                                               value="$!entity.language" >
+                                #foreach($langCountry in $!langsCountries)
+                                    <div class="control-group">
+                                        <label class="control-label">$!langCountry.desc ($!langCountry.value)</label>
+                                        <div class="controls">
+                                            <input name="$!langCountry.key" type="text" class="span7 countryLanguage">
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="control-group">
-                                    <label class="control-label">country</label>
-                                    <div class="controls">
-                                        <input for="name" name="country" type="text" class="span7"
-                                               value="$!entity.country" >
-                                    </div>
-                                </div>
-
-
-                                <div class="control-group">
-                                    <label class="control-label">variant</label>
-                                    <div class="controls">
-                                        <input for="name" name="variant" type="text" class="span7"
-                                               value="$!entity.variant" >
-                                    </div>
-                                </div>
+                                #end
 
 
                                 <div class="form-actions">
                                     #if($!type==2 || $!type==1)
-                                        <button type="submit" class="btn btn-success">保存</button>
+                                        <button type="button" class="btn btnSave btn-success">保存</button>
                                     #elseif($!type==3)
                                         <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
                                         <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
@@ -115,6 +91,36 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            $(".btnSave").click(function () {
+                var request = {};
+                var langsMessageList=[];
+                $(".countryLanguage").each(function (i, o) {
+                    var countryLanguage = {};
+                    countryLanguage.langsKey=$(o).attr("name");
+                    countryLanguage.message=$(o).val();
+                    langsMessageList.push(countryLanguage);
+                });
+                request.id = $("input[name='id']").val();
+                request.message = $("input[name='message']").val();
+                request.keyCode = $("input[name='keyCode']").val();
+                request.categoryId = $("input[name='categoryId']").val();
+                request.langsMessageList=langsMessageList;
+                $.ajax({
+                    url: 'saveLangsDictionary',
+                    data: JSON.stringify(request),
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (result) {
+                        if (result.code == 0) {
+                            alert("操作成功");
+                            window.location.href = "/langsDictionary/edit?type=3&id=" + result.data;
+                        } else {
+                            alert(result.msg);
+                        }
+                    }
+                });
+            });
             var type = $!type;
             if (type == 3) {
                 $(":text").attr("disabled", "disabled");

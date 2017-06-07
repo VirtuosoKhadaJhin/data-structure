@@ -3,17 +3,16 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.model.LangsCategory;
 import com.nuanyou.cms.model.LangsDictionary;
+import com.nuanyou.cms.model.LangsDictionaryVo;
 import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsCategoryService;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,6 +43,7 @@ public class LangsDictionaryController {
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
+        LangsCountry[] values = LangsCountry.values();
         LangsCategory example=new LangsCategory();
         example.setIndex(1);example.setSize(100000);
         Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
@@ -52,6 +52,7 @@ public class LangsDictionaryController {
             entity = dictionaryService.findLangsDictionary(id);
         }
         model.addAttribute("entity", entity);
+        model.addAttribute("langsCountries", values);
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
         model.addAttribute("type", type);
         return "langsDictionary/edit";
@@ -67,6 +68,17 @@ public class LangsDictionaryController {
         }
         String url = "edit?type=3&id=" + category.getId();
         return "redirect:" + url;
+    }
+
+
+
+    @RequestMapping(value = "saveLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public APIResult saveTemplate(@RequestBody LangsDictionaryVo dictionaryVo
+    ) throws IOException {
+
+
+        return null;
     }
 
 

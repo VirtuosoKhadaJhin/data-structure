@@ -122,7 +122,7 @@
 
                                                 </td>
                                                 <td>
-                                                   <input name="name" style="width: 150px" readonly><br>
+                                                   <input name="name" style="width: 150px" ><br>
                                                     <a class="btn btn-info btn-mini selectLang" inputLangsName="name">选择</a>
                                                     <a class="btn btn-info btn-mini addLang" inputLangsName="name">添加</a>
                                                 </td>
@@ -148,7 +148,7 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <input name="remark" style="width: 150px" readonly><br>
+                                                    <input name="remark" style="width: 150px" ><br>
 
                                                     <a class="btn btn-info btn-mini selectLang" inputLangsName="remark">选择</a>
                                                     <a class="btn btn-info btn-mini addLang" inputLangsName="remark">添加</a>
@@ -157,8 +157,6 @@
                                                     <a class="btn btn-info btn-mini removeRow">删除</a>
                                                 </td>
                                             </tr>
-
-
 
                                             <tr class="rowSpanExample" style="display: none">
                                                 <td>
@@ -293,10 +291,17 @@
     <div class="modal-body">
 
         <div class="control-group">
+            <label class="control-label">keyCode</label>
+            <div class="controls">
+                <input for="name" name="keyCode" type="text" class="span5"
+                       value="$!entity.keyCode">
+            </div>
+        </div>
+
+        <div class="control-group">
             <label class="control-label">多语言分类</label>
             <div class="controls">
-                <select class="span5 select2"  name="langsCategoryId" >
-                    <option value="0">全部</option>
+                <select class="span5 select2 " name="categoryId">
                     #foreach($e in $!selectableLangsCategory)
                         <option value="$!e.id">$!e.name</option>
                     #end
@@ -304,62 +309,15 @@
             </div>
         </div>
 
-        <div class="control-group">
-            <label class="control-label">多语言列表</label>
-            <div class="controls">
-                <select class="span5 select2" id="keyCode" name="selectedLangsKey">
-                    #foreach($lang in $!selectableLangs)
-                        <option value="11">全部</option>
-                        <option value="$!lang.id">
-                            key:
-                        </option>
-                    #end
-                </select>
+
+        #foreach($langCountry in $!langsCountries)
+            <div class="control-group">
+                <label class="control-label">$!langCountry.desc ($!langCountry.value)</label>
+                <div class="controls">
+                    <input name="$!langCountry.key" type="text" class="span5 countryLanguage">
+                </div>
             </div>
-        </div>
-
-
-        <div class="control-group">
-            <label class="control-label">keyCode</label>
-            <div class="controls">
-                <input for="name" name="keyCode" type="text" class="span5"
-                       value="$!entity.keyCode" >
-            </div>
-        </div>
-
-
-        <div class="control-group">
-            <label class="control-label">message</label>
-            <div class="controls">
-                <input for="name" name="message" type="text" class="span5"
-                       value="$!entity.message" >
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label">language</label>
-            <div class="controls">
-                <input for="name" name="language" type="text" class="span5"
-                       value="$!entity.language" >
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label">country</label>
-            <div class="controls">
-                <input for="name" name="country" type="text" class="span5"
-                       value="$!entity.country" >
-            </div>
-        </div>
-
-
-        <div class="control-group">
-            <label class="control-label">variant</label>
-            <div class="controls">
-                <input for="name" name="variant" type="text" class="span5"
-                       value="$!entity.variant" >
-            </div>
-        </div>
+        #end
 
     </div>
     <div class="modal-footer">
@@ -543,6 +501,38 @@
         $("#addLangSave").on("click", function () {
             var langsKey="add";
             currLangInput.val(langsKey);
+
+            var request = {};
+            var langsMessageList=[];
+            $(".countryLanguage").each(function (i, o) {
+                var countryLanguage = {};
+                alert($(o).attr("name"));
+                alert($(o).val());
+                countryLanguage.langsKey=$(o).attr("name");
+                countryLanguage.message=$(o).val();
+                langsMessageList.push(countryLanguage);
+            });
+            request.id = $("input[name='id']").val();
+            request.message = $("input[name='message']").val();
+            request.keyCode = $("input[name='keyCode']").val();
+            request.categoryId = $("input[name='categoryId']").val();
+            request.langsMessageList=langsMessageList;
+            $.ajax({
+                url: 'saveLangsDictionary',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        alert("操作成功");
+                    } else {
+                        alert(result.msg);
+                    }
+                }
+            });
+
+
             $('#addLangsModal').modal('hide');
         });
 

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Byron on 2017/6/6.
  */
-public class LangsDirtionaryVo implements Serializable {
+public class LangsDictionaryVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,13 +23,13 @@ public class LangsDirtionaryVo implements Serializable {
     //国家语言+内容
     private List<LangsCountryMessageVo> langsMessageList = Lists.newArrayList ();
 
-    public LangsDirtionaryVo(Long id, String keyCode, Long categoryId) {
+    public LangsDictionaryVo(Long id, String keyCode, Long categoryId) {
         this.id = id;
         this.keyCode = keyCode;
         this.categoryId = categoryId;
     }
 
-    public LangsDirtionaryVo(Long id, String keyCode, Long categoryId, List<LangsCountryMessageVo> langsMessageList) {
+    public LangsDictionaryVo(Long id, String keyCode, Long categoryId, List<LangsCountryMessageVo> langsMessageList) {
         this.id = id;
         this.keyCode = keyCode;
         this.categoryId = categoryId;
@@ -66,5 +66,8 @@ public class LangsDirtionaryVo implements Serializable {
 
     public void setLangsMessageList(List<LangsCountryMessageVo> langsMessageList) {
         this.langsMessageList = langsMessageList;
+    }
+
+    public LangsDictionaryVo() {
     }
 }
