@@ -69,9 +69,9 @@ public class LangsCategory implements Serializable {
     @JsonProperty("delFlag")
     private Boolean delFlag = false;
 
-    private int index;
+    private int index = 1;
 
-    private int size;
+    private int size = 20;
 
     public Long getId() {
         return id;
