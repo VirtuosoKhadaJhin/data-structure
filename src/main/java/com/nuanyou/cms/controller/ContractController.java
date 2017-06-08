@@ -186,11 +186,6 @@ public class ContractController {
     @RequestMapping(path = "verify", method = RequestMethod.GET)
     @ResponseBody
     public APIResult verify( Boolean valid, Long contractId) throws ParseException {
-//        User ssoUser=new User();
-//        ssoUser.setName("f");
-//        ssoUser.setAccess_token("sdfsdf");
-//        ssoUser.setEmail("felix.zhao@91nuanyou.com");
-//        UserHolder.setUser(ssoUser);
         String email = UserHolder.getUser().getEmail();
         CmsUser user = userService.getUserByEmail(email);
         //审核

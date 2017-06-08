@@ -36,7 +36,11 @@
         #foreach($entity in $!page.content)
         <tr class="odd gradeX">
             <td>$!entity.id</td>
-            <td>$!entity.name</td>
+            <td>
+                <a href="$!link.contextPath/contractParameter/edit?op=3&id=1" class="alink">
+                    $!entity.name.key
+                </a>
+            </td>
             <td>$!entity.key</td>
             <td>$!entity.defaultValue</td>
             <td>
@@ -54,8 +58,8 @@
             <td>#if($!entity.editable)是#else 否#end</td>
             <td>#if($!entity.nullable)是#else 否#end</td>
             <td>$!entity.regex</td>
-            <td>$!entity.hint</td>
-            <td>$!entity.remark</td>
+            <td>$!entity.hint.key</td>
+            <td>$!entity.remark.key</td>
             <td>#if($!entity.multiValuable)是#else 否#end</td>
             <td>#if($!entity.common)是#else 否#end</td>
             <td>#if($!entity.custom)是#else 否#end</td>

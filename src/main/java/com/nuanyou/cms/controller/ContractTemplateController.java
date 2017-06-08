@@ -130,10 +130,12 @@ public class ContractTemplateController {
     }
 
     private void setSelectableParams(List<ContractParameter> selectedParams, List<ContractParameter> params) {
+        //用迭代器也可以
         for (int i = params.size() - 1; i >= 0; i--) {
-            for (int j = 0; j < selectedParams.size(); j++) {
+            for (int j = 0; j<=selectedParams.size()-1 ; j++) {
                 if (params.get(i).getId().equals(selectedParams.get(j).getId())) {
                     params.remove(i);
+                    break;
                 }
             }
         }
