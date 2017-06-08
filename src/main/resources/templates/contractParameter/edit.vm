@@ -155,7 +155,6 @@
                                     #elseif($!type==3)
                                         <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
                                     #end
-                                    <a href="edit?type=1" class="btn btn-info">新增</a>
                                     <a class="btn btn-primary" href="list">返回</a>
                                 </div>
                             </form>

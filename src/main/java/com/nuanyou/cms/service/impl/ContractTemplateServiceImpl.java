@@ -6,7 +6,6 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.contract.enums.TemplateStatus;
-import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
 import com.nuanyou.cms.model.contract.output.ContractTemplates;
 import com.nuanyou.cms.model.contract.request.*;
@@ -33,7 +32,7 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
     private CountryDao countryDao;
 
     @Override
-    public Page<Contract> findContractTemplateList(Long countryId, Integer status, Integer type, Integer index, Integer limit) {
+    public Page<ContractTemplate> findContractTemplateList(Long countryId, Integer status, Integer type, Integer index, Integer limit) {
         APIResult<ContractTemplates> api = contractService.findContractTemplateList(countryId, status, type, index, limit);
         if (api.getCode() != 0) {
             throw new APIException(api.getCode(), api.getMsg());
@@ -42,7 +41,7 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
         Pageable pageable = new PageRequest(index - 1, limit);
         List<ContractTemplate> list = data.getList();
         setOtherProperties(list);
-        return (Page<Contract>) new PageImpl(list, pageable, data.getTotal());
+        return  new PageImpl<ContractTemplate>(list, pageable, data.getTotal());
     }
 
     @Override

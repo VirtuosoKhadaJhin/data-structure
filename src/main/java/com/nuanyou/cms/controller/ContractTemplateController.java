@@ -5,7 +5,6 @@ import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.LangsCategory;
 import com.nuanyou.cms.model.contract.enums.TemplateStatus;
-import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractParameter;
 import com.nuanyou.cms.model.contract.output.ContractParameters;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
@@ -54,7 +53,7 @@ public class ContractTemplateController {
                        @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit) {
         List<Country> countries = this.countryService.getIdNameList();
         List<TemplateStatus> templateStatuses = Arrays.asList(TemplateStatus.values());
-        Page<Contract> page = this.contractTemplateService.findContractTemplateList(countryId, status == null ? null : status.getValue(), type, index, limit);
+        Page<ContractTemplate> page = this.contractTemplateService.findContractTemplateList(countryId, status == null ? null : status.getValue(), type, index, limit);
         model.addAttribute("page", page);
         model.addAttribute("countries", countries);
         model.addAttribute("templateStatuses", templateStatuses);

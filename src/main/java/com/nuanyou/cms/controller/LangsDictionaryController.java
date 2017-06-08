@@ -49,6 +49,7 @@ public class LangsDictionaryController {
                        String keyCode,
                        String message,
                        Model model) {
+
         LangsDictionary example=new LangsDictionary();
         example.setBaseName(baseName);example.setKeyCode(keyCode);example.setIndex(index);example.setMessage(message);
         Page<LangsDictionary> allDictionary = dictionaryService.findAllDictionary(example);
