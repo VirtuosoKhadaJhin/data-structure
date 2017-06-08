@@ -38,6 +38,8 @@ public class ContractParameter implements Comparable<ContractParameter> {
 
     private boolean custom;
 
+    private String note;
+
     @ApiModelProperty(value = "参数名称")
     @JsonProperty("name")
     public MLString getName() {
@@ -181,6 +183,14 @@ public class ContractParameter implements Comparable<ContractParameter> {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     @Override

@@ -27,6 +27,8 @@ public class TemplateParameterRequest {
 
     private String regex;
 
+    private String note;
+
     public String getName() {
         return name;
     }
@@ -113,5 +115,14 @@ public class TemplateParameterRequest {
 
     public void setRegex(String regex) {
         this.regex = regex;
+    }
+
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

@@ -219,7 +219,7 @@
                 >
                     #foreach($param in $!selectableParams)
                         <option value="$!param.id">
-                            id:$!param.id  ; key:  $!param.key ; 属性名:  $!param.name.key
+                             key:  $!param.key ; 属性名:  $!param.name.key 备注:$!param.note
                         </option>
                     #end
                 </select>

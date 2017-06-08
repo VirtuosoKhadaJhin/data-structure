@@ -67,6 +67,7 @@ public class ContractParameterController {
             updateParameterRequest.setRegex(request.getRegex());
             updateParameterRequest.setName(request.getName());
             updateParameterRequest.setRemark(request.getRemark());
+            updateParameterRequest.setNote(request.getNote());
             APIResult<ContractParameter> res = this.contractService.updateContractParameter(id,updateParameterRequest);
             if (res.getCode() != 0) {
                 throw new APIException(res.getCode(), res.getMsg());
