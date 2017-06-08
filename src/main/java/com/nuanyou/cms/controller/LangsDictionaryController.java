@@ -41,6 +41,25 @@ public class LangsDictionaryController {
         return "langsDictionary/list";
     }
 
+
+
+    @RequestMapping("list1")
+    public String list1(@RequestParam(required = false, defaultValue = "1") int index,
+                       String baseName,
+                       String keyCode,
+                       String message,
+                       Model model) {
+        LangsDictionary example=new LangsDictionary();
+        example.setBaseName(baseName);example.setKeyCode(keyCode);example.setIndex(index);example.setMessage(message);
+        Page<LangsDictionary> allDictionary = dictionaryService.findAllDictionary(example);
+        model.addAttribute("page", allDictionary);
+        model.addAttribute("entity", example);
+        model.addAttribute ( "langsCountries", LangsCountry.values () );
+        return "langsDictionary/list1";
+    }
+
+
+
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
         LangsCountry[] values = LangsCountry.values();
