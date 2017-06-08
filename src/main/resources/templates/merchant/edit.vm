@@ -205,6 +205,17 @@
                                 <div class="controls">
                                     <textarea class="span10" name="intro" id="intro">$!entity.intro</textarea>
                                 </div>
+
+                                <label class="control-label">定位是否准确</label>
+                                <div class="controls">
+                                        #if($!entity.locateExactly==true)
+                                            是
+                                        #else
+                                            否
+                                        #end
+                                </div>
+
+
                                 <div class="directMail" style="display: none">
                                     <label class="control-label">邮费</label>
                                     <div class="controls">
