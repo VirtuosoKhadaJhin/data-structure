@@ -69,9 +69,9 @@ public class LangsCategory implements Serializable {
     @JsonProperty("delFlag")
     private Boolean delFlag = false;
 
-    private int index;
+    private Integer index = 1;
 
-    private int size;
+    private Integer size = 20;
 
     public Long getId() {
         return id;
@@ -137,69 +137,19 @@ public class LangsCategory implements Serializable {
         this.delFlag = delFlag;
     }
 
-    public int getIndex() {
+    public Integer getIndex() {
         return index;
     }
 
-    public void setIndex(int index) {
+    public void setIndex(Integer index) {
         this.index = index;
     }
 
-    public int getSize() {
+    public Integer getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(Integer size) {
         this.size = size;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof LangsCategory)) return false;
-
-        LangsCategory category = (LangsCategory) o;
-
-        if (getIndex () != category.getIndex ()) return false;
-        if (getId () != null ? !getId ().equals ( category.getId () ) : category.getId () != null) return false;
-        if (getName () != null ? !getName ().equals ( category.getName () ) : category.getName () != null) return false;
-        if (isGlobal != null ? !isGlobal.equals ( category.isGlobal ) : category.isGlobal != null) return false;
-        if (getDesc () != null ? !getDesc ().equals ( category.getDesc () ) : category.getDesc () != null) return false;
-        if (getCreateDt () != null ? !getCreateDt ().equals ( category.getCreateDt () ) : category.getCreateDt () != null)
-            return false;
-        if (getUpdateDt () != null ? !getUpdateDt ().equals ( category.getUpdateDt () ) : category.getUpdateDt () != null)
-            return false;
-        if (getUserId () != null ? !getUserId ().equals ( category.getUserId () ) : category.getUserId () != null)
-            return false;
-        return getDelFlag () != null ? getDelFlag ().equals ( category.getDelFlag () ) : category.getDelFlag () == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getId () != null ? getId ().hashCode () : 0;
-        result = 31 * result + (getName () != null ? getName ().hashCode () : 0);
-        result = 31 * result + (isGlobal != null ? isGlobal.hashCode () : 0);
-        result = 31 * result + (getDesc () != null ? getDesc ().hashCode () : 0);
-        result = 31 * result + (getCreateDt () != null ? getCreateDt ().hashCode () : 0);
-        result = 31 * result + (getUpdateDt () != null ? getUpdateDt ().hashCode () : 0);
-        result = 31 * result + (getUserId () != null ? getUserId ().hashCode () : 0);
-        result = 31 * result + (getDelFlag () != null ? getDelFlag ().hashCode () : 0);
-        result = 31 * result + getIndex ();
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "LangsCategory{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", isGlobal=" + isGlobal +
-                ", desc='" + desc + '\'' +
-                ", createDt=" + createDt +
-                ", updateDt=" + updateDt +
-                ", userId=" + userId +
-                ", delFlag=" + delFlag +
-                ", index=" + index +
-                '}';
     }
 }

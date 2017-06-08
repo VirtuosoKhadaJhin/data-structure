@@ -90,7 +90,9 @@ public class LangsDictionary implements Serializable{
     @JsonProperty("delFlag")
     private Boolean delFlag = false;
 
-    private Integer index;
+    private Integer index = 1;
+
+    private Integer size = 20;
 
     public Long getId() {
         return id;
@@ -188,21 +190,12 @@ public class LangsDictionary implements Serializable{
         this.index = index;
     }
 
-    @Override
-    public String toString() {
-        return "LangsDictionary{" +
-                "id=" + id +
-                ", keyCode='" + keyCode + '\'' +
-                ", baseName='" + baseName + '\'' +
-                ", message='" + message + '\'' +
-                ", language='" + language + '\'' +
-                ", country='" + country + '\'' +
-                ", variant='" + variant + '\'' +
-                ", createDt=" + createDt +
-                ", updateDt=" + updateDt +
-                ", userId=" + userId +
-                ", delFlag=" + delFlag +
-                ", index=" + index +
-                '}';
+    public Integer getSize() {
+        return size;
     }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
 }
