@@ -25,7 +25,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -78,14 +77,6 @@ public class ContractTemplateController {
         List<ContractParameter> params = data.getList();
 
 
-        //all common params
-        List<ContractParameter> commonParams = new ArrayList<>();
-        for (ContractParameter param : params) {
-            if (param.isCommon()) {
-                commonParams.add(param);
-            }
-        }
-
         //all countries
         List<Country> countries = this.countryService.getIdNameList();
 
@@ -108,28 +99,26 @@ public class ContractTemplateController {
 
         List<ContractParameter> selectedParams = null;
         if (optype == 1) {
-            selectedParams = commonParams;
+            //selectedParams = commonParams;
         } else {
             selectedParams = template.getParameters();
         }
 
-
-
-
-
-
         setSelectableParams(selectedParams, params);
         model.addAttribute("entity", template);
         model.addAttribute("selectableParams", params);
+        model.addAttribute("selectedParams", selectedParams);
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
         model.addAttribute("countries", countries);
-        model.addAttribute("selectedParams", selectedParams);
         model.addAttribute("optype", optype);
         model.addAttribute ( "langsCountries", LangsCountry.values () );
         return "contractTemplate/edit";
     }
 
     private void setSelectableParams(List<ContractParameter> selectedParams, List<ContractParameter> params) {
+        if(selectedParams==null||params==null){
+            return;
+        }
         //用迭代器也可以
         for (int i = params.size() - 1; i >= 0; i--) {
             for (int j = 0; j<=selectedParams.size()-1 ; j++) {
