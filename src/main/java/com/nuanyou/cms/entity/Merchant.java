@@ -79,6 +79,12 @@ public class Merchant {
 
     private BigDecimal ratio;
 
+
+
+    private Boolean locateExactly;
+
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -517,5 +523,14 @@ public class Merchant {
 
     public void setRatio(BigDecimal ratio) {
         this.ratio = ratio;
+    }
+
+    @Column(name = "locateexactly")
+    public Boolean getLocateExactly() {
+        return locateExactly;
+    }
+
+    public void setLocateExactly(Boolean locateExactly) {
+        this.locateExactly = locateExactly;
     }
 }

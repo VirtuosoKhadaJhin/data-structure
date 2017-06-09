@@ -139,6 +139,7 @@ public class MerchantServiceImpl implements MerchantService {
 
         if (vo.getId() == null) {
             entity = BeanUtils.copyBean(vo, new Merchant());
+            entity.setLocateExactly(true);
             entity = merchantDao.save(entity);
             merchantStatsDao.save(new MerchantStats(0, entity.getId()));
             merchantStaffService.saveNotNull(new MerchantStaff(entity.getId(), StringUtils.leftPad(entity.getId().toString(), 4, '0')));
