@@ -1,6 +1,7 @@
 package com.nuanyou.cms.service;
 
 import com.nuanyou.cms.model.LangsDictionary;
+import com.nuanyou.cms.model.LangsDictionaryVo;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface LangsDictionaryService {
 
     Page<LangsDictionary> findAllDictionary(LangsDictionary request);
 
+    List<LangsDictionaryVo> findAllLangsDictionary(LangsDictionary request);
+
     LangsDictionary findLangsDictionary(String keyCode, Locale locale);
 
     LangsDictionary addLangsDictionary(LangsDictionary entity);
@@ -24,4 +27,9 @@ public interface LangsDictionaryService {
     void deleteLangsDictionary(Long id);
 
     List<LangsDictionary> findIdNameListByCat(Long id);
+
+    boolean verifykeyCode(LangsDictionaryVo dictionaryVo);
+
+    boolean saveLangsDictionary(LangsDictionaryVo dictionaryVo);
+
 }

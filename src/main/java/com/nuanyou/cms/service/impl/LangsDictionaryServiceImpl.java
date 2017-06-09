@@ -1,10 +1,15 @@
 package com.nuanyou.cms.service.impl;
 
 import com.google.common.collect.Lists;
+import com.nuanyou.cms.dao.EntityNyLangsCategoryDao;
 import com.nuanyou.cms.dao.EntityNyLangsDictionaryDao;
+import com.nuanyou.cms.entity.EntityNyLangsCategory;
 import com.nuanyou.cms.entity.EntityNyLangsDictionary;
+import com.nuanyou.cms.model.LangsCountryMessageVo;
 import com.nuanyou.cms.model.LangsDictionary;
+import com.nuanyou.cms.model.LangsDictionaryVo;
 import com.nuanyou.cms.model.PageUtil;
+import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -35,6 +40,9 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     @Autowired
     private EntityNyLangsDictionaryDao dictionaryDao;
 
+    @Autowired
+    private EntityNyLangsCategoryDao categoryDao;
+
     public LangsDictionaryServiceImpl() {
     }
 
@@ -46,9 +54,10 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
     @Override
     public Page<LangsDictionary> findAllDictionary(final LangsDictionary request) {
+
         Pageable pageable = new PageRequest ( request.getIndex () - 1, PageUtil.pageSize );
 
-        Page<EntityNyLangsDictionary> dictionaries = dictionaryDao.findAll ( new Specification () {
+        Page<EntityNyLangsDictionary> uniqueDictionaries = dictionaryDao.findAll ( new Specification () {
 
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
@@ -79,9 +88,55 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
             }
         }, pageable );
 
-        List<LangsDictionary> allDictionaries = this.convertToMultipleLangsCategories ( dictionaries.getContent () );
-        Page<LangsDictionary> pageVOs = new PageImpl<LangsDictionary> ( allDictionaries, pageable, dictionaries.getTotalPages () );
+
+
+
+        List<LangsDictionary> allDictionaries = this.convertToMultipleLangsCategories ( uniqueDictionaries.getContent () );
+        Page<LangsDictionary> pageVOs = new PageImpl<LangsDictionary> ( allDictionaries, pageable, uniqueDictionaries.getTotalPages () );
         return pageVOs;
+    }
+
+    @Override
+    public List<LangsDictionaryVo> findAllLangsDictionary(final LangsDictionary request) {
+        // 查询所有baseNames
+/*
+        List<EntityNyLangsDictionary> dictionaries = dictionaryDao.findAll();
+
+        List<String> baseNames = new ArrayList<String>();
+        for(EntityNyLangsDictionary entityNyLangsDictionary : dictionaries){
+            if(!baseNames.contains(entityNyLangsDictionary.getKeyCode())){
+                baseNames.add(entityNyLangsDictionary.getKeyCode());
+            }
+        }
+
+        LangsCountry[] langsCountrys = LangsCountry.values();
+        List<LangsDictionaryVo> langsDictionaryVos =new ArrayList<LangsDictionaryVo>();
+        for(String code : baseNames){
+            LangsDictionaryVo langsDictionaryVo = new LangsDictionaryVo();
+            langsDictionaryVo.setKeyCode(code);
+
+            List<LangsCountryVo> langsCountryVos = new ArrayList<LangsCountryVo>();
+            for(LangsCountry langsCountry : langsCountrys){
+                EntityNyLangsDictionary entityNyLangsDictionary = new EntityNyLangsDictionary();
+                entityNyLangsDictionary.setKeyCode(code);
+                entityNyLangsDictionary.setCountry(langsCountry.getDesc());
+
+                ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("keyCode", contains().ignoreCase());
+
+                EntityNyLangsDictionary etityNyLangsDictionary = dictionaryDao.findOne(Example.of(entityNyLangsDictionary));
+
+                if(null == etityNyLangsDictionary){
+                    langsCountryVos.add(new LangsCountryVo("空","空"));
+                }else{
+                    langsCountryVos.add(new LangsCountryVo(etityNyLangsDictionary.getLanguage(), etityNyLangsDictionary.getCountry()));
+                }
+            }
+            langsDictionaryVo.setLangsCountryList(langsCountryVos);
+            langsDictionaryVos.add(langsDictionaryVo);
+        }
+*/
+
+        return null;
     }
 
     @Override
@@ -111,9 +166,61 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
     @Override
     public List<LangsDictionary> findIdNameListByCat(Long id) {
-        List<EntityNyLangsDictionary> list=this.dictionaryDao.findByCategoryId(id);
+        EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne(id);
+
+        EntityNyLangsDictionary entityNyLangsDictionary = new EntityNyLangsDictionary();
+        entityNyLangsDictionary.setCategory(entityNyLangsCategory);
+
+        Example<EntityNyLangsDictionary> example = Example.of ( entityNyLangsDictionary );
+        List<EntityNyLangsDictionary> list = this.dictionaryDao.findAll( example );
+
         List<LangsDictionary> langsDictionaries = convertToMultipleLangsCategories(list);
         return langsDictionaries;
+    }
+
+    @Override
+    public boolean verifykeyCode(LangsDictionaryVo dictionaryVo) {
+        EntityNyLangsDictionary entityNyLangsDictionary = new EntityNyLangsDictionary();
+        entityNyLangsDictionary.setKeyCode(dictionaryVo.getKeyCode());
+
+        Example<EntityNyLangsDictionary> example = Example.of ( entityNyLangsDictionary );
+        List<EntityNyLangsDictionary> entityResult = dictionaryDao.findAll ( example );
+
+        if(entityResult.size() == 0){
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean saveLangsDictionary(LangsDictionaryVo dictionaryVo) {
+        // each message of langs
+        EntityNyLangsDictionary entityNyLangsDictionary = null;
+        if(null != dictionaryVo.getLangsMessageList()){
+            for(LangsCountryMessageVo langsCountryMessageVo : dictionaryVo.getLangsMessageList()){
+                if(!StringUtils.isEmpty(langsCountryMessageVo.getMessage())){
+                    EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne(dictionaryVo.getCategoryId());
+                    if(null != entityNyLangsCategory){
+                        // enum index
+                        Integer langsKey = langsCountryMessageVo.getLangsKey();
+                        LangsCountry langsCountry = LangsCountry.toEnum(langsKey);
+                        // if lang not null, save one record
+                        entityNyLangsDictionary= new EntityNyLangsDictionary();
+                        entityNyLangsDictionary.setCountry(langsCountry.getValue());
+                        entityNyLangsDictionary.setKeyCode(dictionaryVo.getKeyCode());
+                        entityNyLangsDictionary.setLanguage(langsCountry.getDesc());
+                        entityNyLangsDictionary.setCategory(entityNyLangsCategory);
+                        entityNyLangsDictionary.setMessage(langsCountryMessageVo.getMessage());
+                        this.dictionaryDao.save(entityNyLangsDictionary);
+                    }else{
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     private EntityNyLangsDictionary convertToEntityLangsDictionary(LangsDictionary dictionary) {

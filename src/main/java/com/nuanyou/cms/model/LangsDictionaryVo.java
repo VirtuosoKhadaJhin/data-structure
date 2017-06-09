@@ -21,12 +21,21 @@ public class LangsDictionaryVo implements Serializable {
     private Long categoryId;
 
     //国家语言+内容
-    private List<LangsCountryMessageVo> langsMessageList = Lists.newArrayList ();
+    private List<LangsCountryMessageVo> langsMessageList = Lists.newArrayList();
+
+    public LangsDictionaryVo() {
+    }
 
     public LangsDictionaryVo(Long id, String keyCode, Long categoryId) {
         this.id = id;
         this.keyCode = keyCode;
         this.categoryId = categoryId;
+    }
+
+    public LangsDictionaryVo(String keyCode, Long categoryId, List<LangsCountryMessageVo> langsMessageList) {
+        this.keyCode = keyCode;
+        this.categoryId = categoryId;
+        this.langsMessageList = langsMessageList;
     }
 
     public LangsDictionaryVo(Long id, String keyCode, Long categoryId, List<LangsCountryMessageVo> langsMessageList) {
@@ -68,6 +77,5 @@ public class LangsDictionaryVo implements Serializable {
         this.langsMessageList = langsMessageList;
     }
 
-    public LangsDictionaryVo() {
-    }
+
 }
