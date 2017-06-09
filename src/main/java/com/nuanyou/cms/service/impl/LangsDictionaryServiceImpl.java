@@ -8,7 +8,6 @@ import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.model.LangsCountryMessageVo;
 import com.nuanyou.cms.model.LangsDictionary;
 import com.nuanyou.cms.model.LangsDictionaryVo;
-import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import com.nuanyou.cms.util.BeanUtils;
@@ -47,15 +46,16 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     }
 
     @Override
-    public LangsDictionary findLangsDictionary(Long id) {
+    public LangsDictionaryVo findLangsDictionary(Long id) {
         EntityNyLangsDictionary langsDictionary = dictionaryDao.findOne ( id );
-        return convertToLangsDictionary ( langsDictionary );
+        //return convertToLangsDictionary ( langsDictionary );
+        return null;
     }
 
     @Override
     public Page<LangsDictionary> findAllDictionary(final LangsDictionary request) {
 
-        Pageable pageable = new PageRequest ( request.getIndex () - 1, PageUtil.pageSize );
+        Pageable pageable = new PageRequest ( request.getIndex () - 1, request.getSize () );
 
         Page<EntityNyLangsDictionary> uniqueDictionaries = dictionaryDao.findAll ( new Specification () {
 
@@ -87,9 +87,6 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                 return query.where ( predicate.toArray ( arrays ) ).getRestriction ();
             }
         }, pageable );
-
-
-
 
         List<LangsDictionary> allDictionaries = this.convertToMultipleLangsCategories ( uniqueDictionaries.getContent () );
         Page<LangsDictionary> pageVOs = new PageImpl<LangsDictionary> ( allDictionaries, pageable, uniqueDictionaries.getTotalPages () );
@@ -140,11 +137,12 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     }
 
     @Override
-    public LangsDictionary findLangsDictionary(String keyCode, Locale locale) {
+    public LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale) {
         EntityNyLangsDictionary entityDictionary = new EntityNyLangsDictionary ( keyCode, locale.getLanguage (), locale.getCountry (), locale.getVariant () );
         Example<EntityNyLangsDictionary> example = Example.of ( entityDictionary );
         EntityNyLangsDictionary entityResult = dictionaryDao.findOne ( example );
-        return convertToLangsDictionary ( entityResult );
+        //return convertToLangsDictionary ( entityResult );
+        return null;
     }
 
     @Override
@@ -189,7 +187,6 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         if(entityResult.size() == 0){
             return true;
         }
-
         return false;
     }
 
@@ -197,29 +194,30 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     public boolean saveLangsDictionary(LangsDictionaryVo dictionaryVo) {
         // each message of langs
         EntityNyLangsDictionary entityNyLangsDictionary = null;
-        if(null != dictionaryVo.getLangsMessageList()){
-            for(LangsCountryMessageVo langsCountryMessageVo : dictionaryVo.getLangsMessageList()){
-                if(!StringUtils.isEmpty(langsCountryMessageVo.getMessage())){
-                    EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne(dictionaryVo.getCategoryId());
-                    if(null != entityNyLangsCategory){
-                        // enum index
-                        Integer langsKey = langsCountryMessageVo.getLangsKey();
-                        LangsCountry langsCountry = LangsCountry.toEnum(langsKey);
-                        // if lang not null, save one record
-                        entityNyLangsDictionary= new EntityNyLangsDictionary();
-                        entityNyLangsDictionary.setCountry(langsCountry.getValue());
-                        entityNyLangsDictionary.setKeyCode(dictionaryVo.getKeyCode());
-                        entityNyLangsDictionary.setLanguage(langsCountry.getDesc());
-                        entityNyLangsDictionary.setCategory(entityNyLangsCategory);
-                        entityNyLangsDictionary.setMessage(langsCountryMessageVo.getMessage());
-                        this.dictionaryDao.save(entityNyLangsDictionary);
-                    }else{
-                        return false;
-                    }
-                }
-            }
+        if (CollectionUtils.isEmpty ( dictionaryVo.getLangsMessageList () )) {
+            return false;
         }
-
+        for (LangsCountryMessageVo langsCountryMessageVo : dictionaryVo.getLangsMessageList ()) {
+            String message = langsCountryMessageVo.getMessage ();
+            if (StringUtils.isEmpty ( message )) {
+                return false;
+            }
+            EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne ( dictionaryVo.getCategoryId () );
+            if (entityNyLangsCategory == null) {
+                return false;
+            }
+            // enum index
+            Integer langsKey = langsCountryMessageVo.getLangsKey ();
+            LangsCountry langsCountry = LangsCountry.toEnum ( langsKey );
+            // if lang not null, save one record
+            entityNyLangsDictionary = new EntityNyLangsDictionary ();
+            entityNyLangsDictionary.setCountry ( langsCountry.getValue () );
+            entityNyLangsDictionary.setKeyCode ( dictionaryVo.getKeyCode () );
+            entityNyLangsDictionary.setLanguage ( langsCountry.getDesc () );
+            entityNyLangsDictionary.setCategory ( entityNyLangsCategory );
+            entityNyLangsDictionary.setMessage ( message );
+            this.dictionaryDao.save ( entityNyLangsDictionary );
+        }
         return true;
     }
 
