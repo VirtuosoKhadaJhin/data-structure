@@ -176,6 +176,18 @@
                                     <button type="button" class="btn btn-success viewMap">查看地图</button>
                                 </div>
 
+                                #if ($!entity.id)
+                                    <label class="control-label">定位为默认经纬度</label>
+                                    <div class="controls">
+                                        #if($!entity.locateExactly==true)
+                                            否
+                                        #elseif($!entity.locateExactly==false)
+                                            是
+                                        #end
+                                    </div>
+                                #end
+
+
                                 <label class="control-label">商圈信息</label>
                                 <div class="controls">
                                     <select class="span10" name="district.Id">
@@ -236,17 +248,7 @@
                                     <textarea class="span10" name="intro" id="intro">$!entity.intro</textarea>
                                 </div>
 
-                                #if ($!entity.id)
-                                    <label class="control-label">定位是否准确</label>
-                                    <div class="controls">
 
-                                        #if($!entity.locateExactly==true)
-                                            是
-                                        #elseif($!entity.locateExactly==false)
-                                            否
-                                        #end
-                                    </div>
-                                #end
 
 
                                 <div class="directMail" style="display: none">
