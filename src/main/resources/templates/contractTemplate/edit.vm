@@ -511,6 +511,7 @@
             $('#selectLangsModal').modal('show');
         });
 
+
         $("#selectLangSave").on("click", function () {
             var langsKey=$("#langsKey").val();
             console.log(langsKey);
