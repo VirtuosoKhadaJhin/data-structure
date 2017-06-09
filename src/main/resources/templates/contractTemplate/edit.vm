@@ -547,7 +547,9 @@
             $('#selectLangsModal').modal('show');
         });
 
-
+//        $("#autocomp").bind("autocompleteselect", function(e, ui) {
+//            alert(ui.item.value);
+//        });
         var availableTags = new Array();
         var j = 2;
         $("#mytable").delegate(".langsAutoComplete", "focus", function (e) {
@@ -560,6 +562,7 @@
             }
 
             var obj = $(this);
+            var availableTags1 = new Array();
             $.ajax({
                 url: '/langsDictionary/suggest',
                 data: {key: keyWord},
@@ -570,7 +573,6 @@
                 success: function (result) {
                     if (result.code == 0) {
                         var list = result.data
-                        var availableTags1 = new Array();
                         for (var i = 0; i < list.length; i++) {
                             var obj = list[i];
                             console.log(obj);
@@ -578,9 +580,7 @@
 
                         }
 
-                        $(this).autocomplete({
-                            source: availableTags1
-                        });
+
 
                         // alert("操作成功");
                     } else {
@@ -588,7 +588,11 @@
                     }
                 }
             });
+//console.log(availableTags1);
 
+            $(this).autocomplete({
+                source: availableTags1
+            });
 
 //            j++;
 //            for(var i=0;i<j;i++){
