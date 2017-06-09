@@ -111,9 +111,7 @@ public class ContractTemplateController {
         }
 
         List<ContractParameter> selectedParams = null;
-        if (optype == 1) {
-            //selectedParams = commonParams;
-        } else {
+        if (optype == 2||optype==3||optype==4) {
             selectedParams = template.getParameters();
         }
 

@@ -159,7 +159,7 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <input name="remark" style="width: 150px"><br>
+                                                    <input name="remark" class="langsAutoComplete" style="width: 150px"><br>
 
                                                     <a class="btn btn-info btn-mini selectLang" inputLangsName="remark">选择</a>
                                                     <a class="btn btn-info btn-mini addLang"
@@ -205,7 +205,7 @@
                                     </div>
                                 </div>
                                 <div class="form-actions">
-                                    #if($!optype==2 || $!optype==1)
+                                    #if($!optype==2 || $!optype==1|| $!optype==4)
                                         <button type="button" class="btn btnSave btn-success">保存
                                         </button>
                                     #elseif($!optype==3)
@@ -445,6 +445,10 @@
             request.id = $("input[name='id']").val();
             request.paramIds = paramIds;
             request.list = list;
+            request.optype= $("#optype").val();
+            if(optype==4){
+                request.id=null;
+            }
             $.ajax({
                 url: 'saveTemplate',
                 data: JSON.stringify(request),
