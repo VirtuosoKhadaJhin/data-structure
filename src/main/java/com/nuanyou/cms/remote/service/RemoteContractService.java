@@ -29,10 +29,17 @@ public interface RemoteContractService {
     @RequestMapping(value = "/template/paramter/{id}",method = RequestMethod.DELETE)
     public APIResult deleteContractParameter(@PathVariable(value = "id") Long id);
 
+    @ApiOperation(value = "废弃合同模版", notes = "废弃合同模版")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "废弃合同模版")})
+    @RequestMapping(value = "/template/{id}/discard",method = RequestMethod.POST)
+    public APIResult discardContractTemplate(@PathVariable(value = "id") Long id);
+
     @ApiOperation(value = "发布合同模版", notes = "发布合同模版")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "发布合同模版")})
     @RequestMapping(value = "/template/{id}/release",method = RequestMethod.POST)
     public APIResult releaseContractTemplate(@PathVariable(value = "id") Long id);
+
+
 
     @ApiOperation(value = "获取合同详情.", notes = "获取合同详情")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "合同详情")})
@@ -89,6 +96,10 @@ public interface RemoteContractService {
     @RequestMapping(value = "/template/parameters", method = RequestMethod.GET)
     public APIResult<ContractParameters> findAllTemplateParameters( @ApiParam(value = "页序号，默认从1开始") @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                                                     @ApiParam(value = "每页条目数,默认20条") @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit);
+
+
+
+
 
     @ApiOperation(value = "新增合同模版", notes = "新增合同模版")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "新增合同模版")})
@@ -172,6 +183,7 @@ public interface RemoteContractService {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "操作结果(成功：200，其他：)", response = NullData.class)})
     @RequestMapping(value = "/_trashcan", consumes = MimeTypes.MIME_TYPE_FORM_DATA, method = RequestMethod.POST)
     APIResult remove(@ApiParam(value = "合同id", required = true) @RequestParam(value = "id", required = true) Long id);
+
 
 
     @ApiOperation(value = "商户合同关联.", notes = "商户合同关联", response = NullData.class)

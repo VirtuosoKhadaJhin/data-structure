@@ -33,13 +33,15 @@
             <td>$!entity.templateStatus.name</td>
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.statusChangeTime)</td>
             <td>
-                <a href="edit?optype=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
                 #if($!entity.templateStatus=="Release")
-                    <a data-id="$!entity.id" class="btn btn-info btn-mini publish">废弃</a>
+                    <a data-id="$!entity.id" class="btn btn-info btn-mini discard">废弃</a>
+                    <a data-id="$!entity.id" class="btn btn-info btn-mini delete">删除</a>
+                    <a href="edit?optype=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
                 #end
                 #if($!entity.templateStatus=="Discard"||$!entity.templateStatus=="Draft")
                     <a data-id="$!entity.id" class="btn btn-info btn-mini publish">发布</a>
-                    <a data-id="$!entity.id" class="btn btn-info btn-mini publish">删除</a>
+                    <a data-id="$!entity.id" class="btn btn-info btn-mini delete">删除</a>
+                    <a href="edit?optype=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
                 #end
             </td>
         </tr>
@@ -108,6 +110,53 @@
             });
         });
     });
+
+
+    $(".discard").each(function (i, o) {
+        $(o).on("click", function (event) {
+            if (!confirm('确实要废弃吗?'))
+                return;
+            var dataId = $(this).attr("data-id");
+            $.ajax({
+                url: 'discard',
+                data: {id: dataId},
+                type: 'get',
+                success: function (result) {
+                    if (result.code == 0) {
+                        window.location.reload();
+                    } else {
+                        alert("操作失败:" + result.msg);
+                    }
+                }
+            });
+        });
+    });
+
+
+
+    $(".delete").each(function (i, o) {
+        $(o).on("click", function (event) {
+            if (!confirm('确实要删除吗?'))
+                return;
+            var dataId = $(this).attr("data-id");
+            $.ajax({
+                url: 'delete',
+                data: {id: dataId},
+                type: 'get',
+                success: function (result) {
+                    if (result.code == 0) {
+                        window.location.reload();
+                    } else {
+                        alert("操作失败:" + result.msg);
+                    }
+                }
+            });
+        });
+    });
+
+
+
+
 </script>
 
 

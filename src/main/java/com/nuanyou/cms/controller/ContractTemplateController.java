@@ -196,6 +196,26 @@ public class ContractTemplateController {
         return new APIResult();
     }
 
+    @RequestMapping(path = "discard", method = RequestMethod.GET)
+    @ResponseBody
+    public APIResult discard(Long id) {
+        APIResult res = this.contractService.discardContractTemplate(id);
+        if (res.getCode() != 0) {
+            throw new APIException(res.getCode(), res.getMsg());
+        }
+        return new APIResult();
+    }
+
+    @RequestMapping(path = "delete", method = RequestMethod.GET)
+    @ResponseBody
+    public APIResult delete(Long id) {
+        APIResult res = this.contractService.deleteContractParameter(id);
+        if (res.getCode() != 0) {
+            throw new APIException(res.getCode(), res.getMsg());
+        }
+        return new APIResult();
+    }
+
 
     @InitBinder("params")
     public void initAccountBinder(WebDataBinder binder) {
