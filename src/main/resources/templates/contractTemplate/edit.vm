@@ -293,8 +293,9 @@
         <div class="control-group">
             <label class="control-label">keyCode</label>
             <div class="controls">
-                <input for="name" name="keyCode" type="text" class="span5"
-                       value="$!entity.keyCode">
+                <input for="name" id="keyCode" name="keyCode" type="text" class="span5"
+                       value="$!entity.keyCode" onchange="verifykeyCode()">
+                <label id="keyCodeStatus" class="control-label" style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
             </div>
         </div>
 
@@ -314,7 +315,7 @@
             <div class="control-group">
                 <label class="control-label">$!langCountry.desc ($!langCountry.value)</label>
                 <div class="controls">
-                    <input name="$!langCountry.key" type="text" class="span5 countryLanguage">
+                    <input name="keyCodes" data-key="$!langCountry.key" type="text" class="span5 countryLanguage">
                 </div>
             </div>
         #end
@@ -334,6 +335,38 @@
     #include("common/image-support.vm")
 <script src="/dist/js/cascade-select.js"></script>
 <script type="text/javascript">
+    /**
+     * 验证keyCode是否重复
+     */
+    function verifykeyCode(){
+        var request = {};
+        var keyCode = $("input[name='keyCode']").val();
+
+        request.keyCode = keyCode;
+        $.ajax({
+            url: '/langsDictionary/verifykeyCode',
+            data: JSON.stringify(request),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    console.log(result.data);
+                    if(!result.data){
+                        $("#keyCodeStatus").show();
+                        $("#addLangSave").attr("onclick", "");
+                        $("#keyCode").css("border","1px solid red");
+                        $("#addLangSave").attr("style", "background-color: gray;");
+                    }else{
+                        $("#keyCodeStatus").hide();
+                        $("#addLangSave").attr("style", "");
+                        $("#keyCode").css("border","");
+                        $("#addLangSave").attr("onclick", "saveLangsDictionary()");
+                    }
+                }
+            }
+        });
+    }
     /**
      * 根据下拉选择的分类填充语言列表
      */
@@ -529,7 +562,7 @@
         });
 
         $("#addLangSave").on("click", function () {
-            var langsKey="add";
+            /*var langsKey="add";
             currLangInput.val(langsKey);
 
             var request = {};
@@ -549,6 +582,40 @@
             request.langsMessageList=langsMessageList;
             $.ajax({
                 url: 'saveLangsDictionary',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        alert("操作成功");
+                    } else {
+                        alert(result.msg);
+                    }
+                }
+            });*/
+            var request = {};
+
+            request.keyCode = $("input[name='keyCode']").val();
+            request.categoryId = parseInt($("select[name='categoryId']").val());
+
+            var langsMessageList = [];
+            var keyCodes = document.getElementsByName("keyCodes");
+
+            for (var i = 0, j = keyCodes.length; i < j; i++){
+                var keyCodeInput = keyCodes[i];
+                var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
+                var message = keyCodeInput.value;
+                var langsCountryMessageVo = { langsKey : langsKey, message : message};
+                langsMessageList.push(langsCountryMessageVo);
+            }
+
+            request.langsMessageList = langsMessageList;
+
+            console.log(request);
+
+            $.ajax({
+                url: '/langsDictionary/saveLangsDictionary',
                 data: JSON.stringify(request),
                 type: 'post',
                 dataType: 'json',

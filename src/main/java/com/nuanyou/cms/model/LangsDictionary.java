@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Created by Byron on 2017/5/26.
  */
-public class LangsDictionary implements Serializable{
+public class LangsDictionary implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,11 +28,11 @@ public class LangsDictionary implements Serializable{
     private String keyCode;
 
     /**
-     * 字典項类型
+     * 字典項类型ID
      */
-    @ApiModelProperty(value = "字典項类型")
+    @ApiModelProperty(value = "字典項类型ID")
     @JsonProperty("baseName")
-    private String baseName;
+    private Long baseName;
 
     /**
      * 多元化内容
@@ -94,6 +94,8 @@ public class LangsDictionary implements Serializable{
 
     private Integer size = 20;
 
+    private String baseNameStr;//UI查询使用
+
     public Long getId() {
         return id;
     }
@@ -110,11 +112,11 @@ public class LangsDictionary implements Serializable{
         this.keyCode = keyCode;
     }
 
-    public String getBaseName() {
+    public Long getBaseName() {
         return baseName;
     }
 
-    public void setBaseName(String baseName) {
+    public void setBaseName(Long baseName) {
         this.baseName = baseName;
     }
 
@@ -196,6 +198,18 @@ public class LangsDictionary implements Serializable{
 
     public void setSize(Integer size) {
         this.size = size;
+    }
+
+    public String getBaseNameStr() {
+        return baseNameStr;
+    }
+
+    public void setBaseNameStr(String baseNameStr) {
+        this.baseNameStr = baseNameStr;
+    }
+
+    public String getLangsCountry() {
+        return this.getLanguage() + "-" + this.getCountry();
     }
 
 }

@@ -1,8 +1,10 @@
 package com.nuanyou.cms.controller;
 
 import com.nuanyou.cms.commons.APIResult;
+import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.model.LangsCategory;
 import com.nuanyou.cms.model.LangsDictionary;
+import com.nuanyou.cms.model.LangsDictionaryRequestVo;
 import com.nuanyou.cms.model.LangsDictionaryVo;
 import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsCategoryService;
@@ -27,44 +29,27 @@ public class LangsDictionaryController {
     private LangsCategoryService categoryService;
 
     @RequestMapping("list")
-    public String list(@RequestParam(required = false, defaultValue = "1") int index,
-                       String baseName,
-                       String keyCode,
-                       String message,
-                       Model model) {
-        LangsDictionary example=new LangsDictionary();
-        example.setBaseName(baseName);example.setKeyCode(keyCode);example.setIndex(index);example.setMessage(message);
-        Page<LangsDictionary> allDictionary = dictionaryService.findAllDictionary(example);
+    public String list(LangsDictionaryRequestVo requestVo, Model model) {
+        Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllDictionary(requestVo);
         model.addAttribute("page", allDictionary);
-        model.addAttribute("entity", example);
-        model.addAttribute ( "langsCountries", LangsCountry.values () );
+        model.addAttribute("entity", requestVo);
+        model.addAttribute("langsCountries", LangsCountry.values());
         return "langsDictionary/list";
     }
 
     @RequestMapping("list1")
-    public String list1(@RequestParam(required = false, defaultValue = "1") int index,
-                       String baseName,
-                       String keyCode,
-                       String message,
-                       Model model) {
-
-        LangsDictionary example=new LangsDictionary();
-        example.setBaseName(baseName);
-        example.setKeyCode(keyCode);
-        example.setIndex(index);
-        example.setMessage(message);
-        List<LangsDictionaryVo> allDictionary = dictionaryService.findAllLangsDictionary(example);
-
+    public String list1(LangsDictionaryRequestVo requestVo, Model model) {
+        Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllDictionary(requestVo);
         model.addAttribute("page", allDictionary);
-        model.addAttribute("entity", example);
-        model.addAttribute ("langsCountries", LangsCountry.values () );
+        model.addAttribute("entity", requestVo);
+        model.addAttribute("langsCountries", LangsCountry.values());
         return "langsDictionary/list1";
     }
 
     @RequestMapping("add")
-    public String add(Model model){
+    public String add(Model model) {
         LangsCountry[] values = LangsCountry.values();
-        LangsCategory example=new LangsCategory();
+        LangsCategory example = new LangsCategory();
         example.setIndex(1);
         example.setSize(100000);
         Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
@@ -77,14 +62,15 @@ public class LangsDictionaryController {
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
         LangsCountry[] values = LangsCountry.values();
-        LangsCategory example=new LangsCategory();
-        example.setIndex(1);example.setSize(100000);
+        LangsCategory example = new LangsCategory();
+        example.setIndex(1);
+        example.setSize(100000);
         Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
-        LangsDictionary entity = null;
+        LangsDictionaryVo vo = null;
         if (id != null) {
-            entity = dictionaryService.findLangsDictionary(id);
+            vo = dictionaryService.findLangsDictionary(id);
         }
-        model.addAttribute("entity", entity);
+        model.addAttribute("entity", vo);
         model.addAttribute("langsCountries", values);
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
         model.addAttribute("type", type);
@@ -127,15 +113,35 @@ public class LangsDictionaryController {
         return new APIResult(dictionaryService.saveLangsDictionary(dictionaryVo));
     }
 
-
-    @RequestMapping("api/list")
+    /**
+     * 查询单个的语言
+     *
+     * @param keyCode
+     * @return LangsDictionaryVo
+     */
+    @RequestMapping(value = "findOneByKeyCode", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult list(Long id) {
-        if(id==null){
+    public APIResult findOneByKeyCode(@RequestParam String keyCode) {
+        APIResult<LangsDictionaryVo> result = new APIResult<LangsDictionaryVo>(ResultCodes.Success);
+        LangsDictionaryVo langsDictionary = dictionaryService.findLangsDictionary(keyCode, null);
+        result.setData(langsDictionary);
+        return result;
+    }
+
+    /**
+     * 根据分类id查询所有的语言
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "api/list", method = RequestMethod.POST)
+    @ResponseBody
+    public APIResult list(@RequestParam Long id) {
+        System.out.println(id);
+        if (id == null) {
             return null;
         }
         List<LangsDictionary> list = dictionaryService.findIdNameListByCat(id);
-        System.out.println(list.size());
         return new APIResult(list);
     }
 

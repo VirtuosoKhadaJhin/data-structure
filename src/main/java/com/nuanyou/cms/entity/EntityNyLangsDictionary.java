@@ -53,6 +53,10 @@ public class EntityNyLangsDictionary {
     public EntityNyLangsDictionary() {
     }
 
+    public EntityNyLangsDictionary(String keyCode) {
+        this.keyCode = keyCode;
+    }
+
     public EntityNyLangsDictionary(String keyCode, String language, String country, String variant) {
         this.keyCode = keyCode;
         this.language = language;
@@ -147,5 +151,9 @@ public class EntityNyLangsDictionary {
 
     public void setDelFlag(Boolean delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public String getLangsCountry() {
+        return this.getLanguage() + "-" + this.getCountry();
     }
 }

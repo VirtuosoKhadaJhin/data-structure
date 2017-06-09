@@ -12,8 +12,6 @@ public class LangsDictionaryVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
-
     //key+category
     private String keyCode;
 
@@ -26,8 +24,7 @@ public class LangsDictionaryVo implements Serializable {
     public LangsDictionaryVo() {
     }
 
-    public LangsDictionaryVo(Long id, String keyCode, Long categoryId) {
-        this.id = id;
+    public LangsDictionaryVo(String keyCode, Long categoryId) {
         this.keyCode = keyCode;
         this.categoryId = categoryId;
     }
@@ -36,21 +33,6 @@ public class LangsDictionaryVo implements Serializable {
         this.keyCode = keyCode;
         this.categoryId = categoryId;
         this.langsMessageList = langsMessageList;
-    }
-
-    public LangsDictionaryVo(Long id, String keyCode, Long categoryId, List<LangsCountryMessageVo> langsMessageList) {
-        this.id = id;
-        this.keyCode = keyCode;
-        this.categoryId = categoryId;
-        this.langsMessageList = langsMessageList;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getKeyCode() {
