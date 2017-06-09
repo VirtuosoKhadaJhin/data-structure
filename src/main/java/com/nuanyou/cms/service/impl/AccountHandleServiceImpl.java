@@ -86,8 +86,6 @@ public class AccountHandleServiceImpl implements AccountHandleService {
     private void validate(BigDecimal poundage, Long paymentDays, DayType dateType, Date startTimeStr, BigDecimal startPrice) {
         if (poundage == null) {
             throw new APIException(ResultCodes.Fail, "手续费不能为空");
-        } else if (paymentDays == null) {
-            throw new APIException(ResultCodes.Fail, "账期不能为空");
         } else if (dateType == null) {
             throw new APIException(ResultCodes.Fail, "数据类型不能为空");
         } else if (startPrice == null) {
@@ -129,12 +127,24 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         Date dateTime = startTimeStr == null ? null : DateTime.parse(startTimeStr, dateFormat).toDate();
         BigDecimal startPrice = startPriceStr == null ? null : new BigDecimal(startPriceStr);
         request.setEnabled(true);
-        if(DayType.toEnum(dateType)==DayType.Month){
-            request.setDay(1L);
-        }else{
+
+        if(paymentDays==null){//非日结
+            if(dateType==null){
+                throw new APIException(ResultCodes.Fail,"非日结时结算周期必须存在");
+            }
+            request.setDayType(DayType.toEnum(dateType));//月结或者半月结的结算周期
+            if(DayType.toEnum(dateType)==DayType.Month) {
+                request.setDay(1L);//月结
+            }else{
+                request.setDay(null);//半月结
+            }
+        }else{//日结
+            if(dateType!=null){
+                throw new APIException(ResultCodes.Fail,"日结天数和结算周期不能同时存在!");
+            }
+            request.setDayType(DayType.Day);
             request.setDay(paymentDays);
         }
-        request.setDayType(DayType.toEnum(dateType));
         request.setPoundage(poundage);
         request.setStartPrice(startPrice);
         request.setMerchantId(mchId);

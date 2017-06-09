@@ -82,7 +82,7 @@ public class LangsDictionaryController {
         Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
         LangsDictionary entity = null;
         if (id != null) {
-            entity = dictionaryService.findLangsDictionary(id);
+            //entity = dictionaryService.findLangsDictionary(id);
         }
         model.addAttribute("entity", entity);
         model.addAttribute("langsCountries", values);
