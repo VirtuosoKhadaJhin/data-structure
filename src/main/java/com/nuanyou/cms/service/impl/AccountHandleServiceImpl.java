@@ -129,9 +129,13 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         Date dateTime = startTimeStr == null ? null : DateTime.parse(startTimeStr, dateFormat).toDate();
         BigDecimal startPrice = startPriceStr == null ? null : new BigDecimal(startPriceStr);
         request.setEnabled(true);
+        if(DayType.toEnum(dateType)==DayType.Month){
+            request.setDay(1L);
+        }else{
+            request.setDay(paymentDays);
+        }
         request.setDayType(DayType.toEnum(dateType));
         request.setPoundage(poundage);
-        request.setDay(paymentDays);
         request.setStartPrice(startPrice);
         request.setMerchantId(mchId);
         request.setStartTime(dateTime);
