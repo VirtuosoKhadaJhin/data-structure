@@ -54,7 +54,7 @@
                                         <option value="2"  #if($!entity.type==2)selected #end>附加合同</option>
                                     </select>
                                 </div>
-                                <label class="control-label">自定义参数</label>
+                                <label class="control-label">自定义参数 </label>
                                 <div class="controls">
                                     <div style="overflow: auto;width: 100%">
 
@@ -129,8 +129,9 @@
                                                            readonly>
                                                 </td>
                                                 <td>
-                                                    <input name="name" style="width: 150px" class="langsAutoComplete"
-                                                           id="langsAutoComplete"><br>
+                                                    <input name="name" style="width: 150px"
+                                                           class="langsAutoComplete"
+                                                           id="langsAutoComplete1"><br>
                                                     <a class="btn btn-info btn-mini selectLang"
                                                        inputLangsName="name">选择</a>
                                                     <a class="btn btn-info btn-mini addLang"
@@ -547,12 +548,9 @@
             $('#selectLangsModal').modal('show');
         });
 
-//        $("#autocomp").bind("autocompleteselect", function(e, ui) {
-//            alert(ui.item.value);
-//        });
         var availableTags = new Array();
         var j = 2;
-        $("#mytable").delegate(".langsAutoComplete", "focus", function (e) {
+        $("#mytable").delegate(".langsAutoComplete", "keyup", function (e) {
 
             var keyWord = $(this).val();
             if (keyWord == "") {
@@ -574,35 +572,45 @@
                     if (result.code == 0) {
                         var list = result.data
                         for (var i = 0; i < list.length; i++) {
-                            var obj = list[i];
-                            console.log(obj);
-                            availableTags1[i] = "589";
-
+                            var o=list[i];
+                            console.log(list[i]);
+                            availableTags[i]=o.keyCode+":"+o.message;
                         }
 
 
+                        var option = {
+                            max: 12,    //列表里的条目数
+                            minChars: 0,    //自动完成激活之前填入的最小字符
+                            width: 400,     //提示的宽度，溢出隐藏
+                            scrollHeight: 300,   //提示的高度，溢出显示滚动条
+                            matchContains: false,    //包含匹配，就是data参数里的数据，是否只要包含文本框里的数据就显示
+                            autoFill: true,    //自动填充
+                            minLength: 0,
+                            select: function (event, ui) {
 
-                        // alert("操作成功");
+                                console.log(ui);
+//                                $("#autoByAjax").val(ui.item.label); // display the selected text
+//                                $("#autoByAjaxVal").val(ui.item.id); // save selected id to hidden input
+                            }
+                        };
+
+                        $(".langsAutoComplete").autocomplete({
+                            source: availableTags
+                        },option).on('focus', function() {
+                            $(this).keydown();
+                        });
+
+//                        $(".langsAutoComplete").autocomplete({
+//                            source: availableTags
+//                        });
                     } else {
                         //alert(result.msg);
                     }
                 }
             });
-//console.log(availableTags1);
 
-            $(this).autocomplete({
-                source: availableTags1
-            });
-
-//            j++;
-//            for(var i=0;i<j;i++){
-//                availableTags[i]=i+"aaa";
-//            }
-//            // $(this).keydown();
-//            $(this).autocomplete({
-//                source: availableTags
-//            });
         });
+
 
 
         $("#selectLangSave").on("click", function () {
