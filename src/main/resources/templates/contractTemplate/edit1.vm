@@ -7,7 +7,10 @@
     #include("common/css-support.vm")
 
 
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+
+
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
 </head>
 <body>
@@ -129,8 +132,7 @@
                                                            readonly>
                                                 </td>
                                                 <td>
-                                                    <input name="name" style="width: 150px" class="langsAutoComplete"
-                                                           id="langsAutoComplete"><br>
+                                                    <input name="name" style="width: 150px" class="langsAutoComplete" id="langsAutoComplete"><br>
                                                     <a class="btn btn-info btn-mini selectLang"
                                                        inputLangsName="name">选择</a>
                                                     <a class="btn btn-info btn-mini addLang"
@@ -296,8 +298,7 @@
             <div class="controls">
                 <input for="name" id="keyCode" name="keyCode" type="text" class="span5"
                        value="$!entity.keyCode" onchange="verifykeyCode()">
-                <label id="keyCodeStatus" class="control-label"
-                       style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
+                <label id="keyCodeStatus" class="control-label" style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
             </div>
         </div>
 
@@ -341,7 +342,7 @@
     /**
      * 验证keyCode是否重复
      */
-    function verifykeyCode() {
+    function verifykeyCode(){
         var request = {};
         var keyCode = $("input[name='keyCode']").val();
 
@@ -355,15 +356,15 @@
             success: function (result) {
                 if (result.code == 0) {
                     console.log(result.data);
-                    if (!result.data) {
+                    if(!result.data){
                         $("#keyCodeStatus").show();
                         $("#addLangSave").attr("onclick", "");
-                        $("#keyCode").css("border", "1px solid red");
+                        $("#keyCode").css("border","1px solid red");
                         $("#addLangSave").attr("style", "background-color: gray;");
-                    } else {
+                    }else{
                         $("#keyCodeStatus").hide();
                         $("#addLangSave").attr("style", "");
-                        $("#keyCode").css("border", "");
+                        $("#keyCode").css("border","");
                         $("#addLangSave").attr("onclick", "saveLangsDictionary()");
                     }
                 }
@@ -548,57 +549,44 @@
         });
 
 
-        var availableTags = new Array();
-        var j = 2;
+        var availableTags1 = [
+            "ActionScript",
+            "AppleScript",
+            "Asp",
+            "BASIC",
+            "C",
+            "C++",
+            "Clojure",
+            "COBOL",
+            "ColdFusion",
+            "Erlang",
+            "Fortran",
+            "Groovy",
+            "Haskell",
+            "Java",
+            "JavaScript",
+            "Lisp",
+            "Perl",
+            "PHP",
+            "Python",
+            "Ruby",
+            "Scala",
+            "Scheme"
+        ];
+        var availableTags=new Array();
+        var j=2;
         $("#mytable").delegate(".langsAutoComplete", "focus", function (e) {
-
-            var keyWord = $(this).val();
-            if (keyWord == "") {
-                return;
-            } else {
-                //console.log(keyWord);
+            j++;
+            for(var i=0;i<j;i++){
+                availableTags[i]=i+"aaa";
             }
-
-            var obj = $(this);
-            $.ajax({
-                url: '/langsDictionary/suggest',
-                data: {key: keyWord},
-                type: 'post',
-                dataType: 'json',
-                async: false,
-                contentType: 'application/json',
-                success: function (result) {
-                    if (result.code == 0) {
-                        var list = result.data
-                        var availableTags1 = new Array();
-                        for (var i = 0; i < list.length; i++) {
-                            var obj = list[i];
-                            console.log(obj);
-                            availableTags1[i] = "589";
-
-                        }
-
-                        $(this).autocomplete({
-                            source: availableTags1
-                        });
-
-                        // alert("操作成功");
-                    } else {
-                        //alert(result.msg);
-                    }
-                }
+            // $(this).keydown();
+            $(this).autocomplete({
+                source: availableTags
             });
-
-
-//            j++;
-//            for(var i=0;i<j;i++){
-//                availableTags[i]=i+"aaa";
-//            }
-//            // $(this).keydown();
-//            $(this).autocomplete({
-//                source: availableTags
-//            });
         });
+
+
 
 
         $("#selectLangSave").on("click", function () {
@@ -660,11 +648,11 @@
             var langsMessageList = [];
             var keyCodes = document.getElementsByName("keyCodes");
 
-            for (var i = 0, j = keyCodes.length; i < j; i++) {
+            for (var i = 0, j = keyCodes.length; i < j; i++){
                 var keyCodeInput = keyCodes[i];
                 var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
                 var message = keyCodeInput.value;
-                var langsCountryMessageVo = {langsKey: langsKey, message: message};
+                var langsCountryMessageVo = { langsKey : langsKey, message : message};
                 langsMessageList.push(langsCountryMessageVo);
             }
 

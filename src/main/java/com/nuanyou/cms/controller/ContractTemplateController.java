@@ -15,6 +15,7 @@ import com.nuanyou.cms.remote.service.RemoteContractService;
 import com.nuanyou.cms.service.ContractTemplateService;
 import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.LangsCategoryService;
+import com.nuanyou.cms.service.ParamsDataMappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -46,6 +47,9 @@ public class ContractTemplateController {
     private ContractTemplateService contractTemplateService;
     @Autowired
     private LangsCategoryService categoryService;
+    @Autowired
+    private ParamsDataMappingService dataMappingService;
+
 
     @RequestMapping("list")
     public String list(Model model,
@@ -86,6 +90,9 @@ public class ContractTemplateController {
         //all countries
         List<Country> countries = this.countryService.getIdNameList();
 
+        //all 所有的数据映射
+        //List<ParamsDataMapping> dataMappings=this.dataMappingService.findAll();
+
 
         //add selectable langs
         LangsCategory example=new LangsCategory();
@@ -112,6 +119,7 @@ public class ContractTemplateController {
 
         setSelectableParams(selectedParams, params);
         model.addAttribute("entity", template);
+        //model.addAttribute("dataMappings", dataMappings);
         model.addAttribute("selectableParams", params);
         model.addAttribute("selectedParams", selectedParams);
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
