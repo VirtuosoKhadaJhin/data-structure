@@ -79,11 +79,4 @@ sso:
 
 contractService: http://127.0.0.1:8200
 accountService: http://127.0.0.1:8086
-contractConfig:
-  poundageNames: poundage_huigou,poundage_radio,youfu_poundage
-  paymentDaysNames: settle_day,account_period_huigou,youfu_payment_day
-  dayTypeNames: youfu_billing_cycle
-  youfuStartTimeNames: youfu_start_time
-  startPriceNames: youfu_start_price
-  commissionNames: group_buying_commission
-  groupBuyingStartTimeNames: group_buying_start_time
+

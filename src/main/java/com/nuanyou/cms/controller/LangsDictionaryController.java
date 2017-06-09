@@ -105,6 +105,9 @@ public class LangsDictionaryController {
     @RequestMapping("api/list")
     @ResponseBody
     public APIResult list(Long id) {
+        if(id==null){
+            return null;
+        }
         List<LangsDictionary> list = dictionaryService.findIdNameListByCat(id);
         return new APIResult(list);
     }

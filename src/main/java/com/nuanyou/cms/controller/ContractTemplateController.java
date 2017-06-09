@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -70,10 +71,7 @@ public class ContractTemplateController {
     public String edit(Long id, Model model, Integer optype, HttpServletRequest request) {
 
         //获取浏览器当地语言
-        Locale locale = request.getLocale();
-        String country = locale.getCountry();
-        String language = locale.getLanguage();
-        String s = locale.toString();
+        List<LangsCountry> langsCountries=getNativeLangs(request);
 
 
         //all params
@@ -119,8 +117,22 @@ public class ContractTemplateController {
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
         model.addAttribute("countries", countries);
         model.addAttribute("optype", optype);
-        model.addAttribute( "langsCountries", LangsCountry.values () );
+        model.addAttribute( "langsCountries",langsCountries );
         return "contractTemplate/edit";
+    }
+
+    private List<LangsCountry> getNativeLangs(HttpServletRequest request) {
+        List<LangsCountry> langsCountries=new ArrayList<>();
+        Locale locale = request.getLocale();
+        String lang = locale.toLanguageTag();
+        LangsCountry langsCountry = LangsCountry.toEnum(lang);
+        langsCountries.add(langsCountry);
+        if(!langsCountry.equals((LangsCountry.ZH_CN))){
+            langsCountries.add(LangsCountry.ZH_CN);
+        }  if(!langsCountry.equals((LangsCountry.EN_UK))){
+            langsCountries.add(LangsCountry.EN_UK);
+        }
+        return langsCountries;
     }
 
     private void setSelectableParams(List<ContractParameter> selectedParams, List<ContractParameter> params) {
