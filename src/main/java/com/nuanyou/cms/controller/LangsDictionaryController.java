@@ -41,8 +41,6 @@ public class LangsDictionaryController {
         return "langsDictionary/list";
     }
 
-
-
     @RequestMapping("list1")
     public String list1(@RequestParam(required = false, defaultValue = "1") int index,
                        String baseName,
@@ -51,15 +49,30 @@ public class LangsDictionaryController {
                        Model model) {
 
         LangsDictionary example=new LangsDictionary();
-        example.setBaseName(baseName);example.setKeyCode(keyCode);example.setIndex(index);example.setMessage(message);
-        Page<LangsDictionary> allDictionary = dictionaryService.findAllDictionary(example);
+        example.setBaseName(baseName);
+        example.setKeyCode(keyCode);
+        example.setIndex(index);
+        example.setMessage(message);
+        List<LangsDictionaryVo> allDictionary = dictionaryService.findAllLangsDictionary(example);
+
         model.addAttribute("page", allDictionary);
         model.addAttribute("entity", example);
-        model.addAttribute ( "langsCountries", LangsCountry.values () );
+        model.addAttribute ("langsCountries", LangsCountry.values () );
         return "langsDictionary/list1";
     }
 
+    @RequestMapping("add")
+    public String add(Model model){
+        LangsCountry[] values = LangsCountry.values();
+        LangsCategory example=new LangsCategory();
+        example.setIndex(1);
+        example.setSize(100000);
+        Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
 
+        model.addAttribute("langsCountries", values);
+        model.addAttribute("selectableLangsCategory", selectableLangsCategory);
+        return "langsDictionary/add";
+    }
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
@@ -90,15 +103,28 @@ public class LangsDictionaryController {
         return "redirect:" + url;
     }
 
+    /**
+     * 判断keyCode是否有效
+     *
+     * @param dictionaryVo
+     * @return boolean
+     */
+    @RequestMapping(value = "verifykeyCode", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public APIResult verifykeyCode(@RequestBody LangsDictionaryVo dictionaryVo) {
+        return new APIResult(dictionaryService.verifykeyCode(dictionaryVo));
+    }
 
-
+    /**
+     * 保存多语言
+     *
+     * @param dictionaryVo
+     * @return boolean
+     */
     @RequestMapping(value = "saveLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public APIResult saveTemplate(@RequestBody LangsDictionaryVo dictionaryVo
-    ) throws IOException {
-
-
-        return null;
+    public APIResult saveLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
+        return new APIResult(dictionaryService.saveLangsDictionary(dictionaryVo));
     }
 
 
@@ -109,6 +135,7 @@ public class LangsDictionaryController {
             return null;
         }
         List<LangsDictionary> list = dictionaryService.findIdNameListByCat(id);
+        System.out.println(list.size());
         return new APIResult(list);
     }
 
