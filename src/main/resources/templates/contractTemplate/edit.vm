@@ -334,18 +334,27 @@
     #include("common/image-support.vm")
 <script src="/dist/js/cascade-select.js"></script>
 <script type="text/javascript">
+    /**
+     * 根据下拉选择的分类填充语言列表
+     */
     function dictionaryList(){
         var id = $("select[name='langsCategoryId']").val();
         console.log(id);
         $.ajax({
             url: '/langsDictionary/api/list',
-            data: {id : id},
+            data: { id : id},
             type: 'post',
             dataType: 'json',
-            contentType: 'application/json',
             success: function (result) {
                 if (result.code == 0) {
+                    // langsKey
                     console.log(result.data);
+                    $("#langsKey").empty();
+                    var langsDictionarys = result.data;
+                    for(var i=0;i<langsDictionarys.length;i++){
+                        var option = "<option value='"+langsDictionarys[i].id+"'>"+langsDictionarys[i].language+"</option>";
+                        $("#langsKey").append(option);
+                    }
                 } else {
                     alert(result.msg);
                 }
@@ -498,13 +507,14 @@
             var name=$(currEle).attr("inputLangsName");
             var td = $(currEle).parent().parent();
             currLangInput = td.find("input[name='"+name+"']");
+            dictionaryList();
             $('#selectLangsModal').modal('show');
         });
 
         $("#selectLangSave").on("click", function () {
             var langsKey=$("#langsKey").val();
             console.log(langsKey);
-            langsKey="select";
+            langsKey=$("#langsKey").val();;
             currLangInput.val(langsKey);
             $('#selectLangsModal').modal('hide');
         });
