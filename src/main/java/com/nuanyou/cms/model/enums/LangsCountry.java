@@ -9,7 +9,9 @@ public enum LangsCountry {
     KO_KR ( 3, "ko-KR", "韩语"),
     JA_JP ( 4, "ja-JP", "日本" ),
     DE_DE ( 5, "de-DE", "德语" ),
-    TH ( 6, "th", "泰国" );
+    TH ( 6, "th", "泰国" ),
+    En_GB(7, "en-GB", "英国英语" )
+    ;
 
     private Integer key;
     private String value;

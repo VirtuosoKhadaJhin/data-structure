@@ -551,14 +551,10 @@
         var availableTags = new Array();
         var j = 2;
         $("#mytable").delegate(".langsAutoComplete", "keyup", function (e) {
-
             var keyWord = $(this).val();
             if (keyWord == "") {
                 return;
-            } else {
-                //console.log(keyWord);
             }
-
             var obj = $(this);
             var availableTags1 = new Array();
             $.ajax({
@@ -566,43 +562,33 @@
                 data: {key: keyWord},
                 type: 'post',
                 dataType: 'json',
-                async: false,
+                async: true,
                 contentType: 'application/json',
                 success: function (result) {
                     if (result.code == 0) {
+                        var listComplete=[];
                         var list = result.data
                         for (var i = 0; i < list.length; i++) {
                             var o=list[i];
-                            console.log(list[i]);
-                            availableTags[i]=o.keyCode+":"+o.message;
+                            var complate={};
+                            complate.label=o.message;
+                            complate.value=o.keyCode;
+                            complate.message=o.message;
+                            listComplete.push(complate);
                         }
-
-
-                        var option = {
-                            max: 12,    //列表里的条目数
-                            minChars: 0,    //自动完成激活之前填入的最小字符
-                            width: 400,     //提示的宽度，溢出隐藏
-                            scrollHeight: 300,   //提示的高度，溢出显示滚动条
-                            matchContains: false,    //包含匹配，就是data参数里的数据，是否只要包含文本框里的数据就显示
-                            autoFill: true,    //自动填充
+                        var currEle = e.currentTarget;
+                        $(currEle).autocomplete({
                             minLength: 0,
-                            select: function (event, ui) {
-
-                                console.log(ui);
-//                                $("#autoByAjax").val(ui.item.label); // display the selected text
-//                                $("#autoByAjaxVal").val(ui.item.id); // save selected id to hidden input
+                            source: listComplete,
+                            focus: function( event, ui ) {
+                                $( this ).val(ui.item.label );
+                                return false;
+                            },
+                            select: function( event, ui ) {
+                                $( this ).val( ui.item.value);
+                                return false;
                             }
-                        };
-
-                        $(".langsAutoComplete").autocomplete({
-                            source: availableTags
-                        },option).on('focus', function() {
-                            $(this).keydown();
-                        });
-
-//                        $(".langsAutoComplete").autocomplete({
-//                            source: availableTags
-//                        });
+                        })
                     } else {
                         //alert(result.msg);
                     }
