@@ -185,6 +185,7 @@
                                             是
                                         #end
                                     </div>
+                                    <input type="hidden" value="$!entity.locateExactly"  name="locateExactly">
                                 #end
 
 
