@@ -23,9 +23,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Felix on 2017/4/24.
@@ -65,7 +67,14 @@ public class ContractTemplateController {
 
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
-    public String edit(Long id, Model model, Integer optype) {
+    public String edit(Long id, Model model, Integer optype, HttpServletRequest request) {
+
+        //获取浏览器当地语言
+        Locale locale = request.getLocale();
+        String country = locale.getCountry();
+        String language = locale.getLanguage();
+        String s = locale.toString();
+
 
         //all params
         APIResult<ContractParameters> allTemplateParameters = this.contractService.findAllTemplateParameters(1, 100000);
@@ -110,7 +119,7 @@ public class ContractTemplateController {
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
         model.addAttribute("countries", countries);
         model.addAttribute("optype", optype);
-        model.addAttribute ( "langsCountries", LangsCountry.values () );
+        model.addAttribute( "langsCountries", LangsCountry.values () );
         return "contractTemplate/edit";
     }
 
@@ -118,7 +127,6 @@ public class ContractTemplateController {
         if(selectedParams==null||params==null){
             return;
         }
-        //用迭代器也可以
         for (int i = params.size() - 1; i >= 0; i--) {
             for (int j = 0; j<=selectedParams.size()-1 ; j++) {
                 if (params.get(i).getId().equals(selectedParams.get(j).getId())) {

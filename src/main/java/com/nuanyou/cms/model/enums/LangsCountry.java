@@ -6,7 +6,7 @@ package com.nuanyou.cms.model.enums;
 public enum LangsCountry {
     EN_UK ( 1, "en-US", "英语" ),
     ZH_CN ( 2, "zh-CN", "中文" ),
-    KO_KR ( 3, "ko-KR", "韩语" ),
+    KO_KR ( 3, "ko-KR", "韩语"),
     JA_JP ( 4, "ja-JP", "日本" ),
     DE_DE ( 5, "de-DE", "德语" ),
     TH ( 6, "th", "泰国" );
