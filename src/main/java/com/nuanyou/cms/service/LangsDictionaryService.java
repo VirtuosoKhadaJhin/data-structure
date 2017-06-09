@@ -12,13 +12,13 @@ import java.util.Locale;
  */
 public interface LangsDictionaryService {
 
-    LangsDictionary findLangsDictionary(Long id);
+    LangsDictionaryVo findLangsDictionary(Long id);
 
     Page<LangsDictionary> findAllDictionary(LangsDictionary request);
 
     List<LangsDictionaryVo> findAllLangsDictionary(LangsDictionary request);
 
-    LangsDictionary findLangsDictionary(String keyCode, Locale locale);
+    LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale);
 
     LangsDictionary addLangsDictionary(LangsDictionary entity);
 
