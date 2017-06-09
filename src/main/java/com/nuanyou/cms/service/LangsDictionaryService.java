@@ -33,4 +33,11 @@ public interface LangsDictionaryService {
 
     boolean saveLangsDictionary(LangsDictionaryVo dictionaryVo);
 
+    /**
+     * suggest搜索
+     *
+     * @param key
+     * @return
+     */
+    List<LangsDictionary> findSuggestSearch(String key);
 }

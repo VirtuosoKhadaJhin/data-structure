@@ -46,6 +46,21 @@ public class LangsDictionaryController {
         return "langsDictionary/list1";
     }
 
+    /**
+     * suggest搜索
+     *
+     * @param key
+     * @return
+     */
+    @RequestMapping("/suggest")
+    @ResponseBody
+    public APIResult<LangsDictionary> suggestSearch(String key) {
+        APIResult result = new APIResult ( ResultCodes.Success );
+        List<LangsDictionary> searchResult = dictionaryService.findSuggestSearch ( key );
+        result.setData ( searchResult );
+        return result;
+    }
+
     @RequestMapping("add")
     public String add(Model model) {
         LangsCountry[] values = LangsCountry.values();
