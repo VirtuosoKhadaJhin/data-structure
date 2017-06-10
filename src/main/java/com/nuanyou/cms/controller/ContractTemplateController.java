@@ -115,16 +115,29 @@ public class ContractTemplateController {
             selectedParams = template.getParameters();
         }
 
+
+        //selectedIds
+        List<Long> selectedIds=getSeletedIds(selectedParams);
+
         setSelectableParams(selectedParams, params);
         model.addAttribute("entity", template);
         //model.addAttribute("dataMappings", dataMappings);
         model.addAttribute("selectableParams", params);
         model.addAttribute("selectedParams", selectedParams);
+        model.addAttribute("selectedIds", selectedIds);
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
         model.addAttribute("countries", countries);
         model.addAttribute("optype", optype);
         model.addAttribute( "langsCountries",langsCountries );
         return "contractTemplate/edit";
+    }
+
+    private List<Long> getSeletedIds(List<ContractParameter> selectedParams) {
+        List<Long> selectedIds=new ArrayList<>();
+        for (ContractParameter selectedParam : selectedParams) {
+            selectedIds.add(selectedParam.getId());
+        }
+        return selectedIds;
     }
 
     private List<LangsCountry> getNativeLangs(HttpServletRequest request) {

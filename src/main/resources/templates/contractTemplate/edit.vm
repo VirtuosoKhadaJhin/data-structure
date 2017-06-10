@@ -7,7 +7,7 @@
     #include("common/css-support.vm")
 
 
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.css">
     <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
 </head>
 <body>
@@ -25,7 +25,7 @@
                 <div class="widget-box">
                     <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                         <h5>编辑&查看</h5>
-                        <input id="optype" name="type" type="hidden" value="$!type">
+                        <input id="optype" name="type" type="hidden" value="$!optype">
                     </div>
                     <div class="widget-content nopadding">
                         <form action="update" method="post" a
@@ -337,7 +337,7 @@
 <script src="/dist/js/cascade-select.js"></script>
 
 ##<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
     /**
      * 验证keyCode是否重复
@@ -402,6 +402,7 @@
     $(document).ready(function () {
 
         var type = $!optype;
+        var selectedIds=$!selectedIds;
         var currLangInput;
         var inputRowExample = $(".inputRowExample").html();
         var spanRowExample = $(".rowSpanExample").html();
@@ -421,6 +422,7 @@
             var request = {};
             var list = [];
             var paramIds = [];
+            var optype=$("#optype").val();
             $(".editRow").each(function (i, o) {
                 var templateParameterRequest = {};
                 templateParameterRequest.name = $(o).find("input[name='name']").val();
@@ -435,9 +437,6 @@
             $("input[name='paramId']").each(function (i, o) {
                 paramIds.push($(o).val());
             });
-            $("select[name='selectedParamIds']").each(function (i, o) {
-                request.selectedParamIds = $(o).val();
-            });
             request.title = $("input[name='title']").val();
             request.countryId = $("select[name='countryId']").val();
             request.templateType = $("select[name='templateType']").val();
@@ -448,6 +447,13 @@
             request.optype= $("#optype").val();
             if(optype==4){
                 request.id=null;
+                console.log(JSON.stringify(paramIds) );
+                console.log(JSON.stringify(selectedIds) );
+                paramIds.sort();
+                selectedIds.sort();
+                if(paramIds.join() == selectedIds.join() && list.length<=0){ //JSON.stringify(a1) == JSON.stringify(a2)
+                    return alert("复制操作下的参数列表没有改动！");
+                }
             }
             $.ajax({
                 url: 'saveTemplate',
