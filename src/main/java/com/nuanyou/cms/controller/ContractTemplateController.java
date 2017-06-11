@@ -6,7 +6,6 @@ import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.LangsCategory;
 import com.nuanyou.cms.model.contract.enums.TemplateStatus;
 import com.nuanyou.cms.model.contract.output.ContractParameter;
-import com.nuanyou.cms.model.contract.output.ContractParameters;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
 import com.nuanyou.cms.model.contract.request.ParamDetail;
 import com.nuanyou.cms.model.contract.request.Template;
@@ -71,6 +70,9 @@ public class ContractTemplateController {
     }
 
 
+
+
+
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer optype, HttpServletRequest request) {
 
@@ -79,12 +81,8 @@ public class ContractTemplateController {
 
 
         //all params
-        APIResult<ContractParameters> allTemplateParameters = this.contractService.findAllTemplateParameters(1, 100000);
-        if (allTemplateParameters.getCode() != 0) {
-            throw new APIException(allTemplateParameters.getCode(), allTemplateParameters.getMsg());
-        }
-        ContractParameters data = allTemplateParameters.getData();
-        List<ContractParameter> params = data.getList();
+        List<ContractParameter> params=this.contractTemplateService.getAllParams();
+
 
 
         //all countries
@@ -119,7 +117,7 @@ public class ContractTemplateController {
         //selectedIds
         List<Long> selectedIds=getSeletedIds(selectedParams);
 
-        setSelectableParams(selectedParams, params);
+        //setSelectableParams(selectedParams, params);
         model.addAttribute("entity", template);
         //model.addAttribute("dataMappings", dataMappings);
         model.addAttribute("selectableParams", params);
@@ -184,6 +182,15 @@ public class ContractTemplateController {
                 template.getCountryId(),
                 template.getId());
     }
+
+    @RequestMapping(value = "getAllParams", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public APIResult getAllParams(
+    ) throws IOException {
+        return this.contractService.findAllTemplateParameters(1, 100000);
+
+    }
+
 
 
 

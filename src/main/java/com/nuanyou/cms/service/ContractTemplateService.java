@@ -1,6 +1,7 @@
 package com.nuanyou.cms.service;
 
 import com.nuanyou.cms.commons.APIResult;
+import com.nuanyou.cms.model.contract.output.ContractParameter;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
 import com.nuanyou.cms.model.contract.request.TemplateParameterRequest;
 import com.nuanyou.cms.model.contract.request.TemplateParameterRequests;
@@ -17,4 +18,6 @@ public interface ContractTemplateService {
     APIResult saveTemplate1(Long[] selectedParamIds, TemplateParameterRequests templateParameterRequests, Integer templateType, String title, Long countryId, Long id);
 
     APIResult saveTemplate(List<Long> selectedParamIds, List<Long> paramIds, List<TemplateParameterRequest> requests, Integer templateType, String title, Long countryId, Long id);
+
+    List<ContractParameter> getAllParams();
 }

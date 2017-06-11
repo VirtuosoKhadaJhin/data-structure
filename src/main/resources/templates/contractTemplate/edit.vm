@@ -403,6 +403,7 @@
 
         var type = $!optype;
         var selectedIds=$!selectedIds;
+        //var selectableParams=$!selectableParams;
         var currLangInput;
         var inputRowExample = $(".inputRowExample").html();
         var spanRowExample = $(".rowSpanExample").html();
@@ -485,6 +486,58 @@
         });
 
         $("#mytable").delegate(".selectParameter", "click", function (e) {
+            //
+            var paramsAll=$("select[name='selectedParamId']");
+            //ajax加载参数 $("select[name='selectedParamId']").val();
+            //$("#selectID").append("<option value='7'>7</option>");
+            var paramIds=[];
+            $("input[name='paramId']").each(function (i, o) {
+                paramIds.push($(o).val());
+            });
+            paramsAll.empty();
+            $.ajax({
+                url: 'getAllParams',
+                data: {},
+                type: 'get',
+                dataType: 'json',
+                async: true,
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        var params=result.data.list;
+                        for (var i = 0; i < params.length; i++) {
+                            var isSame=false;
+                            for (var j = 0; j < paramIds.length; j++) {
+                                if(params[i].id==paramIds[j]){
+                                    isSame=true;
+                                    break;
+                                }
+                            }
+                            if(!isSame){
+                                var text=key:"+params[i].key + "备注:"+params[i].note;
+                                var id=params[i].id;
+                                console.log(id);
+                                console.log(text);
+                                paramsAll.append("<option value='"+id+"'>"+text+"</option>");
+                            }
+                        }
+                    } else {
+                        alert(result.msg);
+                    }
+
+                }
+            });
+
+
+
+
+
+
+
+
+
+
+
             $('#parameterModal').modal('show');
 
         });
@@ -577,7 +630,7 @@
                 success: function (result) {
                     if (result.code == 0) {
                         var listComplete=[];
-                        var list = result.data
+                        var list = result.data;
                         for (var i = 0; i < list.length; i++) {
                             var o=list[i];
                             var complate={};
