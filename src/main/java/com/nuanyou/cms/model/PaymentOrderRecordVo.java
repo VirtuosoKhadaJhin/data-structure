@@ -1,6 +1,5 @@
 package com.nuanyou.cms.model;
 
-import com.nuanyou.cms.entity.enums.PaymentOrderMethod;
 import com.nuanyou.cms.entity.enums.PaymentOrderStatus;
 
 import javax.xml.crypto.Data;
@@ -14,27 +13,48 @@ public class PaymentOrderRecordVo {
 
     private Long id;
 
-    private String title;
+    private Long mchId;
 
-    //支付宝和微信流水号
-    private String tradeNo;
+    private String mchName;
 
-    //暖游NYOrderID；
-    private String orderNo;
+    private String mchKpName;
 
     //支付状态
     private PaymentOrderStatus status;
 
+    private Long userId;
+
+    //支付宝和微信流水号
+    private String transactionid;
+
+    //暖游对外订单号
+    private String outTradeNo;
+
+    //暖游订单号
+    private String orderNo;
+
+    private String app;
+
+    private Date payTime;
+
+    private String title;
+
+    private String tradeNo;
+
     //支付价格
     private BigDecimal price;
 
+    //人民币价格
+    private BigDecimal realPrice;
+
     //支付平台
-    private String app;
+    private Long channelId;
 
-    //支付方式
-    private PaymentOrderMethod method;
+    private String channelName;
 
-    private Date payTime;
+    private BigDecimal rate;
+
+    private BigDecimal realRate;
 
     private Data refundTime;
 
@@ -46,6 +66,86 @@ public class PaymentOrderRecordVo {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getMchId() {
+        return mchId;
+    }
+
+    public void setMchId(Long mchId) {
+        this.mchId = mchId;
+    }
+
+    public String getMchName() {
+        return mchName;
+    }
+
+    public void setMchName(String mchName) {
+        this.mchName = mchName;
+    }
+
+    public String getMchKpName() {
+        return mchKpName;
+    }
+
+    public void setMchKpName(String mchKpName) {
+        this.mchKpName = mchKpName;
+    }
+
+    public PaymentOrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PaymentOrderStatus status) {
+        this.status = status;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getTransactionid() {
+        return transactionid;
+    }
+
+    public void setTransactionid(String transactionid) {
+        this.transactionid = transactionid;
+    }
+
+    public String getOutTradeNo() {
+        return outTradeNo;
+    }
+
+    public void setOutTradeNo(String outTradeNo) {
+        this.outTradeNo = outTradeNo;
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    public String getApp() {
+        return app;
+    }
+
+    public void setApp(String app) {
+        this.app = app;
+    }
+
+    public Date getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(Date payTime) {
+        this.payTime = payTime;
     }
 
     public String getTitle() {
@@ -64,22 +164,6 @@ public class PaymentOrderRecordVo {
         this.tradeNo = tradeNo;
     }
 
-    public String getOrderNo() {
-        return orderNo;
-    }
-
-    public void setOrderNo(String orderNo) {
-        this.orderNo = orderNo;
-    }
-
-    public PaymentOrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(PaymentOrderStatus status) {
-        this.status = status;
-    }
-
     public BigDecimal getPrice() {
         return price;
     }
@@ -88,28 +172,44 @@ public class PaymentOrderRecordVo {
         this.price = price;
     }
 
-    public String getApp() {
-        return app;
+    public BigDecimal getRealPrice() {
+        return realPrice;
     }
 
-    public void setApp(String app) {
-        this.app = app;
+    public void setRealPrice(BigDecimal realPrice) {
+        this.realPrice = realPrice;
     }
 
-    public PaymentOrderMethod getMethod() {
-        return method;
+    public Long getChannelId() {
+        return channelId;
     }
 
-    public void setMethod(PaymentOrderMethod method) {
-        this.method = method;
+    public void setChannelId(Long channelId) {
+        this.channelId = channelId;
     }
 
-    public Date getPayTime() {
-        return payTime;
+    public String getChannelName() {
+        return channelName;
     }
 
-    public void setPayTime(Date payTime) {
-        this.payTime = payTime;
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
+    public BigDecimal getRealRate() {
+        return realRate;
+    }
+
+    public void setRealRate(BigDecimal realRate) {
+        this.realRate = realRate;
     }
 
     public Data getRefundTime() {
