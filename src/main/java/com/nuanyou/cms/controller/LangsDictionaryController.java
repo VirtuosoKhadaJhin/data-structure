@@ -2,6 +2,7 @@ package com.nuanyou.cms.controller;
 
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
+import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.model.LangsCategory;
 import com.nuanyou.cms.model.LangsDictionary;
 import com.nuanyou.cms.model.LangsDictionaryRequestVo;
@@ -177,6 +178,37 @@ public class LangsDictionaryController {
         result.setData(keyCode);
         return result;
     }
+
+    /**
+     * 查询单个的语言
+     *
+     * @param dictionaryVo
+     * @return
+     */
+    @RequestMapping(value = "viewLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public APIResult viewLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
+        APIResult<LangsDictionaryVo> result = new APIResult<LangsDictionaryVo>(ResultCodes.Success);
+        LangsDictionaryVo langsDictionary = dictionaryService.findLangsDictionary(dictionaryVo.getKeyCode(), null);
+        result.setData(langsDictionary);
+        return result;
+    }
+
+    /**
+     * 修改单个的语言
+     *
+     * @param dictionaryVo
+     * @return
+     */
+    @RequestMapping(value = "modifyLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public APIResult modifyLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
+        APIResult<EntityNyLangsDictionary> result = new APIResult<EntityNyLangsDictionary>(ResultCodes.Success);
+        EntityNyLangsDictionary entityNyLangsDictionary = dictionaryService.modifyLangsDictionary(dictionaryVo);
+        result.setData(entityNyLangsDictionary);
+        return result;
+    }
+
 
     /**
      * 查询单个的语言
