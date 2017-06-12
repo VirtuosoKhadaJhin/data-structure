@@ -28,6 +28,13 @@ public class LangsDictionaryController {
     @Autowired
     private LangsCategoryService categoryService;
 
+    /**
+     * 多语言列表查询
+     *
+     * @param requestVo
+     * @param model
+     * @return
+     */
     @RequestMapping("list")
     public String list(LangsDictionaryRequestVo requestVo, Model model) {
         Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllDictionary(requestVo);
@@ -35,6 +42,37 @@ public class LangsDictionaryController {
         model.addAttribute("entity", requestVo);
         model.addAttribute("langsCountries", LangsCountry.values());
         return "langsDictionary/list";
+    }
+
+    /**
+     * 多语言列表查询
+     *
+     * @param requestVo
+     * @param model
+     * @return
+     */
+    @RequestMapping("list/local")
+    public String local(LangsDictionaryRequestVo requestVo, Model model) {
+        Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllLocalDictionary(requestVo);
+        model.addAttribute("page", allDictionary);
+        model.addAttribute("entity", requestVo);
+        model.addAttribute("langsCountries", LangsCountry.values());
+        return "langsDictionary/listLocal";
+    }
+
+    /**
+     * 新增单个语言记录
+     *
+     * @param vo
+     * @return
+     */
+    @RequestMapping(value = "saveMessage", method = RequestMethod.POST)
+    @ResponseBody
+    public APIResult saveMessage(@RequestBody LangsDictionaryRequestVo vo) {
+        APIResult<LangsDictionary> result = new APIResult<LangsDictionary>(ResultCodes.Success);
+        LangsDictionary langsDictionary = dictionaryService.saveMessage(vo);
+        result.setData(langsDictionary);
+        return result;
     }
 
     /**
@@ -46,9 +84,9 @@ public class LangsDictionaryController {
     @RequestMapping("/suggest")
     @ResponseBody
     public APIResult<LangsDictionary> suggestSearch(String key) {
-        APIResult result = new APIResult ( ResultCodes.Success );
-        List<LangsDictionary> searchResult = dictionaryService.findSuggestSearch ( key );
-        result.setData ( searchResult );
+        APIResult result = new APIResult(ResultCodes.Success);
+        List<LangsDictionary> searchResult = dictionaryService.findSuggestSearch(key);
+        result.setData(searchResult);
         return result;
     }
 

@@ -10,27 +10,28 @@
     <a class="btn btn-mini btn-info buttons" href="add">新增</a>
 </div>
 <style>
-    .tdInput{
+    .tdInput {
         width: 75%;
     }
-    .text-gray{
+
+    .text-gray {
         background-color: grey;
     }
 </style>
 <div style="overflow: auto;width: 100%">
     <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
-    <thead role="row">
-    <tr>
-        <th>分类</th>
-        <th>keyCode</th>
-        #foreach($langCountry in $!langsCountries)
-        <th>$!langCountry.desc ($!langCountry.value)</th>
-        #end
-        <th>操作</th>
-    </tr>
-    </thead>
-    <tbody>
-        <tr class="odd gradeX">
+        <thead role="row">
+        <tr>
+            <th>分类</th>
+            <th>keyCode</th>
+            #foreach($langCountry in $!langsCountries)
+                <th>$!langCountry.desc ($!langCountry.value)</th>
+            #end
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="odd gradeX" style="display: none">
             <td style="text-align: center;">1</td>
             <td style="text-align: center;">mch_mylon</td>
             <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
@@ -45,26 +46,34 @@
                 <a data-id="$!entity.id" class="btn btn-danger btn-mini remove-item">删除</a>
             </td>
         </tr>
-        #foreach($entity in $!page)
-        <tr class="odd gradeX">
-            <td>$!entity.categoryId</td>
-            <td>$!entity.keyCode</td>
-            #foreach($lang in $!entity.langsMessageList)
-
-                #if($!lang.message == "")
-                    <td><input class="tdInput" onchange="saveLang(this)" data-key="$!{entity.keyCode}" type="text" placeholder="请填写语言"/></td>
-                #else
-                    <td>$!lang.language</td>
+            #foreach($entity in $!page)
+            <tr class="odd gradeX">
+                <td style="width: 10%">$!entity.categoryId</td>
+                <td style="width: 10%">$!entity.keyCode</td>
+                #foreach($langCountry in $!langsCountries)
+                    <td class="lang-message" style="width: 10%">
+                        #set($hasNullMessage=true)
+                        #foreach($lang in $!entity.langsMessageList)
+                            #if($!lang.langsKey == $!langCountry.key)
+                                <label>$!lang.message</label>
+                                #set($hasNullMessage=false)
+                            #end
+                        #end
+                        #if($hasNullMessage)
+                            <input class='tdInput' onchange='saveLang(this)' type='text' placeholder='请填写语言'/>
+                        #end
+                    </td>
                 #end
+                <td>
+                    <div style="text-align: center">
+                        <a class="btn btn-primary btn-mini">编辑</a>
+                        <a data-id="$!entity.id" class="btn btn-danger btn-mini remove-item">删除</a>
+                    </div>
+                </td>
+            </tr>
             #end
-            <td>
-                <a class="btn btn-primary btn-mini">编辑</a>
-                <a data-id="$!entity.id" class="btn btn-danger btn-mini remove-item">删除</a>
-            </td>
-        </tr>
-        #end
-    </tbody>
-</table>
+        </tbody>
+    </table>
 </div>
 
 <!--***************************************修改语言*************************************************************-->
@@ -117,11 +126,21 @@
 #parse("common/list_end.vm")
 
 <script>
+    /*    $(function () {
+            var langMessages = $(".lang-message");
+
+            for (var i = 0; i < langMessages.length; i++) {
+                if ($(".lang-message").eq(i).text().trim() == ""
+                        || $(".lang-message").eq(i).text().trim() == null) {
+                    $(".lang-message").eq(i).html("<input class='tdInput' onchange='saveLang(this)' type='text' placeholder='请填写语言'/>");
+                }
+            }
+        });*/
     /**
      * 实时保存语言
      * @param obj
      */
-    function saveLang(obj){
+    function saveLang(obj) {
         console.log("输入的值" + $(obj).val());
         console.log("对应的keyCode" + $(obj).attr("data-key"));
         console.log("对应的enum的key" + $(obj).parent().index());
