@@ -3,6 +3,7 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.entity.Country;
+import com.nuanyou.cms.entity.user.ParamsDataMapping;
 import com.nuanyou.cms.model.LangsCategory;
 import com.nuanyou.cms.model.contract.enums.TemplateStatus;
 import com.nuanyou.cms.model.contract.output.ContractParameter;
@@ -89,7 +90,7 @@ public class ContractTemplateController {
         List<Country> countries = this.countryService.getIdNameList();
 
         //all 所有的数据映射
-        //List<ParamsDataMapping> dataMappings=this.dataMappingService.findAll();
+        List<ParamsDataMapping> dataMappings=this.dataMappingService.findAll();
 
 
         //add selectable langs
@@ -107,19 +108,20 @@ public class ContractTemplateController {
             }
             template = contractConfig.getData();
         }
-
-        List<ContractParameter> selectedParams = null;
+        //selectedIds
+        List<ContractParameter> selectedParams = new ArrayList<>();
+        List<Long> selectedIds=new ArrayList<>();
         if (optype == 2||optype==3||optype==4) {
             selectedParams = template.getParameters();
+            selectedIds=getSeletedIds(selectedParams);
         }
 
 
-        //selectedIds
-        List<Long> selectedIds=getSeletedIds(selectedParams);
+
 
         //setSelectableParams(selectedParams, params);
         model.addAttribute("entity", template);
-        //model.addAttribute("dataMappings", dataMappings);
+        model.addAttribute("dataTypeMappings", dataMappings);
         model.addAttribute("selectableParams", params);
         model.addAttribute("selectedParams", selectedParams);
         model.addAttribute("selectedIds", selectedIds);

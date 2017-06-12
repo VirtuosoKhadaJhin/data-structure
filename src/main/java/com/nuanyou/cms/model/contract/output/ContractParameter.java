@@ -40,6 +40,7 @@ public class ContractParameter implements Comparable<ContractParameter> {
 
     private String note;
 
+    private Long referenceId;
     @ApiModelProperty(value = "参数名称")
     @JsonProperty("name")
     public MLString getName() {
@@ -171,6 +172,17 @@ public class ContractParameter implements Comparable<ContractParameter> {
     @JsonProperty("custom")
     public boolean isCustom() {
         return custom;
+    }
+
+
+    @ApiModelProperty(value = "引用id")
+    @JsonProperty("referenceid")
+    public Long getReferenceId() {
+        return referenceId;
+    }
+
+    public void setReferenceId(Long referenceId) {
+        this.referenceId = referenceId;
     }
 
     public void setCustom(boolean custom) {

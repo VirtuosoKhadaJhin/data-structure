@@ -14,8 +14,8 @@ public class ParamsDataMapping {
     private Long id;
     private String name;
     private String regex;
-    private String dataType;
-    private String remark;
+    private Integer dataType;
+    private String note;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -46,19 +46,19 @@ public class ParamsDataMapping {
         this.regex = regex;
     }
 
-    public String getDataType() {
+    public Integer getDataType() {
         return dataType;
     }
 
-    public void setDataType(String dataType) {
+    public void setDataType(Integer dataType) {
         this.dataType = dataType;
     }
 
-    public String getRemark() {
-        return remark;
+    public String getNote() {
+        return note;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setNote(String note) {
+        this.note = note;
     }
 }

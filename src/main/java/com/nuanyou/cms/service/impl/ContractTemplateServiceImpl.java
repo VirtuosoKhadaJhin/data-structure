@@ -4,7 +4,10 @@ import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.CountryDao;
+import com.nuanyou.cms.dao.ParamsDataMappingDao;
 import com.nuanyou.cms.entity.Country;
+import com.nuanyou.cms.entity.user.ParamsDataMapping;
+import com.nuanyou.cms.model.LangsDictionaryVo;
 import com.nuanyou.cms.model.contract.enums.TemplateStatus;
 import com.nuanyou.cms.model.contract.output.ContractParameter;
 import com.nuanyou.cms.model.contract.output.ContractParameters;
@@ -13,6 +16,7 @@ import com.nuanyou.cms.model.contract.output.ContractTemplates;
 import com.nuanyou.cms.model.contract.request.*;
 import com.nuanyou.cms.remote.service.RemoteContractService;
 import com.nuanyou.cms.service.ContractTemplateService;
+import com.nuanyou.cms.service.LangsDictionaryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +36,10 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
     private RemoteContractService contractService;
     @Autowired
     private CountryDao countryDao;
+    @Autowired
+    private ParamsDataMappingDao dataMappingDao;
+    @Autowired
+    private LangsDictionaryService langsDictionaryService;
 
     @Override
     public Page<ContractTemplate> findContractTemplateList(Long countryId, Integer status, Integer type, Integer index, Integer limit) {
@@ -176,16 +184,33 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
             if (StringUtils.isBlank(request.getKey())) {
                 throw new APIException(ResultCodes.Fail, "Key不能为空");
             }
-
             if (!request.isEditable()&& StringUtils.isBlank(request.getDefaultValue())) {
                 throw new APIException(ResultCodes.Fail, "不可编辑的列必须要有默认值");
             }
+            if (!request.isEditable()&& StringUtils.isBlank(request.getDefaultValue())) {
+                throw new APIException(ResultCodes.Fail, "不可编辑的列必须要有默认值");
+            }
+            boolean keyCodeValidate = langsDictionaryService.verifykeyCode(new LangsDictionaryVo(request.getName()));
+            if(keyCodeValidate){
+                throw new APIException(ResultCodes.Fail, "参数名多语言的Key不正确");
+            }
+            boolean remarkValidate = langsDictionaryService.verifykeyCode(new LangsDictionaryVo(request.getRemark()));
+            if(remarkValidate){
+                throw new APIException(ResultCodes.Fail, "栏位校验多语言的Key不正确");
+            }
+            Long dataMappingId=request.getDateTypeMappingId();
+            if(dataMappingId!=null){
+                ParamsDataMapping paramsDataMapping=this.dataMappingDao.findOne(dataMappingId);
+                request.setRegex(paramsDataMapping.getRegex());
+                request.setType(paramsDataMapping.getDataType());
+            }
             set.add(request.getKey());
-
         }
         if(set.size()!=requests.size()){
             throw new APIException(ResultCodes.Fail, "key不可重复");
         }
+
+
     }
 
 
