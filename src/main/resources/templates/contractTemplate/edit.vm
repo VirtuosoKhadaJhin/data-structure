@@ -417,6 +417,7 @@
         }
 
         $(".btnSave").click(function () {
+            console.log(1);
             $(".inputRowExample").remove();
             $(".rowSpanExample").remove();
             var form = $(".templateFormValidate");
