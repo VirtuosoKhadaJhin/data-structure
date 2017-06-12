@@ -85,6 +85,17 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     }
 
     @Override
+    public void remove(LangsDictionaryRequestVo requestVo) {
+        EntityNyLangsDictionary entityNyLangsDictionary = new EntityNyLangsDictionary();
+        entityNyLangsDictionary.setKeyCode(requestVo.getKeyCode());
+
+        Example<EntityNyLangsDictionary> example = Example.of(entityNyLangsDictionary);
+        List<EntityNyLangsDictionary> entityResult = dictionaryDao.findAll(example);
+
+        dictionaryDao.delete(entityResult);
+    }
+
+    @Override
     public Page<LangsDictionaryVo> findAllDictionary(final LangsDictionaryRequestVo requestVo) {
 
         final String baseNameStr = requestVo.getBaseNameStr();

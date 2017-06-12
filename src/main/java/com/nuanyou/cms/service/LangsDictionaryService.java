@@ -19,6 +19,8 @@ public interface LangsDictionaryService {
 
     Page<LangsDictionaryVo> findAllDictionary(LangsDictionaryRequestVo requestVo);
 
+    Page<LangsDictionaryVo> findAllLocalDictionary(LangsDictionaryRequestVo requestVo);
+
     LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale);
 
     LangsDictionary addLangsDictionary(LangsDictionary entity);
@@ -34,10 +36,25 @@ public interface LangsDictionaryService {
     boolean saveLangsDictionary(LangsDictionaryVo dictionaryVo);
 
     /**
+     * 新增单个语言记录
+     *
+     * @param vo
+     * @return
+     */
+    LangsDictionary saveMessage(LangsDictionaryRequestVo vo);
+
+    /**
      * suggest搜索
      *
      * @param key
      * @return
      */
     List<LangsDictionary> findSuggestSearch(String key);
+
+    /**
+     * 删除多语言记录
+     *
+     * @param requestVo
+     */
+    void remove(LangsDictionaryRequestVo requestVo);
 }
