@@ -96,6 +96,48 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     }
 
     @Override
+    public EntityNyLangsDictionary modifyLangsDictionary(LangsDictionaryVo requestVo) {
+        EntityNyLangsDictionary entityNyLangsDictionary;
+        EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne(requestVo.getCategoryId());
+
+        // 迭代每一个语言的数据
+        for (LangsCountryMessageVo langsCountryMessageVo : requestVo.getLangsMessageList()) {
+            entityNyLangsDictionary = new EntityNyLangsDictionary();
+            // 设置查询的keyCode
+            entityNyLangsDictionary.setKeyCode(requestVo.getKeyCode());
+            // 设置查询的分类
+            entityNyLangsDictionary.setCategory(entityNyLangsCategory);
+            // ENUM
+            LangsCountry langsCountry = LangsCountry.toEnum(langsCountryMessageVo.getLangsKey());
+            String[] langsCountrys = langsCountry.getValue().split("-");
+            // 设置查询的语言和城市
+            entityNyLangsDictionary.setLanguage(langsCountrys[0]);
+            entityNyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
+            // 条件查询是否已经存在
+            Example<EntityNyLangsDictionary> example = Example.of(entityNyLangsDictionary);
+            List<EntityNyLangsDictionary> entityResult = dictionaryDao.findAll(example);
+
+            if (entityResult.size() == 0) {
+                entityNyLangsDictionary = new EntityNyLangsDictionary();
+
+                entityNyLangsDictionary.setLanguage(langsCountrys[0]);
+                entityNyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
+                entityNyLangsDictionary.setKeyCode(requestVo.getKeyCode());
+
+                entityNyLangsDictionary.setCategory(entityNyLangsCategory);
+                entityNyLangsDictionary.setMessage(langsCountryMessageVo.getMessage());
+                dictionaryDao.save(entityNyLangsDictionary);
+                return entityNyLangsDictionary;
+            }else{
+                // 修改
+
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     public Page<LangsDictionaryVo> findAllDictionary(final LangsDictionaryRequestVo requestVo) {
 
         final String baseNameStr = requestVo.getBaseNameStr();
@@ -377,7 +419,11 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         messageVo = new LangsCountryMessageVo();
         messageVo.setMessage(langsDictionary.getMessage());
         String langsCountry = langsDictionary.getLangsCountry();
-        messageVo.setLangsKey(LangsCountry.toEnum(langsCountry).getKey());
+        if (langsDictionary.getCountry().equals(langsDictionary.getLanguage())) {
+            messageVo.setLangsKey(LangsCountry.toEnum(langsDictionary.getCountry()).getKey());
+        } else {
+            messageVo.setLangsKey(LangsCountry.toEnum(langsCountry).getKey());
+        }
         return messageVo;
     }
 
