@@ -98,39 +98,35 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     @Override
     public EntityNyLangsDictionary modifyLangsDictionary(LangsDictionaryVo requestVo) {
         EntityNyLangsDictionary entityNyLangsDictionary;
+
+        entityNyLangsDictionary = new EntityNyLangsDictionary();
+        entityNyLangsDictionary.setKeyCode(requestVo.getKeyCode());
+
+        Example<EntityNyLangsDictionary> example = Example.of(entityNyLangsDictionary);
+        List<EntityNyLangsDictionary> entityResult = dictionaryDao.findAll(example);
+
+        dictionaryDao.delete(entityResult);
+
         EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne(requestVo.getCategoryId());
 
         // 迭代每一个语言的数据
         for (LangsCountryMessageVo langsCountryMessageVo : requestVo.getLangsMessageList()) {
-            entityNyLangsDictionary = new EntityNyLangsDictionary();
-            // 设置查询的keyCode
-            entityNyLangsDictionary.setKeyCode(requestVo.getKeyCode());
-            // 设置查询的分类
-            entityNyLangsDictionary.setCategory(entityNyLangsCategory);
-            // ENUM
-            LangsCountry langsCountry = LangsCountry.toEnum(langsCountryMessageVo.getLangsKey());
-            String[] langsCountrys = langsCountry.getValue().split("-");
-            // 设置查询的语言和城市
-            entityNyLangsDictionary.setLanguage(langsCountrys[0]);
-            entityNyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
-            // 条件查询是否已经存在
-            Example<EntityNyLangsDictionary> example = Example.of(entityNyLangsDictionary);
-            List<EntityNyLangsDictionary> entityResult = dictionaryDao.findAll(example);
-
-            if (entityResult.size() == 0) {
+            if (StringUtils.isNotEmpty(langsCountryMessageVo.getMessage())) {
                 entityNyLangsDictionary = new EntityNyLangsDictionary();
 
+                // ENUM
+                LangsCountry langsCountry = LangsCountry.toEnum(langsCountryMessageVo.getLangsKey());
+                String[] langsCountrys = langsCountry.getValue().split("-");
+
+                entityNyLangsDictionary = new EntityNyLangsDictionary();
+
+                entityNyLangsDictionary.setKeyCode(requestVo.getKeyCode());
+                entityNyLangsDictionary.setCategory(entityNyLangsCategory);
                 entityNyLangsDictionary.setLanguage(langsCountrys[0]);
                 entityNyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
                 entityNyLangsDictionary.setKeyCode(requestVo.getKeyCode());
-
-                entityNyLangsDictionary.setCategory(entityNyLangsCategory);
                 entityNyLangsDictionary.setMessage(langsCountryMessageVo.getMessage());
                 dictionaryDao.save(entityNyLangsDictionary);
-                return entityNyLangsDictionary;
-            }else{
-                // 修改
-
             }
         }
 
