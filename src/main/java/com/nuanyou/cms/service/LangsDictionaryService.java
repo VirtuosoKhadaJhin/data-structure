@@ -57,4 +57,11 @@ public interface LangsDictionaryService {
      * @param requestVo
      */
     void remove(LangsDictionaryRequestVo requestVo);
+
+    /**
+     * 修改单个语言
+     *
+     * @param dictionaryVo
+     */
+    void modifyLangsDictionary(LangsDictionaryVo dictionaryVo);
 }

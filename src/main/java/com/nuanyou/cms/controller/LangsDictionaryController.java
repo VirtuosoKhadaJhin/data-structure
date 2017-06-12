@@ -2,6 +2,7 @@ package com.nuanyou.cms.controller;
 
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
+import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.model.LangsCategory;
 import com.nuanyou.cms.model.LangsDictionary;
 import com.nuanyou.cms.model.LangsDictionaryRequestVo;
@@ -27,6 +28,8 @@ public class LangsDictionaryController {
     private LangsDictionaryService dictionaryService;
     @Autowired
     private LangsCategoryService categoryService;
+
+    private static final Integer LOCAL_KEY = 5;
 
     /**
      * 多语言列表查询
@@ -65,13 +68,13 @@ public class LangsDictionaryController {
      * @param model
      * @return
      */
-    @RequestMapping("list/local")
+    @RequestMapping("localList")
     public String local(LangsDictionaryRequestVo requestVo, Model model) {
         Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllLocalDictionary(requestVo);
         model.addAttribute("page", allDictionary);
         model.addAttribute("entity", requestVo);
-        model.addAttribute("langsCountries", LangsCountry.values());
-        return "langsDictionary/listLocal";
+        model.addAttribute ( "langsCountries", LangsCountry.localValues (LOCAL_KEY) );
+        return "langsDictionary/local_list";
     }
 
     /**
@@ -117,22 +120,15 @@ public class LangsDictionaryController {
         return "langsDictionary/add";
     }
 
-    @RequestMapping(path = "edit", method = RequestMethod.GET)
-    public String edit(Long id, Model model, Integer type) {
-        LangsCountry[] values = LangsCountry.values();
+    @RequestMapping("localAdd")
+    public String localAdd(Model model) {
         LangsCategory example = new LangsCategory();
         example.setIndex(1);
         example.setSize(100000);
         Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
-        LangsDictionaryVo vo = null;
-        if (id != null) {
-            vo = dictionaryService.findLangsDictionary(id);
-        }
-        model.addAttribute("entity", vo);
-        model.addAttribute("langsCountries", values);
+        model.addAttribute("langsCountries", LangsCountry.localValues (LOCAL_KEY));
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
-        model.addAttribute("type", type);
-        return "langsDictionary/edit";
+        return "langsDictionary/local_add";
     }
 
     @RequestMapping("update")
@@ -177,6 +173,36 @@ public class LangsDictionaryController {
         result.setData(keyCode);
         return result;
     }
+
+    /**
+     * 查询单个的语言
+     *
+     * @param dictionaryVo
+     * @return
+     */
+    @RequestMapping(value = "viewLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public APIResult viewLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
+        APIResult<LangsDictionaryVo> result = new APIResult<LangsDictionaryVo>(ResultCodes.Success);
+        LangsDictionaryVo langsDictionary = dictionaryService.findLangsDictionary(dictionaryVo.getKeyCode(), null);
+        result.setData(langsDictionary);
+        return result;
+    }
+
+    /**
+     * 修改单个的语言
+     *
+     * @param dictionaryVo
+     * @return
+     */
+    @RequestMapping(value = "modifyLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public APIResult modifyLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
+        APIResult<EntityNyLangsDictionary> result = new APIResult<EntityNyLangsDictionary>(ResultCodes.Success);
+        dictionaryService.modifyLangsDictionary ( dictionaryVo );
+        return result;
+    }
+
 
     /**
      * 查询单个的语言
