@@ -1,5 +1,6 @@
 package com.nuanyou.cms.service;
 
+import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.model.LangsDictionary;
 import com.nuanyou.cms.model.LangsDictionaryRequestVo;
 import com.nuanyou.cms.model.LangsDictionaryVo;
@@ -57,4 +58,12 @@ public interface LangsDictionaryService {
      * @param requestVo
      */
     void remove(LangsDictionaryRequestVo requestVo);
+
+    /**
+     * 修改单个语言
+     *
+     * @param dictionaryVo
+     * @return
+     */
+    EntityNyLangsDictionary modifyLangsDictionary(LangsDictionaryVo dictionaryVo);
 }
