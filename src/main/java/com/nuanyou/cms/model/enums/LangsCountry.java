@@ -1,5 +1,9 @@
 package com.nuanyou.cms.model.enums;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
+
 /**
  * Created by Byron on 2017/6/6.
  */
@@ -48,11 +52,21 @@ public enum LangsCountry {
         throw new IllegalArgumentException ( "Cannot create evalue from key: " + key + "!" );
     }
 
-    public static Boolean verifyIsLocalLanguage(String langsDictionary) {
+    public static Boolean verifyIsLocalLanguage(String langsDictionary, Integer key) {
         return langsDictionary.equals ( LangsCountry.ZH_CN.getValue () )
                 || langsDictionary.equals ( LangsCountry.EN_UK.getValue () )
                 || langsDictionary.equals ( LangsCountry.En_GB.getValue () )
-                || langsDictionary.equals ( LangsCountry.DE_DE.getValue () );
+                || langsDictionary.equals ( LangsCountry.toEnum ( key ).getValue () );
+    }
+
+    public static List<LangsCountry> localValues(Integer key) {//
+        List<LangsCountry> langsCountries = Lists.newArrayList ();
+        for (LangsCountry langsCountry : LangsCountry.values ()) {
+            if (key == langsCountry.getKey () || langsCountry.getKey () == 1 || langsCountry.getKey () == 2 || langsCountry.getKey () == 7) {
+                langsCountries.add ( langsCountry );
+            }
+        }
+        return langsCountries;
     }
 
     public Integer getKey() {

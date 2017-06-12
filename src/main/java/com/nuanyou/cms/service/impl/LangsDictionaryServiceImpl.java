@@ -13,6 +13,7 @@ import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,8 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
     @Autowired
     private EntityNyLangsCategoryDao categoryDao;
+
+    private static final Integer LOCAL_KEY = 7;
 
     public LangsDictionaryServiceImpl() {
     }
@@ -363,25 +366,22 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         return dictionary;
     }
 
-    private LinkedHashMap<String, LangsDictionaryVo> getStringLangsDictionaryVos(List<EntityNyLangsDictionary> allDictionaries, boolean isLocalLangs) {
+    private LinkedHashMap<String, LangsDictionaryVo> getStringLangsDictionaryVos(List<EntityNyLangsDictionary> allDictionaries, Boolean isLocalLangs) {
         LinkedHashMap<String, LangsDictionaryVo> langsDictionaryMap = new LinkedHashMap<String, LangsDictionaryVo>();
         List<LangsCountryMessageVo> langsMessageList = Lists.newArrayList();
         LangsCountryMessageVo messageVo = null;
         Set<String> keyCodes = new HashSet<String>();
         LangsDictionaryVo dictionaryVo = null;
-        if (isLocalLangs) {
+        if (BooleanUtils.isTrue ( isLocalLangs )) {
             for (EntityNyLangsDictionary langsDictionary : allDictionaries) {
-                if (langsDictionary.getLangsCountry().equals(LangsCountry.ZH_CN.getValue())
-                        || langsDictionary.getLangsCountry().equals(LangsCountry.EN_UK.getValue())
-                        || langsDictionary.getLangsCountry().equals(LangsCountry.En_GB.getValue())
-                        || langsDictionary.getLangsCountry().equals(LangsCountry.DE_DE.getValue())) {
+                if (LangsCountry.verifyIsLocalLanguage ( langsDictionary.getCountry (), LOCAL_KEY )) {
                     this.setLangsDictionaryVoValue(langsDictionaryMap, langsMessageList, keyCodes, langsDictionary);
                 }
             }
-        } else {
-            for (EntityNyLangsDictionary langsDictionary : allDictionaries) {
-                this.setLangsDictionaryVoValue(langsDictionaryMap, langsMessageList, keyCodes, langsDictionary);
-            }
+            return langsDictionaryMap;
+        }
+        for (EntityNyLangsDictionary langsDictionary : allDictionaries) {
+            this.setLangsDictionaryVoValue ( langsDictionaryMap, langsMessageList, keyCodes, langsDictionary );
         }
         return langsDictionaryMap;
     }

@@ -29,6 +29,8 @@ public class LangsDictionaryController {
     @Autowired
     private LangsCategoryService categoryService;
 
+    private static final Integer LOCAL_KEY = 7;
+
     /**
      * 多语言列表查询
      *
@@ -66,12 +68,12 @@ public class LangsDictionaryController {
      * @param model
      * @return
      */
-    @RequestMapping("list/local")
+    @RequestMapping("localList")
     public String local(LangsDictionaryRequestVo requestVo, Model model) {
         Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllLocalDictionary(requestVo);
         model.addAttribute("page", allDictionary);
         model.addAttribute("entity", requestVo);
-        model.addAttribute("langsCountries", LangsCountry.values());
+        model.addAttribute ( "langsCountries", LangsCountry.localValues (LOCAL_KEY) );
         return "langsDictionary/listLocal";
     }
 
