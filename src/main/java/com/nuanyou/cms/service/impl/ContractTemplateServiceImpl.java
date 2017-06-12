@@ -6,6 +6,8 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.contract.enums.TemplateStatus;
+import com.nuanyou.cms.model.contract.output.ContractParameter;
+import com.nuanyou.cms.model.contract.output.ContractParameters;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
 import com.nuanyou.cms.model.contract.output.ContractTemplates;
 import com.nuanyou.cms.model.contract.request.*;
@@ -141,6 +143,17 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
             newVersionId = res.getData().getId();
         }
         return new APIResult(newVersionId);
+    }
+
+    @Override
+    public List<ContractParameter> getAllParams() {
+        APIResult<ContractParameters> allTemplateParameters = this.contractService.findAllTemplateParameters(1, 100000);
+        if (allTemplateParameters.getCode() != 0) {
+            throw new APIException(allTemplateParameters.getCode(), allTemplateParameters.getMsg());
+        }
+        ContractParameters data = allTemplateParameters.getData();
+        List<ContractParameter> params = data.getList();
+        return params;
     }
 
     private void validateBasic(Integer templateType, String title, Long countryId) {

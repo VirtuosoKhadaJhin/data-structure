@@ -7,7 +7,10 @@
     #include("common/css-support.vm")
 
 
-    <link rel="stylesheet" href="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.css">
+
+
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
 </head>
 <body>
@@ -25,7 +28,7 @@
                 <div class="widget-box">
                     <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                         <h5>编辑&查看</h5>
-                        <input id="optype" name="type" type="hidden" value="$!optype">
+                        <input id="optype" name="type" type="hidden" value="$!type">
                     </div>
                     <div class="widget-content nopadding">
                         <form action="update" method="post" a
@@ -54,7 +57,7 @@
                                         <option value="2"  #if($!entity.type==2)selected #end>附加合同</option>
                                     </select>
                                 </div>
-                                <label class="control-label">自定义参数 </label>
+                                <label class="control-label">自定义参数</label>
                                 <div class="controls">
                                     <div style="overflow: auto;width: 100%">
 
@@ -129,9 +132,7 @@
                                                            readonly>
                                                 </td>
                                                 <td>
-                                                    <input name="name" style="width: 150px"
-                                                           class="langsAutoComplete"
-                                                           id="langsAutoComplete1"><br>
+                                                    <input name="name" style="width: 150px" class="langsAutoComplete" id="langsAutoComplete"><br>
                                                     <a class="btn btn-info btn-mini selectLang"
                                                        inputLangsName="name">选择</a>
                                                     <a class="btn btn-info btn-mini addLang"
@@ -159,7 +160,7 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <input name="remark" class="langsAutoComplete" style="width: 150px"><br>
+                                                    <input name="remark" style="width: 150px"><br>
 
                                                     <a class="btn btn-info btn-mini selectLang" inputLangsName="remark">选择</a>
                                                     <a class="btn btn-info btn-mini addLang"
@@ -205,7 +206,7 @@
                                     </div>
                                 </div>
                                 <div class="form-actions">
-                                    #if($!optype==2 || $!optype==1|| $!optype==4)
+                                    #if($!optype==2 || $!optype==1)
                                         <button type="button" class="btn btnSave btn-success">保存
                                         </button>
                                     #elseif($!optype==3)
@@ -297,8 +298,7 @@
             <div class="controls">
                 <input for="name" id="keyCode" name="keyCode" type="text" class="span5"
                        value="$!entity.keyCode" onchange="verifykeyCode()">
-                <label id="keyCodeStatus" class="control-label"
-                       style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
+                <label id="keyCodeStatus" class="control-label" style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
             </div>
         </div>
 
@@ -337,12 +337,12 @@
 <script src="/dist/js/cascade-select.js"></script>
 
 ##<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.js"></script>
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script type="text/javascript">
     /**
      * 验证keyCode是否重复
      */
-    function verifykeyCode() {
+    function verifykeyCode(){
         var request = {};
         var keyCode = $("input[name='keyCode']").val();
 
@@ -356,15 +356,15 @@
             success: function (result) {
                 if (result.code == 0) {
                     console.log(result.data);
-                    if (!result.data) {
+                    if(!result.data){
                         $("#keyCodeStatus").show();
                         $("#addLangSave").attr("onclick", "");
-                        $("#keyCode").css("border", "1px solid red");
+                        $("#keyCode").css("border","1px solid red");
                         $("#addLangSave").attr("style", "background-color: gray;");
-                    } else {
+                    }else{
                         $("#keyCodeStatus").hide();
                         $("#addLangSave").attr("style", "");
-                        $("#keyCode").css("border", "");
+                        $("#keyCode").css("border","");
                         $("#addLangSave").attr("onclick", "saveLangsDictionary()");
                     }
                 }
@@ -402,8 +402,6 @@
     $(document).ready(function () {
 
         var type = $!optype;
-        var selectedIds=$!selectedIds;
-        //var selectableParams=$!selectableParams;
         var currLangInput;
         var inputRowExample = $(".inputRowExample").html();
         var spanRowExample = $(".rowSpanExample").html();
@@ -423,7 +421,6 @@
             var request = {};
             var list = [];
             var paramIds = [];
-            var optype=$("#optype").val();
             $(".editRow").each(function (i, o) {
                 var templateParameterRequest = {};
                 templateParameterRequest.name = $(o).find("input[name='name']").val();
@@ -438,6 +435,9 @@
             $("input[name='paramId']").each(function (i, o) {
                 paramIds.push($(o).val());
             });
+            $("select[name='selectedParamIds']").each(function (i, o) {
+                request.selectedParamIds = $(o).val();
+            });
             request.title = $("input[name='title']").val();
             request.countryId = $("select[name='countryId']").val();
             request.templateType = $("select[name='templateType']").val();
@@ -445,17 +445,6 @@
             request.id = $("input[name='id']").val();
             request.paramIds = paramIds;
             request.list = list;
-            request.optype= $("#optype").val();
-            if(optype==4){
-                request.id=null;
-                console.log(JSON.stringify(paramIds) );
-                console.log(JSON.stringify(selectedIds) );
-                paramIds.sort();
-                selectedIds.sort();
-                if(paramIds.join() == selectedIds.join() && list.length<=0){ //JSON.stringify(a1) == JSON.stringify(a2)
-                    return alert("复制操作下的参数列表没有改动！");
-                }
-            }
             $.ajax({
                 url: 'saveTemplate',
                 data: JSON.stringify(request),
@@ -486,58 +475,6 @@
         });
 
         $("#mytable").delegate(".selectParameter", "click", function (e) {
-            //
-            var paramsAll=$("select[name='selectedParamId']");
-            //ajax加载参数 $("select[name='selectedParamId']").val();
-            //$("#selectID").append("<option value='7'>7</option>");
-            var paramIds=[];
-            $("input[name='paramId']").each(function (i, o) {
-                paramIds.push($(o).val());
-            });
-            paramsAll.empty();
-            $.ajax({
-                url: 'getAllParams',
-                data: {},
-                type: 'get',
-                dataType: 'json',
-                async: true,
-                contentType: 'application/json',
-                success: function (result) {
-                    if (result.code == 0) {
-                        var params=result.data.list;
-                        for (var i = 0; i < params.length; i++) {
-                            var isSame=false;
-                            for (var j = 0; j < paramIds.length; j++) {
-                                if(params[i].id==paramIds[j]){
-                                    isSame=true;
-                                    break;
-                                }
-                            }
-                            if(!isSame){
-                                var text=key:"+params[i].key + "备注:"+params[i].note;
-                                var id=params[i].id;
-                                console.log(id);
-                                console.log(text);
-                                paramsAll.append("<option value='"+id+"'>"+text+"</option>");
-                            }
-                        }
-                    } else {
-                        alert(result.msg);
-                    }
-
-                }
-            });
-
-
-
-
-
-
-
-
-
-
-
             $('#parameterModal').modal('show');
 
         });
@@ -611,54 +548,44 @@
             $('#selectLangsModal').modal('show');
         });
 
-        var availableTags = new Array();
-        var j = 2;
-        $("#mytable").delegate(".langsAutoComplete", "keyup", function (e) {
-            var keyWord = $(this).val();
-            if (keyWord == "") {
-                return;
-            }
-            var obj = $(this);
-            var availableTags1 = new Array();
-            $.ajax({
-                url: '/langsDictionary/suggest',
-                data: {key: keyWord},
-                type: 'post',
-                dataType: 'json',
-                async: true,
-                contentType: 'application/json',
-                success: function (result) {
-                    if (result.code == 0) {
-                        var listComplete=[];
-                        var list = result.data;
-                        for (var i = 0; i < list.length; i++) {
-                            var o=list[i];
-                            var complate={};
-                            complate.label=o.message;
-                            complate.value=o.keyCode;
-                            complate.message=o.message;
-                            listComplete.push(complate);
-                        }
-                        var currEle = e.currentTarget;
-                        $(currEle).autocomplete({
-                            minLength: 0,
-                            source: listComplete,
-                            focus: function( event, ui ) {
-                                $( this ).val(ui.item.label );
-                                return false;
-                            },
-                            select: function( event, ui ) {
-                                $( this ).val( ui.item.value);
-                                return false;
-                            }
-                        })
-                    } else {
-                        //alert(result.msg);
-                    }
-                }
-            });
 
+        var availableTags1 = [
+            "ActionScript",
+            "AppleScript",
+            "Asp",
+            "BASIC",
+            "C",
+            "C++",
+            "Clojure",
+            "COBOL",
+            "ColdFusion",
+            "Erlang",
+            "Fortran",
+            "Groovy",
+            "Haskell",
+            "Java",
+            "JavaScript",
+            "Lisp",
+            "Perl",
+            "PHP",
+            "Python",
+            "Ruby",
+            "Scala",
+            "Scheme"
+        ];
+        var availableTags=new Array();
+        var j=2;
+        $("#mytable").delegate(".langsAutoComplete", "focus", function (e) {
+            j++;
+            for(var i=0;i<j;i++){
+                availableTags[i]=i+"aaa";
+            }
+            // $(this).keydown();
+            $(this).autocomplete({
+                source: availableTags
+            });
         });
+
 
 
 
@@ -721,11 +648,11 @@
             var langsMessageList = [];
             var keyCodes = document.getElementsByName("keyCodes");
 
-            for (var i = 0, j = keyCodes.length; i < j; i++) {
+            for (var i = 0, j = keyCodes.length; i < j; i++){
                 var keyCodeInput = keyCodes[i];
                 var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
                 var message = keyCodeInput.value;
-                var langsCountryMessageVo = {langsKey: langsKey, message: message};
+                var langsCountryMessageVo = { langsKey : langsKey, message : message};
                 langsMessageList.push(langsCountryMessageVo);
             }
 

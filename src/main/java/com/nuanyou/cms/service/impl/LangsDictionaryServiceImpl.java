@@ -58,22 +58,46 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         return null;
     }
 
+    /**
+     * 模板参数搜索message（suggest）
+     *
+     * @param message
+     * @return
+     */
+    @Override
+    public List<LangsDictionary> findSuggestSearch(final String message) {
+        List<EntityNyLangsDictionary> dictionaries = dictionaryDao.findAll ( new Specification () {
+
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate> ();
+                if (StringUtils.isNotEmpty ( message )) {
+                    predicate.add ( cb.like ( root.get ( "message" ).as ( String.class ), "%" + message + "%" ) );
+                }
+
+                Predicate[] arrays = new Predicate[predicate.size ()];
+                return query.where ( predicate.toArray ( arrays ) ).getRestriction ();
+            }
+        } );
+
+        List<LangsDictionary> dictionaryList = this.convertToMultipleLangsCategories ( dictionaries );
+        return dictionaryList;
+    }
+
     @Override
     public Page<LangsDictionaryVo> findAllDictionary(final LangsDictionaryRequestVo requestVo) {
 
         final String baseNameStr = requestVo.getBaseNameStr();
 
-
         List<EntityNyLangsCategory> langsCategories = Lists.newArrayList();
 
         if (StringUtils.isNotEmpty(baseNameStr)) {
-            langsCategories = categoryDao.findAll(new Specification() {
+            langsCategories = categoryDao.findAll ( new Specification () {
 
                 @Override
                 public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                     List<Predicate> predicate = new ArrayList<Predicate>();
-                    Predicate p1 = cb.like(root.get("name"), "%" + baseNameStr + "%");
-                    predicate.add(p1);
+                    predicate.add ( cb.like ( root.get ( "name" ), "%" + baseNameStr + "%" ) );
                     Predicate[] arrays = new Predicate[predicate.size()];
                     return query.where(predicate.toArray(arrays)).getRestriction();
                 }
@@ -87,22 +111,19 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         }
 
         // 查询所有数据
-        List<EntityNyLangsDictionary> dictionaries = dictionaryDao.findAll(new Specification() {
+        List<EntityNyLangsDictionary> dictionaries = dictionaryDao.findAll ( new Specification () {
 
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 if (CollectionUtils.isNotEmpty(categoryIds)) {
-                    Predicate p = root.get("basename").in(categoryIds);
-                    predicate.add(p);
+                    predicate.add ( root.get ( "basename" ).in ( categoryIds ) );
                 }
                 if (StringUtils.isNotEmpty(requestVo.getKeyCode())) {
-                    Predicate p1 = cb.equal(root.get("keyCode"), requestVo.getKeyCode());
-                    predicate.add(p1);
+                    predicate.add ( cb.equal ( root.get ( "keyCode" ), requestVo.getKeyCode () ) );
                 }
                 if (StringUtils.isNotEmpty(requestVo.getMessage())) {
-                    Predicate p2 = cb.equal(root.get("message"), requestVo.getMessage());
-                    predicate.add(p2);
+                    predicate.add ( cb.like ( root.get ( "name" ), "%" + baseNameStr + "%" ) );
                 }
                 Predicate[] arrays = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(arrays)).getRestriction();
