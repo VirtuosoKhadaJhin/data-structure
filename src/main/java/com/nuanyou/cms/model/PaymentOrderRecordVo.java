@@ -25,7 +25,7 @@ public class PaymentOrderRecordVo {
     private Long userId;
 
     //支付宝和微信流水号
-    private String transactionid;
+    private String transactionId;
 
     //暖游对外订单号
     private String outTradeNo;
@@ -108,12 +108,12 @@ public class PaymentOrderRecordVo {
         this.userId = userId;
     }
 
-    public String getTransactionid() {
-        return transactionid;
+    public String getTransactionId() {
+        return transactionId;
     }
 
-    public void setTransactionid(String transactionid) {
-        this.transactionid = transactionid;
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 
     public String getOutTradeNo() {

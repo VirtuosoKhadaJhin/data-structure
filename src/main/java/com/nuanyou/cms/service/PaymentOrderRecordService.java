@@ -9,6 +9,12 @@ import org.springframework.data.domain.Page;
  */
 public interface PaymentOrderRecordService {
 
+    /**
+     * 搜索订单支付记录列表
+     *
+     * @param paramVo
+     * @return
+     */
     Page<PaymentOrderRecordVo> findAllPaymentOrderRecord(PaymentRecordRequestVo paramVo);
 
 }
