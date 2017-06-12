@@ -45,6 +45,20 @@ public class LangsDictionaryController {
     }
 
     /**
+     * 删除语言
+     *
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping("/remove")
+    @ResponseBody
+    public APIResult<LangsDictionary> remove(@RequestBody LangsDictionaryRequestVo requestVo) {
+        APIResult result = new APIResult(ResultCodes.Success);
+        dictionaryService.remove(requestVo);
+        return result;
+    }
+
+    /**
      * 多语言列表查询
      *
      * @param requestVo
@@ -142,7 +156,11 @@ public class LangsDictionaryController {
     @RequestMapping(value = "verifykeyCode", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public APIResult verifykeyCode(@RequestBody LangsDictionaryVo dictionaryVo) {
-        return new APIResult(dictionaryService.verifykeyCode(dictionaryVo));
+        APIResult result = new APIResult(ResultCodes.Success);
+        boolean verifykeyCodeResult = dictionaryService.verifykeyCode(dictionaryVo);
+        result.setData(verifykeyCodeResult);
+
+        return result;
     }
 
     /**
@@ -154,7 +172,10 @@ public class LangsDictionaryController {
     @RequestMapping(value = "saveLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public APIResult saveLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
-        return new APIResult(dictionaryService.saveLangsDictionary(dictionaryVo));
+        APIResult result = new APIResult(ResultCodes.Success);
+        String keyCode = dictionaryService.saveLangsDictionary(dictionaryVo);
+        result.setData(keyCode);
+        return result;
     }
 
     /**

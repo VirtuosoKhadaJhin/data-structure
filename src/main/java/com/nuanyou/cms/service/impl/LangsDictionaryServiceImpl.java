@@ -272,20 +272,20 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     }
 
     @Override
-    public boolean saveLangsDictionary(LangsDictionaryVo dictionaryVo) {
+    public String saveLangsDictionary(LangsDictionaryVo dictionaryVo) {
         // each message of langs
         EntityNyLangsDictionary entityNyLangsDictionary = null;
         if (CollectionUtils.isEmpty(dictionaryVo.getLangsMessageList())) {
-            return false;
+            return null;
         }
         for (LangsCountryMessageVo langsCountryMessageVo : dictionaryVo.getLangsMessageList()) {
             String message = langsCountryMessageVo.getMessage();
             if (StringUtils.isEmpty(message)) {
-                return false;
+                return null;
             }
             EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne(dictionaryVo.getCategoryId());
             if (entityNyLangsCategory == null) {
-                return false;
+                return null;
             }
             // enum index
             Integer langsKey = langsCountryMessageVo.getLangsKey();
@@ -296,14 +296,14 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
             String[] langsCountrys = langsCountry.getValue().split("-");
 
             entityNyLangsDictionary.setLanguage(langsCountrys[0]);
-            entityNyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : null);
+            entityNyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
             entityNyLangsDictionary.setKeyCode(dictionaryVo.getKeyCode());
 
             entityNyLangsDictionary.setCategory(entityNyLangsCategory);
             entityNyLangsDictionary.setMessage(message);
             this.dictionaryDao.save(entityNyLangsDictionary);
         }
-        return true;
+        return dictionaryVo.getKeyCode();
     }
 
     @Override
@@ -318,7 +318,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         String[] splitValues = LangsCountry.toEnum(vo.getLangsKey()).getValue().split("-");
 
         entity.setLanguage(splitValues[0]);
-        entity.setCountry(splitValues.length > 1 ? splitValues[1] : null);
+        entity.setCountry(splitValues.length > 1 ? splitValues[1] : splitValues[0]);
         entity.setKeyCode(vo.getKeyCode());
         entity.setMessage(vo.getMessage());
         entity.setCategory(entityResult.get(0).getCategory());

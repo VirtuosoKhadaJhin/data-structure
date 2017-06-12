@@ -33,7 +33,7 @@ public interface LangsDictionaryService {
 
     boolean verifykeyCode(LangsDictionaryVo dictionaryVo);
 
-    boolean saveLangsDictionary(LangsDictionaryVo dictionaryVo);
+    String saveLangsDictionary(LangsDictionaryVo dictionaryVo);
 
     /**
      * 新增单个语言记录
