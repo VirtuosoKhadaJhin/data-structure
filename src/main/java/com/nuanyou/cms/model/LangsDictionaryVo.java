@@ -34,6 +34,10 @@ public class LangsDictionaryVo implements Serializable {
         this.categoryId = categoryId;
     }
 
+    public LangsDictionaryVo(String keyCode) {
+        this.keyCode = keyCode;
+    }
+
     public LangsDictionaryVo(String keyCode, Long categoryId, List<LangsCountryMessageVo> langsMessageList) {
         this.keyCode = keyCode;
         this.categoryId = categoryId;
