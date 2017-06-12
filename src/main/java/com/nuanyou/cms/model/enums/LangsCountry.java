@@ -48,6 +48,13 @@ public enum LangsCountry {
         throw new IllegalArgumentException ( "Cannot create evalue from key: " + key + "!" );
     }
 
+    public static Boolean verifyIsLocalLanguage(String langsDictionary) {
+        return langsDictionary.equals ( LangsCountry.ZH_CN.getValue () )
+                || langsDictionary.equals ( LangsCountry.EN_UK.getValue () )
+                || langsDictionary.equals ( LangsCountry.En_GB.getValue () )
+                || langsDictionary.equals ( LangsCountry.DE_DE.getValue () );
+    }
+
     public Integer getKey() {
         return key;
     }

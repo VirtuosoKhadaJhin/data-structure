@@ -204,8 +204,7 @@ public class LangsDictionaryController {
     @ResponseBody
     public APIResult modifyLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
         APIResult<EntityNyLangsDictionary> result = new APIResult<EntityNyLangsDictionary>(ResultCodes.Success);
-        EntityNyLangsDictionary entityNyLangsDictionary = dictionaryService.modifyLangsDictionary(dictionaryVo);
-        result.setData(entityNyLangsDictionary);
+        dictionaryService.modifyLangsDictionary ( dictionaryVo );
         return result;
     }
 

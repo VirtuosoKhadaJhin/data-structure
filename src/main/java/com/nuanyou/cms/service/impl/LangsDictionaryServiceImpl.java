@@ -96,7 +96,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     }
 
     @Override
-    public EntityNyLangsDictionary modifyLangsDictionary(LangsDictionaryVo requestVo) {
+    public void modifyLangsDictionary(LangsDictionaryVo requestVo) {
         EntityNyLangsDictionary entityNyLangsDictionary;
 
         entityNyLangsDictionary = new EntityNyLangsDictionary();
@@ -129,8 +129,6 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                 dictionaryDao.save(entityNyLangsDictionary);
             }
         }
-
-        return null;
     }
 
     @Override
