@@ -24,6 +24,11 @@ public class LangsDictionaryRequestVo implements Serializable {
     public LangsDictionaryRequestVo() {
     }
 
+    public LangsDictionaryRequestVo(Integer index, Integer pageNum) {
+        this.index = index;
+        this.pageNum = pageNum;
+    }
+
     public LangsDictionaryRequestVo(Integer index, Integer pageNum, String baseNameStr, String keyCode, String message) {
         this.index = index;
         this.pageNum = pageNum;

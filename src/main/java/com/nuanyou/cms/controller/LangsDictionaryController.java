@@ -74,7 +74,7 @@ public class LangsDictionaryController {
         model.addAttribute("page", allDictionary);
         model.addAttribute("entity", requestVo);
         model.addAttribute ( "langsCountries", LangsCountry.localValues (LOCAL_KEY) );
-        return "langsDictionary/listLocal";
+        return "langsDictionary/local_list";
     }
 
     /**
@@ -120,22 +120,15 @@ public class LangsDictionaryController {
         return "langsDictionary/add";
     }
 
-    @RequestMapping(path = "edit", method = RequestMethod.GET)
-    public String edit(Long id, Model model, Integer type) {
-        LangsCountry[] values = LangsCountry.values();
+    @RequestMapping("localAdd")
+    public String localAdd(Model model) {
         LangsCategory example = new LangsCategory();
         example.setIndex(1);
         example.setSize(100000);
         Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
-        LangsDictionaryVo vo = null;
-        if (id != null) {
-            vo = dictionaryService.findLangsDictionary(id);
-        }
-        model.addAttribute("entity", vo);
-        model.addAttribute("langsCountries", values);
+        model.addAttribute("langsCountries", LangsCountry.localValues (LOCAL_KEY));
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
-        model.addAttribute("type", type);
-        return "langsDictionary/edit";
+        return "langsDictionary/local_add";
     }
 
     @RequestMapping("update")
