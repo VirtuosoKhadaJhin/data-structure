@@ -226,11 +226,10 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
             // if lang not null, save one record
             entityNyLangsDictionary = new EntityNyLangsDictionary();
 
+            String[] langsCountrys = langsCountry.getValue().split("-");
 
-
-            entityNyLangsDictionary.setCountry(langsCountry.getValue());
-            entityNyLangsDictionary.setLanguage(langsCountry.getDesc());
-
+            entityNyLangsDictionary.setLanguage(langsCountrys[0]);
+            entityNyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : null);
             entityNyLangsDictionary.setKeyCode(dictionaryVo.getKeyCode());
 
             entityNyLangsDictionary.setCategory(entityNyLangsCategory);
