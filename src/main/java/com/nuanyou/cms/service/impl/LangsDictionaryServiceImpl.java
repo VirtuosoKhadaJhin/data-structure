@@ -42,7 +42,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     @Autowired
     private EntityNyLangsCategoryDao categoryDao;
 
-    private static final Integer LOCAL_KEY = 7;
+    private static final Integer LOCAL_KEY = 5;
 
     public LangsDictionaryServiceImpl() {
     }

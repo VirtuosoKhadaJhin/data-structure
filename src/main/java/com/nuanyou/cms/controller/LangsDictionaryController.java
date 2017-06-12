@@ -29,7 +29,7 @@ public class LangsDictionaryController {
     @Autowired
     private LangsCategoryService categoryService;
 
-    private static final Integer LOCAL_KEY = 7;
+    private static final Integer LOCAL_KEY = 5;
 
     /**
      * 多语言列表查询
