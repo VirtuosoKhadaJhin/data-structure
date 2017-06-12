@@ -19,6 +19,8 @@ public class LangsDictionaryRequestVo implements Serializable {
 
     private String message;
 
+    private Integer langsKey;
+
     public LangsDictionaryRequestVo() {
     }
 
@@ -28,6 +30,15 @@ public class LangsDictionaryRequestVo implements Serializable {
         this.baseNameStr = baseNameStr;
         this.keyCode = keyCode;
         this.message = message;
+    }
+
+    public LangsDictionaryRequestVo(Integer index, Integer pageNum, String baseNameStr, String keyCode, String message, Integer langsKey) {
+        this.index = index;
+        this.pageNum = pageNum;
+        this.baseNameStr = baseNameStr;
+        this.keyCode = keyCode;
+        this.message = message;
+        this.langsKey = langsKey;
     }
 
     public Integer getIndex() {
@@ -68,5 +79,13 @@ public class LangsDictionaryRequestVo implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Integer getLangsKey() {
+        return langsKey;
+    }
+
+    public void setLangsKey(Integer langsKey) {
+        this.langsKey = langsKey;
     }
 }
