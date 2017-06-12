@@ -153,7 +153,7 @@ public class MerchantServiceImpl implements MerchantService {
             Double latitude_after = entity.getLatitude();
             Double longitude_after = entity.getLongitude();
             if(!latitude_before.equals(latitude_after) || !longitude_before.equals(longitude_after)){
-                entity.setLocateExactly(false);
+                entity.setLocateExactly(true);
             }
 
             if (entity.getFirstshowTime() == null && Boolean.TRUE.equals(entity.getDisplay())) {
