@@ -37,15 +37,6 @@ public class LangsDictionaryController {
         return "langsDictionary/list";
     }
 
-    @RequestMapping("list1")
-    public String list1(LangsDictionaryRequestVo requestVo, Model model) {
-        Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllDictionary(requestVo);
-        model.addAttribute("page", allDictionary);
-        model.addAttribute("entity", requestVo);
-        model.addAttribute("langsCountries", LangsCountry.values());
-        return "langsDictionary/list1";
-    }
-
     /**
      * suggest搜索
      *
