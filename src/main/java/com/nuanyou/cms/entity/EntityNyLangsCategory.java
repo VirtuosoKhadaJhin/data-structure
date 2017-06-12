@@ -37,7 +37,7 @@ public class EntityNyLangsCategory {
     private Long userId;
 
     @Column(name = "DEL_FLAG")
-    private Boolean delFlag;
+    private Boolean delFlag = false;
 
     public Long getId() {
         return id;

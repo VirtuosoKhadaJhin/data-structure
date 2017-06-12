@@ -15,8 +15,13 @@ public class LangsDictionaryVo implements Serializable {
     //key+category
     private String keyCode;
 
+    //修改后新值
+    private String newKeyCode;
+
     //分类ID
     private Long categoryId;
+
+    private LangsMessageTipVo messageTip;
 
     //国家语言+内容
     private List<LangsCountryMessageVo> langsMessageList = Lists.newArrayList();
@@ -43,12 +48,28 @@ public class LangsDictionaryVo implements Serializable {
         this.keyCode = keyCode;
     }
 
+    public String getNewKeyCode() {
+        return newKeyCode;
+    }
+
+    public void setNewKeyCode(String newKeyCode) {
+        this.newKeyCode = newKeyCode;
+    }
+
     public Long getCategoryId() {
         return categoryId;
     }
 
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public LangsMessageTipVo getMessageTip() {
+        return messageTip;
+    }
+
+    public void setMessageTip(LangsMessageTipVo messageTip) {
+        this.messageTip = messageTip;
     }
 
     public List<LangsCountryMessageVo> getLangsMessageList() {

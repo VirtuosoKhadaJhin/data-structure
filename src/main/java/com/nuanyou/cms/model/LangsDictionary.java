@@ -96,6 +96,8 @@ public class LangsDictionary implements Serializable {
 
     private String baseNameStr;//UI查询使用
 
+    private LangsMessageTipVo messageTip;
+
     public Long getId() {
         return id;
     }
@@ -206,6 +208,14 @@ public class LangsDictionary implements Serializable {
 
     public void setBaseNameStr(String baseNameStr) {
         this.baseNameStr = baseNameStr;
+    }
+
+    public LangsMessageTipVo getMessageTip() {
+        return messageTip;
+    }
+
+    public void setMessageTip(LangsMessageTipVo messageTip) {
+        this.messageTip = messageTip;
     }
 
     public String getLangsCountry() {

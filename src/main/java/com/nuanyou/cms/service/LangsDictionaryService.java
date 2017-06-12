@@ -13,10 +13,6 @@ import java.util.Locale;
  */
 public interface LangsDictionaryService {
 
-    LangsDictionary findLangDictionary(Long id);
-
-    LangsDictionaryVo findLangsDictionary(Long id);
-
     Page<LangsDictionaryVo> findAllDictionary(LangsDictionaryRequestVo requestVo);
 
     Page<LangsDictionaryVo> findAllLocalDictionary(LangsDictionaryRequestVo requestVo);

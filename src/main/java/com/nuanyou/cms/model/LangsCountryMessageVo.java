@@ -15,10 +15,6 @@ public class LangsCountryMessageVo implements Serializable {
     //内容
     private String message;
 
-    private String language;
-
-    private String country;
-
     public LangsCountryMessageVo(Integer langsKey, String message) {
         this.langsKey = langsKey;
         this.message = message;
@@ -27,8 +23,6 @@ public class LangsCountryMessageVo implements Serializable {
     public LangsCountryMessageVo(Integer langsKey, String message, String language, String country) {
         this.langsKey = langsKey;
         this.message = message;
-        this.language = language;
-        this.country = country;
     }
 
     public Integer getLangsKey() {
@@ -49,21 +43,4 @@ public class LangsCountryMessageVo implements Serializable {
 
     public LangsCountryMessageVo() {
     }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
 }

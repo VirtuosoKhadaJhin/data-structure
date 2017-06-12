@@ -3,12 +3,11 @@ package com.nuanyou.cms.service.impl;
 import com.google.common.collect.Lists;
 import com.nuanyou.cms.dao.EntityNyLangsCategoryDao;
 import com.nuanyou.cms.dao.EntityNyLangsDictionaryDao;
+import com.nuanyou.cms.dao.EntityNyLangsMessageTipDao;
 import com.nuanyou.cms.entity.EntityNyLangsCategory;
 import com.nuanyou.cms.entity.EntityNyLangsDictionary;
-import com.nuanyou.cms.model.LangsCountryMessageVo;
-import com.nuanyou.cms.model.LangsDictionary;
-import com.nuanyou.cms.model.LangsDictionaryRequestVo;
-import com.nuanyou.cms.model.LangsDictionaryVo;
+import com.nuanyou.cms.entity.EntityNyLangsMessageTip;
+import com.nuanyou.cms.model.*;
 import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import com.nuanyou.cms.util.BeanUtils;
@@ -42,24 +41,10 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     @Autowired
     private EntityNyLangsCategoryDao categoryDao;
 
+    @Autowired
+    private EntityNyLangsMessageTipDao messageTipDao;
+
     private static final Integer LOCAL_KEY = 5;
-
-    public LangsDictionaryServiceImpl() {
-    }
-
-    @Override
-    public LangsDictionary findLangDictionary(Long id) {
-        EntityNyLangsDictionary langsDictionary = dictionaryDao.findOne(id);
-
-        return null;
-    }
-
-    @Override
-    public LangsDictionaryVo findLangsDictionary(Long id) {
-        EntityNyLangsDictionary langsDictionary = dictionaryDao.findOne(id);
-        //return convertToLangsDictionary ( langsDictionary );
-        return null;
-    }
 
     /**
      * 模板参数搜索message（suggest）
@@ -123,7 +108,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
                 entityNyLangsDictionary = new EntityNyLangsDictionary();
 
-                entityNyLangsDictionary.setKeyCode(requestVo.getKeyCode());
+                entityNyLangsDictionary.setKeyCode(requestVo.getNewKeyCode ());
                 entityNyLangsDictionary.setCategory(entityNyLangsCategory);
                 entityNyLangsDictionary.setLanguage(langsCountrys[0]);
                 entityNyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
@@ -316,6 +301,11 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         EntityNyLangsDictionary entityNyLangsDictionary = null;
         if (CollectionUtils.isEmpty(dictionaryVo.getLangsMessageList())) {
             return null;
+        }
+        LangsMessageTipVo messageTip = dictionaryVo.getMessageTip ();
+        if (messageTip != null) {
+            EntityNyLangsMessageTip entity = BeanUtils.copyBean ( messageTip, new EntityNyLangsMessageTip () );
+            messageTipDao.save ( entity );
         }
         for (LangsCountryMessageVo langsCountryMessageVo : dictionaryVo.getLangsMessageList()) {
             String message = langsCountryMessageVo.getMessage();
