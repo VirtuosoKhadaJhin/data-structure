@@ -5,6 +5,7 @@ import com.nuanyou.cms.model.LangsDictionaryRequestVo;
 import com.nuanyou.cms.model.LangsDictionaryVo;
 import org.springframework.data.domain.Page;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Locale;
 
@@ -17,7 +18,16 @@ public interface LangsDictionaryService {
 
     Page<LangsDictionaryVo> findAllLocalDictionary(LangsDictionaryRequestVo requestVo);
 
-    LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale);
+    LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale) throws UnsupportedEncodingException;
+
+    /**
+     * 查询当地语Message内容
+     *
+     * @param keyCode
+     * @param locale
+     * @return
+     */
+    String findLocalMessageByKeyCode(String keyCode, Locale locale);
 
     LangsDictionary addLangsDictionary(LangsDictionary entity);
 

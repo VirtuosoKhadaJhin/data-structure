@@ -23,4 +23,12 @@ public interface LangsMessageTipService {
      */
     String uploadImg(MultipartFile file);
 
+    /**
+     * 查看keyCode的备注信息
+     *
+     * @param requestVo
+     * @return
+     */
+    LangsMessageTipVo viewLangsMessageTip(LangsMessageTipVo requestVo);
+
 }

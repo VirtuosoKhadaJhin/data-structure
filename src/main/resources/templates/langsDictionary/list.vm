@@ -33,7 +33,8 @@
         <tbody>
             #foreach($entity in $!page)
             <tr class="odd gradeX">
-                <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$!entity.categoryId</label></td>
+                <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$!entity.categoryId</label>
+                </td>
                 <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$!entity.keyCode</label></td>
                 #foreach($langCountry in $!langsCountries)
                     <td class="lang-message" key-code="$!entity.keyCode" langs-key="$!langCountry.key"
@@ -46,7 +47,8 @@
                             #end
                         #end
                         #if($hasNullMessage)
-                            <input style="padding-top: 5%" class='tdInput' onchange='saveMessage(this)' type='text' placeholder=''/>
+                            <input style="padding-top: 5%" class='tdInput' onchange='saveMessage(this)' type='text'
+                                   placeholder=''/>
                         #end
                     </td>
                 #end
@@ -91,7 +93,12 @@
 <form class="form-horizontal " method="get" action="list">
     <div class="control-group">
         <label>分类</label>
-        <input type="text" class="span11" name="baseName" value="$!entity.baseName">
+        <select class="span7 select2 " name="baseNameId" style="min-width: 203px;">
+            <option value="">全部分类</option>
+            #foreach($e in $!categories)
+                <option value="$!e.id">$!e.name</option>
+            #end
+        </select>
     </div>
 
     <div class="control-group">
@@ -99,7 +106,7 @@
         <input type="text" class="span11" name="keyCode" value="$!entity.keyCode">
     </div>
     <div class="control-group">
-        <label>message</label>
+        <label>内容</label>
         <input type="text" class="span11" name="message" value="$!entity.message">
     </div>
 
@@ -173,7 +180,7 @@
         });
     });
 
-    function sureRemoveLangsDictionary(keyCode){
+    function sureRemoveLangsDictionary(keyCode) {
         if (confirm("确实要删除keyCode为(" + keyCode + ")的多语言记录吗?")) {
             var request = {};
             request.keyCode = keyCode;

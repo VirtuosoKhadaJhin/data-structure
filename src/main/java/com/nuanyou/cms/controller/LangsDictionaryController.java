@@ -10,6 +10,7 @@ import com.nuanyou.cms.model.LangsDictionaryVo;
 import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsCategoryService;
 import com.nuanyou.cms.service.LangsDictionaryService;
+import com.nuanyou.cms.service.LangsMessageTipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @Controller
@@ -25,8 +27,12 @@ public class LangsDictionaryController {
 
     @Autowired
     private LangsDictionaryService dictionaryService;
+
     @Autowired
     private LangsCategoryService categoryService;
+
+    @Autowired
+    private LangsMessageTipService messageTipService;
 
     private static final Integer LOCAL_KEY = 5;
 
@@ -40,6 +46,8 @@ public class LangsDictionaryController {
     @RequestMapping("list")
     public String list(LangsDictionaryRequestVo requestVo, Model model) {
         Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllDictionary(requestVo);
+        List<LangsCategory> categories = categoryService.findAllCategories();
+        model.addAttribute("categories", categories);
         model.addAttribute("page", allDictionary);
         model.addAttribute("entity", requestVo);
         model.addAttribute("langsCountries", LangsCountry.values());
@@ -72,7 +80,7 @@ public class LangsDictionaryController {
         Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllLocalDictionary(requestVo);
         model.addAttribute("page", allDictionary);
         model.addAttribute("entity", requestVo);
-        model.addAttribute ( "langsCountries", LangsCountry.localValues (LOCAL_KEY) );
+        model.addAttribute("langsCountries", LangsCountry.localValues(LOCAL_KEY));
         return "langsDictionary/local_list";
     }
 
@@ -138,7 +146,7 @@ public class LangsDictionaryController {
         example.setIndex(1);
         example.setSize(100000);
         Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
-        model.addAttribute("langsCountries", LangsCountry.localValues (LOCAL_KEY));
+        model.addAttribute("langsCountries", LangsCountry.localValues(LOCAL_KEY));
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
 
         // 根据keyCode查询中文、英文、当地文
@@ -205,7 +213,7 @@ public class LangsDictionaryController {
      */
     @RequestMapping(value = "viewLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public APIResult viewLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
+    public APIResult viewLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) throws UnsupportedEncodingException {
         APIResult<LangsDictionaryVo> result = new APIResult<LangsDictionaryVo>(ResultCodes.Success);
         LangsDictionaryVo langsDictionary = dictionaryService.findLangsDictionary(dictionaryVo.getKeyCode(), null);
         result.setData(langsDictionary);
@@ -222,7 +230,7 @@ public class LangsDictionaryController {
     @ResponseBody
     public APIResult modifyLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
         APIResult<EntityNyLangsDictionary> result = new APIResult<EntityNyLangsDictionary>(ResultCodes.Success);
-        dictionaryService.modifyLangsDictionary ( dictionaryVo );
+        dictionaryService.modifyLangsDictionary(dictionaryVo);
         return result;
     }
 
@@ -235,7 +243,7 @@ public class LangsDictionaryController {
      */
     @RequestMapping(value = "findOneByKeyCode", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult findOneByKeyCode(@RequestParam String keyCode) {
+    public APIResult findOneByKeyCode(@RequestParam String keyCode) throws UnsupportedEncodingException {
         APIResult<LangsDictionaryVo> result = new APIResult<LangsDictionaryVo>(ResultCodes.Success);
         LangsDictionaryVo langsDictionary = dictionaryService.findLangsDictionary(keyCode, null);
         result.setData(langsDictionary);

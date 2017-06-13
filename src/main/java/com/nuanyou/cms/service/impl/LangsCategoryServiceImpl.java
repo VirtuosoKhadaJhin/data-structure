@@ -31,7 +31,7 @@ import java.util.List;
 @Service
 public class LangsCategoryServiceImpl implements LangsCategoryService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger ( LangsCategoryServiceImpl.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(LangsCategoryServiceImpl.class);
 
     @Autowired
     private EntityNyLangsCategoryDao categoryDao;
@@ -39,70 +39,77 @@ public class LangsCategoryServiceImpl implements LangsCategoryService {
     @Override
     public Page<LangsCategory> findAllCategories(final LangsCategory request) {
 
-        Pageable pageable = new PageRequest ( request.getIndex () - 1,request.getSize() );
+        Pageable pageable = new PageRequest(request.getIndex() - 1, request.getSize());
 
-        Page<EntityNyLangsCategory> categories = categoryDao.findAll ( new Specification () {
+        List<EntityNyLangsCategory> categories = categoryDao.findAll(new Specification() {
 
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
 
-                List<Predicate> predicate = new ArrayList<Predicate> ();
-                if (StringUtils.isNotEmpty ( request.getName () )) {
-                    Predicate p1 = cb.like ( root.get ( "name" ), "%" + request.getName () + "%" );
-                    predicate.add ( p1 );
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (StringUtils.isNotEmpty(request.getName())) {
+                    Predicate p1 = cb.like(root.get("name"), "%" + request.getName() + "%");
+                    predicate.add(p1);
                 }
-                if (request.getIsGlobal ()!=null) {
-                    Predicate p2 = cb.equal ( root.get ( "isGlobal" ), request.getIsGlobal () );
-                    predicate.add ( p2 );
+                if (request.getIsGlobal() != null) {
+                    Predicate p2 = cb.equal(root.get("isGlobal"), request.getIsGlobal());
+                    predicate.add(p2);
                 }
-                Predicate[] arrays = new Predicate[predicate.size ()];
-                return query.where ( predicate.toArray ( arrays ) ).getRestriction ();
+                Predicate[] arrays = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(arrays)).getRestriction();
             }
-        }, pageable );
+        });
 
-        List<LangsCategory> allCate = this.convertToMultipleLangsCategories ( categories.getContent () );
-        Page<LangsCategory> pageVOs = new PageImpl<LangsCategory> ( allCate, pageable, categories.getTotalPages () );
+        List<LangsCategory> allCate = this.convertToMultipleLangsCategories(categories);
+        Page<LangsCategory> pageVOs = new PageImpl<LangsCategory>(allCate, pageable, categories.size());
         return pageVOs;
     }
 
     @Override
+    public List<LangsCategory> findAllCategories() {
+        List<EntityNyLangsCategory> categories = categoryDao.findAll();
+        List<LangsCategory> allCate = this.convertToMultipleLangsCategories(categories);
+        return allCate;
+    }
+
+    @Override
     public LangsCategory findLangsCategory(Long id) {
-        return this.convertToLangsCategory ( categoryDao.findOne ( id ) );
+        return this.convertToLangsCategory(categoryDao.findOne(id));
     }
 
     @Override
     public LangsCategory save(LangsCategory category) {
-        EntityNyLangsCategory langsCat = this.convertToEntityLangsCategory ( category );
-        return this.convertToLangsCategory ( categoryDao.save ( langsCat ) );
+        EntityNyLangsCategory langsCat = this.convertToEntityLangsCategory(category);
+        return this.convertToLangsCategory(categoryDao.save(langsCat));
     }
 
     @Override
     public LangsCategory update(LangsCategory category) {
-        EntityNyLangsCategory langsCat = this.convertToEntityLangsCategory ( category );
-        return this.convertToLangsCategory ( categoryDao.saveAndFlush ( langsCat ) );
+        EntityNyLangsCategory langsCat = this.convertToEntityLangsCategory(category);
+        return this.convertToLangsCategory(categoryDao.saveAndFlush(langsCat));
     }
 
     @Override
     public void delete(Long id) {
-        categoryDao.delete ( id );
+        categoryDao.delete(id);
     }
 
     private EntityNyLangsCategory convertToEntityLangsCategory(LangsCategory category) {
-        return BeanUtils.copyBean ( category, new EntityNyLangsCategory () );
+        return BeanUtils.copyBean(category, new EntityNyLangsCategory());
     }
 
     private LangsCategory convertToLangsCategory(EntityNyLangsCategory category) {
-        LangsCategory langsCategory = BeanUtils.copyBean ( category, new LangsCategory () );
+        LangsCategory langsCategory = BeanUtils.copyBean(category, new LangsCategory());
         return langsCategory;
     }
 
     private List<LangsCategory> convertToMultipleLangsCategories(List<EntityNyLangsCategory> entities) {
-        if (CollectionUtils.isEmpty ( entities )) {
-            return Lists.newArrayList ();
+        if (CollectionUtils.isEmpty(entities)) {
+            return Lists.newArrayList();
         }
-        List<LangsCategory> categories = Lists.newArrayList ();
+        List<LangsCategory> categories = Lists.newArrayList();
         for (EntityNyLangsCategory entity : entities) {
-            categories.add ( BeanUtils.copyBean ( entity, new LangsCategory () ) );
+            categories.add(BeanUtils.copyBean(entity, new LangsCategory()));
         }
         return categories;
     }

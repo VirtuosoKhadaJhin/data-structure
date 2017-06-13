@@ -21,6 +21,14 @@ public class LangsMessageTipVo {
 
     private Boolean delFlag = false;
 
+    public LangsMessageTipVo() {
+    }
+
+    public LangsMessageTipVo(String remark, String imgUrl) {
+        this.remark = remark;
+        this.imgUrl = imgUrl;
+    }
+
     public Long getId() {
         return id;
     }
