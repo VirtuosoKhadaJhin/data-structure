@@ -13,6 +13,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Service;
 
 import javax.net.ssl.SSLContext;
@@ -103,12 +104,12 @@ public class HttpServiceImpl implements HttpService {
     }
 
     @Override
-    public <T> T doPostJson(URI uri, String request, Class<T> clazz) throws IOException {
+    public <CodePayResponse> T doPostJson(URI uri, String request, Class<CodePayResponse> clazz) throws IOException {
         return doPostJson ( uri, new StringEntity ( request, StandardCharsets.UTF_8 ), clazz );
     }
 
     @Override
-    public <T> T doPostJson(URI uri, HttpEntity request, Class<T> clazz) throws IOException {
+    public <CodePayResponse> T doPostJson(URI uri, HttpEntity request, Class<CodePayResponse> clazz) throws IOException {
         try {
             HttpPost post = new HttpPost ( uri );
             post.setEntity ( request );
@@ -119,15 +120,16 @@ public class HttpServiceImpl implements HttpService {
                 String result = loadEntity ( entity );
                 ObjectMapper mapper = new ObjectMapper ();
                 mapper.disable ( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES );
-                return mapper.readValue ( result, clazz );
+                mapper.readValue ( result, clazz );
             }
         } catch (IOException e) {
             throw e;
         }
+        return null;
     }
 
     @Override
-    public <T> T doGetJson(URI uri, Class<T> clazz) throws IOException {
+    public <CodePayResponse> T doGetJson(URI uri, Class<CodePayResponse> clazz) throws IOException {
         try {
             HttpGet get = new HttpGet ( uri );
             try (CloseableHttpResponse response = createHttpClient ().execute ( get )) {
@@ -135,11 +137,12 @@ public class HttpServiceImpl implements HttpService {
                 String result = loadEntity ( entity );
                 ObjectMapper mapper = new ObjectMapper ();
                 mapper.disable ( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES );
-                return mapper.readValue ( result, clazz );
+                mapper.readValue ( result, clazz );
             }
         } catch (IOException e) {
             throw e;
         }
+        return null;
     }
 
     @Override
