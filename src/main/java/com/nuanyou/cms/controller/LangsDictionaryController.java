@@ -241,7 +241,6 @@ public class LangsDictionaryController {
     @RequestMapping(value = "api/list", method = RequestMethod.POST)
     @ResponseBody
     public APIResult list(@RequestParam Long id) {
-        System.out.println(id);
         if (id == null) {
             return null;
         }
