@@ -381,7 +381,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         LangsDictionaryVo dictionaryVo = null;
         if (BooleanUtils.isTrue(isLocalLangs)) {
             for (EntityNyLangsDictionary langsDictionary : allDictionaries) {
-                if (LangsCountry.verifyIsLocalLanguage(langsDictionary.getCountry(), LOCAL_KEY)) {
+                if (LangsCountry.verifyIsLocalLanguage(langsDictionary.getLanguage() + "-" + langsDictionary.getCountry(), LOCAL_KEY)) {
                     this.setLangsDictionaryVoValue(langsDictionaryMap, langsMessageList, keyCodes, langsDictionary);
                 }
             }
