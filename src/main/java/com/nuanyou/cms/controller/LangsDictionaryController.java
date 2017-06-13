@@ -132,15 +132,20 @@ public class LangsDictionaryController {
         return "langsDictionary/edit";
     }
 
-    @RequestMapping("localAdd")
-    public String localAdd(Model model) {
+    @RequestMapping("localEdit")
+    public String localAdd(LangsDictionaryVo dictionaryVo, Model model) {
         LangsCategory example = new LangsCategory();
         example.setIndex(1);
         example.setSize(100000);
         Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
         model.addAttribute("langsCountries", LangsCountry.localValues (LOCAL_KEY));
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
-        return "langsDictionary/local_add";
+
+        // 根据keyCode查询中文、英文、当地文
+        List<LangsDictionary> dictionarys = dictionaryService.viewLocalLangsDictionary(dictionaryVo);
+        model.addAttribute("dictionarys", dictionarys);
+
+        return "langsDictionary/local_edit";
     }
 
     /**
