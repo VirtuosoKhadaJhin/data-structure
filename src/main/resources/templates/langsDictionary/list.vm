@@ -31,43 +31,29 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="odd gradeX" style="display: none">
-            <td style="text-align: center;">1</td>
-            <td style="text-align: center;">mch_mylon</td>
-            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
-            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
-            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
-            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
-            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
-            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
-
-            <td>
-                <a class="btn btn-primary btn-mini selectParameter">编辑</a>
-                <a data-id="$!entity.id" class="btn btn-danger btn-mini remove-item">删除</a>
-            </td>
-        </tr>
             #foreach($entity in $!page)
             <tr class="odd gradeX">
-                <td style="width: 10%">$!entity.categoryId</td>
-                <td style="width: 10%">$!entity.keyCode</td>
+                <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$!entity.categoryId</label></td>
+                <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$!entity.keyCode</label></td>
                 #foreach($langCountry in $!langsCountries)
-                    <td class="lang-message" style="width: 10%">
+                    <td class="lang-message" key-code="$!entity.keyCode" langs-key="$!langCountry.key"
+                        style="width: 10%">
                         #set($hasNullMessage=true)
                         #foreach($lang in $!entity.langsMessageList)
                             #if($!lang.langsKey == $!langCountry.key)
-                                <label>$!lang.message</label>
+                                <label style="text-align: center;padding-top: 5%">$!lang.message</label>
                                 #set($hasNullMessage=false)
                             #end
                         #end
                         #if($hasNullMessage)
-                            <input class='tdInput' onchange='saveLang(this)' type='text' placeholder='请填写语言'/>
+                            <input style="padding-top: 5%" class='tdInput' onchange='saveMessage(this)' type='text' placeholder=''/>
                         #end
                     </td>
                 #end
                 <td>
                     <div style="text-align: center">
-                        <a class="btn btn-primary btn-mini">编辑</a>
-                        <a data-id="$!entity.id" class="btn btn-danger btn-mini remove-item">删除</a>
+                        <a key-code="$!entity.keyCode" class="btn btn-primary btn-mini modify-item">编辑</a>
+                        <a key-code="$!entity.keyCode" class="btn btn-danger btn-mini remove-item">删除</a>
                     </div>
                 </td>
             </tr>
@@ -102,7 +88,7 @@
 <!--***************************************修改语言*************************************************************-->
 
 #parse("common/list_mid.vm")
-<form class="form-horizontal " method="get">
+<form class="form-horizontal " method="get" action="list">
     <div class="control-group">
         <label>分类</label>
         <input type="text" class="span11" name="baseName" value="$!entity.baseName">
@@ -126,26 +112,35 @@
 #parse("common/list_end.vm")
 
 <script>
-    /*    $(function () {
-            var langMessages = $(".lang-message");
-
-            for (var i = 0; i < langMessages.length; i++) {
-                if ($(".lang-message").eq(i).text().trim() == ""
-                        || $(".lang-message").eq(i).text().trim() == null) {
-                    $(".lang-message").eq(i).html("<input class='tdInput' onchange='saveLang(this)' type='text' placeholder='请填写语言'/>");
-                }
-            }
-        });*/
     /**
      * 实时保存语言
      * @param obj
      */
-    function saveLang(obj) {
-        console.log("输入的值" + $(obj).val());
-        console.log("对应的keyCode" + $(obj).attr("data-key"));
-        console.log("对应的enum的key" + $(obj).parent().index());
+    function saveMessage(obj) {
+        console.log("输入的值:" + $(obj).val());
+        console.log("对应的keyCode:" + $(obj).parent().attr("key-code"));
+        console.log("对应的langsKey:" + $(obj).parent().attr("langs-key"));
 
-        $(obj).parent().html($(obj).val());
+        var request = {};
+        request.langsKey = $(obj).parent().attr("langs-key");
+        request.keyCode = $(obj).parent().attr("key-code");
+        request.message = $(obj).val();
+        $.ajax({
+            url: 'saveMessage',
+            data: JSON.stringify(request),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    // alert("操作成功");
+                } else {
+                    alert(result.msg);
+                }
+            }
+        });
+
+        $(obj).parent().html("<label style='text-align: center;padding-top: 5%'>" + $(obj).val() + "</label>");
     }
 
     /**
@@ -161,13 +156,33 @@
      */
     $(".remove-item").each(function (i, o) {
         $(o).on("click", function (event) {
-            if (!confirm('确实要删除该内容吗?'))
-                return;
-            var dataId = $(this).attr("data-id");
+            var keyCode = $(this).attr("key-code");
+            if (confirm("确实要删除keyCode为(" + keyCode + ")的多语言记录吗?")) {
+                sureRemoveLangsDictionary(keyCode);
+            }
+        });
+    });
+
+    /**
+     * 修改语言
+     */
+    $(".modify-item").each(function (i, o) {
+        $(o).on("click", function (event) {
+            var keyCode = $(this).attr("key-code");
+            location.href = "edit?keyCode=" + keyCode;
+        });
+    });
+
+    function sureRemoveLangsDictionary(keyCode){
+        if (confirm("确实要删除keyCode为(" + keyCode + ")的多语言记录吗?")) {
+            var request = {};
+            request.keyCode = keyCode;
             $.ajax({
                 url: 'remove',
-                data: {id: dataId},
-                type: 'get',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
                 success: function (result) {
                     if (result.code == 0) {
                         window.location.reload();
@@ -176,8 +191,9 @@
                     }
                 }
             });
-        });
-    });
+        }
+    }
+
 </script>
 
 

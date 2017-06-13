@@ -73,7 +73,7 @@
 
     <script type="text/javascript">
     function backLangsDictionaryList(){
-       location.href = "list1";
+       location.href = "list";
     }
     /**
      * 验证keyCode是否重复
@@ -140,7 +140,7 @@
             success: function (result) {
                 if (result.code == 0) {
                     alert("操作成功");
-                    window.location.href = "list1";
+                    window.location.href = "list";
                 } else {
                     alert(result.msg);
                 }
