@@ -41,6 +41,14 @@ public class EntityNyLangsMessageTip {
         return id;
     }
 
+    public EntityNyLangsMessageTip(String keyCode, String remark, String imgUrl, Date createDt, Boolean delFlag) {
+        this.keyCode = keyCode;
+        this.remark = remark;
+        this.imgUrl = imgUrl;
+        this.createDt = createDt;
+        this.delFlag = delFlag;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
