@@ -215,7 +215,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     }
 
     @Override
-    public List<LangsDictionary> findIdNameListByCat(Long id) {
+    public List<LangsDictionary> findAllLanguagesByCatId(Long id) {
         EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne(id);
 
         EntityNyLangsDictionary entityNyLangsDictionary = new EntityNyLangsDictionary();

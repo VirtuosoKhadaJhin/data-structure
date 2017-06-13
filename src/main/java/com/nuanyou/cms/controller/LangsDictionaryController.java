@@ -262,7 +262,7 @@ public class LangsDictionaryController {
         if (id == null) {
             return null;
         }
-        List<LangsDictionary> list = dictionaryService.findIdNameListByCat(id);
+        List<LangsDictionary> list = dictionaryService.findAllLanguagesByCatId(id);
         return new APIResult(list);
     }
 

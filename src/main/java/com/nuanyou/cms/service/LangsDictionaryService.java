@@ -14,10 +14,30 @@ import java.util.Locale;
  */
 public interface LangsDictionaryService {
 
+    /**
+     * 查询所有语言字典项列表
+     *
+     * @param requestVo
+     * @return
+     */
     Page<LangsDictionaryVo> findAllDictionary(LangsDictionaryRequestVo requestVo);
 
+    /**
+     * 查询本地语言字典项列表
+     *
+     * @param requestVo
+     * @return
+     */
     Page<LangsDictionaryVo> findAllLocalDictionary(LangsDictionaryRequestVo requestVo);
 
+    /**
+     * 根据KeyCode和Locale获取字典项
+     *
+     * @param keyCode
+     * @param locale
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale) throws UnsupportedEncodingException;
 
     /**
@@ -29,14 +49,29 @@ public interface LangsDictionaryService {
      */
     String findLocalMessageByKeyCode(String keyCode, Locale locale);
 
-    LangsDictionary addLangsDictionary(LangsDictionary entity);
+    /**
+     * 根据分类id查询所有的语言
+     *
+     * @param id
+     * @return
+     */
+    List<LangsDictionary> findAllLanguagesByCatId(Long id);
 
-    LangsDictionary updateLangsDictionary(LangsDictionary entity);
-
-    List<LangsDictionary> findIdNameListByCat(Long id);
-
+    /**
+     * 判断keyCode是否有效
+     *
+     * @param dictionaryVo
+     * @return
+     */
     boolean verifykeyCode(LangsDictionaryVo dictionaryVo);
 
+
+    /**
+     * 保存新增对象
+     *
+     * @param dictionaryVo
+     * @return
+     */
     String saveLangsDictionary(LangsDictionaryVo dictionaryVo);
 
     /**
