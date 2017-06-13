@@ -2,6 +2,7 @@ package com.nuanyou.cms.model;
 
 import com.nuanyou.cms.entity.enums.PaymentOrderMethod;
 import com.nuanyou.cms.entity.enums.PaymentOrderStatus;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -17,6 +18,8 @@ public class PaymentRecordRequestVo implements Serializable {
     private Long mchId;
 
     private String mchName;
+
+    private String mchKpName;
 
     private String title;
 
@@ -35,9 +38,11 @@ public class PaymentRecordRequestVo implements Serializable {
     private BigDecimal endPrice;
 
     //支付时间begin
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date beginDt;
 
     //支付时间end
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endDt;
 
     private Integer index = 1;
@@ -58,6 +63,14 @@ public class PaymentRecordRequestVo implements Serializable {
 
     public void setMchName(String mchName) {
         this.mchName = mchName;
+    }
+
+    public String getMchKpName() {
+        return mchKpName;
+    }
+
+    public void setMchKpName(String mchKpName) {
+        this.mchKpName = mchKpName;
     }
 
     public String getTitle() {

@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -29,6 +30,7 @@ import java.util.List;
 /**
  * Created by Byron on 2017/6/9.
  */
+@Service
 public class PaymentOrderRecordServiceImpl implements PaymentOrderRecordService {
 
     private final static Logger _LOGGER = LoggerFactory.getLogger ( PaymentOrderRecordServiceImpl.class );
@@ -52,6 +54,10 @@ public class PaymentOrderRecordServiceImpl implements PaymentOrderRecordService 
                     Predicate p = cb.like ( root.get ( "mchName" ), "%" + paramVo.getMchName () + "%" );
                     predicate.add ( p );
                 }
+                if (StringUtils.isNotEmpty(paramVo.getMchKpName())) {
+                    Predicate p = cb.like(root.get("mchKpName"), "%" + paramVo.getMchKpName() + "%");
+                    predicate.add(p);
+                }
                 if (paramVo.getTradeNo () != null) {
                     Predicate p = cb.equal ( root.get ( "tradeNo" ), paramVo.getTradeNo () );
                     predicate.add ( p );
@@ -68,8 +74,8 @@ public class PaymentOrderRecordServiceImpl implements PaymentOrderRecordService 
                     Predicate p = cb.greaterThanOrEqualTo ( root.get ( "price" ), paramVo.getBeginPrice () );
                     predicate.add ( p );
                 }
-                if (paramVo.getBeginPrice () != null) {
-                    Predicate p = cb.lessThanOrEqualTo ( root.get ( "price" ), paramVo.getBeginPrice () );
+                if (paramVo.getEndPrice() != null) {
+                    Predicate p = cb.lessThanOrEqualTo(root.get("price"), paramVo.getEndPrice());
                     predicate.add ( p );
                 }
                 if (StringUtils.isNotEmpty ( paramVo.getPayChannel () )) {
@@ -86,19 +92,22 @@ public class PaymentOrderRecordServiceImpl implements PaymentOrderRecordService 
                 }
 
                 Predicate[] pre = new Predicate[predicate.size ()];
-                return query.where ( predicate.toArray ( pre ) ).getRestriction ();
+                return query.where(predicate.toArray(pre)).orderBy(cb.desc(root.get("payTime"))).getRestriction();
             }
         } );
 
         Pageable pageable = new PageRequest ( paramVo.getIndex () - 1, paramVo.getPageNum () );
         List<PaymentOrderRecordVo> orderRecordVos = this.convertToPaymentRecordVo ( records );
+        if (CollectionUtils.isEmpty(orderRecordVos)) {
+            return new PageImpl<PaymentOrderRecordVo>(orderRecordVos, pageable, 0);
+        }
         Page<PaymentOrderRecordVo> voPage = new PageImpl<PaymentOrderRecordVo> ( orderRecordVos, pageable, records.size () );
         return voPage;
     }
 
     private List<PaymentOrderRecordVo> convertToPaymentRecordVo(List<PaymentOrderRecord> content) {
         if (CollectionUtils.isEmpty ( content )) {
-            return null;
+            return Lists.newArrayList();
         }
         List<PaymentOrderRecordVo> vos = Lists.newArrayList ();
         for (PaymentOrderRecord record : content) {

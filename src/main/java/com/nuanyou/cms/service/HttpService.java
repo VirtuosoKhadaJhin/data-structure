@@ -1,8 +1,8 @@
 package com.nuanyou.cms.service;
 
+import com.nuanyou.cms.model.CodePayResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,17 +17,18 @@ import java.security.cert.CertificateException;
  * Created by Byron on 2017/6/12.
  */
 public interface HttpService {
+
     String doGet(URI uri) throws IOException;
 
     String doPost(URI uri, String request) throws IOException;
 
     String doPost(URI uri, HttpEntity request) throws IOException;
 
-    <CodePayResponse> T doPostJson(URI uri, String request, Class<CodePayResponse> clazz) throws IOException;
+    CodePayResponse doGetJson(URI uri) throws IOException;
 
-    <CodePayResponse> T doPostJson(URI uri, HttpEntity request, Class<CodePayResponse> clazz) throws IOException;
+    CodePayResponse doPostJson(URI uri, String request) throws IOException;
 
-    <CodePayResponse> T doGetJson(URI uri, Class<CodePayResponse> clazz) throws IOException;
+    CodePayResponse doPostJson(URI uri, HttpEntity request) throws IOException;
 
     String doSSLPost(URI uri, String request, InputStream inputStream, char[] password) throws IOException, UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException;
 

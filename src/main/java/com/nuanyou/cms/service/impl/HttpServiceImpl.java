@@ -2,6 +2,7 @@ package com.nuanyou.cms.service.impl;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nuanyou.cms.model.CodePayResponse;
 import com.nuanyou.cms.service.HttpService;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -13,7 +14,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
-import org.apache.poi.ss.formula.functions.T;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.net.ssl.SSLContext;
@@ -27,10 +29,12 @@ import java.security.*;
 import java.security.cert.CertificateException;
 
 /**
- * Created by xiejing on 2016/1/28.
+ * Created by Byron on 2017/6/13.
  */
 @Service
 public class HttpServiceImpl implements HttpService {
+
+    private static final Logger _LOGGER = LoggerFactory.getLogger(HttpServiceImpl.class);
 
     private HttpClientBuilder builder = HttpClientBuilder.create ();
 
@@ -45,16 +49,14 @@ public class HttpServiceImpl implements HttpService {
             }
         } catch (IOException e) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream ();
-            e.printStackTrace ( new PrintStream ( stream ) );
+            e.printStackTrace(new PrintStream(stream));
             throw e;
         } finally {
-            long endtime = System.currentTimeMillis ();
         }
     }
 
     private CloseableHttpClient createHttpClient() {
         builder.setConnectionManagerShared ( true );
-//        builder.setConnectionManager()
         return builder.build ();
     }
 
@@ -66,19 +68,9 @@ public class HttpServiceImpl implements HttpService {
             inputStream.close ();
         }
 
-        // Trust own CA and all self-signed certs
-        SSLContext sslcontext = SSLContexts.custom ()
-                .loadKeyMaterial ( keyStore, password )
-                .build ();
-        // Allow TLSv1 protocol only
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory (
-                sslcontext,
-                new String[]{"TLSv1"},
-                null,
-                SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER );
-        CloseableHttpClient httpclient = HttpClientBuilder.create ()
-                .setSSLSocketFactory ( sslsf )
-                .build ();
+        SSLContext sslcontext = SSLContexts.custom().loadKeyMaterial(keyStore, password).build();
+        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext, new String[]{"TLSv1"}, null, SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+        CloseableHttpClient httpclient = HttpClientBuilder.create().setSSLSocketFactory(sslsf).build();
         return httpclient;
     }
 
@@ -92,11 +84,10 @@ public class HttpServiceImpl implements HttpService {
         try {
             HttpPost post = new HttpPost ( uri );
             post.setEntity ( request );
-            try (CloseableHttpResponse response = createHttpClient ().execute ( post )) {
-                HttpEntity entity = response.getEntity ();
-                String result = loadEntity ( entity );
-                return result;
-            }
+            CloseableHttpResponse response = createHttpClient().execute(post);
+            HttpEntity entity = response.getEntity();
+            String result = loadEntity(entity);
+            return result;
         } catch (IOException e) {
             throw e;
         } finally {
@@ -104,23 +95,22 @@ public class HttpServiceImpl implements HttpService {
     }
 
     @Override
-    public <CodePayResponse> T doPostJson(URI uri, String request, Class<CodePayResponse> clazz) throws IOException {
-        return doPostJson ( uri, new StringEntity ( request, StandardCharsets.UTF_8 ), clazz );
+    public CodePayResponse doPostJson(URI uri, String request) throws IOException {
+        return doPostJson(uri, new StringEntity(request, StandardCharsets.UTF_8));
     }
 
     @Override
-    public <CodePayResponse> T doPostJson(URI uri, HttpEntity request, Class<CodePayResponse> clazz) throws IOException {
+    public CodePayResponse doPostJson(URI uri, HttpEntity request) throws IOException {
         try {
             HttpPost post = new HttpPost ( uri );
             post.setEntity ( request );
             post.setHeader ( "Accept", "application/json" );
-//            post.setHeader("Content-type", "application/json");
             try (CloseableHttpResponse response = createHttpClient ().execute ( post )) {
                 HttpEntity entity = response.getEntity ();
                 String result = loadEntity ( entity );
                 ObjectMapper mapper = new ObjectMapper ();
                 mapper.disable ( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES );
-                mapper.readValue ( result, clazz );
+                mapper.readValue(result, CodePayResponse.class);
             }
         } catch (IOException e) {
             throw e;
@@ -129,25 +119,24 @@ public class HttpServiceImpl implements HttpService {
     }
 
     @Override
-    public <CodePayResponse> T doGetJson(URI uri, Class<CodePayResponse> clazz) throws IOException {
+    public CodePayResponse doGetJson(URI uri) throws IOException {
         try {
             HttpGet get = new HttpGet ( uri );
-            try (CloseableHttpResponse response = createHttpClient ().execute ( get )) {
-                HttpEntity entity = response.getEntity ();
-                String result = loadEntity ( entity );
-                ObjectMapper mapper = new ObjectMapper ();
-                mapper.disable ( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES );
-                mapper.readValue ( result, clazz );
-            }
+            CloseableHttpResponse response = createHttpClient().execute(get);
+            HttpEntity entity = response.getEntity();
+            String result = loadEntity(entity);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+            CodePayResponse value = mapper.readValue(result, CodePayResponse.class);
+            return value;
         } catch (IOException e) {
             throw e;
         }
-        return null;
     }
 
     @Override
     public String doSSLPost(URI uri, String request, InputStream inputStream, char[] password) throws IOException, UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-        return doPost ( uri, new StringEntity ( request, StandardCharsets.UTF_8 ), inputStream, password );
+        return doPost(uri, new StringEntity(request, StandardCharsets.UTF_8), inputStream, password);
     }
 
     @Override

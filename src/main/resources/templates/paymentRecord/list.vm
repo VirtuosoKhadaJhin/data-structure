@@ -1,0 +1,117 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
+    <a href="/paymentOrderRecord/list" class="tip-bottom" data-original-title="">支付订单记录管理</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>支付记录列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th width="100px;">操作</th>
+        <th>商户ID</th>
+        <th>商户名称</th>
+        <th>购买人</th>
+        <th>订单编号</th>
+        <th>订单流水</th>
+        <th>支付价格</th>
+        <th>支付状态</th>
+        <th>支付方式</th>
+        <th>支付通道</th>
+        <th>支付时间</th>
+    </tr>
+    </thead>
+    <tbody data-key="$!searchDateMap">
+        #if ($null.isNull($page.content) || $page.content.size()==0)
+        <tr>
+            <td colspan="11" style="text-align:center;">
+                <div class="no-result-div" style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                    <p>没有符合条件的支付订单信息！</p>
+                </div>
+            </td>
+        </tr>
+        #end
+        #foreach($item in $!page.content)
+        <tr class="odd gradeX" data-itemId="$!item.id">
+            <td style=" text-align: center; ">
+                #if($!item.status.key==0)
+                    <a href="javascript:void(0);" data-keyId="$!item.id" data-keyApp="$!item.app"
+                       class="btn btn-success btn-mini order-status-search">查询</a>
+                #end
+            </td>
+            <td>$!item.mchId</td>
+            <td>$!item.mchName</td>
+            <td>$!item.userId</td>
+            <td>$!item.outTradeNo</td>
+            <td>$!item.transactionId</td>
+            <td>$!item.price</td>
+            <td>$!item.status.name</td>
+            <td>$!item.method.name</td>
+            <td>$!item.channelName</td>
+            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss", $!item.payTime)</td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#parse("common/list_mid.vm")
+<form method="get">
+    <div class="control-group">
+        <label>商户</label>
+        <select class="span11 select2" name="mchId">
+            <option value="">全部</option>
+            #foreach($merchant in $!merchants)
+                <option value="$!merchant.id"
+                    #if($!entity.merchant.id == $!merchant.id)
+                        selected
+                    #end
+                >$!merchant.id:$!merchant.name</option>
+            #end
+        </select>
+
+        <label style="margin-top: 10px;">商户本地名称：</label>
+        <input type="text" class="span11" name="mchKpName" value="$!requestVo.mchKpName" placeholder="商户本地名称">
+
+        <label>支付价格：</label>
+        <input type="text" class="span5" id="beginPrice" name="beginPrice" value="$!requestVo.beginPrice" placeholder="请输入价格起始">
+        <span class="search-price-middle-separator" style="margin: 0 3px;">-</span>
+        <input type="text" class="span5" id="J_EndPrice" name="endPrice" value="$!requestVo.endPrice" placeholder="请输入价格结束">
+
+        <label>开始时间：</label>
+        <input type="text" class="span11 dateTimeFormat" id="beginTime" name="beginDt" value="$!requestVo.beginDt" placeholder="请选择开始时间">
+
+        <label>结束时间：</label>
+        <input type="text" class="span11 dateTimeFormat" id="endTime" name="endDt" value="$!requestVo.endDt" placeholder="请选择结束时间">
+
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+#parse("common/list_end.vm")
+#include("common/js-support.vm")
+
+<script type="text/javascript">
+    $(function () {
+        $("table").delegate(".order-status-search", "click", function (e) {
+            var _this = e.currentTarget;
+            var item_id = $(_this).attr("data-keyid");
+            var item_app = $(_this).attr("data-keyApp");
+            var postParam = {app: item_app, orderId: item_id};
+            $(_this).text("查询中...").attr("disabled", true);
+            $.ajax({
+                url: "searchRecord?orderId=" + item_id,
+                type: "post",
+                data: {app: item_app},
+                dataType: "json",
+                success: function (response) {
+                    alert("操作成功！");
+                    $(_this).remove();
+                },
+                error: function (response) {
+                    $(_this).text("查询").removeAttr("disabled");
+                    alert("请求失败，请稍后重试！");
+                }
+            });
+        });
+    });
+</script>

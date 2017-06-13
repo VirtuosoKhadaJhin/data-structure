@@ -1,8 +1,8 @@
 package com.nuanyou.cms.model;
 
+import com.nuanyou.cms.entity.enums.PaymentOrderMethod;
 import com.nuanyou.cms.entity.enums.PaymentOrderStatus;
 
-import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -31,15 +31,14 @@ public class PaymentOrderRecordVo {
     private String outTradeNo;
 
     //暖游订单号
+    private String tradeNo;
+
+    //暖游NYOrderID；
     private String orderNo;
 
-    private String app;
-
-    private Date payTime;
+    private String app; //支付平台
 
     private String title;
-
-    private String tradeNo;
 
     //支付价格
     private BigDecimal price;
@@ -47,8 +46,11 @@ public class PaymentOrderRecordVo {
     //人民币价格
     private BigDecimal realPrice;
 
-    //支付平台
-    private Long channelId;
+    //支付方式
+    private PaymentOrderMethod method;
+
+    //支付通道
+    private String channelId;
 
     private String channelName;
 
@@ -56,7 +58,9 @@ public class PaymentOrderRecordVo {
 
     private BigDecimal realRate;
 
-    private Data refundTime;
+    private Date payTime;
+
+    private Date refundTime;
 
     private Date createTime;
 
@@ -124,6 +128,14 @@ public class PaymentOrderRecordVo {
         this.outTradeNo = outTradeNo;
     }
 
+    public String getTradeNo() {
+        return tradeNo;
+    }
+
+    public void setTradeNo(String tradeNo) {
+        this.tradeNo = tradeNo;
+    }
+
     public String getOrderNo() {
         return orderNo;
     }
@@ -140,28 +152,12 @@ public class PaymentOrderRecordVo {
         this.app = app;
     }
 
-    public Date getPayTime() {
-        return payTime;
-    }
-
-    public void setPayTime(Date payTime) {
-        this.payTime = payTime;
-    }
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getTradeNo() {
-        return tradeNo;
-    }
-
-    public void setTradeNo(String tradeNo) {
-        this.tradeNo = tradeNo;
     }
 
     public BigDecimal getPrice() {
@@ -180,11 +176,19 @@ public class PaymentOrderRecordVo {
         this.realPrice = realPrice;
     }
 
-    public Long getChannelId() {
+    public PaymentOrderMethod getMethod() {
+        return method;
+    }
+
+    public void setMethod(PaymentOrderMethod method) {
+        this.method = method;
+    }
+
+    public String getChannelId() {
         return channelId;
     }
 
-    public void setChannelId(Long channelId) {
+    public void setChannelId(String channelId) {
         this.channelId = channelId;
     }
 
@@ -212,11 +216,19 @@ public class PaymentOrderRecordVo {
         this.realRate = realRate;
     }
 
-    public Data getRefundTime() {
+    public Date getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(Date payTime) {
+        this.payTime = payTime;
+    }
+
+    public Date getRefundTime() {
         return refundTime;
     }
 
-    public void setRefundTime(Data refundTime) {
+    public void setRefundTime(Date refundTime) {
         this.refundTime = refundTime;
     }
 

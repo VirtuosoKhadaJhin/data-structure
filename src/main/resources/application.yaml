@@ -86,3 +86,5 @@ merchantSettlement:
 contractConfig:
   poundageNames: poundage_huigou,poundage_radio,poundage
   paymentDaysNames: settle_day,account_period_huigou
+
+payment_service_address: http://test.payment.91nuanyou.com

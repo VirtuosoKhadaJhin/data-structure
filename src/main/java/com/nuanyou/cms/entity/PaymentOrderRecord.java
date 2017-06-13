@@ -1,9 +1,10 @@
 package com.nuanyou.cms.entity;
 
 import com.nuanyou.cms.commons.DateEntityListener;
+import com.nuanyou.cms.entity.enums.PaymentOrderMethod;
+import com.nuanyou.cms.entity.enums.PaymentOrderStatus;
 
 import javax.persistence.*;
-import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -20,7 +21,7 @@ public class PaymentOrderRecord {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "mchid", nullable = false)
+    @Column(name = "mchid")
     private Long mchId;
 
     @Column(name = "mchname")
@@ -30,7 +31,8 @@ public class PaymentOrderRecord {
     private String mchKpName;
 
     @Column(name = "status")
-    private Integer status; //支付状态
+    @Enumerated(EnumType.ORDINAL)
+    private PaymentOrderStatus status; //支付状态
 
     @Column(name = "userid")
     private Long userId;
@@ -59,8 +61,12 @@ public class PaymentOrderRecord {
     @Column(name = "realprice")
     private BigDecimal realPrice;
 
+    @Column(name="method")
+    @Enumerated(EnumType.ORDINAL)
+    private PaymentOrderMethod method;
+
     @Column(name = "chnid")
-    private Long channelId;
+    private String channelId;
 
     @Column(name = "channelname")
     private String channelName;//支付通道
@@ -68,14 +74,14 @@ public class PaymentOrderRecord {
     @Column(name = "rate")
     private BigDecimal rate;
 
-    @Column(name = "realRate")
+    @Column(name = "realrate")
     private BigDecimal realRate;
 
     @Column(name = "paytime")
     private Date payTime;
 
     @Column(name = "refundtime")
-    private Data refundTime;
+    private Date refundTime;
 
     @Column(name = "createtime")
     private Date createTime;
@@ -112,11 +118,11 @@ public class PaymentOrderRecord {
         this.mchKpName = mchKpName;
     }
 
-    public Integer getStatus() {
+    public PaymentOrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(PaymentOrderStatus status) {
         this.status = status;
     }
 
@@ -200,11 +206,19 @@ public class PaymentOrderRecord {
         this.realPrice = realPrice;
     }
 
-    public Long getChannelId() {
+    public PaymentOrderMethod getMethod() {
+        return method;
+    }
+
+    public void setMethod(PaymentOrderMethod method) {
+        this.method = method;
+    }
+
+    public String getChannelId() {
         return channelId;
     }
 
-    public void setChannelId(Long channelId) {
+    public void setChannelId(String channelId) {
         this.channelId = channelId;
     }
 
@@ -232,11 +246,11 @@ public class PaymentOrderRecord {
         this.realRate = realRate;
     }
 
-    public Data getRefundTime() {
+    public Date getRefundTime() {
         return refundTime;
     }
 
-    public void setRefundTime(Data refundTime) {
+    public void setRefundTime(Date refundTime) {
         this.refundTime = refundTime;
     }
 

@@ -1,77 +1,81 @@
 package com.nuanyou.cms.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.nuanyou.cms.commons.APIResult;
 
 import java.math.BigDecimal;
 
 /**
  * Created by Byron on 2017/6/12.
  */
-public class CodePayResponse {
+public class CodePayResponse extends APIResult<CodePayResponse.Result> {
 
-    /**
-     * 0.支付成功，1.等待密码, 2.重复订单, 3.失败
-     */
-    @JsonProperty("status")
-    private int status;
-    /**
-     * 人民币金额
-     */
-    @JsonProperty("rmbprice")
-    private BigDecimal rmbprice;
-    /**
-     * 支付流水号
-     */
-    @JsonProperty("orderid")
-    private Long orderid;
-    /**
-     * 支付订单号
-     */
-    @JsonProperty("tradeno")
-    private String tradeno;
-    /**
-     * 通道流水号
-     */
-    @JsonProperty("transactionid")
-    private String transactionid;
+    public static class Result {
 
-    public int getStatus() {
-        return status;
-    }
+        /**
+         * 0.支付成功，1.等待密码, 2.重复订单, 3.失败
+         */
+        @JsonProperty("status")
+        private int status;
+        /**
+         * 人民币金额
+         */
+        @JsonProperty("rmbprice")
+        private BigDecimal rmbprice;
+        /**
+         * 支付流水号
+         */
+        @JsonProperty("orderid")
+        private Long orderid;
+        /**
+         * 支付订单号
+         */
+        @JsonProperty("tradeno")
+        private String tradeno;
+        /**
+         * 通道流水号
+         */
+        @JsonProperty("transactionid")
+        private String transactionid;
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
+        public int getStatus() {
+            return status;
+        }
 
-    public BigDecimal getRmbprice() {
-        return rmbprice;
-    }
+        public void setStatus(int status) {
+            this.status = status;
+        }
 
-    public void setRmbprice(BigDecimal rmbprice) {
-        this.rmbprice = rmbprice;
-    }
+        public BigDecimal getRmbprice() {
+            return rmbprice;
+        }
 
-    public Long getOrderid() {
-        return orderid;
-    }
+        public void setRmbprice(BigDecimal rmbprice) {
+            this.rmbprice = rmbprice;
+        }
 
-    public void setOrderid(Long orderid) {
-        this.orderid = orderid;
-    }
+        public Long getOrderid() {
+            return orderid;
+        }
 
-    public String getTradeno() {
-        return tradeno;
-    }
+        public void setOrderid(Long orderid) {
+            this.orderid = orderid;
+        }
 
-    public void setTradeno(String tradeno) {
-        this.tradeno = tradeno;
-    }
+        public String getTradeno() {
+            return tradeno;
+        }
 
-    public String getTransactionid() {
-        return transactionid;
-    }
+        public void setTradeno(String tradeno) {
+            this.tradeno = tradeno;
+        }
 
-    public void setTransactionid(String transactionid) {
-        this.transactionid = transactionid;
+        public String getTransactionid() {
+            return transactionid;
+        }
+
+        public void setTransactionid(String transactionid) {
+            this.transactionid = transactionid;
+        }
     }
 }
