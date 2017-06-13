@@ -6,8 +6,10 @@ import com.nuanyou.cms.dao.EntityNyLangsDictionaryDao;
 import com.nuanyou.cms.dao.EntityNyLangsMessageTipDao;
 import com.nuanyou.cms.entity.EntityNyLangsCategory;
 import com.nuanyou.cms.entity.EntityNyLangsDictionary;
-import com.nuanyou.cms.entity.EntityNyLangsMessageTip;
-import com.nuanyou.cms.model.*;
+import com.nuanyou.cms.model.LangsCountryMessageVo;
+import com.nuanyou.cms.model.LangsDictionary;
+import com.nuanyou.cms.model.LangsDictionaryRequestVo;
+import com.nuanyou.cms.model.LangsDictionaryVo;
 import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import com.nuanyou.cms.util.BeanUtils;
@@ -110,9 +112,9 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
                 entityNyLangsDictionary.setKeyCode(requestVo.getNewKeyCode ());
                 entityNyLangsDictionary.setCategory(entityNyLangsCategory);
+                entityNyLangsDictionary.setDelFlag(false);
                 entityNyLangsDictionary.setLanguage(langsCountrys[0]);
                 entityNyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
-                entityNyLangsDictionary.setKeyCode(requestVo.getKeyCode());
                 entityNyLangsDictionary.setMessage(langsCountryMessageVo.getMessage());
                 dictionaryDao.save(entityNyLangsDictionary);
             }
@@ -315,6 +317,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
             String[] langsCountrys = langsCountry.getValue().split("-");
 
             entityNyLangsDictionary.setLanguage(langsCountrys[0]);
+            entityNyLangsDictionary.setDelFlag(false);
             entityNyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
             entityNyLangsDictionary.setKeyCode(dictionaryVo.getKeyCode());
 
@@ -340,6 +343,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         entity.setCountry(splitValues.length > 1 ? splitValues[1] : splitValues[0]);
         entity.setKeyCode(vo.getKeyCode());
         entity.setMessage(vo.getMessage());
+        entity.setDelFlag(false);
         entity.setCategory(entityResult.get(0).getCategory());
         EntityNyLangsDictionary nyLangsDictionary = dictionaryDao.save(entity);
         LangsDictionary dictionary = this.convertToLangsDictionary(nyLangsDictionary);
