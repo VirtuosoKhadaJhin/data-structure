@@ -14,10 +14,15 @@ import java.util.Date;
 @EntityListeners({AuditingEntityListener.class})
 public class EntityNyLangsMessageTip {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private Long id;
+
     @Column(name = "KEY_CODE")
     private String keyCode;
 
-    @JoinColumn(name = "REMARK")
+    @Column(name = "REMARK")
     private String remark;
 
     @Column(name = "IMG_URL")
@@ -26,11 +31,19 @@ public class EntityNyLangsMessageTip {
     @Column(name = "CREATE_DT")
     private Date createDt;
 
-    @JoinColumn(name = "USER_ID")
+    @Column(name = "USER_ID")
     private Long userId;
 
     @Column(name = "DEL_FLAG")
     private Boolean delFlag = false;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getKeyCode() {
         return keyCode;

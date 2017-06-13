@@ -7,6 +7,8 @@ import java.util.Date;
  */
 public class LangsMessageTipVo {
 
+    private Long id;
+
     private String keyCode;
 
     private String remark;
@@ -18,6 +20,14 @@ public class LangsMessageTipVo {
     private Long userId;
 
     private Boolean delFlag = false;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getKeyCode() {
         return keyCode;

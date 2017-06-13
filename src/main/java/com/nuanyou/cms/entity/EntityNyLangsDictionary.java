@@ -49,10 +49,6 @@ public class EntityNyLangsDictionary {
     @Column(name = "DEL_FLAG")
     private Boolean delFlag = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "KEY_CODE")
-    private EntityNyLangsMessageTip langsMessage;
-
     public EntityNyLangsDictionary() {
     }
 
@@ -154,14 +150,6 @@ public class EntityNyLangsDictionary {
 
     public void setDelFlag(Boolean delFlag) {
         this.delFlag = delFlag;
-    }
-
-    public EntityNyLangsMessageTip getLangsMessage() {
-        return langsMessage;
-    }
-
-    public void setLangsMessage(EntityNyLangsMessageTip langsMessage) {
-        this.langsMessage = langsMessage;
     }
 
     public String getLangsCountry() {

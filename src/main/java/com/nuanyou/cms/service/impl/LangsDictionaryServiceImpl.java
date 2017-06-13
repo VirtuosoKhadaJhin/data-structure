@@ -297,11 +297,6 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         if (CollectionUtils.isEmpty(dictionaryVo.getLangsMessageList())) {
             return null;
         }
-        LangsMessageTipVo messageTip = dictionaryVo.getMessageTip ();
-        if (messageTip != null) {
-            EntityNyLangsMessageTip entity = BeanUtils.copyBean ( messageTip, new EntityNyLangsMessageTip () );
-            messageTipDao.save ( entity );
-        }
         for (LangsCountryMessageVo langsCountryMessageVo : dictionaryVo.getLangsMessageList()) {
             String message = langsCountryMessageVo.getMessage();
             if (StringUtils.isEmpty(message)) {
