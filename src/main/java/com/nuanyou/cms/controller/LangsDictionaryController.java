@@ -149,6 +149,24 @@ public class LangsDictionaryController {
     }
 
     /**
+     * 根据keyCode查询查询中文、英文、当地文
+     *
+     * @param dictionaryVo
+     * @return boolean
+     */
+    @RequestMapping(value = "viewLocalLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public APIResult viewLocalLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
+        APIResult result = new APIResult(ResultCodes.Success);
+        // 根据keyCode查询中文、英文、当地文
+        List<LangsDictionary> dictionarys = dictionaryService.viewLocalLangsDictionary(dictionaryVo);
+        result.setData(dictionarys);
+
+        return result;
+    }
+
+
+    /**
      * 判断keyCode是否有效
      *
      * @param dictionaryVo
