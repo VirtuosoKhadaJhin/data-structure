@@ -263,11 +263,6 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     }
 
     @Override
-    public void deleteLangsDictionary(Long id) {
-        dictionaryDao.delete(id);
-    }
-
-    @Override
     public List<LangsDictionary> findIdNameListByCat(Long id) {
         EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne(id);
 

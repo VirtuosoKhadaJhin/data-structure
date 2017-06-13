@@ -23,8 +23,6 @@ public interface LangsDictionaryService {
 
     LangsDictionary updateLangsDictionary(LangsDictionary entity);
 
-    void deleteLangsDictionary(Long id);
-
     List<LangsDictionary> findIdNameListByCat(Long id);
 
     boolean verifykeyCode(LangsDictionaryVo dictionaryVo);
