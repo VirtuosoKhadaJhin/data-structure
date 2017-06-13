@@ -29,6 +29,12 @@ public interface RemoteContractService {
     @RequestMapping(value = "/template/paramter/{id}",method = RequestMethod.DELETE)
     public APIResult deleteContractParameter(@PathVariable(value = "id") Long id);
 
+    @ApiOperation(value = "删除模版", notes = "删除模版")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "删除模版")})
+    @RequestMapping(value = "/template/{id}",method = RequestMethod.DELETE)
+    public APIResult deleteContract(@PathVariable(value = "id") Long id);
+
+
     @ApiOperation(value = "废弃合同模版", notes = "废弃合同模版")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "废弃合同模版")})
     @RequestMapping(value = "/template/{id}/discard",method = RequestMethod.POST)

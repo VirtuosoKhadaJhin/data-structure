@@ -100,7 +100,7 @@ public class LangsDictionaryController {
      */
     @RequestMapping("/suggest")
     @ResponseBody
-    public APIResult<LangsDictionary> suggestSearch(String key) {
+    public APIResult<LangsDictionary> suggestSearch(@RequestParam("key") String key) {
         APIResult result = new APIResult(ResultCodes.Success);
         List<LangsDictionary> searchResult = dictionaryService.findSuggestSearch(key);
         result.setData(searchResult);

@@ -176,7 +176,6 @@ public class ContractTemplateController {
     ) throws IOException {
 
         return this.contractTemplateService.saveTemplate(
-                template.getSelectedParamIds(),
                 template.getParamIds(),
                 template.getList(),
                 template.getTemplateType(),
@@ -237,7 +236,7 @@ public class ContractTemplateController {
     @RequestMapping(path = "delete", method = RequestMethod.GET)
     @ResponseBody
     public APIResult delete(Long id) {
-        APIResult res = this.contractService.deleteContractParameter(id);
+        APIResult res = this.contractService.deleteContract(id);
         if (res.getCode() != 0) {
             throw new APIException(res.getCode(), res.getMsg());
         }
