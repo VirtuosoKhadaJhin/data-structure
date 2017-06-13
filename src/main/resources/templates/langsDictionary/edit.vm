@@ -6,6 +6,12 @@
     <title>暖游 后台管理系统 菜单管理</title>
 
     #include("common/css-support.vm")
+
+    <style>
+        .span7 {
+            width: 300px;
+        }
+    </style>
 </head>
 <body>
 <div id="content">
@@ -13,77 +19,88 @@
         <div id="breadcrumb">
             <div id="breadcrumb">
                 <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-                <a href="list" class="tip-bottom" data-original-title="">分类管理</a>
+                <a href="list" class="tip-bottom" data-original-title="">多语言管理</a>
                 <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
             </div>
         </div>
 
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span6">
+                <div class="span6" style="width: 80%;min-width:994px;">
                     <div class="widget-box">
                         <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                             <h5>编辑&查看</h5>
                         </div>
-                        <div class="widget-content nopadding">
-                            <form action="update" method="post" class="form-horizontal langsDicFormValidate" role="form"
-                                  id="cityform">
-                                <div class="control-group">
-                                    <span class="col-sm-2 control-label">ID</span>
-                                    <div class="controls">
-                                        #if($!type==2)
-                                            <input name="id" readonly type="text" class="form-control span7" placeholder="ID"
-                                                   value="$!entity.id">
-                                        #end
-                                        #if($!type==3)
-                                            <label>$!entity.id</label>
-                                        #end
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label">keyCode</label>
-                                    <div class="controls">
-                                        <input for="name" name="keyCode" type="text" class="span7"
-                                               value="$!entity.keyCode">
-                                    </div>
-                                </div>
+                        <form class="form-horizontal langsDicFormValidate" role="form">
 
-                                <div class="control-group">
-                                    <label class="control-label">多语言分类</label>
-                                    <div class="controls">
-                                        <select class="span7 select2 " name="categoryId">
-                                            #foreach($e in $!selectableLangsCategory)
-                                                <option value="$!e.id">$!e.name</option>
-                                            #end
-                                        </select>
-                                    </div>
-                                </div>
-
-
-                                #foreach($langCountry in $!langsCountries)
-                                    <div class="control-group">
-                                        <label class="control-label">$!langCountry.desc ($!langCountry.value)</label>
+                            <div class="nopadding" style="width: 100%;">
+                                <div class="fl" style="border-right:1px solid #eeeeee;box-sizing:border-box;width:50%;">
+                                    #*<div class="control-group">*#
+                                    <div class="">
+                                        <label class="control-label">keyCode</label>
                                         <div class="controls">
-                                            <input name="$!langCountry.key" type="text" class="span7 countryLanguage">
+                                            <input for="name" name="keyCode" type="text" class="span7"
+                                                   readonly="readonly"
+                                                   value="">
                                         </div>
                                     </div>
-                                #end
+                                    <div class="">
+                                        <label class="control-label">多语言分类<font
+                                                style="color: red;margin: 0px;padding: 5px;">*</font></label>
+                                        <div class="controls">
+                                            <select class="span7 select2 " name="categoryId">
+                                                #foreach($e in $!selectableLangsCategory)
+                                                    <option value="$!e.id">$!e.name</option>
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
 
 
-                                <div class="form-actions">
-                                    #if($!type==2 || $!type==1)
-                                        <button type="button" class="btn btnSave btn-success">保存</button>
-                                    #elseif($!type==3)
-                                        <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
-                                        <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
+
+                                    #foreach($langCountry in $!langsCountries)
+                                        <div class="">
+                                            <label class="control-label">$!langCountry.desc
+                                                ($!langCountry.value)</label>
+                                            <div class="controls">
+                                                <input name="$!langCountry.key" type="text"
+                                                       class="span7 countryLanguage">
+                                            </div>
+                                        </div>
                                     #end
 
-                                    <a class="btn btn-primary" href="list">返回</a>
                                 </div>
-                            </form>
-                        </div>
+                            <div class="fr" style="width:50%">
+                                <div class="">
+                                    <label class="control-label">备注：</label>
+                                    <div class="controls">
+                                        <textarea class="form-control" rows="3"  style="resize: none;"></textarea>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <label class="control-label">文件</label>
+                                    <div class="controls">
+                                        #*<input  type="file" class="span7"
+                                               readonly="readonly"
+                                               value="">*#
+                                        <input id="lefile" type="file" style="display:none">
+                                        <div class="input-append">
+                                            <input id="photoCover" class="span3" type="text" style="width:50%;">
+                                            <a class="btn span4" style="background-color: #eee;" onclick="$('input[id=lefile]').click();"><i class="icon-folder-open" style="padding-right"></i>预览文件</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-actions" style="clear:both;text-align: center">
+                                <a onclick="modifyLangsDictionary()" class="btn btn-info">确定</a>
+                                <a class="btn btn-primary" href="list">返回</a>
+                            </div>
+                        </form>
+
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -91,42 +108,103 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".btnSave").click(function () {
-                var request = {};
-                var langsMessageList=[];
-                $(".countryLanguage").each(function (i, o) {
-                    var countryLanguage = {};
-                    countryLanguage.langsKey=$(o).attr("name");
-                    countryLanguage.message=$(o).val();
-                    langsMessageList.push(countryLanguage);
-                });
-                request.id = $("input[name='id']").val();
-                request.message = $("input[name='message']").val();
-                request.keyCode = $("input[name='keyCode']").val();
-                request.categoryId = $("input[name='categoryId']").val();
-                request.langsMessageList=langsMessageList;
-                $.ajax({
-                    url: 'saveLangsDictionary',
-                    data: JSON.stringify(request),
-                    type: 'post',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    success: function (result) {
-                        if (result.code == 0) {
-                            alert("操作成功");
-                            window.location.href = "/langsDictionary/edit?type=3&id=" + result.data;
-                        } else {
-                            alert(result.msg);
+            /**
+             * @description 查询要编辑的语言信息
+             */
+            var request = {};
+            request.keyCode = getUrlParam("keyCode");
+            $.ajax({
+                url: 'viewLangsDictionary',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        var langsDictionaryVo = result.data;
+                        var keyCode = langsDictionaryVo.keyCode;
+                        var categoryId = langsDictionaryVo.categoryId;
+
+                        $("select[name='categoryId']").find("option[value='" + categoryId + "']").attr("selected", true);
+                        $(".select2-selection__rendered").html($("select[name='categoryId']").find("option[value='" + categoryId + "']").text());
+
+                        var langsMessageList = langsDictionaryVo.langsMessageList;
+                        for (var i = 0; i < langsMessageList.length; i++) {
+                            var langsMessage = langsMessageList[i];
+                            console.log();
+                            $("input[name='" + langsMessage.langsKey + "']").val(langsMessage.message);
                         }
+
+                        // 拼接KeyCode
+                        $("input[name='keyCode']").val("mch_" + categoryId + );
+
+                    } else {
+                        alert("操作失败:" + result.msg);
                     }
-                });
+                }
             });
-            var type = $!type;
-            if (type == 3) {
-                $(":text").attr("disabled", "disabled");
-                $("select").attr("disabled", "disabled");
-            }
+
+            //file 上传文件
+            $('input[id=lefile]').change(function() {
+                $('#photoCover').val($(this).val());
+            });
+
         });
+
+        /**
+         * 修改语言
+         */
+        function modifyLangsDictionary() {
+            var request = {};
+            request.keyCode = $("input[name='keyCode']").val();
+            request.categoryId = Number($("select[name='categoryId']").val());
+
+            // 页面所有的语言message
+            var countryLanguages = $("input[class='span7 countryLanguage']");
+            // langsMessageList
+            var langsMessageList = [];
+            for (var i = 0; i < countryLanguages.length; i++) {
+                var countryLanguage = countryLanguages.eq(i);
+                // keyCode
+                var langsKey = countryLanguage.attr("name");
+                // message
+                var message = countryLanguage.val().trim();
+                var langsCountryMessageVo = {
+                    langsKey: langsKey,
+                    message: message
+                };
+                langsMessageList.push(langsCountryMessageVo);
+            }
+            // 封装LangsDictionaryVo传输约束
+            request.langsMessageList = langsMessageList;
+
+            console.log(request);
+
+            $.ajax({
+                url: 'modifyLangsDictionary',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        alert("操作成功!");
+                        location.href = "list";
+                    }
+                }
+            });
+
+        }
+
+        //获取url中的参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+
+
     </script>
 </body>
 </html>
