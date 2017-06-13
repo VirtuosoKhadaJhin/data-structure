@@ -29,17 +29,17 @@ public class TemplateParameterRequest {
 
     private String note;
 
-    private String referName;
+    private Long referenceId;
 
     private Long dateTypeMappingId;
 
 
-    public String getReferName() {
-        return referName;
+    public Long getReferenceId() {
+        return referenceId;
     }
 
-    public void setReferName(String referName) {
-        this.referName = referName;
+    public void setReferenceId(Long referenceId) {
+        this.referenceId = referenceId;
     }
 
     public Long getDateTypeMappingId() {

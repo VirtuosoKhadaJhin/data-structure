@@ -110,8 +110,6 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
         validateRequest(requests);
         //验证模板基本信息
         validateBasic(templateType,title,countryId);
-        //插入referenceId
-        setReferenceId(requests);
         //fetch param ids
         BatchTemplateParameterRequest batch = new BatchTemplateParameterRequest();
         batch.setParameterRequests(requests);
@@ -264,9 +262,5 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
         }
     }
 
-    public void setReferenceId(List<TemplateParameterRequest> referenceId) {
-        for (TemplateParameterRequest request : referenceId) {
-            String referKeyName=request.getReferName();
-        }
-    }
+
 }

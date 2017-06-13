@@ -5,6 +5,7 @@ import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.user.ParamsDataMapping;
 import com.nuanyou.cms.model.LangsCategory;
+import com.nuanyou.cms.model.LangsDictionaryVo;
 import com.nuanyou.cms.model.contract.enums.TemplateStatus;
 import com.nuanyou.cms.model.contract.output.ContractParameter;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
@@ -12,10 +13,7 @@ import com.nuanyou.cms.model.contract.request.ParamDetail;
 import com.nuanyou.cms.model.contract.request.Template;
 import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.remote.service.RemoteContractService;
-import com.nuanyou.cms.service.ContractTemplateService;
-import com.nuanyou.cms.service.CountryService;
-import com.nuanyou.cms.service.LangsCategoryService;
-import com.nuanyou.cms.service.ParamsDataMappingService;
+import com.nuanyou.cms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -49,6 +47,8 @@ public class ContractTemplateController {
     private LangsCategoryService categoryService;
     @Autowired
     private ParamsDataMappingService dataMappingService;
+    @Autowired
+    private LangsDictionaryService dictionaryService;
 
 
     @RequestMapping("list")
@@ -113,6 +113,7 @@ public class ContractTemplateController {
         List<Long> selectedIds=new ArrayList<>();
         if (optype == 2||optype==3||optype==4) {
             selectedParams = template.getParameters();
+            setLangsMessage(selectedParams,request);
             selectedIds=getSeletedIds(selectedParams);
         }
 
@@ -251,4 +252,11 @@ public class ContractTemplateController {
     }
 
 
+    public void setLangsMessage(List<ContractParameter> langsMessage,HttpServletRequest request) {
+        LangsDictionaryVo dic= dictionaryService.findLangsDictionary("",request.getLocale());
+        for (ContractParameter contractParameter : langsMessage) {
+            contractParameter.getName().setContent("sdfsdf");
+            contractParameter.getRemark().setContent("sdffd");
+        }
+    }
 }
