@@ -29,18 +29,21 @@
                             <form action="update" method="post" class="form-horizontal langsDicFormValidate" role="form"
                                   id="cityform">
                                 <div class="control-group">
-                                    <label class="control-label">keyCode</label>
+                                    <label class="control-label">
+                                        keyCode<font style="color: red;margin: 0px;padding: 5px;">*</font>：</label>
                                     <div class="controls">
-                                        <input for="name" id="keyCode" name="keyCode" type="text" class="span7"
+                                        <input for="name" id="keyCode" readonly="readonly" name="keyCode" type="text"
+                                               class="span7"
                                                value="$!entity.keyCode" onchange="verifykeyCode()">
-                                        <label id="keyCodeStatus" class="control-label" style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
+                                        <label id="keyCodeStatus" class="control-label"
+                                               style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
                                     </div>
                                 </div>
 
                                 <div class="control-group">
                                     <label class="control-label">多语言分类</label>
                                     <div class="controls">
-                                        <select class="span7 select2 " name="categoryId">
+                                        <select class="span7 select2 " name="categoryId" onchange="keyCodeRealTime()">
                                             #foreach($e in $!selectableLangsCategory)
                                                 <option value="$!e.id">$!e.name</option>
                                             #end
@@ -51,15 +54,31 @@
 
                                 #foreach($langCountry in $!langsCountries)
                                     <div class="control-group">
-                                        <label class="control-label">$!langCountry.desc ($!langCountry.value)</label>
+                                        <label class="control-label">$!langCountry.desc
+                                            ($!langCountry.value)
+                                            #if($!langCountry.key == 1 || $!langCountry.key == 2)
+                                                <font style="color: red;margin: 0px;padding: 5px;">*</font>
+                                            #end
+                                            ：</label>
                                         <div class="controls">
-                                            <input name="keyCodes" data-key="$!langCountry.key" type="text" class="span7 countryLanguage">
+                                            #if($!langCountry.key == 1 || $!langCountry.key == 2)
+                                                <input name="$!langCountry.key" data-key="$!langCountry.key" type="text"
+                                                       onchange="keyCodeRealTime()" data-name="langs"
+                                                       class="span7 countryLanguage">
+                                            #end
+                                            #if($!langCountry.key != 1 && $!langCountry.key != 2)
+                                                <input name="$!langCountry.key" data-key="$!langCountry.key" type="text"
+                                                       data-name="langs"
+                                                       class="span7 countryLanguage">
+                                            #end
+                                            <label id="requiredKey_$!langCountry.key" class="control-label"
+                                                   style="width:80px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">必填项</label>
                                         </div>
                                     </div>
                                 #end
 
-                                <div class="form-actions">
-                                    <button type="button" id="saveBtn" onclick="saveLangsDictionary()" class="btn btnSave btn-success">保存</button>
+                                <div class="form-actions" style="clear:both;text-align: center">
+                                    <a onclick="saveLangsDictionary()" class="btn btn-info">确定</a>
                                     <a class="btn btn-primary" onclick="backLangsDictionaryList()">返回</a>
                                 </div>
                             </form>
@@ -72,81 +91,130 @@
     #include("common/js-support.vm")
 
     <script type="text/javascript">
-    function backLangsDictionaryList(){
-       location.href = "list";
-    }
-    /**
-     * 验证keyCode是否重复
-     */
-    function verifykeyCode(){
-        var request = {};
-        var keyCode = $("input[name='keyCode']").val();
+        keyCodeRealTime();
+        function backLangsDictionaryList() {
+            location.href = "list";
+        }
+        /**
+         * 验证keyCode是否重复
+         */
+        function verifykeyCode() {
+            var request = {};
+            var keyCode = $("input[id='keyCode']").val();
 
-        request.keyCode = keyCode;
-        $.ajax({
-            url: 'verifykeyCode',
-            data: JSON.stringify(request),
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.code == 0) {
-                    console.log(result.data);
-                    if(!result.data){
-                        $("#keyCodeStatus").show();
-                        $("#saveBtn").attr("onclick", "");
-                        $("#keyCode").css("border","1px solid red");
-                        $("#saveBtn").attr("style", "background-color: gray;");
-                    }else{
-                        $("#keyCodeStatus").hide();
-                        $("#saveBtn").attr("style", "");
-                        $("#keyCode").css("border","");
-                        $("#saveBtn").attr("onclick", "saveLangsDictionary()");
+            request.keyCode = keyCode;
+            $.ajax({
+                url: 'verifykeyCode',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        console.log(result.data);
+                        if (!result.data) {
+                            $("#keyCodeStatus").show();
+                            $("#saveBtn").attr("onclick", "");
+                            $("#keyCode").css("border", "1px solid red");
+                            $("#saveBtn").attr("style", "background-color: gray;");
+                        } else {
+                            $("#keyCodeStatus").hide();
+                            $("#saveBtn").attr("style", "");
+                            $("#keyCode").css("border", "");
+                            $("#saveBtn").attr("onclick", "saveLangsDictionary()");
+                        }
                     }
                 }
-            }
-        });
-    }
-    /**
-     * 保存多语言
-     */
-    function saveLangsDictionary(){
-        var request = {};
-
-        request.keyCode = $("input[name='keyCode']").val();
-        request.categoryId = parseInt($("select[name='categoryId']").val());
-
-        var langsMessageList = [];
-        var keyCodes = document.getElementsByName("keyCodes");
-
-        for (var i = 0, j = keyCodes.length; i < j; i++){
-            var keyCodeInput = keyCodes[i];
-            var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
-            var message = keyCodeInput.value;
-            var langsCountryMessageVo = { langsKey : langsKey, message : message};
-            langsMessageList.push(langsCountryMessageVo);
+            });
         }
 
-        request.langsMessageList = langsMessageList;
-
-        console.log("requestJsonBody:" + request);
-
-        $.ajax({
-            url: 'saveLangsDictionary',
-            data: JSON.stringify(request),
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.code == 0) {
-                    alert("操作成功");
-                    window.location.href = "list";
-                } else {
-                    alert(result.msg);
-                }
+        /**
+         * 实时更新keyCode展示
+         */
+        function keyCodeRealTime() {
+            // 拼接KeyCode
+            var requiredUS = $("input[name='1']").val();
+            // 如果是英文,则要增加改变事件,用来改变keyCode
+            $("input[name='1']").attr("onchange", "keyCodeRealTime()");
+            // 选择的分类
+            var categoryId = $("select[name='categoryId']").val();
+            // keyCode初始化值
+            if (requiredUS != null) {
+                var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
+                $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
             }
-        });
-    }
+        }
+
+        /**
+         * 检验必填项
+         */
+        function checkRequiredParams() {
+            var requiredUS = $("input[name='1']").val();
+            var requiredZH = $("input[name='2']").val();
+
+            if (requiredUS == null || requiredUS == "") {
+                $("#requiredKey_1").show();
+                $("input[name='1']").css("border", "1px solid red");
+                return false;
+            } else if (requiredZH == null || requiredZH == "") {
+                $("#requiredKey_2").show();
+                $("input[name='2']").css("border", "1px solid red");
+                return false;
+            } else {
+                $("#requiredKey_1").hide();
+                $("input[name='1']").css("border", "");
+                $("#requiredKey_2").hide();
+                $("input[name='2']").css("border", "");
+                return true;
+            }
+            return true;
+        }
+
+        /**
+         * 保存多语言
+         */
+        function saveLangsDictionary() {
+            keyCodeRealTime();
+
+            var checkResult = checkRequiredParams();
+            if (!checkResult) {
+                return false;
+            }
+
+            var request = {};
+
+            request.keyCode = $("input[id='keyCode']").val();
+            request.categoryId = parseInt($("select[name='categoryId']").val());
+
+            var langsMessageList = [];
+            var keyCodes = $("input[data-name='langs']");
+
+            for (var i = 0, j = keyCodes.length; i < j; i++) {
+                var keyCodeInput = keyCodes[i];
+                var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
+                var message = keyCodeInput.value;
+                var langsCountryMessageVo = {langsKey: langsKey, message: message};
+                langsMessageList.push(langsCountryMessageVo);
+            }
+
+            request.langsMessageList = langsMessageList;
+
+            $.ajax({
+                url: 'saveLangsDictionary',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        alert("操作成功");
+                        window.location.href = "list";
+                    } else {
+                        alert(result.msg);
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
