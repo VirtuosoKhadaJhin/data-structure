@@ -56,14 +56,9 @@
                                 </div>
 
 
-                                <label class="control-label">測試</label>
-                                <div class="controls">
-                                    <select class="span5 select2" id="testSelect2">
-                                        <option value="1"   >主合同1</option>
-                                        <option value="2"   selected>附加合同2</option>
-                                        <option value="3"   >附加合同3</option>
-                                    </select>
-                                </div>
+
+
+
 
 
                                 <label class="control-label">自定义参数 </label>
@@ -90,7 +85,7 @@
                                             <tbody>
                                                 #foreach($param in $!selectedParams)
                                                 <tr>
-                                                    <td>$!param.id : $!param.key
+                                                    <td>$!param.id : <span class="key">$!param.key</span>
                                                         <input name="paramId" type="hidden" value="$!param.id"
                                                                style="width: 200px" readonly>
                                                     </td>
@@ -124,7 +119,7 @@
                                                         #end
                                                     </td>
                                                     <td>$!param.remark.key</td>
-                                                    <td>$!param.referenceId </td>
+                                                    <td>$!param.referenceId</td>
                                                     <td style="text-align: left" class="operateColumn">
                                                         <a class="btn btn-info btn-mini removeRow">删除</a>
                                                     </td>
@@ -140,11 +135,10 @@
                                                            readonly>
                                                 </td>
                                                 <td>
-                                                    <input name="name" style="width: 150px"
-                                                           class="langsAutoComplete"
-                                                           id="langsAutoComplete1"><br>
-##                                                    <a class="btn btn-info btn-mini selectLang"
-##                                                       inputLangsName="name">选择</a>
+                                                    <input name="nameLabel" style="width: 150px"
+                                                           class="langsAutoComplete">
+                                                    <input name="name" type="hidden">
+                                                    <br>
                                                     <a class="btn btn-info btn-mini addLang"
                                                        inputLangsName="name">添加</a>
                                                 </td>
@@ -171,13 +165,17 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <input name="remark" class="langsAutoComplete" style="width: 150px"><br>
-##                                                    <a class="btn btn-info btn-mini selectLang" inputLangsName="remark">选择</a>
+                                                    <input name="remarkLabel" class="langsAutoComplete" style="width: 150px">
+
+                                                    <input name="remark" type="hidden">
+                                                    <br>
                                                     <a class="btn btn-info btn-mini addLang"
                                                        inputLangsName="remark">添加</a>
                                                 </td>
                                                 <td>
-                                                    <input name="referenceId" class="referId" placeholder="选择引用" readonly style="width: 150px">
+
+                                                    <input name="referName" class="referName" placeholder="引用参数" style="width: 150px">
+
                                                 </td>
                                                 <td style="text-align: left;width: 300px" class="operateColumn">
                                                     <a class="btn btn-info btn-mini removeRow">删除</a>
@@ -211,7 +209,7 @@
                                                     <span class="referId"></span>
                                                 </td>
                                                 <td style="stext-align: left;width: 300px">
-                                                    <a class="btn btn-info btn-mini removeRow operateColumn" >删除</a>
+                                                    <a class="btn btn-info btn-mini removeRow operateColumn">删除</a>
                                                 </td>
                                             </tr>
                                             <!--span-->
@@ -266,7 +264,6 @@
 <!--***************************************选择参数*************************************************************-->
 
 
-
 <!--***************************************选择语言*************************************************************-->
 <div id="selectLangsModal" class="modal hide fade" role="dialog" aria-hidden="true">
     <div class="modal-header">
@@ -301,13 +298,9 @@
 <!--***************************************选择语言*************************************************************-->
 
 
-
-
-
-
-
 <!--***************************************选择引用*************************************************************-->
-<<div id="referModal" class="modal hide fade" role="dialog" aria-hidden="true">
+<
+<div id="referModal" class="modal hide fade" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3>引用参数选择</h3>
@@ -319,7 +312,7 @@
                 <select class="span5 select2" id="referIds" name="referIds">
                     #foreach($param in $!selectableParams)
                         <option value="$!param.id">
-                           id: $!param.id key:  $!param.key ; 属性名:  $!param.name.key 备注:$!param.note
+                            id: $!param.id key:  $!param.key ; 属性名:  $!param.name.key 备注:$!param.note
                         </option>
                     #end
                 </select>
@@ -332,9 +325,6 @@
     </div>
 </div>
 <!--***************************************选择引用*************************************************************-->
-
-
-
 
 
 <div id="addLangsModal" class="modal hide fade" role="dialog" aria-hidden="true">
@@ -389,7 +379,8 @@
 <script src="/dist/js/cascade-select.js"></script>
 
 ##<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.js"></script>
+##<script src="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
     /**
      * 验证keyCode是否重复
@@ -452,15 +443,13 @@
     }
 
     $(document).ready(function () {
-
         var type = $!optype;
-        var selectedIds=$!selectedIds;
+        var selectedIds =$!selectedIds;
         var currLangInput;
         var curRefer;
         var inputRowExample = $(".inputRowExample").html();
         var spanRowExample = $(".rowSpanExample").html();
 
-        $("#testSelect2").val(3);
 
         if (type == 3) {
             $(":text").attr("disabled", "disabled");
@@ -472,20 +461,36 @@
         }
 
         $(".btnSave").click(function () {
-            var form = $(".templateFormValidate");
-            if(!form.valid()){
-                return false;
-            }
+            //remove examples
             $(".inputRowExample").remove();
             $(".rowSpanExample").remove();
+
+            //validate form
+            var form = $(".templateFormValidate");
+            if (!form.valid()) {
+                return false;
+            }
+
+            //validate keys
+            var keyNames = [];
+            $("input[name='key']").each(function (i, o) {
+                keyNames.push($(o).val());
+            });
+            $("span[class='key']").each(function (i, o) {
+                keyNames.push($(o).html());
+            });
+
+
+
+
+            //begin to generate datas
             var request = {};
             var list = [];
             var paramIds = [];
-            var paramIds = [];
-            var optype=$("#optype").val();
+            var optype = $("#optype").val();
             $(".editRow").each(function (i, o) {
                 var templateParameterRequest = {};
-                templateParameterRequest.referId= $(o).find("input[name='referId']").val();
+                templateParameterRequest.referId = $(o).find("input[name='referId']").val();
                 templateParameterRequest.name = $(o).find("input[name='name']").val();
                 templateParameterRequest.key = $(o).find("input[name='key']").val();
                 templateParameterRequest.defaultValue = $(o).find("input[name='defaultValue']").val();
@@ -495,6 +500,23 @@
                 templateParameterRequest.remark = $(o).find("input[name='remark']").val();
                 templateParameterRequest.referenceId = $(o).find("input[name='referenceId']").val();
                 templateParameterRequest.dateTypeMappingId = $(o).find("select[name='dateTypeMappingId']").val();
+                templateParameterRequest.referName=$(o).find("input[name='referName']").val();
+                //validate refer key name
+                if(templateParameterRequest.referName!=""){
+                    if(templateParameterRequest.referName==templateParameterRequest.key){
+                        return alert("引用Key："+templateParameterRequest.referName+"不能引用自己");
+                    }
+                    for(var i=0 ;i<keyNames.length;i++){
+                        var isSame=false;
+                        if(keyNames[i]==templateParameterRequest.referName){
+                            isSame=true;
+                            break;
+                        }
+                    }
+                    if(!isSame){
+                        return alert("引用Key："+templateParameterRequest.referName+"不存在");
+                    }
+                }
                 list.push(templateParameterRequest);
             });
             $("input[name='paramId']").each(function (i, o) {
@@ -507,12 +529,12 @@
             request.id = $("input[name='id']").val();
             request.paramIds = paramIds;
             request.list = list;
-            request.optype= $("#optype").val();
-            if(optype==4){
-                request.id=null;
+            request.optype = $("#optype").val();
+            if (optype == 4) {
+                request.id = null;
                 paramIds.sort();
                 selectedIds.sort();
-                if(paramIds.join() == selectedIds.join() && list.length<=0){ //JSON.stringify(a1) == JSON.stringify(a2)
+                if (paramIds.join() == selectedIds.join() && list.length <= 0) { //JSON.stringify(a1) == JSON.stringify(a2)
                     return alert("复制操作下的参数列表没有改动！");
                 }
             }
@@ -540,20 +562,24 @@
 
         $("#mytable").delegate(".addRow", "click", function (e) {
             var table = $("#mytable");
-            //var trHTML=$("tr[name='firstRow']").eq(0).prop('outerHTML');
-            var trHTML = "<tr class='editRow'>" + inputRowExample + "</tr>";
+            var trHTML = "<tr class='editRow eachRow'>" + inputRowExample + "</tr>";
             table.append(trHTML);
+            var last = lastInputRow = $('#mytable .editRow').eq(0);
+            //options.autocompleteOptions.source = false;
+            //$( ".selector" ).autocomplete( "close" );
+            //$( ".selector" ).autocomplete( "enable" );
+          //  last.find("input[class='langsAutoComplete']").autocomplete("enable");
+            $(".langsAutoComplete").autocomplete();
+//          var trHTML=$("tr[name='firstRow']").eq(0).prop('outerHTML');
+//          console.log($(trHTML).find("input[class='langsAutoComplete']"));
+//          console.log( last.find("input[class='langsAutoComplete']"));
         });
-
-
-
-
 
 
         /*选择参数*/
         $("#mytable").delegate(".selectParameter", "click", function (e) {
-            var paramsAll=$("select[name='selectedParamId']");
-            var paramIds=[];
+            var paramsAll = $("select[name='selectedParamId']");
+            var paramIds = [];
             $("input[name='paramId']").each(function (i, o) {
                 paramIds.push($(o).val());
             });
@@ -563,23 +589,23 @@
                 data: {},
                 type: 'get',
                 dataType: 'json',
-                async: true,
+                async: false,
                 contentType: 'application/json',
                 success: function (result) {
                     if (result.code == 0) {
-                        var params=result.data.list;
+                        var params = result.data.list; //template相关的params  页面相关的params
                         for (var i = 0; i < params.length; i++) {
-                            var isSame=false;
+                            var isSame = false;
                             for (var j = 0; j < paramIds.length; j++) {
-                                if(params[i].id==paramIds[j]){
-                                    isSame=true;
+                                if (params[i].id == paramIds[j]) {
+                                    isSame = true;
                                     break;
                                 }
                             }
-                            if(!isSame){
-                                var text="key:"+params[i].key + "备注:"+params[i].note;
-                                var id=params[i].id;
-                                paramsAll.append("<option value='"+id+"'>"+text+"</option>");
+                            if (!isSame) {
+                                var text = "key:" + params[i].key + "备注:" + params[i].note;
+                                var id = params[i].id;
+                                paramsAll.append("<option value='" + id + "'>" + text + "</option>");
                             }
                         }
                     } else {
@@ -594,14 +620,14 @@
 
         $("#parameterSave").on("click", function () {
             var lastInputRow;
-            if($('#mytable .editRow').length<=0){
-                lastInputRow=$("#mytable tr:last");
-            }else{
-                lastInputRow=lastInputRow = $('#mytable .editRow').eq(0);
+            if ($('#mytable .editRow').length <= 0) {
+                lastInputRow = $("#mytable tr:last");
+            } else {
+                lastInputRow = lastInputRow = $('#mytable .editRow').eq(0);
             }
             //console.log(lastInputRow);
             var table = $("#mytable");
-            var trHTML = "<tr class='rowSpan'>" + spanRowExample + "</tr>";
+            var trHTML = "<tr class='rowSpan eachRow'>" + spanRowExample + "</tr>";
             $(trHTML).insertBefore(lastInputRow);
             var selectedParamId = $("select[name='selectedParamId']").val();
             console.log("selectedParamId:" + selectedParamId);
@@ -656,41 +682,55 @@
             });
         });
 
-        $("#mytable").delegate(".langsAutoComplete", "keyup", function (e) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+    $("#mytable").delegate(".langsAutoComplete", "keyup", function (e) {
             var keyWord = $(this).val();
-            if (keyWord == "") {
+            if ($.trim(keyWord) == "") {
                 return;
             }
+            console.log(keyWord);
             var obj = $(this);
             $.ajax({
                 url: '/langsDictionary/suggest',
-                data: {key: keyWord},
+                data: {"key": keyWord},
                 type: 'post',
                 dataType: 'json',
-                async: true,
-                contentType: 'application/json',
+                async: false,
                 success: function (result) {
                     if (result.code == 0) {
-                        var listComplete=[];
+                        var listComplete = [];
                         var list = result.data;
                         for (var i = 0; i < list.length; i++) {
-                            var o=list[i];
-                            var complate={};
-                            complate.label=o.message;
-                            complate.value=o.keyCode;
-                            complate.message=o.message;
+                            var o = list[i];
+                            var complate = {};
+                            complate.label = o.message;
+                            complate.value = o.keyCode;
+                            //complate.message=o.message;
                             listComplete.push(complate);
                         }
                         var currEle = e.currentTarget;
                         $(currEle).autocomplete({
                             minLength: 0,
                             source: listComplete,
-                            focus: function( event, ui ) {
-                                $( this ).val(ui.item.label );
+                            focus: function (event, ui) {
+                                $(this).val(ui.item.label);
                                 return false;
                             },
-                            select: function( event, ui ) {
-                                $( this ).val( ui.item.value);
+                            select: function (event, ui) {
+                                $(this).val(ui.item.label);
+                                $(this).next().val(ui.item.value);
                                 return false;
                             }
                         })
@@ -740,7 +780,8 @@
                 contentType: 'application/json',
                 success: function (result) {
                     if (result.code == 0) {
-                        currLangInput.val(result.data);
+                        currLangInput.val(langsCountryMessageVo.message);
+                        currLangInput.next().val(result.data);
                     } else {
                         alert(result.msg);
                     }
@@ -753,8 +794,9 @@
         $("#mytable").delegate(".referId", "click", function (e) {
             var currEle = e.currentTarget;
             var td = $(currEle).parent().parent();
+
             curRefer = td.find("input[name='referenceId']");
-            if(curRefer.val()!=""){
+            if (curRefer.val() != "") {
                 $("#referIds").val(curRefer.val());
                 $("#referIds").select2();
             }
@@ -787,6 +829,76 @@
             },
             errorElement: "span"
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//
+//
+//        $(".langsAutoComplete222").autocomplete({
+//            source: function( request, response ) {
+//                $.ajax({
+//                    url : '/langsDictionary/suggest?date=' + new Date(),
+//                    type : "get",
+//                    dataType : "json",
+//                    async: true,
+//                    data: {key: keyWord},
+//                    success: function( data ) {
+//                        console.log(data);
+//
+//                        var listComplete = [];
+//                        var list = result.data;
+//                        for (var i = 0; i < list.length; i++) {
+//                            var o = list[i];
+//                            var complate = {};
+//                            complate.label = o.message;
+//                            complate.value = o.keyCode;
+//                            //complate.message=o.message;
+//                            listComplete.push(complate);
+//                        }
+//                        response( $.map( listComplete, function( item ) {
+//                            return {
+//                                label: item.label,
+//                                value: item.value
+//                            }
+//                        }));
+//
+//
+//                    }
+//                });
+//            },
+//
+//            focus: function (event, ui) {
+//                $(this).val(ui.item.label);
+//                return false;
+//            },
+//            select: function (event, ui) {
+//                $(this).val(ui.item.label);
+//                $(this).next().val(ui.item.value);
+//                return false;
+//            }
+//        });
     });
 
 </script>

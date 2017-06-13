@@ -105,12 +105,13 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
 
 
     @Override
-    public APIResult saveTemplate(List<Long> selectedParamIds, List<Long> paramIds, List<TemplateParameterRequest> requests, Integer templateType, String title, Long countryId, Long id) {
-
+    public APIResult saveTemplate( List<Long> paramIds, List<TemplateParameterRequest> requests, Integer templateType, String title, Long countryId, Long id) {
+        //验证表单信息
         validateRequest(requests);
-
+        //验证模板基本信息
         validateBasic(templateType,title,countryId);
-
+        //插入referenceId
+        setReferenceId(requests);
         //fetch param ids
         BatchTemplateParameterRequest batch = new BatchTemplateParameterRequest();
         batch.setParameterRequests(requests);
@@ -176,7 +177,7 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
     }
 
     private void validateRequest(List<TemplateParameterRequest> requests) {
-        Set<String> set=new HashSet<>();
+        Set<String> keySet =new HashSet<>();
         for (TemplateParameterRequest request : requests) {
             if (StringUtils.isEmpty(request.getName())) {
                 throw new APIException(ResultCodes.Fail, "参数名不能为空");
@@ -204,14 +205,14 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
                 request.setRegex(paramsDataMapping.getRegex());
                 request.setType(paramsDataMapping.getDataType());
             }
-            set.add(request.getKey());
+            keySet.add(request.getKey());
         }
-        if(set.size()!=requests.size()){
+        if(keySet.size()!=requests.size()){
             throw new APIException(ResultCodes.Fail, "key不可重复");
         }
-
-
     }
+
+
 
 
     private List<TemplateParameterRequest> toListTemplateParameter(TemplateParameterRequests templateParameterRequests) {
@@ -263,4 +264,9 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
         }
     }
 
+    public void setReferenceId(List<TemplateParameterRequest> referenceId) {
+        for (TemplateParameterRequest request : referenceId) {
+            String referKeyName=request.getReferName();
+        }
+    }
 }
