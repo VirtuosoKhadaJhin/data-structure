@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -142,18 +141,6 @@ public class LangsDictionaryController {
         model.addAttribute("langsCountries", LangsCountry.localValues (LOCAL_KEY));
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
         return "langsDictionary/local_add";
-    }
-
-    @RequestMapping("update")
-    public String update(LangsDictionary entity) throws IOException {
-        LangsDictionary category;
-        if (entity.getId() == null) {
-            category = dictionaryService.addLangsDictionary(entity);
-        } else {
-            category = dictionaryService.updateLangsDictionary(entity);
-        }
-        String url = "edit?type=3&id=" + category.getId();
-        return "redirect:" + url;
     }
 
     /**
