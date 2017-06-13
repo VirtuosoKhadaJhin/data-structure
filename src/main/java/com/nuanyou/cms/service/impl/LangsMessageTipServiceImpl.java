@@ -3,7 +3,6 @@ package com.nuanyou.cms.service.impl;
 import com.nuanyou.cms.component.FileClient;
 import com.nuanyou.cms.dao.EntityNyLangsDictionaryDao;
 import com.nuanyou.cms.dao.EntityNyLangsMessageTipDao;
-import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.entity.EntityNyLangsMessageTip;
 import com.nuanyou.cms.model.LangsMessageTipVo;
 import com.nuanyou.cms.service.LangsMessageTipService;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
@@ -39,14 +39,25 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
 
     @Override
     public EntityNyLangsMessageTip add(LangsMessageTipVo requestVo) {
-        EntityNyLangsDictionary entityNyLangsDictionary = new EntityNyLangsDictionary();
-        entityNyLangsDictionary.setKeyCode(requestVo.getKeyCode());
+        String keyCode = requestVo.getKeyCode();
+        try {
+            keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
-        Example<EntityNyLangsDictionary> example = Example.of(entityNyLangsDictionary);
-        List<EntityNyLangsDictionary> entityResult = dictionaryDao.findAll(example);
+        EntityNyLangsMessageTip entityNyLangsMessageTip = new EntityNyLangsMessageTip();
+        entityNyLangsMessageTip.setKeyCode(requestVo.getKeyCode());
 
-        EntityNyLangsMessageTip entityNyLangsMessageTip = new EntityNyLangsMessageTip(requestVo.getKeyCode(),
-                requestVo.getRemark(), requestVo.getImgUrl(), new Date(), false);
+        Example<EntityNyLangsMessageTip> example = Example.of(entityNyLangsMessageTip);
+        List<EntityNyLangsMessageTip> entityResult = messageTipDao.findAll(example);
+
+        if (entityResult.size() > 0) {
+            messageTipDao.delete(entityResult);
+        }
+
+        entityNyLangsMessageTip = new EntityNyLangsMessageTip(keyCode, requestVo.getRemark(),
+                requestVo.getImgUrl(), new Date(), false);
 
         EntityNyLangsMessageTip result = messageTipDao.save(entityNyLangsMessageTip);
 
@@ -61,10 +72,36 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
             if (originalFilename.contains("."))
                 fileType = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
             InputStream is = file.getInputStream();
-            fileClient.uploadFile(is, fileType);
+            String imgUrl = fileClient.uploadFile(is, fileType);
+            return imgUrl;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    @Override
+    public LangsMessageTipVo viewLangsMessageTip(LangsMessageTipVo requestVo) {
+        String keyCode = requestVo.getKeyCode();
+        try {
+            keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        EntityNyLangsMessageTip entityNyLangsMessageTip = new EntityNyLangsMessageTip();
+        entityNyLangsMessageTip.setKeyCode(keyCode);
+
+        Example<EntityNyLangsMessageTip> example = Example.of(entityNyLangsMessageTip);
+        List<EntityNyLangsMessageTip> entityResult = messageTipDao.findAll(example);
+
+        if (entityResult.size() > 0) {
+            entityNyLangsMessageTip = entityResult.get(0);
+            LangsMessageTipVo langsMessageTipVo = new LangsMessageTipVo(entityNyLangsMessageTip.getRemark(),
+                    entityNyLangsMessageTip.getImgUrl());
+            return langsMessageTipVo;
+        }
+
         return null;
     }
 

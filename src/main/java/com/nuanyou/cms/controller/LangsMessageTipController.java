@@ -52,4 +52,14 @@ public class LangsMessageTipController {
         return result;
     }
 
+
+    @RequestMapping("/viewLangsMessageTip")
+    @ResponseBody
+    public APIResult<LangsMessageTipVo> viewLangsMessageTip(@RequestBody LangsMessageTipVo requestVo) {
+        APIResult<LangsMessageTipVo> result = new APIResult<LangsMessageTipVo>(ResultCodes.Success);
+        LangsMessageTipVo langsMessageTipVo = messageTipService.viewLangsMessageTip(requestVo);
+        result.setData(langsMessageTipVo);
+        return result;
+    }
+
 }

@@ -5,6 +5,7 @@ import com.nuanyou.cms.model.LangsDictionaryRequestVo;
 import com.nuanyou.cms.model.LangsDictionaryVo;
 import org.springframework.data.domain.Page;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Locale;
 
@@ -13,20 +14,64 @@ import java.util.Locale;
  */
 public interface LangsDictionaryService {
 
+    /**
+     * 查询所有语言字典项列表
+     *
+     * @param requestVo
+     * @return
+     */
     Page<LangsDictionaryVo> findAllDictionary(LangsDictionaryRequestVo requestVo);
 
+    /**
+     * 查询本地语言字典项列表
+     *
+     * @param requestVo
+     * @return
+     */
     Page<LangsDictionaryVo> findAllLocalDictionary(LangsDictionaryRequestVo requestVo);
 
-    LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale);
+    /**
+     * 根据KeyCode和Locale获取字典项
+     *
+     * @param keyCode
+     * @param locale
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale) throws UnsupportedEncodingException;
 
-    LangsDictionary addLangsDictionary(LangsDictionary entity);
+    /**
+     * 查询当地语Message内容
+     *
+     * @param keyCode
+     * @param locale
+     * @return
+     */
+    String findLocalMessageByKeyCode(String keyCode, Locale locale);
 
-    LangsDictionary updateLangsDictionary(LangsDictionary entity);
+    /**
+     * 根据分类id查询所有的语言
+     *
+     * @param id
+     * @return
+     */
+    List<LangsDictionary> findAllLanguagesByCatId(Long id);
 
-    List<LangsDictionary> findIdNameListByCat(Long id);
-
+    /**
+     * 判断keyCode是否有效
+     *
+     * @param dictionaryVo
+     * @return
+     */
     boolean verifykeyCode(LangsDictionaryVo dictionaryVo);
 
+
+    /**
+     * 保存新增对象
+     *
+     * @param dictionaryVo
+     * @return
+     */
     String saveLangsDictionary(LangsDictionaryVo dictionaryVo);
 
     /**

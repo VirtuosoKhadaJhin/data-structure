@@ -88,11 +88,9 @@
                                 <div class="fr" style="width:50%">
                                     <div class="">
                                         <label class="control-label">备注：</label>
-                                        <div class="controls">
-                                            <textarea placeholder="图文备注" class="form-control" id="remark" rows="10"
-                                                      cols="5"
-                                                      style="resize: none;"></textarea>
-                                            <img id="imgUrl" src="C:\\Users\\nuanyoupc7\\Desktop\\icon.png">
+                                        <div class="controls" style="width: 300px;">
+                                            <textarea placeholder="图文备注" class="form-control" id="remark" cols="4"
+                                                      rows="4" style="resize: none; width: 285px;"></textarea>
                                             <label name="remark" class="control-label"
                                                    style="width:110px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">备注不能为空</label>
                                         </div>
@@ -101,22 +99,22 @@
                                         <label class="control-label">文件：</label>
                                         <div class="controls">
                                             <input id="lefile" name="file" type="file" style="display:none">
-                                            <div class="input-append">
-                                                <input id="photoCover" class="span3" type="text" style="width:50%;">
-                                                <a class="btn span4" style="background-color: #eee;"
-                                                   onclick="$('input[id=lefile]').click();"><i
-                                                        class="icon-folder-open"
-                                                        style="padding-right"></i>预览文件</a>
+                                            <div class="input-append" style="width: 100%;">
+                                                <input id="photoCover" class="span3" type="text" style="width: 300px;">
+                                                <a class="btn span4"
+                                                   style="background-color: #eee;float: right;width: 80px;position: absolute;"
+                                                   onclick="$('input[id=lefile]').click();">
+                                                    <i class="icon-folder-open" style="padding-right"></i>选择文件</a>
                                             </div>
                                             <label name="lefile" class="control-label"
                                                    style="width:110px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">请选择图片</label>
                                         </div>
+                                        <div style="text-align: center;padding-top: 1em;" class="controls">
+                                            <img style="" id="imgUrl" src="">
+                                        </div>
                                     </div>
-                                    <div style="clear:both;text-align: center">
-                                        <a onclick="addLangsMessageTip()"
-                                           style="width: 100px;background-color: #10a782;"
-                                           class="btn btn-info">上传图文备注</a>
-                                    </div>
+
+
                                 </div>
 
                                 <div class="form-actions" style="clear:both;text-align: center">
@@ -135,11 +133,39 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            var request = {};
+            request.keyCode = getUrlParam("keyCode");
+
+            /**
+             * 查询备注
+             */
+            $.ajax({
+                url: '/langsMessageTip/viewLangsMessageTip',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        console.log(result.data)
+                        if(result.data != null){
+                            var remark = result.data.remark;
+                            var imgUrl = result.data.imgUrl;
+                            if (remark != null && remark != "") {
+                                $("#remark").val(remark);
+                            }
+                            if (imgUrl != null && imgUrl != "") {
+                                $("#imgUrl").attr("src", imgUrl);
+                            }
+                        };
+                    }
+                }
+            });
+
+
             /**
              * @description 查询要编辑的语言信息
              */
-            var request = {};
-            request.keyCode = getUrlParam("keyCode");
             $.ajax({
                 url: 'viewLangsDictionary',
                 data: JSON.stringify(request),
@@ -179,6 +205,18 @@
             // file 上传文件
             $('input[id=lefile]').change(function () {
                 $('#photoCover').val($(this).val());
+                $("#uploadForm").ajaxSubmit({
+                    type: 'post',
+                    url: "/langsMessageTip/uploadImg",
+                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                    success: function (result) {
+                        if (result.code == 0) {
+                            alert("上传图片成功!");
+                            $("#photoCover").val(result.data);
+                            $("#imgUrl").attr("src", result.data).show();
+                        }
+                    }
+                });
             });
 
         });
@@ -203,37 +241,6 @@
             } else {
                 $("label[name='lefile']").hide();
             }
-
-            $("#uploadForm").ajaxSubmit({
-                type: 'post',
-                url: "/langsMessageTip/uploadImg",
-                contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                success: function (result) {
-                    if (result.code == 0) {
-                        $("#imgUrl").attr("src", imgUrl);
-                    }
-                }
-            });
-
-            var request = {};
-
-            request.keyCode = keyCode;
-            request.remark = remark;
-            request.imgUrl = imgUrl;
-
-            $.ajax({
-                url: '/langsMessageTip/add',
-                data: JSON.stringify(request),
-                type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                success: function (result) {
-                    if (result.code == 0) {
-                        alert("操作成功!");
-                    }
-                }
-            });
-
         }
 
         /**
@@ -314,6 +321,28 @@
             $.ajax({
                 url: 'modifyLangsDictionary',
                 data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                    }
+                }
+            });
+
+            var messRequest = {};
+
+            var keyCode = getUrlParam("keyCode");
+            var remark = $("textarea[id='remark']").val();
+            var imgUrl = $("input[id='lefile']").val();
+
+            messRequest.keyCode = keyCode;
+            messRequest.remark = remark;
+            messRequest.imgUrl = imgUrl;
+
+            $.ajax({
+                url: '/langsMessageTip/add',
+                data: JSON.stringify(messRequest),
                 type: 'post',
                 dataType: 'json',
                 contentType: 'application/json',

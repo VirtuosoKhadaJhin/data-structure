@@ -27,6 +27,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
@@ -90,7 +91,15 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         EntityNyLangsDictionary entityNyLangsDictionary;
 
         entityNyLangsDictionary = new EntityNyLangsDictionary();
-        entityNyLangsDictionary.setKeyCode(requestVo.getKeyCode());
+
+        String keyCode = requestVo.getKeyCode();
+        try {
+            keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        entityNyLangsDictionary.setKeyCode(keyCode);
 
         Example<EntityNyLangsDictionary> example = Example.of(entityNyLangsDictionary);
         List<EntityNyLangsDictionary> entityResult = dictionaryDao.findAll(example);
@@ -110,7 +119,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
                 entityNyLangsDictionary = new EntityNyLangsDictionary();
 
-                entityNyLangsDictionary.setKeyCode(requestVo.getNewKeyCode());
+                entityNyLangsDictionary.setKeyCode(keyCode);
                 entityNyLangsDictionary.setCategory(entityNyLangsCategory);
                 entityNyLangsDictionary.setDelFlag(false);
                 entityNyLangsDictionary.setCreateDt(new Date());
@@ -145,119 +154,19 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
     @Override
     public Page<LangsDictionaryVo> findAllDictionary(final LangsDictionaryRequestVo requestVo) {
-
-        final String baseNameStr = requestVo.getBaseNameStr();
-
-        List<EntityNyLangsCategory> langsCategories = Lists.newArrayList();
-
-        if (StringUtils.isNotEmpty(baseNameStr)) {
-            langsCategories = categoryDao.findAll(new Specification() {
-
-                @Override
-                public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                    List<Predicate> predicate = new ArrayList<Predicate>();
-                    predicate.add(cb.like(root.get("name"), "%" + baseNameStr + "%"));
-                    Predicate[] arrays = new Predicate[predicate.size()];
-                    return query.where(predicate.toArray(arrays)).getRestriction();
-                }
-            });
-        }
-        final List<Long> categoryIds = new ArrayList<Long>();
-        if (CollectionUtils.isNotEmpty(langsCategories)) {
-            for (EntityNyLangsCategory langsCategory : langsCategories) {
-                categoryIds.add(langsCategory.getId());
-            }
-        }
-
-        // 查询所有数据
-        List<EntityNyLangsDictionary> dictionaries = dictionaryDao.findAll(new Specification() {
-
-            @Override
-            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                List<Predicate> predicate = new ArrayList<Predicate>();
-                if (CollectionUtils.isNotEmpty(categoryIds)) {
-                    predicate.add(root.get("basename").in(categoryIds));
-                }
-                if (StringUtils.isNotEmpty(requestVo.getKeyCode())) {
-                    predicate.add(cb.equal(root.get("keyCode"), requestVo.getKeyCode()));
-                }
-                if (StringUtils.isNotEmpty(requestVo.getMessage())) {
-                    predicate.add(cb.like(root.get("name"), "%" + baseNameStr + "%"));
-                }
-                Predicate[] arrays = new Predicate[predicate.size()];
-                return query.where(predicate.toArray(arrays)).getRestriction();
-            }
-        });
-
-        LinkedHashMap<String, LangsDictionaryVo> langsDictionaryMap = this.getStringLangsDictionaryVos(dictionaries, false);
-
-        // 计算分页
-        Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageNum());
-
-        Collection<LangsDictionaryVo> values = langsDictionaryMap.values();
-        ArrayList<LangsDictionaryVo> langsDictionaryVos = Lists.<LangsDictionaryVo>newArrayList(values);
-        Page<LangsDictionaryVo> pageVOs = new PageImpl<LangsDictionaryVo>(langsDictionaryVos, pageable, langsDictionaryMap.size());
-        return pageVOs;
+        return findAllDictioryByRequestVo(requestVo, false);
     }
 
     @Override
     public Page<LangsDictionaryVo> findAllLocalDictionary(final LangsDictionaryRequestVo requestVo) {
-        final String baseNameStr = requestVo.getBaseNameStr();
-
-        List<EntityNyLangsCategory> langsCategories = Lists.newArrayList();
-
-        if (StringUtils.isNotEmpty(baseNameStr)) {
-            langsCategories = categoryDao.findAll(new Specification() {
-
-                @Override
-                public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                    List<Predicate> predicate = new ArrayList<Predicate>();
-                    predicate.add(cb.like(root.get("name"), "%" + baseNameStr + "%"));
-                    Predicate[] arrays = new Predicate[predicate.size()];
-                    return query.where(predicate.toArray(arrays)).getRestriction();
-                }
-            });
-        }
-        final List<Long> categoryIds = new ArrayList<Long>();
-        if (CollectionUtils.isNotEmpty(langsCategories)) {
-            for (EntityNyLangsCategory langsCategory : langsCategories) {
-                categoryIds.add(langsCategory.getId());
-            }
-        }
-
-        // 查询所有数据
-        List<EntityNyLangsDictionary> dictionaries = dictionaryDao.findAll(new Specification() {
-
-            @Override
-            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                List<Predicate> predicate = new ArrayList<Predicate>();
-                if (CollectionUtils.isNotEmpty(categoryIds)) {
-                    predicate.add(root.get("basename").in(categoryIds));
-                }
-                if (StringUtils.isNotEmpty(requestVo.getKeyCode())) {
-                    predicate.add(cb.equal(root.get("keyCode"), requestVo.getKeyCode()));
-                }
-                if (StringUtils.isNotEmpty(requestVo.getMessage())) {
-                    predicate.add(cb.like(root.get("name"), "%" + baseNameStr + "%"));
-                }
-                Predicate[] arrays = new Predicate[predicate.size()];
-                return query.where(predicate.toArray(arrays)).getRestriction();
-            }
-        });
-
-        LinkedHashMap<String, LangsDictionaryVo> langsDictionaryMap = this.getStringLangsDictionaryVos(dictionaries, true);
-
-        // 计算分页
-        Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageNum());
-
-        Collection<LangsDictionaryVo> values = langsDictionaryMap.values();
-        ArrayList<LangsDictionaryVo> langsDictionaryVos = Lists.<LangsDictionaryVo>newArrayList(values);
-        Page<LangsDictionaryVo> pageVOs = new PageImpl<LangsDictionaryVo>(langsDictionaryVos, pageable, langsDictionaryMap.size());
-        return pageVOs;
+        return findAllDictioryByRequestVo(requestVo, true);
     }
 
+
     @Override
-    public LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale) {
+    public LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale) throws UnsupportedEncodingException {
+        keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
+
         Example<EntityNyLangsDictionary> example = Example.of(new EntityNyLangsDictionary(keyCode));
         List<EntityNyLangsDictionary> entityNyLangsDictionarys = this.dictionaryDao.findAll(example);
 
@@ -275,19 +184,26 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     }
 
     @Override
-    public LangsDictionary addLangsDictionary(LangsDictionary dictionary) {
-        EntityNyLangsDictionary entityNyLangsDictionary = this.convertToEntityLangsDictionary(dictionary);
-        return this.convertToLangsDictionary(dictionaryDao.save(entityNyLangsDictionary));
+    public String findLocalMessageByKeyCode(String keyCode, Locale locale) {
+        try {
+            keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.error("throw", e);
+        }
+        Example<EntityNyLangsDictionary> example = Example.of(new EntityNyLangsDictionary(keyCode));
+        List<EntityNyLangsDictionary> entityNyLangsDictionarys = this.dictionaryDao.findAll(example);
+        List<LangsCountryMessageVo> langsMessageList = Lists.newArrayList();
+        LangsDictionaryVo dictionaryVo = new LangsDictionaryVo();
+        for (EntityNyLangsDictionary langsDictionary : entityNyLangsDictionarys) {
+            if (langsDictionary.getCountry() == locale.getCountry() && langsDictionary.getLanguage().equals(locale.getLanguage())) {
+                return langsDictionary.getMessage();
+            }
+        }
+        return null;
     }
 
     @Override
-    public LangsDictionary updateLangsDictionary(LangsDictionary dictionary) {
-        EntityNyLangsDictionary entityNyLangsDictionary = this.convertToEntityLangsDictionary(dictionary);
-        return this.convertToLangsDictionary(dictionaryDao.saveAndFlush(entityNyLangsDictionary));
-    }
-
-    @Override
-    public List<LangsDictionary> findIdNameListByCat(Long id) {
+    public List<LangsDictionary> findAllLanguagesByCatId(Long id) {
         EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne(id);
 
         EntityNyLangsDictionary entityNyLangsDictionary = new EntityNyLangsDictionary();
@@ -373,6 +289,26 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         return dictionary;
     }
 
+    private Page<LangsDictionaryVo> findAllDictioryByRequestVo(LangsDictionaryRequestVo requestVo, Boolean isLocal) {
+
+        //根据分类名称查询分类Ids
+        final List<Long> categoryIds = this.getCategoryIdsByBaseName(requestVo.getBaseNameStr());
+
+        //条件查询所有结果
+        List<EntityNyLangsDictionary> dictionaries = this.getEntityNyLangsDictionaries(requestVo, categoryIds);
+
+        //合并查询结果Entity->VO
+        LinkedHashMap<String, LangsDictionaryVo> langsDictionaryMap = this.getStringLangsDictionaryVos(dictionaries, isLocal);
+
+        //填充message查询结果未补全
+        this.searchResultFillMessage(requestVo, langsDictionaryMap.values());
+
+        ArrayList<LangsDictionaryVo> langsDictionaryVos = Lists.<LangsDictionaryVo>newArrayList(langsDictionaryMap.values());
+        Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageNum());  // 计算分页
+        Page<LangsDictionaryVo> pageVOs = new PageImpl<LangsDictionaryVo>(langsDictionaryVos, pageable, langsDictionaryMap.size());
+        return pageVOs;
+    }
+
     private LinkedHashMap<String, LangsDictionaryVo> getStringLangsDictionaryVos(List<EntityNyLangsDictionary> allDictionaries, Boolean isLocalLangs) {
         LinkedHashMap<String, LangsDictionaryVo> langsDictionaryMap = new LinkedHashMap<String, LangsDictionaryVo>();
         List<LangsCountryMessageVo> langsMessageList = Lists.newArrayList();
@@ -420,12 +356,105 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         messageVo = new LangsCountryMessageVo();
         messageVo.setMessage(langsDictionary.getMessage());
         String langsCountry = langsDictionary.getLangsCountry();
-        if (langsDictionary.getCountry().equals(langsDictionary.getLanguage())) {
+        if (langsDictionary.getCountry().equals(langsDictionary.getLanguage())) {//TH
             messageVo.setLangsKey(LangsCountry.toEnum(langsDictionary.getCountry()).getKey());
         } else {
             messageVo.setLangsKey(LangsCountry.toEnum(langsCountry).getKey());
         }
         return messageVo;
+    }
+
+    private void searchResultFillMessage(LangsDictionaryRequestVo requestVo, Collection<LangsDictionaryVo> result) {
+        if (StringUtils.isEmpty(requestVo.getMessage())) {
+            return;
+        }
+        LangsCountryMessageVo vo = null;
+        Iterator<LangsDictionaryVo> iterator = result.iterator();
+        List<LangsCountryMessageVo> newMessageVos = null;
+        while (iterator.hasNext()) {
+            LangsDictionaryVo next = iterator.next();
+            String keyCode = next.getKeyCode();
+            newMessageVos = Lists.newArrayList();
+            List<EntityNyLangsDictionary> lists = dictionaryDao.findAll(Example.of(new EntityNyLangsDictionary(keyCode)));
+            for (EntityNyLangsDictionary entity : lists) {
+                vo = new LangsCountryMessageVo();
+                vo.setMessage(entity.getMessage());
+                vo.setLangsKey(LangsCountry.toEnum(entity.getLangsCountry()).getKey());
+                newMessageVos.add(vo);
+            }
+            next.getLangsMessageList().clear();
+            next.getLangsMessageList().addAll(newMessageVos);
+        }
+    }
+
+
+    private List<Long> getCategoryIdsByBaseName(final String baseNameStr) {
+        List<EntityNyLangsCategory> langsCategories = Lists.newArrayList();
+        if (StringUtils.isNotEmpty(baseNameStr)) {
+            langsCategories = categoryDao.findAll(new Specification() {
+
+                @Override
+                public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                    List<Predicate> predicate = new ArrayList<Predicate>();
+                    predicate.add(cb.like(root.get("name"), "%" + baseNameStr + "%"));
+                    Predicate[] arrays = new Predicate[predicate.size()];
+                    return query.where(predicate.toArray(arrays)).getRestriction();
+                }
+            });
+        }
+        final List<Long> categoryIds = new ArrayList<Long>();
+        if (CollectionUtils.isNotEmpty(langsCategories)) {
+            for (EntityNyLangsCategory langsCategory : langsCategories) {
+                categoryIds.add(langsCategory.getId());
+            }
+        }
+        return categoryIds;
+    }
+
+    private List<EntityNyLangsDictionary> getEntityNyLangsDictionaries(final LangsDictionaryRequestVo requestVo, final List<Long> categoryIds) {
+        final Long baseNameId = requestVo.getBaseNameId();
+        /**
+         * categoryIds和baseNameId都存在时已BaseNameID为主
+         */
+        if (baseNameId != null) {
+            // 查询所有数据
+            return dictionaryDao.findAll(new Specification() {
+
+                @Override
+                public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                    List<Predicate> predicate = new ArrayList<Predicate>();
+                    predicate.add(cb.equal(root.get("baseName"), baseNameId));//baseNameId
+                    if (StringUtils.isNotEmpty(requestVo.getKeyCode())) {
+                        predicate.add(cb.equal(root.get("keyCode"), requestVo.getKeyCode()));
+                    }
+                    if (StringUtils.isNotEmpty(requestVo.getMessage())) {
+                        predicate.add(cb.like(root.get("message"), "%" + requestVo.getMessage() + "%"));
+                    }
+                    Predicate[] arrays = new Predicate[predicate.size()];
+                    return query.where(predicate.toArray(arrays)).getRestriction();
+                }
+            });
+        } else {
+            // 查询所有数据
+            return dictionaryDao.findAll(new Specification() {
+
+                @Override
+                public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                    List<Predicate> predicate = new ArrayList<Predicate>();
+                    if (CollectionUtils.isNotEmpty(categoryIds)) {
+                        predicate.add(root.get("basename").in(categoryIds));//categoryIds
+                    }
+                    if (StringUtils.isNotEmpty(requestVo.getKeyCode())) {
+                        predicate.add(cb.equal(root.get("keyCode"), requestVo.getKeyCode()));
+                    }
+                    if (StringUtils.isNotEmpty(requestVo.getMessage())) {
+                        predicate.add(cb.like(root.get("message"), "%" + requestVo.getMessage() + "%"));
+                    }
+                    Predicate[] arrays = new Predicate[predicate.size()];
+                    return query.where(predicate.toArray(arrays)).getRestriction();
+                }
+            });
+        }
     }
 
     private EntityNyLangsDictionary convertToEntityLangsDictionary(LangsDictionary dictionary) {

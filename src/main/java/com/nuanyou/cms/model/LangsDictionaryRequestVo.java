@@ -15,6 +15,8 @@ public class LangsDictionaryRequestVo implements Serializable {
 
     private String baseNameStr;
 
+    private Long baseNameId;
+
     private String keyCode;
 
     private String message;
@@ -68,6 +70,14 @@ public class LangsDictionaryRequestVo implements Serializable {
 
     public void setBaseNameStr(String baseNameStr) {
         this.baseNameStr = baseNameStr;
+    }
+
+    public Long getBaseNameId() {
+        return baseNameId;
+    }
+
+    public void setBaseNameId(Long baseNameId) {
+        this.baseNameId = baseNameId;
     }
 
     public String getKeyCode() {
