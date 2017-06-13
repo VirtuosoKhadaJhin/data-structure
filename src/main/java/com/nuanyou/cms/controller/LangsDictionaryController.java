@@ -120,6 +120,19 @@ public class LangsDictionaryController {
         return "langsDictionary/add";
     }
 
+    @RequestMapping("edit")
+    public String edit(Model model) {
+        LangsCountry[] values = LangsCountry.values();
+        LangsCategory example = new LangsCategory();
+        example.setIndex(1);
+        example.setSize(100000);
+        Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
+
+        model.addAttribute("langsCountries", values);
+        model.addAttribute("selectableLangsCategory", selectableLangsCategory);
+        return "langsDictionary/edit";
+    }
+
     @RequestMapping("localAdd")
     public String localAdd(Model model) {
         LangsCategory example = new LangsCategory();
