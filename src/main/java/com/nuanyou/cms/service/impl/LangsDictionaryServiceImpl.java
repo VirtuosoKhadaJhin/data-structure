@@ -203,18 +203,6 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     }
 
     @Override
-    public LangsDictionary addLangsDictionary(LangsDictionary dictionary) {
-        EntityNyLangsDictionary entityNyLangsDictionary = this.convertToEntityLangsDictionary(dictionary);
-        return this.convertToLangsDictionary(dictionaryDao.save(entityNyLangsDictionary));
-    }
-
-    @Override
-    public LangsDictionary updateLangsDictionary(LangsDictionary dictionary) {
-        EntityNyLangsDictionary entityNyLangsDictionary = this.convertToEntityLangsDictionary(dictionary);
-        return this.convertToLangsDictionary(dictionaryDao.saveAndFlush(entityNyLangsDictionary));
-    }
-
-    @Override
     public List<LangsDictionary> findAllLanguagesByCatId(Long id) {
         EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne(id);
 
