@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -133,28 +132,39 @@ public class LangsDictionaryController {
         return "langsDictionary/edit";
     }
 
-    @RequestMapping("localAdd")
-    public String localAdd(Model model) {
+    @RequestMapping("localEdit")
+    public String localAdd(LangsDictionaryVo dictionaryVo, Model model) {
         LangsCategory example = new LangsCategory();
         example.setIndex(1);
         example.setSize(100000);
         Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
         model.addAttribute("langsCountries", LangsCountry.localValues (LOCAL_KEY));
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
-        return "langsDictionary/local_add";
+
+        // 根据keyCode查询中文、英文、当地文
+        List<LangsDictionary> dictionarys = dictionaryService.viewLocalLangsDictionary(dictionaryVo);
+        model.addAttribute("dictionarys", dictionarys);
+
+        return "langsDictionary/local_edit";
     }
 
-    @RequestMapping("update")
-    public String update(LangsDictionary entity) throws IOException {
-        LangsDictionary category;
-        if (entity.getId() == null) {
-            category = dictionaryService.addLangsDictionary(entity);
-        } else {
-            category = dictionaryService.updateLangsDictionary(entity);
-        }
-        String url = "edit?type=3&id=" + category.getId();
-        return "redirect:" + url;
+    /**
+     * 根据keyCode查询查询中文、英文、当地文
+     *
+     * @param dictionaryVo
+     * @return boolean
+     */
+    @RequestMapping(value = "viewLocalLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public APIResult viewLocalLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
+        APIResult result = new APIResult(ResultCodes.Success);
+        // 根据keyCode查询中文、英文、当地文
+        List<LangsDictionary> dictionarys = dictionaryService.viewLocalLangsDictionary(dictionaryVo);
+        result.setData(dictionarys);
+
+        return result;
     }
+
 
     /**
      * 判断keyCode是否有效

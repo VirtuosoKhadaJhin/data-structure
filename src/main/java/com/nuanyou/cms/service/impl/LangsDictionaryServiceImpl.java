@@ -6,8 +6,10 @@ import com.nuanyou.cms.dao.EntityNyLangsDictionaryDao;
 import com.nuanyou.cms.dao.EntityNyLangsMessageTipDao;
 import com.nuanyou.cms.entity.EntityNyLangsCategory;
 import com.nuanyou.cms.entity.EntityNyLangsDictionary;
-import com.nuanyou.cms.entity.EntityNyLangsMessageTip;
-import com.nuanyou.cms.model.*;
+import com.nuanyou.cms.model.LangsCountryMessageVo;
+import com.nuanyou.cms.model.LangsDictionary;
+import com.nuanyou.cms.model.LangsDictionaryRequestVo;
+import com.nuanyou.cms.model.LangsDictionaryVo;
 import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import com.nuanyou.cms.util.BeanUtils;
@@ -108,15 +110,37 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
                 entityNyLangsDictionary = new EntityNyLangsDictionary();
 
-                entityNyLangsDictionary.setKeyCode(requestVo.getNewKeyCode ());
+                entityNyLangsDictionary.setKeyCode(requestVo.getNewKeyCode());
                 entityNyLangsDictionary.setCategory(entityNyLangsCategory);
+                entityNyLangsDictionary.setDelFlag(false);
+                entityNyLangsDictionary.setCreateDt(new Date());
+                entityNyLangsDictionary.setUpdateDt(new Date());
                 entityNyLangsDictionary.setLanguage(langsCountrys[0]);
                 entityNyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
-                entityNyLangsDictionary.setKeyCode(requestVo.getKeyCode());
                 entityNyLangsDictionary.setMessage(langsCountryMessageVo.getMessage());
                 dictionaryDao.save(entityNyLangsDictionary);
             }
         }
+    }
+
+    @Override
+    public List<LangsDictionary> viewLocalLangsDictionary(LangsDictionaryVo dictionaryVo) {
+        EntityNyLangsDictionary entityNyLangsDictionary = new EntityNyLangsDictionary();
+        entityNyLangsDictionary.setKeyCode(dictionaryVo.getKeyCode());
+
+        Example<EntityNyLangsDictionary> example = Example.of(entityNyLangsDictionary);
+        List<EntityNyLangsDictionary> entityResult = dictionaryDao.findAll(example);
+
+        List<EntityNyLangsDictionary> dictionaries = new ArrayList<EntityNyLangsDictionary>();
+        for (EntityNyLangsDictionary entity : entityResult) {
+            if (LangsCountry.verifyIsLocalLanguage(entity.getLanguage() + "-" + entity.getCountry(), LOCAL_KEY)) {
+                dictionaries.add(entity);
+            }
+        }
+
+        List<LangsDictionary> dictionaryList = this.convertToMultipleLangsCategories(dictionaries);
+
+        return dictionaryList;
     }
 
     @Override
@@ -315,9 +339,11 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
             String[] langsCountrys = langsCountry.getValue().split("-");
 
             entityNyLangsDictionary.setLanguage(langsCountrys[0]);
+            entityNyLangsDictionary.setDelFlag(false);
             entityNyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
             entityNyLangsDictionary.setKeyCode(dictionaryVo.getKeyCode());
 
+            entityNyLangsDictionary.setCreateDt(new Date());
             entityNyLangsDictionary.setCategory(entityNyLangsCategory);
             entityNyLangsDictionary.setMessage(message);
             this.dictionaryDao.save(entityNyLangsDictionary);
@@ -340,6 +366,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         entity.setCountry(splitValues.length > 1 ? splitValues[1] : splitValues[0]);
         entity.setKeyCode(vo.getKeyCode());
         entity.setMessage(vo.getMessage());
+        entity.setDelFlag(false);
         entity.setCategory(entityResult.get(0).getCategory());
         EntityNyLangsDictionary nyLangsDictionary = dictionaryDao.save(entity);
         LangsDictionary dictionary = this.convertToLangsDictionary(nyLangsDictionary);
@@ -352,16 +379,16 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         LangsCountryMessageVo messageVo = null;
         Set<String> keyCodes = new HashSet<String>();
         LangsDictionaryVo dictionaryVo = null;
-        if (BooleanUtils.isTrue ( isLocalLangs )) {
+        if (BooleanUtils.isTrue(isLocalLangs)) {
             for (EntityNyLangsDictionary langsDictionary : allDictionaries) {
-                if (LangsCountry.verifyIsLocalLanguage ( langsDictionary.getCountry (), LOCAL_KEY )) {
+                if (LangsCountry.verifyIsLocalLanguage(langsDictionary.getLanguage() + "-" + langsDictionary.getCountry(), LOCAL_KEY)) {
                     this.setLangsDictionaryVoValue(langsDictionaryMap, langsMessageList, keyCodes, langsDictionary);
                 }
             }
             return langsDictionaryMap;
         }
         for (EntityNyLangsDictionary langsDictionary : allDictionaries) {
-            this.setLangsDictionaryVoValue ( langsDictionaryMap, langsMessageList, keyCodes, langsDictionary );
+            this.setLangsDictionaryVoValue(langsDictionaryMap, langsMessageList, keyCodes, langsDictionary);
         }
         return langsDictionaryMap;
     }

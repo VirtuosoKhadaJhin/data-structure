@@ -58,4 +58,13 @@ public interface LangsDictionaryService {
      * @param dictionaryVo
      */
     void modifyLangsDictionary(LangsDictionaryVo dictionaryVo);
+
+    /**
+     * 根据keyCode查询当地语言
+     *
+     * @param dictionaryVo
+     * @return
+     */
+    List<LangsDictionary> viewLocalLangsDictionary(LangsDictionaryVo dictionaryVo);
+
 }

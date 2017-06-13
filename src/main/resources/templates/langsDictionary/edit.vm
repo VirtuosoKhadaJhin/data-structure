@@ -8,8 +8,14 @@
     #include("common/css-support.vm")
 
     <style>
-        .span7 {
-            width: 300px;
+        .form-horizontal .control-label {
+            padding-top: 15px;
+            width: 140px;
+        }
+
+        .form-horizontal .controls {
+            margin-left: 180px;
+            padding: 10px 0;
         }
     </style>
 </head>
@@ -26,29 +32,32 @@
 
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span6" style="width: 80%;min-width:994px;">
+                <div class="span6" style="width: 70%;min-width:994px;">
                     <div class="widget-box">
                         <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                             <h5>编辑&查看</h5>
                         </div>
-                        <form class="form-horizontal langsDicFormValidate" role="form">
+                        <form class="form-horizontal langsDicFormValidate" role="form" id="uploadForm"
+                              action="/langsMessageTip/uploadImg" name="uploadForm" enctype="multipart/form-data">
 
                             <div class="nopadding" style="width: 100%;">
                                 <div class="fl" style="border-right:1px solid #eeeeee;box-sizing:border-box;width:50%;">
-                                    #*<div class="control-group">*#
+                                #*<div class="control-group">*#
                                     <div class="">
-                                        <label class="control-label">keyCode</label>
+                                        <label class="control-label">keyCode：</label>
                                         <div class="controls">
                                             <input for="name" name="keyCode" type="text" class="span7"
-                                                   readonly="readonly"
+                                                   readonly="readonly" style="min-width: 285px;"
                                                    value="">
                                         </div>
                                     </div>
                                     <div class="">
-                                        <label class="control-label">多语言分类<font
-                                                style="color: red;margin: 0px;padding: 5px;">*</font></label>
+                                        <label class="control-label">多语言分类
+                                            <font style="color: red;margin: 0px;padding: 5px;">*</font>：
+                                        </label>
                                         <div class="controls">
-                                            <select class="span7 select2 " name="categoryId">
+                                            <select class="span7 select2 " name="categoryId" style="min-width: 285px;"
+                                                    onchange="keyCodeRealTime()">
                                                 #foreach($e in $!selectableLangsCategory)
                                                     <option value="$!e.id">$!e.name</option>
                                                 #end
@@ -57,45 +66,63 @@
                                     </div>
 
 
-
                                     #foreach($langCountry in $!langsCountries)
                                         <div class="">
                                             <label class="control-label">$!langCountry.desc
-                                                ($!langCountry.value)</label>
+                                                ($!langCountry.value)
+                                                #if($!langCountry.key == 1 || $!langCountry.key == 2)
+                                                    <font style="color: red;margin: 0px;padding: 5px;">*</font>
+                                                #end
+                                                ：</label>
                                             <div class="controls">
-                                                <input name="$!langCountry.key" type="text"
+                                                <input name="$!langCountry.key" type="text" style="min-width: 285px;"
                                                        class="span7 countryLanguage">
+                                                <label id="requiredKey_$!langCountry.key" class="control-label"
+                                                       style="width:80px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">必填项</label>
                                             </div>
                                         </div>
                                     #end
 
                                 </div>
-                            <div class="fr" style="width:50%">
-                                <div class="">
-                                    <label class="control-label">备注：</label>
-                                    <div class="controls">
-                                        <textarea class="form-control" rows="3"  style="resize: none;"></textarea>
-                                    </div>
-                                </div>
-                                <div class="">
-                                    <label class="control-label">文件</label>
-                                    <div class="controls">
-                                        #*<input  type="file" class="span7"
-                                               readonly="readonly"
-                                               value="">*#
-                                        <input id="lefile" type="file" style="display:none">
-                                        <div class="input-append">
-                                            <input id="photoCover" class="span3" type="text" style="width:50%;">
-                                            <a class="btn span4" style="background-color: #eee;" onclick="$('input[id=lefile]').click();"><i class="icon-folder-open" style="padding-right"></i>预览文件</a>
+
+                                <div class="fr" style="width:50%">
+                                    <div class="">
+                                        <label class="control-label">备注：</label>
+                                        <div class="controls">
+                                            <textarea placeholder="图文备注" class="form-control" id="remark" rows="10"
+                                                      cols="5"
+                                                      style="resize: none;"></textarea>
+                                            <img id="imgUrl" src="C:\\Users\\nuanyoupc7\\Desktop\\icon.png">
+                                            <label name="remark" class="control-label"
+                                                   style="width:110px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">备注不能为空</label>
                                         </div>
                                     </div>
+                                    <div class="">
+                                        <label class="control-label">文件：</label>
+                                        <div class="controls">
+                                            <input id="lefile" name="file" type="file" style="display:none">
+                                            <div class="input-append">
+                                                <input id="photoCover" class="span3" type="text" style="width:50%;">
+                                                <a class="btn span4" style="background-color: #eee;"
+                                                   onclick="$('input[id=lefile]').click();"><i
+                                                        class="icon-folder-open"
+                                                        style="padding-right"></i>预览文件</a>
+                                            </div>
+                                            <label name="lefile" class="control-label"
+                                                   style="width:110px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">请选择图片</label>
+                                        </div>
+                                    </div>
+                                    <div style="clear:both;text-align: center">
+                                        <a onclick="addLangsMessageTip()"
+                                           style="width: 100px;background-color: #10a782;"
+                                           class="btn btn-info">上传图文备注</a>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="form-actions" style="clear:both;text-align: center">
-                                <a onclick="modifyLangsDictionary()" class="btn btn-info">确定</a>
-                                <a class="btn btn-primary" href="list">返回</a>
-                            </div>
+                                <div class="form-actions" style="clear:both;text-align: center">
+                                    <a onclick="modifyLangsDictionary()" class="btn btn-info">确定</a>
+                                    <a class="btn btn-primary" href="list">返回</a>
+                                </div>
                         </form>
 
                     </div>
@@ -131,12 +158,17 @@
                         var langsMessageList = langsDictionaryVo.langsMessageList;
                         for (var i = 0; i < langsMessageList.length; i++) {
                             var langsMessage = langsMessageList[i];
-                            console.log();
                             $("input[name='" + langsMessage.langsKey + "']").val(langsMessage.message);
                         }
 
                         // 拼接KeyCode
-                        $("input[name='keyCode']").val("mch_" + categoryId + );
+                        var requiredUS = $("input[name='1']").val();
+                        // 如果是英文,则要增加改变事件,用来改变keyCode
+                        $("input[name='1']").attr("onchange", "keyCodeRealTime()");
+
+                        // keyCode初始化值
+                        var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
+                        $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
 
                     } else {
                         alert("操作失败:" + result.msg);
@@ -144,19 +176,120 @@
                 }
             });
 
-            //file 上传文件
-            $('input[id=lefile]').change(function() {
+            // file 上传文件
+            $('input[id=lefile]').change(function () {
                 $('#photoCover').val($(this).val());
             });
 
         });
 
         /**
+         * 上传图文消息
+         */
+        function addLangsMessageTip() {
+            var keyCode = getUrlParam("keyCode");
+            var remark = $("textarea[id='remark']").val();
+            var imgUrl = $("input[id='lefile']").val();
+
+            if (remark == null || remark == "") {
+                $("label[name='remark']").show();
+                $("textarea[id='remark']").css("border", "1px solid red");
+                return false;
+            } else if (imgUrl == null || imgUrl == "") {
+                $("label[name='remark']").hide();
+                $("textarea[id='remark']").css("border", "");
+                $("label[name='lefile']").show();
+                return true;
+            } else {
+                $("label[name='lefile']").hide();
+            }
+
+            $("#uploadForm").ajaxSubmit({
+                type: 'post',
+                url: "/langsMessageTip/uploadImg",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                success: function (result) {
+                    if (result.code == 0) {
+                        $("#imgUrl").attr("src", imgUrl);
+                    }
+                }
+            });
+
+            var request = {};
+
+            request.keyCode = keyCode;
+            request.remark = remark;
+            request.imgUrl = imgUrl;
+
+            $.ajax({
+                url: '/langsMessageTip/add',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        alert("操作成功!");
+                    }
+                }
+            });
+
+        }
+
+        /**
+         * 实时更新keyCode展示
+         */
+        function keyCodeRealTime() {
+            // 拼接KeyCode
+            var requiredUS = $("input[name='1']").val();
+            // 如果是英文,则要增加改变事件,用来改变keyCode
+            $("input[name='1']").attr("onchange", "keyCodeRealTime()");
+            // 选择的分类
+            var categoryId = $("select[name='categoryId']").val();
+            // keyCode初始化值
+            if (requiredUS != null) {
+                var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
+                $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
+            }
+        }
+
+        /**
+         * 检验必填项
+         */
+        function checkRequiredParams() {
+            var requiredUS = $("input[name='1']").val();
+            var requiredZH = $("input[name='2']").val();
+
+            if (requiredUS == null || requiredUS == "") {
+                $("#requiredKey_1").show();
+                $("input[name='1']").css("border", "1px solid red");
+                return false;
+            } else if (requiredZH == null || requiredZH == "") {
+                $("#requiredKey_2").show();
+                $("input[name='2']").css("border", "1px solid red");
+                return false;
+            } else {
+                $("#requiredKey_1").hide();
+                $("input[name='1']").css("border", "");
+                $("#requiredKey_2").hide();
+                $("input[name='2']").css("border", "");
+                return true;
+            }
+            return true;
+        }
+
+        /**
          * 修改语言
          */
         function modifyLangsDictionary() {
+            keyCodeRealTime();
+            var checkResult = checkRequiredParams();
+            if (!checkResult) {
+                return false;
+            }
             var request = {};
-            request.keyCode = $("input[name='keyCode']").val();
+            request.keyCode = getUrlParam("keyCode");
+            request.newKeyCode = $("input[name='keyCode']").val();
             request.categoryId = Number($("select[name='categoryId']").val());
 
             // 页面所有的语言message
@@ -177,8 +310,6 @@
             }
             // 封装LangsDictionaryVo传输约束
             request.langsMessageList = langsMessageList;
-
-            console.log(request);
 
             $.ajax({
                 url: 'modifyLangsDictionary',
@@ -203,7 +334,6 @@
             if (r != null) return unescape(r[2]);
             return null;
         }
-
 
     </script>
 </body>

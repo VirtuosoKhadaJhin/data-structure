@@ -62,7 +62,7 @@ public enum LangsCountry {
     public static List<LangsCountry> localValues(Integer key) {//
         List<LangsCountry> langsCountries = Lists.newArrayList ();
         for (LangsCountry langsCountry : LangsCountry.values ()) {
-            if (key == langsCountry.getKey () || langsCountry.getKey () == 1 || langsCountry.getKey () == 2 || langsCountry.getKey () == 7) {
+            if (key == langsCountry.getKey () || langsCountry.getKey () == 1 || langsCountry.getKey () == 2) {
                 langsCountries.add ( langsCountry );
             }
         }
