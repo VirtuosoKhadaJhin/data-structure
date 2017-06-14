@@ -116,8 +116,8 @@
                                         #elseif ($!entity.status==1)
                                         <span style="color: red">已驳回</span>
                                         #else
-                                        <button class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</button>
-                                        <button class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="false">驳回 </button>
+                                        <input type="button" class="verify btn btn-info btn-mini " value="通过" data-id="$!entity.id" valid="true">
+                                        <input type="button" class="verify btn btn-info btn-mini " value="驳回"  data-id="$!entity.id" valid="false">
                                     #end
                                     <a class="btn btn-success btn-mini" href="list">返回</a>
                                 </div>
@@ -134,9 +134,7 @@
     #include("common/js-support.vm")
 
     <script type="text/javascript">
-
         $(".verify").each(function (i, o) {
-
             $(o).on("click", function (event) {
                 $(".verify").attr("disabled", true);
                 var id = $(this).attr("data-id");

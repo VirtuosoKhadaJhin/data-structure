@@ -196,7 +196,7 @@ public class ContractController {
         //审核
         APIResult approve = this.contractService.approve(user.getId(), contractId, valid);
         if (approve.getCode() != 0) {
-            throw new APIException(approve.getCode(), approve.getMsg());
+            throw new APIException(approve.getCode(), approve.getMsg()+",contractId:"+contractId);
         }
         if (valid) {
             //2 得到合同信息
