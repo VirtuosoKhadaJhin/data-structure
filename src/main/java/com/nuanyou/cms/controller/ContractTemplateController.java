@@ -8,6 +8,7 @@ import com.nuanyou.cms.model.LangsCategory;
 import com.nuanyou.cms.model.LangsDictionaryVo;
 import com.nuanyou.cms.model.contract.enums.TemplateStatus;
 import com.nuanyou.cms.model.contract.output.ContractParameter;
+import com.nuanyou.cms.model.contract.output.ContractParameters;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
 import com.nuanyou.cms.model.contract.request.ParamDetail;
 import com.nuanyou.cms.model.contract.request.Template;
@@ -110,7 +111,7 @@ public class ContractTemplateController {
         List<Long> selectedIds=new ArrayList<>();
         if (optype == 2||optype==3||optype==4) {
             selectedParams = template.getParameters();
-            setLangsMessage(selectedParams,request);
+            this.contractTemplateService.setLangsMessage(selectedParams);
             selectedIds=getSeletedIds(selectedParams);
         }
 
@@ -186,7 +187,8 @@ public class ContractTemplateController {
     @ResponseBody
     public APIResult getAllParams(
     ) throws IOException {
-        return this.contractService.findAllTemplateParameters(1, 100000);
+        List<ContractParameter> list=this.contractTemplateService.findAllTemplateParameters(1,100000);
+        return new APIResult(list);
 
     }
 
@@ -197,12 +199,11 @@ public class ContractTemplateController {
     @ResponseBody
     public APIResult getParameterDetail(
             @RequestBody ParamDetail detail ) throws IOException {
-        APIResult<ContractParameter> res = this.contractService.saveTemplateParamter(detail.getSelectedParamId());
-        if (res.getCode() != 0) {
-            throw new APIException(res.getCode(), res.getMsg());
-        }
 
-        return new APIResult(res.getData());
+        ContractParameter data = this.contractTemplateService.getParameterDetail(detail.getSelectedParamId());
+
+
+        return new APIResult(data);
     }
 
 
@@ -249,13 +250,5 @@ public class ContractTemplateController {
     }
 
 
-    public void setLangsMessage(List<ContractParameter> langsMessage,HttpServletRequest request) throws UnsupportedEncodingException {
-        for (ContractParameter contractParameter : langsMessage) {
 
-            String name= dictionaryService.findLocalMessageByKeyCode(contractParameter.getName().getKey(),request.getLocale());
-            String remark= dictionaryService.findLocalMessageByKeyCode(contractParameter.getName().getKey(),request.getLocale());
-            contractParameter.getName().setContent(name);
-            contractParameter.getRemark().setContent(remark);
-        }
-    }
 }
