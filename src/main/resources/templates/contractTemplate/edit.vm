@@ -162,12 +162,20 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <input name="remarkLabel" class="langsAutoComplete"
-                                                           style="width: 150px">
+
+                                                    <input name="remarkLabel" style="width: 150px" class="langsAutoComplete" langsKeyName="remark">
+                                                    <a class="btn btn-info btn-mini addLang" langsKeyName="remark" langsValueName="remarkLabel">
+                                                        <i class="icon-plus"></i>
+                                                    </a>
                                                     <input name="remark" type="text">
-                                                    <br>
-                                                    <a class="btn btn-info btn-mini addLang"
-                                                       inputLangsName="remark">添加</a>
+
+
+##                                                    <input name="remarkLabel" class="langsAutoComplete"
+##                                                           style="width: 150px">
+##                                                    <input name="remark" type="text">
+##                                                    <br>
+##                                                    <a class="btn btn-info btn-mini addLang"
+##                                                       inputLangsName="remark">添加</a>
                                                 </td>
                                                 <td>
                                                     <input name="referenceId" placeholder="引用参数" class="referParam"
