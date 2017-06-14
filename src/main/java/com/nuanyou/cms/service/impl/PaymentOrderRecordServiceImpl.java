@@ -54,8 +54,7 @@ public class PaymentOrderRecordServiceImpl implements PaymentOrderRecordService 
                     predicate.add(cb.like(root.get("mchName"), "%" + paramVo.getMchName() + "%"));
                 }
                 if (StringUtils.isNotEmpty(paramVo.getMchKpName())) {
-                    Predicate p = cb.like(root.get("mchKpName"), "%" + paramVo.getMchKpName() + "%");
-                    predicate.add(p);
+                    predicate.add(cb.like(root.get("mchKpName"), "%" + paramVo.getMchKpName() + "%"));
                 }
                 if (paramVo.getTradeNo () != null) {
                     predicate.add(cb.equal(root.get("tradeNo"), paramVo.getTradeNo()));
@@ -67,7 +66,7 @@ public class PaymentOrderRecordServiceImpl implements PaymentOrderRecordService 
                     predicate.add(cb.equal(root.get("status"), paramVo.getStatus().getKey()));
                 }
                 if (paramVo.getPaymentOrderMethod() != null) {
-                    Predicate p = cb.equal(root.get("paymentOrderMethod"), paramVo.getPaymentOrderMethod().getKey());
+                    predicate.add(cb.equal(root.get("method"), paramVo.getPaymentOrderMethod().getKey()));
                 }
                 if (paramVo.getBeginPrice () != null) {
                     predicate.add(cb.greaterThanOrEqualTo(root.get("price"), paramVo.getBeginPrice()));
@@ -96,7 +95,7 @@ public class PaymentOrderRecordServiceImpl implements PaymentOrderRecordService 
         Integer pageNum = paramVo.getPageNum();
         Pageable pageable = new PageRequest(pageIndex - 1, pageNum);
         if (CollectionUtils.isEmpty(orderRecordVos)) {
-            return new PageImpl<PaymentOrderRecordVo>(null, pageable, 0);
+            return new PageImpl<PaymentOrderRecordVo>(orderRecordVos, pageable, 0);
         }
         int toIndex = pageIndex * pageNum;
         List<PaymentOrderRecordVo> subList = orderRecordVos.subList((pageIndex - 1) * pageNum, toIndex > orderRecordVos.size() ? orderRecordVos.size() : toIndex);

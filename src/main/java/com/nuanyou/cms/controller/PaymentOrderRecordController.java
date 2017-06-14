@@ -56,8 +56,9 @@ public class PaymentOrderRecordController {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"), true);
-        binder.registerCustomEditor(Date.class, editor);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
     /**
@@ -90,14 +91,20 @@ public class PaymentOrderRecordController {
      */
     @RequestMapping("searchRecord")
     @ResponseBody
-    public APIResult searchRecord(@RequestParam("app") String app, @RequestParam("orderId") Long orderId, Model model) {
+    public APIResult searchRecord(@RequestParam("app") String app, @RequestParam("orderId") Long orderId, Model model, HttpServletRequest request) {
         APIResult result = new APIResult<>(ResultCodes.Success);
         String uri = paymentServiceAddress + "/wechat/query/" + app + "/kr/" + orderId;
         try {
             CodePayResponse response = httpService.doGetJson(new URI(uri));
+            Integer code = response.getCode();
             result.setData(response.getData());
-            result.setCode(response.getCode());
+            result.setCode(code);
             result.setMsg(response.getMsg());
+            if (response.isSuccess()) {
+                LinkedHashMap<String, Date> searchDateMap = (LinkedHashMap<String, Date>) request.getSession().getAttribute("searchDateMap");
+                searchDateMap.remove(orderId);
+                request.getSession().setAttribute("searchDateMap", searchDateMap);
+            }
         } catch (Exception e) {
             result.setCode(ResultCodes.Fail.getCode());
             _LOGGER.error("Request a single query order payment information failure!", e);

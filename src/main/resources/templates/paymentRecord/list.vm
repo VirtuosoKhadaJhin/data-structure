@@ -5,7 +5,7 @@
 </div>
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
-    <h5>支付记录列表</h5>
+    <h5>支付订单记录列表</h5>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
@@ -28,7 +28,7 @@
         <tr>
             <td colspan="11" style="text-align:center;">
                 <div class="no-result-div" style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
-                    <p>没有符合条件的支付订单信息！</p>
+                    <p>没有符合条件的支付订单记录信息！</p>
                 </div>
             </td>
         </tr>
@@ -85,15 +85,15 @@
         <input type="text" class="span11" name="mchKpName" value="$!requestVo.mchKpName" placeholder="商户本地名称">
 
         <label>支付价格：</label>
-        <input type="text" class="span5" id="beginPrice" name="beginPrice" value="$!requestVo.beginPrice" placeholder="请输入价格起始">
-        <span class="search-price-middle-separator span1" style="margin: 0 3px;">-</span>
+        <input type="text" class="span5" id="J_BginPrice" name="beginPrice" value="$!requestVo.beginPrice" placeholder="请输入价格起始">
+        <span class="search-price-middle-separator" style="margin: 0 3px;">-</span>
         <input type="text" class="span5" id="J_EndPrice" name="endPrice" value="$!requestVo.endPrice" placeholder="请输入价格结束">
 
         <label>开始时间：</label>
-        <input type="text" class="span11 dateTimeFormat" id="beginTime" name="beginDt" value="$!requestVo.beginDt" placeholder="请选择开始时间">
+        <input type="text" class="span11 dateTimeFormat data-beginTime" id="beginTime" name="beginDt" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss", $!requestVo.beginDt)" placeholder="请选择开始时间">
 
         <label>结束时间：</label>
-        <input type="text" class="span11 dateTimeFormat" id="endTime" name="endDt" value="$!requestVo.endDt" placeholder="请选择结束时间">
+        <input type="text" class="span11 dateTimeFormat data-endTime" id="endTime" name="endDt" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss", $!requestVo.endDt)" placeholder="请选择结束时间">
 
         <label for="paymentStatus">支付状态：</label>
         <select id="paymentStatus" name="status" class="span11">
@@ -111,7 +111,8 @@
             #end
         </select>
 
-        <button type="submit" class="btn btn-primary">查询</button>
+        <button type="submit" class="btn btn-primary search-submit">查询</button>
+        <button type="reset" class="btn btn-warning search-reset">重置</button>
     </div>
 </form>
 #parse("common/list_end.vm")
@@ -119,6 +120,46 @@
 
 <script type="text/javascript">
     $(function () {
+
+        $(".search-submit").click(function () {
+            var beginPrice = $("#J_BginPrice").val().trim();
+            var endPrice = $("#J_EndPrice").val().trim();
+
+            if (isNaN(beginPrice)) {
+                alert("请输入数字类型的起始价格！");
+                return false;
+            }
+            if (isNaN(endPrice)) {
+                alert("请输入数字类型的结束价格！");
+                return false;
+            }
+            if (parseFloat(beginPrice) > parseFloat(endPrice)) {
+                alert("起始价格不能大于结束价格！");
+                return false;
+            }
+            var beginTime = $(".data-beginTime").val().trim();
+            var endTime = $(".data-endTime").val().trim();
+            var begin = new Date(beginTime.replace("-", "/").replace("-", "/"));
+            var end = new Date(endTime.replace("-", "/").replace("-", "/"));
+            if (begin > end) {
+                alert("开始时间不能大于结束时间！");
+                return false;
+            }
+        });
+
+        function validateTime(begin, end) {
+            if (begin == "" || end == "") {
+                return false;
+            }
+            var begin = new Date(begin.replace("-", "/").replace("-", "/"));
+            var end = new Date(end.replace("-", "/").replace("-", "/"));
+            var result = end - begin;
+            if (result > 32 * 24 * 60 * 60 * 1000) {
+                return false;
+            }
+            return true;
+        }
+
         $("table").delegate(".order-status-search", "click", function (e) {
             var _this = e.currentTarget;
             if ($(_this).attr("disabled") == "disabled") {
