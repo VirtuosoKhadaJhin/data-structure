@@ -451,6 +451,185 @@
         });
     }
 
+
+    /** ########################多语言common弹出框增加######################## */
+     /**
+     * 通用弹窗
+     */
+    var localeLangs = false;
+    var localelangsKey;
+    function langsCommonDialog() {
+        $("input[id='keyCode']").val("");
+        $("input[data-name='langs']").val("");
+        $("#categoryId").val("");
+        $("#select2-categoryId-container").html("全部分类");
+
+        $('#parameterModal').modal('show');
+        $("span[dir='ltr']").attr("style", "min-width: 366px;");
+
+        $('#addLangsModal').modal('show');
+        $.ajax({
+            url: '/langsDictionary/viewLocalLanguage',
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    console.log(result.data);
+                    if (result.data != null && localeLangs == false) {
+                        localeLangs = true;
+                        // 如果不是必填项中文和英文
+                        var langsCountry = result.data;
+                        localelangsKey = langsCountry.langsCountryKey;
+                        if (langsCountry.langsValue != "zh-CN" && langsCountry.langsValue != "en-US") {
+                            var localeInputHtml = "<div class='control-group'>"
+                                    + "<label class='control-label'>"
+                                    + langsCountry.langsDesc + (langsCountry.langsValue)
+                                    + "：</label>"
+                                    + " <div class='controls'>"
+                                    + " <input name='" + langsCountry.langsCountryKey + "' data-key='" + langsCountry.langsCountryKey + "' type='text' onkeyup='keyCodeRealTime()' data-name='langs' class='span7 countryLanguage'>"
+                                    + " </div>"
+                                    + "</div>";
+                            $("#langsInput").append(localeInputHtml);
+
+                        }
+                    }
+                }
+            }
+        });
+    }
+    /**
+     * 验证keyCode是否重复
+     */
+    function verifykeyCode() {
+        var request = {};
+        var keyCode = $("input[id='keyCode']").val();
+
+        request.keyCode = keyCode;
+        $.ajax({
+            url: 'verifykeyCode',
+            data: JSON.stringify(request),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    if (!result.data) {
+                        $("#keyCodeStatus").show();
+                        $("#saveBtn").attr("onclick", "");
+                        $("#keyCode").css("border", "1px solid red");
+                        $("#saveBtn").attr("style", "background-color: gray;");
+                    } else {
+                        $("#keyCodeStatus").hide();
+                        $("#saveBtn").attr("style", "");
+                        $("#keyCode").css("border", "");
+                        $("#saveBtn").attr("onclick", "saveLangsDictionary()");
+                    }
+                }
+            }
+        });
+    }
+    /**
+     * 检验必填项
+     */
+    function checkRequiredParams() {
+        var requiredUS = $("input[name='1']").val();
+        var requiredZH = $("input[name='2']").val();
+        var categoryId = $("select[name='categoryId']").val();
+
+        if (requiredUS == null || requiredUS == "") {
+            $("#requiredKey_1").show();
+            $("input[name='1']").css("border", "1px solid red");
+            return false;
+        } else if (requiredZH == null || requiredZH == "") {
+            $("#requiredKey_2").show();
+            $("input[name='2']").css("border", "1px solid red");
+            return false;
+        } else if (categoryId == null || categoryId == "") {
+            alert("请选择分类!");
+            return false;
+        } else {
+            $("#requiredKey_1").hide();
+            $("input[name='1']").css("border", "");
+            $("#requiredKey_2").hide();
+            $("input[name='2']").css("border", "");
+            return true;
+        }
+        return true;
+    }
+
+    /**
+     * 保存多语言
+     */
+    function saveLangsDictionary() {
+        keyCodeRealTime();
+
+        var checkResult = checkRequiredParams();
+        if (!checkResult) {
+            return false;
+        }
+
+        var request = {};
+
+        request.keyCode = $("input[id='keyCode']").val();
+        request.categoryId = parseInt($("select[name='categoryId']").val());
+
+        var langsMessageList = [];
+        var keyCodes = $("input[data-name='langs']");
+
+        for (var i = 0, j = keyCodes.length; i < j; i++) {
+            var keyCodeInput = keyCodes[i];
+            var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
+            var message = keyCodeInput.value;
+            var langsCountryMessageVo = {langsKey: langsKey, message: message};
+            langsMessageList.push(langsCountryMessageVo);
+        }
+
+        request.langsMessageList = langsMessageList;
+
+        $.ajax({
+            url: '/langsDictionary/saveLangsDictionary',
+            data: JSON.stringify(request),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    alert("操作成功");
+                    $('#parameterModal').modal('hide');
+                    console.log(localelangsKey);
+                    console.log(langsMessageList);
+                    for (var i = 0; i < langsMessageList.length; i++) {
+                        if (localelangsKey == langsMessageList[i].langsKey) {
+                            $("input[name='nameLabel'").val(localelangsKey);
+                            $("input[name='name'").val(localelangsKey);
+                        }
+
+                    }
+                } else {
+                    alert(result.msg);
+                }
+            }
+        });
+    }
+    /**
+     * 实时更新keyCode展示
+     */
+    function keyCodeRealTime() {
+        // 拼接KeyCode
+        var requiredUS = $("input[name='1']").val();
+        // 如果是英文,则要增加改变事件,用来改变keyCode
+        $("input[name='1']").attr("onchange", "keyCodeRealTime()");
+        // 选择的分类
+        var categoryId = $("select[name='categoryId']").val();
+        // keyCode初始化值
+        if (requiredUS != null) {
+            var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
+            $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
+        }
+    }
+
+
     $(document).ready(function () {
         var type = $!optype;
         var selectedIds =$!selectedIds;
@@ -811,184 +990,6 @@
 
 
     });
-
-    /** ########################多语言common弹出框增加######################## */
-     /**
-     * 通用弹窗
-     */
-    var localeLangs = false;
-    var localelangsKey;
-    function langsCommonDialog() {
-        $("input[id='keyCode']").val("");
-        $("input[data-name='langs']").val("");
-        $("#categoryId").val("");
-        $("#select2-categoryId-container").html("全部分类");
-
-        $('#parameterModal').modal('show');
-        $("span[dir='ltr']").attr("style", "min-width: 366px;");
-
-        $('#addLangsModal').modal('show');
-        $.ajax({
-            url: '/langsDictionary/viewLocalLanguage',
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.code == 0) {
-                    console.log(result.data);
-                    if (result.data != null && localeLangs == false) {
-                        localeLangs = true;
-                        // 如果不是必填项中文和英文
-                        var langsCountry = result.data;
-                        localelangsKey = langsCountry.langsCountryKey;
-                        if (langsCountry.langsValue != "zh-CN" && langsCountry.langsValue != "en-US") {
-                            var localeInputHtml = "<div class='control-group'>"
-                                    + "<label class='control-label'>"
-                                    + langsCountry.langsDesc + (langsCountry.langsValue)
-                                    + "：</label>"
-                                    + " <div class='controls'>"
-                                    + " <input name='" + langsCountry.langsCountryKey + "' data-key='" + langsCountry.langsCountryKey + "' type='text' onkeyup='keyCodeRealTime()' data-name='langs' class='span7 countryLanguage'>"
-                                    + " </div>"
-                                    + "</div>";
-                            $("#langsInput").append(localeInputHtml);
-
-                        }
-                    }
-                }
-            }
-        });
-    }
-    /**
-     * 验证keyCode是否重复
-     */
-    function verifykeyCode() {
-        var request = {};
-        var keyCode = $("input[id='keyCode']").val();
-
-        request.keyCode = keyCode;
-        $.ajax({
-            url: 'verifykeyCode',
-            data: JSON.stringify(request),
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.code == 0) {
-                    if (!result.data) {
-                        $("#keyCodeStatus").show();
-                        $("#saveBtn").attr("onclick", "");
-                        $("#keyCode").css("border", "1px solid red");
-                        $("#saveBtn").attr("style", "background-color: gray;");
-                    } else {
-                        $("#keyCodeStatus").hide();
-                        $("#saveBtn").attr("style", "");
-                        $("#keyCode").css("border", "");
-                        $("#saveBtn").attr("onclick", "saveLangsDictionary()");
-                    }
-                }
-            }
-        });
-    }
-    /**
-     * 检验必填项
-     */
-    function checkRequiredParams() {
-        var requiredUS = $("input[name='1']").val();
-        var requiredZH = $("input[name='2']").val();
-        var categoryId = $("select[name='categoryId']").val();
-
-        if (requiredUS == null || requiredUS == "") {
-            $("#requiredKey_1").show();
-            $("input[name='1']").css("border", "1px solid red");
-            return false;
-        } else if (requiredZH == null || requiredZH == "") {
-            $("#requiredKey_2").show();
-            $("input[name='2']").css("border", "1px solid red");
-            return false;
-        } else if (categoryId == null || categoryId == "") {
-            alert("请选择分类!");
-            return false;
-        } else {
-            $("#requiredKey_1").hide();
-            $("input[name='1']").css("border", "");
-            $("#requiredKey_2").hide();
-            $("input[name='2']").css("border", "");
-            return true;
-        }
-        return true;
-    }
-
-    /**
-     * 保存多语言
-     */
-    function saveLangsDictionary() {
-        keyCodeRealTime();
-
-        var checkResult = checkRequiredParams();
-        if (!checkResult) {
-            return false;
-        }
-
-        var request = {};
-
-        request.keyCode = $("input[id='keyCode']").val();
-        request.categoryId = parseInt($("select[name='categoryId']").val());
-
-        var langsMessageList = [];
-        var keyCodes = $("input[data-name='langs']");
-
-        for (var i = 0, j = keyCodes.length; i < j; i++) {
-            var keyCodeInput = keyCodes[i];
-            var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
-            var message = keyCodeInput.value;
-            var langsCountryMessageVo = {langsKey: langsKey, message: message};
-            langsMessageList.push(langsCountryMessageVo);
-        }
-
-        request.langsMessageList = langsMessageList;
-
-        $.ajax({
-            url: '/langsDictionary/saveLangsDictionary',
-            data: JSON.stringify(request),
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.code == 0) {
-                    alert("操作成功");
-                    $('#parameterModal').modal('hide');
-                    console.log(localelangsKey);
-                    console.log(langsMessageList);
-                    for (var i = 0; i < langsMessageList.length; i++) {
-                        if (localelangsKey == langsMessageList[i].langsKey) {
-
-                            alert("fliex要的本地化语言的key：" + localelangsKey);
-                            alert("fliex要的本地化语言的message：" + langsMessageList[i].message);
-                        }
-
-                    }
-                } else {
-                    alert(result.msg);
-                }
-            }
-        });
-    }
-    /**
-     * 实时更新keyCode展示
-     */
-    function keyCodeRealTime() {
-        // 拼接KeyCode
-        var requiredUS = $("input[name='1']").val();
-        // 如果是英文,则要增加改变事件,用来改变keyCode
-        $("input[name='1']").attr("onchange", "keyCodeRealTime()");
-        // 选择的分类
-        var categoryId = $("select[name='categoryId']").val();
-        // keyCode初始化值
-        if (requiredUS != null) {
-            var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
-            $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
-        }
-    }
 
 </script>
 </html>
