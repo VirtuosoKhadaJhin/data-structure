@@ -98,6 +98,11 @@ public class LangsDictionary implements Serializable {
 
     private LangsMessageTipVo messageTip;
 
+    public LangsDictionary(String keyCode, String variant) {
+        this.keyCode = keyCode;
+        this.variant = variant;
+    }
+
     public Long getId() {
         return id;
     }

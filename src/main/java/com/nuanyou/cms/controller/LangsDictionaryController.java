@@ -140,6 +140,13 @@ public class LangsDictionaryController {
         return "langsDictionary/edit";
     }
 
+    /**
+     * 本地语言搜索
+     *
+     * @param dictionaryVo
+     * @param model
+     * @return
+     */
     @RequestMapping("localEdit")
     public String localAdd(LangsDictionaryVo dictionaryVo, Model model) {
         LangsCategory example = new LangsCategory();

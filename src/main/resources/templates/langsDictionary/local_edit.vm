@@ -1,0 +1,199 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 菜单管理</title>
+
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <div id="breadcrumb">
+                <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i
+                        class="icon-home"></i> 主页</a>
+                <a href="local_list" class="tip-bottom" data-original-title="">分类管理</a>
+                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span6">
+                    <div class="widget-box">
+                        <div class="widget-title"><span class="icon"> <i
+                                class="icon-align-justify"></i> </span>
+                            <h5>编辑&查看</h5>
+                        </div>
+                        <div class="widget-content nopadding">
+                            <form action="update" method="post"
+                                  class="form-horizontal langsDicFormValidate" role="form"
+                                  id="cityform">
+
+                            #*<div *##*class="fl"*##*
+                             style="border-right:1px solid #eeeeee;box-sizing:border-box;width:50%;">*#
+                            #*<div class="control-group">*#
+                            #*获取keyCode*#
+                                <div class="">
+                                    <label class="control-label">keyCode：</label>
+                                    <div class="controls">
+                                        <input for="name" name="keyCode" type="text"
+                                               class="span7"
+                                               readonly="readonly"
+                                               value="$!dictionarys[0].keyCode">
+                                    </div>
+                                </div>
+
+
+                                #foreach($langCountry in $!langsCountries)
+
+                                    <div class="">
+                                        <label class="control-label">
+                                        #*$!langCountry.desc
+                                        ($!langCountry.value)*#
+                                        #*#if($!langCountry.key == 1 || $!langCountry.key == 2)
+                                            <font style="color: red;margin: 0px;padding: 5px;">*</font>
+                                        #end*#
+                                            #if($!langCountry.desc == "中文" || $!langCountry.desc ==
+                                                "英语")
+                                                $!langCountry.desc ($!langCountry.value)
+                                            #end
+                                            #if($!langCountry.desc != "中文" && $!langCountry.desc !=
+                                                "英语")
+                                                当地语
+                                            #end
+                                            ：</label>
+                                        <div class="controls">
+
+                                            #*<input name="$!langCountry.key" type="text"
+                                                   class="span7 countryLanguage"
+                                                   value="hello sharp"
+                                            >*#
+
+                                            #foreach($dictionary in $!dictionarys)
+
+
+
+
+
+                                                #if($!dictionary.language+"-"+$!dictionary.country == $!langCountry.value)
+                                                    #if($!langCountry.desc == "中文" || $!langCountry.desc == "英语")
+                                                        <input type="text" value="$!dictionary.message"
+                                                               class="span7 countryLanguage" readonly="readonly">
+                                                    #end
+
+                                                    #if($!langCountry.desc != "中文" && $!langCountry.desc != "英语")
+                                                        <input type="text" value="$!dictionary.message"
+                                                               class="span7 countryLanguage">
+                                                    #end
+
+                                                    #*<input type="text" value="$!dictionary.message"
+                                                           class="span7 countryLanguage">*#
+                                                #end
+                                            #end
+                                        </div>
+                                    </div>
+                                #end
+
+                        </div>
+
+
+                        <div class="form-actions">
+                            <button type="button" id="saveBtn"
+                                    onclick="saveLangsDictionary()" #*onclick按钮点击事件*#
+                                    class="btn btnSave btn-success">保存
+                            </button>
+                            <a class="btn btn-primary" onclick="backLangsDictionaryList()">返回</a>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    #include("common/js-support.vm")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".btnSave").click(function () {
+            var request = {};
+            var langsMessageList = [];
+            $(".countryLanguage").each(function (i, o) {
+                var countryLanguage = {};
+                countryLanguage.langsKey = $(o).attr("name");
+                countryLanguage.message = $(o).val();
+                langsMessageList.push(countryLanguage);
+            });
+            request.id = $("input[name='id']").val();
+            request.message = $("input[name='message']").val();
+            request.keyCode = $("input[name='keyCode']").val();
+            request.categoryId = $("input[name='categoryId']").val();
+            request.langsMessageList = langsMessageList;
+            $.ajax({
+                url: 'saveLangsDictionary',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        alert("操作成功");
+                        window.location.href = "/langsDictionary/edit?type=3&id=" + result.data;
+                    } else {
+                        alert(result.msg);
+                    }
+                }
+            });
+        });
+        var type = $!type;
+        if (type == 3) {
+            $(":text").attr("disabled", "disabled");
+            $("select").attr("disabled", "disabled");
+        }
+    });
+
+    function saveLangsDictionary() {
+        var request = {};
+
+        request.keyCode = $("input[name='keyCode']").val();
+        request.categoryId = parseInt($("select[name='categoryId']").val());
+
+        var langsMessageList = [];
+        var keyCodes = document.getElementsByName("keyCodes");
+
+        for (var i = 0, j = keyCodes.length; i < j; i++) {
+            var keyCodeInput = keyCodes[i];
+            var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
+            var message = keyCodeInput.value;
+            var langsCountryMessageVo = {langsKey: langsKey, message: message};
+            langsMessageList.push(langsCountryMessageVo);
+        }
+
+        request.langsMessageList = langsMessageList;
+
+        console.log("requestJsonBody:" + request);
+
+        alert("nihao sharp")
+
+        $.ajax({
+            url: 'saveMessage',
+            data: JSON.stringify(request),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    alert("操作成功");
+                    window.location.href = "list1";
+                } else {
+                    alert(result.msg);
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
