@@ -67,13 +67,14 @@
                                                         <input type="text" value="$!dictionary.message"
                                                                class="span7 countryLanguage" readonly="readonly">
                                                     #end
-                                                    #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
-                                                        <input type="text" value="$!dictionary.message"
-                                                               class="span7 countryLanguage">
-                                                    #end
                                                 #end
                                                 #if($!dictionary.baseNameStr != $!langCountry.value)
-                                                    <input type="text" class="span7 countryLanguage">
+                                                    #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
+                                                        <input type="text" class="span7 countryLanguage" readonly="readonly">
+                                                    #end
+                                                    #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
+                                                        <input type="text" class="span7 countryLanguage" >
+                                                    #end
                                                 #end
                                             #end
                                         </div>

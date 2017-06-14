@@ -38,7 +38,7 @@
         <tbody>
             #foreach($entity in $!page)
             <tr class="odd gradeX">
-                <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$!entity.categoryId</label>
+                <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$!entity.categoryName</label>
                 </td>
                 <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$!entity.keyCode</label></td>
                 #foreach($langCountry in $!langsCountries)

@@ -315,9 +315,16 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         this.searchResultFillMessage(requestVo, langsDictionaryMap.values());
 
         ArrayList<LangsDictionaryVo> langsDictionaryVos = Lists.<LangsDictionaryVo>newArrayList(langsDictionaryMap.values());
-        Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageNum());  // 计算分页
-        Page<LangsDictionaryVo> pageVOs = new PageImpl<LangsDictionaryVo>(langsDictionaryVos, pageable, langsDictionaryMap.size());
+
+        Integer pageIndex = requestVo.getIndex();
+        Integer pageNum = requestVo.getPageNum();
+
+        List<LangsDictionaryVo> subList = langsDictionaryVos.subList((pageIndex - 1) * pageNum, pageIndex * pageNum > langsDictionaryVos.size() ? langsDictionaryVos.size() : pageIndex * pageNum);
+        Pageable pageable = new PageRequest(pageIndex - 1, pageNum);  // 计算分页
+        Page<LangsDictionaryVo> pageVOs = new PageImpl<LangsDictionaryVo>(subList, pageable, langsDictionaryVos.size());
         return pageVOs;
+
+
     }
 
     private LinkedHashMap<String, LangsDictionaryVo> getStringLangsDictionaryVos(List<EntityNyLangsDictionary> allDictionaries, Boolean isLocalLangs) {
@@ -349,6 +356,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
             keyCodes.add(keyCode);
             dictionaryVo = new LangsDictionaryVo();
             dictionaryVo.setCategoryId(langsDictionary.getCategory().getId());
+            dictionaryVo.setCategoryName(langsDictionary.getCategory().getName());
             dictionaryVo.setKeyCode(langsDictionary.getKeyCode());
             messageVo = this.getLangsCountryMessageVo(langsDictionary);
             langsMessageList.add(messageVo);

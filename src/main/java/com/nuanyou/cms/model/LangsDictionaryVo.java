@@ -22,7 +22,7 @@ public class LangsDictionaryVo implements Serializable {
     private Long categoryId;
 
     //分类名称
-    private Long categoryName;
+    private String categoryName;
 
     private LangsMessageTipVo messageTip;
 
@@ -71,11 +71,11 @@ public class LangsDictionaryVo implements Serializable {
         this.categoryId = categoryId;
     }
 
-    public Long getCategoryName() {
+    public String getCategoryName() {
         return categoryName;
     }
 
-    public void setCategoryName(Long categoryName) {
+    public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
 
