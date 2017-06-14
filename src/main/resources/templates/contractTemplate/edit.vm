@@ -807,6 +807,9 @@
             },
             errorElement: "span"
         });
+
+
+
     });
 
     /** ########################多语言common弹出框增加######################## */
@@ -958,6 +961,7 @@
                     console.log(langsMessageList);
                     for (var i = 0; i < langsMessageList.length; i++) {
                         if (localelangsKey == langsMessageList[i].langsKey) {
+
                             alert("fliex要的本地化语言的key：" + localelangsKey);
                             alert("fliex要的本地化语言的message：" + langsMessageList[i].message);
                         }
