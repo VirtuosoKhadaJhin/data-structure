@@ -18,8 +18,8 @@
         </div>
     </div>
 *#
-    <div class="control-group">
-        <select class="span7 select2 " name="categoryId">
+    <div class="control-group" style="max-width: 200px">
+        <select class="span7 select2 " name="categoryId" style="max-width: 200px">
             #foreach($e in $!selectableLangsCategory)
                 <option value="$!e.id">$!e.name</option>
             #end
@@ -50,7 +50,7 @@
             #foreach($langCountry in $!langsCountries)
                 <th>
 
-                #*             $!langCountry.desc ($!langCountry.value)*#
+                    #*$!langCountry.desc ($!langCountry.value)*#
 
                     #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
                         $!langCountry.desc ($!langCountry.value)
@@ -66,21 +66,6 @@
         </thead>
     #*表格体*#
         <tbody>
-        <tr class="odd gradeX" style="display: none">
-            <td style="text-align: center;">1</td>
-            <td style="text-align: center;">mch_mylon</td>
-            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
-            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
-            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
-            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
-            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
-            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
-
-            <td>
-                <a class="btn btn-primary btn-mini selectParameter">编辑</a>
-                <a data-id="$!entity.id" class="btn btn-danger btn-mini remove-item">删除</a>
-            </td>
-        </tr>
         #*循环展示表格体*#
             #foreach($entity in $!page)
             <tr class="odd gradeX">

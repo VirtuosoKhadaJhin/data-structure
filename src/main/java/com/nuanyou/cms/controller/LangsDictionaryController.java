@@ -173,6 +173,22 @@ public class LangsDictionaryController {
     }
 
     /**
+     * (待定)修改当地语言接口
+     *
+     * @param messageVo
+     * @return
+     */
+    @RequestMapping(value = "modifyLocalLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public APIResult viewLocalLangsDictionary(@RequestBody LangsCountryMessageVo messageVo) {
+        APIResult result = new APIResult(ResultCodes.Success);
+        /*List<LangsDictionary> dictionarys = dictionaryService.modifyLocalLangsDictionary(messageVo);
+        result.setData(dictionarys);*/
+
+        return result;
+    }
+
+    /**
      * 根据keyCode查询查询中文、英文、当地文
      *
      * @param dictionaryVo

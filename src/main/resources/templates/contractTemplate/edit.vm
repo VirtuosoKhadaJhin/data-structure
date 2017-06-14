@@ -976,7 +976,7 @@
                         console.log(langsMessageList);
                         for (var i = 0; i < langsMessageList.length; i++) {
                             if (localelangsKey == langsMessageList[i].langsKey) {
-                                currLangKeyInput.val(localelangsKey);
+                                currLangKeyInput.val(request.keyCode);
                                 currLangValueInput.val(langsMessageList[i].message);
                             }
 
