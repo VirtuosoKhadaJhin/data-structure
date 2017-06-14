@@ -1,5 +1,7 @@
 package com.nuanyou.cms.service.impl;
 
+import com.nuanyou.cms.commons.APIException;
+import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.CmsUserDao;
 import com.nuanyou.cms.entity.CmsUser;
 import com.nuanyou.cms.service.UserService;
@@ -25,6 +27,10 @@ public class UserServiceImpl implements UserService{
         if(id==null){
             return null;
         }
-        return cmsUserDao.findOne(id).getUsername();
+        CmsUser user = cmsUserDao.findOne(id);
+        if(user==null){
+            throw new APIException(ResultCodes.Fail,"查询用户失败,id"+id);
+        }
+        return user.getUsername();
     }
 }

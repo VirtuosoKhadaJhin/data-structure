@@ -57,7 +57,7 @@
 
 
 
-                                <label class="control-label">自定义参数 </label>
+                                <label class="control-label">自定义参数<select class="langsAutoComplete3" style="display: none"></select> </label>
                                 <div class="controls">
                                     <div style="overflow: auto;width: 100%">
 
@@ -133,11 +133,7 @@
                                                 <td>
                                                     <input name="nameLabel" style="width: 150px"
                                                            class="langsAutoComplete">
-
-
-                                                    <select class="langsAutoComplete3"></select>
-
-                                                    <input name="name" type="hidden">
+                                                    <input name="name" type="text">
                                                     <br>
                                                     <a class="btn btn-info btn-mini addLang"
                                                        inputLangsName="name">添加</a>
@@ -166,16 +162,12 @@
                                                 </td>
                                                 <td>
                                                     <input name="remarkLabel" class="langsAutoComplete" style="width: 150px">
-
-                                                    <input name="remark" type="hidden">
+                                                    <input name="remark" type="text">
                                                     <br>
-                                                    <a class="btn btn-info btn-mini addLang"
-                                                       inputLangsName="remark">添加</a>
+                                                    <a class="btn btn-info btn-mini addLang"inputLangsName="remark">添加</a>
                                                 </td>
                                                 <td>
                                                     <input name="referenceId" placeholder="引用参数" class="referParam"  readonly>
-##                                                    <input name="referId" placeholder="引用参数" style="width: 150px">
-
                                                 </td>
                                                 <td style="text-align: left;width: 300px" class="operateColumn">
                                                     <a class="btn btn-info btn-mini removeRow">删除</a>
@@ -377,9 +369,6 @@
     #include("common/js-support.vm")
     #include("common/image-support.vm")
 <script src="/dist/js/cascade-select.js"></script>
-
-##<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-##<script src="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
     /**
@@ -471,20 +460,6 @@
                 return false;
             }
 
-            //validate keys
-            /*
-            var keyNames = [];
-            $("input[name='key']").each(function (i, o) {
-                keyNames.push($(o).val());
-            });
-            $("span[class='key']").each(function (i, o) {
-                keyNames.push($(o).html());
-            });
-            */
-
-
-
-
             //begin to generate datas
             var request = {};
             var list = [];
@@ -503,24 +478,6 @@
                 templateParameterRequest.referenceId = $(o).find("input[name='referenceId']").val();
                 templateParameterRequest.dateTypeMappingId = $(o).find("select[name='dateTypeMappingId']").val();
                 templateParameterRequest.referName=$(o).find("input[name='referName']").val();
-                //validate refer key name
-                /*
-                if(templateParameterRequest.referName!=""){
-                    if(templateParameterRequest.referName==templateParameterRequest.key){
-                        return alert("引用Key："+templateParameterRequest.referName+"不能引用自己");
-                    }
-                    for(var i=0 ;i<keyNames.length;i++){
-                        var isSame=false;
-                        if(keyNames[i]==templateParameterRequest.referName){
-                            isSame=true;
-                            break;
-                        }
-                    }
-                    if(!isSame){
-                        return alert("引用Key："+templateParameterRequest.referName+"不存在");
-                    }
-                }
-                */
                 list.push(templateParameterRequest);
             });
             $("input[name='paramId']").each(function (i, o) {
@@ -569,14 +526,7 @@
             var trHTML = "<tr class='editRow eachRow'>" + inputRowExample + "</tr>";
             table.append(trHTML);
             var last = lastInputRow = $('#mytable .editRow').eq(0);
-            //options.autocompleteOptions.source = false;
-            //$( ".selector" ).autocomplete( "close" );
-            //$( ".selector" ).autocomplete( "enable" );
-          //  last.find("input[class='langsAutoComplete']").autocomplete("enable");
             $(".langsAutoComplete").autocomplete();
-//          var trHTML=$("tr[name='firstRow']").eq(0).prop('outerHTML');
-//          console.log($(trHTML).find("input[class='langsAutoComplete']"));
-//          console.log( last.find("input[class='langsAutoComplete']"));
         });
 
 
@@ -885,76 +835,6 @@
             },
             errorElement: "span"
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//
-//
-//        $(".langsAutoComplete222").autocomplete({
-//            source: function( request, response ) {
-//                $.ajax({
-//                    url : '/langsDictionary/suggest?date=' + new Date(),
-//                    type : "get",
-//                    dataType : "json",
-//                    async: true,
-//                    data: {key: keyWord},
-//                    success: function( data ) {
-//                        console.log(data);
-//
-//                        var listComplete = [];
-//                        var list = result.data;
-//                        for (var i = 0; i < list.length; i++) {
-//                            var o = list[i];
-//                            var complate = {};
-//                            complate.label = o.message;
-//                            complate.value = o.keyCode;
-//                            //complate.message=o.message;
-//                            listComplete.push(complate);
-//                        }
-//                        response( $.map( listComplete, function( item ) {
-//                            return {
-//                                label: item.label,
-//                                value: item.value
-//                            }
-//                        }));
-//
-//
-//                    }
-//                });
-//            },
-//
-//            focus: function (event, ui) {
-//                $(this).val(ui.item.label);
-//                return false;
-//            },
-//            select: function (event, ui) {
-//                $(this).val(ui.item.label);
-//                $(this).next().val(ui.item.value);
-//                return false;
-//            }
-//        });
     });
 
 </script>

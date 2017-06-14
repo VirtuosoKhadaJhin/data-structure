@@ -45,8 +45,9 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         AcMerchantSettlementCommission settlementCommissionRequest = new AcMerchantSettlementCommission();
         setMerchantSettlementRequest(result, settlementRequest, detail.getMchId());
         setMerchantSettlementCommissionRequest(result, settlementCommissionRequest);
-        if (detail.getParentId() == null) {//主合同
-            validate(settlementRequest.getPoundage(), settlementRequest.getDay(), settlementRequest.getDayType(), settlementRequest.getStartTime(), settlementRequest.getStartPrice());
+        if (detail.getParentId() == null) {//主合同验证优付的参数
+            validateYoufuSettlement(settlementRequest.getPoundage(), settlementRequest.getDay(), settlementRequest.getDayType(), settlementRequest.getStartPrice());
+            validateCommission(settlementCommissionRequest.getGroupon(),settlementCommissionRequest.getStartTime());
         }
         APIResult<AcMerchantSettlement> res = remoteAccountSettlementService.getSettlement(settlementRequest.getMerchantId());
         if (res.getCode() != 0) {
@@ -83,13 +84,21 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         }
     }
 
-    private void validate(BigDecimal poundage, Long paymentDays, DayType dateType, Date startTimeStr, BigDecimal startPrice) {
+    private void validateCommission(BigDecimal groupon, Date startTime) {
+
+        if(groupon!=null||startTime!=null){
+            throw new APIException(ResultCodes.Fail, "主合同时不能存在团购佣金等参数");
+        }
+    }
+
+    private void validateYoufuSettlement(BigDecimal poundage, Long paymentDays, DayType dateType, BigDecimal startPrice) {
+        if(dateType==null&&paymentDays==null){
+            throw new APIException(ResultCodes.Fail, "主合同时结算周期和日结天数不能同时为空");
+        }
         if (poundage == null) {
-            throw new APIException(ResultCodes.Fail, "手续费不能为空");
-        } else if (dateType == null) {
-            throw new APIException(ResultCodes.Fail, "数据类型不能为空");
-        } else if (startPrice == null) {
-            throw new APIException(ResultCodes.Fail, "起始金额不能为空");
+            throw new APIException(ResultCodes.Fail, "主合同时手续费不能为空");
+        }else if (startPrice == null) {
+            throw new APIException(ResultCodes.Fail, "主合同时起始金额不能为空");
         }
     }
 
@@ -127,16 +136,17 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         Date dateTime = startTimeStr == null ? null : DateTime.parse(startTimeStr, dateFormat).toDate();
         BigDecimal startPrice = startPriceStr == null ? null : new BigDecimal(startPriceStr);
         request.setEnabled(true);
-
         if(paymentDays==null){//非日结
             if(dateType==null){
-                throw new APIException(ResultCodes.Fail,"非日结时结算周期必须存在");
-            }
-            request.setDayType(DayType.toEnum(dateType));//月结或者半月结的结算周期
-            if(DayType.toEnum(dateType)==DayType.Month) {
-                request.setDay(1L);//月结
-            }else{
-                request.setDay(null);//半月结
+                request.setDayType(null);
+                request.setDay(null);
+            }else {
+                request.setDayType(DayType.toEnum(dateType));//月结或者半月结的结算周期
+                if(DayType.toEnum(dateType)==DayType.Month) {
+                    request.setDay(1L);//月结
+                }else{
+                    request.setDay(null);//半月结
+                }
             }
         }else{//日结
             if(dateType!=null){
