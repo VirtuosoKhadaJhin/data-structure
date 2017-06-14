@@ -18,7 +18,8 @@
     .text-gray {
         background-color: grey;
     }
-    #select2-categoryId-xe-container{
+
+    #select2-categoryId-xe-container {
         min-width: 180px;
     }
 </style>
@@ -75,39 +76,39 @@
         <h3>新增多语言</h3>
     </div>
     <div class="modal-body">
-            <form action="update" method="post" class="form-horizontal langsDicFormValidate" role="form"
-                  id="cityform">
-                <div class="control-group">
-                    <label class="control-label">
-                        keyCode<font style="color: red;margin: 0px;padding: 5px;">*</font>：</label>
-                    <div class="controls">
-                        <input for="name" id="keyCode" readonly="readonly" name="keyCode" type="text"
-                               class="span7"
-                               value="$!entity.keyCode" onchange="verifykeyCode()">
-                        <label id="keyCodeStatus" class="control-label"
-                               style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
-                    </div>
+        <form action="update" method="post" class="form-horizontal langsDicFormValidate" role="form"
+              id="langsInput">
+            <div class="control-group">
+                <label class="control-label">
+                    keyCode<font style="color: red;margin: 0px;padding: 5px;">*</font>：</label>
+                <div class="controls">
+                    <input id="verify_keyCode" type="text" style="display: none" value="" onkeyup="verifykeyCode()">
+                    <input for="name" id="keyCode" readonly="readonly"
+                           class="span7" name="keyCode" type="text"
+                           value="$!entity.keyCode" onblur="verifykeyCode()">
+                    <label id="keyCodeStatus" class="control-label"
+                           style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
                 </div>
+            </div>
 
-                <div class="control-group">
-                    <label class="control-label">多语言分类</label>
-                    <div class="controls">
-                        <select class="span7 select2 " name="categoryId" onchange="keyCodeRealTime()">
-                            #foreach($e in $!categories)
-                                <option value="$!e.id">$!e.name</option>
-                            #end
-                        </select>
-                    </div>
+            <div class="control-group">
+                <label class="control-label">多语言分类</label>
+                <div class="controls">
+                    <select class="span7 select2 " id="categoryId" name="categoryId" onchange="keyCodeRealTime()">
+                        <option value="" selected="selected">全部分类</option>
+                        #foreach($e in $!categories)
+                            <option value="$!e.id">$!e.name</option>
+                        #end
+                    </select>
                 </div>
+            </div>
 
-
-                #foreach($langCountry in $!langsCountries)
+            #foreach($langCountry in $!langsCountries)
+                #if($!langCountry.key == 1 || $!langCountry.key == 2)
                     <div class="control-group">
-                        <label class="control-label">$!langCountry.desc
-                            ($!langCountry.value)
-                            #if($!langCountry.key == 1 || $!langCountry.key == 2)
-                                <font style="color: red;margin: 0px;padding: 5px;">*</font>
-                            #end
+                        <label class="control-label">
+                            $!langCountry.desc ($!langCountry.value)
+                            <font style="color: red;margin: 0px;padding: 5px;">*</font>
                             ：</label>
                         <div class="controls">
                             #if($!langCountry.key == 1 || $!langCountry.key == 2)
@@ -115,20 +116,16 @@
                                        onkeyup="keyCodeRealTime()" data-name="langs"
                                        class="span7 countryLanguage">
                             #end
-                            #if($!langCountry.key != 1 && $!langCountry.key != 2)
-                                <input name="$!langCountry.key" data-key="$!langCountry.key" type="text"
-                                       data-name="langs"
-                                       class="span7 countryLanguage">
-                            #end
                             <label id="requiredKey_$!langCountry.key" class="control-label"
                                    style="width:80px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">必填项</label>
                         </div>
                     </div>
                 #end
-            </form>
+            #end
+        </form>
     </div>
     <div class="modal-footer">
-        <a href="javascript:void(0);" onclick="saveLangsDictionary()" class="btn btn-primary">保存</a>
+        <a href="javascript:void(0);" id="common_langs_saveBtn" onclick="saveLangsDictionary()" class="btn btn-primary">保存</a>
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
     </div>
 </div>
@@ -169,16 +166,55 @@
     /**
      * 通用弹窗
      */
-    function langsCommonDialog(){
+    var localeLangs = false;
+    function langsCommonDialog() {
+        $("input[id='keyCode']").val("");
+        $("input[data-name='langs']").val("");
+        $("#categoryId").val("");
+        $("#select2-categoryId-container").html("全部分类");
+
+        $("#keyCodeStatus").hide();
+        $("#common_langs_saveBtn").attr("style", "");
+        $("#keyCode").css("border", "");
+        $("#common_langs_saveBtn").attr("onclick", "saveLangsDictionary()");
+
         $('#parameterModal').modal('show');
         $("span[dir='ltr']").attr("style", "min-width: 180px;");
+
+        $.ajax({
+            url: 'viewLocalLanguage',
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    if (result.data != null && localeLangs == false) {
+                        localeLangs = true;
+                        // 如果不是必填项中文和英文
+                        var langsCountry = result.data;
+                        if (langsCountry.langsValue != "zh-CN" && langsCountry.langsValue != "en-US") {
+                            var localeInputHtml = "<div class='control-group'>"
+                                    + "<label class='control-label'>"
+                                    + langsCountry.langsDesc + (langsCountry.langsValue)
+                                    + "：</label>"
+                                    + " <div class='controls'>"
+                                    + " <input name='" + langsCountry.langsCountryKey + "' data-key='" + langsCountry.langsCountryKey + "' type='text' onkeyup='keyCodeRealTime()' data-name='langs' class='span7 countryLanguage'>"
+                                    + " </div>"
+                                    + "</div>";
+                            $("#langsInput").append(localeInputHtml);
+
+                        }
+                    }
+                }
+            }
+        });
     }
     /**
      * 验证keyCode是否重复
      */
     function verifykeyCode() {
         var request = {};
-        var keyCode = $("input[id='keyCode']").val();
+        var keyCode = $("input[id='verify_keyCode']").val();
 
         request.keyCode = keyCode;
         $.ajax({
@@ -189,17 +225,16 @@
             contentType: 'application/json',
             success: function (result) {
                 if (result.code == 0) {
-                    console.log(result.data);
                     if (!result.data) {
                         $("#keyCodeStatus").show();
-                        $("#saveBtn").attr("onclick", "");
+                        $("#common_langs_saveBtn").attr("onclick", "");
                         $("#keyCode").css("border", "1px solid red");
-                        $("#saveBtn").attr("style", "background-color: gray;");
+                        $("#common_langs_saveBtn").attr("style", "background-color: gray;");
                     } else {
                         $("#keyCodeStatus").hide();
-                        $("#saveBtn").attr("style", "");
+                        $("#common_langs_saveBtn").attr("style", "");
                         $("#keyCode").css("border", "");
-                        $("#saveBtn").attr("onclick", "saveLangsDictionary()");
+                        $("#common_langs_saveBtn").attr("onclick", "saveLangsDictionary()");
                     }
                 }
             }
@@ -211,6 +246,7 @@
     function checkRequiredParams() {
         var requiredUS = $("input[name='1']").val();
         var requiredZH = $("input[name='2']").val();
+        var categoryId = $("select[name='categoryId']").val();
 
         if (requiredUS == null || requiredUS == "") {
             $("#requiredKey_1").show();
@@ -219,6 +255,9 @@
         } else if (requiredZH == null || requiredZH == "") {
             $("#requiredKey_2").show();
             $("input[name='2']").css("border", "1px solid red");
+            return false;
+        } else if (categoryId == null || categoryId == "") {
+            alert("请选择分类!");
             return false;
         } else {
             $("#requiredKey_1").hide();
@@ -289,7 +328,9 @@
         if (requiredUS != null) {
             var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
             $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
+            $("#verify_keyCode").attr("value", categoryName + "_" + requiredUS);
         }
+        verifykeyCode();
     }
     /** ########################多语言common弹出框增加######################## */
 
@@ -297,7 +338,7 @@
      /**
      * 重置查询条件
      */
-    function reset(){
+    function reset() {
         location.href = "list?baseNameId=&keyCode=&message=";
     }
     /**
