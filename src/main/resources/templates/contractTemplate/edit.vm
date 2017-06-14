@@ -132,13 +132,12 @@
                                                            readonly>
                                                 </td>
                                                 <td>
-                                                    <input name="nameLabel" style="width: 150px"
-                                                           class="langsAutoComplete">
-                                                    <a class="btn btn-info btn-mini addLang"
-                                                       inputLangsName="name"><i class="icon-plus"></i></a>
+                                                    <input name="nameLabel" style="width: 150px" class="langsAutoComplete">
+                                                    <a class="btn btn-info btn-mini addLang" langsKeyName="name" langsValueName="nameLabel">
+                                                        <i class="icon-plus"></i>
+                                                    </a>
                                                     <input name="name" type="text">
                                                     <br>
-
                                                 </td>
                                                 <td><input name="defaultValue" style="width: 90px"></td>
                                                 <td>
@@ -378,7 +377,7 @@
 
     </div>
     <div class="modal-footer">
-        <a href="javascript:void(0);" onclick="saveLangsDictionary()" class="btn btn-primary">保存</a>
+        <a href="javascript:void(0);" class="btn btn-primary saveLangsDictionary">保存</a>
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
     </div>
 </div>
@@ -458,46 +457,7 @@
      */
     var localeLangs = false;
     var localelangsKey;
-    function langsCommonDialog() {
-        $("input[id='keyCode']").val("");
-        $("input[data-name='langs']").val("");
-        $("#categoryId").val("");
-        $("#select2-categoryId-container").html("全部分类");
 
-        $('#parameterModal').modal('show');
-        $("span[dir='ltr']").attr("style", "min-width: 366px;");
-
-        $('#addLangsModal').modal('show');
-        $.ajax({
-            url: '/langsDictionary/viewLocalLanguage',
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.code == 0) {
-                    console.log(result.data);
-                    if (result.data != null && localeLangs == false) {
-                        localeLangs = true;
-                        // 如果不是必填项中文和英文
-                        var langsCountry = result.data;
-                        localelangsKey = langsCountry.langsCountryKey;
-                        if (langsCountry.langsValue != "zh-CN" && langsCountry.langsValue != "en-US") {
-                            var localeInputHtml = "<div class='control-group'>"
-                                    + "<label class='control-label'>"
-                                    + langsCountry.langsDesc + (langsCountry.langsValue)
-                                    + "：</label>"
-                                    + " <div class='controls'>"
-                                    + " <input name='" + langsCountry.langsCountryKey + "' data-key='" + langsCountry.langsCountryKey + "' type='text' onkeyup='keyCodeRealTime()' data-name='langs' class='span7 countryLanguage'>"
-                                    + " </div>"
-                                    + "</div>";
-                            $("#langsInput").append(localeInputHtml);
-
-                        }
-                    }
-                }
-            }
-        });
-    }
     /**
      * 验证keyCode是否重复
      */
@@ -558,60 +518,7 @@
         return true;
     }
 
-    /**
-     * 保存多语言
-     */
-    function saveLangsDictionary() {
-        keyCodeRealTime();
 
-        var checkResult = checkRequiredParams();
-        if (!checkResult) {
-            return false;
-        }
-
-        var request = {};
-
-        request.keyCode = $("input[id='keyCode']").val();
-        request.categoryId = parseInt($("select[name='categoryId']").val());
-
-        var langsMessageList = [];
-        var keyCodes = $("input[data-name='langs']");
-
-        for (var i = 0, j = keyCodes.length; i < j; i++) {
-            var keyCodeInput = keyCodes[i];
-            var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
-            var message = keyCodeInput.value;
-            var langsCountryMessageVo = {langsKey: langsKey, message: message};
-            langsMessageList.push(langsCountryMessageVo);
-        }
-
-        request.langsMessageList = langsMessageList;
-
-        $.ajax({
-            url: '/langsDictionary/saveLangsDictionary',
-            data: JSON.stringify(request),
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.code == 0) {
-                    alert("操作成功");
-                    $('#parameterModal').modal('hide');
-                    console.log(localelangsKey);
-                    console.log(langsMessageList);
-                    for (var i = 0; i < langsMessageList.length; i++) {
-                        if (localelangsKey == langsMessageList[i].langsKey) {
-                            $("input[name='nameLabel'").val(localelangsKey);
-                            $("input[name='name'").val(localelangsKey);
-                        }
-
-                    }
-                } else {
-                    alert(result.msg);
-                }
-            }
-        });
-    }
     /**
      * 实时更新keyCode展示
      */
@@ -633,7 +540,8 @@
     $(document).ready(function () {
         var type = $!optype;
         var selectedIds =$!selectedIds;
-        var currLangInput;
+        var currLangKeyInput;
+        var currLangValueInput;
         var curRefer;
         var inputRowExample = $(".inputRowExample").html();
         var spanRowExample = $(".rowSpanExample").html();
@@ -923,21 +831,65 @@
         });
 
 
-        $("#selectLangSave").on("click", function () {
-            var langsKey = $("#langsKey").val();
-            console.log(langsKey);
-            langsKey = $("#langsKey").val();
-            currLangInput.val(langsKey);
-            $('#selectLangsModal').modal('hide');
-        });
+//        $("#selectLangSave").on("click", function () {
+//            var langsKey = $("#langsKey").val();
+//            console.log(langsKey);
+//            langsKey = $("#langsKey").val();
+//            currLangInput.val(langsKey);
+//        });
 
         $("#mytable").delegate(".addLang", "click", function (e) {
             var currEle = e.currentTarget;
-            var name = $(currEle).attr("inputLangsName");
+            var keyName = $(currEle).attr("langsKeyName");
+            var valueName = $(currEle).attr("langsValueName");
             var td = $(currEle).parent().parent();
-            currLangInput = td.find("input[name='" + name + "']");
+            currLangKeyInput = td.find("input[name='" + keyName + "']");
+            currLangValueInput = td.find("input[name='" + valueName + "']");
             langsCommonDialog();
         });
+
+
+        function langsCommonDialog() {
+            $("input[id='keyCode']").val("");
+            $("input[data-name='langs']").val("");
+            $("#categoryId").val("");
+            $("#select2-categoryId-container").html("全部分类");
+
+            $("span[dir='ltr']").attr("style", "min-width: 366px;");
+
+            $('#addLangsModal').modal('show');
+            $.ajax({
+                url: '/langsDictionary/viewLocalLanguage',
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        console.log(result.data);
+                        if (result.data != null && localeLangs == false) {
+                            localeLangs = true;
+                            // 如果不是必填项中文和英文
+                            var langsCountry = result.data;
+                            localelangsKey = langsCountry.langsCountryKey;
+                            if (langsCountry.langsValue != "zh-CN" && langsCountry.langsValue != "en-US") {
+                                var localeInputHtml = "<div class='control-group'>"
+                                        + "<label class='control-label'>"
+                                        + langsCountry.langsDesc + (langsCountry.langsValue)
+                                        + "：</label>"
+                                        + " <div class='controls'>"
+                                        + " <input name='" + langsCountry.langsCountryKey + "' data-key='" + langsCountry.langsCountryKey + "' type='text' onkeyup='keyCodeRealTime()' data-name='langs' class='span7 countryLanguage'>"
+                                        + " </div>"
+                                        + "</div>";
+                                $("#langsInput").append(localeInputHtml);
+
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
 
         $("#mytable").delegate(".referParam", "click", function (e) {
             var currEle = e.currentTarget;
@@ -966,6 +918,68 @@
             curRefer.next().val("sdfsdf");
             $('#referModal').modal('hide');
         });
+
+
+
+        $(".saveLangsDictionary").on("click",function () {
+            saveLangsDictionary();
+        });
+
+        /**
+         * 保存多语言
+         */
+        function saveLangsDictionary() {
+            keyCodeRealTime();
+
+            var checkResult = checkRequiredParams();
+            if (!checkResult) {
+                return false;
+            }
+
+            var request = {};
+
+            request.keyCode = $("input[id='keyCode']").val();
+            request.categoryId = parseInt($("select[name='categoryId']").val());
+
+            var langsMessageList = [];
+            var keyCodes = $("input[data-name='langs']");
+
+            for (var i = 0, j = keyCodes.length; i < j; i++) {
+                var keyCodeInput = keyCodes[i];
+                var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
+                var message = keyCodeInput.value;
+                var langsCountryMessageVo = {langsKey: langsKey, message: message};
+                langsMessageList.push(langsCountryMessageVo);
+            }
+
+            request.langsMessageList = langsMessageList;
+
+            $.ajax({
+                url: '/langsDictionary/saveLangsDictionary',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        alert("操作成功");
+                        $('#addLangsModal').modal('hide');
+                        console.log(localelangsKey);
+                        console.log(langsMessageList);
+                        for (var i = 0; i < langsMessageList.length; i++) {
+                            if (localelangsKey == langsMessageList[i].langsKey) {
+                                currLangKeyInput.val(localelangsKey);
+                                currLangValueInput.val(langsMessageList[i].message);
+                            }
+
+                        }
+                    } else {
+                        alert(result.msg);
+                    }
+                }
+            });
+        }
+
 
 
         $(".templateFormValidate").validate({
