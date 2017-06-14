@@ -46,76 +46,75 @@
                                     </div>
                                 </div>
 
-
                                 #foreach($langCountry in $!langsCountries)
-                                    <div class="">
-                                        <label class="control-label">
-                                            #if($!langCountry.desc == "中文" || $!langCountry.desc ==
-                                                "英文")
-                                                $!langCountry.desc ($!langCountry.value)
-                                                <font style="color: red;margin: 0px;padding: 5px;">*</font>
+                                <div class="">
+                                    <label class="control-label">
+                                        #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
+                                            $!langCountry.desc ($!langCountry.value)
+                                            <font style="color: red;margin: 0px;padding: 5px;">*</font>
+                                        #end
+                                        #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
+                                            $!langCountry.desc ($!langCountry.value)-当地语
+                                        #end  ：
+                                    </label>
+                                    #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
+                                    <div class="controls">
+                                    #end
+                                    #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
+                                    <div class="controls" id="localLanguage" data-key="$!langCountry.key"
+                                         data-value="$!langCountry.value">
+                                    #end
+                                    #foreach($dictionary in $!dictionarys)
+                                        #if($!dictionary.baseNameStr == $!langCountry.value)
+                                            #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
+                                                <input type="text" value="$!dictionary.message"
+                                                       class="span7 countryLanguage" readonly="readonly">
                                             #end
-                                            #if($!langCountry.desc != "中文" && $!langCountry.desc !=
-                                                "英文")
-                                                $!langCountry.desc ($!langCountry.value)-当地语
-                                            #end
-                                            ：</label>
-                                        <div class="controls">
-                                            #foreach($dictionary in $!dictionarys)
-                                                #if($!dictionary.baseNameStr == $!langCountry.value)
-                                                    #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
-                                                        <input type="text" value="$!dictionary.message"
-                                                               class="span7 countryLanguage" readonly="readonly">
-                                                    #end
-                                                #end
-                                                #if($!dictionary.baseNameStr != $!langCountry.value)
-                                                    #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
-                                                        <input type="text" class="span7 countryLanguage" readonly="readonly">
-                                                    #end
-                                                    #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
-                                                        <input type="text" class="span7 countryLanguage" >
-                                                    #end
-                                                #end
-                                            #end
-                                        </div>
-                                    </div>
+                                        #end
+                                    #end
+                                </div>
+                                </div>
                                 #end
-                        </div>
+                            </div>
 
-                        <div class="form-actions" style="clear: both;text-align: center;">
-                            <button type="button" id="saveBtn"
-                                    onclick="saveLangsDictionary()" #*onclick按钮点击事件*#
-                                    class="btn btnSave btn-success">保存
-                            </button>
-                            <a class="btn btn-primary" onclick="backLangsDictionaryList()">返回</a>
+                                <div class="form-actions" style="clear: both;text-align: center;">
+                                    <button type="button" id="saveBtn"
+                                            onclick="modifyLocalLangsDictionary()" #*onclick按钮点击事件*#
+                                            class="btn btnSave btn-success">保存
+                                    </button>
+                                    <a class="btn btn-primary" href="localList">返回</a>
+                                </div>
+                            </form>
                         </div>
-                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
     #include("common/js-support.vm")
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $(".btnSave").click(function () {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // 填充需要填写的本地语言Input样式
+            $("#localLanguage").append("<input type='text' id='localLanguageMess' class='span7 countryLanguage'>");
+        });
+
+        /**
+         * 修改本地语言
+         */
+        function modifyLocalLangsDictionary() {
+            var keyCode = $("input[name='keyCode']").val();
+            var localLanguageKey = Number($("#localLanguage").attr("data-key"));
+            var localLanguageMess = $("#localLanguageMess").val();
+
             var request = {};
-            var langsMessageList = [];
-            $(".countryLanguage").each(function (i, o) {
-                var countryLanguage = {};
-                countryLanguage.langsKey = $(o).attr("name");
-                countryLanguage.message = $(o).val();
-                langsMessageList.push(countryLanguage);
-            });
-            request.id = $("input[name='id']").val();
-            request.message = $("input[name='message']").val();
-            request.keyCode = $("input[name='keyCode']").val();
-            request.categoryId = $("input[name='categoryId']").val();
-            request.langsMessageList = langsMessageList;
+
+            request.keyCode = keyCode;
+            request.langsKey = localLanguageKey;
+            request.localMess = localLanguageMess;
+
             $.ajax({
-                url: 'saveLangsDictionary',
+                url: 'modifyLocalLangsDictionary',
                 data: JSON.stringify(request),
                 type: 'post',
                 dataType: 'json',
@@ -123,59 +122,15 @@
                 success: function (result) {
                     if (result.code == 0) {
                         alert("操作成功");
-                        window.location.href = "/langsDictionary/edit?type=3&id=" + result.data;
+                        location.href = "";
                     } else {
                         alert(result.msg);
                     }
                 }
             });
-        });
-        var type = $!type;
-        if (type == 3) {
-            $(":text").attr("disabled", "disabled");
-            $("select").attr("disabled", "disabled");
-        }
-    });
 
-    function saveLangsDictionary() {
-        var request = {};
-
-        request.keyCode = $("input[name='keyCode']").val();
-        request.categoryId = parseInt($("select[name='categoryId']").val());
-
-        var langsMessageList = [];
-        var keyCodes = document.getElementsByName("keyCodes");
-
-        for (var i = 0, j = keyCodes.length; i < j; i++) {
-            var keyCodeInput = keyCodes[i];
-            var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
-            var message = keyCodeInput.value;
-            var langsCountryMessageVo = {langsKey: langsKey, message: message};
-            langsMessageList.push(langsCountryMessageVo);
         }
 
-        request.langsMessageList = langsMessageList;
-
-        console.log("requestJsonBody:" + request);
-
-        alert("nihao sharp")
-
-        $.ajax({
-            url: 'saveMessage',
-            data: JSON.stringify(request),
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.code == 0) {
-                    alert("操作成功");
-                    window.location.href = "list1";
-                } else {
-                    alert(result.msg);
-                }
-            }
-        });
-    }
-</script>
+    </script>
 </body>
 </html>

@@ -18,12 +18,19 @@ public class LangsDictionaryVo implements Serializable {
     //修改后新值
     private String newKeyCode;
 
+    // 接收当地语言
+    private String localMess;
+
+    // 语言的key
+    private Integer langsKey;
+
     //分类ID
     private Long categoryId;
 
     //分类名称
     private String categoryName;
 
+    // 接收备注信息
     private LangsMessageTipVo messageTip;
 
     //国家语言+内容
@@ -61,6 +68,22 @@ public class LangsDictionaryVo implements Serializable {
 
     public void setNewKeyCode(String newKeyCode) {
         this.newKeyCode = newKeyCode;
+    }
+
+    public String getLocalMess() {
+        return localMess;
+    }
+
+    public void setLocalMess(String localMess) {
+        this.localMess = localMess;
+    }
+
+    public Integer getLangsKey() {
+        return langsKey;
+    }
+
+    public void setLangsKey(Integer langsKey) {
+        this.langsKey = langsKey;
     }
 
     public Long getCategoryId() {

@@ -175,16 +175,14 @@ public class LangsDictionaryController {
     /**
      * (待定)修改当地语言接口
      *
-     * @param messageVo
+     * @param dictionaryVo
      * @return
      */
     @RequestMapping(value = "modifyLocalLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public APIResult viewLocalLangsDictionary(@RequestBody LangsCountryMessageVo messageVo) {
+    public APIResult modifyLocalLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
         APIResult result = new APIResult(ResultCodes.Success);
-        /*List<LangsDictionary> dictionarys = dictionaryService.modifyLocalLangsDictionary(messageVo);
-        result.setData(dictionarys);*/
-
+        dictionaryService.modifyLocalLangsDictionary(dictionaryVo);
         return result;
     }
 

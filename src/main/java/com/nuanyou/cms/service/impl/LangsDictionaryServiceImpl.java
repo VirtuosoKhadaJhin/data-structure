@@ -153,6 +153,50 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     }
 
     @Override
+    public void modifyLocalLangsDictionary(LangsDictionaryVo dictionaryVo) {
+        EntityNyLangsDictionary entityNyLangsDictionarey = new EntityNyLangsDictionary();
+
+        // 现有的字典项, 用于查询分类的Id
+        EntityNyLangsDictionary existsdictionary = new EntityNyLangsDictionary();
+        existsdictionary.setKeyCode(dictionaryVo.getKeyCode());
+
+        Example<EntityNyLangsDictionary> example = Example.of(existsdictionary);
+        List<EntityNyLangsDictionary> entityResult = dictionaryDao.findAll(example);
+
+        if (entityResult.size() > 0) {
+            existsdictionary = entityResult.get(0);
+            entityNyLangsDictionarey.setCategory(existsdictionary.getCategory());
+        }
+
+        // 查找是否有旧的添加的本地语言
+        existsdictionary = new EntityNyLangsDictionary();
+        existsdictionary.setKeyCode(dictionaryVo.getKeyCode());
+        String[] langsCountrys = LangsCountry.toEnum(dictionaryVo.getLangsKey()).getValue().split("-");
+        existsdictionary.setLanguage(langsCountrys[0]);
+        existsdictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
+
+        example = Example.of(existsdictionary);
+        entityResult = dictionaryDao.findAll(example);
+
+        // 删除旧的本地语言
+        if (entityResult.size() > 0) {
+            dictionaryDao.delete(entityResult);
+        }
+
+        // 如果输入空, 则不保存, 相当于删除了这个本地语言行
+        if (StringUtils.isNotEmpty(dictionaryVo.getLocalMess())) {
+            entityNyLangsDictionarey.setKeyCode(dictionaryVo.getKeyCode());
+            entityNyLangsDictionarey.setMessage(dictionaryVo.getLocalMess());
+            entityNyLangsDictionarey.setCreateDt(new Date());
+            entityNyLangsDictionarey.setLanguage(langsCountrys[0]);
+            entityNyLangsDictionarey.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
+            entityNyLangsDictionarey.setDelFlag(false);
+            dictionaryDao.save(entityNyLangsDictionarey);
+        }
+
+    }
+
+    @Override
     public Page<LangsDictionaryVo> findAllDictionary(final LangsDictionaryRequestVo requestVo) {
         return findAllDictioryByRequestVo(requestVo, false);
     }

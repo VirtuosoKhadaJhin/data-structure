@@ -112,4 +112,11 @@ public interface LangsDictionaryService {
      */
     List<LangsDictionary> viewLocalLangsDictionary(LangsDictionaryVo dictionaryVo);
 
+    /**
+     * 修改当地语言
+     *
+     * @param dictionaryVo
+     */
+    void modifyLocalLangsDictionary(LangsDictionaryVo dictionaryVo);
+
 }
