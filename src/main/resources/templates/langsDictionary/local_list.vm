@@ -1,0 +1,224 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
+        主页</a>
+    <a href="listLocal" class="tip-bottom" data-original-title="">当地语言管理</a>
+    <a href="#" class="tip-bottom" data-original-title="">列表</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>当地语言列表</h5>
+#*    <a class="btn btn-mini btn-info buttons" href="local_add">新增</a>*#
+    #*显示国家下拉框*#
+#*
+    <div class="control-group">
+        *##*<label class="control-label">多语言分类</label>*##*
+        <div class="controls">
+
+        </div>
+    </div>
+*#
+    <div class="control-group">
+        <select class="span7 select2 " name="categoryId" >
+            #foreach($e in $!selectableLangsCategory)
+                <option value="$!e.id">$!e.name</option>
+            #end
+        </select>
+    </div>
+
+
+</div>
+<style>
+    .tdInput {
+        width: 75%;
+    }
+
+    .text-gray {
+        background-color: grey;
+    }
+</style>
+<div style="overflow: auto;width: 100%">
+    <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+    #*表格头*#
+        <thead role="row">
+        <tr>#*标题行*#
+        #*分类*#
+            <th>分类</th>
+        #*keyCode*#
+            <th>keyCode</th>
+        #*多个语言循环展示*#
+            #foreach($langCountry in $!langsCountries)
+                <th>
+
+                #*             $!langCountry.desc ($!langCountry.value)*#
+
+                    #if($!langCountry.desc == "中文" || $!langCountry.desc == "英语")
+                        $!langCountry.desc ($!langCountry.value)
+                    #end
+                    #if($!langCountry.desc != "中文" && $!langCountry.desc != "英语")
+                        当地语
+                    #end
+                </th>
+            #end
+        #*操作*#
+            <th>操作</th>
+        </tr>
+        </thead>
+    #*表格体*#
+        <tbody>
+        <tr class="odd gradeX" style="display: none">
+            <td style="text-align: center;">1</td>
+            <td style="text-align: center;">mch_mylon</td>
+            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
+            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
+            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
+            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
+            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
+            <td style="text-align: center;width: 12%"><input class="tdInput" onchange="saveLang(this)" type="text"></td>
+
+            <td>
+                <a class="btn btn-primary btn-mini selectParameter">编辑</a>
+                <a data-id="$!entity.id" class="btn btn-danger btn-mini remove-item">删除</a>
+            </td>
+        </tr>
+        #*循环展示表格体*#
+            #foreach($entity in $!page)
+            <tr class="odd gradeX">
+                <td style="width: 10%">$!entity.categoryId</td>
+                <td style="width: 10%">$!entity.keyCode</td>
+                #foreach($langCountry in $!langsCountries)
+                    <td class="lang-message" style="width: 10%">
+                        #set($hasNullMessage=true)
+                        #foreach($lang in $!entity.langsMessageList)
+                            #if($!lang.langsKey == $!langCountry.key)
+                                <label>$!lang.message</label>
+                                #set($hasNullMessage=false)
+                            #end
+                        #end
+                        #if($hasNullMessage)
+                            <input class='tdInput' onchange='saveLang(this)' type='text'
+                                   placeholder='请填写语言'/>
+                        #end
+                    </td>
+                #end
+                <td width="8%">
+                    <div style="text-align: center" >
+                        <a class="btn btn-primary btn-mini" href="localEdit?keyCode=$!entity.keyCode" >编辑</a>
+                    #*
+                        运营人员不能删除一行数据
+                        <a data-id="$!entity.id" class="btn btn-danger btn-mini remove-item">删除</a>*#
+                    </div>
+                </td>
+            </tr>
+            #end
+        </tbody>
+    </table>
+</div>
+
+<!--***************************************修改语言*************************************************************-->
+<div id="parameterModal" class="modal hide fade" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>多语言编辑</h3>
+    </div>
+    <div class="modal-body">
+        <div class="control-group">
+            <div class="controls">
+                #foreach($langCountry in $!langsCountries)
+                    <div class="control-group">
+                        <label>$!langCountry.desc </label>
+                        <input type="text" class="span11" name="baseName"
+                               value="$!langCountry.value ">
+                    </div>
+                #end
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" id="parameterSave" class="btn btn-primary">保存</a>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+<!--***************************************修改语言*************************************************************-->
+
+#parse("common/list_mid.vm")
+<form class="form-horizontal " method="get">
+    <div class="control-group">
+        <label>分类</label>
+        <input type="text" class="span11" name="baseName" value="$!entity.baseName">
+    </div>
+
+    <div class="control-group">
+        <label>keyCode</label>
+        <input type="text" class="span11" name="keyCode" value="$!entity.keyCode">
+    </div>
+    <div class="control-group">
+        <label>message</label>
+        <input type="text" class="span11" name="message" value="$!entity.message">
+    </div>
+
+
+    <div class="control-group">
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+
+#parse("common/list_end.vm")
+
+<script>
+    /*    $(function () {
+            var langMessages = $(".lang-message");
+
+            for (var i = 0; i < langMessages.length; i++) {
+                if ($(".lang-message").eq(i).text().trim() == ""
+                        || $(".lang-message").eq(i).text().trim() == null) {
+                    $(".lang-message").eq(i).html("<input class='tdInput' onchange='saveLang(this)' type='text' placeholder='请填写语言'/>");
+                }
+            }
+        });*/
+    /**
+     * 实时保存语言
+     * @param obj
+     */
+    function saveLang(obj) {
+        console.log("输入的值" + $(obj).val());
+        console.log("对应的keyCode" + $(obj).attr("data-key"));
+        console.log("对应的enum的key" + $(obj).parent().index());
+
+        $(obj).parent().html($(obj).val());
+    }
+
+    /**
+     * 弹出框修改语言
+     */
+    $("#DataTables_Table_0").delegate(".selectParameter", "click", function (e) {
+        $('#parameterModal').modal('show');
+
+    });
+
+    /**
+     * 删除语言
+     */
+    $(".remove-item").each(function (i, o) {
+        $(o).on("click", function (event) {
+            if (!confirm('确实要删除该内容吗?'))
+                return;
+            var dataId = $(this).attr("data-id");
+            $.ajax({
+                url: 'remove',
+                data: {id: dataId},
+                type: 'get',
+                success: function (result) {
+                    if (result.code == 0) {
+                        window.location.reload();
+                    } else {
+                        alert("操作失败:" + result.msg);
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
+
