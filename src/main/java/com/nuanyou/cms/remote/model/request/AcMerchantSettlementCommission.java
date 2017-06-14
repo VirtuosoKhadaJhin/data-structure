@@ -52,4 +52,6 @@ public class AcMerchantSettlementCommission {
     public void setSettlementId(Long settlementId) {
         this.settlementId = settlementId;
     }
+
+
 }

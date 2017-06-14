@@ -183,7 +183,7 @@ public class ContractController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(path = "verify", method = RequestMethod.GET)
+    @RequestMapping(path = "verify", method = RequestMethod.POST)
     @ResponseBody
     public APIResult verify( Boolean valid, Long contractId) throws ParseException {
         String email = UserHolder.getUser().getEmail();

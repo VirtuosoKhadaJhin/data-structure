@@ -103,11 +103,11 @@
 
                                 <div class="form-actions">
 
-                                    <a class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</a>
-                                    <a class="btn btn-success btn-mini verify" data-id="$!entity.id" valid="false">驳回</a>
-##                                    #if($!entity.businessLicense && $!entity.paperContract)
-##                                        <a class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</a>
-##                                    #end
+##                                    <button class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</button>
+                                    <button class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="false">驳回</button>
+                                    #if($!entity.businessLicense && $!entity.paperContract)
+                                        <a class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</a>
+                                    #end
                                     <a class="btn btn-success btn-mini" href="list">返回</a>
                                 </div>
                             </form>
@@ -125,7 +125,9 @@
     <script type="text/javascript">
 
         $(".verify").each(function (i, o) {
+
             $(o).on("click", function (event) {
+                $(".verify").attr("disabled", true);
                 var id = $(this).attr("data-id");
                 var valid = $(this).attr("valid");
                 var message;
@@ -136,9 +138,9 @@
                 }
                 if (confirm(message)) {
                     $.ajax({
-                        url: 'verify',
+                        url: 'verify?date='+new Date(),
                         data: {contractId: id, valid: valid},
-                        type: 'get',
+                        type: 'post',
                         success: function (result) {
                             if (result.code == 0) {
                                 alert("操作成功");
@@ -146,8 +148,11 @@
                             } else {
                                 alert("Fail Code: " + result.code + " MSG: " + result.msg);
                             }
+                            $(".verify").attr("disabled", false);
                         }
                     });
+                }else{
+                    $(".verify").attr("disabled", false);
                 }
             })
         });

@@ -704,5 +704,40 @@
 
     });
 
+
+
+
+    //validate keys
+    /*
+    var keyNames = [];
+    $("input[name='key']").each(function (i, o) {
+        keyNames.push($(o).val());
+    });
+    $("span[class='key']").each(function (i, o) {
+        keyNames.push($(o).html());
+    });
+    */
+
+    //validate refer key name
+    /*
+    if(templateParameterRequest.referName!=""){
+        if(templateParameterRequest.referName==templateParameterRequest.key){
+            return alert("引用Key："+templateParameterRequest.referName+"不能引用自己");
+        }
+        for(var i=0 ;i<keyNames.length;i++){
+            var isSame=false;
+            if(keyNames[i]==templateParameterRequest.referName){
+                isSame=true;
+                break;
+            }
+        }
+        if(!isSame){
+            return alert("引用Key："+templateParameterRequest.referName+"不存在");
+        }
+    }
+    */
+
+
+
 </script>
 </html>

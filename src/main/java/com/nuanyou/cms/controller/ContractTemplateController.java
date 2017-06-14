@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -75,7 +76,7 @@ public class ContractTemplateController {
 
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
-    public String edit(Long id, Model model, Integer optype, HttpServletRequest request) {
+    public String edit(Long id, Model model, Integer optype, HttpServletRequest request) throws UnsupportedEncodingException {
 
         //获取浏览器当地语言
         List<LangsCountry> langsCountries=getNativeLangs(request);
@@ -252,7 +253,7 @@ public class ContractTemplateController {
     }
 
 
-    public void setLangsMessage(List<ContractParameter> langsMessage,HttpServletRequest request) {
+    public void setLangsMessage(List<ContractParameter> langsMessage,HttpServletRequest request) throws UnsupportedEncodingException {
         LangsDictionaryVo dic= dictionaryService.findLangsDictionary("",request.getLocale());
         for (ContractParameter contractParameter : langsMessage) {
             contractParameter.getName().setContent("sdfsdf");
