@@ -63,7 +63,7 @@
                                         <div class="controls">
                                             #if($!langCountry.key == 1 || $!langCountry.key == 2)
                                                 <input name="$!langCountry.key" data-key="$!langCountry.key" type="text"
-                                                       onchange="keyCodeRealTime()" data-name="langs"
+                                                       onkeyup="keyCodeRealTime()" data-name="langs"
                                                        class="span7 countryLanguage">
                                             #end
                                             #if($!langCountry.key != 1 && $!langCountry.key != 2)
