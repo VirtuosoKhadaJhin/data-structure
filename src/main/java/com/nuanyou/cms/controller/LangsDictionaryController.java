@@ -3,10 +3,7 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.entity.EntityNyLangsDictionary;
-import com.nuanyou.cms.model.LangsCategory;
-import com.nuanyou.cms.model.LangsDictionary;
-import com.nuanyou.cms.model.LangsDictionaryRequestVo;
-import com.nuanyou.cms.model.LangsDictionaryVo;
+import com.nuanyou.cms.model.*;
 import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsCategoryService;
 import com.nuanyou.cms.service.LangsDictionaryService;
@@ -218,14 +215,10 @@ public class LangsDictionaryController {
     @RequestMapping(value = "viewLocalLanguage", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public APIResult viewLocalLanguage(HttpServletRequest request) {
-        APIResult<LangsDictionary> result = new APIResult<LangsDictionary>(ResultCodes.Success);
-        // LangsCountry langsCountry = dictionaryService.viewLocalLanguage(request);
-        LangsCountry langsCountry = LangsCountry.DE_DE;
-        String[] langsCountrys = langsCountry.getValue().split("-");
-
-        LangsDictionary langsDictionary = new LangsDictionary(langsCountry.getKey(),
-                langsCountrys[0], langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
-        result.setData(langsDictionary);
+        APIResult<LangsCountryVo> result = new APIResult<LangsCountryVo>(ResultCodes.Success);
+        LangsCountry langCountry = LangsCountry.toEnum(request.getLocale().getLanguage() + "-" + request.getLocale().getCountry());
+        LangsCountryVo vo = new LangsCountryVo(langCountry.getKey(), langCountry.getValue(), langCountry.getDesc());
+        result.setData(vo);
         return result;
     }
 

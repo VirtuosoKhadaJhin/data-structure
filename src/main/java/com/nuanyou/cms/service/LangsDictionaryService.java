@@ -3,10 +3,8 @@ package com.nuanyou.cms.service;
 import com.nuanyou.cms.model.LangsDictionary;
 import com.nuanyou.cms.model.LangsDictionaryRequestVo;
 import com.nuanyou.cms.model.LangsDictionaryVo;
-import com.nuanyou.cms.model.enums.LangsCountry;
 import org.springframework.data.domain.Page;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Locale;
@@ -113,13 +111,5 @@ public interface LangsDictionaryService {
      * @return
      */
     List<LangsDictionary> viewLocalLangsDictionary(LangsDictionaryVo dictionaryVo);
-
-    /**
-     *
-     *
-     * @param request
-     * @return
-     */
-    LangsCountry viewLocalLanguage(HttpServletRequest request);
 
 }

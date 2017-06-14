@@ -118,11 +118,11 @@ public class ContractTemplateController {
             selectedIds=getSeletedIds(selectedParams);
         }
 
-
-
+        List<LangsCategory> categories = categoryService.findAllCategories();
 
         //setSelectableParams(selectedParams, params);
         model.addAttribute("entity", template);
+        model.addAttribute("categories", categories);
         model.addAttribute("dataTypeMappings", dataMappings);
         model.addAttribute("selectableParams", params);
         model.addAttribute("selectedParams", selectedParams);

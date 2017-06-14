@@ -27,7 +27,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
@@ -151,13 +150,6 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         List<LangsDictionary> dictionaryList = this.convertToMultipleLangsCategories(dictionaries);
 
         return dictionaryList;
-    }
-
-    @Override
-    public LangsCountry viewLocalLanguage(HttpServletRequest request) {
-        Locale locale = request.getLocale();
-        LangsCountry langCountry = LangsCountry.toEnum(locale.getLanguage() + "-" + locale.getCountry());
-        return langCountry;
     }
 
     @Override
