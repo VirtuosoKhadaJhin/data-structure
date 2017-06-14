@@ -9,7 +9,7 @@
     <span class="icon"><i class="icon-th"></i></span>
     <h5>当地语言列表</h5>
 #*    <a class="btn btn-mini btn-info buttons" href="local_add">新增</a>*#
-    #*显示国家下拉框*#
+#*显示国家下拉框*#
 #*
     <div class="control-group">
         *##*<label class="control-label">多语言分类</label>*##*
@@ -19,7 +19,7 @@
     </div>
 *#
     <div class="control-group">
-        <select class="span7 select2 " name="categoryId" >
+        <select class="span7 select2 " name="categoryId">
             #foreach($e in $!selectableLangsCategory)
                 <option value="$!e.id">$!e.name</option>
             #end
@@ -52,10 +52,10 @@
 
                 #*             $!langCountry.desc ($!langCountry.value)*#
 
-                    #if($!langCountry.desc == "中文" || $!langCountry.desc == "英语")
+                    #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
                         $!langCountry.desc ($!langCountry.value)
                     #end
-                    #if($!langCountry.desc != "中文" && $!langCountry.desc != "英语")
+                    #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
                         当地语
                     #end
                 </th>
@@ -87,7 +87,8 @@
                 <td style="width: 10%">$!entity.categoryId</td>
                 <td style="width: 10%">$!entity.keyCode</td>
                 #foreach($langCountry in $!langsCountries)
-                    <td class="lang-message" style="width: 10%">
+                    <td class="lang-message" style="width: 10%" key-code="$!entity.keyCode"
+                        langs-key="$!langCountry.key">
                         #set($hasNullMessage=true)
                         #foreach($lang in $!entity.langsMessageList)
                             #if($!lang.langsKey == $!langCountry.key)
@@ -96,14 +97,13 @@
                             #end
                         #end
                         #if($hasNullMessage)
-                            <input class='tdInput' onchange='saveLang(this)' type='text'
-                                   placeholder='请填写语言'/>
+                            <input class='tdInput' onchange='saveLang(this)' type='text'/>
                         #end
                     </td>
                 #end
                 <td width="8%">
-                    <div style="text-align: center" >
-                        <a class="btn btn-primary btn-mini" href="localEdit?keyCode=$!entity.keyCode" >编辑</a>
+                    <div style="text-align: center">
+                        <a class="btn btn-primary btn-mini" href="localEdit?keyCode=$!entity.keyCode">编辑</a>
                     #*
                         运营人员不能删除一行数据
                         <a data-id="$!entity.id" class="btn btn-danger btn-mini remove-item">删除</a>*#
@@ -166,26 +166,35 @@
 #parse("common/list_end.vm")
 
 <script>
-    /*    $(function () {
-            var langMessages = $(".lang-message");
-
-            for (var i = 0; i < langMessages.length; i++) {
-                if ($(".lang-message").eq(i).text().trim() == ""
-                        || $(".lang-message").eq(i).text().trim() == null) {
-                    $(".lang-message").eq(i).html("<input class='tdInput' onchange='saveLang(this)' type='text' placeholder='请填写语言'/>");
-                }
-            }
-        });*/
     /**
      * 实时保存语言
      * @param obj
      */
     function saveLang(obj) {
-        console.log("输入的值" + $(obj).val());
-        console.log("对应的keyCode" + $(obj).attr("data-key"));
-        console.log("对应的enum的key" + $(obj).parent().index());
+        console.log("输入的值:" + $(obj).val());
+        console.log("对应的keyCode:" + $(obj).parent().attr("key-code"));
+        console.log("对应的langsKey:" + $(obj).parent().attr("langs-key"));
 
-        $(obj).parent().html($(obj).val());
+        var request = {};
+        request.langsKey = $(obj).parent().attr("langs-key");
+        request.keyCode = $(obj).parent().attr("key-code");
+        request.message = $(obj).val();
+        $.ajax({
+            url: 'saveMessage',
+            data: JSON.stringify(request),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    // alert("操作成功");
+                } else {
+                    alert(result.msg);
+                }
+            }
+        });
+
+        $(obj).parent().html("<label style='text-align: center;padding-top: 5%'>" + $(obj).val() + "</label>");
     }
 
     /**

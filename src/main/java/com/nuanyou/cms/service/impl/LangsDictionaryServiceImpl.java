@@ -282,6 +282,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         entity.setCountry(splitValues.length > 1 ? splitValues[1] : splitValues[0]);
         entity.setKeyCode(vo.getKeyCode());
         entity.setMessage(vo.getMessage());
+        entity.setCreateDt(new Date());
         entity.setDelFlag(false);
         entity.setCategory(entityResult.get(0).getCategory());
         EntityNyLangsDictionary nyLangsDictionary = dictionaryDao.save(entity);
