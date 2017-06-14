@@ -111,14 +111,22 @@
     </div>
 
 
-    <div class="control-group">
+    <div class="control-group" style="clear: both;text-align: right;padding-right: 18px;">
         <button type="submit" class="btn btn-primary">查询</button>
+        <a onclick="reset()" class="btn btn-primary" style="background-color: #8b8c8c">重置</a>
     </div>
 </form>
 
 #parse("common/list_end.vm")
 
 <script>
+    /**
+     * 重置查询条件
+     */
+    function reset(){
+        location.href = "list?baseNameId=&keyCode=&message=";
+    }
+
     /**
      * 实时保存语言
      * @param obj

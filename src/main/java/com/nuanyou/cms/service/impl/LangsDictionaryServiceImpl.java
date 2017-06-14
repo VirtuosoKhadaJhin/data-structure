@@ -423,7 +423,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                 @Override
                 public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                     List<Predicate> predicate = new ArrayList<Predicate>();
-                    predicate.add(cb.equal(root.get("baseName"), baseNameId));//baseNameId
+                    predicate.add(cb.equal(root.get("category").get("id"), baseNameId));//baseNameId
                     if (StringUtils.isNotEmpty(requestVo.getKeyCode())) {
                         predicate.add(cb.equal(root.get("keyCode"), requestVo.getKeyCode()));
                     }
@@ -442,7 +442,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                 public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                     List<Predicate> predicate = new ArrayList<Predicate>();
                     if (CollectionUtils.isNotEmpty(categoryIds)) {
-                        predicate.add(root.get("basename").in(categoryIds));//categoryIds
+                        predicate.add(root.get("category").get("id").in(categoryIds));//categoryIds
                     }
                     if (StringUtils.isNotEmpty(requestVo.getKeyCode())) {
                         predicate.add(cb.equal(root.get("keyCode"), requestVo.getKeyCode()));
