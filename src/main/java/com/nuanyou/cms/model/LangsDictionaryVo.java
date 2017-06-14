@@ -21,6 +21,9 @@ public class LangsDictionaryVo implements Serializable {
     //分类ID
     private Long categoryId;
 
+    //分类名称
+    private Long categoryName;
+
     private LangsMessageTipVo messageTip;
 
     //国家语言+内容
@@ -66,6 +69,14 @@ public class LangsDictionaryVo implements Serializable {
 
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public Long getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(Long categoryName) {
+        this.categoryName = categoryName;
     }
 
     public LangsMessageTipVo getMessageTip() {
