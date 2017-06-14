@@ -6,7 +6,12 @@ package com.nuanyou.cms.entity.enums;
 public enum PaymentOrderMethod {
 
     PAY_WX ( 0, "微信" ),
-    PAY_ZFB ( 1, "支付宝" );
+    PAY_ZFB(1, "支付宝"),
+    PAY_APPLE(2, "苹果"),
+    PAY_JD(3, "京东"),
+    PAY_KRP(4, "KRP"),
+    PAY_JUMP(5, "重定向"),
+    UNKNOWN(6, "未知");
 
     private Integer key;
 

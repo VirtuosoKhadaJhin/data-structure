@@ -19,6 +19,8 @@ public class PaymentOrderRecordVo {
 
     private String mchKpName;
 
+    private String platform;
+
     //支付状态
     private PaymentOrderStatus status;
 
@@ -94,6 +96,14 @@ public class PaymentOrderRecordVo {
 
     public void setMchKpName(String mchKpName) {
         this.mchKpName = mchKpName;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 
     public PaymentOrderStatus getStatus() {

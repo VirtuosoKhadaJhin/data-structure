@@ -41,67 +41,66 @@ public class PaymentOrderRecordServiceImpl implements PaymentOrderRecordService 
     @Override
     public Page<PaymentOrderRecordVo> findAllPaymentOrderRecord(final PaymentRecordRequestVo paramVo) {
 
-        List<PaymentOrderRecord> records = paymentRecordDao.findAll ( new Specification () {
+
+        List<PaymentOrderRecord> records = paymentRecordDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate> ();
 
                 if (paramVo.getMchId () != null) {
-                    Predicate p = cb.equal ( root.get ( "mchId" ), paramVo.getMchId () );
-                    predicate.add ( p );
+                    predicate.add(cb.equal(root.get("mchId"), paramVo.getMchId()));
                 }
                 if (StringUtils.isNotEmpty ( paramVo.getMchName () )) {
-                    Predicate p = cb.like ( root.get ( "mchName" ), "%" + paramVo.getMchName () + "%" );
-                    predicate.add ( p );
+                    predicate.add(cb.like(root.get("mchName"), "%" + paramVo.getMchName() + "%"));
                 }
                 if (StringUtils.isNotEmpty(paramVo.getMchKpName())) {
                     Predicate p = cb.like(root.get("mchKpName"), "%" + paramVo.getMchKpName() + "%");
                     predicate.add(p);
                 }
                 if (paramVo.getTradeNo () != null) {
-                    Predicate p = cb.equal ( root.get ( "tradeNo" ), paramVo.getTradeNo () );
-                    predicate.add ( p );
+                    predicate.add(cb.equal(root.get("tradeNo"), paramVo.getTradeNo()));
                 }
                 if (paramVo.getOutTradeNo () != null) {
-                    Predicate p = cb.equal ( root.get ( "outTradeNo" ), paramVo.getOutTradeNo () );
-                    predicate.add ( p );
+                    predicate.add(cb.equal(root.get("outTradeNo"), paramVo.getOutTradeNo()));
                 }
                 if (paramVo.getStatus () != null) {
-                    Predicate p = cb.equal ( root.get ( "status" ), paramVo.getStatus ().getKey () );
-                    predicate.add ( p );
+                    predicate.add(cb.equal(root.get("status"), paramVo.getStatus().getKey()));
+                }
+                if (paramVo.getPaymentOrderMethod() != null) {
+                    Predicate p = cb.equal(root.get("paymentOrderMethod"), paramVo.getPaymentOrderMethod().getKey());
                 }
                 if (paramVo.getBeginPrice () != null) {
-                    Predicate p = cb.greaterThanOrEqualTo ( root.get ( "price" ), paramVo.getBeginPrice () );
-                    predicate.add ( p );
+                    predicate.add(cb.greaterThanOrEqualTo(root.get("price"), paramVo.getBeginPrice()));
                 }
-                if (paramVo.getEndPrice() != null) {
-                    Predicate p = cb.lessThanOrEqualTo(root.get("price"), paramVo.getEndPrice());
-                    predicate.add ( p );
+                if (paramVo.getBeginPrice() != null) {
+                    predicate.add(cb.lessThanOrEqualTo(root.get("price"), paramVo.getBeginPrice()));
                 }
                 if (StringUtils.isNotEmpty ( paramVo.getPayChannel () )) {
-                    Predicate p = cb.like ( root.get ( "channelName" ), "%" + paramVo.getPayChannel () + "%" );
-                    predicate.add ( p );
+                    predicate.add(cb.like(root.get("channelName"), "%" + paramVo.getPayChannel() + "%"));
                 }
                 if (paramVo.getBeginDt () != null) {
-                    Predicate p = cb.greaterThanOrEqualTo ( root.get ( "payTime" ).as ( Date.class ), paramVo.getBeginDt () );
-                    predicate.add ( p );
+                    predicate.add(cb.greaterThanOrEqualTo(root.get("payTime").as(Date.class), paramVo.getBeginDt()));
                 }
                 if (paramVo.getEndDt () != null) {
-                    Predicate p = cb.lessThanOrEqualTo ( root.get ( "payTime" ).as ( Date.class ), paramVo.getEndDt () );
-                    predicate.add ( p );
+                    predicate.add(cb.lessThanOrEqualTo(root.get("payTime").as(Date.class), paramVo.getEndDt()));
                 }
 
                 Predicate[] pre = new Predicate[predicate.size ()];
                 return query.where(predicate.toArray(pre)).orderBy(cb.desc(root.get("payTime"))).getRestriction();
             }
-        } );
+        });
 
-        Pageable pageable = new PageRequest ( paramVo.getIndex () - 1, paramVo.getPageNum () );
-        List<PaymentOrderRecordVo> orderRecordVos = this.convertToPaymentRecordVo ( records );
+
+        List<PaymentOrderRecordVo> orderRecordVos = this.convertToPaymentRecordVo(records);
+        Integer pageIndex = paramVo.getIndex();
+        Integer pageNum = paramVo.getPageNum();
+        Pageable pageable = new PageRequest(pageIndex - 1, pageNum);
         if (CollectionUtils.isEmpty(orderRecordVos)) {
-            return new PageImpl<PaymentOrderRecordVo>(orderRecordVos, pageable, 0);
+            return new PageImpl<PaymentOrderRecordVo>(null, pageable, 0);
         }
-        Page<PaymentOrderRecordVo> voPage = new PageImpl<PaymentOrderRecordVo> ( orderRecordVos, pageable, records.size () );
+        int toIndex = pageIndex * pageNum;
+        List<PaymentOrderRecordVo> subList = orderRecordVos.subList((pageIndex - 1) * pageNum, toIndex > orderRecordVos.size() ? orderRecordVos.size() : toIndex);
+        Page<PaymentOrderRecordVo> voPage = new PageImpl<PaymentOrderRecordVo>(subList, pageable, records.size());
         return voPage;
     }
 

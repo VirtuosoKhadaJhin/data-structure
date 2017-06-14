@@ -30,9 +30,16 @@ public class PaymentOrderRecord {
     @Column(name = "mchkpname")
     private String mchKpName;
 
+    @Column(name = "platform")
+    private String platform;
+
     @Column(name = "status")
     @Enumerated(EnumType.ORDINAL)
     private PaymentOrderStatus status; //支付状态
+
+    @Column(name="method")
+    @Enumerated(EnumType.ORDINAL)
+    private PaymentOrderMethod method;
 
     @Column(name = "userid")
     private Long userId;
@@ -60,10 +67,6 @@ public class PaymentOrderRecord {
 
     @Column(name = "realprice")
     private BigDecimal realPrice;
-
-    @Column(name="method")
-    @Enumerated(EnumType.ORDINAL)
-    private PaymentOrderMethod method;
 
     @Column(name = "chnid")
     private String channelId;
@@ -116,6 +119,14 @@ public class PaymentOrderRecord {
 
     public void setMchKpName(String mchKpName) {
         this.mchKpName = mchKpName;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 
     public PaymentOrderStatus getStatus() {

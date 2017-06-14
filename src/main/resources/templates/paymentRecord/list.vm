@@ -18,12 +18,12 @@
         <th>订单流水</th>
         <th>支付价格</th>
         <th>支付状态</th>
-        <th>支付方式</th>
+        <th>支付类型</th>
         <th>支付通道</th>
         <th>支付时间</th>
     </tr>
     </thead>
-    <tbody data-key="$!searchDateMap">
+    <tbody class="tbody-class">
         #if ($null.isNull($page.content) || $page.content.size()==0)
         <tr>
             <td colspan="11" style="text-align:center;">
@@ -34,11 +34,22 @@
         </tr>
         #end
         #foreach($item in $!page.content)
-        <tr class="odd gradeX" data-itemId="$!item.id">
+        <tr class="odd gradeX" data-itemId="$!item.id" data-platform="$!item.platform" data-status="$!item.status.key">
             <td style=" text-align: center; ">
-                #if($!item.status.key==0)
-                    <a href="javascript:void(0);" data-keyId="$!item.id" data-keyApp="$!item.app"
-                       class="btn btn-success btn-mini order-status-search">查询</a>
+                #if($!item.status.key==0 && $!item.platform=="scan")
+                    #set($hasSearched=false)
+                    #foreach($param in ${searchDateMap.entrySet()})
+                        #if(${param.key}==$!item.id)
+                            #set($hasSearched=true)
+                        #end
+                    #end
+                    #if($!hasSearched==true)
+                        <a href="javascript:void(0);" data-hasSearch="$!hasSearched" data-keyId="$!item.id" data-keyApp="$!item.app"
+                           class="btn btn-success btn-mini order-status-search" disabled="disabled">查询中···</a>
+                    #elseif($!hasSearched==false)
+                        <a href="javascript:void(0);" data-hasSearch="$!hasSearched" data-keyId="$!item.id" data-keyApp="$!item.app"
+                           class="btn btn-success btn-mini order-status-search">查询</a>
+                    #end
                 #end
             </td>
             <td>$!item.mchId</td>
@@ -75,7 +86,7 @@
 
         <label>支付价格：</label>
         <input type="text" class="span5" id="beginPrice" name="beginPrice" value="$!requestVo.beginPrice" placeholder="请输入价格起始">
-        <span class="search-price-middle-separator" style="margin: 0 3px;">-</span>
+        <span class="search-price-middle-separator span1" style="margin: 0 3px;">-</span>
         <input type="text" class="span5" id="J_EndPrice" name="endPrice" value="$!requestVo.endPrice" placeholder="请输入价格结束">
 
         <label>开始时间：</label>
@@ -83,6 +94,22 @@
 
         <label>结束时间：</label>
         <input type="text" class="span11 dateTimeFormat" id="endTime" name="endDt" value="$!requestVo.endDt" placeholder="请选择结束时间">
+
+        <label for="paymentStatus">支付状态：</label>
+        <select id="paymentStatus" name="status" class="span11">
+            <option value="">全部</option>
+            #foreach($o in $!paymentStatuses)
+                <option value="$o" #if($!requestVo.status== $o) selected #end>$o.name</option>
+            #end
+        </select>
+
+        <label for="status">支付类型：</label>
+        <select id="J_method" name="paymentOrderMethod" class="span11">
+            <option value="">全部</option>
+            #foreach($o in $!paymentMethods)
+                <option value="$o" #if($!requestVo.paymentOrderMethod==$o) selected #end>$o.name</option>
+            #end
+        </select>
 
         <button type="submit" class="btn btn-primary">查询</button>
     </div>
@@ -94,18 +121,26 @@
     $(function () {
         $("table").delegate(".order-status-search", "click", function (e) {
             var _this = e.currentTarget;
+            if ($(_this).attr("disabled") == "disabled") {
+                return false;
+            }
             var item_id = $(_this).attr("data-keyid");
             var item_app = $(_this).attr("data-keyApp");
             var postParam = {app: item_app, orderId: item_id};
-            $(_this).text("查询中...").attr("disabled", true);
+            $(_this).text("查询中···").attr("disabled", true);
             $.ajax({
                 url: "searchRecord?orderId=" + item_id,
                 type: "post",
                 data: {app: item_app},
                 dataType: "json",
                 success: function (response) {
-                    alert("操作成功！");
-                    $(_this).remove();
+                    if (response.code == 0 && response.data != null) {//data为orderId、status、rmbprice等
+                        alert("操作成功！");
+                        $(_this).remove();
+                    } else if (response.code != 0 && response.data == null) {
+                        alert("系统繁忙，请稍后重试！");
+                        $(_this).remove();
+                    }
                 },
                 error: function (response) {
                     $(_this).text("查询").removeAttr("disabled");

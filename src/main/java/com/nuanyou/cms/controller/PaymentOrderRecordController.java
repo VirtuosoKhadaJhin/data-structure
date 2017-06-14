@@ -3,6 +3,8 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.entity.Merchant;
+import com.nuanyou.cms.entity.enums.PaymentOrderMethod;
+import com.nuanyou.cms.entity.enums.PaymentOrderStatus;
 import com.nuanyou.cms.model.CodePayResponse;
 import com.nuanyou.cms.model.PaymentOrderRecordVo;
 import com.nuanyou.cms.model.PaymentRecordRequestVo;
@@ -23,9 +25,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -47,14 +51,34 @@ public class PaymentOrderRecordController {
     @Autowired
     private HttpService httpService;
 
-    @Value("${payment_service_address}")
+    @Value("${paymentRecord.service-address}")
     private String paymentServiceAddress;
-
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"), true);
         binder.registerCustomEditor(Date.class, editor);
+    }
+
+    /**
+     * 订单支付记录列表
+     *
+     * @param requestVo
+     * @param model
+     * @return
+     */
+    @RequestMapping("list")
+    public String list(PaymentRecordRequestVo requestVo, Model model, HttpServletRequest request) {
+        Page<PaymentOrderRecordVo> records = paymentOrderRecordService.findAllPaymentOrderRecord(requestVo);
+        List<Merchant> merchants = merchantService.getIdNameList();
+        LinkedHashMap<String, Date> searchDateMap = (LinkedHashMap<String, Date>) request.getSession().getAttribute("searchDateMap");
+        model.addAttribute("paymentMethods", PaymentOrderMethod.values());
+        model.addAttribute("paymentStatuses", PaymentOrderStatus.values());
+        model.addAttribute("page", records);
+        model.addAttribute("requestVo", requestVo);
+        model.addAttribute("searchDateMap", searchDateMap);
+        model.addAttribute("merchants", merchants);
+        return "paymentRecord/list";
     }
 
     /**
@@ -66,7 +90,7 @@ public class PaymentOrderRecordController {
      */
     @RequestMapping("searchRecord")
     @ResponseBody
-    public APIResult searchRecord(@RequestParam("app") String app, @RequestParam("orderId") Long orderId) {
+    public APIResult searchRecord(@RequestParam("app") String app, @RequestParam("orderId") Long orderId, Model model) {
         APIResult result = new APIResult<>(ResultCodes.Success);
         String uri = paymentServiceAddress + "/wechat/query/" + app + "/kr/" + orderId;
         try {
@@ -79,22 +103,5 @@ public class PaymentOrderRecordController {
             _LOGGER.error("Request a single query order payment information failure!", e);
         }
         return result;
-    }
-
-    /**
-     * 订单支付记录列表
-     *
-     * @param requestVo
-     * @param model
-     * @return
-     */
-    @RequestMapping("list")
-    public String list(PaymentRecordRequestVo requestVo, Model model) {
-        Page<PaymentOrderRecordVo> records = paymentOrderRecordService.findAllPaymentOrderRecord ( requestVo );
-        List<Merchant> merchants = merchantService.getIdNameList ();
-        model.addAttribute("page", records);
-        model.addAttribute ( "requestVo", requestVo );
-        model.addAttribute ( "merchants", merchants );
-        return "paymentRecord/list";
     }
 }
