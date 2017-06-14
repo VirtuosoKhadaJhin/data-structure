@@ -48,59 +48,40 @@
 
 
                                 #foreach($langCountry in $!langsCountries)
-
                                     <div class="">
                                         <label class="control-label">
-                                        #*$!langCountry.desc
-                                        ($!langCountry.value)*#
-                                        #*#if($!langCountry.key == 1 || $!langCountry.key == 2)
-                                            <font style="color: red;margin: 0px;padding: 5px;">*</font>
-                                        #end*#
                                             #if($!langCountry.desc == "中文" || $!langCountry.desc ==
-                                                "英语")
+                                                "英文")
                                                 $!langCountry.desc ($!langCountry.value)
+                                                <font style="color: red;margin: 0px;padding: 5px;">*</font>
                                             #end
                                             #if($!langCountry.desc != "中文" && $!langCountry.desc !=
-                                                "英语")
-                                                当地语
+                                                "英文")
+                                                $!langCountry.desc ($!langCountry.value)-当地语
                                             #end
                                             ：</label>
                                         <div class="controls">
-
-                                            #*<input name="$!langCountry.key" type="text"
-                                                   class="span7 countryLanguage"
-                                                   value="hello sharp"
-                                            >*#
-
                                             #foreach($dictionary in $!dictionarys)
-
-
-
-
-
-                                                #if($!dictionary.language+"-"+$!dictionary.country == $!langCountry.value)
-                                                    #if($!langCountry.desc == "中文" || $!langCountry.desc == "英语")
+                                                #if($!dictionary.baseNameStr == $!langCountry.value)
+                                                    #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
                                                         <input type="text" value="$!dictionary.message"
                                                                class="span7 countryLanguage" readonly="readonly">
                                                     #end
-
-                                                    #if($!langCountry.desc != "中文" && $!langCountry.desc != "英语")
+                                                    #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
                                                         <input type="text" value="$!dictionary.message"
                                                                class="span7 countryLanguage">
                                                     #end
-
-                                                    #*<input type="text" value="$!dictionary.message"
-                                                           class="span7 countryLanguage">*#
+                                                #end
+                                                #if($!dictionary.baseNameStr != $!langCountry.value)
+                                                    <input type="text" class="span7 countryLanguage">
                                                 #end
                                             #end
                                         </div>
                                     </div>
                                 #end
-
                         </div>
 
-
-                        <div class="form-actions">
+                        <div class="form-actions" style="clear: both;text-align: center;">
                             <button type="button" id="saveBtn"
                                     onclick="saveLangsDictionary()" #*onclick按钮点击事件*#
                                     class="btn btnSave btn-success">保存
