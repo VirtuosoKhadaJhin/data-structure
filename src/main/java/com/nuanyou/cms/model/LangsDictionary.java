@@ -103,6 +103,10 @@ public class LangsDictionary implements Serializable {
         this.variant = variant;
     }
 
+
+    public LangsDictionary() {
+    }
+
     public Long getId() {
         return id;
     }

@@ -32,8 +32,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Felix on 2017/4/24.
@@ -170,13 +172,16 @@ public class ContractController {
 
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
-    public String edit(Long id, Model model, Integer type) {
+    public String edit(Long id, Model model, Integer type) throws UnsupportedEncodingException {
         Contract entity = null;
+        Map<String, String> parametersLangs=null;
         if (id != null) {
             entity = this.contractModuleService.getContract(id);
+             parametersLangs =contractModuleService.setParamsTitle(entity.getTemplateId(),entity.getParameters());
         }
         model.addAttribute("entity", entity);
         model.addAttribute("type", type);
+        model.addAttribute("parametersLangs", parametersLangs);
         return "contract/edit";
     }
 
