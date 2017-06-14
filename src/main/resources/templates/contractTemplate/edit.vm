@@ -56,8 +56,8 @@
                                 </div>
 
 
-
-                                <label class="control-label">自定义参数<select class="langsAutoComplete3" style="display: none"></select> </label>
+                                <label class="control-label">自定义参数<select class="langsAutoComplete3"
+                                                                          style="display: none"></select> </label>
                                 <div class="controls">
                                     <div style="overflow: auto;width: 100%">
 
@@ -81,7 +81,8 @@
                                             <tbody>
                                                 #foreach($param in $!selectedParams)
                                                 <tr class="rowSpan">
-                                                    <td><span class="paramId">$!param.id</span> : <span class="key">$!param.key</span>
+                                                    <td><span class="paramId">$!param.id</span> : <span
+                                                            class="key">$!param.key</span>
                                                         <input name="paramId" type="hidden" value="$!param.id"
                                                                style="width: 200px" readonly>
                                                     </td>
@@ -161,13 +162,16 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <input name="remarkLabel" class="langsAutoComplete" style="width: 150px">
+                                                    <input name="remarkLabel" class="langsAutoComplete"
+                                                           style="width: 150px">
                                                     <input name="remark" type="text">
                                                     <br>
-                                                    <a class="btn btn-info btn-mini addLang"inputLangsName="remark">添加</a>
+                                                    <a class="btn btn-info btn-mini addLang"
+                                                       inputLangsName="remark">添加</a>
                                                 </td>
                                                 <td>
-                                                    <input name="referenceId" placeholder="引用参数" class="referParam"  readonly>
+                                                    <input name="referenceId" placeholder="引用参数" class="referParam"
+                                                           readonly>
                                                 </td>
                                                 <td style="text-align: left;width: 300px" class="operateColumn">
                                                     <a class="btn btn-info btn-mini removeRow">删除</a>
@@ -492,7 +496,7 @@
                 templateParameterRequest.remark = $(o).find("input[name='remark']").val();
                 templateParameterRequest.referenceId = $(o).find("input[name='referenceId']").val();
                 templateParameterRequest.dateTypeMappingId = $(o).find("select[name='dateTypeMappingId']").val();
-                templateParameterRequest.referName=$(o).find("input[name='referName']").val();
+                templateParameterRequest.referName = $(o).find("input[name='referName']").val();
                 list.push(templateParameterRequest);
             });
             $("input[name='paramId']").each(function (i, o) {
@@ -652,19 +656,7 @@
         });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    $("#mytable").delegate(".langsAutoComplete", "keyup", function (e) {
+        $("#mytable").delegate(".langsAutoComplete", "keyup", function (e) {
             var keyWord = $(this).val();
             if ($.trim(keyWord) == "") {
                 return;
@@ -712,7 +704,6 @@
         });
 
 
-
         $("#mytable").delegate(".langsAutoComplete3", "click", function (e) {
             var keyWord = $(this).val();
             if ($.trim(keyWord) == "") {
@@ -734,9 +725,9 @@
                     cache: true,
                     processResults: function (data, page) {
                         var arr = [];
-                        for (var i=0;i<=10;i++) {
+                        for (var i = 0; i <= 10; i++) {
                             var t = {};
-                            t.id =1;
+                            t.id = 1;
                             t.text = "33";
                             arr.push(t);
                         }
@@ -749,10 +740,7 @@
             });
 
 
-
         });
-
-
 
 
         $("#selectLangSave").on("click", function () {
@@ -780,9 +768,9 @@
 
             console.log($(".rowSpan"));
             $(".rowSpan").each(function (i, o) {
-                var keyName=$(o).find("span[class='key']").html();
-                var id=$(o).find("span[class='paramId']").html();
-                $("#referIds").append("<option value='" + id + "'>" +"id:" +id+"; keyName:"+keyName+ "</option>");
+                var keyName = $(o).find("span[class='key']").html();
+                var id = $(o).find("span[class='paramId']").html();
+                $("#referIds").append("<option value='" + id + "'>" + "id:" + id + "; keyName:" + keyName + "</option>");
             });
             if (curRefer.val() != "") {
                 $("#referIds").val(curRefer.val());
@@ -825,6 +813,7 @@
      * 通用弹窗
      */
     var localeLangs = false;
+    var localelangsKey;
     function langsCommonDialog() {
         $("input[id='keyCode']").val("");
         $("input[data-name='langs']").val("");
@@ -847,6 +836,7 @@
                         localeLangs = true;
                         // 如果不是必填项中文和英文
                         var langsCountry = result.data;
+                        localelangsKey = langsCountry.langsCountryKey;
                         if (langsCountry.langsValue != "zh-CN" && langsCountry.langsValue != "en-US") {
                             var localeInputHtml = "<div class='control-group'>"
                                     + "<label class='control-label'>"
@@ -953,8 +943,6 @@
 
         request.langsMessageList = langsMessageList;
 
-        console.log(request);
-
         $.ajax({
             url: '/langsDictionary/saveLangsDictionary',
             data: JSON.stringify(request),
@@ -963,9 +951,17 @@
             contentType: 'application/json',
             success: function (result) {
                 if (result.code == 0) {
-                    console.log(result.data);
                     alert("操作成功");
                     $('#parameterModal').modal('hide');
+                    console.log(localelangsKey);
+                    console.log(langsMessageList);
+                    for (var i = 0; i < langsMessageList.length; i++) {
+                        if(localelangsKey == langsMessageList[i].langsKey){
+                            alert("fliex要的本地化语言的key：" + localelangsKey);
+                            alert("fliex要的本地化语言的message：" + langsMessageList[i].message);
+                        }
+
+                    }
                 } else {
                     alert(result.msg);
                 }
