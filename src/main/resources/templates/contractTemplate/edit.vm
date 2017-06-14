@@ -132,11 +132,11 @@
                                                            readonly>
                                                 </td>
                                                 <td>
-                                                    <input name="nameLabel" style="width: 150px" class="langsAutoComplete">
+                                                    <input name="nameLabel" style="width: 150px" class="langsAutoComplete" langsKeyName="name">
                                                     <a class="btn btn-info btn-mini addLang" langsKeyName="name" langsValueName="nameLabel">
                                                         <i class="icon-plus"></i>
                                                     </a>
-                                                    <input name="name" type="text">
+                                                    <input name="name" type="hidden" >
                                                     <br>
                                                 </td>
                                                 <td><input name="defaultValue" style="width: 90px"></td>
@@ -167,7 +167,7 @@
                                                     <a class="btn btn-info btn-mini addLang" langsKeyName="remark" langsValueName="remarkLabel">
                                                         <i class="icon-plus"></i>
                                                     </a>
-                                                    <input name="remark" type="text">
+                                                    <input name="remark"  type="hidden">
 
 
 ##                                                    <input name="remarkLabel" class="langsAutoComplete"
@@ -662,7 +662,7 @@
                 contentType: 'application/json',
                 success: function (result) {
                     if (result.code == 0) {
-                        var params = result.data.list; //template相关的params  页面相关的params
+                        var params = result.data; //template相关的params  页面相关的params
                         for (var i = 0; i < params.length; i++) {
                             var isSame = false;
                             for (var j = 0; j < paramIds.length; j++) {
@@ -680,7 +680,6 @@
                     } else {
                         alert(result.msg);
                     }
-
                 }
             });
             $('#parameterModal').modal('show');
@@ -737,12 +736,12 @@
                         lastTr.find("span[class='key']").html(parameter.key);
                         lastTr.find("span[class='paramId']").html(parameter.id);
                         lastTr.find("input[name='paramId']").val(parameter.id);
-                        lastTr.find("span[class='name']").html(parameter.name.key);
+                        lastTr.find("span[class='name']").html(parameter.name.content);
                         lastTr.find("span[class='defaultValue']").html(parameter.defaultvalue);
                         lastTr.find("span[class='dataType']").html(dateTypeText);
                         lastTr.find("span[class='editable']").html(editableText);
                         lastTr.find("span[class='nullable']").html(nullableText);
-                        lastTr.find("span[class='remark']").html(parameter.remark);
+                        lastTr.find("span[class='remark']").html(parameter.remark.content);
                         $('#parameterModal').modal('hide');
                     } else {
                         alert(result.msg);
@@ -772,8 +771,8 @@
                         for (var i = 0; i < list.length; i++) {
                             var o = list[i];
                             var complate = {};
-                            complate.label = o.message;
-                            complate.value = o.keyCode;
+                            complate.label = "文本:"+o.message+ "keyCode:"+o.keyCode;
+                            complate.value =   o.keyCode;
                             //complate.message=o.message;
                             listComplete.push(complate);
                         }
@@ -783,11 +782,12 @@
                             source: listComplete,
                             focus: function (event, ui) {
                                 $(this).val(ui.item.label);
+                                $(this).next().next().val(ui.item.value);
                                 return false;
                             },
                             select: function (event, ui) {
                                 $(this).val(ui.item.label);
-                                $(this).next().val(ui.item.value);
+                                $(this).next().next().val(ui.item.value);
                                 return false;
                             }
                         })

@@ -25,6 +25,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
@@ -39,7 +41,9 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
     @Autowired
     private ParamsDataMappingDao dataMappingDao;
     @Autowired
-    private LangsDictionaryService langsDictionaryService;
+    private LangsDictionaryService dictionaryService;
+    @Autowired
+    private HttpServletRequest request;
 
     @Override
     public Page<ContractTemplate> findContractTemplateList(Long countryId, Integer status, Integer type, Integer index, Integer limit) {
@@ -51,7 +55,19 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
         Pageable pageable = new PageRequest(index - 1, limit);
         List<ContractTemplate> list = data.getList();
         setOtherProperties(list);
-        return  new PageImpl<ContractTemplate>(list, pageable, data.getTotal());
+        return new PageImpl<ContractTemplate>(list, pageable, data.getTotal());
+    }
+
+
+    @Override
+    public ContractParameter getParameterDetail(Long selectedParamId) {
+        APIResult<ContractParameter> res = this.contractService.saveTemplateParamter(selectedParamId);
+        if (res.getCode() != 0) {
+            throw new APIException(res.getCode(), res.getMsg());
+        }
+        ContractParameter data = res.getData();
+        setLangsMessage(data);
+        return data;
     }
 
     @Override
@@ -105,11 +121,11 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
 
 
     @Override
-    public APIResult saveTemplate( List<Long> paramIds, List<TemplateParameterRequest> requests, Integer templateType, String title, Long countryId, Long id) {
+    public APIResult saveTemplate(List<Long> paramIds, List<TemplateParameterRequest> requests, Integer templateType, String title, Long countryId, Long id) {
         //验证表单信息
         validateRequest(requests);
         //验证模板基本信息
-        validateBasic(templateType,title,countryId);
+        validateBasic(templateType, title, countryId);
         //fetch param ids
         BatchTemplateParameterRequest batch = new BatchTemplateParameterRequest();
         batch.setParameterRequests(requests);
@@ -163,6 +179,18 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
         return params;
     }
 
+    @Override
+    public List<ContractParameter> findAllTemplateParameters(int index, int size) {
+        APIResult<ContractParameters> allTemplateParameters = this.contractService.findAllTemplateParameters(index, size);
+        if (allTemplateParameters.getCode() != 0) {
+            throw new APIException(allTemplateParameters.getCode(), allTemplateParameters.getMsg());
+        }
+        ContractParameters data = allTemplateParameters.getData();
+        List<ContractParameter> list = data.getList();
+        //setLangsMessage(list);
+        return list;
+    }
+
     private void validateBasic(Integer templateType, String title, Long countryId) {
 
         if (templateType == null) {
@@ -175,7 +203,7 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
     }
 
     private void validateRequest(List<TemplateParameterRequest> requests) {
-        Set<String> keySet =new HashSet<>();
+        Set<String> keySet = new HashSet<>();
         for (TemplateParameterRequest request : requests) {
             if (StringUtils.isEmpty(request.getName())) {
                 throw new APIException(ResultCodes.Fail, "参数名不能为空");
@@ -183,34 +211,32 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
             if (StringUtils.isBlank(request.getKey())) {
                 throw new APIException(ResultCodes.Fail, "Key不能为空");
             }
-            if (!request.isEditable()&& StringUtils.isBlank(request.getDefaultValue())) {
+            if (!request.isEditable() && StringUtils.isBlank(request.getDefaultValue())) {
                 throw new APIException(ResultCodes.Fail, "不可编辑的列必须要有默认值");
             }
-            if (!request.isEditable()&& StringUtils.isBlank(request.getDefaultValue())) {
+            if (!request.isEditable() && StringUtils.isBlank(request.getDefaultValue())) {
                 throw new APIException(ResultCodes.Fail, "不可编辑的列必须要有默认值");
             }
-            boolean keyCodeValidate = langsDictionaryService.verifykeyCode(new LangsDictionaryVo(request.getName()));
-            if(keyCodeValidate){
+            boolean keyCodeValidate = dictionaryService.verifykeyCode(new LangsDictionaryVo(request.getName()));
+            if (keyCodeValidate) {
                 throw new APIException(ResultCodes.Fail, "参数名多语言的Key不正确");
             }
-            boolean remarkValidate = langsDictionaryService.verifykeyCode(new LangsDictionaryVo(request.getRemark()));
-            if(remarkValidate){
+            boolean remarkValidate = dictionaryService.verifykeyCode(new LangsDictionaryVo(request.getRemark()));
+            if (remarkValidate) {
                 throw new APIException(ResultCodes.Fail, "栏位校验多语言的Key不正确");
             }
-            Long dataMappingId=request.getDateTypeMappingId();
-            if(dataMappingId!=null){
-                ParamsDataMapping paramsDataMapping=this.dataMappingDao.findOne(dataMappingId);
+            Long dataMappingId = request.getDateTypeMappingId();
+            if (dataMappingId != null) {
+                ParamsDataMapping paramsDataMapping = this.dataMappingDao.findOne(dataMappingId);
                 request.setRegex(paramsDataMapping.getRegex());
                 request.setType(paramsDataMapping.getDataType());
             }
             keySet.add(request.getKey());
         }
-        if(keySet.size()!=requests.size()){
+        if (keySet.size() != requests.size()) {
             throw new APIException(ResultCodes.Fail, "key不可重复");
         }
     }
-
-
 
 
     private List<TemplateParameterRequest> toListTemplateParameter(TemplateParameterRequests templateParameterRequests) {
@@ -263,4 +289,22 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
     }
 
 
+    @Override
+    public void setLangsMessage(List<ContractParameter> langsMessage) {
+        for (ContractParameter contractParameter : langsMessage) {
+            String name = dictionaryService.findLocalMessageByKeyCode(contractParameter.getName().getKey(), request.getLocale());
+            String remark = dictionaryService.findLocalMessageByKeyCode(contractParameter.getRemark().getKey(), request.getLocale());
+            contractParameter.getName().setContent(name == null ? contractParameter.getName().getKey() : name);
+            contractParameter.getRemark().setContent(remark == null ? contractParameter.getRemark().getKey() : remark);
+        }
+    }
+
+
+    @Override
+    public void setLangsMessage(ContractParameter contractParameter) {
+        String name = dictionaryService.findLocalMessageByKeyCode(contractParameter.getName().getKey(), request.getLocale());
+        String remark = dictionaryService.findLocalMessageByKeyCode(contractParameter.getRemark().getKey(), request.getLocale());
+        contractParameter.getName().setContent(name == null ? contractParameter.getName().getKey() : name);
+        contractParameter.getRemark().setContent(remark == null ? contractParameter.getRemark().getKey() : remark);
+    }
 }

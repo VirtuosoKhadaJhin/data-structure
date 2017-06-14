@@ -7,6 +7,7 @@ import com.nuanyou.cms.model.contract.request.TemplateParameterRequest;
 import com.nuanyou.cms.model.contract.request.TemplateParameterRequests;
 import org.springframework.data.domain.Page;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -17,7 +18,15 @@ public interface ContractTemplateService {
 
     APIResult saveTemplate1(Long[] selectedParamIds, TemplateParameterRequests templateParameterRequests, Integer templateType, String title, Long countryId, Long id);
 
-    APIResult saveTemplate( List<Long> paramIds, List<TemplateParameterRequest> requests, Integer templateType, String title, Long countryId, Long id);
+    APIResult saveTemplate(List<Long> paramIds, List<TemplateParameterRequest> requests, Integer templateType, String title, Long countryId, Long id);
 
     List<ContractParameter> getAllParams();
+
+    List<ContractParameter> findAllTemplateParameters(int i, int i1);
+
+    void setLangsMessage(List<ContractParameter> selectedParams);
+
+    ContractParameter getParameterDetail(Long selectedParamId);
+
+    void setLangsMessage(ContractParameter contractParameter);
 }
