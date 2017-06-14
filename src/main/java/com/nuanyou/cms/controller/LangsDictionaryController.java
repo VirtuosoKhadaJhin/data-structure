@@ -3,10 +3,7 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.entity.EntityNyLangsDictionary;
-import com.nuanyou.cms.model.LangsCategory;
-import com.nuanyou.cms.model.LangsDictionary;
-import com.nuanyou.cms.model.LangsDictionaryRequestVo;
-import com.nuanyou.cms.model.LangsDictionaryVo;
+import com.nuanyou.cms.model.*;
 import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsCategoryService;
 import com.nuanyou.cms.service.LangsDictionaryService;
@@ -18,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -114,6 +112,12 @@ public class LangsDictionaryController {
         return result;
     }
 
+    /**
+     * 本地语言增加页面
+     *
+     * @param model
+     * @return
+     */
     @RequestMapping("add")
     public String add(Model model) {
         LangsCountry[] values = LangsCountry.values();
@@ -127,6 +131,12 @@ public class LangsDictionaryController {
         return "langsDictionary/add";
     }
 
+    /**
+     * 多语言编辑
+     *
+     * @param model
+     * @return
+     */
     @RequestMapping("edit")
     public String edit(Model model) {
         LangsCountry[] values = LangsCountry.values();
@@ -141,7 +151,7 @@ public class LangsDictionaryController {
     }
 
     /**
-     * 本地语言搜索
+     * 本地语言编辑
      *
      * @param dictionaryVo
      * @param model
@@ -153,12 +163,11 @@ public class LangsDictionaryController {
         example.setIndex(1);
         example.setSize(100000);
         Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
-        model.addAttribute("langsCountries", LangsCountry.localValues(LOCAL_KEY));
-        model.addAttribute("selectableLangsCategory", selectableLangsCategory);
-
         // 根据keyCode查询中文、英文、当地文
         List<LangsDictionary> dictionarys = dictionaryService.viewLocalLangsDictionary(dictionaryVo);
         model.addAttribute("dictionarys", dictionarys);
+        model.addAttribute("langsCountries", LangsCountry.localValues(LOCAL_KEY));
+        model.addAttribute("selectableLangsCategory", selectableLangsCategory);
 
         return "langsDictionary/local_edit";
     }
@@ -167,7 +176,7 @@ public class LangsDictionaryController {
      * 根据keyCode查询查询中文、英文、当地文
      *
      * @param dictionaryVo
-     * @return boolean
+     * @return List<LangsDictionary>
      */
     @RequestMapping(value = "viewLocalLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -198,17 +207,33 @@ public class LangsDictionaryController {
     }
 
     /**
+     * 得到当地语言
+     *
+     * @param request
+     * @return LangsDictionary
+     */
+    @RequestMapping(value = "viewLocalLanguage", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public APIResult viewLocalLanguage(HttpServletRequest request) {
+        APIResult<LangsCountryVo> result = new APIResult<LangsCountryVo>(ResultCodes.Success);
+        LangsCountry langCountry = LangsCountry.toEnum(request.getLocale().getLanguage() + "-" + request.getLocale().getCountry());
+        LangsCountryVo vo = new LangsCountryVo(langCountry.getKey(), langCountry.getValue(), langCountry.getDesc());
+        result.setData(vo);
+        return result;
+    }
+
+    /**
      * 保存多语言
      *
      * @param dictionaryVo
-     * @return boolean
+     * @return LangsDictionary
      */
     @RequestMapping(value = "saveLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public APIResult saveLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
-        APIResult result = new APIResult(ResultCodes.Success);
-        String keyCode = dictionaryService.saveLangsDictionary(dictionaryVo);
-        result.setData(keyCode);
+        APIResult<LangsDictionary> result = new APIResult<LangsDictionary>(ResultCodes.Success);
+        LangsDictionary langsDictionary = dictionaryService.saveLangsDictionary(dictionaryVo);
+        result.setData(langsDictionary);
         return result;
     }
 

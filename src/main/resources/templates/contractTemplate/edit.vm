@@ -56,8 +56,8 @@
                                 </div>
 
 
-
-                                <label class="control-label">自定义参数<select class="langsAutoComplete3" style="display: none"></select> </label>
+                                <label class="control-label">自定义参数<select class="langsAutoComplete3"
+                                                                          style="display: none"></select> </label>
                                 <div class="controls">
                                     <div style="overflow: auto;width: 100%">
 
@@ -81,7 +81,8 @@
                                             <tbody>
                                                 #foreach($param in $!selectedParams)
                                                 <tr class="rowSpan">
-                                                    <td><span class="paramId">$!param.id</span> : <span class="key">$!param.key</span>
+                                                    <td><span class="paramId">$!param.id</span> : <span
+                                                            class="key">$!param.key</span>
                                                         <input name="paramId" type="hidden" value="$!param.id"
                                                                style="width: 200px" readonly>
                                                     </td>
@@ -161,13 +162,16 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <input name="remarkLabel" class="langsAutoComplete" style="width: 150px">
+                                                    <input name="remarkLabel" class="langsAutoComplete"
+                                                           style="width: 150px">
                                                     <input name="remark" type="text">
                                                     <br>
-                                                    <a class="btn btn-info btn-mini addLang"inputLangsName="remark">添加</a>
+                                                    <a class="btn btn-info btn-mini addLang"
+                                                       inputLangsName="remark">添加</a>
                                                 </td>
                                                 <td>
-                                                    <input name="referenceId" placeholder="引用参数" class="referParam"  readonly>
+                                                    <input name="referenceId" placeholder="引用参数" class="referParam"
+                                                           readonly>
                                                 </td>
                                                 <td style="text-align: left;width: 300px" class="operateColumn">
                                                     <a class="btn btn-info btn-mini removeRow">删除</a>
@@ -318,18 +322,20 @@
 </div>
 <!--***************************************选择引用*************************************************************-->
 
-
+<!--***************************************通用新增语言*************************************************************-->
 <div id="addLangsModal" class="modal hide fade" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>多语言添加</h3>
+        <h3>新增多语言</h3>
     </div>
     <div class="modal-body">
 
         <div class="control-group">
-            <label class="control-label">keyCode</label>
+            <label class="control-label">
+                keyCode<font style="color: red;margin: 0px;padding: 5px;">*</font>：</label>
             <div class="controls">
-                <input for="name" id="keyCode" name="keyCode" type="text" class="span5"
+                <input for="name" id="keyCode" readonly="readonly" name="keyCode" type="text"
+                       class="span5"
                        value="$!entity.keyCode" onchange="verifykeyCode()">
                 <label id="keyCodeStatus" class="control-label"
                        style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
@@ -339,8 +345,9 @@
         <div class="control-group">
             <label class="control-label">多语言分类</label>
             <div class="controls">
-                <select class="span5 select2 " name="categoryId">
-                    #foreach($e in $!selectableLangsCategory)
+                <select class="span5 select2 " id="categoryId" name="categoryId" onchange="keyCodeRealTime()">
+                    <option value="" selected="selected">全部分类</option>
+                    #foreach($e in $!categories)
                         <option value="$!e.id">$!e.name</option>
                     #end
                 </select>
@@ -349,20 +356,32 @@
 
 
         #foreach($langCountry in $!langsCountries)
-            <div class="control-group">
-                <label class="control-label">$!langCountry.desc ($!langCountry.value)</label>
-                <div class="controls">
-                    <input name="keyCodes" data-key="$!langCountry.key" type="text" class="span5 countryLanguage">
+            #if($!langCountry.key == 1 || $!langCountry.key == 2)
+                <div class="control-group">
+                    <label class="control-label">
+                        $!langCountry.desc ($!langCountry.value)
+                        <font style="color: red;margin: 0px;padding: 5px;">*</font>
+                        ：</label>
+                    <div class="controls">
+                        #if($!langCountry.key == 1 || $!langCountry.key == 2)
+                            <input name="$!langCountry.key" data-key="$!langCountry.key" type="text"
+                                   onkeyup="keyCodeRealTime()" data-name="langs"
+                                   class="span5 countryLanguage">
+                        #end
+                        <label id="requiredKey_$!langCountry.key" class="control-label"
+                               style="width:80px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">必填项</label>
+                    </div>
                 </div>
-            </div>
+            #end
         #end
 
     </div>
     <div class="modal-footer">
-        <a href="javascript:void(0);" id="addLangSave" class="btn btn-primary">保存</a>
+        <a href="javascript:void(0);" onclick="saveLangsDictionary()" class="btn btn-primary">保存</a>
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
     </div>
 </div>
+<!--***************************************通用新增语言*************************************************************-->
 
 
 </body>
@@ -477,7 +496,7 @@
                 templateParameterRequest.remark = $(o).find("input[name='remark']").val();
                 templateParameterRequest.referenceId = $(o).find("input[name='referenceId']").val();
                 templateParameterRequest.dateTypeMappingId = $(o).find("select[name='dateTypeMappingId']").val();
-                templateParameterRequest.referName=$(o).find("input[name='referName']").val();
+                templateParameterRequest.referName = $(o).find("input[name='referName']").val();
                 list.push(templateParameterRequest);
             });
             $("input[name='paramId']").each(function (i, o) {
@@ -637,19 +656,7 @@
         });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    $("#mytable").delegate(".langsAutoComplete", "keyup", function (e) {
+        $("#mytable").delegate(".langsAutoComplete", "keyup", function (e) {
             var keyWord = $(this).val();
             if ($.trim(keyWord) == "") {
                 return;
@@ -697,7 +704,6 @@
         });
 
 
-
         $("#mytable").delegate(".langsAutoComplete3", "click", function (e) {
             var keyWord = $(this).val();
             if ($.trim(keyWord) == "") {
@@ -719,9 +725,9 @@
                     cache: true,
                     processResults: function (data, page) {
                         var arr = [];
-                        for (var i=0;i<=10;i++) {
+                        for (var i = 0; i <= 10; i++) {
                             var t = {};
-                            t.id =1;
+                            t.id = 1;
                             t.text = "33";
                             arr.push(t);
                         }
@@ -734,9 +740,7 @@
             });
 
 
-
         });
-
 
 
         $("#selectLangSave").on("click", function () {
@@ -752,41 +756,8 @@
             var name = $(currEle).attr("inputLangsName");
             var td = $(currEle).parent().parent();
             currLangInput = td.find("input[name='" + name + "']");
-            $('#addLangsModal').modal('show');
+            langsCommonDialog();
         });
-
-        $("#addLangSave").on("click", function () {
-            var request = {};
-            request.keyCode = $("input[name='keyCode']").val();
-            request.categoryId = parseInt($("select[name='categoryId']").val());
-            var langsMessageList = [];
-            var keyCodes = document.getElementsByName("keyCodes");
-            for (var i = 0, j = keyCodes.length; i < j; i++) {
-                var keyCodeInput = keyCodes[i];
-                var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
-                var message = keyCodeInput.value;
-                var langsCountryMessageVo = {langsKey: langsKey, message: message};
-                langsMessageList.push(langsCountryMessageVo);
-            }
-            request.langsMessageList = langsMessageList;
-            $.ajax({
-                url: '/langsDictionary/saveLangsDictionary',
-                data: JSON.stringify(request),
-                type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                success: function (result) {
-                    if (result.code == 0) {
-                        currLangInput.val(langsCountryMessageVo.message);
-                        currLangInput.next().val(result.data);
-                    } else {
-                        alert(result.msg);
-                    }
-                }
-            });
-            $('#addLangsModal').modal('hide');
-        });
-
 
         $("#mytable").delegate(".referParam", "click", function (e) {
             var currEle = e.currentTarget;
@@ -797,9 +768,9 @@
 
             console.log($(".rowSpan"));
             $(".rowSpan").each(function (i, o) {
-                var keyName=$(o).find("span[class='key']").html();
-                var id=$(o).find("span[class='paramId']").html();
-                $("#referIds").append("<option value='" + id + "'>" +"id:" +id+"; keyName:"+keyName+ "</option>");
+                var keyName = $(o).find("span[class='key']").html();
+                var id = $(o).find("span[class='paramId']").html();
+                $("#referIds").append("<option value='" + id + "'>" + "id:" + id + "; keyName:" + keyName + "</option>");
             });
             if (curRefer.val() != "") {
                 $("#referIds").val(curRefer.val());
@@ -836,6 +807,183 @@
             errorElement: "span"
         });
     });
+
+    /** ########################多语言common弹出框增加######################## */
+     /**
+     * 通用弹窗
+     */
+    var localeLangs = false;
+    var localelangsKey;
+    function langsCommonDialog() {
+        $("input[id='keyCode']").val("");
+        $("input[data-name='langs']").val("");
+        $("#categoryId").val("");
+        $("#select2-categoryId-container").html("全部分类");
+
+        $('#parameterModal').modal('show');
+        $("span[dir='ltr']").attr("style", "min-width: 366px;");
+
+        $('#addLangsModal').modal('show');
+        $.ajax({
+            url: '/langsDictionary/viewLocalLanguage',
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    console.log(result.data);
+                    if (result.data != null && localeLangs == false) {
+                        localeLangs = true;
+                        // 如果不是必填项中文和英文
+                        var langsCountry = result.data;
+                        localelangsKey = langsCountry.langsCountryKey;
+                        if (langsCountry.langsValue != "zh-CN" && langsCountry.langsValue != "en-US") {
+                            var localeInputHtml = "<div class='control-group'>"
+                                    + "<label class='control-label'>"
+                                    + langsCountry.langsDesc + (langsCountry.langsValue)
+                                    + "：</label>"
+                                    + " <div class='controls'>"
+                                    + " <input name='" + langsCountry.langsCountryKey + "' data-key='" + langsCountry.langsCountryKey + "' type='text' onkeyup='keyCodeRealTime()' data-name='langs' class='span7 countryLanguage'>"
+                                    + " </div>"
+                                    + "</div>";
+                            $("#langsInput").append(localeInputHtml);
+
+                        }
+                    }
+                }
+            }
+        });
+    }
+    /**
+     * 验证keyCode是否重复
+     */
+    function verifykeyCode() {
+        var request = {};
+        var keyCode = $("input[id='keyCode']").val();
+
+        request.keyCode = keyCode;
+        $.ajax({
+            url: 'verifykeyCode',
+            data: JSON.stringify(request),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    if (!result.data) {
+                        $("#keyCodeStatus").show();
+                        $("#saveBtn").attr("onclick", "");
+                        $("#keyCode").css("border", "1px solid red");
+                        $("#saveBtn").attr("style", "background-color: gray;");
+                    } else {
+                        $("#keyCodeStatus").hide();
+                        $("#saveBtn").attr("style", "");
+                        $("#keyCode").css("border", "");
+                        $("#saveBtn").attr("onclick", "saveLangsDictionary()");
+                    }
+                }
+            }
+        });
+    }
+    /**
+     * 检验必填项
+     */
+    function checkRequiredParams() {
+        var requiredUS = $("input[name='1']").val();
+        var requiredZH = $("input[name='2']").val();
+        var categoryId = $("select[name='categoryId']").val();
+
+        if (requiredUS == null || requiredUS == "") {
+            $("#requiredKey_1").show();
+            $("input[name='1']").css("border", "1px solid red");
+            return false;
+        } else if (requiredZH == null || requiredZH == "") {
+            $("#requiredKey_2").show();
+            $("input[name='2']").css("border", "1px solid red");
+            return false;
+        } else if (categoryId == null || categoryId == "") {
+            alert("请选择分类!");
+            return false;
+        } else {
+            $("#requiredKey_1").hide();
+            $("input[name='1']").css("border", "");
+            $("#requiredKey_2").hide();
+            $("input[name='2']").css("border", "");
+            return true;
+        }
+        return true;
+    }
+
+    /**
+     * 保存多语言
+     */
+    function saveLangsDictionary() {
+        keyCodeRealTime();
+
+        var checkResult = checkRequiredParams();
+        if (!checkResult) {
+            return false;
+        }
+
+        var request = {};
+
+        request.keyCode = $("input[id='keyCode']").val();
+        request.categoryId = parseInt($("select[name='categoryId']").val());
+
+        var langsMessageList = [];
+        var keyCodes = $("input[data-name='langs']");
+
+        for (var i = 0, j = keyCodes.length; i < j; i++) {
+            var keyCodeInput = keyCodes[i];
+            var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
+            var message = keyCodeInput.value;
+            var langsCountryMessageVo = {langsKey: langsKey, message: message};
+            langsMessageList.push(langsCountryMessageVo);
+        }
+
+        request.langsMessageList = langsMessageList;
+
+        $.ajax({
+            url: '/langsDictionary/saveLangsDictionary',
+            data: JSON.stringify(request),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    alert("操作成功");
+                    $('#parameterModal').modal('hide');
+                    console.log(localelangsKey);
+                    console.log(langsMessageList);
+                    for (var i = 0; i < langsMessageList.length; i++) {
+                        if(localelangsKey == langsMessageList[i].langsKey){
+                            alert("fliex要的本地化语言的key：" + localelangsKey);
+                            alert("fliex要的本地化语言的message：" + langsMessageList[i].message);
+                        }
+
+                    }
+                } else {
+                    alert(result.msg);
+                }
+            }
+        });
+    }
+    /**
+     * 实时更新keyCode展示
+     */
+    function keyCodeRealTime() {
+        // 拼接KeyCode
+        var requiredUS = $("input[name='1']").val();
+        // 如果是英文,则要增加改变事件,用来改变keyCode
+        $("input[name='1']").attr("onchange", "keyCodeRealTime()");
+        // 选择的分类
+        var categoryId = $("select[name='categoryId']").val();
+        // keyCode初始化值
+        if (requiredUS != null) {
+            var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
+            $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
+        }
+    }
 
 </script>
 </html>

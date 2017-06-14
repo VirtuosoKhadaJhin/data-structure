@@ -1,6 +1,7 @@
 package com.nuanyou.cms.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.nuanyou.cms.model.enums.LangsCountry;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -96,15 +97,22 @@ public class LangsDictionary implements Serializable {
 
     private String baseNameStr;//UI查询使用
 
+    private Integer langsCountryKey;//UI查询使用
+
     private LangsMessageTipVo messageTip;
+
+    public LangsDictionary() {
+    }
 
     public LangsDictionary(String keyCode, String variant) {
         this.keyCode = keyCode;
         this.variant = variant;
     }
 
-
-    public LangsDictionary() {
+    public LangsDictionary(Integer langsCountryKey, String language, String country) {
+        this.langsCountryKey = langsCountryKey;
+        this.language = language;
+        this.country = country;
     }
 
     public Long getId() {
@@ -231,4 +239,15 @@ public class LangsDictionary implements Serializable {
         return this.getLanguage() + "-" + this.getCountry();
     }
 
+    public String getLangsCountryDesc() {
+        return LangsCountry.toEnum(this.getLanguage() + "-" + this.getCountry()).getDesc();
+    }
+
+    public Integer getLangsCountryKey() {
+        return langsCountryKey;
+    }
+
+    public void setLangsCountryKey(Integer langsCountryKey) {
+        this.langsCountryKey = langsCountryKey;
+    }
 }
