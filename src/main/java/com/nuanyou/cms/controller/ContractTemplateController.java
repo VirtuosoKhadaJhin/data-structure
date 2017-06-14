@@ -81,11 +81,8 @@ public class ContractTemplateController {
         //获取浏览器当地语言
         List<LangsCountry> langsCountries=getNativeLangs(request);
 
-
         //all params
         List<ContractParameter> params=this.contractTemplateService.getAllParams();
-
-
 
         //all countries
         List<Country> countries = this.countryService.getIdNameList();
@@ -93,12 +90,10 @@ public class ContractTemplateController {
         //all 所有的数据映射
         List<ParamsDataMapping> dataMappings=this.dataMappingService.findAll();
 
-
         //add selectable langs
         LangsCategory example=new LangsCategory();
         example.setIndex(1);example.setSize(100000);
         Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
-
 
         //vo info
         ContractTemplate template = null;
@@ -109,6 +104,7 @@ public class ContractTemplateController {
             }
             template = contractConfig.getData();
         }
+
         //selectedIds
         List<ContractParameter> selectedParams = new ArrayList<>();
         List<Long> selectedIds=new ArrayList<>();
@@ -254,10 +250,12 @@ public class ContractTemplateController {
 
 
     public void setLangsMessage(List<ContractParameter> langsMessage,HttpServletRequest request) throws UnsupportedEncodingException {
-        LangsDictionaryVo dic= dictionaryService.findLangsDictionary("",request.getLocale());
         for (ContractParameter contractParameter : langsMessage) {
-            contractParameter.getName().setContent("sdfsdf");
-            contractParameter.getRemark().setContent("sdffd");
+
+            String name= dictionaryService.findLocalMessageByKeyCode(contractParameter.getName().getKey(),request.getLocale());
+            String remark= dictionaryService.findLocalMessageByKeyCode(contractParameter.getName().getKey(),request.getLocale());
+            contractParameter.getName().setContent(name);
+            contractParameter.getRemark().setContent(remark);
         }
     }
 }
