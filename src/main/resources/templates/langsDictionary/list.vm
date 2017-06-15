@@ -27,6 +27,7 @@
     <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
         <thead role="row">
         <tr>
+            <th>序号</th>
             <th>分类</th>
             <th>keyCode</th>
             #foreach($langCountry in $!langsCountries)
@@ -36,8 +37,11 @@
         </tr>
         </thead>
         <tbody>
+            #set($sort = 1)
             #foreach($entity in $!page)
             <tr class="odd gradeX">
+                <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$sort</label>
+                </td>
                 <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$!entity.categoryName</label>
                 </td>
                 <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$!entity.keyCode</label></td>
@@ -64,6 +68,7 @@
                     </div>
                 </td>
             </tr>
+            #set($sort = $sort + 1)
             #end
         </tbody>
     </table>

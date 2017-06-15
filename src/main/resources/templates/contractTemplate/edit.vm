@@ -385,7 +385,7 @@
 
     </div>
     <div class="modal-footer">
-        <a href="javascript:void(0);" class="btn btn-primary saveLangsDictionary">保存</a>
+        <a href="javascript:void(0);" id="addLangSave" class="btn btn-primary saveLangsDictionary">保存</a>
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
     </div>
 </div>
@@ -398,6 +398,7 @@
 <script src="/dist/js/cascade-select.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
+    keyCodeRealTime();
     /**
      * 验证keyCode是否重复
      */
@@ -417,14 +418,14 @@
                     console.log(result.data);
                     if (!result.data) {
                         $("#keyCodeStatus").show();
-                        $("#addLangSave").attr("onclick", "");
                         $("#keyCode").css("border", "1px solid red");
                         $("#addLangSave").attr("style", "background-color: gray;");
+                        $(".saveLangsDictionary").attr("disabled", true);
                     } else {
                         $("#keyCodeStatus").hide();
                         $("#addLangSave").attr("style", "");
                         $("#keyCode").css("border", "");
-                        $("#addLangSave").attr("onclick", "saveLangsDictionary()");
+                        $(".saveLangsDictionary").attr("disabled", false);
                     }
                 }
             }
@@ -467,37 +468,6 @@
     var localelangsKey;
 
     /**
-     * 验证keyCode是否重复
-     */
-    function verifykeyCode() {
-        var request = {};
-        var keyCode = $("input[id='keyCode']").val();
-
-        request.keyCode = keyCode;
-        $.ajax({
-            url: 'verifykeyCode',
-            data: JSON.stringify(request),
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.code == 0) {
-                    if (!result.data) {
-                        $("#keyCodeStatus").show();
-                        $("#saveBtn").attr("onclick", "");
-                        $("#keyCode").css("border", "1px solid red");
-                        $("#saveBtn").attr("style", "background-color: gray;");
-                    } else {
-                        $("#keyCodeStatus").hide();
-                        $("#saveBtn").attr("style", "");
-                        $("#keyCode").css("border", "");
-                        $("#saveBtn").attr("onclick", "saveLangsDictionary()");
-                    }
-                }
-            }
-        });
-    }
-    /**
      * 检验必填项
      */
     function checkRequiredParams() {
@@ -537,11 +507,21 @@
         $("input[name='1']").attr("onchange", "keyCodeRealTime()");
         // 选择的分类
         var categoryId = $("select[name='categoryId']").val();
-        // keyCode初始化值
-        if (requiredUS != null) {
+        if (categoryId != null && categoryId != "") {
             var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
             $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
         }
+        if (categoryId == null || categoryId == "") {
+            $("input[name='keyCode']").val(requiredUS);
+        }
+        // keyCode初始化值
+        if (requiredUS != null && requiredUS != "") {
+            if (categoryId != null && categoryId != "") {
+                var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
+                $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
+            }
+        }
+        verifykeyCode();
     }
 
 
@@ -853,6 +833,12 @@
             var td = $(currEle).parent().parent();
             currLangKeyInput = td.find("input[name='" + keyName + "']");
             currLangValueInput = td.find("input[name='" + valueName + "']");
+            $("input[id='keyCode']").css("border", "");
+            $("#keyCodeStatus").hide();
+            $("#requiredKey_1").hide();
+            $("input[name='1']").css("border", "");
+            $("#requiredKey_2").hide();
+            $("input[name='2']").css("border", "");
             langsCommonDialog();
         });
 
@@ -937,55 +923,57 @@
          * 保存多语言
          */
         function saveLangsDictionary() {
-            keyCodeRealTime();
+            if($("#addLangSave").attr("disabled") != "disabled"){
+                keyCodeRealTime();
 
-            var checkResult = checkRequiredParams();
-            if (!checkResult) {
-                return false;
-            }
-
-            var request = {};
-
-            request.keyCode = $("input[id='keyCode']").val();
-            request.categoryId = parseInt($("select[name='categoryId']").val());
-
-            var langsMessageList = [];
-            var keyCodes = $("input[data-name='langs']");
-
-            for (var i = 0, j = keyCodes.length; i < j; i++) {
-                var keyCodeInput = keyCodes[i];
-                var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
-                var message = keyCodeInput.value;
-                var langsCountryMessageVo = {langsKey: langsKey, message: message};
-                langsMessageList.push(langsCountryMessageVo);
-            }
-
-            request.langsMessageList = langsMessageList;
-
-            $.ajax({
-                url: '/langsDictionary/saveLangsDictionary',
-                data: JSON.stringify(request),
-                type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                success: function (result) {
-                    if (result.code == 0) {
-                        alert("操作成功");
-                        $('#addLangsModal').modal('hide');
-                        console.log(localelangsKey);
-                        console.log(langsMessageList);
-                        for (var i = 0; i < langsMessageList.length; i++) {
-                            if (localelangsKey == langsMessageList[i].langsKey) {
-                                currLangKeyInput.val(request.keyCode);
-                                currLangValueInput.val(langsMessageList[i].message);
-                            }
-
-                        }
-                    } else {
-                        alert(result.msg);
-                    }
+                var checkResult = checkRequiredParams();
+                if (!checkResult) {
+                    return false;
                 }
-            });
+
+                var request = {};
+
+                request.keyCode = $("input[id='keyCode']").val();
+                request.categoryId = parseInt($("select[name='categoryId']").val());
+
+                var langsMessageList = [];
+                var keyCodes = $("input[data-name='langs']");
+
+                for (var i = 0, j = keyCodes.length; i < j; i++) {
+                    var keyCodeInput = keyCodes[i];
+                    var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
+                    var message = keyCodeInput.value;
+                    var langsCountryMessageVo = {langsKey: langsKey, message: message};
+                    langsMessageList.push(langsCountryMessageVo);
+                }
+
+                request.langsMessageList = langsMessageList;
+
+                $.ajax({
+                    url: '/langsDictionary/saveLangsDictionary',
+                    data: JSON.stringify(request),
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (result) {
+                        if (result.code == 0) {
+                            alert("操作成功");
+                            $('#addLangsModal').modal('hide');
+                            console.log(localelangsKey);
+                            console.log(langsMessageList);
+                            for (var i = 0; i < langsMessageList.length; i++) {
+                                if (localelangsKey == langsMessageList[i].langsKey) {
+                                    currLangKeyInput.val(request.keyCode);
+                                    currLangValueInput.val(langsMessageList[i].message);
+                                }
+
+                            }
+                        } else {
+                            alert(result.msg);
+                        }
+                    }
+                });
+            }
         }
 
 

@@ -119,7 +119,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
                 entityNyLangsDictionary = new EntityNyLangsDictionary();
 
-                entityNyLangsDictionary.setKeyCode(keyCode);
+                entityNyLangsDictionary.setKeyCode(requestVo.getNewKeyCode());
                 entityNyLangsDictionary.setCategory(entityNyLangsCategory);
                 entityNyLangsDictionary.setDelFlag(false);
                 entityNyLangsDictionary.setCreateDt(new Date());
@@ -149,7 +149,19 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
         List<LangsDictionary> dictionaryList = this.convertToMultipleLangsCategories(dictionaries);
 
-        return dictionaryList;
+        List<LangsDictionary> dataList = Lists.newArrayList();
+        dataList.add(new LangsDictionary(dictionaryVo.getKeyCode(), LangsCountry.EN_UK.getKey()));
+        dataList.add(new LangsDictionary(dictionaryVo.getKeyCode(), LangsCountry.ZH_CN.getKey()));
+
+        for (LangsDictionary dictionary : dictionaryList) {
+            if (dictionary.getBaseNameStr().equals(LangsCountry.EN_UK.getValue())
+                    || dictionary.getBaseNameStr().equals(LangsCountry.ZH_CN.getValue())) {
+                dataList.remove(new LangsDictionary(dictionary.getKeyCode(), LangsCountry.toEnum(dictionary.getBaseNameStr()).getKey()));
+                dataList.add(dictionary);
+            }
+        }
+
+        return dataList;
     }
 
     @Override

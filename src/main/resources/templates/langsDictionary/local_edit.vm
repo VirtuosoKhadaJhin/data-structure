@@ -65,7 +65,7 @@
                                          data-value="$!langCountry.value">
                                     #end
                                     #foreach($dictionary in $!dictionarys)
-                                        #if($!dictionary.baseNameStr == $!langCountry.value)
+                                        #if($!dictionary.langsCountryKey == $!langCountry.key)
                                             #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
                                                 <input type="text" value="$!dictionary.message"
                                                        class="span7 countryLanguage" readonly="readonly">

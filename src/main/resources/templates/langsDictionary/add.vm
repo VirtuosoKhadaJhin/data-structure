@@ -216,6 +216,7 @@
     function checkRequiredParams() {
         var requiredUS = $("input[name='1']").val();
         var requiredZH = $("input[name='2']").val();
+        var categoryId = $("select[name='categoryId']").val();
 
         if (requiredUS == null || requiredUS == "") {
             $("#requiredKey_1").show();
@@ -224,6 +225,9 @@
         } else if (requiredZH == null || requiredZH == "") {
             $("#requiredKey_2").show();
             $("input[name='2']").css("border", "1px solid red");
+            return false;
+        } else if (categoryId == null || categoryId == "") {
+            alert("请选择分类!");
             return false;
         } else {
             $("#requiredKey_1").hide();

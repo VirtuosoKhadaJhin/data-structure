@@ -109,6 +109,11 @@ public class LangsDictionary implements Serializable {
         this.variant = variant;
     }
 
+    public LangsDictionary(String keyCode, Integer langsCountryKey) {
+        this.keyCode = keyCode;
+        this.langsCountryKey = langsCountryKey;
+    }
+
     public LangsDictionary(Integer langsCountryKey, String language, String country) {
         this.langsCountryKey = langsCountryKey;
         this.language = language;
