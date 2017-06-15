@@ -14,7 +14,7 @@
             <div id="breadcrumb">
                 <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i
                         class="icon-home"></i> 主页</a>
-                <a href="local_list" class="tip-bottom" data-original-title="">分类管理</a>
+                <a href="localList" class="tip-bottom" data-original-title="">分类管理</a>
                 <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
             </div>
         </div>
@@ -46,6 +46,7 @@
                                     </div>
                                 </div>
 
+                                #set($num=0)
                                 #foreach($langCountry in $!langsCountries)
                                 <div class="">
                                     <label class="control-label">
@@ -60,20 +61,28 @@
                                     #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
                                     <div class="controls">
                                     #end
-                                    #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
-                                    <div class="controls" id="localLanguage" data-key="$!langCountry.key"
-                                         data-value="$!langCountry.value">
-                                    #end
-                                    #foreach($dictionary in $!dictionarys)
-                                        #if($!dictionary.langsCountryKey == $!langCountry.key)
-                                            #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
-                                                <input type="text" value="$!dictionary.message"
-                                                       class="span7 countryLanguage" readonly="readonly">
-                                            #end
+                                        #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
+                                        <div class="controls" id="localLanguage" data-key="$!langCountry.key"
+                                             data-value="$!langCountry.value">
                                         #end
-                                    #end
-                                </div>
-                                </div>
+                                            #foreach($dictionary in $!dictionarys)
+                                                #if($!dictionary.langsCountryKey == $!langCountry.key)
+                                                    #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
+                                                        <input type="text" value="$!dictionary.message"
+                                                               class="span7 countryLanguage" readonly="readonly">
+                                                    #else
+                                                        <input type="text" value="$!dictionary.message"
+                                                               id='localLanguageMess' class="span7 countryLanguage">
+                                                    #end
+                                                #end
+                                            #end
+                                            #set($num=$num+1)
+                                            #if($!dictionarys.size() == 2 && $num == 3)
+                                                <input type="text" value=""
+                                                       id='localLanguageMess' class="span7 countryLanguage">
+                                            #end
+                                        </div>
+                                    </div>
                                 #end
                             </div>
 
@@ -82,7 +91,7 @@
                                             onclick="modifyLocalLangsDictionary()" #*onclick按钮点击事件*#
                                             class="btn btnSave btn-success">保存
                                     </button>
-                                    <a class="btn btn-primary" href="localList">返回</a>
+                                    <a class="btn btn-primary" onclick="back()">返回</a>
                                 </div>
                             </form>
                         </div>
@@ -94,10 +103,20 @@
     #include("common/js-support.vm")
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            // 填充需要填写的本地语言Input样式
-            $("#localLanguage").append("<input type='text' id='localLanguageMess' class='span7 countryLanguage'>");
-        });
+        // 返回列表页
+        function back() {
+            console.log("localList?index=" + getUrlParam("pageIndex"));
+            location.href = "localList?index=" + getUrlParam("pageIndex");
+        }
+        /**
+         * 获取url中的参数
+         */
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
 
         /**
          * 修改本地语言
@@ -122,7 +141,7 @@
                 success: function (result) {
                     if (result.code == 0) {
                         alert("操作成功");
-                        location.href = "";
+                        location.href = "localList?index=" + getUrlParam("pageIndex");
                     } else {
                         alert(result.msg);
                     }

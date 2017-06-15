@@ -2,7 +2,7 @@
 <div id="breadcrumb">
     <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
         主页</a>
-    <a href="listLocal" class="tip-bottom" data-original-title="">当地语言管理</a>
+    <a href="localList" class="tip-bottom" data-original-title="">当地语言管理</a>
     <a href="#" class="tip-bottom" data-original-title="">列表</a>
 </div>
 <div class="widget-title">
@@ -18,10 +18,11 @@
         </div>
     </div>
 *#
-    <div class="control-group" style="max-width: 200px">
-        <select class="span7 select2 " name="categoryId" style="max-width: 200px">
-            #foreach($e in $!selectableLangsCategory)
-                <option value="$!e.id">$!e.name</option>
+    <div style="margin: 4px;float: right;width: 260px;margin-right: -100px;">
+        <select class="span7 select2 " id="country" onchange="interchangeCountry()">
+            <option value="">选择国家</option>
+            #foreach($e in $!langsCountryVos)
+                <option value="$!e.langsCountryKey">$!e.langsCountryDesc</option>
             #end
         </select>
     </div>
@@ -43,6 +44,7 @@
         <thead role="row">
         <tr>#*标题行*#
         #*分类*#
+            <th>序号</th>
             <th>分类</th>
         #*keyCode*#
             <th>keyCode</th>
@@ -50,13 +52,13 @@
             #foreach($langCountry in $!langsCountries)
                 <th>
 
-                    #*$!langCountry.desc ($!langCountry.value)*#
+                #*$!langCountry.desc ($!langCountry.value)*#
 
                     #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
                         $!langCountry.desc ($!langCountry.value)
                     #end
                     #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
-                        当地语
+                        当地语-$!langCountry.desc ($!langCountry.value)
                     #end
                 </th>
             #end
@@ -67,70 +69,64 @@
     #*表格体*#
         <tbody>
         #*循环展示表格体*#
+            #set($sort = 1)
             #foreach($entity in $!page)
             <tr class="odd gradeX">
-                <td style="width: 10%">$!entity.categoryId</td>
-                <td style="width: 10%">$!entity.keyCode</td>
+                <td width="4%"><label style="text-align: center;padding-top: 5%">$sort</label>
+                </td>
+                <td width="10%"><label style="text-align: center;padding-top: 5%">$!entity.categoryName</label>
+                </td>
+                <td width="10%" style="text-align: center">$!entity.keyCode</td>
                 #foreach($langCountry in $!langsCountries)
-                    <td class="lang-message" style="width: 10%" key-code="$!entity.keyCode"
+                    <td width="10%" class="lang-message" style="text-align: center" key-code="$!entity.keyCode"
                         langs-key="$!langCountry.key">
                         #set($hasNullMessage=true)
                         #foreach($lang in $!entity.langsMessageList)
                             #if($!lang.langsKey == $!langCountry.key)
-                                <label>$!lang.message</label>
+                                #if($!langCountry.key == 1 || $!langCountry.key == 2)
+                                    <input class='tdInput' readonly="readonly" value="$!lang.message" type='text'/>
+                                #else
+                                    #if($!lang.message != "")
+                                        <label style="text-align: center;padding-top: 5%">$!lang.message</label>
+                                    #else
+                                        <input class='tdInput' onchange='saveLang(this)' type='text'/>
+                                    #end
+                                #end
+
                                 #set($hasNullMessage=false)
                             #end
                         #end
                         #if($hasNullMessage)
-                            <input class='tdInput' onchange='saveLang(this)' type='text'/>
+                            #if($!langCountry.key == 1 || $!langCountry.key == 2)
+                                <input class='tdInput' readonly="readonly" type='text'/>
+                            #else
+                                <input class='tdInput' onchange='saveLang(this)' type='text'/>
+                            #end
                         #end
                     </td>
                 #end
                 <td width="8%">
                     <div style="text-align: center">
-                        <a class="btn btn-primary btn-mini" href="localEdit?keyCode=$!entity.keyCode">编辑</a>
-                    #*
-                        运营人员不能删除一行数据
-                        <a data-id="$!entity.id" class="btn btn-danger btn-mini remove-item">删除</a>*#
+                        <a class="btn btn-primary btn-mini modify-item" key-code="$!entity.keyCode">编辑</a>
                     </div>
                 </td>
             </tr>
+                #set($sort = $sort + 1)
             #end
         </tbody>
     </table>
 </div>
 
-<!--***************************************修改语言*************************************************************-->
-<div id="parameterModal" class="modal hide fade" role="dialog" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>多语言编辑</h3>
-    </div>
-    <div class="modal-body">
-        <div class="control-group">
-            <div class="controls">
-                #foreach($langCountry in $!langsCountries)
-                    <div class="control-group">
-                        <label>$!langCountry.desc </label>
-                        <input type="text" class="span11" name="baseName"
-                               value="$!langCountry.value ">
-                    </div>
-                #end
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <a href="javascript:void(0);" id="parameterSave" class="btn btn-primary">保存</a>
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-    </div>
-</div>
-<!--***************************************修改语言*************************************************************-->
-
 #parse("common/list_mid.vm")
 <form class="form-horizontal " method="get">
     <div class="control-group">
         <label>分类</label>
-        <input type="text" class="span11" name="baseName" value="$!entity.baseName">
+        <select class="span7 select2 " name="baseNameId" style="min-width: 203px;">
+            <option value="">全部分类</option>
+            #foreach($e in $!categories)
+                <option value="$!e.id">$!e.name</option>
+            #end
+        </select>
     </div>
 
     <div class="control-group">
@@ -138,19 +134,78 @@
         <input type="text" class="span11" name="keyCode" value="$!entity.keyCode">
     </div>
     <div class="control-group">
-        <label>message</label>
+        <label>当地语</label>
         <input type="text" class="span11" name="message" value="$!entity.message">
     </div>
 
 
-    <div class="control-group">
+    <div class="control-group" style="margin-top: 10px;">
         <button type="submit" class="btn btn-primary">查询</button>
+        <a onclick="reset()" class="btn btn-primary" style="background-color: #8b8c8c">重置</a>
     </div>
 </form>
 
 #parse("common/list_end.vm")
 
 <script>
+    $(document).ready(function () {
+        $("select[id='country']").find("option[value='" + getUrlParam("countryKey") + "']").attr("selected", true);
+    });
+    /**
+     * 切换国家
+     */
+    function interchangeCountry() {
+        var countryKey = $("#country").val();
+        var baseNameId = getUrlParam("baseNameId");
+        var keyCode = getUrlParam("keyCode");
+        var message = getUrlParam("message");
+
+        var url = "localList?";
+        if (countryKey != null && countryKey != "") {
+            url = url + "countryKey=" + countryKey;
+        }
+        if (baseNameId != null && baseNameId != null
+            && countryKey == null && countryKey == "") {
+            url = url + "baseNameId=" + baseNameId;
+        }else if (baseNameId != null && baseNameId != null) {
+            url = url + "&&baseNameId=" + baseNameId;
+        }
+        if (keyCode != null && keyCode != null) {
+            url = url + "&&keyCode=" + baseNameId;
+        }
+        if (message != null && message != null) {
+            url = url + "&&message=" + baseNameId;
+        }
+        location.href = url;
+    }
+    /**
+     * 修改语言
+     */
+    $(".modify-item").each(function (i, o) {
+        $(o).on("click", function (event) {
+            var keyCode = $(this).attr("key-code");
+            var pageIndex = getUrlParam("index");
+            if (null == pageIndex) {
+                pageIndex = 1;
+            }
+            location.href = "localEdit?keyCode=" + keyCode + "&&pageIndex=" + pageIndex;
+        });
+    });
+    /**
+     * 获取url中的参数
+     */
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+    /**
+     * 重置查询条件
+     */
+    function reset() {
+        location.href = "localList?baseNameId=&keyCode=&message=";
+    }
     /**
      * 实时保存语言
      * @param obj
@@ -182,36 +237,6 @@
         $(obj).parent().html("<label style='text-align: center;padding-top: 5%'>" + $(obj).val() + "</label>");
     }
 
-    /**
-     * 弹出框修改语言
-     */
-    $("#DataTables_Table_0").delegate(".selectParameter", "click", function (e) {
-        $('#parameterModal').modal('show');
-
-    });
-
-    /**
-     * 删除语言
-     */
-    $(".remove-item").each(function (i, o) {
-        $(o).on("click", function (event) {
-            if (!confirm('确实要删除该内容吗?'))
-                return;
-            var dataId = $(this).attr("data-id");
-            $.ajax({
-                url: 'remove',
-                data: {id: dataId},
-                type: 'get',
-                success: function (result) {
-                    if (result.code == 0) {
-                        window.location.reload();
-                    } else {
-                        alert("操作失败:" + result.msg);
-                    }
-                }
-            });
-        });
-    });
 </script>
 
 

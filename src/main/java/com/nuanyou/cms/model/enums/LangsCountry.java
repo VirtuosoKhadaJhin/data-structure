@@ -1,6 +1,7 @@
 package com.nuanyou.cms.model.enums;
 
 import com.google.common.collect.Lists;
+import com.nuanyou.cms.model.LangsCountryVo;
 
 import java.util.List;
 
@@ -64,6 +65,19 @@ public enum LangsCountry {
             }
         }
         return langsCountries;
+    }
+
+    public static List<LangsCountryVo> viewAllCountrysResultList() {
+        List<LangsCountryVo> langsCountryVos = Lists.newArrayList();
+
+        LangsCountry[] langsCountryEnums = LangsCountry.values();
+        for (LangsCountry langsCountry : langsCountryEnums) {
+            // String[] langsCountrys = langsCountry.getValue().split("-");
+            // langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]
+            LangsCountryVo vo = new LangsCountryVo(langsCountry.getKey(), langsCountry.getValue());
+            langsCountryVos.add(vo);
+        }
+        return langsCountryVos;
     }
 
     public Integer getKey() {

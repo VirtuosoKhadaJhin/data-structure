@@ -76,8 +76,12 @@ public class LangsDictionaryController {
     @RequestMapping("localList")
     public String local(LangsDictionaryRequestVo requestVo, Model model) {
         Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllLocalDictionary(requestVo);
+        List<LangsCountryVo> langsCountryVos = LangsCountry.viewAllCountrysResultList();
+        List<LangsCategory> categories = categoryService.findAllCategories();
+        model.addAttribute("categories", categories);
         model.addAttribute("page", allDictionary);
         model.addAttribute("entity", requestVo);
+        model.addAttribute("langsCountryVos", langsCountryVos);
         model.addAttribute("langsCountries", LangsCountry.localValues(LOCAL_KEY));
         return "langsDictionary/local_list";
     }
@@ -121,10 +125,7 @@ public class LangsDictionaryController {
     @RequestMapping("add")
     public String add(Model model) {
         LangsCountry[] values = LangsCountry.values();
-        LangsCategory example = new LangsCategory();
-        example.setIndex(1);
-        example.setSize(100000);
-        Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
+        List<LangsCategory> selectableLangsCategory = categoryService.findAllCategories();
 
         model.addAttribute("langsCountries", values);
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
@@ -140,10 +141,7 @@ public class LangsDictionaryController {
     @RequestMapping("edit")
     public String edit(Model model) {
         LangsCountry[] values = LangsCountry.values();
-        LangsCategory example = new LangsCategory();
-        example.setIndex(1);
-        example.setSize(100000);
-        Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
+        List<LangsCategory> selectableLangsCategory = categoryService.findAllCategories();
 
         model.addAttribute("langsCountries", values);
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
@@ -159,10 +157,7 @@ public class LangsDictionaryController {
      */
     @RequestMapping("localEdit")
     public String localAdd(LangsDictionaryVo dictionaryVo, Model model) {
-        LangsCategory example = new LangsCategory();
-        example.setIndex(1);
-        example.setSize(100000);
-        Page<LangsCategory> selectableLangsCategory = this.categoryService.findAllCategories(example);
+        List<LangsCategory> selectableLangsCategory = categoryService.findAllCategories();
         // 根据keyCode查询中文、英文、当地文
         List<LangsDictionary> dictionarys = dictionaryService.viewLocalLangsDictionary(dictionaryVo);
         model.addAttribute("dictionarys", dictionarys);

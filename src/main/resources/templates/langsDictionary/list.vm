@@ -40,7 +40,7 @@
             #set($sort = 1)
             #foreach($entity in $!page)
             <tr class="odd gradeX">
-                <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$sort</label>
+                <td style="width: 4%;"><label style="text-align: center;padding-top: 5%">$sort</label>
                 </td>
                 <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$!entity.categoryName</label>
                 </td>
@@ -346,6 +346,17 @@
     function reset() {
         location.href = "list?baseNameId=&keyCode=&message=";
     }
+
+    /**
+     * 获取url中的参数
+     */
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+
     /**
      * 实时保存语言
      * @param obj
@@ -403,7 +414,11 @@
     $(".modify-item").each(function (i, o) {
         $(o).on("click", function (event) {
             var keyCode = $(this).attr("key-code");
-            location.href = "edit?keyCode=" + keyCode;
+            var pageIndex = getUrlParam("index");
+            if(null == pageIndex){
+                pageIndex = 1;
+            }
+            location.href = "edit?keyCode=" + keyCode + "&&pageIndex=" + pageIndex;
         });
     });
 

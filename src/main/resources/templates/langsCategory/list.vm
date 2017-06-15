@@ -22,13 +22,17 @@
     <tbody>
         #foreach($entity in $!page.content)
         <tr class="odd gradeX">
-            <td>$!entity.id</td>
-            <td>$!entity.name</td>
-            <td> #if($!entity.isGlobal==true) 是 #else 否 #end</td>
-            <td>$!entity.desc</td>
-            <td>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
-                <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+            <td width="22%" style="text-align: center">$!entity.id</td>
+            <td width="22%" style="text-align: center">$!entity.name</td>
+            <td width="22%" style="text-align: center"> #if($!entity.isGlobal==true) 是 #else 否 #end</td>
+            <td width="22%" style="text-align: center">$!entity.desc</td>
+            <td width="12%">
+                <div align="center">
+                    <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
+                    <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+                    <a onclick="delCategory('$!entity.id')"
+                       class="btn btn-danger btn-mini remove-item">删除</a>
+                </div>
             </td>
         </tr>
         #end
@@ -44,15 +48,47 @@
         <label>是否全局</label>
         <select id="country.id" name="isGlobal" class="span11">
             <option value="">全部</option>
-            <option value="true"  #if($!entity.isGlobal==true) selected #end >是</option>
+            <option value="true"  #if($!entity.isGlobal==true) selected #end>是</option>
             <option value="false" #if($!entity.isGlobal==false) selected #end>否</option>
         </select>
     </div>
     <div class="control-group">
-        <button type="submit" class="btn btn-primary">查询</button>
+        <button type="submit" class="btn btn-primary" style="margin-top: 10px;">查询</button>
     </div>
 </form>
 
 #parse("common/list_end.vm")
 
+<script>
+    /**
+     * 删除分类
+     */
+    function delCategory(id) {
+        console.log(id);
+        var request = {};
 
+        request.id = Number(id);
+
+        // 需要判断是否有关联的多语言数据字典
+        $.ajax({
+            url: 'verifyRelatedLangsDictionary',
+            data: JSON.stringify(request),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    if (result.data) {
+                        alert("有关联字典项不可以删除");
+                    } else {
+                        location.href = location.href;
+                    }
+                } else {
+                    alert(result.msg);
+                }
+            }
+        });
+
+
+    }
+</script>

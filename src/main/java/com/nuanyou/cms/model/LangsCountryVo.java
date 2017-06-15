@@ -5,11 +5,18 @@ package com.nuanyou.cms.model;
  */
 public class LangsCountryVo {
 
-    private Integer langsCountryKey;
-
     private String langsValue;
 
     private String langsDesc;
+
+    private Integer langsCountryKey;
+
+    private String langsCountryDesc;
+
+    public LangsCountryVo(Integer langsCountryKey, String langsCountryDesc) {
+        this.langsCountryKey = langsCountryKey;
+        this.langsCountryDesc = langsCountryDesc;
+    }
 
     public LangsCountryVo(Integer langsCountryKey, String langsValue, String langsDesc) {
         this.langsCountryKey = langsCountryKey;
@@ -40,4 +47,13 @@ public class LangsCountryVo {
     public void setLangsDesc(String langsDesc) {
         this.langsDesc = langsDesc;
     }
+
+    public String getLangsCountryDesc() {
+        return langsCountryDesc;
+    }
+
+    public void setLangsCountryDesc(String langsCountryDesc) {
+        this.langsCountryDesc = langsCountryDesc;
+    }
+
 }
