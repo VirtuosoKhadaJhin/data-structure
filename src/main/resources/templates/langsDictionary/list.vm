@@ -8,7 +8,7 @@
     <span class="icon"><i class="icon-th"></i></span>
     <h5>多语言列表</h5>
     <a class="btn btn-mini btn-info buttons" href="add">新增</a>
-    <a class="btn btn-mini btn-info buttons" onclick="langsCommonDialog()">通用新增</a>
+    #*<a class="btn btn-mini btn-info buttons" onclick="langsCommonDialog()">通用新增</a>*#
 </div>
 <style>
     .tdInput {
@@ -153,7 +153,7 @@
     </div>
 
 
-    <div class="control-group" style="clear: both;text-align: right;padding-right: 18px;">
+    <div class="control-group" style="clear: both;margin-top: 10px;">
         <button type="submit" class="btn btn-primary">查询</button>
         <a onclick="reset()" class="btn btn-primary" style="background-color: #8b8c8c">重置</a>
     </div>

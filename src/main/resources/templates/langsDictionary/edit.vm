@@ -113,8 +113,6 @@
                                             <img style="" id="imgUrl" src="">
                                         </div>
                                     </div>
-
-
                                 </div>
 
                                 <div class="form-actions" style="clear:both;text-align: center">
@@ -174,6 +172,7 @@
                 contentType: 'application/json',
                 success: function (result) {
                     if (result.code == 0) {
+                        console.log(result.data);
                         var langsDictionaryVo = result.data;
                         var keyCode = langsDictionaryVo.keyCode;
                         var categoryId = langsDictionaryVo.categoryId;
