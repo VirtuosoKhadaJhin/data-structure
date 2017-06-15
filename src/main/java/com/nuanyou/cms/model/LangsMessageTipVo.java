@@ -11,6 +11,8 @@ public class LangsMessageTipVo {
 
     private String keyCode;
 
+    private String newKeyCode;
+
     private String remark;
 
     private String imgUrl;
@@ -43,6 +45,14 @@ public class LangsMessageTipVo {
 
     public void setKeyCode(String keyCode) {
         this.keyCode = keyCode;
+    }
+
+    public String getNewKeyCode() {
+        return newKeyCode;
+    }
+
+    public void setNewKeyCode(String newKeyCode) {
+        this.newKeyCode = newKeyCode;
     }
 
     public String getRemark() {
