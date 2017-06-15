@@ -125,7 +125,7 @@
                                                    style="width:110px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">请选择图片</label>
                                         </div>
                                         <div style="text-align: center;padding-top: 1em;" class="controls">
-                                            <img style="" id="imgUrl" src="" onerror="showNoPhoto()">
+                                            <img style="width: 250px;height: 250px;" id="imgUrl" src="">
                                         </div>
                                     </div>
                                 </div>
@@ -160,15 +160,17 @@
                 contentType: 'application/json',
                 success: function (result) {
                     if (result.code == 0) {
-                        console.log(result.data)
                         if (result.data != null) {
                             var remark = result.data.remark;
                             var imgUrl = result.data.imgUrl;
                             if (remark != null && remark != "") {
                                 $("#remark").val(remark);
                             }
+                            console.log(result.data.imgUrl)
                             if (imgUrl != null && imgUrl != "") {
                                 $("#imgUrl").attr("src", imgUrl);
+                            }else{
+                                $("#imgUrl").hide();
                             }
                         }
                         ;
@@ -219,7 +221,7 @@
 
             // file 上传文件
             $('input[id=lefile]').change(function () {
-                $('#photoCover').val($(this).val());
+                // $('#photoCover').val($(this).val());
                 $("#editBtn").attr("onclick", "");
                 $("#editBtn").attr("style", "background-color: gray;");
                 $("#uploadForm").ajaxSubmit({
@@ -356,9 +358,6 @@
             return true;
         }
 
-        function showNoPhoto() {
-            $("#imgUrl").hide();
-        }
 
         /**
          * 修改语言
@@ -410,7 +409,7 @@
             var keyCode = getUrlParam("keyCode");
             var newKeyCode = $("input[name='keyCode']").val();
             var remark = $("textarea[id='remark']").val();
-            var imgUrl = $("input[id='lefile']").val();
+            var imgUrl = $("input[id='photoCover']").val();
 
             messRequest.keyCode = keyCode;
             messRequest.newKeyCode = newKeyCode;

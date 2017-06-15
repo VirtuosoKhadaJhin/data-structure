@@ -80,6 +80,9 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
                 fileType = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
             InputStream is = file.getInputStream();
             String imgUrl = fileClient.uploadFile(is, fileType);
+
+            imgUrl = imgUrl.replace("https://", "http://dev.");
+            // https://kr.file.91nuanyou.com/14975265854394393273.png
             return imgUrl;
         } catch (Exception e) {
             e.printStackTrace();
