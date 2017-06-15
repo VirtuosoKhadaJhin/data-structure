@@ -237,10 +237,9 @@
     </div>
     <div class="modal-body">
         <div class="control-group">
-            <label class="control-label">可选参数列表</label>
+            <label class="control-label">可选参数列表(<span style="color:red">可多选</span>)</label>
             <div class="controls">
-                <select class="span5 select2" id="selectedParamId" name="selectedParamId"
-                >
+                <select class="span5 select2" id="selectedParamId" name="selectedParamId" multiple>
                     #foreach($param in $!selectableParams)
                         <option value="$!param.id">
                             key:  $!param.key ; 属性名:  $!param.name.key 备注:$!param.note
@@ -661,63 +660,71 @@
             if ($('#mytable .editRow').length <= 0) {
                 lastInputRow = $("#mytable tr:last");
             } else {
-                lastInputRow = lastInputRow = $('#mytable .editRow').eq(0);
+                lastInputRow  = $('#mytable .editRow').eq(0);
             }
-            //console.log(lastInputRow);
             var table = $("#mytable");
-            var trHTML = "<tr class='rowSpan eachRow'>" + spanRowExample + "</tr>";
-            $(trHTML).insertBefore(lastInputRow);
-            var selectedParamId = $("select[name='selectedParamId']").val();
-            console.log("selectedParamId:" + selectedParamId);
-            var request = {};
-            request.selectedParamId = selectedParamId;
-            $.ajax({
-                url: 'getParameterDetail',
-                data: JSON.stringify(request),
-                type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                success: function (result) {
-                    if (result.code == 0) {
-                        var parameter = result.data;
-                        var lastTr = $('#mytable .rowSpan:last');
-                        var dateTypeText = "";
-                        if (parameter.type == 1) {
-                            dateTypeText = "文本";
-                        } else if (parameter.type = 2) {
-                            dateTypeText = "整数";
-                        } else if (parameter.type = 3) {
-                            dateTypeText = "小数";
-                        } else if (parameter.type = 4) {
-                            dateTypeText = "日期";
-                        }
-                        var editableText = "";
-                        if (parameter.editable) {
-                            editableText = "是";
-                        } else {
-                            editableText = "否";
-                        }
-                        var nullableText = "";
-                        if (parameter.nullable) {
-                            nullableText = "是";
-                        } else {
-                            nullableText = "否";
-                        }
-                        lastTr.find("span[class='key']").html(parameter.key);
-                        lastTr.find("span[class='paramId']").html(parameter.id);
-                        lastTr.find("input[name='paramId']").val(parameter.id);
-                        lastTr.find("span[class='name']").html(parameter.name.content);
-                        lastTr.find("span[class='defaultValue']").html(parameter.defaultvalue);
-                        lastTr.find("span[class='dataType']").html(dateTypeText);
-                        lastTr.find("span[class='editable']").html(editableText);
-                        lastTr.find("span[class='nullable']").html(nullableText);
-                        lastTr.find("span[class='remark']").html(parameter.remark.content);
-                        $('#parameterModal').modal('hide');
-                    } else {
-                        alert(result.msg);
-                    }
+
+            var selectedParamIds=$("select[name='selectedParamId']").val();
+            var trHTML = "";
+            for(var i=0;i<selectedParamIds.length;i++){
+                if(trHTML==""){
+                    trHTML = "<tr class='rowSpan eachRow'>" + spanRowExample + "</tr>";
+                    $(trHTML).insertBefore(lastInputRow);
+                }else{
+                    trHTML = "<tr class='rowSpan eachRow'>" + spanRowExample + "</tr>";
+                    $(trHTML).insertBefore($("#mytable tr:last"));
                 }
-            });
+                var request = {};
+                request.selectedParamId = selectedParamIds[i];
+                $.ajax({
+                    url: 'getParameterDetail',
+                    data: JSON.stringify(request),
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    async:false,
+                    success: function (result) {
+                        if (result.code == 0) {
+                            var parameter = result.data;
+                            var lastTr = $('#mytable .rowSpan:last');
+                            var dateTypeText = "";
+                            if (parameter.type == 1) {
+                                dateTypeText = "文本";
+                            } else if (parameter.type = 2) {
+                                dateTypeText = "整数";
+                            } else if (parameter.type = 3) {
+                                dateTypeText = "小数";
+                            } else if (parameter.type = 4) {
+                                dateTypeText = "日期";
+                            }
+                            var editableText = "";
+                            if (parameter.editable) {
+                                editableText = "是";
+                            } else {
+                                editableText = "否";
+                            }
+                            var nullableText = "";
+                            if (parameter.nullable) {
+                                nullableText = "是";
+                            } else {
+                                nullableText = "否";
+                            }
+                            lastTr.find("span[class='key']").html(parameter.key);
+                            lastTr.find("span[class='paramId']").html(parameter.id);
+                            lastTr.find("input[name='paramId']").val(parameter.id);
+                            lastTr.find("span[class='name']").html(parameter.name.content);
+                            lastTr.find("span[class='defaultValue']").html(parameter.defaultvalue);
+                            lastTr.find("span[class='dataType']").html(dateTypeText);
+                            lastTr.find("span[class='editable']").html(editableText);
+                            lastTr.find("span[class='nullable']").html(nullableText);
+                            lastTr.find("span[class='remark']").html(parameter.remark.content);
+                            $('#parameterModal').modal('hide');
+                        } else {
+                            alert(result.msg);
+                        }
+                    }
+                });
+            }
         });
 
 
