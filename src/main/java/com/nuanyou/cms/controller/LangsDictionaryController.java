@@ -76,8 +76,11 @@ public class LangsDictionaryController {
     @RequestMapping("localList")
     public String local(LangsDictionaryRequestVo requestVo, Model model) {
         Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllLocalDictionary(requestVo);
+        List<LangsCountryVo> langsCountryVos = LangsCountry.viewAllCountrysResultList();
+
         model.addAttribute("page", allDictionary);
         model.addAttribute("entity", requestVo);
+        model.addAttribute("langsCountryVos", langsCountryVos);
         model.addAttribute("langsCountries", LangsCountry.localValues(LOCAL_KEY));
         return "langsDictionary/local_list";
     }

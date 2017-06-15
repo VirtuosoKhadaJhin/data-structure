@@ -14,7 +14,7 @@
             <div id="breadcrumb">
                 <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i
                         class="icon-home"></i> 主页</a>
-                <a href="local_list" class="tip-bottom" data-original-title="">分类管理</a>
+                <a href="localList" class="tip-bottom" data-original-title="">分类管理</a>
                 <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
             </div>
         </div>
