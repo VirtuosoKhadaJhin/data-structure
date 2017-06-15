@@ -11,7 +11,7 @@ public enum PaymentOrderMethod {
     PAY_JD(3, "京东"),
     PAY_KRP(4, "KRP"),
     PAY_JUMP(5, "重定向"),
-    UNKNOWN(6, "未知");
+    UNKNOWN(null, "未知");
 
     private Integer key;
 

@@ -101,9 +101,7 @@ public class PaymentOrderRecordController {
             result.setCode(code);
             result.setMsg(response.getMsg());
             if (response.isSuccess()) {
-                LinkedHashMap<String, Date> searchDateMap = (LinkedHashMap<String, Date>) request.getSession().getAttribute("searchDateMap");
-                searchDateMap.remove(orderId);
-                request.getSession().setAttribute("searchDateMap", searchDateMap);
+                request.setAttribute("SEARCH_PAYMENT_ORDER_RECORD_SUCCESS", orderId);
             }
         } catch (Exception e) {
             result.setCode(ResultCodes.Fail.getCode());

@@ -99,7 +99,9 @@
         <select id="paymentStatus" name="status" class="span11">
             <option value="">全部</option>
             #foreach($o in $!paymentStatuses)
-                <option value="$o" #if($!requestVo.status== $o) selected #end>$o.name</option>
+                #if($o.key)
+                    <option value="$o" #if($!requestVo.status== $o) selected #end>$o.name</option>
+                #end
             #end
         </select>
 
@@ -107,7 +109,9 @@
         <select id="J_method" name="paymentOrderMethod" class="span11">
             <option value="">全部</option>
             #foreach($o in $!paymentMethods)
-                <option value="$o" #if($!requestVo.paymentOrderMethod==$o) selected #end>$o.name</option>
+                #if($o.key)
+                    <option value="$o" #if($!requestVo.paymentOrderMethod==$o) selected #end>$o.name</option>
+                #end
             #end
         </select>
 

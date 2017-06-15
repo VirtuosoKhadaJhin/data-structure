@@ -10,13 +10,18 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Byron on 2017/6/13.
  */
 @Component
 public class PaymentInterceptor extends HandlerInterceptorAdapter {
+
+    public static final String SEARCH_PAYMENT_ORDER_RECORD_SUCCESS = "SEARCH_PAYMENT_ORDER_RECORD_SUCCESS";
 
     private static final Logger _LOGGER = LoggerFactory.getLogger(PaymentInterceptor.class);
 
@@ -43,6 +48,15 @@ public class PaymentInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        Object object = request.getAttribute(SEARCH_PAYMENT_ORDER_RECORD_SUCCESS);
+        if (object != null) {
+            String orderId = (String) object.toString();
+            searchDateMap.remove(orderId);
+        }
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         DateTime dateTime = new DateTime();
         long beforeFiveMisTime = dateTime.minusMinutes(paymentWaitingTime).toDate().getTime();
         Iterator<Map.Entry<String, Date>> iterator = searchDateMap.entrySet().iterator();
@@ -53,9 +67,5 @@ public class PaymentInterceptor extends HandlerInterceptorAdapter {
                 iterator.remove();
             }
         }
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
     }
 }
