@@ -44,16 +44,15 @@
         <thead role="row">
         <tr>#*标题行*#
         #*分类*#
-            <th>序号</th>
-            <th>分类</th>
+            <th width="5%">序号</th>
+            <th width="5%">分类</th>
         #*keyCode*#
-            <th>keyCode</th>
+            <th width="5%">keyCode</th>
         #*多个语言循环展示*#
             #foreach($langCountry in $!langsCountries)
-                <th>
+                <th width="15%">
 
                 #*$!langCountry.desc ($!langCountry.value)*#
-
                     #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
                         $!langCountry.desc ($!langCountry.value)
                     #end
@@ -63,7 +62,7 @@
                 </th>
             #end
         #*操作*#
-            <th>操作</th>
+            <th width="5%">操作</th>
         </tr>
         </thead>
     #*表格体*#
@@ -72,13 +71,13 @@
             #set($sort = 1)
             #foreach($entity in $!page)
             <tr class="odd gradeX">
-                <td width="4%"><label style="text-align: center;padding-top: 5%">$sort</label>
+                <td><label style="text-align: center;padding-top: 5%">$sort</label>
                 </td>
-                <td width="10%"><label style="text-align: center;padding-top: 5%">$!entity.categoryName</label>
+                <td><label style="text-align: center;padding-top: 5%">$!entity.categoryName</label>
                 </td>
-                <td width="10%" style="text-align: center">$!entity.keyCode</td>
+                <td style="text-align: center">$!entity.keyCode</td>
                 #foreach($langCountry in $!langsCountries)
-                    <td width="10%" class="lang-message" style="text-align: center" key-code="$!entity.keyCode"
+                    <td class="lang-message" style="text-align: center" key-code="$!entity.keyCode"
                         langs-key="$!langCountry.key">
                         #set($hasNullMessage=true)
                         #foreach($lang in $!entity.langsMessageList)
@@ -105,7 +104,7 @@
                         #end
                     </td>
                 #end
-                <td width="8%">
+                <td>
                     <div style="text-align: center">
                         <a class="btn btn-primary btn-mini modify-item" key-code="$!entity.keyCode">编辑</a>
                     </div>
@@ -141,7 +140,7 @@
 
     <div class="control-group" style="margin-top: 10px;">
         <button type="submit" class="btn btn-primary">查询</button>
-        <a onclick="reset()" class="btn btn-primary" style="background-color: #8b8c8c">重置</a>
+        <a onclick="reset()" class="btn btn-warning">重置</a>
     </div>
 </form>
 

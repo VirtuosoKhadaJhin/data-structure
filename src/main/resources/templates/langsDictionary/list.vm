@@ -160,7 +160,7 @@
 
     <div class="control-group" style="clear: both;margin-top: 10px;">
         <button type="submit" class="btn btn-primary">查询</button>
-        <a onclick="reset()" class="btn btn-primary" style="background-color: #8b8c8c">重置</a>
+        <a onclick="reset()" class="btn btn-warning">重置</a>
     </div>
 </form>
 

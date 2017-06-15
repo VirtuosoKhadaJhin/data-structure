@@ -82,7 +82,7 @@ public class LangsDictionaryController {
         model.addAttribute("page", allDictionary);
         model.addAttribute("entity", requestVo);
         model.addAttribute("langsCountryVos", langsCountryVos);
-        model.addAttribute("langsCountries", LangsCountry.localValues(LOCAL_KEY));
+        model.addAttribute("langsCountries", LangsCountry.localValues(requestVo.getCountryKey()));
         return "langsDictionary/local_list";
     }
 
