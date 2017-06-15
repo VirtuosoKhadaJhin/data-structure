@@ -891,7 +891,7 @@
 
             curRefer = td.find("input[name='referenceId']");
             $("#referIds").empty();
-
+            $("#referIds").append("<option value=''>" +"无" + "</option>");
             console.log($(".rowSpan"));
             $(".rowSpan").each(function (i, o) {
                 var keyName = $(o).find("span[class='key']").html();
