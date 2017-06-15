@@ -41,6 +41,7 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
     public EntityNyLangsMessageTip add(LangsMessageTipVo requestVo) {
         String keyCode = requestVo.getKeyCode();
         String newKeyCode = requestVo.getNewKeyCode();
+        String imgUrl = requestVo.getImgUrl();
         try {
             keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
         } catch (UnsupportedEncodingException e) {
@@ -57,8 +58,13 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
             messageTipDao.delete(entityResult);
         }
 
-        entityNyLangsMessageTip = new EntityNyLangsMessageTip(newKeyCode, requestVo.getRemark(),
-                requestVo.getImgUrl(), new Date(), false);
+        if (imgUrl == null || imgUrl == "") {
+            if (entityResult.size() > 0) {
+                imgUrl = entityResult.get(0).getImgUrl();
+            }
+        }
+
+        entityNyLangsMessageTip = new EntityNyLangsMessageTip(newKeyCode, requestVo.getRemark(), imgUrl, new Date(), false);
 
         EntityNyLangsMessageTip result = messageTipDao.save(entityNyLangsMessageTip);
 

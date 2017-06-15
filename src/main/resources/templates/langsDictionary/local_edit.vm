@@ -46,6 +46,7 @@
                                     </div>
                                 </div>
 
+                                #set($num=0)
                                 #foreach($langCountry in $!langsCountries)
                                 <div class="">
                                     <label class="control-label">
@@ -60,25 +61,28 @@
                                     #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
                                     <div class="controls">
                                     #end
-                                    #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
-                                    <div class="controls" id="localLanguage" data-key="$!langCountry.key"
-                                         data-value="$!langCountry.value">
-                                    #end
-
-                                    #foreach($dictionary in $!dictionarys)
-                                        #if($!dictionary.langsCountryKey == $!langCountry.key)
-                                            #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
-                                                <input type="text" value="$!dictionary.message"
-                                                       class="span7 countryLanguage" readonly="readonly">
-                                            #else
-                                                <input type="text" value="$!dictionary.message"
+                                        #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
+                                        <div class="controls" id="localLanguage" data-key="$!langCountry.key"
+                                             data-value="$!langCountry.value">
+                                        #end
+                                            #foreach($dictionary in $!dictionarys)
+                                                #if($!dictionary.langsCountryKey == $!langCountry.key)
+                                                    #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
+                                                        <input type="text" value="$!dictionary.message"
+                                                               class="span7 countryLanguage" readonly="readonly">
+                                                    #else
+                                                        <input type="text" value="$!dictionary.message"
+                                                               id='localLanguageMess' class="span7 countryLanguage">
+                                                    #end
+                                                #end
+                                            #end
+                                            #set($num=$num+1)
+                                            #if($!dictionarys.size() == 2 && $num == 3)
+                                                <input type="text" value=""
                                                        id='localLanguageMess' class="span7 countryLanguage">
                                             #end
-                                        #end
-
-                                    #end
-                                </div>
-                                </div>
+                                        </div>
+                                    </div>
                                 #end
                             </div>
 

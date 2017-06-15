@@ -1,15 +1,17 @@
 package com.nuanyou.cms.controller;
 
+import com.nuanyou.cms.commons.APIResult;
+import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.model.LangsCategory;
+import com.nuanyou.cms.model.LangsCategoryVo;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.LangsCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -55,6 +57,21 @@ public class LangsCategoryController {
         }
         String url = "edit?type=3&id=" + category.getId();
         return "redirect:" + url;
+    }
+
+    /**
+     * 判断是否有关联的多语言数据字典
+     *
+     * @param categoryVo
+     * @return
+     */
+    @RequestMapping(value = "verifyRelatedLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public APIResult modifyLocalLangsDictionary(@RequestBody LangsCategoryVo categoryVo) {
+        APIResult<Boolean> result = new APIResult<Boolean>(ResultCodes.Success);
+        Boolean record = categoryService.verifyRelatedLangsDictionary(categoryVo);
+        result.setData(record);
+        return result;
     }
 
 

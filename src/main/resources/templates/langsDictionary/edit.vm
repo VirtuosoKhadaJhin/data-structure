@@ -127,7 +127,7 @@
 
                                 <div class="form-actions" style="clear:both;text-align: center">
                                     <a onclick="modifyLangsDictionary()" id="editBtn" class="btn btn-info">确定</a>
-                                    <a class="btn btn-primary" href="list">返回</a>
+                                    <a class="btn btn-primary" onclick="back()">返回</a>
                                 </div>
                         </form>
 
@@ -381,6 +381,11 @@
             var r = window.location.search.substr(1).match(reg);
             if (r != null) return unescape(r[2]);
             return null;
+        }
+
+        // 返回列表页
+        function back(){
+            location.href = "list?page=" + getUrlParam("pageIndex");
         }
 
     </script>

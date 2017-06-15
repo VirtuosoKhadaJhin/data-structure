@@ -2,19 +2,20 @@ package com.nuanyou.cms.service.impl;
 
 import com.google.common.collect.Lists;
 import com.nuanyou.cms.dao.EntityNyLangsCategoryDao;
+import com.nuanyou.cms.dao.EntityNyLangsDictionaryDao;
 import com.nuanyou.cms.entity.EntityNyLangsCategory;
+import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.model.LangsCategory;
+import com.nuanyou.cms.model.LangsCategoryVo;
 import com.nuanyou.cms.service.LangsCategoryService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,9 @@ public class LangsCategoryServiceImpl implements LangsCategoryService {
 
     @Autowired
     private EntityNyLangsCategoryDao categoryDao;
+
+    @Autowired
+    private EntityNyLangsDictionaryDao dictionaryDao;
 
     @Override
     public Page<LangsCategory> findAllCategories(final LangsCategory request) {
@@ -92,6 +96,35 @@ public class LangsCategoryServiceImpl implements LangsCategoryService {
     @Override
     public void delete(Long id) {
         categoryDao.delete(id);
+    }
+
+    @Override
+    public Boolean verifyRelatedLangsDictionary(LangsCategoryVo categoryVo) {
+        // 查询要删除的分类
+        EntityNyLangsCategory entityNyLangsCategory = new EntityNyLangsCategory();
+        entityNyLangsCategory.setId(categoryVo.getId());
+
+        Example<EntityNyLangsCategory> example = Example.of(entityNyLangsCategory);
+        List<EntityNyLangsCategory> entityResult = categoryDao.findAll(example);
+
+        if (entityResult.size() > 0) {
+            EntityNyLangsCategory category = entityResult.get(0);
+
+            EntityNyLangsDictionary entityNyLangsDictionary = new EntityNyLangsDictionary();
+            entityNyLangsDictionary.setCategory(category);
+
+            Example<EntityNyLangsDictionary> langsExample = Example.of(entityNyLangsDictionary);
+            langsExample = Example.of(entityNyLangsDictionary);
+            List<EntityNyLangsDictionary> entityNyLangsDictionarys = dictionaryDao.findAll(langsExample);
+
+            if(BooleanUtils.isTrue(entityNyLangsDictionarys.size() == 0)){
+                categoryDao.delete(category);
+            }
+
+            return BooleanUtils.isTrue(entityNyLangsDictionarys.size() > 0);
+        }
+
+        return false;
     }
 
     private EntityNyLangsCategory convertToEntityLangsCategory(LangsCategory category) {
