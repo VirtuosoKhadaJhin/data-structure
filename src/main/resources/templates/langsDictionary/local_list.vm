@@ -19,7 +19,7 @@
     </div>
 *#
     <div style="margin: 4px;float: right;width: 260px;margin-right: -100px;">
-        <select class="span7 select2 " name="categoryId">
+        <select class="span7 select2 " id="country" onchange="interchangeCountry()">
             <option value="">选择国家</option>
             #foreach($e in $!langsCountryVos)
                 <option value="$!e.langsCountryKey">$!e.langsCountryDesc</option>
@@ -44,6 +44,7 @@
         <thead role="row">
         <tr>#*标题行*#
         #*分类*#
+            <th>序号</th>
             <th>分类</th>
         #*keyCode*#
             <th>keyCode</th>
@@ -57,7 +58,7 @@
                         $!langCountry.desc ($!langCountry.value)
                     #end
                     #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
-                        当地语
+                        当地语-$!langCountry.desc ($!langCountry.value)
                     #end
                 </th>
             #end
@@ -68,17 +69,30 @@
     #*表格体*#
         <tbody>
         #*循环展示表格体*#
+            #set($sort = 1)
             #foreach($entity in $!page)
             <tr class="odd gradeX">
-                <td style="text-align: center">$!entity.categoryId</td>
-                <td style="text-align: center">$!entity.keyCode</td>
+                <td width="4%"><label style="text-align: center;padding-top: 5%">$sort</label>
+                </td>
+                <td width="10%"><label style="text-align: center;padding-top: 5%">$!entity.categoryName</label>
+                </td>
+                <td width="10%" style="text-align: center">$!entity.keyCode</td>
                 #foreach($langCountry in $!langsCountries)
-                    <td class="lang-message" style="text-align: center" key-code="$!entity.keyCode"
+                    <td width="10%" class="lang-message" style="text-align: center" key-code="$!entity.keyCode"
                         langs-key="$!langCountry.key">
                         #set($hasNullMessage=true)
                         #foreach($lang in $!entity.langsMessageList)
                             #if($!lang.langsKey == $!langCountry.key)
-                                <input class='tdInput' readonly="readonly" value="$!lang.message" type='text'/>
+                                #if($!langCountry.key == 1 || $!langCountry.key == 2)
+                                    <input class='tdInput' readonly="readonly" value="$!lang.message" type='text'/>
+                                #else
+                                    #if($!lang.message != "")
+                                        <label style="text-align: center;padding-top: 5%">$!lang.message</label>
+                                    #else
+                                        <input class='tdInput' onchange='saveLang(this)' type='text'/>
+                                    #end
+                                #end
+
                                 #set($hasNullMessage=false)
                             #end
                         #end
@@ -93,10 +107,11 @@
                 #end
                 <td width="8%">
                     <div style="text-align: center">
-                        <a class="btn btn-primary btn-mini" href="localEdit?keyCode=$!entity.keyCode">编辑</a>
+                        <a class="btn btn-primary btn-mini modify-item" key-code="$!entity.keyCode">编辑</a>
                     </div>
                 </td>
             </tr>
+                #set($sort = $sort + 1)
             #end
         </tbody>
     </table>
@@ -106,7 +121,12 @@
 <form class="form-horizontal " method="get">
     <div class="control-group">
         <label>分类</label>
-        <input type="text" class="span11" name="baseName" value="$!entity.baseName">
+        <select class="span7 select2 " name="baseNameId" style="min-width: 203px;">
+            <option value="">全部分类</option>
+            #foreach($e in $!categories)
+                <option value="$!e.id">$!e.name</option>
+            #end
+        </select>
     </div>
 
     <div class="control-group">
@@ -119,14 +139,73 @@
     </div>
 
 
-    <div class="control-group">
+    <div class="control-group" style="margin-top: 10px;">
         <button type="submit" class="btn btn-primary">查询</button>
+        <a onclick="reset()" class="btn btn-primary" style="background-color: #8b8c8c">重置</a>
     </div>
 </form>
 
 #parse("common/list_end.vm")
 
 <script>
+    $(document).ready(function () {
+        $("select[id='country']").find("option[value='" + getUrlParam("countryKey") + "']").attr("selected", true);
+    });
+    /**
+     * 切换国家
+     */
+    function interchangeCountry() {
+        var countryKey = $("#country").val();
+        var baseNameId = getUrlParam("baseNameId");
+        var keyCode = getUrlParam("keyCode");
+        var message = getUrlParam("message");
+
+        var url = "localList?";
+        if (countryKey != null && countryKey != "") {
+            url = url + "countryKey=" + countryKey;
+        }
+        if (baseNameId != null && baseNameId != null
+            && countryKey == null && countryKey == "") {
+            url = url + "baseNameId=" + baseNameId;
+        }else if (baseNameId != null && baseNameId != null) {
+            url = url + "&&baseNameId=" + baseNameId;
+        }
+        if (keyCode != null && keyCode != null) {
+            url = url + "&&keyCode=" + baseNameId;
+        }
+        if (message != null && message != null) {
+            url = url + "&&message=" + baseNameId;
+        }
+        location.href = url;
+    }
+    /**
+     * 修改语言
+     */
+    $(".modify-item").each(function (i, o) {
+        $(o).on("click", function (event) {
+            var keyCode = $(this).attr("key-code");
+            var pageIndex = getUrlParam("index");
+            if (null == pageIndex) {
+                pageIndex = 1;
+            }
+            location.href = "localEdit?keyCode=" + keyCode + "&&pageIndex=" + pageIndex;
+        });
+    });
+    /**
+     * 获取url中的参数
+     */
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+    /**
+     * 重置查询条件
+     */
+    function reset() {
+        location.href = "localList?baseNameId=&keyCode=&message=";
+    }
     /**
      * 实时保存语言
      * @param obj

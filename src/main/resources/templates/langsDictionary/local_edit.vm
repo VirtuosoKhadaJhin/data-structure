@@ -91,7 +91,7 @@
                                             onclick="modifyLocalLangsDictionary()" #*onclick按钮点击事件*#
                                             class="btn btnSave btn-success">保存
                                     </button>
-                                    <a class="btn btn-primary" href="localList">返回</a>
+                                    <a class="btn btn-primary" onclick="back()">返回</a>
                                 </div>
                             </form>
                         </div>
@@ -103,6 +103,21 @@
     #include("common/js-support.vm")
 
     <script type="text/javascript">
+        // 返回列表页
+        function back() {
+            console.log("localList?index=" + getUrlParam("pageIndex"));
+            location.href = "localList?index=" + getUrlParam("pageIndex");
+        }
+        /**
+         * 获取url中的参数
+         */
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+
         /**
          * 修改本地语言
          */
@@ -126,7 +141,7 @@
                 success: function (result) {
                     if (result.code == 0) {
                         alert("操作成功");
-                        location.href = "";
+                        location.href = "localList?index=" + getUrlParam("pageIndex");
                     } else {
                         alert(result.msg);
                     }

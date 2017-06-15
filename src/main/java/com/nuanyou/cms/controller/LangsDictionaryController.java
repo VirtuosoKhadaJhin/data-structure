@@ -77,7 +77,8 @@ public class LangsDictionaryController {
     public String local(LangsDictionaryRequestVo requestVo, Model model) {
         Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllLocalDictionary(requestVo);
         List<LangsCountryVo> langsCountryVos = LangsCountry.viewAllCountrysResultList();
-
+        List<LangsCategory> categories = categoryService.findAllCategories();
+        model.addAttribute("categories", categories);
         model.addAttribute("page", allDictionary);
         model.addAttribute("entity", requestVo);
         model.addAttribute("langsCountryVos", langsCountryVos);

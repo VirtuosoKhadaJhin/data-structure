@@ -444,7 +444,7 @@
         // 返回列表页
         function back() {
             console.log("list?index=" + getUrlParam("pageIndex"));
-            //location.href = "list?index=" + getUrlParam("pageIndex");
+            location.href = "list?index=" + getUrlParam("pageIndex");
         }
 
     </script>

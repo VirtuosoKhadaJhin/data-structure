@@ -72,8 +72,9 @@ public enum LangsCountry {
 
         LangsCountry[] langsCountryEnums = LangsCountry.values();
         for (LangsCountry langsCountry : langsCountryEnums) {
-            String[] langsCountrys = langsCountry.getValue().split("-");
-            LangsCountryVo vo = new LangsCountryVo(langsCountry.getKey(), langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
+            // String[] langsCountrys = langsCountry.getValue().split("-");
+            // langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]
+            LangsCountryVo vo = new LangsCountryVo(langsCountry.getKey(), langsCountry.getValue());
             langsCountryVos.add(vo);
         }
         return langsCountryVos;

@@ -518,6 +518,12 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                     if (StringUtils.isNotEmpty(requestVo.getKeyCode())) {
                         predicate.add(cb.equal(root.get("keyCode"), requestVo.getKeyCode()));
                     }
+                    if (requestVo.getCountryKey() != 0) {
+                        LangsCountry langsCountry = LangsCountry.toEnum(requestVo.getCountryKey());
+                        String[] langsCountrys = langsCountry.getValue().split("-");
+                        predicate.add(cb.equal(root.get("language"), langsCountrys[0]));
+                        predicate.add(cb.equal(root.get("country"), langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]));
+                    }
                     if (StringUtils.isNotEmpty(requestVo.getMessage())) {
                         predicate.add(cb.like(root.get("message"), "%" + requestVo.getMessage() + "%"));
                     }
@@ -537,6 +543,12 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                     }
                     if (StringUtils.isNotEmpty(requestVo.getKeyCode())) {
                         predicate.add(cb.equal(root.get("keyCode"), requestVo.getKeyCode()));
+                    }
+                    if (requestVo.getCountryKey() != 0) {
+                        LangsCountry langsCountry = LangsCountry.toEnum(requestVo.getCountryKey());
+                        String[] langsCountrys = langsCountry.getValue().split("-");
+                        predicate.add(cb.equal(root.get("language"), langsCountrys[0]));
+                        predicate.add(cb.equal(root.get("country"), langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]));
                     }
                     if (StringUtils.isNotEmpty(requestVo.getMessage())) {
                         predicate.add(cb.like(root.get("message"), "%" + requestVo.getMessage() + "%"));

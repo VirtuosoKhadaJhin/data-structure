@@ -23,6 +23,8 @@ public class LangsDictionaryRequestVo implements Serializable {
 
     private Integer langsKey;
 
+    private Integer countryKey = 0;
+
     public LangsDictionaryRequestVo() {
     }
 
@@ -102,5 +104,13 @@ public class LangsDictionaryRequestVo implements Serializable {
 
     public void setLangsKey(Integer langsKey) {
         this.langsKey = langsKey;
+    }
+
+    public Integer getCountryKey() {
+        return countryKey;
+    }
+
+    public void setCountryKey(Integer countryKey) {
+        this.countryKey = countryKey;
     }
 }
