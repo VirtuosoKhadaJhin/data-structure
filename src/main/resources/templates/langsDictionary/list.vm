@@ -40,7 +40,7 @@
             #set($sort = 1)
             #foreach($entity in $!page)
             <tr class="odd gradeX">
-                <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$sort</label>
+                <td style="width: 4%;"><label style="text-align: center;padding-top: 5%">$sort</label>
                 </td>
                 <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$!entity.categoryName</label>
                 </td>

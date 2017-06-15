@@ -17,6 +17,16 @@
             margin-left: 180px;
             padding: 10px 0;
         }
+        .required-waring {
+            display: none;
+            padding-top: 2px;
+            text-align: left;
+            width: 140px;
+            padding-right: 8em;
+            color: red;
+            text-align: left;
+            padding-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -33,7 +43,7 @@
         <div class="container-fluid">
             <div class="row-fluid">
                 <div class="span6" style="width: 70%;min-width:994px;">
-                    <div class="widget-box">
+                    <div class="widget-box" style="width: 78%">
                         <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                             <h5>编辑&查看</h5>
                         </div>
@@ -41,23 +51,23 @@
                               action="/langsMessageTip/uploadImg" name="uploadForm" enctype="multipart/form-data">
 
                             <div class="nopadding" style="width: 100%;">
-                                <div class="fl" style="border-right:1px solid #eeeeee;box-sizing:border-box;width:50%;">
+                                <div class="fl" style="border-right:1px solid #eeeeee;box-sizing:border-box;width:48%;">
                                 #*<div class="control-group">*#
                                     <div class="">
-                                        <label class="control-label">keyCode：</label>
-                                        <div class="controls">
+                                        <label class="control-label" style="width: 140px;">keyCode：</label>
+                                        <div class="controls" style="margin-left: 152px;">
                                             <input for="name" name="keyCode" type="text" class="span7"
-                                                   readonly="readonly" style="min-width: 285px;"
+                                                   readonly="readonly" style="width: 80%"
                                                    value="">
                                         </div>
                                     </div>
                                     <div class="">
-                                        <label class="control-label">多语言分类
+                                        <label class="control-label" style="width: 140px;">多语言分类
                                             <font style="color: red;margin: 0px;padding: 5px;">*</font>：
                                         </label>
-                                        <div class="controls">
-                                            <select class="span7 select2 " name="categoryId" style="min-width: 285px;"
-                                                    onchange="keyCodeRealTime()">
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select class="span7 select2 " name="categoryId"
+                                                    onchange="keyCodeRealTime()" style="width: 80%">
                                                 #foreach($e in $!selectableLangsCategory)
                                                     <option value="$!e.id">$!e.name</option>
                                                 #end
@@ -68,36 +78,36 @@
 
                                     #foreach($langCountry in $!langsCountries)
                                         <div class="">
-                                            <label class="control-label">$!langCountry.desc
+                                            <label class="control-label" style="width: 140px;">$!langCountry.desc
                                                 ($!langCountry.value)
                                                 #if($!langCountry.key == 1 || $!langCountry.key == 2)
                                                     <font style="color: red;margin: 0px;padding: 5px;">*</font>
                                                 #end
                                                 ：</label>
-                                            <div class="controls">
-                                                <input name="$!langCountry.key" type="text" style="min-width: 285px;"
+                                            <div class="controls" style="margin-left: 152px;">
+                                                <input name="$!langCountry.key" type="text" style="width: 80%"
                                                        class="span7 countryLanguage">
-                                                <label id="requiredKey_$!langCountry.key" class="control-label"
-                                                       style="width:80px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">必填项</label>
+                                                <label id="requiredKey_$!langCountry.key" class="control-label required-waring"
+                                                       style="padding-top: 2px;text-align: left;width: 140px;">必填项</label>
                                             </div>
                                         </div>
                                     #end
 
                                 </div>
 
-                                <div class="fr" style="width:50%">
+                                <div class="fr" style="width:50%;float: left">
                                     <div class="">
-                                        <label class="control-label">备注：</label>
-                                        <div class="controls" style="width: 300px;">
+                                        <label class="control-label" style="width: 60px;">备注：</label>
+                                        <div class="controls" style="width: 300px;margin-left: 80px">
                                             <textarea placeholder="图文备注" class="form-control" id="remark" cols="4"
                                                       rows="4" style="resize: none; width: 285px;"></textarea>
-                                            <label name="remark" class="control-label"
-                                                   style="width:110px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">备注不能为空</label>
+                                            <label name="remark" class="control-label required-waring"
+                                                   style="padding-top: 2px;text-align: left;width: 140px;">备注不能为空</label>
                                         </div>
                                     </div>
                                     <div class="">
-                                        <label class="control-label">文件：</label>
-                                        <div class="controls">
+                                        <label class="control-label" style="width: 60px;">文件：</label>
+                                        <div class="controls" style="width: 300px;margin-left: 80px">
                                             <input id="lefile" name="file" type="file" style="display:none">
                                             <div class="input-append" style="width: 100%;">
                                                 <input id="photoCover" class="span3" type="text" style="width: 300px;">

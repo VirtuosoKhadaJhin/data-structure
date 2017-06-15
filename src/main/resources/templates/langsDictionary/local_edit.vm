@@ -64,13 +64,18 @@
                                     <div class="controls" id="localLanguage" data-key="$!langCountry.key"
                                          data-value="$!langCountry.value">
                                     #end
+
                                     #foreach($dictionary in $!dictionarys)
                                         #if($!dictionary.langsCountryKey == $!langCountry.key)
                                             #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
                                                 <input type="text" value="$!dictionary.message"
                                                        class="span7 countryLanguage" readonly="readonly">
+                                            #else
+                                                <input type="text" value="$!dictionary.message"
+                                                       id='localLanguageMess' class="span7 countryLanguage">
                                             #end
                                         #end
+
                                     #end
                                 </div>
                                 </div>
@@ -94,11 +99,6 @@
     #include("common/js-support.vm")
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            // 填充需要填写的本地语言Input样式
-            $("#localLanguage").append("<input type='text' id='localLanguageMess' class='span7 countryLanguage'>");
-        });
-
         /**
          * 修改本地语言
          */

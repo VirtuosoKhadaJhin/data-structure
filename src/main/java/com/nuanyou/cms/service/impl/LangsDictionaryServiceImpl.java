@@ -134,6 +134,8 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
     @Override
     public List<LangsDictionary> viewLocalLangsDictionary(LangsDictionaryVo dictionaryVo) {
+        List<LangsDictionary> dataList = Lists.newArrayList();
+
         EntityNyLangsDictionary entityNyLangsDictionary = new EntityNyLangsDictionary();
         entityNyLangsDictionary.setKeyCode(dictionaryVo.getKeyCode());
 
@@ -149,19 +151,33 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
         List<LangsDictionary> dictionaryList = this.convertToMultipleLangsCategories(dictionaries);
 
-        List<LangsDictionary> dataList = Lists.newArrayList();
         dataList.add(new LangsDictionary(dictionaryVo.getKeyCode(), LangsCountry.EN_UK.getKey()));
         dataList.add(new LangsDictionary(dictionaryVo.getKeyCode(), LangsCountry.ZH_CN.getKey()));
 
         for (LangsDictionary dictionary : dictionaryList) {
-            if (dictionary.getBaseNameStr().equals(LangsCountry.EN_UK.getValue())
-                    || dictionary.getBaseNameStr().equals(LangsCountry.ZH_CN.getValue())) {
-                dataList.remove(new LangsDictionary(dictionary.getKeyCode(), LangsCountry.toEnum(dictionary.getBaseNameStr()).getKey()));
+            dictionary.setLangsCountryKey(LangsCountry.toEnum(dictionary.getBaseNameStr()).getKey());
+            if (LangsCountry.toEnum(dictionary.getBaseNameStr()).getValue().equals(LangsCountry.EN_UK.getValue())
+                    || LangsCountry.toEnum(dictionary.getBaseNameStr()).getValue().equals(LangsCountry.ZH_CN.getValue())) {
+                LangsDictionary langsDictionary = verifyLangsDictionary(dataList, dictionaryVo.getKeyCode(), LangsCountry.toEnum(dictionary.getBaseNameStr()).getKey());
+                if (null != langsDictionary) {
+                    dataList.remove(langsDictionary);
+                    dataList.add(dictionary);
+                }
+            } else {
                 dataList.add(dictionary);
             }
         }
 
         return dataList;
+    }
+
+    private LangsDictionary verifyLangsDictionary(List<LangsDictionary> dataList, String keyCode, Integer langsKey) {
+        for (LangsDictionary dictionary : dataList) {
+            if (dictionary.getLangsCountryKey().equals(langsKey) && dictionary.getKeyCode().equals(keyCode)) {
+                return dictionary;
+            }
+        }
+        return null;
     }
 
     @Override
