@@ -79,7 +79,7 @@ public class ContractTemplateController {
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer optype, HttpServletRequest request) throws UnsupportedEncodingException {
 
-        //获取浏览器当地语言
+        //local lang
         List<LangsCountry> langsCountries=getNativeLangs(request);
 
         //all params
@@ -88,7 +88,7 @@ public class ContractTemplateController {
         //all countries
         List<Country> countries = this.countryService.getIdNameList();
 
-        //all 所有的数据映射
+        //all data mappings
         List<ParamsDataMapping> dataMappings=this.dataMappingService.findAll();
 
         //add selectable langs
@@ -115,9 +115,9 @@ public class ContractTemplateController {
             selectedIds=getSeletedIds(selectedParams);
         }
 
+        //langs categories
         List<LangsCategory> categories = categoryService.findAllCategories();
 
-        //setSelectableParams(selectedParams, params);
         model.addAttribute("entity", template);
         model.addAttribute("categories", categories);
         model.addAttribute("dataTypeMappings", dataMappings);
@@ -153,19 +153,7 @@ public class ContractTemplateController {
         return langsCountries;
     }
 
-    private void setSelectableParams(List<ContractParameter> selectedParams, List<ContractParameter> params) {
-        if(selectedParams==null||params==null){
-            return;
-        }
-        for (int i = params.size() - 1; i >= 0; i--) {
-            for (int j = 0; j<=selectedParams.size()-1 ; j++) {
-                if (params.get(i).getId().equals(selectedParams.get(j).getId())) {
-                    params.remove(i);
-                    break;
-                }
-            }
-        }
-    }
+
 
 
     @RequestMapping(value = "saveTemplate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -173,7 +161,6 @@ public class ContractTemplateController {
     public APIResult saveTemplate(
             @RequestBody Template template
     ) throws IOException {
-
         return this.contractTemplateService.saveTemplate(
                 template.getParamIds(),
                 template.getList(),
@@ -182,6 +169,9 @@ public class ContractTemplateController {
                 template.getCountryId(),
                 template.getId());
     }
+
+
+
 
     @RequestMapping(value = "getAllParams", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>暖游 后台管理系统 菜单管理</title>
     #include("common/css-support.vm")
-
-
     <link rel="stylesheet" href="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.css">
     <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
 </head>
@@ -56,11 +54,9 @@
                                 </div>
 
 
-                                <label class="control-label">自定义参数<select class="langsAutoComplete3"
-                                                                          style="display: none"></select> </label>
+                                <label class="control-label"></label>
                                 <div class="controls">
                                     <div style="overflow: auto;width: 100%">
-
                                         <table class="table table-bordered data-table dataTable" id="mytable">
                                             <thead>
                                             <tr id="0">
@@ -170,12 +166,6 @@
                                                     <input name="remark"  type="hidden">
 
 
-##                                                    <input name="remarkLabel" class="langsAutoComplete"
-##                                                           style="width: 150px">
-##                                                    <input name="remark" type="text">
-##                                                    <br>
-##                                                    <a class="btn btn-info btn-mini addLang"
-##                                                       inputLangsName="remark">添加</a>
                                                 </td>
                                                 <td>
                                                     <input name="referenceId" placeholder="引用参数" class="referParam"
@@ -751,9 +741,8 @@
                         for (var i = 0; i < list.length; i++) {
                             var o = list[i];
                             var complate = {};
-                            complate.label = "文本:"+o.message+ "keyCode:"+o.keyCode;
+                            complate.label = o.message+"("+o.keyCode+")";
                             complate.value =   o.keyCode;
-                            //complate.message=o.message;
                             listComplete.push(complate);
                         }
                         var currEle = e.currentTarget;
@@ -780,51 +769,6 @@
         });
 
 
-        $("#mytable").delegate(".langsAutoComplete3", "click", function (e) {
-            var keyWord = $(this).val();
-            if ($.trim(keyWord) == "") {
-                return;
-            }
-            console.log(keyWord);
-            var obj = $(this);
-
-            var currEle = e.currentTarget;
-            $(currEle).select2({
-                language: "zh-CN", //设置 提示语言
-                width: "100%", //设置下拉框的宽度
-                placeholder: "请选择",
-                allowClear: true,
-                tags: true,
-                maximumSelectionLength: 2,  //设置最多可以选择多少项
-                ajax: {
-                    url: '/langsDictionary/suggest',
-                    cache: true,
-                    processResults: function (data, page) {
-                        var arr = [];
-                        for (var i = 0; i <= 10; i++) {
-                            var t = {};
-                            t.id = 1;
-                            t.text = "33";
-                            arr.push(t);
-                        }
-                        console.log(arr);
-                        return {
-                            results: arr
-                        };
-                    }
-                }
-            });
-
-
-        });
-
-
-//        $("#selectLangSave").on("click", function () {
-//            var langsKey = $("#langsKey").val();
-//            console.log(langsKey);
-//            langsKey = $("#langsKey").val();
-//            currLangInput.val(langsKey);
-//        });
 
         $("#mytable").delegate(".addLang", "click", function (e) {
             var currEle = e.currentTarget;
@@ -957,16 +901,14 @@
                     contentType: 'application/json',
                     success: function (result) {
                         if (result.code == 0) {
-                            alert("操作成功");
                             $('#addLangsModal').modal('hide');
                             console.log(localelangsKey);
                             console.log(langsMessageList);
                             for (var i = 0; i < langsMessageList.length; i++) {
                                 if (localelangsKey == langsMessageList[i].langsKey) {
                                     currLangKeyInput.val(request.keyCode);
-                                    currLangValueInput.val(langsMessageList[i].message);
+                                    currLangValueInput.val(langsMessageList[i].message+"("+request.keyCode+")");
                                 }
-
                             }
                         } else {
                             alert(result.msg);
