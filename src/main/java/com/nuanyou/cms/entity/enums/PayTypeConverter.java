@@ -10,7 +10,7 @@ public class PayTypeConverter implements AttributeConverter<List<PayType>, Integ
     @Override
     public Integer convertToDatabaseColumn(List<PayType> attribute) {
         if (attribute == null || attribute.isEmpty())
-            return null;
+            return 0;
         Integer flag = 0;
         for (PayType e : attribute) {
             flag += e.value;
@@ -20,7 +20,7 @@ public class PayTypeConverter implements AttributeConverter<List<PayType>, Integ
 
     @Override
     public List<PayType> convertToEntityAttribute(Integer dbData) {
-        if (dbData == null)
+        if (dbData == null||dbData==0)
             return null;
         return PayType.toEnums(dbData);
     }
