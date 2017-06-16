@@ -154,8 +154,14 @@ window.onload = function () {
             async: false,
             success: function (result) {
                 if (result.code == 0) {
+                    var currEle = e.currentTarget;
                     var listComplete = [];
                     var list = result.data;
+                    console.log(list);
+                    if(list.length==0){
+                        $(currEle).next().val("");
+                        return ;
+                    }
                     for (var i = 0; i < list.length; i++) {
                         var o = list[i];
                         var complate = {};
@@ -164,7 +170,6 @@ window.onload = function () {
                         complate.value =   o.keyCode;
                         listComplete.push(complate);
                     }
-                    var currEle = e.currentTarget;
                     $(currEle).autocomplete({
                         minLength: 0,
                         source: listComplete,
