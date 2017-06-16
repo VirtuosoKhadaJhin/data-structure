@@ -140,4 +140,52 @@ window.onload = function () {
         errorElement: "span"
     });
 
+    $("body").delegate(".langsAutoComplete", "keyup", function (e) {
+        var keyWord = $(this).val();
+        if (!keyWord) {
+            return;
+        }
+        var obj = $(this);
+        $.ajax({
+            url: '/langsDictionary/suggest',
+            data: {"key": keyWord},
+            type: 'post',
+            dataType: 'json',
+            async: false,
+            success: function (result) {
+                if (result.code == 0) {
+                    var listComplete = [];
+                    var list = result.data;
+                    for (var i = 0; i < list.length; i++) {
+                        var o = list[i];
+                        var complate = {};
+                        complate.labelDisplay = o.message;
+                        complate.label = o.message+"("+o.keyCode+")";
+                        complate.value =   o.keyCode;
+                        listComplete.push(complate);
+                    }
+                    var currEle = e.currentTarget;
+                    $(currEle).autocomplete({
+                        minLength: 0,
+                        source: listComplete,
+                        focus: function (event, ui) {
+                            $(this).val(ui.item.labelDisplay);
+                            $(this).next().val(ui.item.value);
+                            return false;
+                        },
+                        select: function (event, ui) {
+                            $(this).val(ui.item.labelDisplay);
+                            $(this).next().val(ui.item.value);
+                            return false;
+                        }
+                    })
+                } else {
+                    alert(result.msg);
+                }
+            }
+        });
+    });
+
+
+
 }
