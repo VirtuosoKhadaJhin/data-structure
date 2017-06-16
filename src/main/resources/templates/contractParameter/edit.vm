@@ -132,7 +132,7 @@
                                 <div class="control-group">
                                     <label class="control-label">栏位提示</label>
                                     <div class="controls">
-                                        <input name="remarkLabel" type="text" langsKeyName="remark" class="span7 langsAutoComplete" value="$!entity.remark.content">
+                                        <input name="nameLabel" type="text" langsKeyName="remark" class="span7 langsAutoComplete" value="$!entity.remark.content">
                                         <input name="remark" type="hidden" value="$!entity.remark.key">
                                         <a class="btn btn-info btn-mini addLang" langsKeyName="remark" langsValueName="remarkLabel"> <i class="icon-plus"></i> </a>
                                     </div>
