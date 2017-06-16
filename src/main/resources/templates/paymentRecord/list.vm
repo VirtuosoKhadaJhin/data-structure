@@ -67,7 +67,7 @@
     </tbody>
 </table>
 #parse("common/list_mid.vm")
-<form method="get">
+<form method="get" class="search-form">
     <div class="control-group">
         <label>商户</label>
         <select class="span11 select2" name="mchId">
@@ -116,7 +116,7 @@
         </select>
 
         <button type="submit" class="btn btn-primary search-submit">查询</button>
-        <button type="reset" class="btn btn-warning search-reset">重置</button>
+        <button class="btn btn-warning search-reset">重置</button>
     </div>
 </form>
 #parse("common/list_end.vm")
@@ -151,18 +151,9 @@
             }
         });
 
-        function validateTime(begin, end) {
-            if (begin == "" || end == "") {
-                return false;
-            }
-            var begin = new Date(begin.replace("-", "/").replace("-", "/"));
-            var end = new Date(end.replace("-", "/").replace("-", "/"));
-            var result = end - begin;
-            if (result > 32 * 24 * 60 * 60 * 1000) {
-                return false;
-            }
-            return true;
-        }
+        $(".search-reset").click(function () {
+            $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
+        });
 
         $("table").delegate(".order-status-search", "click", function (e) {
             var _this = e.currentTarget;
