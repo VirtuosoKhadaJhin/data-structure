@@ -261,9 +261,10 @@
             }
 
             if (submitAuth) {
-                // $("#contractParameterForm").submit();
+                $("#contractParameterForm").submit();
+            }else{
+                alert("请输入有效的keyCode!");
             }
-            alert("请输入有效的keyCode!");
 
         }
 
