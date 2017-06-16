@@ -129,7 +129,7 @@
 </div>
 
 #parse("common/list_mid.vm")
-<form class="form-horizontal " method="get">
+<form class="form-horizontal search-form" method="get">
     <div class="control-group" style="margin-bottom: 10px">
         <label>分类</label>
         <select class="span7 select2 " name="baseNameId" style="min-width: 203px;">
