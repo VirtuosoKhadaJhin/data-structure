@@ -14,7 +14,7 @@ import com.nuanyou.cms.entity.order.*;
 import com.nuanyou.cms.entity.user.PasUserProfile;
 import com.nuanyou.cms.model.OrderSave;
 import com.nuanyou.cms.model.PageUtil;
-import com.nuanyou.cms.remote.RemoteOrderService;
+import com.nuanyou.cms.remote.service.RemoteOrderService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.OrderService;
 import com.nuanyou.cms.util.ExcelUtil;

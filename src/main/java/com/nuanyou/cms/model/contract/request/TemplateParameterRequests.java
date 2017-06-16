@@ -12,7 +12,7 @@ public class TemplateParameterRequests {
 
     private List<Long> paramId;
 
-    private  List<String> name;
+    private List<String> name;
 
     private List<String> key;
 
@@ -25,12 +25,13 @@ public class TemplateParameterRequests {
     private List<Boolean> nullable;
 
     private List<String> hint;
+    private String[] hint1;
 
     private List<String> remark;
 
     private List<Boolean> multiValuable;
 
-    private  List<String> regex;
+    private List<String> regex;
 
     public List<Long> getParamId() {
         return paramId;
@@ -120,44 +121,49 @@ public class TemplateParameterRequests {
         this.regex = regex;
     }
 
-    public boolean validateKeys(){
-        if(key==null){
+    public String[] getHint1() {
+        return hint1;
+    }
+
+    public void setHint1(String[] hint1) {
+        this.hint1 = hint1;
+    }
+
+    public boolean validateKeys() {
+        if (key == null) {
             return true;
         }
         List<String> key = this.key;
-        if(key.size()!=new HashSet<>(key).size()){
-            return  false;
+        if (key.size() != new HashSet<>(key).size()) {
+            return false;
         }
-        return  true;
+        return true;
 
 
     }
 
 
-    public boolean validateTemplate(){
-        if(name==null){
+    public boolean validateTemplate() {
+        if (dataType == null) {
             return true;
         }
-        Integer size=name.size();
-        if(key.size()!=size||
-                defaultValue.size()!=size||
-                dataType.size()!=size||
-                hint.size()!=size||
-                remark.size()!=size||
-                regex.size()!=size){
+        Integer size = dataType.size();
+        if (
+                key.size() != size ||
+                        name.size() != size) {
             return false;
 
         }
 
         for (int i = 0; i < name.size(); i++) {
             String one = name.get(i);
-            if(StringUtils.isBlank(one)){
+            if (StringUtils.isBlank(one)) {
                 return false;
             }
         }
         for (int i = 0; i < key.size(); i++) {
             String one = key.get(i);
-            if(StringUtils.isBlank(one)){
+            if (StringUtils.isBlank(one)) {
                 return false;
             }
         }
@@ -170,14 +176,10 @@ public class TemplateParameterRequests {
 
         for (int i = 0; i < dataType.size(); i++) {
             Integer one = dataType.get(i);
-            if(one==null){
+            if (one == null) {
                 return false;
             }
         }
-
-
-
-
 
 
         return true;

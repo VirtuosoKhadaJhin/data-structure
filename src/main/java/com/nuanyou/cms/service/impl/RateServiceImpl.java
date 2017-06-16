@@ -39,6 +39,12 @@ public class RateServiceImpl implements RateService {
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 Predicate[] pre = new Predicate[predicate.size()];
+                Predicate krw = cb.equal(root.get("code"), "KRW");
+                Predicate jpy = cb.equal(root.get("code"), "JPY");
+                Predicate eur = cb.equal(root.get("code"), "EUR");
+                Predicate thb = cb.equal(root.get("code"), "THB");
+                Predicate or = cb.or(krw, jpy, eur, thb);
+                predicate.add(or);
                 return query.where(predicate.toArray(pre)).getRestriction();
             }
         }, pageable);

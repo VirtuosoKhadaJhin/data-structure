@@ -27,6 +27,29 @@ public class TemplateParameterRequest {
 
     private String regex;
 
+    private String note;
+
+    private Long referenceId;
+
+    private Long dateTypeMappingId;
+
+
+    public Long getReferenceId() {
+        return referenceId;
+    }
+
+    public void setReferenceId(Long referenceId) {
+        this.referenceId = referenceId;
+    }
+
+    public Long getDateTypeMappingId() {
+        return dateTypeMappingId;
+    }
+
+    public void setDateTypeMappingId(Long dateTypeMappingId) {
+        this.dateTypeMappingId = dateTypeMappingId;
+    }
+
     public String getName() {
         return name;
     }
@@ -113,5 +136,14 @@ public class TemplateParameterRequest {
 
     public void setRegex(String regex) {
         this.regex = regex;
+    }
+
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

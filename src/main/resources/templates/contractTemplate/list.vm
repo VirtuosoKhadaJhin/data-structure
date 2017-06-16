@@ -9,7 +9,7 @@
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>列表</h5>
-    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
+    <a class="btn btn-mini btn-info buttons" href="edit?optype=1">新增</a>
 </div>
 <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
     <thead>
@@ -19,6 +19,7 @@
         <th>标题</th>
         <th>类型</th>
         <th>发布状态</th>
+        <th>最新更新时间</th>
         <th class="table-set" width="90px">操作</th>
     </tr>
     </thead>
@@ -30,9 +31,19 @@
             <td>$!entity.title</td>
             <td>#if($!entity.type==1)主合同#else 附加合同#end</td>
             <td>$!entity.templateStatus.name</td>
+            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.statusChangeTime)</td>
             <td>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
-                <a data-id="$!entity.id" class="btn btn-danger btn-mini publish">发布</a>
+                #if($!entity.templateStatus=="Release")
+                    <a data-id="$!entity.id" class="btn btn-info btn-mini discard">废弃</a>
+                    <a data-id="$!entity.id" class="btn btn-info btn-mini delete">删除</a>
+                    <a href="edit?optype=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
+                #end
+                #if($!entity.templateStatus=="Discard"||$!entity.templateStatus=="Draft")
+                    <a data-id="$!entity.id" class="btn btn-info btn-mini publish">发布</a>
+                    <a data-id="$!entity.id" class="btn btn-info btn-mini delete">删除</a>
+                    <a href="edit?optype=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
+                #end
+                <a href="edit?optype=4&id=$!entity.id" class="btn btn-info btn-mini">复制</a>
             </td>
         </tr>
         #end
@@ -100,6 +111,53 @@
             });
         });
     });
+
+
+    $(".discard").each(function (i, o) {
+        $(o).on("click", function (event) {
+            if (!confirm('确实要废弃吗?'))
+                return;
+            var dataId = $(this).attr("data-id");
+            $.ajax({
+                url: 'discard',
+                data: {id: dataId},
+                type: 'get',
+                success: function (result) {
+                    if (result.code == 0) {
+                        window.location.reload();
+                    } else {
+                        alert("操作失败:" + result.msg);
+                    }
+                }
+            });
+        });
+    });
+
+
+
+    $(".delete").each(function (i, o) {
+        $(o).on("click", function (event) {
+            if (!confirm('确实要删除吗?'))
+                return;
+            var dataId = $(this).attr("data-id");
+            $.ajax({
+                url: 'delete',
+                data: {id: dataId},
+                type: 'get',
+                success: function (result) {
+                    if (result.code == 0) {
+                        window.location.reload();
+                    } else {
+                        alert("操作失败:" + result.msg);
+                    }
+                }
+            });
+        });
+    });
+
+
+
+
 </script>
 
 

@@ -1,9 +1,11 @@
 package com.nuanyou.cms.model.contract.output;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nuanyou.cms.model.contract.enums.TemplateStatus;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,6 +23,8 @@ public class ContractTemplate {
     private Integer type;
 
     private Integer status;
+
+    private Date statusChangeTime;
 
     private TemplateStatus templateStatus;
 
@@ -107,5 +111,19 @@ public class ContractTemplate {
 
     public void setTemplateStatus(TemplateStatus templateStatus) {
         this.templateStatus = templateStatus;
+    }
+
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @ApiModelProperty(value = "合同截止时间")
+    @JsonProperty("statuschangetime")
+    public Date getStatusChangeTime() {
+        return statusChangeTime;
+    }
+
+
+
+    public void setStatusChangeTime(Date statusChangeTime) {
+        this.statusChangeTime = statusChangeTime;
     }
 }

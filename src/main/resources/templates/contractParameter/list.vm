@@ -11,16 +11,16 @@
     <h5>列表</h5>
     <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
 </div>
-<table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+<div style="overflow: auto;width: 100%">
+<table class="table table-bordered data-table dataTable" id="DataTables_Table_0" >
     <thead>
     <tr role="row">
         <th>ID
         </th>
-        <th>名称(</th>
+        <th>名称</th>
         <th>key</th>
         <th>默认值</th>
-        <th>类型</th>
-        <th>备选数据</th>
+        <th>数据类型</th>
         <th>是否可编辑</th>
         <th>是否为空</th>
         <th>正则表达式</th>
@@ -36,16 +36,30 @@
         #foreach($entity in $!page.content)
         <tr class="odd gradeX">
             <td>$!entity.id</td>
-            <td>$!entity.name</td>
+            <td>
+                <a href="$!link.contextPath/contractParameter/edit?op=3&id=1" class="alink">
+                    $!entity.name.key
+                </a>
+            </td>
             <td>$!entity.key</td>
             <td>$!entity.defaultValue</td>
-            <td> #if($!entity.type==1)主合同#else 附加合同#end</td>
-            <td>$!entity.source</td>
+            <td>
+                #if($!entity.type==1)
+                文本
+            #elseif($!entity.type==2)
+                整数
+            #elseif($!entity.type==3)
+                小数
+            #elseif($!entity.type==4)
+                日期
+            #elseif($!entity.type==5)
+                其他数据
+            #end</td>
             <td>#if($!entity.editable)是#else 否#end</td>
             <td>#if($!entity.nullable)是#else 否#end</td>
             <td>$!entity.regex</td>
-            <td>$!entity.hint</td>
-            <td>$!entity.remark</td>
+            <td>$!entity.hint.key</td>
+            <td>$!entity.remark.key</td>
             <td>#if($!entity.multiValuable)是#else 否#end</td>
             <td>#if($!entity.common)是#else 否#end</td>
             <td>#if($!entity.custom)是#else 否#end</td>
@@ -58,6 +72,7 @@
         #end
     </tbody>
 </table>
+ </div>
 #parse("common/list_mid.vm")
 <form>
     <button type="submit" class="btn btn-primary">查询</button>

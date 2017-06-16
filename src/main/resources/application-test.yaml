@@ -67,11 +67,11 @@ AWS:
       refundFail: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refundFail
 
 sso:
-  urlPatterns: /dd
+  urlPatterns: /*
   urlExcludePattern: ^/test|^/dist/.*|^/favicon.*
   loginUrl: https://testuser.api.91nuanyou.com/oauth/corp
   reLogin: false
-  serverName: http://127.0.0.1:8085
+  serverName: http://testmerchant.99mice.com
   validateCodeUrl: https://testuser.api.91nuanyou.com/corp/oauth/access_token
   stateExpiredInMilliSeconds: 120000
 
@@ -79,10 +79,3 @@ sso:
 
 contractService: http://test.contract.91nuanyou.com
 accountService: http://testaccount.99mice.com
-merchantSettlement:
-  default:
-    daytype: 1
-    startprice: 1
-contractConfig:
-  poundageNames: poundage_huigou,poundage_radio,poundage
-  paymentDaysNames: settle_day,account_period_huigou

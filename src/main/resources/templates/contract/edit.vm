@@ -14,7 +14,7 @@
             <div id="breadcrumb">
                 <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
                 <a href="list" class="tip-bottom" data-original-title="">合同管理</a>
-                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
+                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">查看</a>
             </div>
         </div>
 
@@ -98,13 +98,26 @@
                                         $!dateFormatter.format("yyyy-MM-dd",$!entity.endTime)
                                     </div>
                                 </div>
+                            #foreach($param in $parametersLangs.entrySet())
+                                <div class="control-group">
+                                    <label class="control-label">$!param.key</label>
+                                    <div class="controls" >
+                                        $!param.value
+                                    </div>
+                                </div>
+                            #end
 
 
 
                                 <div class="form-actions">
-                                    <a class="btn btn-success btn-mini verify" data-id="$!entity.id" valid="false">驳回</a>
-                                    #if($!entity.businessLicense && $!entity.paperContract)
-                                        <a class="btn btn-info btn-mini verify" data-id="$!entity.id" valid="true">通过</a>
+
+                                    #if($!entity.status==4)
+                                        <span style="color: red">已通过</span>
+                                        #elseif ($!entity.status==1)
+                                        <span style="color: red">已驳回</span>
+                                        #else
+                                        <input type="button" class="verify btn btn-info btn-mini " value="通过" data-id="$!entity.id" valid="true">
+                                        <input type="button" class="verify btn btn-info btn-mini " value="驳回"  data-id="$!entity.id" valid="false">
                                     #end
                                     <a class="btn btn-success btn-mini" href="list">返回</a>
                                 </div>
@@ -121,9 +134,9 @@
     #include("common/js-support.vm")
 
     <script type="text/javascript">
-
         $(".verify").each(function (i, o) {
             $(o).on("click", function (event) {
+                $(".verify").attr("disabled", true);
                 var id = $(this).attr("data-id");
                 var valid = $(this).attr("valid");
                 var message;
@@ -134,9 +147,9 @@
                 }
                 if (confirm(message)) {
                     $.ajax({
-                        url: 'verify',
+                        url: 'verify?date='+new Date(),
                         data: {contractId: id, valid: valid},
-                        type: 'get',
+                        type: 'post',
                         success: function (result) {
                             if (result.code == 0) {
                                 alert("操作成功");
@@ -144,8 +157,11 @@
                             } else {
                                 alert("Fail Code: " + result.code + " MSG: " + result.msg);
                             }
+                            $(".verify").attr("disabled", false);
                         }
                     });
+                }else{
+                    $(".verify").attr("disabled", false);
                 }
             })
         });

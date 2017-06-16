@@ -5,23 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>暖游 后台管理系统 菜单管理</title>
     #include("common/css-support.vm")
+    <link rel="stylesheet" href="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.css">
+    <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
 </head>
 <body>
 <div id="content">
     <div id="content-header">
         <div id="breadcrumb">
             <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-            <a href="/contractTemplate/list" class="tip-bottom" data-original-title="">模板参数管理</a>
+            <a href="list" class="tip-bottom" data-original-title="">模板参数管理</a>
             <a href="#" class="tip-bottom" data-original-title="">编辑</a>
         </div>
     </div>
     <div class="container-fluid">
         <div class="row-fluid">
-            <div class="span12">
+            <div class="span20">
                 <div class="widget-box">
                     <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                         <h5>编辑&查看</h5>
-                        <input id="type" name="type" type="hidden" value="$!type">
+                        <input id="optype" name="type" type="hidden" value="$!optype">
                     </div>
                     <div class="widget-content nopadding">
                         <form action="update" method="post" a
@@ -50,166 +52,171 @@
                                         <option value="2"  #if($!entity.type==2)selected #end>附加合同</option>
                                     </select>
                                 </div>
-                                <label class="control-label">选择已有参数</label>
-                                <div class="controls">
-                                    <select class="span5 select2" id="selectedParamIds" name="selectedParamIds"
-                                            multiple>
-                                        <option value="0">全部</option>
-                                        #foreach($param in $!allParams)
-                                            <option value="$!param.id">
-                                                $!param.id  >>  $!param.key >>  $!param.name >> $!param.remark
-                                            </option>
-                                        #end
-                                    </select>
-                                </div>
-                                <label class="control-label">自定义参数</label>
+
+
+                                <label class="control-label"></label>
                                 <div class="controls">
                                     <div style="overflow: auto;width: 100%">
-
-                                        <table class="table table-bordered data-table dataTable" id="mytable"
-                                               style="width: 80%">
-                                            <tbody>
+                                        <table class="table table-bordered data-table dataTable" id="mytable">
+                                            <thead>
                                             <tr id="0">
                                                 <th id="roleSuperid0">key</th>
-                                                <th id="roleSuperid0">name</th>
+                                                <th id="roleSuperid0">参数名</th>
                                                 <th id="roleSuperid0">默认值</th>
-                                                <th id="roleSuperid0">数据类型</th>
+                                                <th id="roleSuperid0">内容填写类型</th>
                                                 <th id="roleSuperid0">是否可编辑</th>
-                                                <th id="roleSuperid0">是否可NULL</th>
-                                                <th id="roleSuperid0">弹出提示</th>
-                                                <th id="roleSuperid0">是否多选</th>
-                                                <th id="roleSuperid0">正则</th>
-                                                <th id="roleSuperid0">默认提示</th>
-                                                <th><input type="button" value="添加行" class="addRow btn-info"></th>
+                                                <th id="roleSuperid0">是否可为空</th>
+                                                <th id="roleSuperid0">栏位提示</th>
+                                                <th id="roleSuperid0">参数引用ID</th>
+                                                <th style="text-align: left" style="width: 15%" class="operateColumn">
+                                                    <a class="btn btn-info btn-mini addRow">手动添加</a>
+                                                    <a class="btn btn-info btn-mini selectParameter">选择添加</a>
+                                                </th>
                                             </tr>
-
+                                            </thead>
+                                            <tbody>
                                                 #foreach($param in $!selectedParams)
-                                                <tr>
-                                                    <td><input name="key" value="$!param.key" style="width: 200px"
-                                                               readonly>
-                                                        <input name="paramId" value="$!param.id" style="width: 90px"
-                                                               type="hidden"
-                                                               readonly>
+                                                <tr class="rowSpan">
+                                                    <td><span class="paramId">$!param.id</span> : <span
+                                                            class="key">$!param.key</span>
+                                                        <input name="paramId" type="hidden" value="$!param.id"
+                                                               style="width: 200px" readonly>
                                                     </td>
-                                                    <td><input name="name" value="$!param.name" style="width: 50px"
-                                                               readonly></td>
-                                                    <td><input name="defaultValue" value="$!param.defaultValue"
-                                                               style="width: 50px" readonly></td>
+                                                    <td>$!param.name.content</td>
+                                                    <td>$!param.defaultValue</td>
                                                     <td>
-                                                        <select name="dataType" style="width: 70px" readonly>
-                                                            <option value="1"  #if($!param.type==1)selected #end>
-                                                                文本
-                                                            </option>
-                                                            <option value="2" #if($!param.type==2)selected #end>整型
-                                                            </option>
-                                                            <option value="3" #if($!param.type==3)selected #end>
-                                                                浮点型
-                                                            </option>
-                                                            <option value="4" #if($!param.type==4)selected #end>日期
-                                                            </option>
-                                                            <option value="5" #if($!param.type==5)selected #end>
-                                                                备选数据
-                                                            </option>
-                                                        </select>
-
+                                                        #if($!param.type==1)
+                                                            文本
+                                                        #elseif($!param.type==2)
+                                                            整数
+                                                        #elseif($!param.type==3)
+                                                            小数
+                                                        #elseif($!param.type==4)
+                                                            日期
+                                                        #end
                                                     </td>
 
                                                     <td>
-                                                        <select name="editable" style="width: 70px" readonly>
-                                                            <option value="true"
-                                                                    #if($!param.editable==true)selected #end>true
-                                                            </option>
-                                                            <option value="false"
-                                                                    #if($!param.editable==false)selected #end>false
-                                                            </option>
-                                                        </select>
+                                                        #if($!param.editable==true)
+                                                            是
+                                                        #else
+                                                            否
+                                                        #end
                                                     </td>
                                                     <td>
-                                                        <select name="nullable" style="width: 70px" readonly>
-                                                            <option value="true"
-                                                                    #if($!param.nullable==true)selected #end>true
-                                                            </option>
-                                                            <option value="false"
-                                                                    #if($!param.nullable==true)selected #end>false
-                                                            </option>
-                                                        </select>
-                                                    </td>
-                                                    <td><input name="hint" style="width: 50px" readonly
-                                                               value="$!param.hint"></td>
-                                                    <td>
-                                                        <select name="multiValuable" style="width: 70px" readonly>
-                                                            <option value="true"
-                                                                    #if($!param.nullable==true)selected #end>true
-                                                            </option>
-                                                            <option value="false"
-                                                                    #if($!param.nullable==true)selected #end>false
-                                                            </option>
-                                                        </select>
-                                                    </td>
-                                                    <td><input name="regex" readonly style="width: 100px"
-                                                               value="$!param.regex"></td>
-                                                    <td><input name="remark" readonly style="width: 100px"
-                                                               value="$!param.remark"></td>
-                                                    <td style="text-align: center">
 
-                                                        <input type='button' value="删除行"
-                                                               class="removeRow btn-warning">
+                                                        #if($!param.nullable==true)
+                                                            是
+                                                        #else
+                                                            否
+                                                        #end
+                                                    </td>
+                                                    <td>$!param.remark.content</td>
+                                                    <td>$!param.referenceId</td>
+                                                    <td style="text-align: left" class="operateColumn">
+                                                        <a class="btn btn-info btn-mini removeRow">删除</a>
                                                     </td>
                                                 </tr>
                                                 #end
 
-                                            <tr class="firstRow" disabled="disabled" style="display: none">
+
+                                            <!--inputRowExample-->
+                                            <tr class="inputRowExample" style="display: none">
                                                 <td>
-                                                    <input name="key" style="width: 200px">
-                                                    <input name="paramId"type="hidden" value="" style="width: 90px" readonly>
+                                                    <input name="key" style="width: 150px">
+                                                    <input name="paramId" type="hidden" value="" style="width: 150px"
+                                                           readonly>
                                                 </td>
-                                                <td><input name="name" style="width: 50px"></td>
-                                                <td><input name="defaultValue" style="width: 50px"></td>
                                                 <td>
-                                                    <select name="dataType" style="width: 70px" readonly>
-                                                        <option value="1">文本</option>
-                                                        <option value="2">整型</option>
-                                                        <option value="3">浮点型</option>
-                                                        <option value="4">日期</option>
-                                                        <option value="5">备选数据</option>
+                                                    <input name="nameLabel" style="width: 150px" class="langsAutoComplete" langsKeyName="name">
+                                                    <input name="name" type="hidden" >
+                                                    <a class="btn btn-info btn-mini addLang" langsKeyName="name" langsValueName="nameLabel">
+                                                        <i class="icon-plus"></i>
+                                                    </a>
+                                                    <br>
+                                                </td>
+                                                <td><input name="defaultValue" style="width: 90px"></td>
+                                                <td>
+                                                    <select name="dateTypeMappingId" style="width: 150px">
+                                                        #foreach($dateTypeMapping in $!dataTypeMappings)
+                                                            <option value="$!dateTypeMapping.id">
+                                                                $!dateTypeMapping.name
+                                                            </option>
+                                                        #end
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <select name="editable" style="width: 70px">
-                                                        <option value="true">true</option>
-                                                        <option value="false">false</option>
+                                                    <select name="editable" style="width: 90px">
+                                                        <option value="true">是</option>
+                                                        <option value="false">否</option>
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <select name="nullable" style="width: 70px">
-                                                        <option value="true">true</option>
-                                                        <option value="false">false</option>
+                                                    <select name="nullable" style="width: 90px">
+                                                        <option value="true">是</option>
+                                                        <option value="false">否</option>
                                                     </select>
                                                 </td>
-                                                <td><input name="hint" style="width: 50px"></td>
                                                 <td>
-                                                    <select name="multiValuable" style="width: 70px">
-                                                        <option value="true">true</option>
-                                                        <option value="false">false</option>
-                                                    </select>
+
+                                                    <input name="remarkLabel" style="width: 150px" class="langsAutoComplete" langsKeyName="remark">
+                                                    <input name="remark"  type="hidden">
+                                                    <a class="btn btn-info btn-mini addLang" langsKeyName="remark" langsValueName="remarkLabel">
+                                                        <i class="icon-plus"></i>
+                                                    </a>
+
+
                                                 </td>
-                                                <td><input name="regex" style="width: 100px"></td>
-                                                <td><input name="remark" style="width: 100px"></td>
-                                                <td style="text-align: center">
-                                                    <input type='button' value="删除行" class="removeRow btn-warning">
+                                                <td>
+                                                    <input name="referenceId" placeholder="引用参数" class="referParam" style="width: 90px"
+                                                           readonly>
+                                                </td>
+                                                <td style="text-align: left;width: 300px" class="operateColumn">
+                                                    <a class="btn btn-info btn-mini removeRow">删除</a>
                                                 </td>
                                             </tr>
+                                            <!--input-->
+
+                                            <!--span-->
+                                            <tr class="rowSpanExample" style="display: none">
+                                                <td>
+                                                    <span class="paramId"></span> : <span class="key"></span>
+                                                    <input name="paramId" type="hidden" value="$!param.id"
+                                                           style="width: 200px" readonly>
+                                                </td>
+                                                <td><span class="name"></span></td>
+                                                <td><span class="defaultValue"></span></td>
+                                                <td>
+
+                                                    <span class="dataType"></span>
+                                                </td>
+                                                <td>
+                                                    <span class="editable"></span>
+                                                </td>
+                                                <td>
+                                                    <span class="nullable"></span>
+                                                </td>
+                                                <td>
+                                                    <span class="remark"></span>
+                                                </td>
+                                                <td>
+                                                    <span class="referId"></span>
+                                                </td>
+                                                <td style="stext-align: left;width: 300px">
+                                                    <a class="btn btn-info btn-mini removeRow operateColumn">删除</a>
+                                                </td>
+                                            </tr>
+                                            <!--span-->
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                                 <div class="form-actions">
-                                    #if($!type==2 || $!type==1)
+                                    #if($!optype==2 || $!optype==1|| $!optype==4)
                                         <button type="button" class="btn btnSave btn-success">保存
                                         </button>
-                                    #elseif($!type==3)
-                                        <button type="button" class="btn btnSave btn-success">保存
-                                        </button>
+                                    #elseif($!optype==3)
+                                        <a href="edit?optype=2&id=$!entity.id" class="btn btn-info">编辑</a>
                                     #end
                                     <a class="btn btn-primary" href="list">返回</a>
                                 </div>
@@ -221,33 +228,377 @@
     </div>
 </div>
 </div>
+
+<!--***************************************选择参数*************************************************************-->
+<div id="parameterModal" class="modal hide fade" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>参数选择</h3>
+    </div>
+    <div class="modal-body">
+        <div class="control-group">
+            <label class="control-label">可选参数列表(<span style="color:red">可多选</span>)</label>
+            <div class="controls">
+                <select class="span5 select2" id="selectedParamId" name="selectedParamId" multiple>
+                    #foreach($param in $!selectableParams)
+                        <option value="$!param.id">
+                            key:  $!param.key ; 属性名:  $!param.name.key 备注:$!param.note
+                        </option>
+                    #end
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" id="parameterSave" class="btn btn-primary">保存</a>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+<!--***************************************选择参数*************************************************************-->
+
+
+<!--***************************************选择语言*************************************************************-->
+<div id="selectLangsModal" class="modal hide fade" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>多语言选择</h3>
+    </div>
+    <div class="modal-body">
+        <div class="control-group">
+            <label class="control-label">多语言分类</label>
+            <div class="controls">
+                <select class="span5 select2" name="langsCategoryId" onchange="dictionaryList()">
+                    <option value="0">全部</option>
+                    #foreach($e in $!selectableLangsCategory)
+                        <option value="$!e.id">$!e.name</option>
+                    #end
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">多语言列表</label>
+            <div class="controls">
+                <select class="span5 select2" id="langsKey" name="selectedLangsKey">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" id="selectLangSave" class="btn btn-primary">保存</a>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+<!--***************************************选择语言*************************************************************-->
+
+
+<!--***************************************选择引用*************************************************************-->
+<
+<div id="referModal" class="modal hide fade" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>引用参数选择</h3>
+    </div>
+    <div class="modal-body">
+        <div class="control-group">
+            <label class="control-label">可选参数列表</label>
+            <div class="controls">
+                <select class="span5 select2" id="referIds" name="referIds">
+                    #foreach($param in $!selectableParams)
+                        <option value="$!param.id">
+                            id: $!param.id key:  $!param.key ; 属性名:  $!param.name.key 备注:$!param.note
+                        </option>
+                    #end
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" id="referSave" class="btn btn-primary">保存</a>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+<!--***************************************选择引用*************************************************************-->
+
+<!--***************************************通用新增语言*************************************************************-->
+<div id="addLangsModal" class="modal hide fade" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>新增多语言</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class="control-group">
+            <label class="control-label">
+                keyCode<font style="color: red;margin: 0px;padding: 5px;">*</font>：</label>
+            <div class="controls">
+                <input for="name" id="keyCode" readonly="readonly" name="keyCode" type="text"
+                       class="span5"
+                       value="$!entity.keyCode" onchange="verifykeyCode()">
+                <label id="keyCodeStatus" class="control-label"
+                       style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">多语言分类</label>
+            <div class="controls">
+                <select class="span5 select2 " id="categoryId" name="categoryId" onchange="keyCodeRealTime()">
+                    <option value="" selected="selected">全部分类</option>
+                    #foreach($e in $!categories)
+                        <option value="$!e.id">$!e.name</option>
+                    #end
+                </select>
+            </div>
+        </div>
+
+
+        #foreach($langCountry in $!langsCountries)
+            #if($!langCountry.key == 1 || $!langCountry.key == 2)
+                <div class="control-group">
+                    <label class="control-label">
+                        $!langCountry.desc ($!langCountry.value)
+                        <font style="color: red;margin: 0px;padding: 5px;">*</font>
+                        ：</label>
+                    <div class="controls">
+                        #if($!langCountry.key == 1 || $!langCountry.key == 2)
+                            <input name="$!langCountry.key" data-key="$!langCountry.key" type="text"
+                                   onkeyup="keyCodeRealTime()" data-name="langs"
+                                   class="span5 countryLanguage">
+                        #end
+                        <label id="requiredKey_$!langCountry.key" class="control-label"
+                               style="width:80px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">必填项</label>
+                    </div>
+                </div>
+            #end
+        #end
+
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" id="addLangSave" class="btn btn-primary saveLangsDictionary">保存</a>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+<!--***************************************通用新增语言*************************************************************-->
+
+
 </body>
     #include("common/js-support.vm")
     #include("common/image-support.vm")
 <script src="/dist/js/cascade-select.js"></script>
+##<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
+    keyCodeRealTime();
+    /**
+     * 验证keyCode是否重复
+     */
+    function verifykeyCode() {
+        var request = {};
+        var keyCode = $("input[name='keyCode']").val();
+
+        request.keyCode = keyCode;
+        $.ajax({
+            url: '/langsDictionary/verifykeyCode',
+            data: JSON.stringify(request),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    console.log(result.data);
+                    if (!result.data) {
+                        $("#keyCodeStatus").show();
+                        $("#keyCode").css("border", "1px solid red");
+                        $("#addLangSave").attr("style", "background-color: gray;");
+                        $(".saveLangsDictionary").attr("disabled", true);
+                    } else {
+                        $("#keyCodeStatus").hide();
+                        $("#addLangSave").attr("style", "");
+                        $("#keyCode").css("border", "");
+                        $(".saveLangsDictionary").attr("disabled", false);
+                    }
+                }
+            }
+        });
+    }
+    /**
+     * 根据下拉选择的分类填充语言列表
+     */
+    function dictionaryList() {
+        var id = $("select[name='langsCategoryId']").val();
+        console.log(id);
+        $.ajax({
+            url: '/langsDictionary/api/list',
+            data: {id: id},
+            type: 'post',
+            dataType: 'json',
+            success: function (result) {
+                if (result.code == 0) {
+                    // langsKey
+                    console.log(result.data);
+                    $("#langsKey").empty();
+                    var langsDictionarys = result.data;
+                    for (var i = 0; i < langsDictionarys.length; i++) {
+                        var option = "<option value='" + langsDictionarys[i].id + "'>" + langsDictionarys[i].language + "</option>";
+                        $("#langsKey").append(option);
+                    }
+                } else {
+                    alert(result.msg);
+                }
+            }
+        });
+    }
+
+
+    /** ########################多语言common弹出框增加######################## */
+     /**
+     * 通用弹窗
+     */
+    var localeLangs = false;
+    var localelangsKey;
+
+    /**
+     * 检验必填项
+     */
+    function checkRequiredParams() {
+        var requiredUS = $("input[name='1']").val();
+        var requiredZH = $("input[name='2']").val();
+        var categoryId = $("select[name='categoryId']").val();
+
+        if (requiredUS == null || requiredUS == "") {
+            $("#requiredKey_1").show();
+            $("input[name='1']").css("border", "1px solid red");
+            return false;
+        } else if (requiredZH == null || requiredZH == "") {
+            $("#requiredKey_2").show();
+            $("input[name='2']").css("border", "1px solid red");
+            return false;
+        } else if (categoryId == null || categoryId == "") {
+            alert("请选择分类!");
+            return false;
+        } else {
+            $("#requiredKey_1").hide();
+            $("input[name='1']").css("border", "");
+            $("#requiredKey_2").hide();
+            $("input[name='2']").css("border", "");
+            return true;
+        }
+        return true;
+    }
+
+
+    /**
+     * 实时更新keyCode展示
+     */
+    function keyCodeRealTime() {
+        // 拼接KeyCode
+        var requiredUS = $("input[name='1']").val();
+        // 如果是英文,则要增加改变事件,用来改变keyCode
+        $("input[name='1']").attr("onchange", "keyCodeRealTime()");
+        // 选择的分类
+        var categoryId = $("select[name='categoryId']").val();
+        if (categoryId != null && categoryId != "") {
+            var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
+            $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
+        }
+        if (categoryId == null || categoryId == "") {
+            $("input[name='keyCode']").val(requiredUS);
+        }
+        // keyCode初始化值
+        if (requiredUS != null && requiredUS != "") {
+            if (categoryId != null && categoryId != "") {
+                var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
+                $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
+            }
+        }
+        verifykeyCode();
+    }
+
+
     $(document).ready(function () {
+        var type = $!optype;
+        var selectedIds =$!selectedIds;
+        var currLangKeyInput;
+        var currLangValueInput;
+        var curRefer;
+        var inputRowExample = $(".inputRowExample").html();
+        var spanRowExample = $(".rowSpanExample").html();
 
 
-        var tr=$(".firstRow").html();
+        if (type == 3) {
+            $(":text").attr("disabled", "disabled");
+            $("select").attr("disabled", "disabled");
+            $(".removeRow").css("display", "none");
+            $(".addRow").css("display", "none");
+            $(".selectParameter").css("display", "none");
+            $(".operateColumn").css("display", "none");
+        }
+
         $(".btnSave").click(function () {
+            //remove examples
+            $(".inputRowExample").remove();
+            $(".rowSpanExample").remove();
+
+            //validate form
             var form = $(".templateFormValidate");
-            $(".firstRow").remove();
+            if (!form.valid()) {
+                return false;
+            }
+
+            //begin to generate datas
+            var request = {};
+            var list = [];
+            var paramIds = [];
+            var optype = $("#optype").val();
+            $(".editRow").each(function (i, o) {
+                var templateParameterRequest = {};
+                templateParameterRequest.referId = $(o).find("input[name='referId']").val();
+                templateParameterRequest.name = $(o).find("input[name='name']").val();
+                templateParameterRequest.key = $(o).find("input[name='key']").val();
+                templateParameterRequest.defaultValue = $(o).find("input[name='defaultValue']").val();
+                //templateParameterRequest.type = $(o).find("select[name='dataType']").val();
+                templateParameterRequest.editable = $(o).find("select[name='editable']").val();
+                templateParameterRequest.nullable = $(o).find("select[name='nullable']").val();
+                templateParameterRequest.remark = $(o).find("input[name='remark']").val();
+                templateParameterRequest.referenceId = $(o).find("input[name='referenceId']").val();
+                templateParameterRequest.dateTypeMappingId = $(o).find("select[name='dateTypeMappingId']").val();
+                templateParameterRequest.referName = $(o).find("input[name='referName']").val();
+                list.push(templateParameterRequest);
+            });
+            $("input[name='paramId']").each(function (i, o) {
+                paramIds.push($(o).val());
+            });
+            request.title = $("input[name='title']").val();
+            request.countryId = $("select[name='countryId']").val();
+            request.templateType = $("select[name='templateType']").val();
+            request.type = $("input[name='type']").val();
+            request.id = $("input[name='id']").val();
+            request.paramIds = paramIds;
+            request.list = list;
+            request.optype = $("#optype").val();
+            if (optype == 4) {
+                request.id = null;
+                paramIds.sort();
+                selectedIds.sort();
+                if (paramIds.join() == selectedIds.join() && list.length <= 0) { //JSON.stringify(a1) == JSON.stringify(a2)
+                    return alert("复制操作下的参数列表没有改动！");
+                }
+            }
             $.ajax({
                 url: 'saveTemplate',
-                data: $(form).serialize(),
+                data: JSON.stringify(request),
                 type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
                 success: function (result) {
                     if (result.code == 0) {
                         alert("操作成功");
-                        window.location.href = "/contractTemplate/edit?type=2&id=" + result.data;
+                        window.location.href = "/contractTemplate/edit?optype=3&id=" + result.data;
                     } else {
                         alert(result.msg);
                     }
                 }
             });
         });
-
 
         $("#mytable").delegate(".removeRow", "click", function (e) {
             var currEle = e.currentTarget;
@@ -256,32 +607,299 @@
 
         $("#mytable").delegate(".addRow", "click", function (e) {
             var table = $("#mytable");
-            //var trHTML=$("tr[name='firstRow']").eq(0).prop('outerHTML');
-            var trHTML = "<tr>" + tr + "</tr>";
+            var trHTML = "<tr class='editRow eachRow'>" + inputRowExample + "</tr>";
             table.append(trHTML);
+            var last = lastInputRow = $('#mytable .editRow').eq(0);
+            $(".langsAutoComplete").autocomplete();
         });
+
+
+        /*选择参数*/
+        $("#mytable").delegate(".selectParameter", "click", function (e) {
+            var paramsAll = $("select[name='selectedParamId']");
+            var paramIds = [];
+            $("input[name='paramId']").each(function (i, o) {
+                paramIds.push($(o).val());
+            });
+            paramsAll.empty();
+            $.ajax({
+                url: 'getAllParams',
+                data: {},
+                type: 'get',
+                dataType: 'json',
+                async: false,
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        var params = result.data; //template相关的params  页面相关的params
+                        for (var i = 0; i < params.length; i++) {
+                            var isSame = false;
+                            for (var j = 0; j < paramIds.length; j++) {
+                                if (params[i].id == paramIds[j]) {
+                                    isSame = true;
+                                    break;
+                                }
+                            }
+                            if (!isSame) {
+                                var text = "key:" + params[i].key + "备注:" + params[i].note;
+                                var id = params[i].id;
+                                paramsAll.append("<option value='" + id + "'>" + text + "</option>");
+                            }
+                        }
+                    } else {
+                        alert(result.msg);
+                    }
+                }
+            });
+            $('#parameterModal').modal('show');
+
+        });
+
+        $("#parameterSave").on("click", function () {
+            var lastInputRow;
+            if ($('#mytable .editRow').length <= 0) {
+                lastInputRow = $("#mytable tr:last");
+            } else {
+                lastInputRow  = $('#mytable .editRow').eq(0);
+            }
+            var table = $("#mytable");
+
+            var selectedParamIds=$("select[name='selectedParamId']").val();
+            var trHTML = "";
+            for(var i=0;i<selectedParamIds.length;i++){
+                if(trHTML==""){
+                    trHTML = "<tr class='rowSpan eachRow'>" + spanRowExample + "</tr>";
+                    $(trHTML).insertBefore(lastInputRow);
+                }else{
+                    trHTML = "<tr class='rowSpan eachRow'>" + spanRowExample + "</tr>";
+                    $(trHTML).insertBefore($("#mytable tr:last"));
+                }
+                var request = {};
+                request.selectedParamId = selectedParamIds[i];
+                $.ajax({
+                    url: 'getParameterDetail',
+                    data: JSON.stringify(request),
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    async:false,
+                    success: function (result) {
+                        if (result.code == 0) {
+                            var parameter = result.data;
+                            var lastTr = $('#mytable .rowSpan:last');
+                            var dateTypeText = "";
+                            if (parameter.type == 1) {
+                                dateTypeText = "文本";
+                            } else if (parameter.type = 2) {
+                                dateTypeText = "整数";
+                            } else if (parameter.type = 3) {
+                                dateTypeText = "小数";
+                            } else if (parameter.type = 4) {
+                                dateTypeText = "日期";
+                            }
+                            var editableText = "";
+                            if (parameter.editable) {
+                                editableText = "是";
+                            } else {
+                                editableText = "否";
+                            }
+                            var nullableText = "";
+                            if (parameter.nullable) {
+                                nullableText = "是";
+                            } else {
+                                nullableText = "否";
+                            }
+                            lastTr.find("span[class='key']").html(parameter.key);
+                            lastTr.find("span[class='paramId']").html(parameter.id);
+                            lastTr.find("input[name='paramId']").val(parameter.id);
+                            lastTr.find("span[class='name']").html(parameter.name.content);
+                            lastTr.find("span[class='defaultValue']").html(parameter.defaultvalue);
+                            lastTr.find("span[class='dataType']").html(dateTypeText);
+                            lastTr.find("span[class='editable']").html(editableText);
+                            lastTr.find("span[class='nullable']").html(nullableText);
+                            lastTr.find("span[class='remark']").html(parameter.remark.content);
+                            $('#parameterModal').modal('hide');
+                        } else {
+                            alert(result.msg);
+                        }
+                    }
+                });
+            }
+        });
+
+
+
+
+
+        $("#mytable").delegate(".addLang", "click", function (e) {
+            var currEle = e.currentTarget;
+            var keyName = $(currEle).attr("langsKeyName");
+            var valueName = $(currEle).attr("langsValueName");
+            var td = $(currEle).parent().parent();
+            currLangKeyInput = td.find("input[name='" + keyName + "']");
+            currLangValueInput = td.find("input[name='" + valueName + "']");
+            $("input[id='keyCode']").css("border", "");
+            $("#keyCodeStatus").hide();
+            $("#requiredKey_1").hide();
+            $("input[name='1']").css("border", "");
+            $("#requiredKey_2").hide();
+            $("input[name='2']").css("border", "");
+            langsCommonDialog();
+        });
+
+
+        function langsCommonDialog() {
+            $("input[id='keyCode']").val("");
+            $("input[data-name='langs']").val("");
+            $("#categoryId").val("");
+            $("#select2-categoryId-container").html("全部分类");
+
+            $("span[dir='ltr']").attr("style", "min-width: 366px;");
+
+            $('#addLangsModal').modal('show');
+            $.ajax({
+                url: '/langsDictionary/viewLocalLanguage',
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        console.log(result.data);
+                        if (result.data != null && localeLangs == false) {
+                            localeLangs = true;
+                            // 如果不是必填项中文和英文
+                            var langsCountry = result.data;
+                            localelangsKey = langsCountry.langsCountryKey;
+                            if (langsCountry.langsValue != "zh-CN" && langsCountry.langsValue != "en-US") {
+                                var localeInputHtml = "<div class='control-group'>"
+                                        + "<label class='control-label'>"
+                                        + langsCountry.langsDesc + (langsCountry.langsValue)
+                                        + "：</label>"
+                                        + " <div class='controls'>"
+                                        + " <input name='" + langsCountry.langsCountryKey + "' data-key='" + langsCountry.langsCountryKey + "' type='text' onkeyup='keyCodeRealTime()' data-name='langs' class='span7 countryLanguage'>"
+                                        + " </div>"
+                                        + "</div>";
+                                $("#langsInput").append(localeInputHtml);
+
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
+
+        $("#mytable").delegate(".referParam", "click", function (e) {
+            var currEle = e.currentTarget;
+            var td = $(currEle).parent().parent();
+
+            curRefer = td.find("input[name='referenceId']");
+            $("#referIds").empty();
+            $("#referIds").append("<option value=''>" +"无" + "</option>");
+            console.log($(".rowSpan"));
+            $(".rowSpan").each(function (i, o) {
+                var keyName = $(o).find("span[class='key']").html();
+                var id = $(o).find("span[class='paramId']").html();
+                $("#referIds").append("<option value='" + id + "'>" + "id:" + id + "; keyName:" + keyName + "</option>");
+            });
+            if (curRefer.val() != "") {
+                $("#referIds").val(curRefer.val());
+                $("#referIds").select2();
+            }
+            $('#referModal').modal('show');
+
+        });
+
+        $("#referSave").on("click", function () {
+            var referId = $("#referIds").val();
+            curRefer.val(referId);
+            curRefer.next().val("sdfsdf");
+            $('#referModal').modal('hide');
+        });
+
+
+
+        $(".saveLangsDictionary").on("click",function () {
+            saveLangsDictionary();
+        });
+
+        /**
+         * 保存多语言
+         */
+        function saveLangsDictionary() {
+            if($("#addLangSave").attr("disabled") != "disabled"){
+                keyCodeRealTime();
+
+                var checkResult = checkRequiredParams();
+                if (!checkResult) {
+                    return false;
+                }
+
+                var request = {};
+
+                request.keyCode = $("input[id='keyCode']").val();
+                request.categoryId = parseInt($("select[name='categoryId']").val());
+
+                var langsMessageList = [];
+                var keyCodes = $("input[data-name='langs']");
+
+                for (var i = 0, j = keyCodes.length; i < j; i++) {
+                    var keyCodeInput = keyCodes[i];
+                    var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
+                    var message = keyCodeInput.value;
+                    var langsCountryMessageVo = {langsKey: langsKey, message: message};
+                    langsMessageList.push(langsCountryMessageVo);
+                }
+
+                request.langsMessageList = langsMessageList;
+
+                $.ajax({
+                    url: '/langsDictionary/saveLangsDictionary',
+                    data: JSON.stringify(request),
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (result) {
+                        if (result.code == 0) {
+                            $('#addLangsModal').modal('hide');
+                            console.log(localelangsKey);
+                            console.log(langsMessageList);
+                            for (var i = 0; i < langsMessageList.length; i++) {
+                                if (localelangsKey == langsMessageList[i].langsKey) {
+                                    currLangKeyInput.val(request.keyCode);
+                                    currLangValueInput.val(langsMessageList[i].message+"("+request.keyCode+")");
+                                }
+                            }
+                        } else {
+                            alert(result.msg);
+                        }
+                    }
+                });
+            }
+        }
+
 
 
         $(".templateFormValidate").validate({
             rules: {
-                sort: {
-                    digits: true
-                },
                 title: {
-                    maxlength: 50
+                    maxlength: 20,
+                    required: true
                 },
-                source: {
-                    required: true, maxlength: 20
+                name: {
+                    maxlength: 20
+                },
+                key: {
+                    maxlength: 20
                 }
             },
             errorPlacement: function (error, element) {
-                $(element)
-                        .closest("form")
-                        .find(element)
-                        .after(error);
+                $(element).closest("form").find(element).after(error);
             },
             errorElement: "span"
         });
+
 
 
     });
