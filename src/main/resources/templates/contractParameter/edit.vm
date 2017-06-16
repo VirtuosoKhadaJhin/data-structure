@@ -49,7 +49,7 @@
                                 <div class="control-group">
                                     <label class="control-label">名称</label>
                                     <div class="controls">
-                                        <input name="nameLabel" type="text" langsKeyName="name" class="span7 langsAutoComplete" value="$!entity.name.key">
+                                        <input name="nameLabel" type="text" langsKeyName="name" class="span7 langsAutoComplete" value="$!entity.name.content">
                                         <input name="name" type="hidden">
                                         <a class="btn btn-info btn-mini addLang" langsKeyName="name" langsValueName="nameLabel"> <i class="icon-plus"></i> </a>
                                     </div>
@@ -120,22 +120,21 @@
                                 <div class="control-group">
                                     <label class="control-label">校验提示</label>
                                     <div class="controls">
-                                        <input name="hint" type="text" langsKeyName="langsKeyName" class="span7" value="$!entity.hint.key">
-                                        <input name="remark" type="hidden">
-                                        <a class="btn btn-info btn-mini addLang" onclick="">
-                                            <i class="icon-plus"></i>
-                                        </a>
+
+                                        <input name="nameLabel" type="text" langsKeyName="hint" class="span7 langsAutoComplete" value="$!entity.hint.content">
+                                        <input name="hint" type="hidden">
+                                        <a class="btn btn-info btn-mini addLang" langsKeyName="hint" langsValueName="hintLabel"> <i class="icon-plus"></i> </a>
+
+
                                     </div>
                                 </div>
 
                                 <div class="control-group">
                                     <label class="control-label">栏位提示</label>
                                     <div class="controls">
-                                        <input name="remark" type="text" langsKeyName="langsKeyName" class="span7" value="$!entity.remark.key">
+                                        <input name="remarkLabel" type="text" langsKeyName="remark" class="span7 langsAutoComplete" value="$!entity.remark.content">
                                         <input name="remark" type="hidden">
-                                        <a class="btn btn-info btn-mini addLang" onclick="">
-                                            <i class="icon-plus"></i>
-                                        </a>
+                                        <a class="btn btn-info btn-mini addLang" langsKeyName="remark" langsValueName="remarkLabel"> <i class="icon-plus"></i> </a>
                                     </div>
                                 </div>
 

@@ -10,6 +10,7 @@ import com.nuanyou.cms.model.contract.request.TemplateParameterRequest;
 import com.nuanyou.cms.model.contract.request.UpdateParameterRequest;
 import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.remote.service.RemoteContractService;
+import com.nuanyou.cms.service.ContractTemplateService;
 import com.nuanyou.cms.service.LangsCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,6 +41,8 @@ public class ContractParameterController {
 
     @Autowired
     private RemoteContractService contractService;
+    @Autowired
+    private ContractTemplateService contractTemplateService;
 
     @Autowired
     private LangsCategoryService categoryService;
@@ -102,6 +105,7 @@ public class ContractParameterController {
         if (id != null) {
             APIResult<ContractParameter> res = this.contractService.saveTemplateParamter(id);
             data = res.getData();
+            this.contractTemplateService.setLangsMessage(data);
         }
 
         //本地语言

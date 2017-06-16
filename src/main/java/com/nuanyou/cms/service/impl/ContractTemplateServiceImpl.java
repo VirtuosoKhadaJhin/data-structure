@@ -309,7 +309,9 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
     public void setLangsMessage(ContractParameter contractParameter) {
         String name = dictionaryService.findLocalMessageByKeyCode(contractParameter.getName().getKey(), request.getLocale());
         String remark = dictionaryService.findLocalMessageByKeyCode(contractParameter.getRemark().getKey(), request.getLocale());
+        String hint = dictionaryService.findLocalMessageByKeyCode(contractParameter.getHint().getKey(), request.getLocale());
         contractParameter.getName().setContent(name == null ? contractParameter.getName().getKey() : name);
         contractParameter.getRemark().setContent(remark == null ? contractParameter.getRemark().getKey() : remark);
+        contractParameter.getHint().setContent(remark == null ? contractParameter.getHint().getKey() : hint);
     }
 }
