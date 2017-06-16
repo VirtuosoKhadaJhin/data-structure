@@ -6,6 +6,7 @@ import com.nuanyou.cms.dao.EntityNyLangsMessageTipDao;
 import com.nuanyou.cms.entity.EntityNyLangsMessageTip;
 import com.nuanyou.cms.model.LangsMessageTipVo;
 import com.nuanyou.cms.service.LangsMessageTipService;
+import com.nuanyou.cms.sso.client.util.UserHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,10 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
             }
         }
 
+        Long userid = UserHolder.getUser().getUserid();
+
         entityNyLangsMessageTip = new EntityNyLangsMessageTip(newKeyCode, requestVo.getRemark(), imgUrl, new Date(), false);
+        entityNyLangsMessageTip.setUserId(userid);
 
         EntityNyLangsMessageTip result = messageTipDao.save(entityNyLangsMessageTip);
 

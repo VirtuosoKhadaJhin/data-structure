@@ -8,7 +8,7 @@
     <span class="icon"><i class="icon-th"></i></span>
     <h5>多语言列表</h5>
     <a class="btn btn-mini btn-info buttons" href="add">新增</a>
-    #*<a class="btn btn-mini btn-info buttons" onclick="langsCommonDialog()">通用新增</a>*#
+#*<a class="btn btn-mini btn-info buttons" onclick="langsCommonDialog()">通用新增</a>*#
 </div>
 <style>
     .tdInput {
@@ -23,7 +23,7 @@
         min-width: 180px;
     }
 </style>
-<div style="overflow: auto;width: 100%">
+<div style="width: 100%">
     <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
         <thead role="row">
         <tr>
@@ -38,6 +38,17 @@
         </thead>
         <tbody>
             #set($sort = 1)
+            #if ($null.isNull($page.content) || $page.content.size()==0)
+            <tr>
+                <td colspan="11" style="text-align:center;">
+                    <div class="no-result-div"
+                         style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                        <p>没有符合条件的多语言记录信息！</p>
+                    </div>
+                </td>
+            </tr>
+            #end
+
             #foreach($entity in $!page)
             <tr class="odd gradeX">
                 <td style="width: 4%;"><label style="text-align: center;padding-top: 5%">$sort</label>
@@ -68,7 +79,7 @@
                     </div>
                 </td>
             </tr>
-            #set($sort = $sort + 1)
+                #set($sort = $sort + 1)
             #end
         </tbody>
     </table>
@@ -88,8 +99,7 @@
                     keyCode<font style="color: red;margin: 0px;padding: 5px;">*</font>：</label>
                 <div class="controls">
                     <input id="verify_keyCode" type="text" style="display: none" value="" onkeyup="verifykeyCode()">
-                    <input for="name" id="keyCode" readonly="readonly"
-                           class="span7" name="keyCode" type="text"
+                    <input for="name" id="keyCode" readonly="readonly" class="span7" name="keyCode" type="text"
                            value="$!entity.keyCode" onblur="verifykeyCode()">
                     <label id="keyCodeStatus" class="control-label"
                            style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
@@ -137,30 +147,30 @@
 <!--***************************************通用新增语言*************************************************************-->
 
 #parse("common/list_mid.vm")
-<form class="form-horizontal " method="get" action="list">
-    <div class="control-group">
+<form class="form-horizontal search-form" method="get" action="list">
+    <div class="control-group" style="margin-bottom: 10px">
         <label>分类</label>
         <select class="span7 select2 " name="baseNameId" style="min-width: 203px;">
             <option value="">全部分类</option>
             #foreach($e in $!categories)
-                <option value="$!e.id">$!e.name</option>
+                <option value="$!e.id" #if($!e.id==$!requestVo.baseNameId) selected #end>$!e.name</option>
             #end
         </select>
     </div>
 
-    <div class="control-group">
+    <div class="control-group" style="margin-bottom: 10px">
         <label>keyCode</label>
-        <input type="text" class="span11" name="keyCode" value="$!entity.keyCode">
+        <input type="text" class="span11" name="keyCode" value="$!requestVo.keyCode">
     </div>
-    <div class="control-group">
+    <div class="control-group" style="margin-bottom: 10px">
         <label>内容</label>
-        <input type="text" class="span11" name="message" value="$!entity.message">
+        <input type="text" class="span11" name="message" value="$!requestVo.message">
     </div>
 
 
     <div class="control-group" style="clear: both;margin-top: 10px;">
         <button type="submit" class="btn btn-primary">查询</button>
-        <a onclick="reset()" class="btn btn-warning">重置</a>
+        <button class="btn btn-warning search-reset">重置</button>
     </div>
 </form>
 
@@ -168,7 +178,7 @@
 
 <script>
     /** ########################多语言common弹出框增加######################## */
-    /**
+     /**
      * 通用弹窗
      */
     var localeLangs = false;
@@ -214,6 +224,12 @@
             }
         });
     }
+
+    $(".search-reset").click(function () {
+        $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
+        $(".search-form").find(".select2").val('').trigger('change');
+    });
+
     /**
      * 验证keyCode是否重复
      */
@@ -339,15 +355,7 @@
     }
     /** ########################多语言common弹出框增加######################## */
 
-
      /**
-     * 重置查询条件
-     */
-    function reset() {
-        location.href = "list?baseNameId=&keyCode=&message=";
-    }
-
-    /**
      * 获取url中的参数
      */
     function getUrlParam(name) {
@@ -415,7 +423,7 @@
         $(o).on("click", function (event) {
             var keyCode = $(this).attr("key-code");
             var pageIndex = getUrlParam("index");
-            if(null == pageIndex){
+            if (null == pageIndex) {
                 pageIndex = 1;
             }
             location.href = "edit?keyCode=" + keyCode + "&&pageIndex=" + pageIndex;

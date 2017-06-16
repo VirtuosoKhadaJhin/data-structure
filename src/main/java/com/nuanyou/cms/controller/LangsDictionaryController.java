@@ -47,7 +47,7 @@ public class LangsDictionaryController {
         List<LangsCategory> categories = categoryService.findAllCategories();
         model.addAttribute("categories", categories);
         model.addAttribute("page", allDictionary);
-        model.addAttribute("entity", requestVo);
+        model.addAttribute("requestVo", requestVo);
         model.addAttribute("langsCountries", LangsCountry.values());
         return "langsDictionary/list";
     }
@@ -78,6 +78,13 @@ public class LangsDictionaryController {
         Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllLocalDictionary(requestVo);
         List<LangsCountryVo> langsCountryVos = LangsCountry.viewAllCountrysResultList();
         List<LangsCategory> categories = categoryService.findAllCategories();
+
+        // 页面显示当地语言
+        if(requestVo.getCountryKey() != 0){
+            String localLangs = LangsCountry.toEnum(requestVo.getCountryKey()).getValue();
+            model.addAttribute("localLangs", localLangs);
+        }
+
         model.addAttribute("categories", categories);
         model.addAttribute("page", allDictionary);
         model.addAttribute("entity", requestVo);

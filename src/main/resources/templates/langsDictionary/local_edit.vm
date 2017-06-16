@@ -35,8 +35,10 @@
                                     <div class="fl"
                                          style="border-right:1px solid #eeeeee;box-sizing:border-box;width:48%;">
                                         <div class="">
-                                            <label class="control-label" style="width: 140px;">keyCode：</label>
-                                            <div class="controls">
+                                            <label class="control-label" style="width: 140px;">
+                                                <font style="color: red;margin: 0px;padding: 5px;">*</font>
+                                                keyCode：</label>
+                                            <div class="controls" style="margin-left: 170px;">
                                                 <input for="name" name="keyCode" type="text"
                                                        class="span7" style="width: 80%"
                                                        readonly="readonly" value="$!dictionarys[0].keyCode">
@@ -46,20 +48,20 @@
                                         #set($num=0)
                                         #foreach($langCountry in $!langsCountries)
                                         <div class="">
-                                            <label class="control-label" style="width: 160px;">
+                                            <label class="control-label" style="width: 170px;">
                                                 #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
-                                                    $!langCountry.desc ($!langCountry.value)
                                                     <font style="color: red;margin: 0px;padding: 5px;">*</font>
+                                                    $!langCountry.desc ($!langCountry.value)
                                                 #end
                                                 #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
-                                                    $!langCountry.desc ($!langCountry.value)-当地语
+                                                    当地语($!langCountry.value)
                                                 #end  ：
                                             </label>
                                             #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
-                                            <div class="controls">
+                                            <div class="controls" style="margin-left: 170px;">
                                             #end
                                             #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
-                                            <div class="controls" id="localLanguage" data-key="$!langCountry.key"
+                                            <div class="controls" style="margin-left: 170px;" id="localLanguage" data-key="$!langCountry.key"
                                                  data-value="$!langCountry.value">
                                             #end
                                             #foreach($dictionary in $!dictionarys)
@@ -95,11 +97,15 @@
                                             </div>
                                         </div>
                                         <div class="">
+                                            <label class="control-label" style="width: 60px;">场景图：</label>
                                             <div style="text-align: center;width: 300px;margin-left: 80px">
                                                 <a href="#" id="imgUrlHref" target="_blank">
                                                     <img style="width: 250px;height: 250px;display: none" id="imgUrl"
                                                          src="">
                                                 </a>
+                                            </div>
+                                            <div class="controls" id="noImg" style="width: 300px;margin-left: 80px;display: none">
+                                                <input type="text" readonly value="暂无场景图" style="width: 100%" class="span7 countryLanguage">
                                             </div>
                                         </div>
                                     </div>
@@ -142,12 +148,15 @@
                             if (remark != null && remark != "") {
                                 $("#remark").val(remark);
                             }
-                            console.log(result.data.imgUrl)
                             if (imgUrl != null && imgUrl != "") {
                                 $("#imgUrl").attr("src", imgUrl);
                                 $("#imgUrlHref").attr("href", imgUrl);
                                 $("#imgUrl").show();
+                            }else{
+                                $("#noImg").show();
                             }
+                        }else{
+                            $("#noImg").show();
                         }
                     }
                 }

@@ -12,6 +12,8 @@ import com.nuanyou.cms.model.LangsDictionaryRequestVo;
 import com.nuanyou.cms.model.LangsDictionaryVo;
 import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsDictionaryService;
+import com.nuanyou.cms.sso.client.util.UserHolder;
+import com.nuanyou.cms.sso.client.validation.User;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
@@ -108,6 +110,8 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
         EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne(requestVo.getCategoryId());
 
+        Long userid = UserHolder.getUser().getUserid();
+
         // 迭代每一个语言的数据
         for (LangsCountryMessageVo langsCountryMessageVo : requestVo.getLangsMessageList()) {
             if (StringUtils.isNotEmpty(langsCountryMessageVo.getMessage())) {
@@ -119,6 +123,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
                 entityNyLangsDictionary = new EntityNyLangsDictionary();
 
+                entityNyLangsDictionary.setUserId(userid);
                 entityNyLangsDictionary.setKeyCode(requestVo.getNewKeyCode());
                 entityNyLangsDictionary.setCategory(entityNyLangsCategory);
                 entityNyLangsDictionary.setDelFlag(false);
@@ -213,12 +218,15 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
         // 如果输入空, 则不保存, 相当于删除了这个本地语言行
         if (StringUtils.isNotEmpty(dictionaryVo.getLocalMess())) {
+            User user = UserHolder.getUser();
+
             entityNyLangsDictionarey.setKeyCode(dictionaryVo.getKeyCode());
             entityNyLangsDictionarey.setMessage(dictionaryVo.getLocalMess());
             entityNyLangsDictionarey.setCreateDt(new Date());
             entityNyLangsDictionarey.setLanguage(langsCountrys[0]);
             entityNyLangsDictionarey.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
             entityNyLangsDictionarey.setDelFlag(false);
+            entityNyLangsDictionarey.setUserId(user.getUserid());
             dictionaryDao.save(entityNyLangsDictionarey);
         }
 
@@ -325,11 +333,13 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
                 String[] langsCountrys = langsCountry.getValue().split("-");
 
+                User user = UserHolder.getUser();
+
                 entityNyLangsDictionary.setLanguage(langsCountrys[0]);
                 entityNyLangsDictionary.setDelFlag(false);
                 entityNyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
                 entityNyLangsDictionary.setKeyCode(dictionaryVo.getKeyCode());
-
+                entityNyLangsDictionary.setUserId(user.getUserid());
                 entityNyLangsDictionary.setCreateDt(new Date());
                 entityNyLangsDictionary.setCategory(entityNyLangsCategory);
                 entityNyLangsDictionary.setMessage(message);
@@ -360,11 +370,14 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         EntityNyLangsDictionary entity = new EntityNyLangsDictionary();
         String[] splitValues = LangsCountry.toEnum(vo.getLangsKey()).getValue().split("-");
 
+        User user = UserHolder.getUser();
+
         entity.setLanguage(splitValues[0]);
         entity.setCountry(splitValues.length > 1 ? splitValues[1] : splitValues[0]);
         entity.setKeyCode(vo.getKeyCode());
         entity.setMessage(vo.getMessage());
         entity.setCreateDt(new Date());
+        entity.setUserId(user.getUserid());
         entity.setDelFlag(false);
         entity.setCategory(entityResult.get(0).getCategory());
         EntityNyLangsDictionary nyLangsDictionary = dictionaryDao.save(entity);
