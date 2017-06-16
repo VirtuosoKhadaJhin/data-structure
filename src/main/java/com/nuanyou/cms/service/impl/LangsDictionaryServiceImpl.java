@@ -6,6 +6,7 @@ import com.nuanyou.cms.dao.EntityNyLangsDictionaryDao;
 import com.nuanyou.cms.dao.EntityNyLangsMessageTipDao;
 import com.nuanyou.cms.entity.EntityNyLangsCategory;
 import com.nuanyou.cms.entity.EntityNyLangsDictionary;
+import com.nuanyou.cms.entity.EntityNyLangsMessageTip;
 import com.nuanyou.cms.model.LangsCountryMessageVo;
 import com.nuanyou.cms.model.LangsDictionary;
 import com.nuanyou.cms.model.LangsDictionaryRequestVo;
@@ -85,6 +86,14 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         Example<EntityNyLangsDictionary> example = Example.of(entityNyLangsDictionary);
         List<EntityNyLangsDictionary> entityResult = dictionaryDao.findAll(example);
 
+        // 删除keyCode对应的messageTip
+        EntityNyLangsMessageTip entityNyLangsMessageTip = new EntityNyLangsMessageTip();
+        entityNyLangsMessageTip.setKeyCode(requestVo.getKeyCode());
+
+        Example<EntityNyLangsMessageTip> tipExample = Example.of(entityNyLangsMessageTip);
+        List<EntityNyLangsMessageTip> tipEntityResult = messageTipDao.findAll(tipExample);
+
+        messageTipDao.delete(tipEntityResult);
         dictionaryDao.delete(entityResult);
     }
 
