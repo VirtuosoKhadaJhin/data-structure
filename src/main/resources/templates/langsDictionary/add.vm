@@ -44,7 +44,7 @@
 
                                     <div>
                                         <label class="control-label" style="width: 140px;">
-                                            keyCode<font style="color: red;margin: 0px;padding: 5px;">*</font>：</label>
+                                            <font style="color: red;margin: 0px;padding: 5px;">*</font>keyCode：</label>
                                         <div class="controls" style="margin-left: 152px;">
                                             <input id="verify_keyCode" type="text" style="display: none" value=""
                                                    onkeyup="verifykeyCode()">
@@ -72,10 +72,10 @@
                                     #foreach($langCountry in $!langsCountries)
                                         <div>
                                             <label class="control-label" style="width: 140px;">
-                                                $!langCountry.desc ($!langCountry.value)
                                                 #if($!langCountry.key == 1 || $!langCountry.key == 2)
                                                     <font style="color: red;margin: 0px;padding: 5px;">*</font>
                                                 #end
+                                                $!langCountry.desc ($!langCountry.value)
                                                 ：</label>
                                             <div class="controls" style="margin-left: 152px;">
                                                 #if($!langCountry.key == 1 || $!langCountry.key == 2)
@@ -147,6 +147,8 @@
     }
     // file 上传文件
     $('input[id=lefile]').change(function () {
+        $("#saveBtn").attr("onclick", "");
+        $("#saveBtn").attr("style", "background-color: gray;");
         $('#photoCover').val($(this).val());
         $("#uploadForm").ajaxSubmit({
             type: 'post',
@@ -155,6 +157,8 @@
             success: function (result) {
                 if (result.code == 0) {
                     alert("上传图片成功!");
+                    $("#saveBtn").attr("onclick", "saveLangsDictionary()");
+                    $("#saveBtn").attr("style", "");
                     $("#photoCover").val(result.data);
                     $("#imgUrl").attr("src", result.data).show();
                 }
