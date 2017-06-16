@@ -21,78 +21,96 @@
 
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span6">
-                    <div class="widget-box">
+                <div class="span6" style="width: 70%;min-width:994px;">
+                    <div class="widget-box" style="width: 78%">
                         <div class="widget-title"><span class="icon"> <i
                                 class="icon-align-justify"></i> </span>
                             <h5>编辑&查看</h5>
                         </div>
                         <div class="widget-content nopadding">
-                            <form action="update" method="post"
-                                  class="form-horizontal langsDicFormValidate" role="form"
-                                  id="cityform">
+                            <form class="form-horizontal langsDicFormValidate">
 
-                            #*<div *##*class="fl"*##*
-                             style="border-right:1px solid #eeeeee;box-sizing:border-box;width:50%;">*#
-                            #*<div class="control-group">*#
-                            #*获取keyCode*#
-                                <div class="">
-                                    <label class="control-label">keyCode：</label>
-                                    <div class="controls">
-                                        <input for="name" name="keyCode" type="text"
-                                               class="span7"
-                                               readonly="readonly"
-                                               value="$!dictionarys[0].keyCode">
-                                    </div>
-                                </div>
+                                <div class="nopadding" style="width: 100%;">
 
-                                #set($num=0)
-                                #foreach($langCountry in $!langsCountries)
-                                <div class="">
-                                    <label class="control-label">
-                                        #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
-                                            $!langCountry.desc ($!langCountry.value)
-                                            <font style="color: red;margin: 0px;padding: 5px;">*</font>
-                                        #end
-                                        #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
-                                            $!langCountry.desc ($!langCountry.value)-当地语
-                                        #end  ：
-                                    </label>
-                                    #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
-                                    <div class="controls">
-                                    #end
-                                        #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
-                                        <div class="controls" id="localLanguage" data-key="$!langCountry.key"
-                                             data-value="$!langCountry.value">
-                                        #end
+                                    <div class="fl"
+                                         style="border-right:1px solid #eeeeee;box-sizing:border-box;width:48%;">
+                                        <div class="">
+                                            <label class="control-label" style="width: 140px;">keyCode：</label>
+                                            <div class="controls">
+                                                <input for="name" name="keyCode" type="text"
+                                                       class="span7" style="width: 80%"
+                                                       readonly="readonly" value="$!dictionarys[0].keyCode">
+                                            </div>
+                                        </div>
+
+                                        #set($num=0)
+                                        #foreach($langCountry in $!langsCountries)
+                                        <div class="">
+                                            <label class="control-label" style="width: 160px;">
+                                                #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
+                                                    $!langCountry.desc ($!langCountry.value)
+                                                    <font style="color: red;margin: 0px;padding: 5px;">*</font>
+                                                #end
+                                                #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
+                                                    $!langCountry.desc ($!langCountry.value)-当地语
+                                                #end  ：
+                                            </label>
+                                            #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
+                                            <div class="controls">
+                                            #end
+                                            #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
+                                            <div class="controls" id="localLanguage" data-key="$!langCountry.key"
+                                                 data-value="$!langCountry.value">
+                                            #end
                                             #foreach($dictionary in $!dictionarys)
                                                 #if($!dictionary.langsCountryKey == $!langCountry.key)
                                                     #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
                                                         <input type="text" value="$!dictionary.message"
+                                                               style="width: 80%"
                                                                class="span7 countryLanguage" readonly="readonly">
                                                     #else
                                                         <input type="text" value="$!dictionary.message"
+                                                               style="width: 80%"
                                                                id='localLanguageMess' class="span7 countryLanguage">
                                                     #end
                                                 #end
                                             #end
                                             #set($num=$num+1)
                                             #if($!dictionarys.size() == 2 && $num == 3)
-                                                <input type="text" value=""
+                                                <input type="text" value="" style="width: 80%"
                                                        id='localLanguageMess' class="span7 countryLanguage">
                                             #end
                                         </div>
+                                        </div>
+                                        #end
                                     </div>
-                                #end
-                            </div>
+                                    </div>
+                                    <div class="fr" style="width:50%;float: left">
+                                        <div class="">
+                                            <label class="control-label" style="width: 60px;">备注：</label>
+                                            <div class="controls" style="width: 300px;margin-left: 80px">
+                                            <textarea placeholder="图文备注" class="form-control" id="remark" cols="4"
+                                                      rows="4" style="resize: none; width: 285px;"
+                                                      readonly="readonly"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <div style="text-align: center;width: 300px;margin-left: 80px">
+                                                <a href="#" id="imgUrlHref" target="_blank">
+                                                    <img style="width: 250px;height: 250px;display: none" id="imgUrl"
+                                                         src="">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                <div class="form-actions" style="clear: both;text-align: center;">
-                                    <button type="button" id="saveBtn"
-                                            onclick="modifyLocalLangsDictionary()" #*onclick按钮点击事件*#
-                                            class="btn btnSave btn-success">保存
-                                    </button>
-                                    <a class="btn btn-primary" onclick="back()">返回</a>
-                                </div>
+                                    <div class="form-actions" style="clear: both;text-align: center;">
+                                        <button type="button" id="saveBtn"
+                                                onclick="modifyLocalLangsDictionary()" #*onclick按钮点击事件*#
+                                                class="btn btnSave btn-success">保存
+                                        </button>
+                                        <a class="btn btn-primary" onclick="back()">返回</a>
+                                    </div>
                             </form>
                         </div>
                     </div>
@@ -103,6 +121,38 @@
     #include("common/js-support.vm")
 
     <script type="text/javascript">
+        $(document).ready(function () {
+            var request = {};
+            request.keyCode = getUrlParam("keyCode");
+
+            /**
+             * 查询备注
+             */
+            $.ajax({
+                url: '/langsMessageTip/viewLangsMessageTip',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        if (result.data != null) {
+                            var remark = result.data.remark;
+                            var imgUrl = result.data.imgUrl;
+                            if (remark != null && remark != "") {
+                                $("#remark").val(remark);
+                            }
+                            console.log(result.data.imgUrl)
+                            if (imgUrl != null && imgUrl != "") {
+                                $("#imgUrl").attr("src", imgUrl);
+                                $("#imgUrlHref").attr("href", imgUrl);
+                                $("#imgUrl").show();
+                            }
+                        }
+                    }
+                }
+            });
+        });
         // 返回列表页
         function back() {
             console.log("localList?index=" + getUrlParam("pageIndex"));
@@ -147,7 +197,6 @@
                     }
                 }
             });
-
         }
 
     </script>

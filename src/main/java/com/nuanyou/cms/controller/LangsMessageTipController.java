@@ -52,7 +52,12 @@ public class LangsMessageTipController {
         return result;
     }
 
-
+    /**
+     * 根据keyCode查询备注
+     *
+     * @param requestVo
+     * @return
+     */
     @RequestMapping("/viewLangsMessageTip")
     @ResponseBody
     public APIResult<LangsMessageTipVo> viewLangsMessageTip(@RequestBody LangsMessageTipVo requestVo) {

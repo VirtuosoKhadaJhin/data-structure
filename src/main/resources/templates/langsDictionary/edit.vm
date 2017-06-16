@@ -127,7 +127,8 @@
                                         </div>
                                         <div style="text-align: center;width: 300px;margin-left: 80px">
                                             <a href="#" id="imgUrlHref" target="_blank">
-                                                <img style="width: 250px;height: 250px;" id="imgUrl" src="">
+                                                <img style="width: 250px;height: 250px;display: none" id="imgUrl"
+                                                     src="">
                                             </a>
                                         </div>
                                     </div>
@@ -173,13 +174,9 @@
                             if (imgUrl != null && imgUrl != "") {
                                 $("#imgUrl").attr("src", imgUrl);
                                 $("#imgUrlHref").attr("href", imgUrl);
-                            } else {
-                                $("#imgUrl").hide();
+                                $("#imgUrl").show();
                             }
-                        } else {
-                            $("#imgUrl").hide();
                         }
-                        ;
                     }
                 }
             });
