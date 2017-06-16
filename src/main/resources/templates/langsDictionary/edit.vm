@@ -55,7 +55,8 @@
                                 <div class="fl" style="border-right:1px solid #eeeeee;box-sizing:border-box;width:48%;">
                                 #*<div class="control-group">*#
                                     <div class="">
-                                        <label class="control-label" style="width: 140px;">keyCode<font style="color: red;margin: 0px;padding: 5px;">*</font>：</label>
+                                        <label class="control-label" style="width: 140px;">keyCode<font
+                                                style="color: red;margin: 0px;padding: 5px;">*</font>：</label>
                                         <div class="controls" style="margin-left: 152px;">
                                             <input for="name" name="keyCode" id="keyCode" type="text" class="span7"
                                                    readonly="readonly" style="width: 80%"
@@ -124,8 +125,10 @@
                                             <label name="lefile" class="control-label"
                                                    style="width:110px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">请选择图片</label>
                                         </div>
-                                        <div style="text-align: center;padding-top: 1em;" class="controls">
-                                            <img style="width: 250px;height: 250px;" id="imgUrl" src="">
+                                        <div style="text-align: center;width: 300px;margin-left: 80px">
+                                            <a href="#" id="imgUrlHref" target="_blank">
+                                                <img style="width: 250px;height: 250px;" id="imgUrl" src="">
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -169,9 +172,12 @@
                             console.log(result.data.imgUrl)
                             if (imgUrl != null && imgUrl != "") {
                                 $("#imgUrl").attr("src", imgUrl);
-                            }else{
+                                $("#imgUrlHref").attr("href", imgUrl);
+                            } else {
                                 $("#imgUrl").hide();
                             }
+                        } else {
+                            $("#imgUrl").hide();
                         }
                         ;
                     }
