@@ -381,7 +381,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         List<EntityNyLangsDictionary> dictionaries = this.getEntityNyLangsDictionaries(requestVo, categoryIds);
 
         //合并查询结果Entity->VO
-        LinkedHashMap<String, LangsDictionaryVo> langsDictionaryMap = this.getStringLangsDictionaryVos(dictionaries, isLocal);
+        LinkedHashMap<String, LangsDictionaryVo> langsDictionaryMap = this.getStringLangsDictionaryVos(dictionaries, requestVo, isLocal);
 
         //填充message查询结果未补全
         this.searchResultFillMessage(requestVo, langsDictionaryMap.values());
@@ -399,7 +399,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
     }
 
-    private LinkedHashMap<String, LangsDictionaryVo> getStringLangsDictionaryVos(List<EntityNyLangsDictionary> allDictionaries, Boolean isLocalLangs) {
+    private LinkedHashMap<String, LangsDictionaryVo> getStringLangsDictionaryVos(List<EntityNyLangsDictionary> allDictionaries, LangsDictionaryRequestVo requestVo, Boolean isLocalLangs) {
         LinkedHashMap<String, LangsDictionaryVo> langsDictionaryMap = new LinkedHashMap<String, LangsDictionaryVo>();
         List<LangsCountryMessageVo> langsMessageList = Lists.newArrayList();
         LangsCountryMessageVo messageVo = null;
@@ -407,7 +407,11 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         LangsDictionaryVo dictionaryVo = null;
         if (BooleanUtils.isTrue(isLocalLangs)) {
             for (EntityNyLangsDictionary langsDictionary : allDictionaries) {
-                if (LangsCountry.verifyIsLocalLanguage(langsDictionary.getLanguage() + "-" + langsDictionary.getCountry(), LOCAL_KEY)) {
+                Integer localCountryKey = requestVo.getCountryKey();
+                if (localCountryKey == 0) {
+                    localCountryKey = LOCAL_KEY;
+                }
+                if (LangsCountry.verifyIsLocalLanguage(langsDictionary.getLanguage() + "-" + langsDictionary.getCountry(), localCountryKey)) {
                     this.setLangsDictionaryVoValue(langsDictionaryMap, langsMessageList, keyCodes, langsDictionary);
                 }
             }
@@ -518,12 +522,6 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                     if (StringUtils.isNotEmpty(requestVo.getKeyCode())) {
                         predicate.add(cb.equal(root.get("keyCode"), requestVo.getKeyCode()));
                     }
-                    if (requestVo.getCountryKey() != 0) {
-                        LangsCountry langsCountry = LangsCountry.toEnum(requestVo.getCountryKey());
-                        String[] langsCountrys = langsCountry.getValue().split("-");
-                        predicate.add(cb.equal(root.get("language"), langsCountrys[0]));
-                        predicate.add(cb.equal(root.get("country"), langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]));
-                    }
                     if (StringUtils.isNotEmpty(requestVo.getMessage())) {
                         predicate.add(cb.like(root.get("message"), "%" + requestVo.getMessage() + "%"));
                     }
@@ -543,12 +541,6 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                     }
                     if (StringUtils.isNotEmpty(requestVo.getKeyCode())) {
                         predicate.add(cb.equal(root.get("keyCode"), requestVo.getKeyCode()));
-                    }
-                    if (requestVo.getCountryKey() != 0) {
-                        LangsCountry langsCountry = LangsCountry.toEnum(requestVo.getCountryKey());
-                        String[] langsCountrys = langsCountry.getValue().split("-");
-                        predicate.add(cb.equal(root.get("language"), langsCountrys[0]));
-                        predicate.add(cb.equal(root.get("country"), langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]));
                     }
                     if (StringUtils.isNotEmpty(requestVo.getMessage())) {
                         predicate.add(cb.like(root.get("message"), "%" + requestVo.getMessage() + "%"));
