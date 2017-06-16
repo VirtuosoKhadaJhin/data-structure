@@ -73,11 +73,7 @@
         <select class="span11 select2" name="mchId">
             <option value="">全部</option>
             #foreach($merchant in $!merchants)
-                <option value="$!merchant.id"
-                    #if($!entity.merchant.id == $!merchant.id)
-                        selected
-                    #end
-                >$!merchant.id:$!merchant.name</option>
+                <option value="$!merchant.id" #if($!requestVo.mchId == $!merchant.id) selected #end>$!merchant.id:$!merchant.name</option>
             #end
         </select>
 
@@ -153,6 +149,7 @@
 
         $(".search-reset").click(function () {
             $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
+            $(".search-form").find(".select2").val('').trigger('change');
         });
 
         $("table").delegate(".order-status-search", "click", function (e) {

@@ -71,8 +71,8 @@ public class PaymentOrderRecordServiceImpl implements PaymentOrderRecordService 
                 if (paramVo.getBeginPrice () != null) {
                     predicate.add(cb.greaterThanOrEqualTo(root.get("price"), paramVo.getBeginPrice()));
                 }
-                if (paramVo.getBeginPrice() != null) {
-                    predicate.add(cb.lessThanOrEqualTo(root.get("price"), paramVo.getBeginPrice()));
+                if (paramVo.getEndPrice() != null) {
+                    predicate.add(cb.lessThanOrEqualTo(root.get("price"), paramVo.getEndPrice()));
                 }
                 if (StringUtils.isNotEmpty ( paramVo.getPayChannel () )) {
                     predicate.add(cb.like(root.get("channelName"), "%" + paramVo.getPayChannel() + "%"));
