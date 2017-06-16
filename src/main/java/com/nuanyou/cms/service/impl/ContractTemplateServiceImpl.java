@@ -205,7 +205,7 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
         Set<String> keySet = new HashSet<>();
         for (TemplateParameterRequest request : requests) {
             if (StringUtils.isEmpty(request.getName())) {
-                throw new APIException(ResultCodes.Fail, "参数名不能为空");
+                throw new APIException(ResultCodes.Fail, "参数名无效或者不存在");
             }
             if (StringUtils.isBlank(request.getKey())) {
                 throw new APIException(ResultCodes.Fail, "Key不能为空");

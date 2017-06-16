@@ -13,7 +13,7 @@ import javax.persistence.*;
  */
 @Entity
 @EntityListeners(DateEntityListener.class)
-@Table(name = "cms30_user")
+@Table(name = "cms30_user",catalog = "cms")
 public class CmsUser {
 
     @Id
