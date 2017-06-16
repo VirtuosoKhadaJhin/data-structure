@@ -7,4 +7,5 @@
 <link href="/dist/font-awesome/css/font-awesome.css" rel="stylesheet"/>
 <link href="/dist/css/uniform.css" rel="stylesheet"/>
 <link href="/dist/css/common.css" rel="stylesheet"/>
+<link href="/dist/css/jquery-ui-1.12.1.css" rel="stylesheet"/>
 <link  href="/dist/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">

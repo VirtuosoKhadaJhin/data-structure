@@ -25,13 +25,13 @@ public interface RemoteSettlementService {
     public APIResult<AcMerchantSettlement> getSettlement(
             @ApiParam(value = "商户ID") @RequestParam(value = "merchantId", required = true) Long merchantId);
 
-    @ApiOperation(value = "..", notes = "...")
+    @ApiOperation(value = "增加一个结算", notes = "...")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "...")})
     @RequestMapping(value = "/merchant/settlement", method = {RequestMethod.POST})
     @ResponseBody
     public APIResult<AcMerchantSettlement> addSettlement( AcMerchantSettlement acMerchantSettlement) ;
 
-    @ApiOperation(value = "..", notes = "...")
+    @ApiOperation(value = "更新一个结算", notes = "...")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "...")})
     @RequestMapping(value = "/merchant/settlement/{id}", method = {RequestMethod.POST})
     @ResponseBody
@@ -39,7 +39,7 @@ public interface RemoteSettlementService {
 
 
 
-    @ApiOperation(value = "..", notes = "...")
+    @ApiOperation(value = "增加或者更新一个团购佣金", notes = "...")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "...")})
     @RequestMapping(value = "/merchant/settlement/commission", method = {RequestMethod.POST})
     @ResponseBody
