@@ -129,10 +129,10 @@
                                                 </td>
                                                 <td>
                                                     <input name="nameLabel" style="width: 150px" class="langsAutoComplete" langsKeyName="name">
+                                                    <input name="name" type="hidden" >
                                                     <a class="btn btn-info btn-mini addLang" langsKeyName="name" langsValueName="nameLabel">
                                                         <i class="icon-plus"></i>
                                                     </a>
-                                                    <input name="name" type="hidden" >
                                                     <br>
                                                 </td>
                                                 <td><input name="defaultValue" style="width: 90px"></td>
@@ -160,15 +160,15 @@
                                                 <td>
 
                                                     <input name="remarkLabel" style="width: 150px" class="langsAutoComplete" langsKeyName="remark">
+                                                    <input name="remark"  type="hidden">
                                                     <a class="btn btn-info btn-mini addLang" langsKeyName="remark" langsValueName="remarkLabel">
                                                         <i class="icon-plus"></i>
                                                     </a>
-                                                    <input name="remark"  type="hidden">
 
 
                                                 </td>
                                                 <td>
-                                                    <input name="referenceId" placeholder="引用参数" class="referParam"
+                                                    <input name="referenceId" placeholder="引用参数" class="referParam" style="width: 90px"
                                                            readonly>
                                                 </td>
                                                 <td style="text-align: left;width: 300px" class="operateColumn">
@@ -728,12 +728,11 @@
         });
 
 
-        $("#mytable").delegate(".langsAutoComplete", "keyup", function (e) {
+        $("body").delegate(".langsAutoComplete", "keyup", function (e) {
             var keyWord = $(this).val();
-            if ($.trim(keyWord) == "") {
+            if (!keyWord) {
                 return;
             }
-            console.log(keyWord);
             var obj = $(this);
             $.ajax({
                 url: '/langsDictionary/suggest',
@@ -758,12 +757,12 @@
                             source: listComplete,
                             focus: function (event, ui) {
                                 $(this).val(ui.item.label);
-                                $(this).next().next().val(ui.item.value);
+                                $(this).val(ui.item.value);
                                 return false;
                             },
                             select: function (event, ui) {
                                 $(this).val(ui.item.label);
-                                $(this).next().next().val(ui.item.value);
+                                $(this).next().val(ui.item.value);
                                 return false;
                             }
                         })
