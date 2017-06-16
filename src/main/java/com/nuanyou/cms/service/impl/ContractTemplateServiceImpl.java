@@ -123,7 +123,7 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
     @Override
     public APIResult saveTemplate(List<Long> paramIds, List<TemplateParameterRequest> requests, Integer templateType, String title, Long countryId, Long id) {
         //验证表单信息
-        validateRequest(requests);
+        validateRequest(paramIds,requests);
         //验证模板基本信息
         validateBasic(templateType, title, countryId);
         //fetch param ids
@@ -139,8 +139,6 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
             idsSum.addAll(originalParamIds);//ids from original param ids
         }
         idsSum = removeSame(idsSum);
-
-
         Long newVersionId = null;
         if (id == null) {
             //save template
@@ -202,7 +200,8 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
         }
     }
 
-    private void validateRequest(List<TemplateParameterRequest> requests) {
+    private void validateRequest(List<Long> paramIds, List<TemplateParameterRequest> requests) {
+        Set<Long> paramIdsSet=new HashSet<>(paramIds);
         Set<String> keySet = new HashSet<>();
         for (TemplateParameterRequest request : requests) {
             if (StringUtils.isEmpty(request.getName())) {
@@ -219,12 +218,18 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
             }
             boolean keyCodeValidate = dictionaryService.verifykeyCode(new LangsDictionaryVo(request.getName()));
             if (keyCodeValidate) {
-                throw new APIException(ResultCodes.Fail, "参数名多语言的Key不正确");
+                throw new APIException(ResultCodes.Fail, "参数名:"+request.getName()+"多语言的Key不正确");
             }
             boolean remarkValidate = dictionaryService.verifykeyCode(new LangsDictionaryVo(request.getRemark()));
             if (remarkValidate) {
-                throw new APIException(ResultCodes.Fail, "栏位校验多语言的Key不正确");
+                throw new APIException(ResultCodes.Fail, "栏位校验:"+request.getRemark()+"多语言的Key不正确");
             }
+            if(request.getReferenceId()!=null){
+                if(!paramIdsSet.contains(request.getReferenceId())){
+                    throw new APIException(ResultCodes.Fail, "引用参数的ID不存在"+request.getReferenceId());
+                }
+            }
+
             Long dataMappingId = request.getDateTypeMappingId();
             if (dataMappingId != null) {
                 ParamsDataMapping paramsDataMapping = this.dataMappingDao.findOne(dataMappingId);

@@ -53,6 +53,11 @@ public interface RemoteContractService {
     public APIResult<Contract> getContract(@ApiParam(value = "合同id", required = true) @PathVariable(value = "id") long id) ;
 
 
+    @ApiOperation(value = "校验合同是否可以审批.", notes = "校验合同是否可以审批")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "操作结果（成功：200，其他：）")})
+    @RequestMapping(value = "/{id}/validate", method = RequestMethod.GET)
+    public APIResult validate(@PathVariable(value = "id") Long id);
+
 
     @ApiOperation(value = "模版参数详情", notes = "模版参数详情")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "模版参数详情")})

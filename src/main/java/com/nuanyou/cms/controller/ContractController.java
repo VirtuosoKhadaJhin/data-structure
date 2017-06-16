@@ -53,7 +53,7 @@ public class ContractController {
     @Autowired
     private ContractModuleService contractModuleService;
     @Autowired
-   private AccountHandleService accountHandleService;
+    private AccountHandleService accountHandleService;
     @Autowired
     private CountryService countryService;
     @Autowired
@@ -174,10 +174,10 @@ public class ContractController {
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) throws UnsupportedEncodingException {
         Contract entity = null;
-        Map<String, String> parametersLangs=null;
+        Map<String, String> parametersLangs = null;
         if (id != null) {
             entity = this.contractModuleService.getContract(id);
-             parametersLangs =contractModuleService.setParamsTitle(entity.getTemplateId(),entity.getParameters());
+            parametersLangs = contractModuleService.setParamsTitle(entity.getTemplateId(), entity.getParameters());
         }
         model.addAttribute("entity", entity);
         model.addAttribute("type", type);
@@ -190,20 +190,25 @@ public class ContractController {
 
     @RequestMapping(path = "verify", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult verify( Boolean valid, Long contractId) throws ParseException {
+    public APIResult verify(Boolean valid, Long contractId) throws ParseException {
         String email = UserHolder.getUser().getEmail();
         CmsUser user = userService.getUserByEmail(email);
-        //审核
-        APIResult approve = this.contractService.approve(user.getId(), contractId, valid);
-        if (approve.getCode() != 0) {
-            throw new APIException(approve.getCode(), approve.getMsg()+",contractId:"+contractId);
+        //1是否可以审核
+        APIResult validateRes = this.contractService.validate(contractId);
+        if (validateRes.getCode() != 0) {
+            throw new APIException(validateRes.getCode(), validateRes.getMsg() + ",contractId:" + contractId);
         }
         if (valid) {
             //2 得到合同信息
             APIResult<Contract> resDetail = this.contractService.getContract(contractId);
-            //3插入对账系统
+            //3 插入对账系统
             Contract detail = resDetail.getData();
             this.accountHandleService.addSettlementForAccount(detail);
+            //4 审核
+            APIResult approve = this.contractService.approve(user.getId(), contractId, valid);
+            if (approve.getCode() != 0) {
+                throw new APIException(approve.getCode(), approve.getMsg() + ",contractId:" + contractId);
+            }
         }
         return new APIResult<>(ResultCodes.Success);
     }
@@ -225,12 +230,6 @@ public class ContractController {
     }
 
 
-
-
-
-
-
-
     @RequestMapping("api/templates")
     @ResponseBody
     public List<ContractTemplate> templates(Long id, Integer type) {
@@ -238,7 +237,6 @@ public class ContractController {
         List<ContractTemplate> contractConfig = contractTemplateList.getData().getList();
         return contractConfig;
     }
-
 
 
 }

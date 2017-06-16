@@ -28,14 +28,6 @@ import java.util.Map;
  */
 @Service
 public class AccountHandleServiceImpl implements AccountHandleService {
-//    private static String dayTypeNames = "youfu_billing_cycle";
-//    private static String poundageNames = "poundage_huigou,poundage_radio,youfu_poundage";
-//    private static String paymentDaysNames = "settle_day,account_period_huigou,youfu_payment_day";
-//    private static String youfuStartTimeNames = "youfu_start_time";
-//    private static String startPriceNames = "youfu_start_price";
-//    private static String commissionNames = "group_buying_commission";
-//    private static String groupBuyingStartTime = "group_buying_start_time";
-
 
     private static String dayTypeNames = "youfu_billing_cycle";
     private static String poundageNames = "youfu_poundage";
@@ -44,9 +36,8 @@ public class AccountHandleServiceImpl implements AccountHandleService {
     private static String startPriceNames = "youfu_start_price";
     private static String commissionNames = "group_buying_commission";
     private static String groupBuyingStartTime = "group_buying_start_time";
-
-
     private static DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
+
     @Autowired
     private RemoteSettlementService remoteAccountSettlementService;
 
@@ -143,15 +134,6 @@ public class AccountHandleServiceImpl implements AccountHandleService {
     public  static  final Long ACCOUNT_SYSTEM_ID=1l;
 
     private void setMerchantSettlementRequest(Map<String, String> result, AcMerchantSettlement request, Long mchId) {
-//        List<ContractParamDistribute> distributes=contractParamDistributeDao.findBySystemId(ACCOUNT_SYSTEM_ID);
-//        for (ContractParamDistribute distribute : distributes) {
-//            if(distribute.getNameMapping().equals(poundageNames)){
-//                String
-//            }
-//
-//        }
-
-
         String poundageStr = getValue(result, poundageNames);//手续费
         String paymentDaysStr = getValue(result, paymentDaysNames);//账期
         String dateTypeStr = getValue(result, dayTypeNames);//类型
