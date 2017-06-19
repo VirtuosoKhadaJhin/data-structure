@@ -11,24 +11,27 @@
 <table class="table table-bordered table-striped" style="table-layout: fixed">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>名称</th>
-        <th>位置</th>
-        <th width="15%">跳转</th>
         <th width="15%">图片</th>
-        <th>显示</th>
-        <th width="90px">操作</th>
+        <th width="60px">名称</th>
+        <th width="60px">位置</th>
+        <th width="30%">跳转</th>
+        <th width="30px">是否显示</th>
+        <th width="110px">排序</th>
+        <th width="80px">操作</th>
     </tr>
     </thead>
     <tbody>
         #foreach($e in $!page.content)
         <tr>
-            <td>$!e.id</td>
+            <td style="word-break: break-all;word-wrap: break-word"><img src="$!e.imgUrl"></td>
             <td>$!e.title</td>
             <td>$!e.position</td>
             <td style="word-break: break-all;word-wrap: break-word"><a href="$!e.linkUrl" target="_blank">$!e.linkUrl</a></td>
-            <td style="word-break: break-all;word-wrap: break-word"><a href="$!e.imgUrl" target="_blank">$!e.imgUrl</a></td>
             <td>#if($!e.display)显示#else 隐藏#end</td>
+            <td>
+                <input type="number" class="sort" style="width: 50px" value="$!e.sort" data-id="$!e.id" tabindex="$!{velocityCount}">
+                <button class="btn btn-mini sort-btn">确定</button>
+            </td>
             <td>
                 <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</button>
                 <button data-id="$!e.id" class="btn btn-info btn-mini update-item" modal-id="update-modal">编辑</button>
@@ -38,6 +41,14 @@
     </tbody>
 </table>
 #parse("common/list_mid.vm")
+
+<div class="control-group">
+    <a href="list?position=index">首页-index</a><br/>
+    <a href="list?position=user">用户-user</a><br/>
+    <a href="list?position=tool">工具-tool</a><br/>
+    <a href="list?position=directship">直邮购-directship</a><br/>
+</div>
+
 <div id="update-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -49,7 +60,7 @@
             <div class="control-group">
                 <label class="control-label">名称</label>
                 <div class="controls">
-                    <input type="text" class="span11" placeholder="" name="title">
+                    <input type="text" class="span11" name="title">
                 </div>
                 <label class="control-label">位置</label>
                 <div class="controls">
@@ -60,6 +71,12 @@
                         <option value="directship">直邮购-directship</option>
                     </select>
                 </div>
+
+                <label class="control-label">顺序</label>
+                <div class="controls">
+                    <input type="text" class="span11" name="sort">
+                </div>
+
                 <label class="control-label">是否显示</label>
                 <div class="controls">
                     <input name="display" class="radio" type="radio" value="true" checked>显示
@@ -67,14 +84,14 @@
                 </div>
                 <label class="control-label">图片</label>
                 <div class="controls">
-                    <input type="text" class="span11" placeholder="" id="imgUrl" name="imgUrl">
+                    <input type="text" class="span11" id="imgUrl" name="imgUrl">
                     <button class="btn btn-success previewBtn" type="button" data-id="imgUrl">预览</button>
-                    <button class="btn btn-success uploadImgBtn" id = "quickImgBtn" type="button" data-id="imgUrl" imageSpec="">上传</button>
+                    <button class="btn btn-success uploadImgBtn" id="quickImgBtn" type="button" data-id="imgUrl" imageSpec="">上传</button>
                     <p id="quickMsg"></p>
                 </div>
                 <label class="control-label">跳转</label>
                 <div class="controls">
-                    <input type="text" class="span11" placeholder="" name="linkUrl">
+                    <input type="text" class="span11" name="linkUrl">
                 </div>
             </div>
         </form>
@@ -99,5 +116,45 @@
             $("#quickMsg").empty().append("");
         }
     }).trigger("change");
+
+
+    $(".sort-btn").on("click", function () {
+        var previousNode = $(this).prev();
+        var value = $(previousNode).val();
+        var id = $(previousNode).attr("data-id");
+
+        $.ajax({
+            url: 'sort',
+            data: {id: id, value: value},
+            type: 'post',
+            success: function (result) {
+                if (result.code == 0) {
+                    window.location.reload();
+                } else {
+                    alert("Fail Code: " + result.code + " MSG: " + result.msg);
+                }
+            }
+        });
+    });
+
+    $(".sort").on("keydown", function (e) {
+        if (e.keyCode == 13) {
+            var value = $(this).val();
+            var id = $(this).attr("data-id");
+
+            $.ajax({
+                url: 'sort',
+                data: {id: id, value: value},
+                type: 'post',
+                success: function (result) {
+                    if (result.code == 0) {
+                        window.location.reload();
+                    } else {
+                        alert("Fail Code: " + result.code + " MSG: " + result.msg);
+                    }
+                }
+            });
+        }
+    });
 </script>
 #parse("common/list_end.vm")

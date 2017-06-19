@@ -175,7 +175,7 @@
             var ele = $('<button type="button">X</button>');
             ele.on("click", function () {
                 $(this.previousElementSibling).remove();
-                $(this).remove();
+                $(this.parent.parent).remove();
             });
             $(this).before('  <input name="spec" type="text" class="span1">');
             $(this).before(ele);

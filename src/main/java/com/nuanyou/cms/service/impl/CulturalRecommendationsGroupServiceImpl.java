@@ -3,7 +3,6 @@ package com.nuanyou.cms.service.impl;
 import com.nuanyou.cms.dao.CulturalRecommendationsGroupDao;
 import com.nuanyou.cms.entity.CulturalRecommendationsGroup;
 import com.nuanyou.cms.service.CulturalRecommendationsGroupService;
-import com.nuanyou.cms.service.CulturalRecommendationsGroupService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +32,7 @@ public class CulturalRecommendationsGroupServiceImpl implements CulturalRecommen
         CulturalRecommendationsGroup entity = dao.findOne(id);
         if (entity != null) {
             entity.setDisplay(false);
+            entity.setDeleted(true);
             dao.save(entity);
         }
     }

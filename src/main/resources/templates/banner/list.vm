@@ -87,6 +87,8 @@
             <option value="index"  #if($!entity.page=="index") selected #end>index</option>
             <option value="up"  #if($!entity.page=="up") selected #end>up</option>
             <option value="down"  #if($!entity.page=="down") selected #end>down</option>
+            <option value="tuanFood"  #if($!entity.page=="tuanFood") selected #end>美食团购(tuanFood)</option>
+            <option value="hotActivity"  #if($!entity.page=="hotActivity") selected #end>热门活动(hotActivity)</option>
         </select>
     </div>
 

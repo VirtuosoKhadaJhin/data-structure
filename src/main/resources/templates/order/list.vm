@@ -36,7 +36,6 @@
         <tbody>
             #foreach($order in $!page.content)
             <tr>
-                <td>$!order.id</td>
                 <td>
                     <a href="edit?type=3&id=$!order.id" data-id="$!order.id" class="btn btn-success btn-mini">详情</a>
                     <a href="itemList?id=$!order.id" class="btn btn-success btn-mini">商品</a>
@@ -44,6 +43,7 @@
                         <a href="javascript:void(0);" data-id="$!order.id" class="btn btn-success btn-mini tuikuan">退款</a>
                     #end
                 </td>
+                <td>$!order.id</td>
                 <td>
                     订单编号:$!order.ordersn<br>
                     订单流水号:$!order.transactionid

@@ -3,12 +3,14 @@ package com.nuanyou.cms.entity;
 import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.commons.LastModified;
+import com.nuanyou.cms.entity.enums.FeatureCat;
 
 import javax.persistence.*;
 import java.util.Date;
 
 /**
  * Created by Felix on 2016/9/29.
+ * readnum／likenum 阅读量与点赞数量不可修改
  */
 @Entity
 @EntityListeners(DateEntityListener.class)
@@ -20,13 +22,16 @@ public class Feature {
     private String linkurl;
     private String content;
     private Byte type;
+    private FeatureCat cat;
     private City city;
     private Country country;
     private Boolean display;
+    private Boolean deleted = false;
     private Date updatetime;
     private Date createtime;
     private Integer readnum;
     private Integer likenum;
+    private Integer sort;
 
     @Id
     @Column(name = "id")
@@ -89,6 +94,16 @@ public class Feature {
         this.type = type;
     }
 
+    @Convert(converter = FeatureCat.Converter.class)
+    @Column(name = "cat")
+    public FeatureCat getCat() {
+        return cat;
+    }
+
+    public void setCat(FeatureCat cat) {
+        this.cat = cat;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cityid", nullable = true)
     public City getCity() {
@@ -118,6 +133,14 @@ public class Feature {
         this.display = display;
     }
 
+    @Column(name = "deleted", nullable = true)
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
     @LastModified
     @Column(name = "updatetime", nullable = true)
@@ -131,7 +154,7 @@ public class Feature {
 
 
     @CreatedAt
-    @Column(name = "createtime", nullable = true)
+    @Column(name = "createtime", updatable = false)
     public Date getCreatetime() {
         return createtime;
     }
@@ -141,7 +164,7 @@ public class Feature {
     }
 
 
-    @Column(name = "readnum", nullable = true)
+    @Column(name = "readnum", updatable = false)
     public Integer getReadnum() {
         return readnum;
     }
@@ -151,7 +174,7 @@ public class Feature {
     }
 
 
-    @Column(name = "likenum", nullable = true)
+    @Column(name = "likenum", updatable = false)
     public Integer getLikenum() {
         return likenum;
     }
@@ -160,5 +183,13 @@ public class Feature {
         this.likenum = likenum;
     }
 
+    @OrderBy("ASC")
+    @Column(name = "sort", nullable = true)
+    public Integer getSort() {
+        return sort;
+    }
 
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 }

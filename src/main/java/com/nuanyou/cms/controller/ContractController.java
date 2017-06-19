@@ -5,24 +5,22 @@ import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.component.FileClient;
 import com.nuanyou.cms.dao.MerchantDao;
+import com.nuanyou.cms.entity.CmsUser;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.contract.output.Contract;
 import com.nuanyou.cms.model.contract.output.ContractTemplate;
-import com.nuanyou.cms.model.contract.output.Contracts;
-import com.nuanyou.cms.remote.AccountService;
-import com.nuanyou.cms.remote.ContractService;
+import com.nuanyou.cms.model.contract.output.ContractTemplates;
+import com.nuanyou.cms.remote.service.RemoteContractService;
+import com.nuanyou.cms.service.AccountHandleService;
+import com.nuanyou.cms.service.ContractModuleService;
 import com.nuanyou.cms.service.CountryService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.JsonUtils;
 import io.swagger.annotations.ApiParam;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,9 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.math.BigDecimal;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,26 +48,16 @@ public class ContractController {
     @Autowired
     @Qualifier("s3")
     private FileClient fileClient;
-
     @Autowired
-    private ContractService contractService;
+    private RemoteContractService contractService;
     @Autowired
-    private AccountService accountService;
+    private ContractModuleService contractModuleService;
+    @Autowired
+    private AccountHandleService accountHandleService;
     @Autowired
     private CountryService countryService;
     @Autowired
     private MerchantDao merchantDao;
-    @Value("${merchantSettlement.default.daytype}")
-    private Integer daytype;
-    @Value("${merchantSettlement.default.startprice}")
-    private BigDecimal startprice;
-
-
-    @Value("${contractConfig.poundageNames}")
-    private String poundageNames;
-
-    @Value("${contractConfig.paymentDaysNames}")
-    private String paymentDaysNames;
 
 
     @RequestMapping("list")
@@ -90,28 +77,11 @@ public class ContractController {
                        @RequestParam(value = "businessLicense", required = false) Boolean businessLicense,
                        @RequestParam(value = "contractNum", required = false) Boolean contractNum,
                        @RequestParam(value = "paperContract", required = false) Boolean paperContract) {
-
-        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, "[2]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), businessLicense, paperContract, startTime, endTime, index, limit);
-        Contracts contractsData = contracts.getData();
-        Pageable pageable = new PageRequest(index - 1, limit);
-        List<Contract> list = contractsData.getList();
-        if (list == null)
-            list = new ArrayList(0);
-
-        // 本地名称显示商户本地名称
-        for (Contract contract : list) {
-            Long mchid = contract.getMchid();
-            String localName = merchantDao.getLocalName(mchid);
-            contract.setMchName(localName);
-        }
-        Page<Contract> page = new PageImpl(list, pageable, contractsData.getTotal());
-
+        Page<Contract> page = contractModuleService.getContracts(userId, merchantId, id, merchantName, "[2]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), businessLicense, paperContract, startTime, endTime, index, limit);
         List<Country> countries = countryService.getIdNameList();
-
         model.addAttribute("page", page);
         model.addAttribute("countries", countries);
         model.addAttribute("countryId", countryId);
-
         model.addAttribute("userid", userId);
         model.addAttribute("merchantname", merchantName);
         model.addAttribute("merchantid", merchantId);
@@ -128,6 +98,38 @@ public class ContractController {
         return "contract/list";
     }
 
+
+    @RequestMapping("detail")
+    public String getDetail(Model model,
+                            @RequestParam(value = "id", required = true) Long id) {
+        APIResult<Contract> result = contractService.getContract(id);
+        Contract detail = result.getData();
+        if (detail != null) {
+            Long mchid = detail.getMchId();
+            String localName = merchantDao.getLocalName(mchid);
+            model.addAttribute("id", detail.getId());
+            model.addAttribute("relatedMchName", localName); //商户本地名称
+            model.addAttribute("mchName", detail.getMchName());//企业名称
+            model.addAttribute("approveTime", detail.getApproveTime());
+            model.addAttribute("templateTitle", detail.getTemplateTitle());
+            model.addAttribute("startTime", detail.getStartTime());
+            model.addAttribute("type", detail.getType());
+            model.addAttribute("endTime", detail.getEndTime());
+            model.addAttribute("submitTime", detail.getSubmitTime());
+            model.addAttribute("rejectTime", detail.getRejectTime());
+            model.addAttribute("status", detail.getStatus());
+            model.addAttribute("pdfUrl", detail.getPdfUrl());
+            model.addAttribute("htmlContent", detail.getHtmlContent());
+            model.addAttribute("username", detail.getUsername());
+            model.addAttribute("signImgUrl", detail.getSignImgUrl());
+            model.addAttribute("businessLicense", detail.getBusinessLicense());
+            model.addAttribute("paperContract", detail.getPaperContract());
+            model.addAttribute("remark", detail.getRemark());
+            model.addAttribute("contractNo", detail.getContractNo());
+        }
+        return "contract/detail";
+    }
+
     @RequestMapping("filedList")
     public String filedList(
             Model model,
@@ -142,16 +144,8 @@ public class ContractController {
             @ApiParam(value = "结束时间(yyyy-MM-dd)") @RequestParam(value = "endtime", required = false) String endTime,
             @ApiParam(value = "页序号，默认从1开始") @RequestParam(value = "page", required = false, defaultValue = "1") Integer index,
             @ApiParam(value = "每页条目数,默认20条") @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit) {
-
-        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, "[4]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), null, null, startTime, endTime, index, limit);
-        Contracts contractsData = contracts.getData();
-        Pageable pageable = new PageRequest(index - 1, limit);
-        List<Contract> list = contractsData.getList();
-        if (list == null)
-            list = new ArrayList(0);
-        Page<Contract> page = new PageImpl(list, pageable, contractsData.getTotal());
+        Page<Contract> page = contractModuleService.getContracts(userId, merchantId, id, merchantName, "[4]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), null, null, startTime, endTime, index, limit);
         model.addAttribute("page", page);
-
         model.addAttribute("userid", userId);
         model.addAttribute("merchantname", merchantName);
         model.addAttribute("merchantid", merchantId);
@@ -177,21 +171,44 @@ public class ContractController {
     }
 
 
-    @RequestMapping(path = "verify", method = RequestMethod.GET)
+    @RequestMapping(path = "edit", method = RequestMethod.GET)
+    public String edit(Long id, Model model, Integer type) throws UnsupportedEncodingException {
+        Contract entity = null;
+        Map<String, String> parametersLangs = null;
+        if (id != null) {
+            entity = this.contractModuleService.getContract(id);
+            parametersLangs = contractModuleService.setParamsTitle(entity.getTemplateId(), entity.getParameters());
+        }
+        model.addAttribute("entity", entity);
+        model.addAttribute("type", type);
+        model.addAttribute("parametersLangs", parametersLangs);
+        return "contract/edit";
+    }
+
+    @Autowired
+    private UserService userService;
+
+    @RequestMapping(path = "verify", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult verify(Long id, Boolean valid, Long contractId) throws ParseException {
-        Long userid = UserHolder.getUser().getUserid();
-        //审核
-        APIResult approve = this.contractService.approve(userid, contractId, valid);
-        if (approve.getCode() != 0) {
-            throw new APIException(approve.getCode(), approve.getMsg());
+    public APIResult verify(Boolean valid, Long contractId) throws ParseException {
+        String email = UserHolder.getUser().getEmail();
+        CmsUser user = userService.getUserByEmail(email);
+        //1是否可以审核
+        APIResult validateRes = this.contractService.validate(contractId);
+        if (validateRes.getCode() != 0) {
+            throw new APIException(validateRes.getCode(), validateRes.getMsg() + ",contractId:" + contractId);
         }
         if (valid) {
             //2 得到合同信息
-            APIResult<Contract> resDetail = this.contractService.detail(contractId);
-            //3插入对账系统
+            APIResult<Contract> resDetail = this.contractService.getContract(contractId);
+            //3 插入对账系统
             Contract detail = resDetail.getData();
-            this.addSettlementForAccount(detail);
+            this.accountHandleService.addSettlementForAccount(detail);
+            //4 审核
+            APIResult approve = this.contractService.approve(user.getId(), contractId, valid);
+            if (approve.getCode() != 0) {
+                throw new APIException(approve.getCode(), approve.getMsg() + ",contractId:" + contractId);
+            }
         }
         return new APIResult<>(ResultCodes.Success);
     }
@@ -204,9 +221,7 @@ public class ContractController {
         String filename = file.getOriginalFilename();
         String format = filename.substring(filename.lastIndexOf("."), filename.length());
         String url = fileClient.uploadFile(file.getInputStream(), format);
-
         APIResult apiResult = contractService.addComponent(id, type, url);
-
         response.setContentType("text/html;charset=UTF-8");
         if (apiResult.isSuccess())
             response.getWriter().println("<script>parent.window.location.reload();</script>");
@@ -214,55 +229,14 @@ public class ContractController {
             response.getWriter().println("<script>parent.alert('" + apiResult.getMsg() + "');</script>");
     }
 
-    private void addSettlementForAccount(Contract detail) {
-        if (detail.getMchid() == null) {
-            throw new APIException(ResultCodes.ContractNotAssignedForMerchant);
-        }
-        Map<String, String> result = detail.getParameters();
-        BigDecimal poundage = getPoundage(result);
-        Long paymentDays = getPaymentDays(result);
-        if (poundage != null && paymentDays != null) {
-            Long merchantId = detail.getMchid();
-            APIResult res = accountService.add(merchantId, true, daytype, poundage, paymentDays, startprice, new DateTime().toString("yyyy-MM-dd"));
-            if (res.getCode() != 0) {
-                throw new APIException(res.getCode(), res.getMsg());
-            }
-        } else {
-            throw new APIException(ResultCodes.PoundageOrPayDaysIsNull);
-        }
-    }
-
-    private Long getPaymentDays(Map<String, String> result) {
-        String[] paymentDaysNamesList = paymentDaysNames.split(",");
-        Long paymentDays = null;
-        for (String p : paymentDaysNamesList) {
-            Long temp = result.get(p) == null ? null : new Long(result.get(p));
-            if (temp != null) {
-                paymentDays = temp;
-                break;
-            }
-        }
-        return paymentDays;
-    }
-
-    private BigDecimal getPoundage(Map<String, String> result) {
-        String[] poundageNamesList = poundageNames.split(",");
-        BigDecimal poundage = null;
-        for (String p : poundageNamesList) {
-            BigDecimal temp = result.get(p) == null ? null : new BigDecimal(result.get(p));
-            if (temp != null) {
-                poundage = temp;
-                break;
-            }
-        }
-        return poundage;
-    }
 
     @RequestMapping("api/templates")
     @ResponseBody
-    public APIResult templates(Long id, Integer type) {
-        APIResult<List<ContractTemplate>> contractConfig = this.contractService.getContractConfig(id, type);
+    public List<ContractTemplate> templates(Long id, Integer type) {
+        APIResult<ContractTemplates> contractTemplateList = this.contractService.findContractTemplateList(id, null, null, 1, 1000);
+        List<ContractTemplate> contractConfig = contractTemplateList.getData().getList();
         return contractConfig;
     }
+
 
 }

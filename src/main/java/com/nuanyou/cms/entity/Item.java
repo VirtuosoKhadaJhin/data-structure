@@ -19,7 +19,7 @@ import java.util.List;
 @Entity
 @EntityListeners(DateEntityListener.class)
 @Table(name = "ny_item")
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler", "merchant"})
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler", "directmail", "merchant"})
 public class Item {
     private Long id;
     private String name;

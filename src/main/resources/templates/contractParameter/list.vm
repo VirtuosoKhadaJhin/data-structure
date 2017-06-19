@@ -1,0 +1,103 @@
+#parse("common/list_start.vm")
+
+<div id="content-header">
+    <div id="breadcrumb">
+        <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+        <a href="list" class="tip-bottom" data-original-title="">参数管理</a>
+    </div>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
+</div>
+<div style="overflow: auto;width: 100%">
+<table class="table table-bordered data-table dataTable" id="DataTables_Table_0" >
+    <thead>
+    <tr role="row">
+        <th>ID
+        </th>
+        <th>名称</th>
+        <th>key</th>
+        <th>默认值</th>
+        <th>数据类型</th>
+        <th>是否可编辑</th>
+        <th>是否为空</th>
+        <th>正则表达式</th>
+        <th>校验提示</th>
+        <th>输入提示</th>
+        <th>是否多值</th>
+        <th>是否是公共字段</th>
+        <th>是否自定义参数</th>
+        <th class="table-set" width="90px">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX">
+            <td>$!entity.id</td>
+            <td>
+                <a href="$!link.contextPath/contractParameter/edit?op=3&id=1" class="alink">
+                    $!entity.name.key
+                </a>
+            </td>
+            <td>$!entity.key</td>
+            <td>$!entity.defaultValue</td>
+            <td>
+                #if($!entity.type==1)
+                文本
+            #elseif($!entity.type==2)
+                整数
+            #elseif($!entity.type==3)
+                小数
+            #elseif($!entity.type==4)
+                日期
+            #elseif($!entity.type==5)
+                其他数据
+            #end</td>
+            <td>#if($!entity.editable)是#else 否#end</td>
+            <td>#if($!entity.nullable)是#else 否#end</td>
+            <td>$!entity.regex</td>
+            <td>$!entity.hint.key</td>
+            <td>$!entity.remark.key</td>
+            <td>#if($!entity.multiValuable)是#else 否#end</td>
+            <td>#if($!entity.common)是#else 否#end</td>
+            <td>#if($!entity.custom)是#else 否#end</td>
+            <td>
+                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
+                <a data-id="$!entity.id" class="btn btn-danger btn-mini remove-item">删除</a>
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+ </div>
+#parse("common/list_mid.vm")
+<form>
+    <button type="submit" class="btn btn-primary">查询</button>
+</form>
+#parse("common/list_end.vm")
+
+<script>
+    $(".remove-item").each(function (i, o) {
+        $(o).on("click", function (event) {
+            if (!confirm('确实要删除该内容吗?'))
+                return;
+            var dataId = $(this).attr("data-id");
+            $.ajax({
+                url: 'remove',
+                data: {id: dataId},
+                type: 'get',
+                success: function (result) {
+                    if (result.code == 0) {
+                        window.location.reload();
+                    } else {
+                        alert("操作失败:" + result.msg);
+                    }
+                }
+            });
+        });
+    });
+</script>
+

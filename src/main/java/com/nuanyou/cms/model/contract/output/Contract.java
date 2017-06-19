@@ -32,14 +32,18 @@ public class Contract {
     private Date createTime;
     private Long userId;
     private String username;
-    private Long mchid;
+    private Long mchId;
     private Long countryId;
-    private String mchName;
+    private String mchName;//企业名称
+    private String relatedMchName;
     private String signImgUrl;
     private String businessLicense;
     private String paperContract;
     private String remark;
     private String contractNo;
+    private Long approverId;
+    private String approverName;
+
 
 
     @ApiModelProperty(value = "合同id")
@@ -64,12 +68,12 @@ public class Contract {
 
     @ApiModelProperty(value = "商户ID")
     @JsonProperty("merchantid")
-    public Long getMchid() {
-        return mchid;
+    public Long getMchId() {
+        return mchId;
     }
 
-    public void setMchid(Long mchid) {
-        this.mchid = mchid;
+    public void setMchId(Long mchId) {
+        this.mchId = mchId;
     }
 
     @ApiModelProperty(value = "国家ID")
@@ -84,6 +88,7 @@ public class Contract {
 
     @ApiModelProperty(value = "BDid")
     @JsonProperty("userid")
+    @JsonIgnore
     public Long getUserId() {
         return userId;
     }
@@ -318,5 +323,34 @@ public class Contract {
 
     public void setContractNo(String contractNo) {
         this.contractNo = contractNo;
+    }
+
+    @ApiModelProperty(value = "审核人id")
+    @JsonProperty("approverid")
+    public Long getApproverId() {
+        return approverId;
+    }
+
+    public void setApproverId(Long approverId) {
+        this.approverId = approverId;
+    }
+
+    public String getApproverName() {
+        return approverName;
+    }
+
+    public void setApproverName(String approverName) {
+        this.approverName = approverName;
+    }
+
+
+    @ApiModelProperty(value = "商户本地名称")
+    @JsonProperty("relatedMchName")
+    public String getRelatedMchName() {
+        return relatedMchName;
+    }
+
+    public void setRelatedMchName(String relatedMchName) {
+        this.relatedMchName = relatedMchName;
     }
 }

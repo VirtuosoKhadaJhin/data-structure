@@ -10,7 +10,7 @@ public class SupportTypeConverter implements AttributeConverter<List<SupportType
     @Override
     public Integer convertToDatabaseColumn(List<SupportType> attribute) {
         if (attribute == null || attribute.isEmpty())
-            return null;
+            return 0;
         Integer flag = 0;
         for (SupportType e : attribute) {
             flag += e.value;
@@ -20,7 +20,7 @@ public class SupportTypeConverter implements AttributeConverter<List<SupportType
 
     @Override
     public List<SupportType> convertToEntityAttribute(Integer dbData) {
-        if (dbData == null)
+        if (dbData == null||dbData==0)
             return null;
         return SupportType.toEnums(dbData);
     }

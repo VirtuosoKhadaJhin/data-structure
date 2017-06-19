@@ -58,13 +58,14 @@ public class CityController {
         return "redirect:" + url;
     }
 
+
+
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index,
                        @RequestParam(required = false) String nameOrId,
                        @RequestParam(required = false, defaultValue = "id") String propertie,
                        @RequestParam(required = false) Sort.Direction direction,
                        City entity, Model model) {
-
         if (StringUtils.isNotBlank(nameOrId)) {
             if (StringUtils.isNumeric(nameOrId)) {
                 entity.setId(NumberUtils.toLong(nameOrId));

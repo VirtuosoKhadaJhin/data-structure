@@ -4,18 +4,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Created by yangkai on 2016/9/12.
+ * Created by Alan.ye on 2016/9/12.
  */
-public class ContractTemplateParameter implements Comparable {
+public class ContractTemplateParameter implements Comparable<ContractTemplateParameter> {
+
+    private Long id;
+
     private String name;
 
     private String key;
 
     private String defaultValue;
 
-    private Byte type;
+    private Integer type;
 
     private Integer sort = 0;
+
+    private String source;
+
+    private boolean editable;
+
+    private boolean nullable;
+
+    private String regex;
+
+    private String hint;
+
+    private String remark;
+
+    private boolean multiValuable;
+
+    private boolean common;
+
+    private boolean custom;
 
     @ApiModelProperty(value = "参数名称")
     @JsonProperty("name")
@@ -49,11 +70,11 @@ public class ContractTemplateParameter implements Comparable {
 
     @ApiModelProperty(value = "类型：1、文本，2：数字")
     @JsonProperty("type")
-    public Byte getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(Byte type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -64,21 +85,104 @@ public class ContractTemplateParameter implements Comparable {
     }
 
     public void setSort(Integer sort) {
-        if (sort == null) {
+        if (sort == null)
             sort = 0;
-        }
         this.sort = sort;
     }
+    @ApiModelProperty(value = "备选数据源")
+    @JsonProperty("source")
+    public String getSource() {
+        return source;
+    }
 
+    public void setSource(String source) {
+        this.source = source;
+    }
+    @ApiModelProperty(value = "是否可编辑")
+    @JsonProperty("editable")
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+    @ApiModelProperty(value = "是否可为空")
+    @JsonProperty("nullable")
+    public boolean isNullable() {
+        return nullable;
+    }
+
+    public void setNullable(boolean nullable) {
+        this.nullable = nullable;
+    }
+    @ApiModelProperty(value = "校验正则表达式")
+    @JsonProperty("regex")
+    public String getRegex() {
+        return regex;
+    }
+
+    public void setRegex(String regex) {
+        this.regex = regex;
+    }
+    @ApiModelProperty(value = "格式校验提示")
+    @JsonProperty("hint")
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
+    }
+    @ApiModelProperty(value = "属性说明")
+    @JsonProperty("remark")
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+    @ApiModelProperty(value = "是否多值")
+    @JsonProperty("multivaluable")
+    public boolean isMultiValuable() {
+        return multiValuable;
+    }
+
+    public void setMultiValuable(boolean multiValuable) {
+        this.multiValuable = multiValuable;
+    }
+    @ApiModelProperty(value = "是否是公共属性")
+    @JsonProperty("common")
+    public boolean isCommon() {
+        return common;
+    }
+
+    public void setCommon(boolean common) {
+        this.common = common;
+    }
+    @ApiModelProperty(value = "是否是自定义属性")
+    @JsonProperty("custom")
+    public boolean isCustom() {
+        return custom;
+    }
+
+    public void setCustom(boolean custom) {
+        this.custom = custom;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     @Override
-    public int compareTo(Object o) {
-
-        ContractTemplateParameter contractTemplateParameter = (ContractTemplateParameter) o;
-
-        int sort = contractTemplateParameter.getSort();
-
-
-        return this.sort.compareTo(sort);
+    public int compareTo(ContractTemplateParameter that) {
+        return this.sort.compareTo(that.sort);
     }
+
+
 }

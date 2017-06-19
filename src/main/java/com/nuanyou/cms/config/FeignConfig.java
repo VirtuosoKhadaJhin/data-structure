@@ -1,6 +1,6 @@
 package com.nuanyou.cms.config;
 
-import com.nuanyou.cms.remote.ContractService;
+import com.nuanyou.cms.remote.service.RemoteContractService;
 import com.nuanyou.cms.util.JsonUtils;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
@@ -18,11 +18,11 @@ public class FeignConfig {
     
 
     @Bean
-    public ContractService contractService() {
+    public RemoteContractService contractService() {
         return Feign.builder()
                 .decoder(new JacksonDecoder(JsonUtils.getMapper()))
 //                .encoder()
-                .target(ContractService.class, host);
+                .target(RemoteContractService.class, host);
     }
 
 }

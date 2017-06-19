@@ -113,14 +113,14 @@
                                 <div class="controls">
                                     <select class="span10" name="subcat.id" def-value="$!entity.subcat.id"></select>
                                 </div>
-                                <label class="control-label">2.0分类信息</label>
-                                <div class="controls">
-                                    <select class="span10" name="catId">
-                                        <option value="1" #if($!entity.catId==1) selected #end>美食</option>
-                                        <option value="2" #if($!entity.catId==2) selected #end>购物</option>
-                                        <option value="3" #if($!entity.catId==3) selected #end>景点</option>
-                                    </select>
-                                </div>
+##                                <label class="control-label">2.0分类信息</label>
+##                                <div class="controls">
+##                                    <select class="span10" name="catId">
+##                                        <option value="1" #if($!entity.catId==1) selected #end>美食</option>
+##                                        <option value="2" #if($!entity.catId==2) selected #end>购物</option>
+##                                        <option value="3" #if($!entity.catId==3) selected #end>景点</option>
+##                                    </select>
+##                                </div>
                                 <label class="control-label">中文地址</label>
                                 <div class="controls">
                                     <input type="text" class="span10" placeholder="中文地址" name="address" value="$!entity.address" maxlength="200">
@@ -129,13 +129,13 @@
                                 <div class="controls">
                                     <input type="text" class="span10" placeholder="本地地址" name="kpaddress" value="$!entity.kpaddress" maxlength="200">
                                 </div>
-                                <label class="control-label">2.0列表图</label>
-                                <div class="controls">
-                                    <input type="text" class="span9" id="indexImgUrl" placeholder="2.0列表图" name="indexImgUrl" value="$!entity.indexImgUrl">
-                                    <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">预览</button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl" data-width="600" data-height="200">上传
-                                    </button>
-                                </div>
+##                                <label class="control-label">2.0列表图</label>
+##                                <div class="controls">
+##                                    <input type="text" class="span9" id="indexImgUrl" placeholder="2.0列表图" name="indexImgUrl" value="$!entity.indexImgUrl">
+##                                    <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">预览</button>
+##                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl" data-width="600" data-height="200">上传
+##                                    </button>
+##                                </div>
 
                                 <label class="control-label">3.0列表图</label>
                                 <div class="controls">
@@ -246,22 +246,22 @@
             $("#btn-edit").hide();
             #end
 
-        $("input[name='hasratio']").bind("click",function(){
+        $("input[name='hasratio']").bind("click", function () {
 //            if($(this).attr('checked') == 'checked') return ;
 //            $(this).attr("checked","checked");
-            if($(this).val() == 'true'){
-                if (confirm('确定要输入商品汇率系数吗?')){
+            if ($(this).val() == 'true') {
+                if (confirm('确定要输入商品汇率系数吗?')) {
                     $("input[name='ratio']").removeClass('hide');
-                }else {
+                } else {
                     $(this).removeAttr("checked");
-                    $("input[name='hasratio']:first").prop("checked",true);
+                    $("input[name='hasratio']:first").prop("checked", true);
                 }
-            }else {
-                if (confirm('确定要使用默认商品汇率系数吗?')){
+            } else {
+                if (confirm('确定要使用默认商品汇率系数吗?')) {
                     $("input[name='ratio']").addClass('hide');
-                }else {
+                } else {
                     $(this).removeAttr("checked");
-                    $("input[name='hasratio']:last").prop("checked",true);
+                    $("input[name='hasratio']:last").prop("checked", true);
                 }
             }
         });
@@ -326,7 +326,6 @@
         });
 
 
-
         $(".merchantValidate").validate({
             rules: {
                 sort: {
@@ -353,9 +352,9 @@
                 mailWeight: {
                     number: true
                 },
-                ratio:{
-                    isPositive:true,
-                    number:true
+                ratio: {
+                    isPositive: true,
+                    number: true
                 }
             },
             errorPlacement: function (error, element) {
@@ -366,7 +365,6 @@
             },
             errorElement: "span"
         });
-
 
 
         function directMailChange() {
@@ -383,18 +381,18 @@
         }
 
 
-        $.validator.addMethod("isPositive",function(value,element){
-            if(value==""){
+        $.validator.addMethod("isPositive", function (value, element) {
+            if (value == "") {
                 return true;
             }
-            if(value<=0){
+            if (value <= 0) {
                 return false;
-            }else{
+            } else {
                 return true;
             }
 //            var score = /^[0-9]*$/;
 //            return this.optional(element) || (score.test(value));
-        },"<font color='#E47068'>请输入大于0的数字</font>");
+        }, "<font color='#E47068'>请输入大于0的数字</font>");
 
 
     </script>

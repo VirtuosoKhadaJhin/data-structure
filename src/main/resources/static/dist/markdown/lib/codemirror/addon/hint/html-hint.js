@@ -112,7 +112,7 @@
       attrs: {
         action: null, name: null,
         "accept-charset": charsets,
-        autocomplete: ["on", "off"],
+        autocomplete1: ["on", "off"],
         enctype: encs,
         method: methods,
         novalidate: ["", "novalidate"],
@@ -154,7 +154,7 @@
         name: null, pattern: null, placeholder: null, size: null, src: null,
         step: null, value: null, width: null,
         accept: ["audio/*", "video/*", "image/*"],
-        autocomplete: ["on", "off"],
+        autocomplete1: ["on", "off"],
         autofocus: ["", "autofocus"],
         checked: ["", "checked"],
         disabled: ["", "disabled"],

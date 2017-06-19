@@ -3,7 +3,7 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.model.LogVO;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.model.es.ESResult;
-import com.nuanyou.cms.remote.LogService;
+import com.nuanyou.cms.remote.service.LogService;
 import com.nuanyou.cms.util.NumberUtils;
 import com.nuanyou.cms.util.OperationLog;
 import com.nuanyou.cms.util.TimeCondition;

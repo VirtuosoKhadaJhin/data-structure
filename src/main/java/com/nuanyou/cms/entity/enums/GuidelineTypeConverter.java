@@ -10,7 +10,7 @@ public class GuidelineTypeConverter implements AttributeConverter<List<Guideline
     @Override
     public Integer convertToDatabaseColumn(List<GuidelineType> attribute) {
         if (attribute == null || attribute.isEmpty())
-            return null;
+            return 0;
         Integer flag = 0;
         for (GuidelineType e : attribute) {
             flag += e.value;
@@ -20,7 +20,7 @@ public class GuidelineTypeConverter implements AttributeConverter<List<Guideline
 
     @Override
     public List<GuidelineType> convertToEntityAttribute(Integer dbData) {
-        if (dbData == null)
+        if (dbData == null||dbData==0)
             return null;
         return GuidelineType.toEnums(dbData);
     }

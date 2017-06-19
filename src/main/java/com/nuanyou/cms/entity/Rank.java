@@ -27,6 +27,7 @@ public class Rank {
     private Byte objtype;
     private Merchant merchant;
     private Item item;
+    private String imgUrl;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +54,7 @@ public class Rank {
 
 
 
-    
+
     @Column(name = "objid", nullable = true)
     public Long getObjid() {
         return objid;
@@ -63,7 +64,7 @@ public class Rank {
         this.objid = objid;
     }
 
-    
+
     @Column(name = "objtype", nullable = true)
     public Byte getObjtype() {
         return objtype;
@@ -115,6 +116,14 @@ public class Rank {
         this.updatetime = updatetime;
     }
 
+    @Column(name = "imgurl", nullable = true)
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 
     @Transient
     public Merchant getMerchant() {

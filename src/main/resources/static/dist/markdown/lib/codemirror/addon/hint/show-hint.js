@@ -376,7 +376,7 @@
     };
   });
 
-  CodeMirror.commands.autocomplete = CodeMirror.showHint;
+  CodeMirror.commands.autocomplete1 = CodeMirror.showHint;
 
   var defaultOptions = {
     hint: CodeMirror.hint.auto,
