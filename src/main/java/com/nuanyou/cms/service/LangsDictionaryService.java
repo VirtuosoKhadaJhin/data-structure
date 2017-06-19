@@ -91,7 +91,7 @@ public interface LangsDictionaryService {
     List<LangsDictionary> findSuggestSearch(String key);
 
     /**
-     * 删除多语言记录
+     * del删除多语言记录
      *
      * @param requestVo
      */
