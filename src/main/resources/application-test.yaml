@@ -86,3 +86,8 @@ merchantSettlement:
 contractConfig:
   poundageNames: poundage_huigou,poundage_radio,poundage
   paymentDaysNames: settle_day,account_period_huigou
+
+paymentRecord:
+  service-address: http://test.payment.91nuanyou.com
+  pattern-url: /paymentOrderRecord/*
+  waiting-time: 5
