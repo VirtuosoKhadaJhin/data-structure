@@ -148,10 +148,18 @@ public class LangsDictionaryController {
     @RequestMapping("edit")
     public String edit(String keyCode, Model model) throws UnsupportedEncodingException {
         keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
+
+        // 多语言种类
         LangsCountry[] values = LangsCountry.values();
+
+        // 多语言分类
         List<LangsCategory> selectableLangsCategory = categoryService.findAllCategories();
+
+        // 多语言数据
         LangsDictionaryVo langsDictionary = dictionaryService.findLangsDictionary(keyCode, null);
+
         model.addAttribute("langsCountries", values);
+        model.addAttribute("langsDictionary", langsDictionary);
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
         return "langsDictionary/edit";
     }

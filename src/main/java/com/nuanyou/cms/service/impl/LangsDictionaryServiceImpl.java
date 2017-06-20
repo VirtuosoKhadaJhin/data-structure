@@ -249,7 +249,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     @Override
     public LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale) {
         Example<EntityNyLangsDictionary> example = Example.of(new EntityNyLangsDictionary(keyCode));
-        List<EntityNyLangsDictionary> entityNyLangsDictionarys = this.dictionaryDao.findAll(example);
+        List<EntityNyLangsDictionary> entityNyLangsDictionarys = dictionaryDao.findAll(example);
 
         List<LangsCountryMessageVo> langsMessageList = Lists.newArrayList();
         LangsDictionaryVo dictionaryVo = new LangsDictionaryVo();
@@ -261,6 +261,16 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
             langsMessageList.add(messageVo);
         }
         dictionaryVo.setLangsMessageList(langsMessageList);
+
+        // 查询备注
+        Example<EntityNyLangsMessageTip> tipExample = Example.of(new EntityNyLangsMessageTip(keyCode));
+        EntityNyLangsMessageTip entityNyLangsMessageTip = messageTipDao.findOne(tipExample);
+
+        if(entityNyLangsMessageTip != null){
+            LangsMessageTipVo langsMessageTipVo = convertToLangsMessageTip(entityNyLangsMessageTip);
+            dictionaryVo.setMessageTip(langsMessageTipVo);
+        }
+
         return dictionaryVo;
     }
 

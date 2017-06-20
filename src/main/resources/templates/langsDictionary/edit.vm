@@ -38,6 +38,20 @@
             text-align: left;
             padding-top: 5px;
         }
+
+        #imgUrl {
+            width: 250px;
+            height: 250px;
+        }
+
+        .keyCodeStatus {
+            display: none;
+            padding-right: 8em;
+            float: left;
+            color: red;
+            text-align: left;
+            padding-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -69,10 +83,8 @@
                                                 style="color: red;margin: 0px;padding: 5px;">*</font>：</label>
                                         <div class="controls" style="margin-left: 152px;">
                                             <input for="name" name="keyCode" id="keyCode" type="text" class="span7"
-                                                   readonly="readonly" style="width: 80%"
-                                                   value="">
-                                            <label id="keyCodeStatus" class="control-label"
-                                                   style="display:none;padding-right: 8em;float: left;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
+                                                   readonly="readonly" style="width: 80%" value="$!langsDictionary.keyCode">
+                                            <label id="keyCodeStatus" class="keyCodeStatus">KeyCode重复</label>
                                         </div>
                                     </div>
                                     <div class="">
@@ -82,9 +94,12 @@
                                         <div class="controls" style="margin-left: 152px;">
                                             <select class="span7 select2 " name="categoryId"
                                                     onchange="keyCodeRealTime()" style="width: 80%">
-                                                <option value="" selected="selected">全部分类</option>
                                                 #foreach($e in $!selectableLangsCategory)
-                                                    <option value="$!e.id">$!e.name</option>
+                                                    #if($!langsDictionary.categoryId == $!e.id)
+                                                        <option value="$!e.id" selected>$!e.name</option>
+                                                    #else
+                                                        <option value="$!e.id">$!e.name</option>
+                                                    #end
                                                 #end
                                             </select>
                                         </div>
@@ -100,8 +115,15 @@
                                                 #end
                                                 ：</label>
                                             <div class="controls" style="margin-left: 152px;">
-                                                <input name="$!langCountry.key" type="text" style="width: 80%"
-                                                       class="span7 countryLanguage">
+                                                ##多语言##
+                                                    #foreach($message in $!langsDictionary.langsMessageList)
+                                                        #if($!message.langsKey == $!langCountry.key)
+                                                            <input name="$!langCountry.key" type="text" style="width: 80%"
+                                                                   class="span7 countryLanguage" value="$!message.message">
+                                                        #end
+                                                    #end
+
+                                                ##多语言##
                                                 <label id="requiredKey_$!langCountry.key"
                                                        class="control-label required-waring"
                                                        style="padding-top: 2px;text-align: left;width: 140px;">必填项</label>
@@ -115,10 +137,9 @@
                                     <div class="">
                                         <label class="control-label" style="min-width: 100px;max-width: 100px;">描&nbsp;&nbsp;&nbsp;述：</label>
                                         <div class="controls" style="margin-left: 80px">
-                                            <textarea placeholder="多语言描述" class="form-control" style="margin-left: 40px;resize: none;" id="remark" cols="4"
-                                                      rows="4"></textarea>
-                                            <label name="remark" class="control-label required-waring"
-                                                   style="padding-top: 2px;text-align: left;width: 140px;">备注不能为空</label>
+                                            <textarea placeholder="多语言描述" class="form-control" id="remark"
+                                                      style="margin-left: 40px;min-width: 253px;" cols="4" rows="4">#if(
+                                                "$!langsDictionary.messageTip.remark" != "")$!langsDictionary.messageTip.remark#end</textarea>
                                         </div>
                                     </div>
                                     <div class="">
@@ -127,9 +148,8 @@
                                             <input id="lefile" name="file" type="file" style="display:none">
                                             <div class="input-append">
                                                 <input id="photoCover" style="margin-left: 40px;" class="span3" type="text">
-                                                <a class="btn span4"
-                                                   style="background-color: #eee;float: right;width: 80px;position: absolute;"
-                                                   onclick="$('input[id=lefile]').click();">
+                                                <a class="btn span4" onclick="$('input[id=lefile]').click();"
+                                                   style="background-color: #eee;float: right;width: 80px;position: absolute;">
                                                     <i class="icon-folder-open" style="padding-right"></i>选择文件</a>
                                             </div>
                                             <label name="lefile" class="lefile">
@@ -137,7 +157,9 @@
                                             </label>
                                         </div>
                                         <div style="text-align: center;padding-top: 1em;">
-                                            <img style="width: 250px;height: 250px;display: none" id="imgUrl" src="">
+                                            #if("$!langsDictionary.messageTip.imgUrl" != "")
+                                                <img id="imgUrl" src="$!langsDictionary.messageTip.imgUrl">
+                                            #end
                                         </div>
                                     </div>
                                 </div>
@@ -158,77 +180,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            var request = {};
-            request.keyCode = getUrlParam("keyCode");
-
-            /**
-             * 查询备注
-             */
-            $.ajax({
-                url: '/langsMessageTip/viewLangsMessageTip',
-                data: JSON.stringify(request),
-                type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                success: function (result) {
-                    if (result.code == 0) {
-                        if (result.data != null) {
-                            var remark = result.data.remark;
-                            var imgUrl = result.data.imgUrl;
-                            if (remark != null && remark != "") {
-                                $("#remark").val(remark);
-                            }
-                            console.log(result.data.imgUrl)
-                            if (imgUrl != null && imgUrl != "") {
-                                $("#imgUrl").attr("src", imgUrl);
-                                $("#imgUrlHref").attr("href", imgUrl);
-                                $("#imgUrl").show();
-                            }
-                        }
-                    }
-                }
-            });
-
-
-            /**
-             * @description 查询要编辑的语言信息
-             */
-            $.ajax({
-                url: 'viewLangsDictionary',
-                data: JSON.stringify(request),
-                type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                success: function (result) {
-                    if (result.code == 0) {
-                        console.log(result.data);
-                        var langsDictionaryVo = result.data;
-                        var keyCode = langsDictionaryVo.keyCode;
-                        var categoryId = langsDictionaryVo.categoryId;
-
-                        $("select[name='categoryId']").find("option[value='" + categoryId + "']").attr("selected", true);
-                        $(".select2-selection__rendered").html($("select[name='categoryId']").find("option[value='" + categoryId + "']").text());
-
-                        var langsMessageList = langsDictionaryVo.langsMessageList;
-                        for (var i = 0; i < langsMessageList.length; i++) {
-                            var langsMessage = langsMessageList[i];
-                            $("input[name='" + langsMessage.langsKey + "']").val(langsMessage.message);
-                        }
-
-                        // 拼接KeyCode
-                        var requiredUS = $("input[name='1']").val();
-                        // 如果是英文,则要增加改变事件,用来改变keyCode
-                        $("input[name='1']").attr("onkeyup", "keyCodeRealTime()");
-
-                        // keyCode初始化值
-                        var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
-                        $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
-
-                    } else {
-                        alert("操作失败:" + result.msg);
-                    }
-                }
-            });
 
             // file 上传文件
             $('input[id=lefile]').change(function () {
