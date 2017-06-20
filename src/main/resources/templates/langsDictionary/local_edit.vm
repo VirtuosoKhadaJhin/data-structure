@@ -89,23 +89,23 @@
                                     </div>
                                     <div class="fr" style="width:50%;float: left">
                                         <div class="">
-                                            <label class="control-label" style="width: 60px;">备注：</label>
-                                            <div class="controls" style="width: 300px;margin-left: 80px">
+                                            <label class="control-label" style="min-width: 100px;max-width: 100px;">备注：</label>
+                                            <div class="controls" style="margin-left: 80px">
                                             <textarea placeholder="图文备注" class="form-control" id="remark" cols="4"
                                                       rows="4" style="resize: none; width: 285px;"
                                                       readonly="readonly"></textarea>
                                             </div>
                                         </div>
                                         <div class="">
-                                            <label class="control-label" style="width: 60px;">场景图：</label>
-                                            <div style="text-align: center;width: 300px;margin-left: 80px">
+                                            <label class="control-label" style="min-width: 100px;max-width: 100px;">场景图：</label>
+                                            <div style="margin-left: 80px">
                                                 <a href="#" id="imgUrlHref" target="_blank">
                                                     <img style="width: 250px;height: 250px;display: none" id="imgUrl"
                                                          src="">
                                                 </a>
                                             </div>
-                                            <div class="controls" id="noImg" style="width: 300px;margin-left: 80px;display: none">
-                                                <input type="text" readonly value="暂无场景图" style="width: 100%" class="span7 countryLanguage">
+                                            <div class="controls" id="noImg" style="margin-left: 80px;display: none">
+                                                <input type="text" readonly value="暂无场景图" class="span7 countryLanguage">
                                             </div>
                                         </div>
                                     </div>

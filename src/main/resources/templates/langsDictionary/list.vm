@@ -22,6 +22,13 @@
     #select2-categoryId-xe-container {
         min-width: 180px;
     }
+
+    .td-update-time{
+        min-width: 120px;
+    }
+    .td-sort{
+        min-width: 60px;
+    }
 </style>
 <div style="width: 100%">
     <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
@@ -33,6 +40,7 @@
             #foreach($langCountry in $!langsCountries)
                 <th>$!langCountry.desc ($!langCountry.value)</th>
             #end
+            <th>更新时间</th>
             <th>操作</th>
         </tr>
         </thead>
@@ -51,28 +59,31 @@
 
             #foreach($entity in $!page)
             <tr class="odd gradeX">
-                <td style="width: 4%;"><label style="text-align: center;padding-top: 5%">$sort</label>
+                <td class="td-sort">
+                    <label style="text-align: center;">$sort</label>
                 </td>
-                <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$!entity.categoryName</label>
+                <td class="td-category-name">
+                    <label style="text-align: center;">$!entity.categoryName</label>
                 </td>
-                <td style="width: 10%;"><label style="text-align: center;padding-top: 5%">$!entity.keyCode</label></td>
+                <td class="td-keycode">
+                    <label style="text-align: center;">$!entity.keyCode</label>
+                </td>
                 #foreach($langCountry in $!langsCountries)
-                    <td class="lang-message" key-code="$!entity.keyCode" langs-key="$!langCountry.key"
-                        style="width: 10%">
+                    <td class="lang-message" key-code="$!entity.keyCode" langs-key="$!langCountry.key">
                         #set($hasNullMessage=true)
                         #foreach($lang in $!entity.langsMessageList)
                             #if($!lang.langsKey == $!langCountry.key)
-                                <label style="text-align: center;padding-top: 5%">$!lang.message</label>
+                                <label style="text-align: center">$!lang.message</label>
                                 #set($hasNullMessage=false)
                             #end
                         #end
                         #if($hasNullMessage)
-                            <input style="padding-top: 5%" class='tdInput' onchange='saveMessage(this)' type='text'
-                                   placeholder=''/>
+                            <input style="padding-top: 5%" class='tdInput' onchange='saveMessage(this)' type='text'/>
                         #end
                     </td>
                 #end
-                <td>
+                <td class="td-update-time">$!date.format('yyyy-MM-dd HH:mm:ss ',$!entity.updateDt)</td>
+                <td style="min-width: 80px;">
                     <div style="text-align: center">
                         <a key-code="$!entity.keyCode" class="btn btn-primary btn-mini modify-item">编辑</a>
                         <a key-code="$!entity.keyCode" class="btn btn-danger btn-mini remove-item">删除</a>

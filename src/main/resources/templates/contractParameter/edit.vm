@@ -27,7 +27,7 @@
                         </div>
                         <div class="widget-content nopadding">
                             <form action="update" method="post" class="form-horizontal commonValidate" role="form"
-                                  id="cityform">
+                                  id="contractParameterForm">
                                 <div class="control-group">
                                     <span class="col-sm-2 control-label">ID</span>
                                     <div class="controls">
@@ -132,7 +132,7 @@
                                 <div class="control-group">
                                     <label class="control-label">栏位提示</label>
                                     <div class="controls">
-                                        <input name="remarkLabel" type="text" langsKeyName="remark" class="span7 langsAutoComplete" value="$!entity.remark.content">
+                                        <input name="nameLabel" type="text" langsKeyName="remark" class="span7 langsAutoComplete" value="$!entity.remark.content">
                                         <input name="remark" type="hidden" value="$!entity.remark.key">
                                         <a class="btn btn-info btn-mini addLang" langsKeyName="remark" langsValueName="remarkLabel"> <i class="icon-plus"></i> </a>
                                     </div>
@@ -156,9 +156,9 @@
 
                                 <div class="form-actions">
                                     #if($!type==2 || $!type==1)
-                                        <button type="submit" class="btn btn-success">保存</button>
+                                        <a onclick="return verifyForm()" class="btn btn-success op-btn">保存</a>
                                     #elseif($!type==3)
-                                        <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
+                                        <a href="edit?type=2&id=$!entity.id" class="btn btn-info op-btn">编辑</a>
                                     #end
                                     <a class="btn btn-primary" href="list">返回</a>
                                 </div>
@@ -234,6 +234,40 @@
     #include("common/js-support.vm")
 
     <script type="text/javascript">
+        $("body").delegate(".langsAutoComplete", "keyup", function (e) {
+            var keys = $("input[type='hidden']");
+
+            for (var i = 0; i < keys.length; i++) {
+                var input = $("input[name='" + keys[i].name + "']");
+                var currLangValueInput = input.parent().find("input[name='nameLabel']");
+                currLangValueInput.attr("style", "");
+            }
+        });
+        /**
+         * 表单验证
+         */
+        function verifyForm() {
+            var keys = $("input[type='hidden']");
+
+            var submitAuth = true;
+            for (var i = 0; i < keys.length; i++) {
+                var keyCode = keys[i].value;
+                if (keyCode == null || keyCode == "") {
+                    submitAuth = false;
+                    var input = $("input[name='" + keys[i].name + "']");
+                    var currLangValueInput = input.parent().find("input[name='nameLabel']");
+                    currLangValueInput.attr("style", "border : 1px solid red");
+                }
+            }
+
+            if (submitAuth) {
+                $("#contractParameterForm").submit();
+            }else{
+                alert("请输入有效的keyCode!");
+            }
+
+        }
+
         $(document).ready(function () {
             var type = $!type;
             if (type == 3) {

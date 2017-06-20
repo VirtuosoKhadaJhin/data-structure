@@ -105,26 +105,21 @@ public class LangsCategoryServiceImpl implements LangsCategoryService {
         entityNyLangsCategory.setId(categoryVo.getId());
 
         Example<EntityNyLangsCategory> example = Example.of(entityNyLangsCategory);
-        List<EntityNyLangsCategory> entityResult = categoryDao.findAll(example);
+        EntityNyLangsCategory category = categoryDao.findOne(example);
 
-        if (entityResult.size() > 0) {
-            EntityNyLangsCategory category = entityResult.get(0);
+        EntityNyLangsDictionary entityNyLangsDictionary = new EntityNyLangsDictionary();
+        entityNyLangsDictionary.setCategory(category);
 
-            EntityNyLangsDictionary entityNyLangsDictionary = new EntityNyLangsDictionary();
-            entityNyLangsDictionary.setCategory(category);
+        Example<EntityNyLangsDictionary> langsExample = Example.of(entityNyLangsDictionary);
+        langsExample = Example.of(entityNyLangsDictionary);
+        List<EntityNyLangsDictionary> entityNyLangsDictionarys = dictionaryDao.findAll(langsExample);
 
-            Example<EntityNyLangsDictionary> langsExample = Example.of(entityNyLangsDictionary);
-            langsExample = Example.of(entityNyLangsDictionary);
-            List<EntityNyLangsDictionary> entityNyLangsDictionarys = dictionaryDao.findAll(langsExample);
-
-            if(BooleanUtils.isTrue(entityNyLangsDictionarys.size() == 0)){
-                categoryDao.delete(category);
-            }
-
-            return BooleanUtils.isTrue(entityNyLangsDictionarys.size() > 0);
+        if(entityNyLangsDictionarys.size() == 0){
+            categoryDao.delete(category);
         }
 
-        return false;
+        return BooleanUtils.isTrue(entityNyLangsDictionarys.size() > 0);
+
     }
 
     private EntityNyLangsCategory convertToEntityLangsCategory(LangsCategory category) {
