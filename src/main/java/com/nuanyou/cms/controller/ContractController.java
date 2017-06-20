@@ -193,12 +193,12 @@ public class ContractController {
     public APIResult verify(Boolean valid, Long contractId) throws ParseException {
         String email = UserHolder.getUser().getEmail();
         CmsUser user = userService.getUserByEmail(email);
-        //1是否可以审核
-        APIResult validateRes = this.contractService.validate(contractId);
-        if (validateRes.getCode() != 0) {
-            throw new APIException(validateRes.getCode(), validateRes.getMsg() + ",contractId:" + contractId);
-        }
         if (valid) {
+            //1是否可以审核
+            APIResult validateRes = this.contractService.validate(contractId);
+            if (validateRes.getCode() != 0) {
+                throw new APIException(validateRes.getCode(), validateRes.getMsg() + ",contractId:" + contractId);
+            }
             //2 得到合同信息
             APIResult<Contract> resDetail = this.contractService.getContract(contractId);
             //3 插入对账系统

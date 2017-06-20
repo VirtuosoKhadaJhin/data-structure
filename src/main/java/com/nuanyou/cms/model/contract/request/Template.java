@@ -11,6 +11,7 @@ public class Template {
     private Integer templateType;
     private Long countryId;
     private String type;
+    private String shortCode;
     private Long id;
     private List<Long> selectedParamIds;
     private List<Long> paramIds;
@@ -78,5 +79,13 @@ public class Template {
 
     public void setParamIds(List<Long> paramIds) {
         this.paramIds = paramIds;
+    }
+
+    public String getShortCode() {
+        return shortCode;
+    }
+
+    public void setShortCode(String shortCode) {
+        this.shortCode = shortCode;
     }
 }

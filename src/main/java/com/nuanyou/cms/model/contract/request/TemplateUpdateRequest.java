@@ -10,6 +10,8 @@ public class TemplateUpdateRequest {
 
     private String title;
 
+    private String shortCode;
+
     private List<Long> paramterids = new ArrayList<>();
 
     public String getTitle() {
@@ -28,4 +30,11 @@ public class TemplateUpdateRequest {
         this.paramterids = paramterids;
     }
 
+    public String getShortCode() {
+        return shortCode;
+    }
+
+    public void setShortCode(String shortCode) {
+        this.shortCode = shortCode;
+    }
 }
