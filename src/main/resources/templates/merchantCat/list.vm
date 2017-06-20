@@ -13,8 +13,11 @@
     <tr>
         <th>ID</th>
         <th>商户分类名称</th>
+        <th>分类名称(本地)</th>
+        <th>分类名称(英语)</th>
         <th>简称</th>
-        <th>父节点分类</th>
+        <th>分类属性</th>
+        <th>所属一级分类</th>
         <th>是否显示</th>
         <th width="90px">操作</th>
     </tr>
@@ -22,18 +25,49 @@
     <tbody>
         #foreach($entity in $!page.content)
         <tr class="odd gradeX">
-            <td>$!entity.id</td>
-            <td>$!entity.name</td>
-            <td>$!entity.shortname</td>
-            <td>$!entity.pcat.name</td>
-            <td>
+            <td style="text-align: center;">$!entity.id</td>
+            <td style="text-align: center;">
+                #if("$!entity.pcat.name" == "")
+                    $!entity.name
+                    <img src="$!entity.imageUrl" width="20px" height="20px">
+                #else
+                    $!entity.name
+                #end
+            </td>
+            <td style="text-align: center;">
+                $!entity.localNameLabel
+            </td>
+            <td style="text-align: center;">
+                $!entity.enNameLabel
+            </td>
+            <td style="text-align: center;">
+                $!entity.shortname
+            </td>
+            <td style="text-align: center;">
+            ##分类属性
+                #if("$!entity.pcat" == "")
+                    一级
+                #else
+                    二级
+                #end
+            ##分类属性
+            </td>
+            <td style="text-align: center;">
+                #if("$!entity.pcat" == "")
+
+                #else
+                    $!entity.pcat.name
+                    <img src="$!entity.imageUrl" width="20px" height="20px">
+                #end
+            </td>
+            <td style="text-align: center;">
                 #if($!entity.display)
                     显示
                 #else
                     隐藏
                 #end
             </td>
-            <td>
+            <td style="text-align: center;">
                 <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
                 <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
             </td>
@@ -44,11 +78,11 @@
 
 #parse("common/list_mid.vm")
 <form class="form-horizontal " method="get">
-    <div class="control-group">
+    <div class="control-group" style="margin-bottom: 10px">
         <label>分类名称 或ID</label>
         <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
     </div>
-    <div class="control-group">
+    <div class="control-group" style="margin-bottom: 10px">
         <label>是否显示</label>
         <select name="display">
             <option value="">全部</option>

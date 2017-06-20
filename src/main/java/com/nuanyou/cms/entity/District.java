@@ -31,9 +31,12 @@ public class District {
     private String link;
     private String icon;
     private Date createtime;
+    private Date updatetime;
     private City city;
     private Country country;
     private BigDecimal radio;
+    // keycode
+    private String keyCode;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,6 +79,14 @@ public class District {
         this.startlongitude = startlongitude;
     }
 
+    @Column(name = "keycode", nullable = false, length = 100)
+    public String getKeyCode() {
+        return keyCode;
+    }
+
+    public void setKeyCode(String keyCode) {
+        this.keyCode = keyCode;
+    }
 
     @Column(name = "endlongitude", nullable = true, precision = 0)
     public Double getEndlongitude() {
@@ -176,6 +187,15 @@ public class District {
         this.createtime = createtime;
     }
 
+    @CreatedAt
+    @Column(name = "updatetime", nullable = true)
+    public Date getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cityid")
@@ -228,5 +248,17 @@ public class District {
     }
 
     public District() {
+    }
+
+    public District(Long id, String name, String shortname, Boolean display, Integer sort, String link, City city, Country country, BigDecimal radio) {
+        this.id = id;
+        this.name = name;
+        this.shortname = shortname;
+        this.display = display;
+        this.sort = sort;
+        this.link = link;
+        this.city = city;
+        this.country = country;
+        this.radio = radio;
     }
 }

@@ -1,16 +1,25 @@
 package com.nuanyou.cms.service.impl;
 
+import com.google.common.collect.Lists;
 import com.nuanyou.cms.dao.DistrictDao;
+import com.nuanyou.cms.dao.EntityNyLangsDictionaryDao;
 import com.nuanyou.cms.entity.District;
-import com.nuanyou.cms.model.PageUtil;
+import com.nuanyou.cms.entity.EntityNyLangsDictionary;
+import com.nuanyou.cms.model.DistrictVo;
 import com.nuanyou.cms.service.DistrictService;
 import com.nuanyou.cms.util.BeanUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Felix on 2016/9/7.
@@ -19,25 +28,83 @@ import java.util.List;
 public class DistrictServiceImpl implements DistrictService {
     @Autowired
     private DistrictDao districtDao;
+    @Autowired
+    private EntityNyLangsDictionaryDao dictionaryDao;
 
     @Override
-    public Page<District> findByCondition(District district, Pageable pageable) {
-        ExampleMatcher e = ExampleMatcher.matching();
-        ExampleMatcher.GenericPropertyMatcher g = ExampleMatcher.GenericPropertyMatcher.of(ExampleMatcher.StringMatcher.ENDING);
-        if (district.getId() != null) {
-            e = e.withMatcher("id", g.exact());
+    public Page<DistrictVo> findByCondition(final District entity, Pageable pageable, final Locale locale) {
+        // 孙昊修改了查询方式, 在原有的字段sort上实现了排序功能
+        Page<District> districts = districtDao.findAll(new Specification() {
+
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (entity.getId() != null) {
+                    predicate.add(cb.equal(root.get("id"), entity.getId()));
+                }
+                if (org.apache.commons.lang3.StringUtils.isNotEmpty(entity.getName())) {
+                    predicate.add(cb.like(root.get("name"), "%" + entity.getName() + "%"));
+                }
+                if (null != entity.getDisplay()) {
+                    predicate.add(cb.equal(root.get("display"), entity.getDisplay().booleanValue()));
+                }
+                Predicate[] arrays = new Predicate[predicate.size()];
+                ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("sort")), cb.asc(root.get("updatetime")));
+                return query.where(predicate.toArray(arrays)).orderBy(orderBys).getRestriction();
+            }
+        }, pageable);
+
+        // keyCode结果集
+        final List<String> keyCodes = Lists.newArrayList();
+
+        // 根据截取中文和英文
+        List<District> pageLists = districts.getContent();
+        List<DistrictVo> districtVos = Lists.newArrayList();
+        for (District dis : pageLists) {
+            DistrictVo vo = convertToDistrictVo(dis);
+            districtVos.add(vo);
+            if (dis.getKeyCode() != null) {
+                keyCodes.add(dis.getKeyCode());
+            } else {
+                keyCodes.add("");
+            }
         }
-        if (StringUtils.isNotBlank(district.getName())) {
-            e = e.withMatcher("name", g.contains());
-        } else {
-            district.setName(null);
+
+        if (keyCodes != null && keyCodes.size() > 0) {
+            List<EntityNyLangsDictionary> dicts = dictionaryDao.findAll(new Specification() {
+                @Override
+                public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                    List<Predicate> predicate = new ArrayList<Predicate>();
+
+                    predicate.add(root.get("keyCode").in(keyCodes));
+
+                    Predicate[] arrays = new Predicate[predicate.size()];
+                    return query.where(predicate.toArray(arrays)).getRestriction();
+                }
+            });
+
+            for (EntityNyLangsDictionary dict : dicts) {
+                int keyCodeIndex = keyCodes.indexOf(dict.getKeyCode());
+
+                DistrictVo districtVo = districtVos.get(keyCodeIndex);
+
+                if (dict.getLanguage().equals("en")) {
+                    districtVo.setEnNameLabel(dict.getMessage());
+                } else if (dict.getLanguage().equals(locale.getLanguage())) {
+                    districtVo.setLocalNameLabel(dict.getMessage());
+                }
+
+                // 更新链表的甘油中英文的数据
+                districtVos.set(keyCodeIndex, districtVo);
+            }
+
+            Page<DistrictVo> lists = new PageImpl<DistrictVo>(districtVos, pageable, districts.getTotalElements());
+
+            return lists;
         }
-        if (district.getDisplay() != null) {
-            e = e.withMatcher("display", g.exact());
-        } else {
-            district.setDisplay(null);
-        }
-        return districtDao.findAll(Example.of(district, e), pageable);
+
+        Page<DistrictVo> lists = new PageImpl<DistrictVo>(districtVos, pageable, districts.getTotalElements());
+        return lists;
     }
 
     @Override
@@ -55,4 +122,37 @@ public class DistrictServiceImpl implements DistrictService {
         BeanUtils.copyBeanNotNull(entity, oldEntity);
         return districtDao.save(oldEntity);
     }
+
+    @Override
+    public void updateDistrict(DistrictVo districtVo) {
+        District district = new District(districtVo.getId(), districtVo.getNameLabel(), districtVo.getShortname(),
+                districtVo.getDisplay(), districtVo.getSort(), districtVo.getLink(), districtVo.getCity(), districtVo.getCountry(), districtVo.getRadio());
+
+        // keyCode
+        if (districtVo.getName() != null) {
+            district.setKeyCode(districtVo.getName());
+            String replaceStr = "(" + districtVo.getName() + ")";
+            if (districtVo.getNameLabel().contains(replaceStr)) {
+                String nameLabel = districtVo.getNameLabel().replaceAll(replaceStr, "");
+                districtVo.setNameLabel(nameLabel);
+                district.setName(nameLabel);
+            }
+        }
+
+        if (districtVo.getId() == null) {
+            districtDao.save(district);
+        } else {
+            District oldEntity = districtDao.findOne(districtVo.getId());
+            BeanUtils.copyBeanNotNull(district, oldEntity);
+            oldEntity.setUpdatetime(new Date());
+            districtDao.save(oldEntity);
+        }
+
+    }
+
+    private DistrictVo convertToDistrictVo(District entity) {
+        DistrictVo districtVo = BeanUtils.copyBean(entity, new DistrictVo());
+        return districtVo;
+    }
+
 }

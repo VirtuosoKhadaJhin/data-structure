@@ -27,40 +27,35 @@
                     <div class="widget-content nopadding">
                         <form id="districtForm" action="update" method="post" class="form-horizontal commonValidate" role="form">
                             <div class="control-group">
-                                <label class="col-sm-2 control-label">ID</label>
-                                <div class="controls">
-                                    #if($!type==2)
+                                #if($!type!=1)
+                                    <label class="col-sm-2 control-label">ID</label>
+                                    <div class="controls">
                                         <input name="id" readonly type="text" class="form-control" placeholder="ID"
                                                value="$!entity.id">
-                                    #end
-                                    #if($!type==3)
-                                        <label>$!entity.id</label>
-                                    #end
-                                </div>
+                                    </div>
+                                #end
                                 <label class="control-label">中文名称</label>
                                 <div class="controls">
-                                    <input for="name" name="name" type="text" class="span11" placeholder="中文名称"
-                                           value="$!entity.name">
+                                    <input name="nameLabel" for="name" type="text" class="span7 langsAutoComplete" langsKeyName="name"
+                                           value="$!entity.name" placeholder="中文名称" >
+                                    <input name="name" type="hidden" value="$!entity.keyCode">
+                                    <a class="btn btn-info btn-mini addLang" langskeyname="remark" langsvaluename="remarkLabel">
+                                        <i class="icon-plus"></i>
+                                    </a>
                                 </div>
                                 <label class="control-label">简称</label>
                                 <div class="controls">
-                                    <input for="shortname" name="shortname" type="text" class="span11" placeholder="简称"
+                                    <input for="shortname" name="shortname" type="text" class="span7" placeholder="简称"
                                            value="$!entity.shortname">
-                                </div>
-
-                                <label class="control-label">本地名称</label>
-                                <div class="controls">
-                                    <input name="kpname" type="text" class="span11" placeholder="本地名称"
-                                           value="$!entity.kpname">
                                 </div>
                                 <label class="control-label">汇率系数</label>
                                 <div class="controls">
-                                    <input name="radio" type="text" class="span11" placeholder="汇率系数"
+                                    <input name="radio" type="text" class="span7" placeholder="汇率系数"
                                            value="$!entity.radio">
                                 </div>
                                 <label class="control-label">是否显示 </label>
                                 <div class="controls">
-                                    <select id="display" name="display">
+                                    <select id="display" name="display" class="span7">
                                         <option value="true"  #if($!entity.display==true)  selected #end>显示</option>
                                         <option value="false"  #if($!entity.display==false)  selected #end>隐藏</option>
                                     </select>
@@ -87,33 +82,33 @@
 
                                 <label class="control-label">排序</label>
                                 <div class="controls">
-                                    <input name="sort" for="sort" type="text" class="span11" placeholder="排序"
+                                    <input name="sort" for="sort" type="text" class="span7" placeholder="排序"
                                            value="$!entity.sort">
                                 </div>
                                 <label class="control-label">跳转链接</label>
                                 <div class="controls">
-                                    <input name="link" type="text" class="span11" placeholder="商圈介绍"
+                                    <input name="link" type="text" class="span7" placeholder="商圈介绍"
                                            value="$!entity.link">
                                 </div>
-##                                <label class="control-label">列表图</label>
-##                                <div class="controls">
-##                                    <input type="text" class="span9" id="indeximgurl" name="indeximgurl"
-##                                           value='$!entity.indeximgurl'/>
-##
-##                                    <button type="button" class="btn btn-success previewBtn" data-id="indeximgurl">预览
-##                                    </button>
-##                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indeximgurl">上传
-##                                    </button>
-##                                </div>
-##                                <label class="control-label">背景图</label>
-##                                <div class="controls">
-##                                    <input type="text" class="span9" id="bgimgurl" name="bgimgurl"
-##                                           value='$!entity.bgimgurl'/>
-##                                    <button type="button" class="btn btn-success previewBtn" data-id="bgimgurl">预览
-##                                    </button>
-##                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="bgimgurl">上传
-##                                    </button>
-##                                </div>
+                            ##                                <label class="control-label">列表图</label>
+                            ##                                <div class="controls">
+                            ##                                    <input type="text" class="span9" id="indeximgurl" name="indeximgurl"
+                            ##                                           value='$!entity.indeximgurl'/>
+                            ##
+                            ##                                    <button type="button" class="btn btn-success previewBtn" data-id="indeximgurl">预览
+                            ##                                    </button>
+                            ##                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indeximgurl">上传
+                            ##                                    </button>
+                            ##                                </div>
+                            ##                                <label class="control-label">背景图</label>
+                            ##                                <div class="controls">
+                            ##                                    <input type="text" class="span9" id="bgimgurl" name="bgimgurl"
+                            ##                                           value='$!entity.bgimgurl'/>
+                            ##                                    <button type="button" class="btn btn-success previewBtn" data-id="bgimgurl">预览
+                            ##                                    </button>
+                            ##                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="bgimgurl">上传
+                            ##                                    </button>
+                            ##                                </div>
                             </div>
                             <div class="form-actions">
                                 #if($!type==2 || $!type==1)
@@ -130,9 +125,70 @@
         </div>
     </div>
 </div>
+<!--***************************************通用新增语言*************************************************************-->
+<div id="addLangsModal" class="modal hide fade" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>新增多语言</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class="control-group">
+            <label class="control-label">
+                keyCode<font style="color: red;margin: 0px;padding: 5px;">*</font>：</label>
+            <div class="controls">
+                <input for="name" id="keyCode" readonly="readonly" name="keyCode" type="text"
+                       class="span5"
+                       value="$!entity.keyCode" onchange="verifykeyCode()">
+                <label id="keyCodeStatus" class="control-label"
+                       style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">多语言分类</label>
+            <div class="controls">
+                <select class="span5 select2 " id="categoryId" name="categoryId" onchange="keyCodeRealTime()">
+                    <option value="" selected="selected">全部分类</option>
+                    #foreach($e in $!categories)
+                        <option value="$!e.id">$!e.name</option>
+                    #end
+                </select>
+            </div>
+        </div>
+
+
+        #foreach($langCountry in $!langsCountries)
+            #if($!langCountry.key == 1 || $!langCountry.key == 2)
+                <div class="control-group">
+                    <label class="control-label">
+                        $!langCountry.desc ($!langCountry.value)
+                        <font style="color: red;margin: 0px;padding: 5px;">*</font>
+                        ：</label>
+                    <div class="controls">
+                        #if($!langCountry.key == 1 || $!langCountry.key == 2)
+                            <input name="$!langCountry.key" data-key="$!langCountry.key" type="text"
+                                   onkeyup="keyCodeRealTime()" data-name="langs"
+                                   class="span5 countryLanguage">
+                        #end
+                        <label id="requiredKey_$!langCountry.key" class="control-label"
+                               style="width:80px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">必填项</label>
+                    </div>
+                </div>
+            #end
+        #end
+
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" id="addLangSave" class="btn btn-primary saveLangsDictionary">保存</a>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+<!--***************************************通用新增语言*************************************************************-->
 </body>
     #include("common/js-support.vm")
     #include("common/image-support.vm")
+    #include("common/langs.vm")
 <script src="/dist/js/cascade-select.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {

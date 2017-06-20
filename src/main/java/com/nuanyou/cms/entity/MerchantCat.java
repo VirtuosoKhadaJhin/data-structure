@@ -23,9 +23,21 @@ public class MerchantCat {
     private Boolean display;
     private Integer sort;
     private Date createtime;
+    private Date updatetime;
     private MerchantCat pcat;
     private String imageUrl;
     private String mapimgurl;
+    // keycode
+    private String keyCode;
+
+    public MerchantCat(String name, String shortname, Boolean display, Integer sort, String imageUrl, String mapimgurl) {
+        this.name = name;
+        this.shortname = shortname;
+        this.display = display;
+        this.sort = sort;
+        this.imageUrl = imageUrl;
+        this.mapimgurl = mapimgurl;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,6 +67,15 @@ public class MerchantCat {
 
     public void setShortname(String shortname) {
         this.shortname = shortname;
+    }
+
+    @Column(name = "keycode", nullable = false, length = 50)
+    public String getKeyCode() {
+        return keyCode;
+    }
+
+    public void setKeyCode(String keyCode) {
+        this.keyCode = keyCode;
     }
 
     @Column(name = "kpname", nullable = true, length = 50)
@@ -96,6 +117,15 @@ public class MerchantCat {
         this.createtime = createtime;
     }
 
+    @CreatedAt
+    @Column(name = "updatetime", nullable = true)
+    public Date getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pid", nullable = true)

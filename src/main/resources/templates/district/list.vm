@@ -26,6 +26,7 @@
         <th>名称（中文）</th>
         <th>简称</th>
         <th>名称（本地）</th>
+        <th>名称（英文）</th>
         <th>是否显示</th>
         <th>所属城市
             #if($!page.sort.getOrderFor("city.name").direction=="ASC")
@@ -51,16 +52,17 @@
     <tbody>
         #foreach($entity in $!page.content)
         <tr class="odd gradeX">
-            <td>$!entity.id</td>
-            <td>$!entity.name</td>
-            <td>$!entity.shortname</td>
-            <td>$!entity.kpname</td>
-            <td>
+            <td style="text-align: center;">$!entity.id</td>
+            <td style="text-align: center;">$!entity.name</td>
+            <td style="text-align: center;">$!entity.shortname</td>
+            <td style="text-align: center;">$!entity.localNameLabel</td>
+            <td style="text-align: center;">$!entity.enNameLabel</td>
+            <td style="text-align: center;">
                 #if($!entity.display)显示#else 隐藏#end
             </td>
-            <td>$!entity.city.name</td>
-            <td>$!entity.country.name</td>
-            <td>
+            <td style="text-align: center;">$!entity.city.name</td>
+            <td style="text-align: center;">$!entity.country.name</td>
+            <td style="text-align: center;">
                 <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
                 <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
             </td>
@@ -77,7 +79,7 @@
         </div>
         <div class="control-group">
             <label>国家</label>
-            <select id="country.id" name="country.id" class="span7">
+            <select id="country.id" name="country.id" class="span11">
                 <option value="">全部</option>
                 #foreach($e in $!countries)
                     <option value="$!e.id" #if($!entity.country.id==$!e.id) selected #end>$!e.id:$!e.name</option>
@@ -96,4 +98,3 @@
     <button type="submit" class="btn btn-primary">查询</button>
 </form>
 #parse("common/list_end.vm")
-
