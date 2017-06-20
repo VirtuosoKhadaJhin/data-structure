@@ -157,7 +157,6 @@ window.onload = function () {
                     var currEle = e.currentTarget;
                     var listComplete = [];
                     var list = result.data;
-                    console.log(list);
                     if(list.length==0){
                         $(currEle).next().val("");
                         return ;

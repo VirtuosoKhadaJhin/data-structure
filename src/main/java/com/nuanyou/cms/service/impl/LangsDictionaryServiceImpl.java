@@ -7,10 +7,7 @@ import com.nuanyou.cms.dao.EntityNyLangsMessageTipDao;
 import com.nuanyou.cms.entity.EntityNyLangsCategory;
 import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.entity.EntityNyLangsMessageTip;
-import com.nuanyou.cms.model.LangsCountryMessageVo;
-import com.nuanyou.cms.model.LangsDictionary;
-import com.nuanyou.cms.model.LangsDictionaryRequestVo;
-import com.nuanyou.cms.model.LangsDictionaryVo;
+import com.nuanyou.cms.model.*;
 import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
@@ -26,10 +23,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
@@ -253,9 +247,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
 
     @Override
-    public LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale) throws UnsupportedEncodingException {
-        keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
-
+    public LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale) {
         Example<EntityNyLangsDictionary> example = Example.of(new EntityNyLangsDictionary(keyCode));
         List<EntityNyLangsDictionary> entityNyLangsDictionarys = this.dictionaryDao.findAll(example);
 
@@ -456,6 +448,22 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
             dictionaryVo.setCategoryId(langsDictionary.getCategory().getId());
             dictionaryVo.setCategoryName(langsDictionary.getCategory().getName());
             dictionaryVo.setKeyCode(langsDictionary.getKeyCode());
+            dictionaryVo.setUpdateDt(langsDictionary.getUpdateDt());
+
+            // 查找备注,可能影响效率
+/*
+            EntityNyLangsMessageTip entityNyLangsMessageTip = new EntityNyLangsMessageTip();
+            entityNyLangsMessageTip.setKeyCode(langsDictionary.getKeyCode());
+
+            Example<EntityNyLangsMessageTip> example = Example.of(entityNyLangsMessageTip);
+            EntityNyLangsMessageTip messTip = messageTipDao.findOne(example);
+
+            if(null != messTip){
+                LangsMessageTipVo messVo = convertToLangsMessageTip(messTip);
+                dictionaryVo.setMessageTip(messVo);
+            }
+*/
+
             messageVo = this.getLangsCountryMessageVo(langsDictionary);
             langsMessageList.add(messageVo);
             dictionaryVo.setLangsMessageList(langsMessageList);
@@ -548,8 +556,8 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                         predicate.add(cb.like(root.get("message"), "%" + requestVo.getMessage() + "%"));
                     }
                     Predicate[] arrays = new Predicate[predicate.size()];
-                    return query.where(predicate.toArray(arrays)).getRestriction();
-                }
+                    ArrayList<Order> orderBys = Lists.newArrayList(cb.desc(root.get("updateDt")), cb.asc(root.get("keyCode")));
+                    return query.where(predicate.toArray(arrays)).orderBy(orderBys).getRestriction();                }
             });
         } else {
             // 查询所有数据
@@ -568,7 +576,8 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                         predicate.add(cb.like(root.get("message"), "%" + requestVo.getMessage() + "%"));
                     }
                     Predicate[] arrays = new Predicate[predicate.size()];
-                    return query.where(predicate.toArray(arrays)).getRestriction();
+                    ArrayList<Order> orderBys = Lists.newArrayList(cb.desc(root.get("updateDt")), cb.asc(root.get("keyCode")));
+                    return query.where(predicate.toArray(arrays)).orderBy(orderBys).getRestriction();
                 }
             });
         }
@@ -581,6 +590,11 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     private LangsDictionary convertToLangsDictionary(EntityNyLangsDictionary entity) {
         LangsDictionary dictionary = BeanUtils.copyBean(entity, new LangsDictionary());
         return dictionary;
+    }
+
+    private LangsMessageTipVo convertToLangsMessageTip(EntityNyLangsMessageTip entity) {
+        LangsMessageTipVo message = BeanUtils.copyBean(entity, new LangsMessageTipVo());
+        return message;
     }
 
     private List<LangsDictionary> convertToMultipleLangsCategories(List<EntityNyLangsDictionary> entities) {

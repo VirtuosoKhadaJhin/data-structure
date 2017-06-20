@@ -80,7 +80,7 @@ public class LangsDictionaryController {
         List<LangsCategory> categories = categoryService.findAllCategories();
 
         // 页面显示当地语言
-        if(requestVo.getCountryKey() != 0){
+        if (requestVo.getCountryKey() != 0) {
             String localLangs = LangsCountry.toEnum(requestVo.getCountryKey()).getValue();
             model.addAttribute("localLangs", localLangs);
         }
@@ -146,10 +146,11 @@ public class LangsDictionaryController {
      * @return
      */
     @RequestMapping("edit")
-    public String edit(Model model) {
+    public String edit(String keyCode, Model model) throws UnsupportedEncodingException {
+        keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
         LangsCountry[] values = LangsCountry.values();
         List<LangsCategory> selectableLangsCategory = categoryService.findAllCategories();
-
+        LangsDictionaryVo langsDictionary = dictionaryService.findLangsDictionary(keyCode, null);
         model.addAttribute("langsCountries", values);
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
         return "langsDictionary/edit";
@@ -218,7 +219,6 @@ public class LangsDictionaryController {
         APIResult result = new APIResult(ResultCodes.Success);
         boolean verifykeyCodeResult = dictionaryService.verifykeyCode(dictionaryVo);
         result.setData(verifykeyCodeResult);
-
         return result;
     }
 

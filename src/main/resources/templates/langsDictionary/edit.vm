@@ -28,6 +28,16 @@
             text-align: left;
             padding-top: 5px;
         }
+
+        .lefile {
+            width: 110px;
+            display: none;
+            padding-right: 8em;
+            float: right;
+            color: red;
+            text-align: left;
+            padding-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -103,33 +113,31 @@
 
                                 <div class="fr" style="width:50%;float: left">
                                     <div class="">
-                                        <label class="control-label" style="width: 60px;">备注：</label>
-                                        <div class="controls" style="width: 300px;margin-left: 80px">
-                                            <textarea placeholder="图文备注" class="form-control" id="remark" cols="4"
-                                                      rows="4" style="resize: none; width: 285px;"></textarea>
+                                        <label class="control-label" style="min-width: 100px;max-width: 100px;">描&nbsp;&nbsp;&nbsp;述：</label>
+                                        <div class="controls" style="margin-left: 80px">
+                                            <textarea placeholder="多语言描述" class="form-control" style="margin-left: 40px;resize: none;" id="remark" cols="4"
+                                                      rows="4"></textarea>
                                             <label name="remark" class="control-label required-waring"
                                                    style="padding-top: 2px;text-align: left;width: 140px;">备注不能为空</label>
                                         </div>
                                     </div>
                                     <div class="">
-                                        <label class="control-label" style="width: 60px;">文件：</label>
-                                        <div class="controls" style="width: 300px;margin-left: 80px">
+                                        <label class="control-label" style="min-width: 100px;max-width: 100px;">场景图：</label>
+                                        <div class="controls" style="margin-left: 80px">
                                             <input id="lefile" name="file" type="file" style="display:none">
-                                            <div class="input-append" style="width: 100%;">
-                                                <input id="photoCover" class="span3" type="text" style="width: 300px;">
+                                            <div class="input-append">
+                                                <input id="photoCover" style="margin-left: 40px;" class="span3" type="text">
                                                 <a class="btn span4"
                                                    style="background-color: #eee;float: right;width: 80px;position: absolute;"
                                                    onclick="$('input[id=lefile]').click();">
                                                     <i class="icon-folder-open" style="padding-right"></i>选择文件</a>
                                             </div>
-                                            <label name="lefile" class="control-label"
-                                                   style="width:110px;display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">请选择图片</label>
+                                            <label name="lefile" class="lefile">
+                                                请选择图片
+                                            </label>
                                         </div>
-                                        <div style="text-align: center;width: 300px;margin-left: 80px">
-                                            <a href="#" id="imgUrlHref" target="_blank">
-                                                <img style="width: 250px;height: 250px;display: none" id="imgUrl"
-                                                     src="">
-                                            </a>
+                                        <div style="text-align: center;padding-top: 1em;">
+                                            <img style="width: 250px;height: 250px;display: none" id="imgUrl" src="">
                                         </div>
                                     </div>
                                 </div>
@@ -198,8 +206,8 @@
                         var keyCode = langsDictionaryVo.keyCode;
                         var categoryId = langsDictionaryVo.categoryId;
 
-                        // $("select[name='categoryId']").find("option[value='" + categoryId + "']").attr("selected", true);
-                        // $(".select2-selection__rendered").html($("select[name='categoryId']").find("option[value='" + categoryId + "']").text());
+                        $("select[name='categoryId']").find("option[value='" + categoryId + "']").attr("selected", true);
+                        $(".select2-selection__rendered").html($("select[name='categoryId']").find("option[value='" + categoryId + "']").text());
 
                         var langsMessageList = langsDictionaryVo.langsMessageList;
                         for (var i = 0; i < langsMessageList.length; i++) {
@@ -213,8 +221,8 @@
                         $("input[name='1']").attr("onkeyup", "keyCodeRealTime()");
 
                         // keyCode初始化值
-                        // var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
-                        // $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
+                        var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
+                        $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
 
                     } else {
                         alert("操作失败:" + result.msg);
@@ -371,6 +379,7 @@
             if (!checkResult) {
                 return false;
             }
+
             var request = {};
             request.keyCode = getUrlParam("keyCode");
             request.newKeyCode = $("input[name='keyCode']").val();
@@ -445,7 +454,6 @@
 
         // 返回列表页
         function back() {
-            console.log("list?index=" + getUrlParam("pageIndex"));
             location.href = "list?index=" + getUrlParam("pageIndex");
         }
 

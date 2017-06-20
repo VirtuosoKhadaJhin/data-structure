@@ -38,7 +38,7 @@ public interface LangsDictionaryService {
      * @return
      * @throws UnsupportedEncodingException
      */
-    LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale) throws UnsupportedEncodingException;
+    LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale);
 
     /**
      * 查询当地语Message内容
