@@ -34,16 +34,15 @@
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.statusChangeTime)</td>
             <td>
                 #if($!entity.templateStatus=="Release")
-                    <a data-id="$!entity.id" class="btn btn-info btn-mini discard">废弃</a>
-                    <a data-id="$!entity.id" class="btn btn-info btn-mini delete">删除</a>
-                    <a href="edit?optype=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
+                    <a data-id="$!entity.id" class="btn btn-mini btn-primary  discard">废弃</a>
+                    <a href="edit?optype=2&id=$!entity.id" class="btn  btn-mini btn-primary ">编辑</a>
                 #end
                 #if($!entity.templateStatus=="Discard"||$!entity.templateStatus=="Draft")
-                    <a data-id="$!entity.id" class="btn btn-info btn-mini publish">发布</a>
-                    <a data-id="$!entity.id" class="btn btn-info btn-mini delete">删除</a>
-                    <a href="edit?optype=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
+                    <a data-id="$!entity.id" class="btn  btn-mini btn-primary publish">发布</a>
+                    <a data-id="$!entity.id" class="btn btn-danger btn-mini delete">删除</a>
+                    <a href="edit?optype=2&id=$!entity.id" class="btn  btn-mini btn-primary">编辑</a>
                 #end
-                <a href="edit?optype=4&id=$!entity.id" class="btn btn-info btn-mini">复制</a>
+                <a href="edit?optype=4&id=$!entity.id" class="btn  btn-mini btn-primary">复制</a>
             </td>
         </tr>
         #end
@@ -86,8 +85,11 @@
             <option value="1"  #if($!type==1)selected #end>主合同</option>
             <option value="2"  #if($!type==2)selected #end>附加合同</option>
         </select>
+
+
     </div>
     <button type="submit" class="btn btn-primary">查询</button>
+    <button type="reset" class="btn btn-warning">重置</button>
 </form>
 #parse("common/list_end.vm")
 

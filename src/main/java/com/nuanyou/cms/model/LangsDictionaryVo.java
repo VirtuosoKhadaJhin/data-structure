@@ -3,6 +3,7 @@ package com.nuanyou.cms.model;
 import com.google.common.collect.Lists;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +30,9 @@ public class LangsDictionaryVo implements Serializable {
 
     //分类名称
     private String categoryName;
+
+    //分类名称
+    private Date updateDt;
 
     // 接收备注信息
     private LangsMessageTipVo messageTip;
@@ -108,6 +112,14 @@ public class LangsDictionaryVo implements Serializable {
 
     public void setMessageTip(LangsMessageTipVo messageTip) {
         this.messageTip = messageTip;
+    }
+
+    public Date getUpdateDt() {
+        return updateDt;
+    }
+
+    public void setUpdateDt(Date updateDt) {
+        this.updateDt = updateDt;
     }
 
     public List<LangsCountryMessageVo> getLangsMessageList() {

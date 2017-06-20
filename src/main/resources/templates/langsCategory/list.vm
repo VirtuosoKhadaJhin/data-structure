@@ -30,8 +30,7 @@
                 <div align="center">
                     <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
                     <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
-                    <a onclick="delCategory('$!entity.id')"
-                       class="btn btn-danger btn-mini remove-item">删除</a>
+                    <a class="btn btn-danger btn-mini remove-item" del-id="$!entity.id">删除</a>
                 </div>
             </td>
         </tr>
@@ -40,11 +39,11 @@
 </table>
 #parse("common/list_mid.vm")
 <form class="form-horizontal " method="get">
-    <div class="control-group">
+    <div class="control-group" style="margin-bottom: 10px">
         <label>名称</label>
         <input type="text" class="span11" name="name" value="$!entity.name">
     </div>
-    <div class="control-group">
+    <div class="control-group" style="margin-bottom: 10px">
         <label>是否全局</label>
         <select id="country.id" name="isGlobal" class="span11">
             <option value="">全部</option>
@@ -52,7 +51,7 @@
             <option value="false" #if($!entity.isGlobal==false) selected #end>否</option>
         </select>
     </div>
-    <div class="control-group">
+    <div class="control-group" style="margin-bottom: 10px">
         <button type="submit" class="btn btn-primary" style="margin-top: 10px;">查询</button>
     </div>
 </form>
@@ -61,34 +60,43 @@
 
 <script>
     /**
-     * 删除分类
+     * 删除语言
      */
-    function delCategory(id) {
-        console.log(id);
-        var request = {};
-
-        request.id = Number(id);
-
-        // 需要判断是否有关联的多语言数据字典
-        $.ajax({
-            url: 'verifyRelatedLangsDictionary',
-            data: JSON.stringify(request),
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.code == 0) {
-                    if (result.data) {
-                        alert("有关联字典项不可以删除");
-                    } else {
-                        location.href = location.href;
-                    }
-                } else {
-                    alert(result.msg);
-                }
+    $(".remove-item").each(function (i, o) {
+        $(o).on("click", function (event) {
+            var id = $(this).attr("del-id");
+            if (confirm("确实要删除多语言分类吗?")) {
+                sureRemoveLangsDictionary(id);
             }
         });
+    });
 
+    function sureRemoveLangsDictionary(id) {
+        if (confirm("确实要删除多语言分类吗?")) {
+            var request = {};
 
+            request.id = Number(id);
+
+            // 需要判断是否有关联的多语言数据字典
+            $.ajax({
+                url: 'verifyRelatedLangsDictionary',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        if (result.data) {
+                            alert("有关联字典项不可以删除");
+                        } else {
+                            location.href = location.href;
+                        }
+                    } else {
+                        alert(result.msg);
+                    }
+                }
+            });
+        }
     }
+
 </script>

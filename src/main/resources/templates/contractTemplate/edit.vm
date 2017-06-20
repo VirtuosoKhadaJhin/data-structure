@@ -45,6 +45,13 @@
                                 <div class="controls">
                                     <input name="title" type="text" class="span5" value="$!entity.title"">
                                 </div>
+
+                                <label class="control-label">简称</label>
+                                <div class="controls">
+                                    <input name="shortCode" type="text" class="span5" value="$!entity.shortCode"">
+                                </div>
+
+
                                 <label class="control-label">类型</label>
                                 <div class="controls">
                                     <select class="span5" name="templateType">
@@ -572,6 +579,7 @@
             request.templateType = $("select[name='templateType']").val();
             request.type = $("input[name='type']").val();
             request.id = $("input[name='id']").val();
+            request.shortCode = $("input[name='shortCode']").val();
             request.paramIds = paramIds;
             request.list = list;
             request.optype = $("#optype").val();
