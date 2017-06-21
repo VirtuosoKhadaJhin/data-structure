@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * Created by 孙昊 on 2017/6/13.
  */
@@ -30,9 +32,11 @@ public class LangsMessageTipController {
      */
     @RequestMapping("/add")
     @ResponseBody
-    public APIResult<EntityNyLangsMessageTip> remove(@RequestBody LangsMessageTipVo requestVo) {
+    public APIResult<EntityNyLangsMessageTip> remove(@RequestBody LangsMessageTipVo requestVo) throws UnsupportedEncodingException {
         APIResult<EntityNyLangsMessageTip> result = new APIResult<EntityNyLangsMessageTip>(ResultCodes.Success);
-        EntityNyLangsMessageTip entityNyLangsMessageTip = messageTipService.add(requestVo);
+        String keyCode = requestVo.getKeyCode();
+        keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
+        EntityNyLangsMessageTip entityNyLangsMessageTip = messageTipService.add(requestVo, keyCode);
         result.setData(entityNyLangsMessageTip);
         return result;
     }
@@ -60,9 +64,11 @@ public class LangsMessageTipController {
      */
     @RequestMapping("/viewLangsMessageTip")
     @ResponseBody
-    public APIResult<LangsMessageTipVo> viewLangsMessageTip(@RequestBody LangsMessageTipVo requestVo) {
+    public APIResult<LangsMessageTipVo> viewLangsMessageTip(@RequestBody LangsMessageTipVo requestVo) throws UnsupportedEncodingException {
         APIResult<LangsMessageTipVo> result = new APIResult<LangsMessageTipVo>(ResultCodes.Success);
-        LangsMessageTipVo langsMessageTipVo = messageTipService.viewLangsMessageTip(requestVo);
+        String keyCode = requestVo.getKeyCode();
+        keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
+        LangsMessageTipVo langsMessageTipVo = messageTipService.viewLangsMessageTip(requestVo, keyCode);
         result.setData(langsMessageTipVo);
         return result;
     }

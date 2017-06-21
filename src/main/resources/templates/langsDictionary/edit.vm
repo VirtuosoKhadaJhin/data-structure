@@ -105,7 +105,6 @@
                                         </div>
                                     </div>
 
-
                                     #foreach($langCountry in $!langsCountries)
                                         <div class="">
                                             <label class="control-label" style="width: 140px;">$!langCountry.desc
@@ -119,7 +118,7 @@
                                                 #set($hasNullMessage=true)
                                                 #foreach($message in $!langsDictionary.langsMessageList)
                                                     #if($!message.langsKey == $!langCountry.key)
-                                                        <input name="$!langCountry.key" type="text" style="width: 80%"
+                                                        <input data-id="$!message.id" name="$!langCountry.key" type="text" style="width: 80%"
                                                                class="span7 countryLanguage" value="$!message.message">
                                                         #set($hasNullMessage=false)
                                                     #end
@@ -347,11 +346,14 @@
             var langsMessageList = [];
             for (var i = 0; i < countryLanguages.length; i++) {
                 var countryLanguage = countryLanguages.eq(i);
+                // id
+                var id = countryLanguage.attr("data-id");
                 // keyCode
                 var langsKey = countryLanguage.attr("name");
                 // message
                 var message = countryLanguage.val().trim();
                 var langsCountryMessageVo = {
+                    id : id,
                     langsKey: langsKey,
                     message: message
                 };

@@ -13,8 +13,10 @@ public interface LangsMessageTipService {
      * 添加备注
      *
      * @param requestVo
+     * @param keyCode
+     * @return
      */
-    EntityNyLangsMessageTip add(LangsMessageTipVo requestVo);
+    EntityNyLangsMessageTip add(LangsMessageTipVo requestVo, String keyCode);
 
     /**
      * 上传图片
@@ -27,8 +29,9 @@ public interface LangsMessageTipService {
      * 查看keyCode的备注信息
      *
      * @param requestVo
+     * @param keyCode
      * @return
      */
-    LangsMessageTipVo viewLangsMessageTip(LangsMessageTipVo requestVo);
+    LangsMessageTipVo viewLangsMessageTip(LangsMessageTipVo requestVo, String keyCode);
 
 }

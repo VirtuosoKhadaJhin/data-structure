@@ -18,10 +18,10 @@ public interface EntityNyLangsMessageTipDao extends JpaRepository<EntityNyLangsM
 
     @Transactional
     @Modifying
-    @Query(value = "update EntityNyLangsMessageTip lm set lm.delFlag=true where lm.keyCode=:keyCode")
-    void logicalDelLangsMessageTip(@Param("keyCode") String keyCode);
+    @Query(value = "update EntityNyLangsMessageTip lm set lm.delFlag=:delFlag where lm.keyCode=:keyCode")
+    void setDelFLagKeyCodeFor(@Param("delFlag") Boolean delFlag, @Param("keyCode") String keyCode);
 
-    @Query(value = "select lm from EntityNyLangsMessageTip lm where lm.keyCode=:keyCode")
+    @Query(value = "select lm from EntityNyLangsMessageTip lm where lm.keyCode=:keyCode and lm.delFlag=false")
     EntityNyLangsMessageTip findByKeyCode(@Param("keyCode") String keyCode);
 
 
