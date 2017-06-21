@@ -10,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @EntityListeners(DateEntityListener.class)
-@Table(name = "bd_contract_param_distribute")
+@Table(name = "bd_contract_param_distribute",catalog = "bd")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
 public class ContractParamDistribute {
 

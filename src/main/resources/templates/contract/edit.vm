@@ -81,7 +81,7 @@
                                 <div class="control-group">
                                     <label class="control-label">国家</label>
                                     <div class="controls" >
-                                        #foreach($e in $!countries)#if($!entity.countryId==$!e.id) $!e.name#end#end
+                                        $!entity.countryName
                                     </div>
                                 </div>
 

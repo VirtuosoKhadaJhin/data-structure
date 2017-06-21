@@ -6,9 +6,11 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.ContractParamDistributeDao;
 import com.nuanyou.cms.entity.ContractParamDistribute;
 import com.nuanyou.cms.model.contract.output.Contract;
+import com.nuanyou.cms.model.contract.output.ContractParameter;
 import com.nuanyou.cms.remote.model.request.AcMerchantSettlement;
 import com.nuanyou.cms.remote.model.request.AcMerchantSettlementCommission;
 import com.nuanyou.cms.remote.model.request.DayType;
+import com.nuanyou.cms.remote.service.RemoteContractService;
 import com.nuanyou.cms.remote.service.RemoteSettlementService;
 import com.nuanyou.cms.service.AccountHandleService;
 import com.nuanyou.cms.util.DateUtils;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,9 +40,16 @@ public class AccountHandleServiceImpl implements AccountHandleService {
     private static String commissionNames = "group_buying_commission";
     private static String groupBuyingStartTime = "group_buying_start_time";
     private static DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
+    public  static  final Long ACCOUNT_SYSTEM_ID=1l;
 
     @Autowired
     private RemoteSettlementService remoteAccountSettlementService;
+    @Autowired
+    private ContractParamDistributeDao contractParamDistributeDao;
+    @Autowired
+    private RemoteContractService remoteContractService;
+
+
 
     public void addSettlementForAccount(Contract detail) {
         if (detail.getMchId() == null) {
@@ -48,8 +58,10 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         Map<String, String> result = detail.getParameters();
         AcMerchantSettlement settlementRequest = new AcMerchantSettlement();
         AcMerchantSettlementCommission settlementCommissionRequest = new AcMerchantSettlementCommission();
-        setMerchantSettlementRequest(result, settlementRequest, detail.getMchId());
-        setMerchantSettlementCommissionRequest(result, settlementCommissionRequest);
+        List<ContractParamDistribute> distributes = contractParamDistributeDao.findBySystemId(ACCOUNT_SYSTEM_ID);
+        Map<String,String> distributes_map=getDistributeMap(distributes);
+        setMerchantSettlementRequest(result, settlementRequest, detail.getMchId(),distributes_map);
+        setMerchantSettlementCommissionRequest(result, settlementCommissionRequest,distributes_map);
         if (detail.getParentId() == null) {//主合同验证优付的参数
             validateYoufuSettlement(settlementRequest.getPoundage(), settlementRequest.getDay(), settlementRequest.getDayType(), settlementRequest.getStartPrice());
             validateCommission(settlementCommissionRequest.getGroupon(),settlementCommissionRequest.getStartTime());
@@ -107,9 +119,9 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         }
     }
 
-    private void setMerchantSettlementCommissionRequest(Map<String, String> result, AcMerchantSettlementCommission settlementCommissionRequest) {
-        String startTimeStr = getValue(result, groupBuyingStartTime);//开始时间
-        String commissionStr = getValue(result, commissionNames);//佣金
+    private void setMerchantSettlementCommissionRequest(Map<String, String> result, AcMerchantSettlementCommission settlementCommissionRequest, Map<String,String> distributes) {
+        String startTimeStr = getValue(result, distributes.get(groupBuyingStartTime) );//开始时间
+        String commissionStr = getValue(result,distributes.get(commissionNames) );//佣金
         BigDecimal commission = commissionStr == null ? null : new BigDecimal(commissionStr);
         Date dateTime = startTimeStr == null ? null : DateTime.parse(startTimeStr, dateFormat).toDate();
         settlementCommissionRequest.setGroupon(commission);
@@ -129,16 +141,15 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         return value;
     }
 
-    @Autowired
-    private ContractParamDistributeDao contractParamDistributeDao;
-    public  static  final Long ACCOUNT_SYSTEM_ID=1l;
 
-    private void setMerchantSettlementRequest(Map<String, String> result, AcMerchantSettlement request, Long mchId) {
-        String poundageStr = getValue(result, poundageNames);//手续费
-        String paymentDaysStr = getValue(result, paymentDaysNames);//账期
-        String dateTypeStr = getValue(result, dayTypeNames);//类型
-        String startTimeStr = getValue(result, youfuStartTimeNames);//开始时间
-        String startPriceStr = getValue(result, startPriceNames);//起结金额
+
+    private void setMerchantSettlementRequest(Map<String, String> result, AcMerchantSettlement request, Long mchId,Map<String,String> distributes) {
+
+        String poundageStr = getValue(result,distributes.get(poundageNames));//手续费
+        String paymentDaysStr = getValue(result,distributes.get(paymentDaysNames) );//账期
+        String dateTypeStr = getValue(result,distributes.get(dayTypeNames) );//类型
+        String startTimeStr = getValue(result,distributes.get(youfuStartTimeNames) );//开始时间
+        String startPriceStr = getValue(result, distributes.get(startPriceNames) );//起结金额
         BigDecimal poundage = poundageStr == null ? null : new BigDecimal(poundageStr);
         Integer dateType = dateTypeStr == null ? null : new Integer(dateTypeStr);
         Long paymentDays = paymentDaysStr == null ? null : Long.valueOf(paymentDaysStr);
@@ -168,5 +179,19 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         request.setStartPrice(startPrice);
         request.setMerchantId(mchId);
         request.setStartTime(dateTime);
+    }
+
+    private Map<String,String> getDistributeMap(List<ContractParamDistribute> distributes) {
+        Map<String,String> map=new HashMap<>();
+        for (ContractParamDistribute distribute : distributes) {
+            APIResult<ContractParameter> contractParameterAPIResult = this.remoteContractService.saveTemplateParamter(distribute.getParamId());
+            if (contractParameterAPIResult.getCode() != 0) {
+                throw new APIException(contractParameterAPIResult.getCode(), contractParameterAPIResult.getMsg());
+            }
+            ContractParameter data = contractParameterAPIResult.getData();
+            String paramName=data.getKey();
+            map.put(distribute.getNameMapping(),paramName);
+        }
+        return map;
     }
 }
