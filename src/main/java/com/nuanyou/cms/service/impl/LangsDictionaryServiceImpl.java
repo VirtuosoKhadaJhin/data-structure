@@ -68,7 +68,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                 if (StringUtils.isNotEmpty(message)) {
                     predicate.add(cb.like(root.get("message").as(String.class), "%" + message + "%"));
                 }
-
+                predicate.add(cb.equal(root.get("delFlag").as(String.class), false));
                 Predicate[] arrays = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(arrays)).getRestriction();
             }

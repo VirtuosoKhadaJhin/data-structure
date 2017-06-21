@@ -7,16 +7,24 @@
     <span class="icon"><i class="icon-th"></i></span>
     <h5>支付订单记录列表</h5>
 </div>
+<style type="text/css">
+    .tbody-class td.text-center {
+        vertical-align: middle;
+        text-align: center;
+    }
+</style>
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
         <th width="100px;">操作</th>
         <th>商户ID</th>
         <th>商户名称</th>
+        <th>商户本地名称</th>
         <th>购买人</th>
         <th>订单编号</th>
         <th>订单流水</th>
-        <th>支付价格</th>
+        <th>人民币价格</th>
+        <th>当地价格</th>
         <th>支付状态</th>
         <th>支付类型</th>
         <th>支付通道</th>
@@ -54,13 +62,15 @@
             </td>
             <td>$!item.mchId</td>
             <td>$!item.mchName</td>
+            <td>$!item.mchKpName</td>
             <td>$!item.userId</td>
             <td>$!item.outTradeNo</td>
             <td>$!item.transactionId</td>
-            <td>$!item.price</td>
-            <td>$!item.status.name</td>
-            <td>$!item.method.name</td>
-            <td>$!item.channelName</td>
+            <td class="text-center">$!item.price</td>
+            <td class="text-center">$!item.oprice</td>
+            <td class="text-center">$!item.status.name</td>
+            <td class="text-center">$!item.method.name</td>
+            <td class="text-center">$!item.channelName</td>
             <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss", $!item.payTime)</td>
         </tr>
         #end
@@ -167,16 +177,24 @@
                 data: {app: item_app},
                 dataType: "json",
                 success: function (response) {
-                    if (response.code == 0 && response.data != null) {//data为orderId、status、rmbprice等
-                        alert("操作成功！");
-                        $(_this).remove();
-                    } else if (response.code != 0 && response.data == null) {
-                        alert("系统繁忙，请稍后重试！");
-                        $(_this).remove();
+                    if (response.success && response.code == 0) {
+                        var data = response.data;
+                        var status = data.status;
+                        if (status == 0) {
+                            alert("支付成功！");
+                            $(_this).remove();
+                        } else if (status == 1) {
+                            alert("付款中，请稍后...");
+                        } else if (status == 2) {
+                            alert("重复订单，请稍后重试！");
+                        } else if (status == 3) {
+                            alert("支付失败，请稍后重试！");
+                        }
+                    } else {
+                        alert("请求失败，请稍后重试！");
                     }
                 },
                 error: function (response) {
-                    $(_this).text("查询").removeAttr("disabled");
                     alert("请求失败，请稍后重试！");
                 }
             });

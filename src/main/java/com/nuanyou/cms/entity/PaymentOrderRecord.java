@@ -68,6 +68,9 @@ public class PaymentOrderRecord {
     @Column(name = "realprice")
     private BigDecimal realPrice;
 
+    @Column(name="oprice")
+    private BigDecimal oprice;
+
     @Column(name = "chnid")
     private String channelId;
 
@@ -215,6 +218,14 @@ public class PaymentOrderRecord {
 
     public void setRealPrice(BigDecimal realPrice) {
         this.realPrice = realPrice;
+    }
+
+    public BigDecimal getOprice() {
+        return oprice;
+    }
+
+    public void setOprice(BigDecimal oprice) {
+        this.oprice = oprice;
     }
 
     public PaymentOrderMethod getMethod() {

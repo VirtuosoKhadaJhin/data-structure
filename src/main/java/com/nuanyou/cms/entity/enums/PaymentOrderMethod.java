@@ -22,7 +22,7 @@ public enum PaymentOrderMethod {
         this.name = name;
     }
 
-    public static PaymentOrderMethod toEnum(byte key) {
+    public static PaymentOrderMethod toEnum(int key) {
         PaymentOrderMethod[] values = PaymentOrderMethod.values ();
         for (PaymentOrderMethod status : values)
             if (key == status.getKey ()) {

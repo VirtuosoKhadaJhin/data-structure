@@ -5,6 +5,7 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.enums.PaymentOrderMethod;
 import com.nuanyou.cms.entity.enums.PaymentOrderStatus;
+import com.nuanyou.cms.entity.enums.PaymentResultStatus;
 import com.nuanyou.cms.model.CodePayResponse;
 import com.nuanyou.cms.model.PaymentOrderRecordVo;
 import com.nuanyou.cms.model.PaymentRecordRequestVo;
@@ -96,11 +97,11 @@ public class PaymentOrderRecordController {
         String uri = paymentServiceAddress + "/wechat/query/" + app + "/kr/" + orderId;
         try {
             CodePayResponse response = httpService.doGetJson(new URI(uri));
-            Integer code = response.getCode();
-            result.setData(response.getData());
-            result.setCode(code);
+            CodePayResponse.Result data = response.getData();
+            result.setData(data);
+            result.setCode(response.getCode());
             result.setMsg(response.getMsg());
-            if (response.isSuccess()) {
+            if (response.isSuccess() && PaymentResultStatus.toEnum(data.getStatus()) == PaymentResultStatus.PAY_SUCCES) {
                 request.setAttribute("SEARCH_PAYMENT_ORDER_RECORD_SUCCESS", orderId);
             }
         } catch (Exception e) {

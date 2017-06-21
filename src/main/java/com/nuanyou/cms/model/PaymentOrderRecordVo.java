@@ -48,6 +48,9 @@ public class PaymentOrderRecordVo {
     //人民币价格
     private BigDecimal realPrice;
 
+    //当地价格
+    private BigDecimal oprice;
+
     //支付方式
     private PaymentOrderMethod method;
 
@@ -184,6 +187,14 @@ public class PaymentOrderRecordVo {
 
     public void setRealPrice(BigDecimal realPrice) {
         this.realPrice = realPrice;
+    }
+
+    public BigDecimal getOprice() {
+        return oprice;
+    }
+
+    public void setOprice(BigDecimal oprice) {
+        this.oprice = oprice;
     }
 
     public PaymentOrderMethod getMethod() {

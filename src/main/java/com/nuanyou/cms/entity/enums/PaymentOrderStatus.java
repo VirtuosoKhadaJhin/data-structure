@@ -21,7 +21,7 @@ public enum PaymentOrderStatus {
         this.name = name;
     }
 
-    public static PaymentOrderStatus toEnum(byte key) {
+    public static PaymentOrderStatus toEnum(int key) {
         PaymentOrderStatus[] values = PaymentOrderStatus.values ();
         for (PaymentOrderStatus status : values)
             if (key == status.getKey ()) {
