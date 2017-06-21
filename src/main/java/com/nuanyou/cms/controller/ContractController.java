@@ -68,7 +68,7 @@ public class ContractController {
                        @RequestParam(value = "merchantname", required = false) String merchantName,
                        @RequestParam(value = "countryId", required = false) Long countryId,
                        @RequestParam(value = "status", required = false) Integer[] status,
-                       @RequestParam(value = "templateid", required = false) Long[] templateid,
+                       @RequestParam(value = "templateid", required = false) Long templateid,
                        @RequestParam(value = "type", required = false) Integer type,
                        @RequestParam(value = "starttime", required = false) String startTime,
                        @RequestParam(value = "endtime", required = false) String endTime,
@@ -77,8 +77,14 @@ public class ContractController {
                        @RequestParam(value = "businessLicense", required = false) Boolean businessLicense,
                        @RequestParam(value = "contractNum", required = false) Boolean contractNum,
                        @RequestParam(value = "paperContract", required = false) Boolean paperContract) {
-        Page<Contract> page = contractModuleService.getContracts(userId, merchantId, id, merchantName, "[2]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), businessLicense, paperContract, startTime, endTime, index, limit);
+
+        Integer[] types=type==null?null:new Integer[]{type};
+        Long[] templateids=templateid==null?null:new Long[]{templateid};
+        Page<Contract> page = contractModuleService.getContracts(userId,countryId, merchantId, id, merchantName, "[2]", JsonUtils.toJson(templateids), JsonUtils.toJson(types), businessLicense, paperContract, startTime, endTime, index, limit);
         List<Country> countries = countryService.getIdNameList();
+        APIResult<ContractTemplates> contractTemplateList = this.contractService.findContractTemplateList(id, 3, null, 1, 1000);
+        List<ContractTemplate> templates = contractTemplateList.getData().getList();
+        model.addAttribute("templates", templates);
         model.addAttribute("page", page);
         model.addAttribute("countries", countries);
         model.addAttribute("countryId", countryId);
@@ -97,6 +103,8 @@ public class ContractController {
         model.addAttribute("limit", limit);
         return "contract/list";
     }
+
+
 
 
     @RequestMapping("detail")
@@ -136,15 +144,24 @@ public class ContractController {
             @ApiParam(value = "用户id") @RequestParam(value = "userid", required = false) Long userId,
             @RequestParam(value = "id", required = false) Long id,
             @ApiParam(value = "商户名称") @RequestParam(value = "merchantname", required = false) String merchantName,
+            @RequestParam(value = "countryId", required = false) Long countryId,
             @ApiParam(value = "商户id") @RequestParam(value = "merchantid", required = false) Long merchantId,
             @ApiParam(value = "合同状态: 1.已驳回 2.审核中 3.未生效 4.已生效(多个值以,分割)") @RequestParam(value = "status", required = false) Integer[] status,
-            @ApiParam(value = "合同类型: 为空则查询全部") @RequestParam(value = "templateid", required = false) Long[] templateid,
-            @RequestParam(value = "type", required = false) Integer[] type,
+            @ApiParam(value = "合同类型: 为空则查询全部") @RequestParam(value = "templateid", required = false) Long templateid,
+            @RequestParam(value = "type", required = false) Integer type,
             @ApiParam(value = "开始时间(yyyy-MM-dd)") @RequestParam(value = "starttime", required = false) String startTime,
             @ApiParam(value = "结束时间(yyyy-MM-dd)") @RequestParam(value = "endtime", required = false) String endTime,
             @ApiParam(value = "页序号，默认从1开始") @RequestParam(value = "page", required = false, defaultValue = "1") Integer index,
             @ApiParam(value = "每页条目数,默认20条") @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit) {
-        Page<Contract> page = contractModuleService.getContracts(userId, merchantId, id, merchantName, "[4]", JsonUtils.toJson(templateid), JsonUtils.toJson(type), null, null, startTime, endTime, index, limit);
+        Integer[] types=type==null?null:new Integer[]{type};
+        Long[] templateids=templateid==null?null:new Long[]{templateid};
+        Page<Contract> page = contractModuleService.getContracts(userId,countryId, merchantId, id, merchantName, "[4]", JsonUtils.toJson(templateids), JsonUtils.toJson(types), null, null, startTime, endTime, index, limit);
+        List<Country> countries = countryService.getIdNameList();
+        APIResult<ContractTemplates> contractTemplateList = this.contractService.findContractTemplateList(id, 3, null, 1, 1000);
+        List<ContractTemplate> templates = contractTemplateList.getData().getList();
+        model.addAttribute("templates", templates);
+        model.addAttribute("countries", countries);
+        model.addAttribute("countryId", countryId);
         model.addAttribute("page", page);
         model.addAttribute("userid", userId);
         model.addAttribute("merchantname", merchantName);
@@ -237,6 +254,9 @@ public class ContractController {
         List<ContractTemplate> contractConfig = contractTemplateList.getData().getList();
         return contractConfig;
     }
+
+
+
 
 
 }
