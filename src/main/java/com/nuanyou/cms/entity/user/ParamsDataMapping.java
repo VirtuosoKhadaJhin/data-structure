@@ -9,7 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @EntityListeners(DateEntityListener.class)
-@Table(name = "ny_param_data_mapping")
+@Table(name = "bd_param_data_mapping",catalog = "bd")
 public class ParamsDataMapping {
     private Long id;
     private String name;
