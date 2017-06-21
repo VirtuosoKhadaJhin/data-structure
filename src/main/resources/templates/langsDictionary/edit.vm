@@ -115,15 +115,20 @@
                                                 #end
                                                 ：</label>
                                             <div class="controls" style="margin-left: 152px;">
-                                                ##多语言##
-                                                    #foreach($message in $!langsDictionary.langsMessageList)
-                                                        #if($!message.langsKey == $!langCountry.key)
-                                                            <input name="$!langCountry.key" type="text" style="width: 80%"
-                                                                   class="span7 countryLanguage" value="$!message.message">
-                                                        #end
+                                            ##多语言##
+                                                #set($hasNullMessage=true)
+                                                #foreach($message in $!langsDictionary.langsMessageList)
+                                                    #if($!message.langsKey == $!langCountry.key)
+                                                        <input name="$!langCountry.key" type="text" style="width: 80%"
+                                                               class="span7 countryLanguage" value="$!message.message">
+                                                        #set($hasNullMessage=false)
                                                     #end
-
-                                                ##多语言##
+                                                #end
+                                                #if($hasNullMessage)
+                                                    <input name="$!langCountry.key" type="text" style="width: 80%"
+                                                           class="span7 countryLanguage" value="$!message.message">
+                                                #end
+                                            ##多语言##
                                                 <label id="requiredKey_$!langCountry.key"
                                                        class="control-label required-waring"
                                                        style="padding-top: 2px;text-align: left;width: 140px;">必填项</label>
