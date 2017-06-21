@@ -284,9 +284,11 @@ public class LangsDictionaryController {
      */
     @RequestMapping(value = "modifyLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public APIResult modifyLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
+    public APIResult modifyLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) throws UnsupportedEncodingException {
         APIResult<EntityNyLangsDictionary> result = new APIResult<EntityNyLangsDictionary>(ResultCodes.Success);
-        dictionaryService.modifyLangsDictionary(dictionaryVo);
+        String keyCode = dictionaryVo.getKeyCode();
+        keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
+        dictionaryService.modifyLangsDictionary(keyCode, dictionaryVo);
         return result;
     }
 
