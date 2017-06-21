@@ -100,9 +100,9 @@ public interface LangsDictionaryService {
     /**
      * 修改单个语言
      *
-     * @param dictionaryVo
+     * @param keyCode
      */
-    void modifyLangsDictionary(LangsDictionaryVo dictionaryVo);
+    void modifyLangsDictionary(String keyCode, LangsDictionaryVo dictionaryVo);
 
     /**
      * 根据keyCode查询当地语言
