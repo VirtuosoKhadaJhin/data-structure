@@ -18,10 +18,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -91,7 +88,7 @@ public class MerchantCatController {
         }
 
         Locale locale = request.getLocale();
-        Page<MerchantCatVo> page = merchantCatService.findByCondition(entity, index, locale);
+        Page<MerchantCatVo> page = merchantCatService.findParentCat(entity, index, locale);
 
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
@@ -99,6 +96,18 @@ public class MerchantCatController {
         return "merchantCat/list";
     }
 
+    /**
+     * 根据一级分类的ID分页查询二级分类
+     *
+     * @return
+     */
+    @RequestMapping("viewCat")
+    @ResponseBody
+    public APIResult<Page<MerchantCatVo>> viewCat(@RequestBody MerchantCat entity, int index, HttpServletRequest request) {
+        Locale locale = request.getLocale();
+        Page<MerchantCatVo> page = merchantCatService.findChildCat(entity, index, locale, entity.getPcat().getId());
+        return new APIResult(page);
+    }
 
     @RequestMapping("api/list")
     @ResponseBody

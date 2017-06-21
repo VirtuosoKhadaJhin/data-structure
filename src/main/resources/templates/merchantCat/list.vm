@@ -1,4 +1,16 @@
 #parse("common/list_start.vm")
+<style>
+    .table th, .table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: center;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
+    }
+    .empty-data {
+        color: #b3afaf;
+    }
+</style>
 <div id="breadcrumb"><a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
     主页</a>
     <a href="/merchantCat/list" class="tip-bottom" data-original-title="">商户分类</a>
@@ -12,21 +24,20 @@
     <thead>
     <tr>
         <th>ID</th>
-        <th>商户分类名称</th>
-        <th>分类名称(本地)</th>
-        <th>分类名称(英语)</th>
+        <th>分类名称</th>
+        <th>分类名称（本地）</th>
+        <th>分类名称（英语）</th>
         <th>简称</th>
         <th>分类属性</th>
-        <th>所属一级分类</th>
         <th>是否显示</th>
-        <th width="90px">操作</th>
+        <th width="100px">操作</th>
     </tr>
     </thead>
     <tbody>
         #foreach($entity in $!page.content)
-        <tr class="odd gradeX">
-            <td style="text-align: center;">$!entity.id</td>
-            <td style="text-align: center;">
+        <tr>
+            <td class="tdInput">$!entity.id</td>
+            <td class="tdInput">
                 #if("$!entity.pcat.name" == "")
                     $!entity.name
                     <img src="$!entity.imageUrl" width="20px" height="20px">
@@ -34,47 +45,42 @@
                     $!entity.name
                 #end
             </td>
-            <td style="text-align: center;">
-                $!entity.localNameLabel
-            </td>
-            <td style="text-align: center;">
-                $!entity.enNameLabel
-            </td>
-            <td style="text-align: center;">
-                $!entity.shortname
-            </td>
-            <td style="text-align: center;">
-            ##分类属性
-                #if("$!entity.pcat" == "")
-                    一级
+            <td class="tdInput">
+                #if("$!entity.localNameLabel" != "")
+                    $!entity.localNameLabel
                 #else
-                    二级
-                #end
-            ##分类属性
-            </td>
-            <td style="text-align: center;">
-                #if("$!entity.pcat" == "")
-
-                #else
-                    $!entity.pcat.name
-                    <img src="$!entity.imageUrl" width="20px" height="20px">
+                    <span class="empty-data">暂无</span>
                 #end
             </td>
-            <td style="text-align: center;">
-                #if($!entity.display)
-                    显示
+            <td class="tdInput">
+                #if("$!entity.enNameLabel" != "")
+                    $!entity.enNameLabel
                 #else
-                    隐藏
+                    <span class="empty-data">暂无</span>
                 #end
             </td>
-            <td style="text-align: center;">
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
-                <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
+            <td class="tdInput">
+                #if("$!entity.shortname" != "")
+                    $!entity.shortname
+                #else
+                    <span class="empty-data">暂无</span>
+                #end
+            </td>
+            <td class="tdInput"> #if("$!entity.pcat" == "")一级 #else 二级 #end</td>
+            <td class="tdInput">
+                #if($!entity.display) 显示 #else 隐藏 #end
+            </td>
+            <td class="tdInput">
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
+                <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini back-ground">
+                    子集<i class="icon-plus" style="margin-left: 5px;"></i>
+                </a>
             </td>
         </tr>
         #end
     </tbody>
 </table>
+
 
 #parse("common/list_mid.vm")
 <form class="form-horizontal " method="get">
@@ -94,7 +100,9 @@
 </form>
 #parse("common/list_end.vm")
 
+<script type="text/javascript">
 
+</script>
 
 
 

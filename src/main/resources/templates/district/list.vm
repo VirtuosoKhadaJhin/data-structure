@@ -51,22 +51,22 @@
     </thead>
     <tbody>
         #foreach($entity in $!page.content)
-        <tr class="odd gradeX">
-            <td style="text-align: center;">$!entity.id</td>
-            <td style="text-align: center;">$!entity.name</td>
-            <td style="text-align: center;">$!entity.shortname</td>
-            <td style="text-align: center;">$!entity.localNameLabel</td>
-            <td style="text-align: center;">$!entity.enNameLabel</td>
-            <td style="text-align: center;">
-                #if($!entity.display)显示#else 隐藏#end
-            </td>
-            <td style="text-align: center;">$!entity.city.name</td>
-            <td style="text-align: center;">$!entity.country.name</td>
-            <td style="text-align: center;">
-                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
-            </td>
-        </tr>
+            <tr class="odd gradeX">
+                <td class="tdInput">$!entity.id</td>
+                <td class="tdInput">$!entity.name</td>
+                <td class="tdInput">$!entity.shortname</td>
+                <td class="tdInput">$!entity.localNameLabel</td>
+                <td class="tdInput">$!entity.enNameLabel</td>
+                <td class="tdInput">
+                    #if($!entity.display)显示#else 隐藏#end
+                </td>
+                <td class="tdInput">$!entity.city.name</td>
+                <td class="tdInput">$!entity.country.name</td>
+                <td class="tdInput">
+                    <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
+                    <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
+                </td>
+            </tr>
         #end
     </tbody>
 </table>
@@ -98,3 +98,9 @@
     <button type="submit" class="btn btn-primary">查询</button>
 </form>
 #parse("common/list_end.vm")
+
+<style>
+    .tdInput{
+        text-align: center;
+    }
+</style>
