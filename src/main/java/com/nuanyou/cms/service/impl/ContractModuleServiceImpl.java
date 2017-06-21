@@ -49,8 +49,8 @@ public class ContractModuleServiceImpl implements ContractModuleService {
     private CountryService countryService;
 
     @Override
-    public Page<Contract> getContracts(Long userId, Long merchantId, Long id, String merchantName, String status, String templateid, String type, Boolean businessLicense, Boolean paperContract, String startTime, String endTime, Integer index, Integer limit) {
-        APIResult<Contracts> contracts = contractService.list(userId, merchantId, id, merchantName, status, templateid, type, businessLicense, paperContract, startTime, endTime, index, limit);
+    public Page<Contract> getContracts(Long userId,Long countryId, Long merchantId, Long id, String merchantName, String status, String templateid, String type, Boolean businessLicense, Boolean paperContract, String startTime, String endTime, Integer index, Integer limit) {
+        APIResult<Contracts> contracts = contractService.list(userId,countryId, merchantId, id, merchantName, status, templateid, type, businessLicense, paperContract, startTime, endTime, index, limit);
         Contracts contractsData = contracts.getData();
         Pageable pageable = new PageRequest(index - 1, limit);
         List<Contract> list = contractsData.getList();

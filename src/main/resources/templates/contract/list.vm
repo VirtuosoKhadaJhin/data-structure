@@ -86,7 +86,7 @@
         <label>ID</label>
         <input type="text" class="span11" name="id" value="$!id">
 
-        <label>本地名称</label>
+        <label>商户本地名称</label>
         <input type="text" class="span11" name="merchantname" value="$!merchantname">
 
 
