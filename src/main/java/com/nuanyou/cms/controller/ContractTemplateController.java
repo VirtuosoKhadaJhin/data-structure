@@ -162,6 +162,7 @@ public class ContractTemplateController {
             @RequestBody Template template
     ) throws IOException {
         return this.contractTemplateService.saveTemplate(
+                template.getShortCode(),
                 template.getParamIds(),
                 template.getList(),
                 template.getTemplateType(),

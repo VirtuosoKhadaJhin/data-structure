@@ -27,9 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-/**
- * Places the User in a ThreadLocal such that other resources can access it that do not have access to the web tier session.
- */
+
 @Component
 public final class UserThreadLocalFilter implements Filter {
 

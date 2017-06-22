@@ -157,7 +157,6 @@ window.onload = function () {
                     var currEle = e.currentTarget;
                     var listComplete = [];
                     var list = result.data;
-                    console.log(list);
                     if(list.length==0){
                         $(currEle).next().val("");
                         return ;
@@ -173,6 +172,7 @@ window.onload = function () {
                     $(currEle).autocomplete({
                         minLength: 0,
                         source: listComplete,
+                        delay:500,
                         focus: function (event, ui) {
                             $(this).val(ui.item.labelDisplay);
                             $(this).next().val(ui.item.value);

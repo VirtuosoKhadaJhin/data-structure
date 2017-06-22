@@ -16,50 +16,33 @@ import java.util.regex.Pattern;
 
 @Component
 public class AuthenticationFilter extends AbstractFilter {
-    /**
-     * The URL to the ssp Server login.
-     */
+
+
     private String loginUrl;
-
-
-    /**
-     * Whether to send the renew request or not.
-     */
-    private boolean renew = false;
-
-
     private Pattern urlExcludePattern;
-
     private String state;
-    /**
-     * Whether the request include a renew or not.
-     */
     private Boolean relogin;
 
 
 
-    protected void initInternal(final FilterConfig filterConfig) throws ServletException {
-        if (!isIgnoreInitConfiguration()) {
-            super.initInternal(filterConfig);
-            setLoginUrl(getPropertyFromInitParams(filterConfig, "loginUrl", null));
-            log.trace("Loaded loginUrl parameter: " + this.loginUrl);
-            setRenew(parseBoolean(getPropertyFromInitParams(filterConfig, "renew", "false")));
-            log.trace("Loaded renew parameter: " + this.renew);
-
-            final String gatewayStorageClass = getPropertyFromInitParams(filterConfig, "gatewayStorageClass", null);
-
-
-        }
-
-    }
-
-    public void init() {
-        System.out.println("initFilter"+this.getClass().getName());
-        super.init();
+    public final void init(final FilterConfig filterConfig) throws ServletException {
+        super.init(filterConfig);//验证service和ticket
+        setLoginUrl(getPropertyFromInitParams(filterConfig, "loginUrl", null));
+        System.out.println("initFilter" + this.getClass().getName());
         CommonUtils.assertNotNull(this.loginUrl, "loginUrl cannot be null.");
     }
 
 
+    /**
+     *  1 排除拦截
+     *  2 如果已经是登录用户继续向下一个filter
+     *  3 如果不是就重定向http://ssoServer:port?ret=dfgdfg
+     * @param servletRequest
+     * @param servletResponse
+     * @param filterChain
+     * @throws IOException
+     * @throws ServletException
+     */
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
@@ -68,8 +51,7 @@ public class AuthenticationFilter extends AbstractFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        final User
-                user = session != null ? (User) session.getAttribute(SSO_USER) : null;
+        final User user = session != null ? (User) session.getAttribute(SSO_USER) : null;
         if (user != null) {
             log.debug("user" + user.toString());
         } else {
@@ -83,41 +65,32 @@ public class AuthenticationFilter extends AbstractFilter {
         final String ticket = CommonUtils.safeGetParameter(request, getArtifactParameterName());
 
         if (CommonUtils.isNotBlank(ticket)) {
-            log.debug("Second Step:ticket found and begin to valicate code");
+            log.debug("Second Step:ticket found and begin to validate code");
             filterChain.doFilter(request, response);
             return;
-        }else{
+        } else {
             log.debug("Second Step:not ticket");
         }
         final String modifiedServiceUrl;
 
         modifiedServiceUrl = serviceUrl;
         log.debug("First Step:Constructed service url: " + modifiedServiceUrl);
-        String state= RandomUtils.randomNumber(8);
+        String state = RandomUtils.randomNumber(8);
 //        while (ticketRegistry.getTicket(state)!=null){
 //            state= RandomUtils.randomNumber(8);
 //        }
         setState(state);
         //StateTicket stateTicket=grantStateTicket.grantStateTicket(this.state,expirationPolicy,modifiedServiceUrl);
         //this.ticketRegistry.addTicket(stateTicket);
-        final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.loginUrl, getServiceParameterName(), modifiedServiceUrl,this.state,this.relogin, this.renew);
+        final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.loginUrl, getServiceParameterName(), modifiedServiceUrl, this.state, this.relogin);
         log.debug("First Step:redirecting to \"" + urlToRedirectTo + "\"");
         response.sendRedirect(urlToRedirectTo);
-    }
-
-
-
-
-
-    public final void setRenew(final boolean renew) {
-        this.renew = renew;
     }
 
 
     public final void setLoginUrl(final String loginUrl) {
         this.loginUrl = loginUrl;
     }
-
 
 
     public final void setUrlExcludePattern(Pattern urlExcludePattern) {
@@ -130,18 +103,12 @@ public class AuthenticationFilter extends AbstractFilter {
     }
 
 
-    public Boolean getRelogin() {
-        return relogin;
-    }
-
     public void setRelogin(Boolean relogin) {
         this.relogin = relogin;
     }
 
     public AuthenticationFilter() {
     }
-
-
 
 
 }

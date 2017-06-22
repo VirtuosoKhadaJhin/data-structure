@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by 孙昊 on 2017/6/13.
@@ -39,39 +37,31 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
     private EntityNyLangsMessageTipDao messageTipDao;
 
     @Override
-    public EntityNyLangsMessageTip add(LangsMessageTipVo requestVo) {
-        String keyCode = requestVo.getKeyCode();
+    public EntityNyLangsMessageTip add(LangsMessageTipVo requestVo, String keyCode) {
         String newKeyCode = requestVo.getNewKeyCode();
         String imgUrl = requestVo.getImgUrl();
-        try {
-            keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
 
         EntityNyLangsMessageTip entityNyLangsMessageTip = new EntityNyLangsMessageTip();
         entityNyLangsMessageTip.setKeyCode(keyCode);
 
         Example<EntityNyLangsMessageTip> example = Example.of(entityNyLangsMessageTip);
-        List<EntityNyLangsMessageTip> entityResult = messageTipDao.findAll(example);
-
-        if (entityResult.size() > 0) {
-            messageTipDao.delete(entityResult);
-        }
+        EntityNyLangsMessageTip entityResult = messageTipDao.findByKeyCode(keyCode);
 
         if (imgUrl == null || imgUrl == "") {
-            if (entityResult.size() > 0) {
-                imgUrl = entityResult.get(0).getImgUrl();
+            if (null != entityResult) {
+                imgUrl = entityResult.getImgUrl();
             }
         }
 
         Long userid = UserHolder.getUser().getUserid();
 
         entityNyLangsMessageTip = new EntityNyLangsMessageTip(newKeyCode, requestVo.getRemark(), imgUrl, new Date(), false);
+        if(null != entityResult){
+            entityNyLangsMessageTip.setId(entityResult.getId());
+        }
+
         entityNyLangsMessageTip.setUserId(userid);
-
         EntityNyLangsMessageTip result = messageTipDao.save(entityNyLangsMessageTip);
-
         return result;
     }
 
@@ -95,24 +85,12 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
     }
 
     @Override
-    public LangsMessageTipVo viewLangsMessageTip(LangsMessageTipVo requestVo) {
-        String keyCode = requestVo.getKeyCode();
-        try {
-            keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+    public LangsMessageTipVo viewLangsMessageTip(LangsMessageTipVo requestVo, String keyCode) {
+        EntityNyLangsMessageTip entityResult = messageTipDao.findByKeyCode(keyCode);
 
-        EntityNyLangsMessageTip entityNyLangsMessageTip = new EntityNyLangsMessageTip();
-        entityNyLangsMessageTip.setKeyCode(keyCode);
-
-        Example<EntityNyLangsMessageTip> example = Example.of(entityNyLangsMessageTip);
-        List<EntityNyLangsMessageTip> entityResult = messageTipDao.findAll(example);
-
-        if (entityResult.size() > 0) {
-            entityNyLangsMessageTip = entityResult.get(0);
-            LangsMessageTipVo langsMessageTipVo = new LangsMessageTipVo(entityNyLangsMessageTip.getRemark(),
-                    entityNyLangsMessageTip.getImgUrl());
+        if (null != entityResult) {
+            LangsMessageTipVo langsMessageTipVo = new LangsMessageTipVo(entityResult.getRemark(),
+                    entityResult.getImgUrl());
             return langsMessageTipVo;
         }
 

@@ -44,6 +44,10 @@ public class EntityNyLangsMessageTip {
     public EntityNyLangsMessageTip() {
     }
 
+    public EntityNyLangsMessageTip(String keyCode) {
+        this.keyCode = keyCode;
+    }
+
     public EntityNyLangsMessageTip(String keyCode, String remark, String imgUrl, Date createDt, Boolean delFlag) {
         this.keyCode = keyCode;
         this.remark = remark;

@@ -14,6 +14,8 @@ public class TemplateRequest {
 
     private Long countryId;
 
+    private String shortCode;
+
     private List<Long> paramterids = new ArrayList<>();
 
     public String getTitle() {
@@ -46,5 +48,13 @@ public class TemplateRequest {
 
     public void setCountryId(Long countryId) {
         this.countryId = countryId;
+    }
+
+    public String getShortCode() {
+        return shortCode;
+    }
+
+    public void setShortCode(String shortCode) {
+        this.shortCode = shortCode;
     }
 }

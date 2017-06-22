@@ -44,7 +44,7 @@
                                     <label class="control-label">名称</label>
                                     <div class="controls">
                                         <input for="name" name="name" type="text" class="span7"
-                                               value="$!entity.name" required="required">
+                                               value="$!entity.name" required="required" id="catName">
                                     </div>
                                 </div>
                                 <div class="control-group">
@@ -61,17 +61,16 @@
                                 <div class="control-group">
                                     <label class="control-label">描述</label>
                                     <div class="controls">
-                                        <input for="name" name="desc" type="text" class="span7"
-                                               value="$!entity.desc" required="required">
+                                        <textarea class="form-control" cols="4" rows="4" id="desc" name="desc" style="resize: none;min-width: 350px;" required="required">$!entity.desc</textarea>
                                     </div>
                                 </div>
 
                                 <div class="form-actions">
                                     #if($!type==2 || $!type==1)
-                                        <button type="submit" class="btn btn-success">保存</button>
+                                        <button type="submit" onclick="return charVerify()" class="btn btn-success">保存</button>
                                         <a class="btn btn-primary" href="list">返回</a>
                                     #elseif($!type==3)
-                                        <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
+                                        <a onclick="return charVerify()" href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
                                     #end
                                 </div>
                             </form>
@@ -90,7 +89,58 @@
                 $(":text").attr("disabled", "disabled");
                 $("select").attr("disabled", "disabled");
             }
+
+            var enVerifyResult = "$!enVerifyResult";
+            if (enVerifyResult != null && enVerifyResult != "") {
+                alert(enVerifyResult);
+            }
+
         });
+
+        /**
+         * 中英文校验
+         */
+        function charVerify() {
+
+            if (strlen($("#desc").val()) > 50) {
+                alert("描述必须小于50个字!");
+                return false;
+            }
+
+            return enVerify($("#catName").val());
+        }
+
+        function enVerify(str) {
+            var pattern_char = /[a-zA-Z]/g;
+            var pattern_chin = /[\u4e00-\u9fa5]/g;
+
+            var count_char = 0;
+            var count_chin = 0;
+
+            if (str.match(pattern_char) != null) {
+                count_char = str.match(pattern_char).length;
+            }
+
+            if (str.match(pattern_chin) != null) {
+                count_chin = str.match(pattern_chin).length;
+            }
+
+            if (count_char > 0 && count_chin == 0) {
+                return true;
+            }
+
+            alert("分类名称必须为英文");
+
+            return false;
+        }
+
+        function strlen(str) {
+            if (str == null) return 0;
+            if (typeof str != "string") {
+                str += "";
+            }
+            return str.replace(/[^\x00-\xff]/g, "01").length;
+        }
     </script>
 </body>
 </html>

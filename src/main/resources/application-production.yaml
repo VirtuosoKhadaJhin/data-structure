@@ -71,7 +71,7 @@ sso:
   urlExcludePattern: ^/test|^/dist/.*|^/favicon.*
   loginUrl: https://sso.91nuanyou.com/oauth/corp
   reLogin: false
-  serverName: http://sg.merchant30.91nuanyou.com
+  serverName: http://merchant30.91nuanyou.com
   validateCodeUrl: https://sso.91nuanyou.com/corp/oauth/access_token
   stateExpiredInMilliSeconds: 120000
 
