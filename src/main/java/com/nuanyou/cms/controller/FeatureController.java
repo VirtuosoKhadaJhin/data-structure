@@ -83,30 +83,29 @@ public class FeatureController {
                              @RequestParam(value = "move", required = false) Integer move,
                              @RequestParam(value = "value", required = false) Integer value) {
         Integer sort = featureDao.getSortById(id);
+        if (sort == null)
+            sort = 1;
+        int max = (int) featureDao.count();
 
-        if (sort != null) {
-            int max = (int) featureDao.count();
+        if (value != null) {
+            sort = value;
+            if (sort < 1)
+                sort = 1;
+            if (sort > max)
+                sort = max;
 
-            if (value != null) {
-                sort = value;
-                if (sort < 1)
-                    sort = 1;
-                if (sort > max)
-                    sort = max;
+        } else if (move != null) {
+            sort += move;
+            if (sort < 1)
+                sort = 1;
+            if (sort > max)
+                sort = max;
 
-            } else if (move != null) {
-                sort += move;
-                if (sort < 1)
-                    sort = 1;
-                if (sort > max)
-                    sort = max;
+        } else if (top != null) {
+            sort = top ? 1 : max;
 
-            } else if (top != null) {
-                sort = top ? 1 : max;
-
-            }
-            featureDao.updateSort(id, sort);
         }
+        featureDao.updateSort(id, sort);
         return new APIResult<>();
     }
 

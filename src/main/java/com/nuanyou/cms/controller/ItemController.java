@@ -104,7 +104,9 @@ public class ItemController {
     @RequestMapping(path = "api/list")
     @ResponseBody
     public APIResult list(Item item) {
-        List<Item> sourceList = itemDao.findAll(Example.of(item));
+        Pageable pageable = new PageRequest(0, 50);
+        Page<Item> all = itemDao.findAll(Example.of(item), pageable);
+        List<Item> sourceList = all.getContent();
         return new APIResult(sourceList);
     }
 

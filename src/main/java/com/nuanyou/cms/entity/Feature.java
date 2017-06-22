@@ -10,6 +10,7 @@ import java.util.Date;
 
 /**
  * Created by Felix on 2016/9/29.
+ * readnum／likenum 阅读量与点赞数量不可修改
  */
 @Entity
 @EntityListeners(DateEntityListener.class)
@@ -153,7 +154,7 @@ public class Feature {
 
 
     @CreatedAt
-    @Column(name = "createtime", nullable = true)
+    @Column(name = "createtime", updatable = false)
     public Date getCreatetime() {
         return createtime;
     }
@@ -163,7 +164,7 @@ public class Feature {
     }
 
 
-    @Column(name = "readnum", nullable = true)
+    @Column(name = "readnum", updatable = false)
     public Integer getReadnum() {
         return readnum;
     }
@@ -173,7 +174,7 @@ public class Feature {
     }
 
 
-    @Column(name = "likenum", nullable = true)
+    @Column(name = "likenum", updatable = false)
     public Integer getLikenum() {
         return likenum;
     }

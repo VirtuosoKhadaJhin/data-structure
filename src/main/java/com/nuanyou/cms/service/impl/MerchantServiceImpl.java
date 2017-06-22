@@ -139,6 +139,7 @@ public class MerchantServiceImpl implements MerchantService {
 
         if (vo.getId() == null) {
             entity = BeanUtils.copyBean(vo, new Merchant());
+            entity.setLocateExactly(true);
             entity = merchantDao.save(entity);
             merchantStatsDao.save(new MerchantStats(0, entity.getId()));
             merchantStaffService.saveNotNull(new MerchantStaff(entity.getId(), StringUtils.leftPad(entity.getId().toString(), 4, '0')));
@@ -146,7 +147,14 @@ public class MerchantServiceImpl implements MerchantService {
             genPayUrl(entity.getId());
         } else {
             entity = merchantDao.findOne(vo.getId());
+            Double latitude_before = entity.getLatitude();
+            Double longitude_before = entity.getLongitude();
             BeanUtils.copyBean(vo, entity);
+            Double latitude_after = entity.getLatitude();
+            Double longitude_after = entity.getLongitude();
+            if(!latitude_before.equals(latitude_after) || !longitude_before.equals(longitude_after)){
+                entity.setLocateExactly(true);
+            }
 
             if (entity.getFirstshowTime() == null && Boolean.TRUE.equals(entity.getDisplay())) {
                 entity.setFirstshowTime(new Date());

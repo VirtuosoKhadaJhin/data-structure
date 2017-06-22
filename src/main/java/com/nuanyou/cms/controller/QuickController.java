@@ -67,30 +67,29 @@ public class QuickController {
                              @RequestParam(value = "move", required = false) Integer move,
                              @RequestParam(value = "value", required = false) Integer value) {
         Integer sort = quickDao.getSortById(id);
+        if (sort == null)
+            sort = 1;
+        int max = (int) quickDao.count();
 
-        if (sort != null) {
-            int max = (int) quickDao.count();
+        if (value != null) {
+            sort = value;
+            if (sort < 1)
+                sort = 1;
+            if (sort > max)
+                sort = max;
 
-            if (value != null) {
-                sort = value;
-                if (sort < 1)
-                    sort = 1;
-                if (sort > max)
-                    sort = max;
+        } else if (move != null) {
+            sort += move;
+            if (sort < 1)
+                sort = 1;
+            if (sort > max)
+                sort = max;
 
-            } else if (move != null) {
-                sort += move;
-                if (sort < 1)
-                    sort = 1;
-                if (sort > max)
-                    sort = max;
+        } else if (top != null) {
+            sort = top ? 1 : max;
 
-            } else if (top != null) {
-                sort = top ? 1 : max;
-
-            }
-            quickDao.updateSort(id, sort);
         }
+        quickDao.updateSort(id, sort);
         return new APIResult<>();
     }
 

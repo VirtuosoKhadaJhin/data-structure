@@ -68,6 +68,8 @@ public class MerchantVO {
 
     private String directmailRemind;
 
+    private Boolean locateExactly;
+
 
     public BigDecimal getRatio() {
         return ratio;
@@ -455,5 +457,13 @@ public class MerchantVO {
 
     public void setDirectmailRemind(String directmailRemind) {
         this.directmailRemind = directmailRemind;
+    }
+
+    public Boolean getLocateExactly() {
+        return locateExactly;
+    }
+
+    public void setLocateExactly(Boolean locateExactly) {
+        this.locateExactly = locateExactly;
     }
 }

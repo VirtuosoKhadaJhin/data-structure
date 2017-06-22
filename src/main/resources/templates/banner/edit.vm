@@ -72,6 +72,7 @@
                                             <option value="up"  #if($!entity.page=="up") selected #end>up</option>
                                             <option value="down"  #if($!entity.page=="down") selected #end>down</option>
                                             <option value="tuanFood"  #if($!entity.page=="tuanFood") selected #end>美食团购</option>
+                                            <option value="hotActivity"  #if($!entity.page=="hotActivity") selected #end>热门活动</option>
                                         </select>
                                     </div>
                                     <label class="control-label">开始时间</label>
@@ -146,6 +147,9 @@
             } else if (val == "tuanFood") {
                 $("#bannerImgBtn").attr("imageSpec", "BannerTuanFood");
                 $("#bannermsg").empty().append("尺寸: 720 * 400, 限制: 120k");
+            } else if (val == "hotActivity") {
+                $("#bannerImgBtn").attr("imageSpec", "HotActivity");
+                $("#bannermsg").empty().append("尺寸: 338 * 128, 限制: 80k");
             } else {
                 $("#bannerImgBtn").attr("imageSpec", "BannerYoufu");
                 $("#bannermsg").empty().append("尺寸: 160 * 120, 限制: 15k");
