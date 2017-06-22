@@ -105,33 +105,27 @@ public final class CommonUtils {
 
 
     /**
-     * 组装第一次重定向的URL有这些参数
-     * 1 http / https   serverName   资源路径  参数路径
-     * 2 response.encodeURL一下
-     * 1 http / https   serverName   资源路径  参数路径
-     * 2 response.encodeURL一下
+     * 两个作用
+     * 1 组装第一次重定向的URL有这些参数 serverName   资源路径  参数路径
+     * 2 最后一次重定向时去掉code=...
      * @param request
      * @param response
      * @param serverName
      * @param artifactParameterName
-     * @param encode
      * @return
      */
     public static String constructServiceUrl(final HttpServletRequest request,
-                                             final HttpServletResponse response, final String serverName, final String artifactParameterName, final boolean encode) {
+                                             final HttpServletResponse response, final String serverName, final String artifactParameterName) {
 //        if (CommonUtils.isNotBlank(service)) {
 //            return encode ? response.encodeURL(service) : service;
 //        }
         final StringBuilder buffer = new StringBuilder();
-        if (!serverName.startsWith("https://") && !serverName.startsWith("http://")) {
-            buffer.append(request.isSecure() ? "https://" : "http://");
-        }
         buffer.append(serverName);
         buffer.append(request.getRequestURI());
         if (CommonUtils.isNotBlank(request.getQueryString())) {
             final int location = request.getQueryString().indexOf(artifactParameterName + "=");
             if (location == 0) {
-                final String returnValue = encode ? response.encodeURL(buffer.toString()) : buffer.toString();
+                final String returnValue =  response.encodeURL(buffer.toString());
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("serviceUrl generated: " + returnValue);
                 }
@@ -140,18 +134,18 @@ public final class CommonUtils {
             buffer.append("?");
             if (location == -1) {
                 buffer.append(request.getQueryString());
-            } else if (location > 0) {
+            } else if (location > 0) {//sdf=sdf&code=dd
                 final int actualLocation = request.getQueryString()
                         .indexOf("&" + artifactParameterName + "=");
                 if (actualLocation == -1) {
                     buffer.append(request.getQueryString());
-                } else if (actualLocation > 0) {
+                } else if (actualLocation > 0) {//sdf=sdf&code=dd
                     buffer.append(request.getQueryString().substring(0,
                             actualLocation));
                 }
             }
         }
-        final String returnValue = encode ? response.encodeURL(buffer.toString()) : buffer.toString();
+        final String returnValue =   response.encodeURL(buffer.toString());
         if (LOG.isDebugEnabled()) {
             LOG.debug("serviceUrl generated: " + returnValue);
         }

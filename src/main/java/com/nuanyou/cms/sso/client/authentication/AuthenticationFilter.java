@@ -36,7 +36,8 @@ public class AuthenticationFilter extends AbstractFilter {
     /**
      *  1 排除拦截
      *  2 如果已经是登录用户继续向下一个filter
-     *  3 如果不是就重定向http://ssoServer:port?ret=dfgdfg
+     *  2 如果有ticket，则跑到下一个filter去验证ticket
+     *  3 如果都不是那么就是一个新的请求http://ssoServer:port?ret=dfgdfg
      * @param servletRequest
      * @param servletResponse
      * @param filterChain
@@ -64,7 +65,7 @@ public class AuthenticationFilter extends AbstractFilter {
         final String serviceUrl = constructServiceUrl(request, response);
         final String ticket = CommonUtils.safeGetParameter(request, getArtifactParameterName());
 
-        if (CommonUtils.isNotBlank(ticket)) {
+        if (CommonUtils.isNotBlank(ticket)) {//有ticket说明客户端已经拿到了ticket 直接去验证
             log.debug("Second Step:ticket found and begin to validate code");
             filterChain.doFilter(request, response);
             return;
