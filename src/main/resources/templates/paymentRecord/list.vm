@@ -12,14 +12,33 @@
         vertical-align: middle;
         text-align: center;
     }
+
+    table tr td:hover {
+        cursor: default;
+    }
+
+    .td-mchName, .td-mchKpName {
+        min-width: 100px;
+        max-width: 150px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .td-outTradeNo, .td-transactionId {
+        max-width: 240px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 </style>
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
-        <th width="100px;">操作</th>
+        <th width="80px;">操作</th>
         <th>商户ID</th>
-        <th>商户名称</th>
-        <th>商户本地名称</th>
+        <th class="th-name">商户名称</th>
+        <th class="th-name">商户本地名称</th>
         <th>购买人</th>
         <th>订单编号</th>
         <th>订单流水</th>
@@ -43,7 +62,7 @@
         #end
         #foreach($item in $!page.content)
         <tr class="odd gradeX" data-itemId="$!item.id" data-platform="$!item.platform" data-status="$!item.status.key">
-            <td style=" text-align: center; ">
+            <td class="td-opt" style=" text-align: center; ">
                 #if($!item.status.key==0 && $!item.platform=="scan")
                     #set($hasSearched=false)
                     #foreach($param in ${searchDateMap.entrySet()})
@@ -60,18 +79,19 @@
                     #end
                 #end
             </td>
-            <td>$!item.mchId</td>
-            <td>$!item.mchName</td>
-            <td>$!item.mchKpName</td>
-            <td>$!item.userId</td>
-            <td>$!item.outTradeNo</td>
-            <td>$!item.transactionId</td>
-            <td class="text-center">$!item.price</td>
-            <td class="text-center">$!item.oprice</td>
-            <td class="text-center">$!item.status.name</td>
-            <td class="text-center">$!item.method.name</td>
-            <td class="text-center">$!item.channelName</td>
-            <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss", $!item.payTime)</td>
+            <td class="td-mchId" title="$!item.mchId">$!item.mchId</td>
+            <td class="td-mchName" title="$!item.mchName">$!item.mchName</td>
+            <td class="td-mchKpName" title="$!item.mchKpName">$!item.mchKpName</td>
+            <td class="td-userId" title="$!item.userId">$!item.userId</td>
+            <td class="td-outTradeNo" title="$!item.outTradeNo">$!item.outTradeNo</td>
+            <td class="td-transactionId" title="$!item.transactionId">$!item.transactionId</td>
+            <td class="td-price text-center" title="$!item.price">$!item.price</td>
+            <td class="td-oprice text-center" title="$!item.oprice">$!item.oprice</td>
+            <td class="td-status-name text-center" title="$!item.status.name">$!item.status.name</td>
+            <td class="td-method-name text-center" title="$!item.method.name">$!item.method.name</td>
+            <td class="td-channel-name text-center" title="$!item.channelName">$!item.channelName</td>
+            <td class="td-pay-time" title="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss", $!item.payTime)">$!dateFormatter.format(
+                "yyyy-MM-dd HH:mm:ss", $!item.payTime)</td>
         </tr>
         #end
     </tbody>
@@ -180,14 +200,17 @@
                     if (response.success && response.code == 0) {
                         var data = response.data;
                         var status = data.status;
+                        var parentTr = $(_this).parent("tr");
                         if (status == 0) {
-                            alert("支付成功！");
-                            $(_this).remove();
+                            extractedAjax(_this, item_id);
                         } else if (status == 1) {
                             alert("付款中，请稍后...");
                         } else if (status == 2) {
-                            alert("重复订单，请稍后重试！");
+                            alert("已支付订单，无须重复支付！");
+                            parentTr.find(".td-status-name").text("支付成功");
+                            $(_this).remove();
                         } else if (status == 3) {
+                            parentTr.find(".td-status-name").text("支付失败");
                             alert("支付失败，请稍后重试！");
                         }
                     } else {
@@ -199,5 +222,33 @@
                 }
             });
         });
+
+        function extractedAjax(_this, item_id) {
+            $.ajax({
+                url: "findPaymentOrderRecord?orderId=" + item_id,
+                type: "post",
+                dataType: "json",
+                success: function (response) {
+                    var item = response.data, parentTr = $(_this).parent("tr");
+                    parentTr.find(".td-mchId").text(item.mchId).attr("title", item.mchId);
+                    parentTr.find(".td-mchName").text(item.mchName).attr("title", item.mchName);
+                    parentTr.find(".td-mchKpName").text(item.mchKpName).attr("title", item.mchKpName);
+                    parentTr.find(".td-userId").text(item.userId).attr("title", item.userId);
+                    parentTr.find(".td-outTradeNo").text(item.outTradeNo).attr("title", item.outTradeNo);
+                    parentTr.find(".td-transactionId").text(item.transactionId).attr("title", item.transactionId);
+                    parentTr.find(".td-price").text(item.price).attr("title", item.price);
+                    parentTr.find(".td-oprice").text(item.oprice).attr("title", item.oprice);
+                    parentTr.find(".td-status-name").text(item.status.name).attr("title", item.status.name);
+                    parentTr.find(".td-method-name").text(item.method.name).attr("title", item.method.name);
+                    parentTr.find(".td-channel-name").text(item.channelName).attr("title", item.channelName);
+                    parentTr.find(".td-pay-time").text(item.payTimeStr).attr("title", item.payTimeStr);
+                    $(_this).remove();
+                    alert("支付成功！");
+                },
+                error: function (response) {
+                    alert("请求失败，请稍后重试！");
+                }
+            });
+        }
     });
 </script>

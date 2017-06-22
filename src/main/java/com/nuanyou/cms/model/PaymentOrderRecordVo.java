@@ -4,6 +4,7 @@ import com.nuanyou.cms.entity.enums.PaymentOrderMethod;
 import com.nuanyou.cms.entity.enums.PaymentOrderStatus;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -259,5 +260,12 @@ public class PaymentOrderRecordVo {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getPayTimeStr() {
+        if (this.payTime == null) {
+            return "";
+        }
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(this.getPayTime());
     }
 }

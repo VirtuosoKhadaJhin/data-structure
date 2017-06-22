@@ -84,6 +84,19 @@ public class PaymentOrderRecordController {
     }
 
     /**
+     * 查询支付订单的最新状态
+     *
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("findPaymentOrderRecord")
+    @ResponseBody
+    public APIResult findPaymentOrderRecord(@RequestParam("app") String app, @RequestParam("orderId") Long orderId) {
+        PaymentOrderRecordVo vo = paymentOrderRecordService.findPaymentOrderRecord(orderId);
+        return new APIResult<>(vo);
+    }
+
+    /**
      * 单个查询支付订单记录
      *
      * @param app

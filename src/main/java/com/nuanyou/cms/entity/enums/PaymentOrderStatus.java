@@ -6,7 +6,7 @@ package com.nuanyou.cms.entity.enums;
 public enum PaymentOrderStatus {
 
     UNPAY ( 0, "未支付" ),
-    PAY_WAITING ( 1, "等待" ),
+    //    PAY_WAITING ( 1, "等待" ),
     PAY_SUCCES ( 2, "支付成功" ),
     PAY_REFUND ( 3, "退款" ),//全额退款
     FAILD_PAY(4, "支付失败"),

@@ -17,4 +17,11 @@ public interface PaymentOrderRecordService {
      */
     Page<PaymentOrderRecordVo> findAllPaymentOrderRecord(PaymentRecordRequestVo paramVo);
 
+    /**
+     * 查询支付订单的最新状态
+     *
+     * @param id
+     * @return
+     */
+    PaymentOrderRecordVo findPaymentOrderRecord(Long id);
 }

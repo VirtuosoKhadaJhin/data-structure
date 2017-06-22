@@ -41,7 +41,6 @@ public class PaymentOrderRecordServiceImpl implements PaymentOrderRecordService 
     @Override
     public Page<PaymentOrderRecordVo> findAllPaymentOrderRecord(final PaymentRecordRequestVo paramVo) {
 
-
         List<PaymentOrderRecord> records = paymentRecordDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
@@ -89,7 +88,6 @@ public class PaymentOrderRecordServiceImpl implements PaymentOrderRecordService 
             }
         });
 
-
         List<PaymentOrderRecordVo> orderRecordVos = this.convertToPaymentRecordVo(records);
         Integer pageIndex = paramVo.getIndex();
         Integer pageNum = paramVo.getPageNum();
@@ -101,6 +99,13 @@ public class PaymentOrderRecordServiceImpl implements PaymentOrderRecordService 
         List<PaymentOrderRecordVo> subList = orderRecordVos.subList((pageIndex - 1) * pageNum, toIndex > orderRecordVos.size() ? orderRecordVos.size() : toIndex);
         Page<PaymentOrderRecordVo> voPage = new PageImpl<PaymentOrderRecordVo>(subList, pageable, records.size());
         return voPage;
+    }
+
+    @Override
+    public PaymentOrderRecordVo findPaymentOrderRecord(Long id) {
+        PaymentOrderRecord orderRecord = paymentRecordDao.findOne(id);
+        PaymentOrderRecordVo recordVo = BeanUtils.copyBean(orderRecord, new PaymentOrderRecordVo());
+        return recordVo;
     }
 
     private List<PaymentOrderRecordVo> convertToPaymentRecordVo(List<PaymentOrderRecord> content) {
