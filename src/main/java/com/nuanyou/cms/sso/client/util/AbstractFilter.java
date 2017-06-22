@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a
  * copy of the License at:
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -43,60 +43,39 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
 
     /** 寻找service */
     private String serviceParameterName = "ret";
-    
+
     /** 如果为true则对于serviceURL进行编号response.encodeUrl */
     private boolean encodeServiceUrl = true;
 
     /*服务器地址,格式是http/https：hostname:port ,标准的端口号可以不写*/
     private String serverName;
 
-    /** service. */
-    private String service;
 
-    public final void init(final FilterConfig filterConfig) throws ServletException {
-        if (!isIgnoreInitConfiguration()) {
-            setServerName(getPropertyFromInitParams(filterConfig, "serverName", null));
-            log.trace("Loading serverName property: " + this.serverName);
-            setService(getPropertyFromInitParams(filterConfig, "service", null));
-            log.trace("Loading service property: " + this.service);
-            setArtifactParameterName(getPropertyFromInitParams(filterConfig, "artifactParameterName", "ticket"));
-            log.trace("Loading artifact parameter name property: " + this.artifactParameterName);
-            setServiceParameterName(getPropertyFromInitParams(filterConfig, "serviceParameterName", "service"));
-            log.trace("Loading serviceParameterName property: " + this.serviceParameterName);
-            setEncodeServiceUrl(parseBoolean(getPropertyFromInitParams(filterConfig, "encodeServiceUrl", "true")));
-            log.trace("Loading encodeServiceUrl property: " + this.encodeServiceUrl);
-
-            initInternal(filterConfig);
-        }
-        init();
-    }
 
     /**
-     * 空中filter加载顺序 然后再init之前发生
-     * @param filterConfig the original filter configuration.
-     * @throws ServletException if there is a problem.
-     *
+     * 初始化serverName,ticketName：code,serviceCallbackName：ret
+     * @param filterConfig
+     * @throws ServletException
      */
-    protected void initInternal(final FilterConfig filterConfig) throws ServletException {
-        // template method
-    }
-
-    /**
-     * 属性都populate后进行验证 概念上和spring加载bean类似
-     */
-    public void init() {
+    public  void init(final FilterConfig filterConfig) throws ServletException {
+        setServerName(getPropertyFromInitParams(filterConfig, "serverName", null));
+        setArtifactParameterName(getPropertyFromInitParams(filterConfig, "artifactParameterName", "code"));
+        setServiceParameterName(getPropertyFromInitParams(filterConfig, "serviceParameterName", "ret"));
         CommonUtils.assertNotNull(this.artifactParameterName, "artifactParameterName cannot be null.");
         CommonUtils.assertNotNull(this.serviceParameterName, "serviceParameterName cannot be null.");
-        CommonUtils.assertTrue(CommonUtils.isNotEmpty(this.serverName) || CommonUtils.isNotEmpty(this.service), "serverName or service must be set.");
-        CommonUtils.assertTrue(CommonUtils.isBlank(this.serverName) || CommonUtils.isBlank(this.service), "serverName and service cannot both be set.  You MUST ONLY set one.");
+        CommonUtils.assertTrue(CommonUtils.isNotEmpty(this.serverName), "serverName must be set.");
     }
+
+
+
+
 
     public void destroy() {
         // nothing to do
     }
 
     protected final String constructServiceUrl(final HttpServletRequest request, final HttpServletResponse response) {
-        return CommonUtils.constructServiceUrl(request, response, this.service, this.serverName, this.artifactParameterName, this.encodeServiceUrl);
+        return CommonUtils.constructServiceUrl(request, response, this.serverName, this.artifactParameterName, this.encodeServiceUrl);
     }
 
     /**
@@ -106,17 +85,12 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
      */
     public final void setServerName(final String serverName) {
         if (serverName != null && serverName.endsWith("/")) {
-            this.serverName = serverName.substring(0, serverName.length()-1);
-            log.info(String.format("Eliminated extra slash from serverName [%s].  It is now [%s]", serverName, this.serverName));
+            this.serverName = serverName.substring(0, serverName.length() - 1);
         } else {
             this.serverName = serverName;
         }
     }
 
-
-    public final void setService(final String service) {
-        this.service = service;
-    }
 
     public final void setArtifactParameterName(final String artifactParameterName) {
         this.artifactParameterName = artifactParameterName;
@@ -125,9 +99,9 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
     public final void setServiceParameterName(final String serviceParameterName) {
         this.serviceParameterName = serviceParameterName;
     }
-    
+
     public final void setEncodeServiceUrl(final boolean encodeServiceUrl) {
-    	this.encodeServiceUrl = encodeServiceUrl;
+        this.encodeServiceUrl = encodeServiceUrl;
     }
 
     public final String getArtifactParameterName() {

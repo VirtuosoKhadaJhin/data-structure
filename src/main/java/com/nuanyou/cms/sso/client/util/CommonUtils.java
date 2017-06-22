@@ -104,25 +104,32 @@ public final class CommonUtils {
     }
 
 
+    /**
+     * 组装第一次重定向的URL有这些参数
+     * 1 http / https   serverName   资源路径  参数路径
+     * 2 response.encodeURL一下
+     * 1 http / https   serverName   资源路径  参数路径
+     * 2 response.encodeURL一下
+     * @param request
+     * @param response
+     * @param serverName
+     * @param artifactParameterName
+     * @param encode
+     * @return
+     */
     public static String constructServiceUrl(final HttpServletRequest request,
-                                             final HttpServletResponse response, final String service, final String serverName, final String artifactParameterName, final boolean encode) {
-        if (CommonUtils.isNotBlank(service)) {
-            return encode ? response.encodeURL(service) : service;
-        }
-
+                                             final HttpServletResponse response, final String serverName, final String artifactParameterName, final boolean encode) {
+//        if (CommonUtils.isNotBlank(service)) {
+//            return encode ? response.encodeURL(service) : service;
+//        }
         final StringBuilder buffer = new StringBuilder();
-
-
         if (!serverName.startsWith("https://") && !serverName.startsWith("http://")) {
             buffer.append(request.isSecure() ? "https://" : "http://");
         }
-
         buffer.append(serverName);
         buffer.append(request.getRequestURI());
-
         if (CommonUtils.isNotBlank(request.getQueryString())) {
             final int location = request.getQueryString().indexOf(artifactParameterName + "=");
-
             if (location == 0) {
                 final String returnValue = encode ? response.encodeURL(buffer.toString()) : buffer.toString();
                 if (LOG.isDebugEnabled()) {
@@ -130,15 +137,12 @@ public final class CommonUtils {
                 }
                 return returnValue;
             }
-
             buffer.append("?");
-
             if (location == -1) {
                 buffer.append(request.getQueryString());
             } else if (location > 0) {
                 final int actualLocation = request.getQueryString()
                         .indexOf("&" + artifactParameterName + "=");
-
                 if (actualLocation == -1) {
                     buffer.append(request.getQueryString());
                 } else if (actualLocation > 0) {
@@ -147,7 +151,6 @@ public final class CommonUtils {
                 }
             }
         }
-
         final String returnValue = encode ? response.encodeURL(buffer.toString()) : buffer.toString();
         if (LOG.isDebugEnabled()) {
             LOG.debug("serviceUrl generated: " + returnValue);

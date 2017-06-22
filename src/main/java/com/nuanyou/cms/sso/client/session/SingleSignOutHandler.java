@@ -90,50 +90,13 @@ public final class SingleSignOutHandler {
      */
     public void recordSession(final HttpServletRequest request) {
         final HttpSession session = request.getSession(true);
-
         final String token = CommonUtils.safeGetParameter(request, this.artifactParameterName);
-        if (log.isDebugEnabled()) {
-            log.debug("Recording session for token " + token);
-        }
-        try {
-        	//根据sessionid 移除 对应的ST 和 session
-            this.sessionMappingStorage.removeBySessionById(session.getId());
-        } catch (final Exception e) {
-            // ignore if the session is already marked as invalid.  Nothing we can do!
-        }
+        log.debug("Recording session for token " + token);	//根据sessionid 移除 对应的ST 和 session
+        this.sessionMappingStorage.removeBySessionById(session.getId());
         sessionMappingStorage.addSessionById(token, session);
     }
    
-    /**
-     * 因为是注销操作所以移除session
-     *
-     * @param request HTTP request containing a CAS logout message.
-     */
-    public void destroySession(final HttpServletRequest request) {
-        final String logoutMessage = CommonUtils.safeGetParameter(request, this.logoutParameterName);
-        if (log.isTraceEnabled()) {
-            log.trace ("Logout request:\n" + logoutMessage);
-        }
-        log.debug("logoutMessage:  "+logoutMessage);
-        final String token="";
-        //final String token = XmlUtils.getTextForElement(logoutMessage, "SessionIndex");
-        if (CommonUtils.isNotBlank(token)) {
-            final HttpSession session = this.sessionMappingStorage.removeSessionByMappingId(token);
 
-            if (session != null) {
-                String sessionID = session.getId();
-
-                if (log.isDebugEnabled()) {
-                    log.debug ("Invalidating session [" + sessionID + "] for token [" + token + "]");
-                }
-                try {
-                    session.invalidate();
-                } catch (final IllegalStateException e) {
-                    log.debug("Error invalidating session.", e);
-                }
-            }
-        }
-    }
 
     private boolean isMultipartRequest(final HttpServletRequest request) {
         return request.getContentType() != null && request.getContentType().toLowerCase().startsWith("multipart");

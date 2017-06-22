@@ -40,34 +40,21 @@ import java.util.*;
  * 验证ticket的Filter
  */
 @Component
-public  class AbstractTicketValidationFilter extends AbstractFilter {
+public  class TicketValidationFilter extends AbstractFilter {
 
-    private static final Logger log = LoggerFactory.getLogger(AbstractTicketValidationFilter.class.getSimpleName());
-
-
-
-//    private TicketValidator ticketValidator;
-
+    private static final Logger log = LoggerFactory.getLogger(TicketValidationFilter.class.getSimpleName());
     private SsoValidatorService ssoValidatorService;
-
-
-
-
     private boolean redirectAfterValidation = false;
-
     private boolean exceptionOnValidationFailure = true;
-
     private boolean useSession = true;
 
-    public SsoValidatorService getSsoValidatorService() {
-        return ssoValidatorService;
-    }
 
     public void setSsoValidatorService(SsoValidatorService ssoValidatorService) {
         this.ssoValidatorService = ssoValidatorService;
     }
 
-    protected void initInternal(final FilterConfig filterConfig) throws ServletException {
+    public void init(final FilterConfig filterConfig) throws ServletException {
+        super.init(filterConfig);
         setExceptionOnValidationFailure(parseBoolean(getPropertyFromInitParams(filterConfig, "exceptionOnValidationFailure", "true")));
         log.trace("Setting exceptionOnValidationFailure parameter: " + this.exceptionOnValidationFailure);
         setRedirectAfterValidation(parseBoolean(getPropertyFromInitParams(filterConfig, "redirectAfterValidation", "true")));
@@ -75,7 +62,7 @@ public  class AbstractTicketValidationFilter extends AbstractFilter {
         setUseSession(parseBoolean(getPropertyFromInitParams(filterConfig, "useSession", "true")));
         log.trace("Setting useSession parameter: " + this.useSession);
         setSsoValidatorService(getTicketValidator1(filterConfig));
-        super.initInternal(filterConfig);
+        CommonUtils.assertNotNull(this.ssoValidatorService, "ssoValidatorService cannot be null.");
     }
 
 
@@ -98,10 +85,7 @@ public  class AbstractTicketValidationFilter extends AbstractFilter {
         return validator;
     }
 
-    public void init() {
-        super.init();
-        CommonUtils.assertNotNull(this.ssoValidatorService, "ssoValidatorService cannot be null.");
-    }
+
 
 
     /**

@@ -37,9 +37,18 @@ public class AccountHandleServiceImpl implements AccountHandleService {
     private static String paymentDaysNames = "youfu_payment_day";
     private static String youfuStartTimeNames = "youfu_start_time";
     private static String startPriceNames = "youfu_start_price";
+
+    private static String accountName="account_name";//开户名
+    private static String bank="bank_account";//开户行
+    private static String bankBranch="bank_branch";//分行
+    private static String bankAccount="bank_account";//账号
+
     private static String commissionNames = "group_buying_commission";
     private static String groupBuyingStartTime = "group_buying_start_time";
     private static DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
+
+
+
     public  static  final Long ACCOUNT_SYSTEM_ID=1l;
 
     @Autowired
