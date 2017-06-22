@@ -56,6 +56,14 @@
                                     <button class="btn btn-success setDetail" type="button">设置值</button>
                                 </div>
 
+                                <label class="control-label">展示图</label>
+                                <div class="controls">
+                                    <input type="text" class="span8" name="imgUrl" id="imgUrl" value="$!entity.imgUrl">
+                                    <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览</button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl" imageSpec="TuanShow">上传</button>
+                                    <p>尺寸: 640 * 480, 限制: 100k</p>
+                                </div>
+
                                 <label class="control-label">国家</label>
                                 <div class="controls">
                                     <select class="span7" name="country.id" target-name="city.id" target-url="/city/api/getCitys">
@@ -157,6 +165,7 @@
 </div>
 
     #include("common/js-support.vm")
+    #include("common/image-support.vm")
 <script src="/dist/js/cascade-select.js"></script>
 <script>
     $(document).ready(function () {
@@ -164,6 +173,7 @@
         if (type == 3) {
             $(":text").attr("disabled", "disabled");
             $("select").attr("disabled", "disabled");
+            $(".uploadImgBtn").attr("disabled", "disabled");
         }
     });
 

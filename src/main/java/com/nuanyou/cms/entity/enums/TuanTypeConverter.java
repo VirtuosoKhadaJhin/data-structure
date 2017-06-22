@@ -10,7 +10,7 @@ public class TuanTypeConverter implements AttributeConverter<List<TuanType>, Int
     @Override
     public Integer convertToDatabaseColumn(List<TuanType> attribute) {
         if (attribute == null || attribute.isEmpty())
-            return null;
+            return 0;
         Integer flag = 0;
         for (TuanType e : attribute) {
             flag += e.value;
@@ -20,7 +20,7 @@ public class TuanTypeConverter implements AttributeConverter<List<TuanType>, Int
 
     @Override
     public List<TuanType> convertToEntityAttribute(Integer dbData) {
-        if (dbData == null)
+        if (dbData == null||dbData==0)
             return null;
         return TuanType.toEnums(dbData);
     }
