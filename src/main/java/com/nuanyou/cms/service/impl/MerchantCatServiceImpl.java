@@ -7,7 +7,6 @@ import com.nuanyou.cms.dao.MerchantDao;
 import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.entity.MerchantCat;
 import com.nuanyou.cms.model.MerchantCatVo;
-import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.MerchantCatService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.slf4j.Logger;
@@ -47,11 +46,11 @@ public class MerchantCatServiceImpl implements MerchantCatService {
     }
 
     @Override
-    public Page<MerchantCatVo> findParentCat(final MerchantCat entity, Integer index, final Locale locale) {
-        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
+    public List<MerchantCatVo> findParentCat(final MerchantCat entity, Integer index, final Locale locale) {
+        // Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
 
         // 孙昊修改了查询方式, 在原有的字段sort上实现了排序功能
-        Page<MerchantCat> merchantCats = merchantCatDao.findAll(new Specification() {
+        List<MerchantCat> merchantCats = merchantCatDao.findAll(new Specification() {
 
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
@@ -70,13 +69,13 @@ public class MerchantCatServiceImpl implements MerchantCatService {
                 ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("sort")), cb.asc(root.get("updatetime")));
                 return query.where(predicate.toArray(arrays)).orderBy(orderBys).getRestriction();
             }
-        }, pageable);
+        }/*, pageable*/);
 
         // keyCode结果集
         final List<String> keyCodes = Lists.newArrayList();
 
         // 根据截取中文和英文
-        List<MerchantCat> pageLists = merchantCats.getContent();
+        List<MerchantCat> pageLists = merchantCats;
         List<MerchantCatVo> merchantCatVos = Lists.newArrayList();
         for (MerchantCat cat : pageLists) {
             MerchantCatVo vo = convertToMerchantCatVo(cat);
@@ -116,18 +115,18 @@ public class MerchantCatServiceImpl implements MerchantCatService {
                 merchantCatVos.set(keyCodeIndex, merchantCatVo);
             }
 
-            Page<MerchantCatVo> lists = new PageImpl<MerchantCatVo>(merchantCatVos, pageable, merchantCats.getTotalElements());
+            // Page<MerchantCatVo> lists = new PageImpl<MerchantCatVo>(merchantCatVos, pageable, merchantCats.getTotalElements());
 
-            return lists;
+            return merchantCatVos;
         }
 
-        Page<MerchantCatVo> lists = new PageImpl<MerchantCatVo>(merchantCatVos, pageable, merchantCats.getTotalElements());
-        return lists;
+        // Page<MerchantCatVo> lists = new PageImpl<MerchantCatVo>(merchantCatVos, pageable, merchantCats.getTotalElements());
+        return merchantCatVos;
     }
 
     @Override
-    public Page<MerchantCatVo> findChildCat(final MerchantCat entity, Integer index, final Locale locale, final Long pcatId) {
-        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
+    public Page<MerchantCatVo> findChildCat(final MerchantCatVo entity, Integer index, final Locale locale, final Long pcatId) {
+        Pageable pageable = new PageRequest(index - 1, 10);
 
         // 孙昊修改了查询方式, 在原有的字段sort上实现了排序功能
         Page<MerchantCat> merchantCats = merchantCatDao.findAll(new Specification() {
@@ -233,6 +232,20 @@ public class MerchantCatServiceImpl implements MerchantCatService {
             merchantCatDao.save(oldEntity);
         }
 
+    }
+
+    @Override
+    public Boolean delCat(MerchantCatVo merchantCatVo) {
+        MerchantCat merchantCat = new MerchantCat(merchantCatVo.getId());
+        List<MerchantCat> pCats = merchantCatDao.findByPcat(merchantCat);
+
+        if (pCats.size() > 0) {
+            return false;
+        } else {
+            // merchantCatDao.delete(merchantCatVo.getId());
+        }
+
+        return true;
     }
 
     @Override

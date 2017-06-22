@@ -9,6 +9,9 @@ public class MerchantCatVo {
 
     private Long id;
 
+    // 分页
+    private Integer index;
+
     // keycode
     private String name;
 
@@ -48,6 +51,14 @@ public class MerchantCatVo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 
     public String getNameLabel() {

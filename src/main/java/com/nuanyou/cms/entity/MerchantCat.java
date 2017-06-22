@@ -30,6 +30,8 @@ public class MerchantCat {
     // keycode
     private String keyCode;
 
+
+
     public MerchantCat(String name, String shortname, Boolean display, Integer sort, String imageUrl, String mapimgurl) {
         this.name = name;
         this.shortname = shortname;

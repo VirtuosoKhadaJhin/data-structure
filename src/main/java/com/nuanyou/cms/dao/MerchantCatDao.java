@@ -17,4 +17,7 @@ public interface MerchantCatDao extends JpaRepository<MerchantCat, Long>, JpaSpe
 
     @Query(value = "select new MerchantCat(t.id,t.name) from  MerchantCat t where pcat = null")
     List<MerchantCat> getIdNameList();
+
+
+
 }

@@ -71,19 +71,21 @@
                                         <option value="site" #if($!entity.code=="site")#end>景点</option>
                                     </select>
                                 </div>
-                                <label class="control-label">所属一级分类：</label>
-                                <div class="controls">
-                                    #if("$!entity.pcat" == "")
-                                        <select id="pcat.id" name="pcat.id" for="parentNode" disabled>
-                                        #else
-                                        <select id="pcat.id" name="pcat.id" for="parentNode">
-                                    #end
-                                        <option value="">无</option>
-                                        #foreach($cat in $!merchantCats)
-                                            <option value="$!cat.id" #if($!entity.pcat.id == $!cat.id)
-                                                    selected #end> $!cat.name</option>
+                                <div class="pCat" style="display: none;">
+                                    <label class="control-label">所属一级分类：</label>
+                                    <div class="controls">
+                                        #if("$!entity.pcat" == "")
+                                            <select id="pcat.id" name="pcat.id" for="parentNode" disabled>
+                                            #else
+                                            <select id="pcat.id" name="pcat.id" for="parentNode">
                                         #end
-                                    </select>
+                                            <option value="">无</option>
+                                            #foreach($cat in $!merchantCats)
+                                                <option value="$!cat.id" #if($!entity.pcat.id == $!cat.id)
+                                                        selected #end> $!cat.name</option>
+                                            #end
+                                        </select>
+                                    </div>
                                 </div>
                                 <label class="control-label">是否显示：</label>
                                 <div class="controls">
@@ -223,9 +225,11 @@
                 if (discount == "0") {
                     $("select[for=parentNode]").val(null);
                     $("select[for=parentNode]").attr("disabled", "disabled");
+                    $(".pCat").hide();
                 }
                 if (discount == "1") {
                     $("select[for=parentNode]").attr("disabled", false);
+                    $(".pCat").show();
                 }
             });
         });

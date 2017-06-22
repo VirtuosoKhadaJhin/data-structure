@@ -88,7 +88,7 @@ public class MerchantCatController {
         }
 
         Locale locale = request.getLocale();
-        Page<MerchantCatVo> page = merchantCatService.findParentCat(entity, index, locale);
+        List<MerchantCatVo> page = merchantCatService.findParentCat(entity, index, locale);
 
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
@@ -103,10 +103,24 @@ public class MerchantCatController {
      */
     @RequestMapping("viewCat")
     @ResponseBody
-    public APIResult<Page<MerchantCatVo>> viewCat(@RequestBody MerchantCat entity, int index, HttpServletRequest request) {
+    public APIResult<Page<MerchantCatVo>> viewCat(@RequestBody MerchantCatVo merchantCatVo, HttpServletRequest request) {
         Locale locale = request.getLocale();
-        Page<MerchantCatVo> page = merchantCatService.findChildCat(entity, index, locale, entity.getPcat().getId());
+        Page<MerchantCatVo> page = merchantCatService.findChildCat(merchantCatVo, merchantCatVo.getIndex(), locale, merchantCatVo.getPcat().getId());
         return new APIResult(page);
+    }
+
+    /**
+     * 根据ID删除分类
+     *
+     * @return
+     */
+    @RequestMapping("delCat")
+    @ResponseBody
+    public APIResult<Boolean> viewCat(@RequestBody MerchantCatVo merchantCatVo) {
+        APIResult<Boolean> result = new APIResult<Boolean>();
+        Boolean delResult = merchantCatService.delCat(merchantCatVo);
+        result.setData(delResult);
+        return result;
     }
 
     @RequestMapping("api/list")
