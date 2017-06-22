@@ -16,23 +16,23 @@ import java.util.regex.Pattern;
 
 @Component
 public class AuthenticationFilter extends AbstractFilter {
+
+
     /**
-     * The URL to the ssp Server login.
+     * sso服务器登录的根
      */
     private String loginUrl;
 
 
     /**
-     * Whether to send the renew request or not.
+     * The URL to the sso Server login.
      */
-    private boolean renew = false;
-
-
     private Pattern urlExcludePattern;
 
     private String state;
+
     /**
-     * Whether the request include a renew or not.
+     * 是否需要强制登录
      */
     private Boolean relogin;
 
@@ -43,8 +43,6 @@ public class AuthenticationFilter extends AbstractFilter {
             super.initInternal(filterConfig);
             setLoginUrl(getPropertyFromInitParams(filterConfig, "loginUrl", null));
             log.trace("Loaded loginUrl parameter: " + this.loginUrl);
-            setRenew(parseBoolean(getPropertyFromInitParams(filterConfig, "renew", "false")));
-            log.trace("Loaded renew parameter: " + this.renew);
 
             final String gatewayStorageClass = getPropertyFromInitParams(filterConfig, "gatewayStorageClass", null);
 
@@ -100,7 +98,7 @@ public class AuthenticationFilter extends AbstractFilter {
         setState(state);
         //StateTicket stateTicket=grantStateTicket.grantStateTicket(this.state,expirationPolicy,modifiedServiceUrl);
         //this.ticketRegistry.addTicket(stateTicket);
-        final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.loginUrl, getServiceParameterName(), modifiedServiceUrl,this.state,this.relogin, this.renew);
+        final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.loginUrl, getServiceParameterName(), modifiedServiceUrl,this.state,this.relogin);
         log.debug("First Step:redirecting to \"" + urlToRedirectTo + "\"");
         response.sendRedirect(urlToRedirectTo);
     }
@@ -109,9 +107,6 @@ public class AuthenticationFilter extends AbstractFilter {
 
 
 
-    public final void setRenew(final boolean renew) {
-        this.renew = renew;
-    }
 
 
     public final void setLoginUrl(final String loginUrl) {

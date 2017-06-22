@@ -9,6 +9,9 @@ public class LangsCountryMessageVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 用于修改的ID
+    private Long id;
+
     //LangsCountry.key
     private Integer langsKey;
 
@@ -23,6 +26,16 @@ public class LangsCountryMessageVo implements Serializable {
     public LangsCountryMessageVo(Integer langsKey, String message, String language, String country) {
         this.langsKey = langsKey;
         this.message = message;
+    }
+
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getLangsKey() {

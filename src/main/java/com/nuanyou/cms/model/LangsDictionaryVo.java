@@ -13,6 +13,9 @@ public class LangsDictionaryVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // 用于本地修改的ID
+    private Long id;
+
     //key+category
     private String keyCode;
 
@@ -56,6 +59,14 @@ public class LangsDictionaryVo implements Serializable {
         this.keyCode = keyCode;
         this.categoryId = categoryId;
         this.langsMessageList = langsMessageList;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getKeyCode() {

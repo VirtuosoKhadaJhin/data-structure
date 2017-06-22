@@ -4,7 +4,7 @@ import com.nuanyou.cms.sso.client.authentication.AuthenticationFilter;
 import com.nuanyou.cms.sso.client.session.SingleSignOutFilter;
 import com.nuanyou.cms.sso.client.util.HttpServletRequestWrapperFilter;
 import com.nuanyou.cms.sso.client.util.UserThreadLocalFilter;
-import com.nuanyou.cms.sso.client.validation.TicketValidationFilter;
+import com.nuanyou.cms.sso.client.validation.impl.AbstractTicketValidationFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -61,6 +61,7 @@ public class ApplicationFilterConfiguration {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         filter.setUrlExcludePattern(Pattern.compile(urlExcludePattern));
         filter.setRelogin(reLogin);
+        //filter.setServerName(serverName);
         registration.setFilter(filter);
         registration.addInitParameter("loginUrl",loginUrl);
         registration.addInitParameter("serverName", serverName);
@@ -74,16 +75,16 @@ public class ApplicationFilterConfiguration {
 
 
     @Bean
-    public FilterRegistrationBean ticketValidation(TicketValidationFilter filter) {
+    public FilterRegistrationBean abstractTicketValidation(AbstractTicketValidationFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        filter.setServerName(serverName);
+        //filter.setServerName(serverName);
         registration.setFilter(filter);
         registration.addInitParameter("validateCodeUrl", validateCodeUrl);
         registration.addInitParameter("serverName", serverName);
         registration.addInitParameter("serviceParameterName", "ret");
         registration.addInitParameter("artifactParameterName", "code");
         registration.addUrlPatterns(urlPatterns);
-        registration.setName("TicketValidationFilter");
+        registration.setName("abstractTicketValidationFilter");
         registration.setOrder(3);
         return registration;
     }

@@ -26,16 +26,12 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 
 
+/**
+ * 维护session和ticket之间的关系
+ */
 public final class HashMapBackedSessionMappingStorage implements SessionMappingStorage {
-	
-    /**
-     * Maps the ID from the CAS server to the Session.
-     */
-    private final Map<String,HttpSession> MANAGED_SESSIONS = new HashMap<String,HttpSession>();
 
-    /**
-     * Maps the Session ID to the key from the CAS Server.
-     */
+    private final Map<String,HttpSession> MANAGED_SESSIONS = new HashMap<String,HttpSession>();
     private final Map<String,String> ID_TO_SESSION_KEY_MAPPING = new HashMap<String,String>();
 
     private final Log log = LogFactory.getLog(getClass());

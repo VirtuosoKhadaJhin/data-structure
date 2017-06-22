@@ -68,11 +68,11 @@
                                                 #if($!dictionary.langsCountryKey == $!langCountry.key)
                                                     #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
                                                         <input type="text" value="$!dictionary.message"
-                                                               style="width: 80%"
+                                                               style="width: 80%" data-id="$!dictionary.id"
                                                                class="span7 countryLanguage" readonly="readonly">
                                                     #else
                                                         <input type="text" value="$!dictionary.message"
-                                                               style="width: 80%"
+                                                               style="width: 80%" data-id="$!dictionary.id"
                                                                id='localLanguageMess' class="span7 countryLanguage">
                                                     #end
                                                 #end
@@ -184,9 +184,12 @@
             var keyCode = $("input[name='keyCode']").val();
             var localLanguageKey = Number($("#localLanguage").attr("data-key"));
             var localLanguageMess = $("#localLanguageMess").val();
+            var localLanguageMessId = $("#localLanguageMess").attr("data-id");
+
 
             var request = {};
 
+            request.id = localLanguageMessId;
             request.keyCode = keyCode;
             request.langsKey = localLanguageKey;
             request.localMess = localLanguageMess;

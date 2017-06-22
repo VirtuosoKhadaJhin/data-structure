@@ -76,16 +76,13 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     @Override
     public void remove(LangsDictionaryRequestVo requestVo) {
         // 修改为Dao层删除
-        dictionaryDao.logicalDelLangsDictionary(requestVo.getKeyCode());
+        dictionaryDao.setDelFLagKeyCodeFor(true, requestVo.getKeyCode());
         // 修改为Dao层删除
-        messageTipDao.logicalDelLangsMessageTip(requestVo.getKeyCode());
+        messageTipDao.setDelFLagKeyCodeFor(true, requestVo.getKeyCode());
     }
 
     @Override
     public void modifyLangsDictionary(String keyCode, LangsDictionaryVo requestVo) {
-        // 修改为Dao层删除
-        dictionaryDao.delLangsDictionary(keyCode);
-
         EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne(requestVo.getCategoryId());
 
         Long userid = UserHolder.getUser().getUserid();
@@ -105,6 +102,9 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                 entityNyLangsDictionary = new EntityNyLangsDictionary();
 
                 entityNyLangsDictionary.setUserId(userid);
+                if(null != langsCountryMessageVo.getId()){
+                    entityNyLangsDictionary.setId(langsCountryMessageVo.getId());
+                }
                 entityNyLangsDictionary.setKeyCode(requestVo.getNewKeyCode());
                 entityNyLangsDictionary.setCategory(entityNyLangsCategory);
                 entityNyLangsDictionary.setDelFlag(false);
@@ -115,6 +115,12 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                 entityNyLangsDictionary.setMessage(langsCountryMessageVo.getMessage());
 
                 entityNyLangsDictionarys.add(entityNyLangsDictionary);
+            }else{
+                if(null != langsCountryMessageVo.getId()){
+                    entityNyLangsDictionary = new EntityNyLangsDictionary();
+                    entityNyLangsDictionary.setId(langsCountryMessageVo.getId());
+                    dictionaryDao.delete(entityNyLangsDictionary);
+                }
             }
         }
         dictionaryDao.save(entityNyLangsDictionarys);
@@ -174,30 +180,37 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         if (entityResult.size() > 0) {
             existsdictionary = entityResult.get(0);
             entityNyLangsDictionarey.setCategory(existsdictionary.getCategory());
-        }
 
-        // 查找是否有旧的添加的本地语言
-        existsdictionary = new EntityNyLangsDictionary();
-        existsdictionary.setKeyCode(dictionaryVo.getKeyCode());
-        String[] langsCountrys = LangsCountry.toEnum(dictionaryVo.getLangsKey()).getValue().split("-");
-        existsdictionary.setLanguage(langsCountrys[0]);
-        existsdictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
+            // 查找是否有旧的添加的本地语言
+            existsdictionary = new EntityNyLangsDictionary();
+            existsdictionary.setKeyCode(dictionaryVo.getKeyCode());
+            String[] langsCountrys = LangsCountry.toEnum(dictionaryVo.getLangsKey()).getValue().split("-");
+            existsdictionary.setLanguage(langsCountrys[0]);
+            existsdictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
 
-        // 删除旧的本地语言
-        dictionaryDao.delLangsDictionary(dictionaryVo.getKeyCode());
+            // 如果输入空, 则不保存, 相当于删除了这个本地语言行
+            if (StringUtils.isNotEmpty(dictionaryVo.getLocalMess())) {
+                User user = UserHolder.getUser();
 
-        // 如果输入空, 则不保存, 相当于删除了这个本地语言行
-        if (StringUtils.isNotEmpty(dictionaryVo.getLocalMess())) {
-            User user = UserHolder.getUser();
+                if(null != dictionaryVo.getId()){
+                    entityNyLangsDictionarey.setId(dictionaryVo.getId());
+                }
 
-            entityNyLangsDictionarey.setKeyCode(dictionaryVo.getKeyCode());
-            entityNyLangsDictionarey.setMessage(dictionaryVo.getLocalMess());
-            entityNyLangsDictionarey.setCreateDt(new Date());
-            entityNyLangsDictionarey.setLanguage(langsCountrys[0]);
-            entityNyLangsDictionarey.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
-            entityNyLangsDictionarey.setDelFlag(false);
-            entityNyLangsDictionarey.setUserId(user.getUserid());
-            dictionaryDao.save(entityNyLangsDictionarey);
+                entityNyLangsDictionarey.setKeyCode(dictionaryVo.getKeyCode());
+                entityNyLangsDictionarey.setMessage(dictionaryVo.getLocalMess());
+                entityNyLangsDictionarey.setCreateDt(new Date());
+                entityNyLangsDictionarey.setUpdateDt(new Date());
+                entityNyLangsDictionarey.setLanguage(langsCountrys[0]);
+                entityNyLangsDictionarey.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
+                entityNyLangsDictionarey.setDelFlag(false);
+                entityNyLangsDictionarey.setUserId(user.getUserid());
+                dictionaryDao.save(entityNyLangsDictionarey);
+            }else{
+                if(null != dictionaryVo.getId()){
+                    entityNyLangsDictionarey.setId(dictionaryVo.getId());
+                    dictionaryDao.delete(entityNyLangsDictionarey);
+                }
+            }
         }
 
     }
@@ -310,12 +323,6 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                 entityNyLangsDictionary.setMessage(message);
                 this.dictionaryDao.save(entityNyLangsDictionary);
 
-/*                // 查询本地化语言
-                String keyCode = entityNyLangsDictionary.getKeyCode();
-                if (BooleanUtils.isTrue(LangsCountry.toEnum(langsKey).getKey() == LOCAL_KEY)) {
-                    Locale locale = new Locale(entityNyLangsDictionary.getLanguage(), entityNyLangsDictionary.getCountry());
-                    localMessage = findLocalMessageByKeyCode(keyCode, locale);
-                }*/
             }
         }
 
@@ -439,6 +446,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     private LangsCountryMessageVo getLangsCountryMessageVo(EntityNyLangsDictionary langsDictionary) {
         LangsCountryMessageVo messageVo;
         messageVo = new LangsCountryMessageVo();
+        messageVo.setId(langsDictionary.getId());
         messageVo.setMessage(langsDictionary.getMessage());
         String langsCountry = langsDictionary.getLangsCountry();
         if (langsDictionary.getCountry().equals(langsDictionary.getLanguage())) {//TH

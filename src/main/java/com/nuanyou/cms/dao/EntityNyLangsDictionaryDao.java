@@ -13,22 +13,15 @@ import java.util.List;
 /**
  * Created by Byron on 2017/5/26.
  */
-public interface EntityNyLangsDictionaryDao extends JpaRepository<EntityNyLangsDictionary, Long>,JpaSpecificationExecutor {
-
-    @Query(value = "select * from ny_langs_dictionary t where t.category.id=:BASE_NAME", nativeQuery = true)
-    List<EntityNyLangsDictionary> findByCategoryId(@Param("BASE_NAME") Long id);
+public interface EntityNyLangsDictionaryDao extends JpaRepository<EntityNyLangsDictionary, Long>, JpaSpecificationExecutor {
 
     @Transactional
     @Modifying
-    @Query(value = "update EntityNyLangsDictionary ld set delFlag=true where keyCode=:keyCode")
-    void logicalDelLangsDictionary(@Param("keyCode") String keyCode);
+    @Query("update EntityNyLangsDictionary d set d.delFlag=:delFlag where d.keyCode=:keyCode")
+    void setDelFLagKeyCodeFor(@Param("delFlag") Boolean delFlag, @Param("keyCode") String keyCode);
 
-    @Transactional
-    @Modifying
-    @Query(value = "delete from EntityNyLangsDictionary lm where lm.keyCode=:keyCode")
-    void delLangsDictionary(@Param("keyCode") String keyCode);
+    List<EntityNyLangsDictionary> findByCategoryId(Long id);
 
-    @Query(value = "select * from ny_langs_dictionary t where t.KEY_CODE=:KEY_CODE", nativeQuery = true)
-    List<EntityNyLangsDictionary> findByKeyCode(@Param("KEY_CODE") String keyCode);
+    List<EntityNyLangsDictionary> findByKeyCode(String keyCode);
 
 }
