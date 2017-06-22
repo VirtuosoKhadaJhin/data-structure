@@ -116,7 +116,7 @@
                                     <p>尺寸: 60 * 60, 限制: 5k</p>
                                 </div>
                             </div>
-                            <div class="form-actions">
+                            <div class="form-actions" style="text-align: center">
                                 #if($!type==2 || $!type==1)
                                     <button onclick="return verifyNode()" type="submit" class="btn btn-success">保存</button>
                                 #elseif($!type==3)

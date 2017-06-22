@@ -110,13 +110,13 @@
             <script src="/dist/js/page-support.js"></script>
 
             <form class="form-horizontal search-form" method="get">
-                <div class="control-group" style="margin-bottom: 10px;width: 80%;min-width: 240px;">
+                <div class="control-group" style="margin-bottom: 10px;width: 90%;">
                     <label>分类名称 或ID</label>
                     <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
                 </div>
-                <div class="control-group" style="margin-bottom: 10px;width: 80%;min-width: 230px;">
+                <div class="control-group" style="margin-bottom: 10px;">
                     <label>是否显示</label>
-                    <select name="display">
+                    <select name="display" style="width: 85%;">
                         <option value="">全部</option>
                         <option value="true"  #if($!entity.display==true)  selected #end>显示</option>
                         <option value="false"  #if($!entity.display==false)  selected #end>隐藏</option>
@@ -368,11 +368,20 @@
                     var subSearch = $("#subSearch").val();
                     var tableHTMl = subTableThead();
                     var dataList = subDataList(pcatId, subSearch);
+                    var noResultHtml;
+                    if (dataList.totalPages == 0) {
+                        noResultHtml = "<div class='no-result-div' style='text-align: center;vertical-align: middle;height: 50px;line-height: 50px;'>" +
+                                "<p>暂无商户分类！</p>" +
+                                "</div>";
+                    }
+
                     var tdHTMl = subTableTd(dataList);
                     var pageHtml = subPagination(dataList);
 
+
+
                     $("#tb-data").empty();
-                    $("#tb-data").html(tableHTMl + tdHTMl + pageHtml);
+                    $("#tb-data").html(tableHTMl + tdHTMl + noResultHtml + pageHtml);
 
                     $("#subSearch").val(subSearch);
                 }
