@@ -76,7 +76,6 @@ public  class TicketValidationFilter extends AbstractFilter {
         final List<String> params = Arrays.asList(RESERVED_INIT_PARAMS);
         for (final Enumeration<?> e = filterConfig.getInitParameterNames(); e.hasMoreElements();) {
             final String s = (String) e.nextElement();
-
             if (!params.contains(s)) {
                 additionalParameters.put(s, filterConfig.getInitParameter(s));
             }
@@ -99,14 +98,7 @@ public  class TicketValidationFilter extends AbstractFilter {
     }
 
 
-    /**
-     * 验证失败后的操作
-     * @param request
-     * @param response
-     */
-    protected void onFailedValidation(final HttpServletRequest request, final HttpServletResponse response) {
-        // nothing to do here.
-    }
+
 
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
@@ -170,11 +162,9 @@ public  class TicketValidationFilter extends AbstractFilter {
                         log.debug("sessin is null");
                     }
                     log.debug("**************************************after validate tgt and st ********************************************" + "\n");
-
                     request.getSession().setAttribute(SSO_USER, user);
                 }
                 onSuccessfulValidation(request, response, user);
-
                 if (this.redirectAfterValidation) {
                     log.debug("Redirecting after successful ticket validation.");
                     response.sendRedirect(constructServiceUrl(request, response));
@@ -182,18 +172,13 @@ public  class TicketValidationFilter extends AbstractFilter {
                 }
             } catch (final TicketValidationException e) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-
-                onFailedValidation(request, response);
-
                 if (this.exceptionOnValidationFailure) {
                     throw new ServletException(e);
                 }
                 return;
             }
         }
-
         filterChain.doFilter(request, response);
-
     }
 
 

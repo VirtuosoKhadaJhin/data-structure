@@ -35,26 +35,20 @@ import javax.servlet.http.HttpSession;
 public final class SingleSignOutHandler {
 
     private final Log log = LogFactory.getLog(getClass());
-
     private SessionMappingStorage sessionMappingStorage = new HashMapBackedSessionMappingStorage();
-
     private String artifactParameterName = "ticket";
-
     private String logoutParameterName = "logoutRequest";
 
 
     public void setSessionMappingStorage(final SessionMappingStorage storage) {
         this.sessionMappingStorage = storage;
     }
-
     public SessionMappingStorage getSessionMappingStorage() {
         return this.sessionMappingStorage;
     }
-
     public void setArtifactParameterName(final String name) {
         this.artifactParameterName = name;
     }
-
     public void setLogoutParameterName(final String name) {
         this.logoutParameterName = name;
     }
