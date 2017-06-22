@@ -85,7 +85,7 @@ public class PaymentOrderRecordServiceImpl implements PaymentOrderRecordService 
                 }
 
                 Predicate[] pre = new Predicate[predicate.size ()];
-                return query.where(predicate.toArray(pre)).orderBy(cb.desc(root.get("payTime"))).getRestriction();
+                return query.where(predicate.toArray(pre)).orderBy(cb.desc(root.get("createTime"))).getRestriction();
             }
         });
 
