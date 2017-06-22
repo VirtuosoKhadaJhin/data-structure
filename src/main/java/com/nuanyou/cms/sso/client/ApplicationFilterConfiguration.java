@@ -2,9 +2,8 @@ package com.nuanyou.cms.sso.client;
 
 import com.nuanyou.cms.sso.client.authentication.AuthenticationFilter;
 import com.nuanyou.cms.sso.client.session.SingleSignOutFilter;
-import com.nuanyou.cms.sso.client.util.HttpServletRequestWrapperFilter;
 import com.nuanyou.cms.sso.client.util.UserThreadLocalFilter;
-import com.nuanyou.cms.sso.client.validation.impl.AbstractTicketValidationFilter;
+import com.nuanyou.cms.sso.client.validation.impl.TicketValidationFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -75,30 +74,20 @@ public class ApplicationFilterConfiguration {
 
 
     @Bean
-    public FilterRegistrationBean abstractTicketValidation(AbstractTicketValidationFilter filter) {
+    public FilterRegistrationBean ticketValidation(TicketValidationFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        //filter.setServerName(serverName);
         registration.setFilter(filter);
         registration.addInitParameter("validateCodeUrl", validateCodeUrl);
         registration.addInitParameter("serverName", serverName);
         registration.addInitParameter("serviceParameterName", "ret");
         registration.addInitParameter("artifactParameterName", "code");
         registration.addUrlPatterns(urlPatterns);
-        registration.setName("abstractTicketValidationFilter");
+        registration.setName("ticketValidationFilter");
         registration.setOrder(3);
         return registration;
     }
 
 
-    @Bean
-    public FilterRegistrationBean httpServletRequestWrapper(HttpServletRequestWrapperFilter filter) {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(filter);
-        registration.addUrlPatterns(urlPatterns);
-        registration.setName("HttpServletRequestWrapperFilter");
-        registration.setOrder(4);
-        return registration;
-    }
 
 
     @Bean

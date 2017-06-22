@@ -40,34 +40,21 @@ import java.util.*;
  * 验证ticket的Filter
  */
 @Component
-public  class AbstractTicketValidationFilter extends AbstractFilter {
+public  class TicketValidationFilter extends AbstractFilter {
 
-    private static final Logger log = LoggerFactory.getLogger(AbstractTicketValidationFilter.class.getSimpleName());
-
-
-
-//    private TicketValidator ticketValidator;
-
+    private static final Logger log = LoggerFactory.getLogger(TicketValidationFilter.class.getSimpleName());
     private SsoValidatorService ssoValidatorService;
-
-
-
-
     private boolean redirectAfterValidation = false;
-
     private boolean exceptionOnValidationFailure = true;
-
     private boolean useSession = true;
 
-    public SsoValidatorService getSsoValidatorService() {
-        return ssoValidatorService;
-    }
 
     public void setSsoValidatorService(SsoValidatorService ssoValidatorService) {
         this.ssoValidatorService = ssoValidatorService;
     }
 
-    protected void initInternal(final FilterConfig filterConfig) throws ServletException {
+    public void init(final FilterConfig filterConfig) throws ServletException {
+        super.init(filterConfig);
         setExceptionOnValidationFailure(parseBoolean(getPropertyFromInitParams(filterConfig, "exceptionOnValidationFailure", "true")));
         log.trace("Setting exceptionOnValidationFailure parameter: " + this.exceptionOnValidationFailure);
         setRedirectAfterValidation(parseBoolean(getPropertyFromInitParams(filterConfig, "redirectAfterValidation", "true")));
@@ -75,7 +62,7 @@ public  class AbstractTicketValidationFilter extends AbstractFilter {
         setUseSession(parseBoolean(getPropertyFromInitParams(filterConfig, "useSession", "true")));
         log.trace("Setting useSession parameter: " + this.useSession);
         setSsoValidatorService(getTicketValidator1(filterConfig));
-        super.initInternal(filterConfig);
+        CommonUtils.assertNotNull(this.ssoValidatorService, "ssoValidatorService cannot be null.");
     }
 
 
@@ -89,7 +76,6 @@ public  class AbstractTicketValidationFilter extends AbstractFilter {
         final List<String> params = Arrays.asList(RESERVED_INIT_PARAMS);
         for (final Enumeration<?> e = filterConfig.getInitParameterNames(); e.hasMoreElements();) {
             final String s = (String) e.nextElement();
-
             if (!params.contains(s)) {
                 additionalParameters.put(s, filterConfig.getInitParameter(s));
             }
@@ -98,10 +84,7 @@ public  class AbstractTicketValidationFilter extends AbstractFilter {
         return validator;
     }
 
-    public void init() {
-        super.init();
-        CommonUtils.assertNotNull(this.ssoValidatorService, "ssoValidatorService cannot be null.");
-    }
+
 
 
     /**
@@ -115,14 +98,7 @@ public  class AbstractTicketValidationFilter extends AbstractFilter {
     }
 
 
-    /**
-     * 验证失败后的操作
-     * @param request
-     * @param response
-     */
-    protected void onFailedValidation(final HttpServletRequest request, final HttpServletResponse response) {
-        // nothing to do here.
-    }
+
 
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
@@ -186,11 +162,9 @@ public  class AbstractTicketValidationFilter extends AbstractFilter {
                         log.debug("sessin is null");
                     }
                     log.debug("**************************************after validate tgt and st ********************************************" + "\n");
-
                     request.getSession().setAttribute(SSO_USER, user);
                 }
                 onSuccessfulValidation(request, response, user);
-
                 if (this.redirectAfterValidation) {
                     log.debug("Redirecting after successful ticket validation.");
                     response.sendRedirect(constructServiceUrl(request, response));
@@ -198,18 +172,13 @@ public  class AbstractTicketValidationFilter extends AbstractFilter {
                 }
             } catch (final TicketValidationException e) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-
-                onFailedValidation(request, response);
-
                 if (this.exceptionOnValidationFailure) {
                     throw new ServletException(e);
                 }
                 return;
             }
         }
-
         filterChain.doFilter(request, response);
-
     }
 
 

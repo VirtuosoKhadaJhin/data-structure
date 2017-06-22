@@ -33,14 +33,12 @@ public final class HashMapBackedSessionMappingStorage implements SessionMappingS
 
     private final Map<String,HttpSession> MANAGED_SESSIONS = new HashMap<String,HttpSession>();
     private final Map<String,String> ID_TO_SESSION_KEY_MAPPING = new HashMap<String,String>();
-
     private final Log log = LogFactory.getLog(getClass());
 
 	public synchronized void addSessionById(String mappingId, HttpSession session) {
         ID_TO_SESSION_KEY_MAPPING.put(session.getId(), mappingId);
         MANAGED_SESSIONS.put(mappingId, session);
     	if (log.isDebugEnabled()) {
-			
 			Set<String> keys=ID_TO_SESSION_KEY_MAPPING.keySet();
 			log.debug("\n********************add token to session***************************************");
 			for (String key : keys) {
@@ -54,18 +52,14 @@ public final class HashMapBackedSessionMappingStorage implements SessionMappingS
 	    			log.debug("session " + key + " = " + session.getAttribute(key));
 	    		}
 			}
-			
 		}
-
 	}                               
 
 	public synchronized void removeBySessionById(String sessionId) {
         if (log.isDebugEnabled()) {
             log.debug("Attempting to remove Session=[" + sessionId + "]");
         }
-
         final String key = ID_TO_SESSION_KEY_MAPPING.get(sessionId);
-
         if (log.isDebugEnabled()) {
             if (key != null) {
                 log.debug("Found mapping for session.  Session Removed.");
@@ -77,6 +71,7 @@ public final class HashMapBackedSessionMappingStorage implements SessionMappingS
         ID_TO_SESSION_KEY_MAPPING.remove(sessionId);
 	}
 
+
 	public synchronized HttpSession removeSessionByMappingId(String mappingId) {
 		if (log.isDebugEnabled()) {
 			log.debug("移除前所有的st和sessionid的映射是");
@@ -84,15 +79,11 @@ public final class HashMapBackedSessionMappingStorage implements SessionMappingS
 			for (String key : keys) {
 				//System.out.println("key: "+key+",value: "+ID_TO_SESSION_KEY_MAPPING.get(key));
 			}
-			
 		}
-		
 		final HttpSession session = MANAGED_SESSIONS.get(mappingId);
-
         if (session != null) {
         	removeBySessionById(session.getId());
         }
-
         return session;
 	}
 }

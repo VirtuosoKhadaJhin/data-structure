@@ -15,13 +15,12 @@ import javax.servlet.http.HttpSessionListener;
  */
 @WebListener
 public final class SingleSignOutHttpSessionListener implements HttpSessionListener {
-	protected final Log log = LogFactory.getLog(getClass());
 
+	protected final Log log = LogFactory.getLog(getClass());
 	private SessionMappingStorage sessionMappingStorage;
 	
     public void sessionCreated(final HttpSessionEvent event) {
         System.out.println("HTTP session is successfully created at the moment");
-        // nothing to do at the moment
     }
 
     public void sessionDestroyed(final HttpSessionEvent event) {
