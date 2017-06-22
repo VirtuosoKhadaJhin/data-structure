@@ -37,7 +37,7 @@ import java.util.Collection;
 import java.util.regex.Pattern;
 
 /**
- * 工具类(不依赖于任何第三方jar)
+ * 工具类(不依赖于第三方jar)
  */
 public final class CommonUtils {
 
