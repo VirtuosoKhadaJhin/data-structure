@@ -11,9 +11,7 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 /**
- * Listener to detect when an HTTP session is destroyed and remove it from the map of
- * managed sessions.  Also allows for the programmatic removal of sessions.
- *
+ * 监控器:为了侦测httpsession销毁,销毁时把对应的ticket映射删除
  */
 @WebListener
 public final class SingleSignOutHttpSessionListener implements HttpSessionListener {
@@ -35,12 +33,6 @@ public final class SingleSignOutHttpSessionListener implements HttpSessionListen
         sessionMappingStorage.removeBySessionById(session.getId());
     }
 
-    /**
-     * Obtains a {@link SessionMappingStorage} object. Assumes this method will always return the same
-     * instance of the object.  It assumes this because it generally lazily calls the method.
-     * 
-     * @return the SessionMappingStorage
-     */
     protected static SessionMappingStorage getSessionMappingStorage() {
     	return SingleSignOutFilter.getSingleSignOutHandler().getSessionMappingStorage();
     }

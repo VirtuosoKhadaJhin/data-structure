@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 /**
- * Implements the Single Sign Out protocol.  It handles registering the session and destroying the session.
+ * 注册session和移除session的Filter
  *
  * @author Felix
  */

@@ -28,31 +28,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *  Abstract filter that contains code that is common to all related filters.
+ *  抽象的公共Filter(目的是为了初始化一些公共属性)
  */
 public abstract class AbstractFilter extends AbstractConfigurationFilter {
 
-    /** Represents the constant for where the assertion will be located in memory. */
+    /*放在内存的用户实例标志*/
     public static final String SSO_USER = "sso_user";
 
-    /** Instance of commons logging for logging purposes. */
+    /** 记录日志. */
     protected static final Logger log = LoggerFactory.getLogger(AbstractFilter.class.getSimpleName());
 
-    /** Defines the parameter to look for for the artifact. */
+    /** 定义这个参数目的是为了寻找生成的code */
     private String artifactParameterName = "code";
 
-    /** Defines the parameter to look for for the service. */
+    /** 寻找service */
     private String serviceParameterName = "ret";
     
-    /** Sets where response.encodeUrl should be called on service urls when constructed. */
+    /** 如果为true则对于serviceURL进行编号response.encodeUrl */
     private boolean encodeServiceUrl = true;
 
-    /**
-     * The name of the server.  Should be in the following format: {protocol}:{hostName}:{port}.
-     * Standard ports can be excluded. */
+    /*服务器地址,格式是http/https：hostname:port ,标准的端口号可以不写*/
     private String serverName;
 
-    /** The exact url of the service. */
+    /** service. */
     private String service;
 
     public final void init(final FilterConfig filterConfig) throws ServletException {
@@ -73,7 +71,8 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
         init();
     }
 
-    /** Controls the ordering of filter initialization and checking by defining a method that runs before the init.
+    /**
+     * 空中filter加载顺序 然后再init之前发生
      * @param filterConfig the original filter configuration.
      * @throws ServletException if there is a problem.
      *
@@ -83,8 +82,7 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
     }
 
     /**
-     * Initialization method.  Called by Filter's init method or by Spring.  Similar in concept to the InitializingBean interface's
-     * afterPropertiesSet();
+     * 属性都populate后进行验证 概念上和spring加载bean类似
      */
     public void init() {
         CommonUtils.assertNotNull(this.artifactParameterName, "artifactParameterName cannot be null.");
@@ -93,7 +91,6 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
         CommonUtils.assertTrue(CommonUtils.isBlank(this.serverName) || CommonUtils.isBlank(this.service), "serverName and service cannot both be set.  You MUST ONLY set one.");
     }
 
-    // empty implementation as most filters won't need this.
     public void destroy() {
         // nothing to do
     }
@@ -103,10 +100,9 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
     }
 
     /**
-     * Note that trailing slashes should not be used in the serverName.  As a convenience for this common misconfiguration, we strip them from the provided
-     * value.
      *
-     * @param serverName the serverName. If this method is called, this should not be null.  This AND service should not be both configured.
+     *serverName不应该有斜杠
+     * @param serverName
      */
     public final void setServerName(final String serverName) {
         if (serverName != null && serverName.endsWith("/")) {
@@ -116,6 +112,7 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
             this.serverName = serverName;
         }
     }
+
 
     public final void setService(final String service) {
         this.service = service;

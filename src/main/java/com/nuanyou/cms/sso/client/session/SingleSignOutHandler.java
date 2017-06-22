@@ -27,23 +27,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * Performs CAS single sign-out operations in an API-agnostic fashion.
+ * 登入登出的操作
  *
  * @author Felix
  *
  */
 public final class SingleSignOutHandler {
 
-    /** Logger instance */
     private final Log log = LogFactory.getLog(getClass());
 
-    /** Mapping of token IDs and session IDs to HTTP sessions */
     private SessionMappingStorage sessionMappingStorage = new HashMapBackedSessionMappingStorage();
-    
-    /** The name of the artifact parameter.  This is used to capture the session identifier. */
+
     private String artifactParameterName = "ticket";
 
-    /** Parameter name that stores logout request */
     private String logoutParameterName = "logoutRequest";
 
 
@@ -55,46 +51,34 @@ public final class SingleSignOutHandler {
         return this.sessionMappingStorage;
     }
 
-    /**
-     * @param name Name of the authentication token parameter.
-     */
     public void setArtifactParameterName(final String name) {
         this.artifactParameterName = name;
     }
 
-    /**
-     * @param name Name of parameter containing CAS logout request message.
-     */
     public void setLogoutParameterName(final String name) {
         this.logoutParameterName = name;
     }
 
-    /**
-     * Initializes the component for use.
-     */
+
     public void init() {
         CommonUtils.assertNotNull(this.artifactParameterName, "artifactParameterName cannot be null.");
         CommonUtils.assertNotNull(this.logoutParameterName, "logoutParameterName cannot be null.");
         CommonUtils.assertNotNull(this.sessionMappingStorage, "sessionMappingStorage cannote be null."); 
     }
-    
+
+
     /**
-     * Determines whether the given request contains an authentication token.
-     *
-     * @param request HTTP reqest.
-     *
-     * @return True if request contains authentication token, false otherwise.
+     * request是否含有登录验证ticket
+     * @param request
+     * @return
      */
     public boolean isTokenRequest(final HttpServletRequest request) {
         return CommonUtils.isNotBlank(CommonUtils.safeGetParameter(request, this.artifactParameterName));
     }
 
     /**
-     * Determines whether the given request is a CAS logout request.
+     * 标识给的请求是否是sso服务器传来的注销请求
      *
-     * @param request HTTP request.
-     *
-     * @return True if request is logout request, false otherwise.
      */
     public boolean isLogoutRequest(final HttpServletRequest request) {
         return "GET".equals(request.getMethod()) && !isMultipartRequest(request) &&
@@ -102,10 +86,7 @@ public final class SingleSignOutHandler {
     }
 
     /**
-     * Associates a token request with the current HTTP session by recording the mapping
-     * in the the configured {@link SessionMappingStorage} container.
-     * 
-     * @param request HTTP request containing an authentication token.
+     * 根据ticket注册一个session
      */
     public void recordSession(final HttpServletRequest request) {
         final HttpSession session = request.getSession(true);
@@ -114,7 +95,6 @@ public final class SingleSignOutHandler {
         if (log.isDebugEnabled()) {
             log.debug("Recording session for token " + token);
         }
-
         try {
         	//根据sessionid 移除 对应的ST 和 session
             this.sessionMappingStorage.removeBySessionById(session.getId());
@@ -125,7 +105,7 @@ public final class SingleSignOutHandler {
     }
    
     /**
-     * Destroys the current HTTP session for the given CAS logout request.
+     * 因为是注销操作所以移除session
      *
      * @param request HTTP request containing a CAS logout message.
      */

@@ -17,14 +17,16 @@
  * under the License.
  */
 
-package com.nuanyou.cms.sso.client.validation;
+package com.nuanyou.cms.sso.client.validation.impl;
 
 
 import com.nuanyou.cms.sso.client.util.AbstractFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
-import com.nuanyou.cms.sso.client.util.OperationLog;
+import com.nuanyou.cms.sso.client.validation.SsoValidatorService;
+import com.nuanyou.cms.sso.client.validation.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -32,46 +34,38 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Enumeration;
+import java.util.*;
 
 /**
- * The filter that handles all the work of validating ticket requests.
- *
+ * 验证ticket的Filter
  */
-public abstract class AbstractTicketValidationFilter extends AbstractFilter {
+@Component
+public  class AbstractTicketValidationFilter extends AbstractFilter {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractTicketValidationFilter.class.getSimpleName());
-    /**
-     * The TicketValidator we will use to validate tickets.
-     */
-    private TicketValidator ticketValidator;
 
-    /**
-     * Specify whether the filter should redirect the user agent after a
-     * successful validation to remove the ticket parameter from the query
-     * string.
-     */
+
+
+//    private TicketValidator ticketValidator;
+
+    private SsoValidatorService ssoValidatorService;
+
+
+
+
     private boolean redirectAfterValidation = false;
 
-    /**
-     * Determines whether an exception is thrown when there is a ticket validation failure.
-     */
     private boolean exceptionOnValidationFailure = true;
 
     private boolean useSession = true;
 
-    /**
-     * Template method to return the appropriate validator.
-     *
-     * @param filterConfig the FilterConfiguration that may be needed to construct a validator.
-     * @return the ticket validator.
-     */
-    protected TicketValidator getTicketValidator(final FilterConfig filterConfig) {
-        return this.ticketValidator;
+    public SsoValidatorService getSsoValidatorService() {
+        return ssoValidatorService;
     }
 
-
+    public void setSsoValidatorService(SsoValidatorService ssoValidatorService) {
+        this.ssoValidatorService = ssoValidatorService;
+    }
 
     protected void initInternal(final FilterConfig filterConfig) throws ServletException {
         setExceptionOnValidationFailure(parseBoolean(getPropertyFromInitParams(filterConfig, "exceptionOnValidationFailure", "true")));
@@ -80,48 +74,51 @@ public abstract class AbstractTicketValidationFilter extends AbstractFilter {
         log.trace("Setting redirectAfterValidation parameter: " + this.redirectAfterValidation);
         setUseSession(parseBoolean(getPropertyFromInitParams(filterConfig, "useSession", "true")));
         log.trace("Setting useSession parameter: " + this.useSession);
-        setTicketValidator(getTicketValidator(filterConfig));
+        setSsoValidatorService(getTicketValidator1(filterConfig));
         super.initInternal(filterConfig);
+    }
+
+
+
+    private static final String[] RESERVED_INIT_PARAMS = new String[] {"validateCodeUrl", "serverName", "service", "artifactParameterName", "serviceParameterName", "encodeServiceUrl", "millisBetweenCleanUps", "hostnameVerifier", "encoding", "config"};
+    protected final SsoValidatorService getTicketValidator1(final FilterConfig filterConfig) {
+         final String validateCodeUrl = getPropertyFromInitParams(filterConfig, "validateCodeUrl", null);
+        final SsoValidatorServiceImpl validator = new SsoValidatorServiceImpl(validateCodeUrl);
+        validator.setEncoding(getPropertyFromInitParams(filterConfig, "encoding", null));
+        final Map<String,String> additionalParameters = new HashMap<String,String>();
+        final List<String> params = Arrays.asList(RESERVED_INIT_PARAMS);
+        for (final Enumeration<?> e = filterConfig.getInitParameterNames(); e.hasMoreElements();) {
+            final String s = (String) e.nextElement();
+
+            if (!params.contains(s)) {
+                additionalParameters.put(s, filterConfig.getInitParameter(s));
+            }
+        }
+        validator.setCustomParameters(additionalParameters);
+        return validator;
     }
 
     public void init() {
         super.init();
-        CommonUtils.assertNotNull(this.ticketValidator, "ticketValidator cannot be null.");
+        CommonUtils.assertNotNull(this.ssoValidatorService, "ssoValidatorService cannot be null.");
     }
 
-    /**
-     * Pre-process the request before the normal filter process starts.  This could be useful for pre-empting code.
-     *
-     * @param servletRequest  The servlet request.
-     * @param servletResponse The servlet response.
-     * @param filterChain     the filter chain.
-     * @return true if processing should continue, false otherwise.
-     * @throws IOException      if there is an I/O problem
-     * @throws ServletException if there is a servlet problem.
-     */
-    protected boolean preFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
-        return true;
-    }
 
     /**
-     * Template method that gets executed if ticket validation succeeds.  Override if you want additional behavior to occur
-     * if ticket validation succeeds.  This method is called after all ValidationFilter processing required for a successful authentication
-     * occurs.
-     *
-     * @param request  the HttpServletRequest.
-     * @param response the HttpServletResponse.
-     * @param user     the successful Assertion from the server.
+     * 所有验证都通过且得到用户后的操作,比如写入日志
+     * @param request
+     * @param response
+     * @param user
      */
     protected void onSuccessfulValidation(final HttpServletRequest request, final HttpServletResponse response, final User user) {
-        OperationLog.log(user.getUserid(), user.getName(),request.getRequestURI(), OperationLog.Action.Login,null);
+
     }
 
+
     /**
-     * Template method that gets executed if validation fails.  This method is called right after the exception is caught from the ticket validator
-     * but before any of the processing of the exception occurs.
-     *
-     * @param request  the HttpServletRequest.
-     * @param response the HttpServletResponse.
+     * 验证失败后的操作
+     * @param request
+     * @param response
      */
     protected void onFailedValidation(final HttpServletRequest request, final HttpServletResponse response) {
         // nothing to do here.
@@ -162,7 +159,7 @@ public abstract class AbstractTicketValidationFilter extends AbstractFilter {
         if (CommonUtils.isNotBlank(ticket)) {
             log.info("Second Step:Attempting to validate ticket: " + ticket);
             try {
-                final User user = this.ticketValidator.validate(ticket, constructServiceUrl(request, response));
+                final User user = this.ssoValidatorService.validate(ticket);
                 log.info("Second Step:Successfully authenticated user: " + user);
                 request.setAttribute(SSO_USER, user);
                 if (this.useSession) {
@@ -215,9 +212,7 @@ public abstract class AbstractTicketValidationFilter extends AbstractFilter {
 
     }
 
-    public final void setTicketValidator(final TicketValidator ticketValidator) {
-        this.ticketValidator = ticketValidator;
-    }
+
 
     public final void setRedirectAfterValidation(final boolean redirectAfterValidation) {
         this.redirectAfterValidation = redirectAfterValidation;
