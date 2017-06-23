@@ -4,6 +4,7 @@ import com.nuanyou.cms.sso.client.util.AbstractFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.sso.client.util.RandomUtils;
 import com.nuanyou.cms.sso.client.validation.User;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -45,6 +46,7 @@ public class AuthenticationFilter extends AbstractFilter {
      * @throws ServletException
      */
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
+
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
         final HttpSession session = request.getSession(false);
@@ -72,10 +74,7 @@ public class AuthenticationFilter extends AbstractFilter {
         } else {
             log.debug("Second Step:not ticket");
         }
-        final String modifiedServiceUrl;
-
-        modifiedServiceUrl = serviceUrl;
-        log.debug("First Step:Constructed service url: " + modifiedServiceUrl);
+        log.debug("First Step:Constructed service url: " + serviceUrl);
         String state = RandomUtils.randomNumber(8);
 //        while (ticketRegistry.getTicket(state)!=null){
 //            state= RandomUtils.randomNumber(8);
@@ -83,7 +82,11 @@ public class AuthenticationFilter extends AbstractFilter {
         setState(state);
         //StateTicket stateTicket=grantStateTicket.grantStateTicket(this.state,expirationPolicy,modifiedServiceUrl);
         //this.ticketRegistry.addTicket(stateTicket);
-        final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.loginUrl, getServiceParameterName(), modifiedServiceUrl, this.state, this.relogin);
+        String urlRelogin= CommonUtils.safeGetParameter(request, "relogin");
+        if(StringUtils.isNotBlank(urlRelogin)){
+            this.relogin=new Boolean(urlRelogin);
+        }
+        final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.loginUrl, getServiceParameterName(), serviceUrl, this.state, this.relogin);
         log.debug("First Step:redirecting to \"" + urlToRedirectTo + "\"");
         response.sendRedirect(urlToRedirectTo);
     }
@@ -109,6 +112,15 @@ public class AuthenticationFilter extends AbstractFilter {
     }
 
     public AuthenticationFilter() {
+    }
+
+    public static void main1(String[] args) {
+        String urlExcludePattern="/test|^/dist/.|^/favicon.*";
+        String url="/dist/55";
+        Pattern compile = Pattern.compile(urlExcludePattern);
+        Boolean excluded=compile != null
+            && compile.matcher(url).matches();
+        System.out.println(excluded);
     }
 
 

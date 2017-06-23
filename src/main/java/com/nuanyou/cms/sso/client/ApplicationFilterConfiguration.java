@@ -60,7 +60,6 @@ public class ApplicationFilterConfiguration {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         filter.setUrlExcludePattern(Pattern.compile(urlExcludePattern));
         filter.setRelogin(reLogin);
-        //filter.setServerName(serverName);
         registration.setFilter(filter);
         registration.addInitParameter("loginUrl",loginUrl);
         registration.addInitParameter("serverName", serverName);
