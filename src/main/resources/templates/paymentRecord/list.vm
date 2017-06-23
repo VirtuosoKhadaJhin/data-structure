@@ -13,32 +13,42 @@
         text-align: center;
     }
 
+    table tr td {
+        word-break: break-all;
+    }
+
     table tr td:hover {
         cursor: default;
     }
 
+    .td-mchId, .td-userId, .td-price, .td-oprice, .td-status-name, .td-method-name, .td-channel-name, .td-pay-time {
+        width: 60px;
+        max-width: 80px;
+    }
+
     .td-mchName, .td-mchKpName {
-        min-width: 100px;
-        max-width: 150px;
+        min-width: 60px;
+        max-width: 120px;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
     }
 
     .td-outTradeNo, .td-transactionId {
-        max-width: 240px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        width: 140px;
+        max-width: 150px;
+    }
+
+    .select2 {
+        width: 91.48936170212765%;
     }
 </style>
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
-        <th width="80px;">操作</th>
+        <th>操作</th>
         <th>商户ID</th>
-        <th class="th-name">商户名称</th>
-        <th class="th-name">商户本地名称</th>
+        <th>商户名称</th>
         <th>购买人</th>
         <th>订单编号</th>
         <th>订单流水</th>
@@ -80,8 +90,10 @@
                 #end
             </td>
             <td class="td-mchId" title="$!item.mchId">$!item.mchId</td>
-            <td class="td-mchName" title="$!item.mchName">$!item.mchName</td>
-            <td class="td-mchKpName" title="$!item.mchKpName">$!item.mchKpName</td>
+            <td class="td-mchName" title="中文名称：$!item.mchName<br/>本地名称：$!item.mchKpName">
+                中文名称：$!item.mchName<br/>
+                本地名称：$!item.mchKpName
+            </td>
             <td class="td-userId" title="$!item.userId">$!item.userId</td>
             <td class="td-outTradeNo" title="$!item.outTradeNo">$!item.outTradeNo</td>
             <td class="td-transactionId" title="$!item.transactionId">$!item.transactionId</td>
@@ -125,7 +137,7 @@
         <select id="paymentStatus" name="status" class="span11">
             <option value="">全部</option>
             #foreach($o in $!paymentStatuses)
-                #if($o.key)
+                #if($o.key && $o.key!=1)
                     <option value="$o" #if($!requestVo.status== $o) selected #end>$o.name</option>
                 #end
             #end
