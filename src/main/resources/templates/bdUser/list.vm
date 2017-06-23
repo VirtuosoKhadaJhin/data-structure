@@ -1,0 +1,106 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="list" class="tip-bottom" data-original-title="">多语言管理</a>
+    <a href="#" class="tip-bottom" data-original-title="">列表</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>多语言列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="add">新增</a>
+#*<a class="btn btn-mini btn-info buttons" onclick="langsCommonDialog()">通用新增</a>*#
+</div>
+<style>
+    .tdInput {
+        width: 75%;
+    }
+
+    .text-gray {
+        background-color: grey;
+    }
+
+    #select2-categoryId-xe-container {
+        min-width: 180px;
+    }
+
+    .td-update-time{
+        min-width: 120px;
+    }
+    .td-sort{
+        min-width: 60px;
+    }
+</style>
+<div style="width: 100%">
+    <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+        <thead role="row">
+        <tr>
+            <th>ID</th>
+            <th>用户名</th>
+            <th>所属国家</th>
+            <th>邮箱</th>
+            <th>角色</th>
+
+        </tr>
+        </thead>
+        <tbody>
+            #if ($null.isNull($page.content) || $page.content.size()==0)
+            <tr>
+                <td colspan="11" style="text-align:center;">
+                    <div class="no-result-div"
+                         style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                        <p>没有符合条件的多语言记录信息！</p>
+                    </div>
+                </td>
+            </tr>那么那么
+            #end
+
+            #foreach($entity in $!page.content)
+            <tr class="odd gradeX">
+                <td class="td-sort">
+                    <label style="text-align: center;">$!entity.id</label>
+                </td>
+                <td class="td-sort">
+                    <label style="text-align: center;">$!entity.name</label>
+                </td>
+                <td class="td-sort">
+                    <label style="text-align: center;">$!entity.countryName</label>
+                </td>
+                <td class="td-sort">
+                    <label style="text-align: center;">$!entity.email</label>
+                </td>
+                <td class="td-sort">
+                    <label style="text-align: center;">$!entity.role</label>
+                </td>
+
+            </tr>
+                #set($sort = $sort + 1)
+            #end
+        </tbody>
+    </table>
+</div>
+
+
+#parse("common/list_mid.vm")
+<form class="form-horizontal search-form" method="get" action="list">
+
+
+    <div class="control-group" style="margin-bottom: 10px">
+        <label>keyCode</label>
+        <input type="text" class="span11" name="keyCode" value="$!requestVo.keyCode">
+    </div>
+    <div class="control-group" style="margin-bottom: 10px">
+        <label>内容</label>
+        <input type="text" class="span11" name="message" value="$!requestVo.message">
+    </div>
+
+
+    <div class="control-group" style="clear: both;margin-top: 10px;">
+        <button type="submit" class="btn btn-primary">查询</button>
+        <button class="btn btn-warning search-reset">重置</button>
+    </div>
+</form>
+
+#parse("common/list_end.vm")
+
+
+
