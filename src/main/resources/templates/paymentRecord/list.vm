@@ -1,0 +1,265 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>主页</a>
+    <a href="/paymentOrderRecord/list" class="tip-bottom" data-original-title="">支付订单记录管理</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>支付订单记录列表</h5>
+</div>
+<style type="text/css">
+    .tbody-class td.text-center {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    table tr td {
+        word-break: break-all;
+    }
+
+    table tr td:hover {
+        cursor: default;
+    }
+
+    .td-mchId, .td-userId, .td-price, .td-oprice, .td-status-name, .td-method-name, .td-channel-name, .td-pay-time {
+        width: 60px;
+        max-width: 80px;
+    }
+
+    .td-mchName, .td-mchKpName {
+        min-width: 60px;
+        max-width: 120px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .td-outTradeNo, .td-transactionId {
+        width: 140px;
+        max-width: 150px;
+    }
+
+    .select2 {
+        width: 91.48936170212765%;
+    }
+</style>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>操作</th>
+        <th>商户ID</th>
+        <th>商户名称</th>
+        <th>购买人</th>
+        <th>订单编号</th>
+        <th>订单流水</th>
+        <th>人民币价格</th>
+        <th>当地价格</th>
+        <th>支付状态</th>
+        <th>支付类型</th>
+        <th>支付通道</th>
+        <th>支付时间</th>
+    </tr>
+    </thead>
+    <tbody class="tbody-class">
+        #if ($null.isNull($page.content) || $page.content.size()==0)
+        <tr>
+            <td colspan="11" style="text-align:center;">
+                <div class="no-result-div" style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                    <p>没有符合条件的支付订单记录信息！</p>
+                </div>
+            </td>
+        </tr>
+        #end
+        #foreach($item in $!page.content)
+        <tr class="odd gradeX" data-itemId="$!item.id" data-platform="$!item.platform" data-status="$!item.status.key">
+            <td class="td-opt" style=" text-align: center; ">
+                #if($!item.status.key==0 && $!item.platform=="scan")
+                    #set($hasSearched=false)
+                    #foreach($param in ${searchDateMap.entrySet()})
+                        #if(${param.key}==$!item.id)
+                            #set($hasSearched=true)
+                        #end
+                    #end
+                    #if($!hasSearched==true)
+                        <a href="javascript:void(0);" data-hasSearch="$!hasSearched" data-keyId="$!item.id" data-keyApp="$!item.app"
+                           class="btn btn-success btn-mini order-status-search" disabled="disabled">查询中···</a>
+                    #elseif($!hasSearched==false)
+                        <a href="javascript:void(0);" data-hasSearch="$!hasSearched" data-keyId="$!item.id" data-keyApp="$!item.app"
+                           class="btn btn-success btn-mini order-status-search">查询</a>
+                    #end
+                #end
+            </td>
+            <td class="td-mchId" title="$!item.mchId">$!item.mchId</td>
+            <td class="td-mchName" title="中文名称：$!item.mchName<br/>本地名称：$!item.mchKpName">
+                中文名称：$!item.mchName<br/>
+                本地名称：$!item.mchKpName
+            </td>
+            <td class="td-userId" title="$!item.userId">$!item.userId</td>
+            <td class="td-outTradeNo" title="$!item.outTradeNo">$!item.outTradeNo</td>
+            <td class="td-transactionId" title="$!item.transactionId">$!item.transactionId</td>
+            <td class="td-price text-center" title="$!item.price">$!item.price</td>
+            <td class="td-oprice text-center" title="$!item.oprice">$!item.oprice</td>
+            <td class="td-status-name text-center" title="$!item.status.name">$!item.status.name</td>
+            <td class="td-method-name text-center" title="$!item.method.name">$!item.method.name</td>
+            <td class="td-channel-name text-center" title="$!item.channelName">$!item.channelName</td>
+            <td class="td-pay-time" title="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss", $!item.payTime)">$!dateFormatter.format(
+                "yyyy-MM-dd HH:mm:ss", $!item.payTime)</td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#parse("common/list_mid.vm")
+<form method="get" class="search-form">
+    <div class="control-group">
+        <label>商户</label>
+        <select class="span11 select2" name="mchId">
+            <option value="">全部</option>
+            #foreach($merchant in $!merchants)
+                <option value="$!merchant.id" #if($!requestVo.mchId == $!merchant.id) selected #end>$!merchant.id:$!merchant.name</option>
+            #end
+        </select>
+
+        <label style="margin-top: 10px;">商户本地名称：</label>
+        <input type="text" class="span11" name="mchKpName" value="$!requestVo.mchKpName" placeholder="商户本地名称">
+
+        <label>支付价格：</label>
+        <input type="text" class="span5" id="J_BginPrice" name="beginPrice" value="$!requestVo.beginPrice" placeholder="请输入价格起始">
+        <span class="search-price-middle-separator" style="margin: 0 3px;">-</span>
+        <input type="text" class="span5" id="J_EndPrice" name="endPrice" value="$!requestVo.endPrice" placeholder="请输入价格结束">
+
+        <label>开始时间：</label>
+        <input type="text" class="span11 dateTimeFormat data-beginTime" id="beginTime" name="beginDt" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss", $!requestVo.beginDt)" placeholder="请选择开始时间">
+
+        <label>结束时间：</label>
+        <input type="text" class="span11 dateTimeFormat data-endTime" id="endTime" name="endDt" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss", $!requestVo.endDt)" placeholder="请选择结束时间">
+
+        <label for="paymentStatus">支付状态：</label>
+        <select id="paymentStatus" name="status" class="span11">
+            <option value="">全部</option>
+            #foreach($o in $!paymentStatuses)
+                #if($o.key && $o.key!=1)
+                    <option value="$o" #if($!requestVo.status== $o) selected #end>$o.name</option>
+                #end
+            #end
+        </select>
+
+        <label for="status">支付类型：</label>
+        <select id="J_method" name="paymentOrderMethod" class="span11">
+            <option value="">全部</option>
+            #foreach($o in $!paymentMethods)
+                #if($o.key)
+                    <option value="$o" #if($!requestVo.paymentOrderMethod==$o) selected #end>$o.name</option>
+                #end
+            #end
+        </select>
+
+        <button type="submit" class="btn btn-primary search-submit">查询</button>
+        <button class="btn btn-warning search-reset">重置</button>
+    </div>
+</form>
+#parse("common/list_end.vm")
+#include("common/js-support.vm")
+
+<script type="text/javascript">
+    $(function () {
+        $(".search-submit").click(function () {
+            var beginPrice = $("#J_BginPrice").val().trim();
+            var endPrice = $("#J_EndPrice").val().trim();
+
+            if (isNaN(beginPrice)) {
+                alert("请输入数字类型的起始价格！");
+                return false;
+            }
+            if (isNaN(endPrice)) {
+                alert("请输入数字类型的结束价格！");
+                return false;
+            }
+            if (parseFloat(beginPrice) > parseFloat(endPrice)) {
+                alert("起始价格不能大于结束价格！");
+                return false;
+            }
+            var beginTime = $(".data-beginTime").val().trim();
+            var endTime = $(".data-endTime").val().trim();
+            var begin = new Date(beginTime.replace("-", "/").replace("-", "/"));
+            var end = new Date(endTime.replace("-", "/").replace("-", "/"));
+            if (begin > end) {
+                alert("开始时间不能大于结束时间！");
+                return false;
+            }
+        });
+
+        $(".search-reset").click(function () {
+            $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
+            $(".search-form").find(".select2").val('').trigger('change');
+        });
+
+        $("table").delegate(".order-status-search", "click", function (e) {
+            var _this = e.currentTarget;
+            if ($(_this).attr("disabled") == "disabled") {
+                return false;
+            }
+            var item_id = $(_this).attr("data-keyid");
+            var item_app = $(_this).attr("data-keyApp");
+            var postParam = {app: item_app, orderId: item_id};
+            $(_this).text("查询中···").attr("disabled", true);
+            $.ajax({
+                url: "searchRecord?orderId=" + item_id,
+                type: "post",
+                data: {app: item_app},
+                dataType: "json",
+                success: function (response) {
+                    if (response.success && response.code == 0) {
+                        var data = response.data;
+                        var status = data.status;
+                        var parentTr = $(_this).parent("tr");
+                        if (status == 0) {
+                            extractedAjax(_this, item_id);
+                        } else if (status == 1) {
+                            alert("付款中，请稍后...");
+                        } else if (status == 2) {
+                            alert("已支付订单，无须重复支付！");
+                            parentTr.find(".td-status-name").text("支付成功");
+                            $(_this).remove();
+                        } else if (status == 3) {
+                            parentTr.find(".td-status-name").text("支付失败");
+                            alert("支付失败，请稍后重试！");
+                        }
+                    } else {
+                        alert("请求失败，请稍后重试！");
+                    }
+                },
+                error: function (response) {
+                    alert("请求失败，请稍后重试！");
+                }
+            });
+        });
+
+        function extractedAjax(_this, item_id) {
+            $.ajax({
+                url: "findPaymentOrderRecord?orderId=" + item_id,
+                type: "post",
+                dataType: "json",
+                success: function (response) {
+                    var item = response.data, parentTr = $(_this).parent("tr");
+                    parentTr.find(".td-mchId").text(item.mchId).attr("title", item.mchId);
+                    parentTr.find(".td-mchName").text(item.mchName).attr("title", item.mchName);
+                    parentTr.find(".td-mchKpName").text(item.mchKpName).attr("title", item.mchKpName);
+                    parentTr.find(".td-userId").text(item.userId).attr("title", item.userId);
+                    parentTr.find(".td-outTradeNo").text(item.outTradeNo).attr("title", item.outTradeNo);
+                    parentTr.find(".td-transactionId").text(item.transactionId).attr("title", item.transactionId);
+                    parentTr.find(".td-price").text(item.price).attr("title", item.price);
+                    parentTr.find(".td-oprice").text(item.oprice).attr("title", item.oprice);
+                    parentTr.find(".td-status-name").text(item.status.name).attr("title", item.status.name);
+                    parentTr.find(".td-method-name").text(item.method.name).attr("title", item.method.name);
+                    parentTr.find(".td-channel-name").text(item.channelName).attr("title", item.channelName);
+                    parentTr.find(".td-pay-time").text(item.payTimeStr).attr("title", item.payTimeStr);
+                    $(_this).remove();
+                    alert("支付成功！");
+                },
+                error: function (response) {
+                    alert("请求失败，请稍后重试！");
+                }
+            });
+        }
+    });
+</script>
