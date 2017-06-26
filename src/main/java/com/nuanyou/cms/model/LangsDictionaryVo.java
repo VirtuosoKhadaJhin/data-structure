@@ -3,6 +3,7 @@ package com.nuanyou.cms.model;
 import com.google.common.collect.Lists;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,6 +12,9 @@ import java.util.List;
 public class LangsDictionaryVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    // 用于本地修改的ID
+    private Long id;
 
     //key+category
     private String keyCode;
@@ -29,6 +33,9 @@ public class LangsDictionaryVo implements Serializable {
 
     //分类名称
     private String categoryName;
+
+    //分类名称
+    private Date updateDt;
 
     // 接收备注信息
     private LangsMessageTipVo messageTip;
@@ -52,6 +59,14 @@ public class LangsDictionaryVo implements Serializable {
         this.keyCode = keyCode;
         this.categoryId = categoryId;
         this.langsMessageList = langsMessageList;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getKeyCode() {
@@ -108,6 +123,14 @@ public class LangsDictionaryVo implements Serializable {
 
     public void setMessageTip(LangsMessageTipVo messageTip) {
         this.messageTip = messageTip;
+    }
+
+    public Date getUpdateDt() {
+        return updateDt;
+    }
+
+    public void setUpdateDt(Date updateDt) {
+        this.updateDt = updateDt;
     }
 
     public List<LangsCountryMessageVo> getLangsMessageList() {

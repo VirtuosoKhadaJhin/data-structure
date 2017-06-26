@@ -28,6 +28,9 @@ public class ContractTemplate {
 
     private TemplateStatus templateStatus;
 
+    private String shortCode;
+
+
     private List<ContractParameter> parameters;
 
     public ContractTemplate(Long countryId, String title, Integer type) {
@@ -125,5 +128,13 @@ public class ContractTemplate {
 
     public void setStatusChangeTime(Date statusChangeTime) {
         this.statusChangeTime = statusChangeTime;
+    }
+
+    public String getShortCode() {
+        return shortCode;
+    }
+
+    public void setShortCode(String shortCode) {
+        this.shortCode = shortCode;
     }
 }

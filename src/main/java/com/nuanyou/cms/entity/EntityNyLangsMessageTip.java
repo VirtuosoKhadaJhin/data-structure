@@ -44,12 +44,14 @@ public class EntityNyLangsMessageTip {
     public EntityNyLangsMessageTip() {
     }
 
-    public EntityNyLangsMessageTip(String keyCode, String remark, String imgUrl, Date createDt, Boolean delFlag) {
+    public EntityNyLangsMessageTip(String keyCode) {
+        this.keyCode = keyCode;
+    }
+
+    public EntityNyLangsMessageTip(String keyCode, String remark, String imgUrl) {
         this.keyCode = keyCode;
         this.remark = remark;
         this.imgUrl = imgUrl;
-        this.createDt = createDt;
-        this.delFlag = delFlag;
     }
 
     public void setId(Long id) {

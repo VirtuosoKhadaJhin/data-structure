@@ -17,27 +17,25 @@
  * under the License.
  */
 
-package com.nuanyou.cms.sso.client.validation;
-
-
-import com.nuanyou.cms.sso.client.util.CommonUtils;
-
-import java.net.URL;
+package com.nuanyou.cms.sso.client.validation.impl;
 
 /**
- * Abstract class that knows the protocol for validating a CAS ticket.
+ * ticket验证失效
  */
-public abstract class AbstractCasProtocolUrlBasedTicketValidator extends AbstractUrlBasedTicketValidator {
+public class TicketValidationException extends Exception {
 
-    protected AbstractCasProtocolUrlBasedTicketValidator(final String validateCodeUrl) {
-        super(validateCodeUrl);
+
+    public TicketValidationException(final String string) {
+        super(string);
     }
 
 
-    /**
-     * Retrieves the response from the server by opening a connection and merely reading the response.
-     */
-    protected final String retrieveResponseFromServer(final URL validationUrl, final String ticket) {
-        return CommonUtils.getResponseFromServer(validationUrl, getEncoding());
+    public TicketValidationException(final String string, final Throwable throwable) {
+        super(string, throwable);
+    }
+
+
+    public TicketValidationException(final Throwable throwable) {
+        super(throwable);
     }
 }

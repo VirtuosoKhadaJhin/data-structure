@@ -127,6 +127,7 @@ public interface RemoteContractService {
     @RequestMapping(value = "", method = RequestMethod.GET)
     APIResult<Contracts> list(
             @ApiParam(value = "用户id") @RequestParam(value = "userid", required = false) Long userId,
+            @ApiParam(value = "国家id") @RequestParam(value = "countryid", required = false) Long countryId,
             @ApiParam(value = "商户id") @RequestParam(value = "merchantid", required = false) Long merchantId,
             @ApiParam(value = "合同id") @RequestParam(value = "id", required = false) Long id,
             @ApiParam(value = "商户名称") @RequestParam(value = "merchantname", required = false) String merchantName,

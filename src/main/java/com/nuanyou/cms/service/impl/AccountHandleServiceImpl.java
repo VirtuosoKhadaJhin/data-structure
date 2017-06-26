@@ -6,9 +6,12 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.ContractParamDistributeDao;
 import com.nuanyou.cms.entity.ContractParamDistribute;
 import com.nuanyou.cms.model.contract.output.Contract;
+import com.nuanyou.cms.model.contract.output.ContractParameter;
 import com.nuanyou.cms.remote.model.request.AcMerchantSettlement;
+import com.nuanyou.cms.remote.model.request.AcMerchantSettlementBank;
 import com.nuanyou.cms.remote.model.request.AcMerchantSettlementCommission;
 import com.nuanyou.cms.remote.model.request.DayType;
+import com.nuanyou.cms.remote.service.RemoteContractService;
 import com.nuanyou.cms.remote.service.RemoteSettlementService;
 import com.nuanyou.cms.service.AccountHandleService;
 import com.nuanyou.cms.util.DateUtils;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,25 +38,47 @@ public class AccountHandleServiceImpl implements AccountHandleService {
     private static String paymentDaysNames = "youfu_payment_day";
     private static String youfuStartTimeNames = "youfu_start_time";
     private static String startPriceNames = "youfu_start_price";
+
+    private static String accountName="account_name";//开户名
+    private static String bank="bank";//开户行
+    private static String bankBranch="bank_branch";//分行
+    private static String bankAccount="bank_account";//账号
     private static String commissionNames = "group_buying_commission";
     private static String groupBuyingStartTime = "group_buying_start_time";
     private static DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
 
+
+
+    public  static  final Long ACCOUNT_SYSTEM_ID=1l;
+
     @Autowired
     private RemoteSettlementService remoteAccountSettlementService;
+    @Autowired
+    private ContractParamDistributeDao contractParamDistributeDao;
+    @Autowired
+    private RemoteContractService remoteContractService;
+
+
 
     public void addSettlementForAccount(Contract detail) {
         if (detail.getMchId() == null) {
             throw new APIException(ResultCodes.ContractNotAssignedForMerchant);
         }
         Map<String, String> result = detail.getParameters();
-        AcMerchantSettlement settlementRequest = new AcMerchantSettlement();
-        AcMerchantSettlementCommission settlementCommissionRequest = new AcMerchantSettlementCommission();
-        setMerchantSettlementRequest(result, settlementRequest, detail.getMchId());
-        setMerchantSettlementCommissionRequest(result, settlementCommissionRequest);
+        AcMerchantSettlement settlementRequest = new AcMerchantSettlement();//结算
+        AcMerchantSettlementCommission settlementCommissionRequest = new AcMerchantSettlementCommission();//团购佣金
+        AcMerchantSettlementBank settlementBankRequest = new AcMerchantSettlementBank();
+        List<ContractParamDistribute> distributes = contractParamDistributeDao.findBySystemId(ACCOUNT_SYSTEM_ID);
+        Map<String,String> distributes_map=getDistributeMap(distributes);
+
+        setMerchantSettlementRequest(result, settlementRequest, detail.getMchId(),distributes_map);
+        setMerchantSettlementCommissionRequest(result, settlementCommissionRequest,distributes_map);
+        setMerchantSettlementBank(result, settlementBankRequest,distributes_map);
+
         if (detail.getParentId() == null) {//主合同验证优付的参数
             validateYoufuSettlement(settlementRequest.getPoundage(), settlementRequest.getDay(), settlementRequest.getDayType(), settlementRequest.getStartPrice());
             validateCommission(settlementCommissionRequest.getGroupon(),settlementCommissionRequest.getStartTime());
+            validateMerchantSettlentBank(settlementBankRequest.getBankCode(), settlementBankRequest.getName(), settlementBankRequest.getAccount(), settlementBankRequest.getBranch());
         }
         APIResult<AcMerchantSettlement> res = remoteAccountSettlementService.getSettlement(settlementRequest.getMerchantId());
         if (res.getCode() != 0) {
@@ -60,13 +86,13 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         }
         AcMerchantSettlement settlement = res.getData();
         Long settlementId = null;
-        if (settlement == null) {//若商家已经存在清算记录
+        if (settlement == null) {//商家结算
             if (settlementRequest.getStartTime() == null) {
                 settlementRequest.setStartTime(DateUtils.getTodayDate());
             }
             APIResult<AcMerchantSettlement> addSettlementRes = remoteAccountSettlementService.addSettlement(settlementRequest);
             if (addSettlementRes.getCode() != 0) {
-                throw new APIException(res.getCode(), res.getMsg());
+                throw new APIException(addSettlementRes.getCode(), addSettlementRes.getMsg());
             }
             settlementId = addSettlementRes.getData().getId();
         } else {
@@ -76,18 +102,39 @@ public class AccountHandleServiceImpl implements AccountHandleService {
             }
             APIResult<AcMerchantSettlement> updateSettlementRes = remoteAccountSettlementService.updateSettlement(settlement.getId(), settlementRequest);
             if (updateSettlementRes.getCode() != 0) {
-                throw new APIException(res.getCode(), res.getMsg());
+                throw new APIException(updateSettlementRes.getCode(), updateSettlementRes.getMsg());
             }
             settlementId = updateSettlementRes.getData().getId();
         }
         settlementCommissionRequest.setSettlementId(settlementId);
-        if (settlementCommissionRequest.getGroupon() != null) {//团购佣金
+        if (settlementCommissionRequest.getGroupon() != null) {//团购
             APIResult<AcMerchantSettlement> settlementCommissionRes = remoteAccountSettlementService.addOrUpdateCommission(settlementCommissionRequest);
             if (settlementCommissionRes.getCode() != 0) {
-                throw new APIException(res.getCode(), res.getMsg());
+                throw new APIException(settlementCommissionRes.getCode(), settlementCommissionRes.getMsg());
+            }
+        }
+        settlementBankRequest.setSettlementId(settlementId);
+        if(settlementBankRequest.getBankCode()!=null){//商家银行
+            APIResult<AcMerchantSettlementBank> banRes = remoteAccountSettlementService.addBank(settlementBankRequest);
+            if (banRes.getCode() != 0) {
+                throw new APIException(banRes.getCode(), banRes.getMsg());
             }
         }
     }
+
+    private void validateMerchantSettlentBank(String bankCode, String name, String account, String branch) {
+        if(bankCode==null){
+            throw new APIException(ResultCodes.Fail, "开户行不能为空");
+        }
+        if(name==null){
+            throw new APIException(ResultCodes.Fail, "开户名称不能为空");
+        }
+        if(account==null){
+            throw new APIException(ResultCodes.Fail, "账号不能为空");
+        }
+
+    }
+
 
     private void validateCommission(BigDecimal groupon, Date startTime) {
 
@@ -107,9 +154,13 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         }
     }
 
-    private void setMerchantSettlementCommissionRequest(Map<String, String> result, AcMerchantSettlementCommission settlementCommissionRequest) {
-        String startTimeStr = getValue(result, groupBuyingStartTime);//开始时间
-        String commissionStr = getValue(result, commissionNames);//佣金
+
+
+
+
+    private void setMerchantSettlementCommissionRequest(Map<String, String> result, AcMerchantSettlementCommission settlementCommissionRequest, Map<String,String> distributes) {
+        String startTimeStr = getValue(result, distributes.get(groupBuyingStartTime) );//开始时间
+        String commissionStr = getValue(result,distributes.get(commissionNames) );//佣金
         BigDecimal commission = commissionStr == null ? null : new BigDecimal(commissionStr);
         Date dateTime = startTimeStr == null ? null : DateTime.parse(startTimeStr, dateFormat).toDate();
         settlementCommissionRequest.setGroupon(commission);
@@ -129,16 +180,23 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         return value;
     }
 
-    @Autowired
-    private ContractParamDistributeDao contractParamDistributeDao;
-    public  static  final Long ACCOUNT_SYSTEM_ID=1l;
+    private void setMerchantSettlementBank(Map<String, String> result, AcMerchantSettlementBank merchantSettlementBank, Map<String, String> distributes) {
+        String accountNameStr = getValue(result,distributes.get(accountName));//开户名
+        String bankStr = getValue(result,distributes.get(bank) );//开户行
+        String bankBranchStr = getValue(result,distributes.get(bankBranch) );//分行
+        String bankAccountStr = getValue(result,distributes.get(bankAccount) );//账号
+        merchantSettlementBank.setBankCode(bankStr);
+        merchantSettlementBank.setBranch(bankBranchStr);
+        merchantSettlementBank.setAccount(bankAccountStr);
+        merchantSettlementBank.setName(accountNameStr);
+    }
 
-    private void setMerchantSettlementRequest(Map<String, String> result, AcMerchantSettlement request, Long mchId) {
-        String poundageStr = getValue(result, poundageNames);//手续费
-        String paymentDaysStr = getValue(result, paymentDaysNames);//账期
-        String dateTypeStr = getValue(result, dayTypeNames);//类型
-        String startTimeStr = getValue(result, youfuStartTimeNames);//开始时间
-        String startPriceStr = getValue(result, startPriceNames);//起结金额
+    private void setMerchantSettlementRequest(Map<String, String> result, AcMerchantSettlement request, Long mchId,Map<String,String> distributes) {
+        String poundageStr = getValue(result,distributes.get(poundageNames));//手续费
+        String paymentDaysStr = getValue(result,distributes.get(paymentDaysNames) );//账期
+        String dateTypeStr = getValue(result,distributes.get(dayTypeNames) );//类型
+        String startTimeStr = getValue(result,distributes.get(youfuStartTimeNames) );//开始时间
+        String startPriceStr = getValue(result, distributes.get(startPriceNames) );//起结金额
         BigDecimal poundage = poundageStr == null ? null : new BigDecimal(poundageStr);
         Integer dateType = dateTypeStr == null ? null : new Integer(dateTypeStr);
         Long paymentDays = paymentDaysStr == null ? null : Long.valueOf(paymentDaysStr);
@@ -168,5 +226,19 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         request.setStartPrice(startPrice);
         request.setMerchantId(mchId);
         request.setStartTime(dateTime);
+    }
+
+    private Map<String,String> getDistributeMap(List<ContractParamDistribute> distributes) {
+        Map<String,String> map=new HashMap<>();
+        for (ContractParamDistribute distribute : distributes) {
+            APIResult<ContractParameter> contractParameterAPIResult = this.remoteContractService.saveTemplateParamter(distribute.getParamId());
+            if (contractParameterAPIResult.getCode() != 0) {
+                throw new APIException(contractParameterAPIResult.getCode(), contractParameterAPIResult.getMsg());
+            }
+            ContractParameter data = contractParameterAPIResult.getData();
+            String paramName=data.getKey();
+            map.put(distribute.getNameMapping(),paramName);
+        }
+        return map;
     }
 }

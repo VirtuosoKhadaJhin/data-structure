@@ -4,6 +4,7 @@ import com.nuanyou.cms.sso.client.util.AbstractFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.sso.client.util.RandomUtils;
 import com.nuanyou.cms.sso.client.validation.User;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -16,51 +17,36 @@ import java.util.regex.Pattern;
 
 @Component
 public class AuthenticationFilter extends AbstractFilter {
-    /**
-     * The URL to the ssp Server login.
-     */
+
+
     private String loginUrl;
-
-
-    /**
-     * Whether to send the renew request or not.
-     */
-    private boolean renew = false;
-
-
     private Pattern urlExcludePattern;
-
     private String state;
-    /**
-     * Whether the request include a renew or not.
-     */
     private Boolean relogin;
 
 
 
-    protected void initInternal(final FilterConfig filterConfig) throws ServletException {
-        if (!isIgnoreInitConfiguration()) {
-            super.initInternal(filterConfig);
-            setLoginUrl(getPropertyFromInitParams(filterConfig, "loginUrl", null));
-            log.trace("Loaded loginUrl parameter: " + this.loginUrl);
-            setRenew(parseBoolean(getPropertyFromInitParams(filterConfig, "renew", "false")));
-            log.trace("Loaded renew parameter: " + this.renew);
-
-            final String gatewayStorageClass = getPropertyFromInitParams(filterConfig, "gatewayStorageClass", null);
-
-
-        }
-
-    }
-
-    public void init() {
-        System.out.println("initFilter"+this.getClass().getName());
-        super.init();
+    public final void init(final FilterConfig filterConfig) throws ServletException {
+        super.init(filterConfig);//验证service和ticket
+        setLoginUrl(getPropertyFromInitParams(filterConfig, "loginUrl", null));
+        System.out.println("initFilter" + this.getClass().getName());
         CommonUtils.assertNotNull(this.loginUrl, "loginUrl cannot be null.");
     }
 
 
+    /**
+     *  1 排除拦截
+     *  2 如果已经是登录用户继续向下一个filter
+     *  2 如果有ticket，则跑到下一个filter去验证ticket
+     *  3 如果都不是那么就是一个新的请求http://ssoServer:port?ret=dfgdfg
+     * @param servletRequest
+     * @param servletResponse
+     * @param filterChain
+     * @throws IOException
+     * @throws ServletException
+     */
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
+
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
         final HttpSession session = request.getSession(false);
@@ -68,8 +54,7 @@ public class AuthenticationFilter extends AbstractFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        final User
-                user = session != null ? (User) session.getAttribute(SSO_USER) : null;
+        final User user = session != null ? (User) session.getAttribute(SSO_USER) : null;
         if (user != null) {
             log.debug("user" + user.toString());
         } else {
@@ -82,42 +67,34 @@ public class AuthenticationFilter extends AbstractFilter {
         final String serviceUrl = constructServiceUrl(request, response);
         final String ticket = CommonUtils.safeGetParameter(request, getArtifactParameterName());
 
-        if (CommonUtils.isNotBlank(ticket)) {
-            log.debug("Second Step:ticket found and begin to valicate code");
+        if (CommonUtils.isNotBlank(ticket)) {//有ticket说明客户端已经拿到了ticket 直接去验证
+            log.debug("Second Step:ticket found and begin to validate code");
             filterChain.doFilter(request, response);
             return;
-        }else{
+        } else {
             log.debug("Second Step:not ticket");
         }
-        final String modifiedServiceUrl;
-
-        modifiedServiceUrl = serviceUrl;
-        log.debug("First Step:Constructed service url: " + modifiedServiceUrl);
-        String state= RandomUtils.randomNumber(8);
+        log.debug("First Step:Constructed service url: " + serviceUrl);
+        String state = RandomUtils.randomNumber(8);
 //        while (ticketRegistry.getTicket(state)!=null){
 //            state= RandomUtils.randomNumber(8);
 //        }
         setState(state);
         //StateTicket stateTicket=grantStateTicket.grantStateTicket(this.state,expirationPolicy,modifiedServiceUrl);
         //this.ticketRegistry.addTicket(stateTicket);
-        final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.loginUrl, getServiceParameterName(), modifiedServiceUrl,this.state,this.relogin, this.renew);
+        String urlRelogin= CommonUtils.safeGetParameter(request, "relogin");
+        if(StringUtils.isNotBlank(urlRelogin)){
+            this.relogin=new Boolean(urlRelogin);
+        }
+        final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.loginUrl, getServiceParameterName(), serviceUrl, this.state, this.relogin);
         log.debug("First Step:redirecting to \"" + urlToRedirectTo + "\"");
         response.sendRedirect(urlToRedirectTo);
-    }
-
-
-
-
-
-    public final void setRenew(final boolean renew) {
-        this.renew = renew;
     }
 
 
     public final void setLoginUrl(final String loginUrl) {
         this.loginUrl = loginUrl;
     }
-
 
 
     public final void setUrlExcludePattern(Pattern urlExcludePattern) {
@@ -130,10 +107,6 @@ public class AuthenticationFilter extends AbstractFilter {
     }
 
 
-    public Boolean getRelogin() {
-        return relogin;
-    }
-
     public void setRelogin(Boolean relogin) {
         this.relogin = relogin;
     }
@@ -141,7 +114,14 @@ public class AuthenticationFilter extends AbstractFilter {
     public AuthenticationFilter() {
     }
 
-
+    public static void main1(String[] args) {
+        String urlExcludePattern="/test|^/dist/.|^/favicon.*";
+        String url="/dist/55";
+        Pattern compile = Pattern.compile(urlExcludePattern);
+        Boolean excluded=compile != null
+            && compile.matcher(url).matches();
+        System.out.println(excluded);
+    }
 
 
 }
