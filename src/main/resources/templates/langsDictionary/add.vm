@@ -15,6 +15,10 @@
             color: red;
             text-align: left;
         }
+
+        .btn-ok:disabled:hover {
+            cursor: not-allowed;
+        }
     </style>
 
 </head>
@@ -128,8 +132,8 @@
                                 </div>
 
                                 <div class="form-actions" style="clear:both;text-align: center">
-                                    <a onclick="saveLangsDictionary()" id="saveBtn" class="btn btn-info">确定</a>
-                                    <a class="btn btn-primary" onclick="backLangsDictionaryList()">返回</a>
+                                    <a onclick="saveLangsDictionary()" id="saveBtn" class="btn btn-info btn-ok">确定</a>
+                                    <a class="btn btn-primary btn-back" onclick="backLangsDictionaryList()">返回</a>
                                 </div>
                         </form>
                     </div>
@@ -258,43 +262,40 @@
      * 保存多语言
      */
     function saveLangsDictionary() {
-        if ($("#saveBtn").hasAttr("disabled")) {
+        var saveBtn_distabled = $("#saveBtn").attr("disabled");
+        if (saveBtn_distabled || saveBtn_distabled == "disabled") {
             return false;
         }
-        keyCodeRealTime();
 
+        keyCodeRealTime();
         var checkResult = checkRequiredParams();
         if (!checkResult) {
             return false;
         }
 
-
-        $("#saveBtn").attr("style", "background-color: gray;");
-
-        var request = {};
-
-        request.keyCode = $("input[id='keyCode']").val();
-        request.categoryId = parseInt($("select[name='categoryId']").val());
-
         var langsMessageList = [];
-        var keyCodes = $("input[data-name='langs']");
-
-        for (var i = 0, j = keyCodes.length; i < j; i++) {
-            var keyCodeInput = keyCodes[i];
-            var langsKey = parseInt(keyCodeInput.getAttribute("data-key"));
-            var message = keyCodeInput.value;
-            var langsCountryMessageVo = {langsKey: langsKey, message: message};
+        $("input[data-name='langs']").each(function () {
+            var message = $(this).val();
+            if (message == null || message.trim().length == 0) {
+                return false;
+            }
+            var langsCountryMessageVo = {langsKey: parseInt($(this).attr("data-key")), message: message};
             langsMessageList.push(langsCountryMessageVo);
-        }
+        });
 
-        request.langsMessageList = langsMessageList;
-
+        var keyCode = $("#keyCode").val();
+        var categoryId = parseInt($("select[name='categoryId']").val());
+        var requestParam = {
+            "keyCode": keyCode,
+            "categoryId": categoryId,
+            "langsMessageList": langsMessageList
+        };
         // 防止重复提交
         $("#saveBtn").attr("disabled", "disabled");
         // step1:保存多语言信息
         $.ajax({
             url: 'saveLangsDictionary',
-            data: JSON.stringify(request),
+            data: JSON.stringify(requestParam),
             type: 'post',
             dataType: 'json',
             contentType: 'application/json',
@@ -308,17 +309,12 @@
             }
         });
 
-        var messRequest = {};
+        var messRequest = {
+            keyCode: $("input[name='keyCode']").val(),
+            remark: $("textarea[id='remark']").val(),
+            imgUrl: $("input[id='lefile']").val()
+        };
 
-        var keyCode = $("input[name='keyCode']").val();
-        var remark = $("textarea[id='remark']").val();
-        var imgUrl = $("input[id='lefile']").val();
-
-        messRequest.keyCode = keyCode;
-        messRequest.remark = remark;
-        messRequest.imgUrl = imgUrl;
-
-        // step:2保存备注信息
         $.ajax({
             url: '/langsMessageTip/add',
             data: JSON.stringify(messRequest),

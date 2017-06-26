@@ -38,11 +38,10 @@ public class AccountHandleServiceImpl implements AccountHandleService {
     private static String youfuStartTimeNames = "youfu_start_time";
     private static String startPriceNames = "youfu_start_price";
 
-    private static String accountName="account_name";//开户名
-    private static String bank="bank_account";//开户行
-    private static String bankBranch="bank_branch";//分行
-    private static String bankAccount="bank_account";//账号
-
+    private static String accountName="cp_name_account_name";//开户名
+    private static String bank="cp_name_bank";//开户行
+    private static String bankBranch="cp_name_bank_branch";//分行
+    private static String bankAccount="cp_name_bank_account";//账号
     private static String commissionNames = "group_buying_commission";
     private static String groupBuyingStartTime = "group_buying_start_time";
     private static DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");

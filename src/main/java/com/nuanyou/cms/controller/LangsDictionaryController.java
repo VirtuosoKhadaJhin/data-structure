@@ -8,6 +8,7 @@ import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsCategoryService;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import com.nuanyou.cms.service.LangsMessageTipService;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -256,8 +257,14 @@ public class LangsDictionaryController {
     @ResponseBody
     public APIResult saveLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
         APIResult<LangsDictionary> result = new APIResult<LangsDictionary>(ResultCodes.Success);
-        LangsDictionary langsDictionary = dictionaryService.saveLangsDictionary(dictionaryVo);
-        result.setData(langsDictionary);
+        Boolean recordResult = dictionaryService.saveLangsDictionary(dictionaryVo);
+        if (BooleanUtils.isFalse(recordResult)) {
+            result.setCode(ResultCodes.Fail.getCode());
+            result.setMsg("保存失败，请重新尝试！");
+        } else if (recordResult == null) {
+            result.setCode(ResultCodes.Fail.getCode());
+            result.setMsg("请求参数异常，请重试尝试！");
+        }
         return result;
     }
 
