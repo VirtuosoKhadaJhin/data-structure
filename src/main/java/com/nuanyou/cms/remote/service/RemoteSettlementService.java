@@ -3,6 +3,7 @@ package com.nuanyou.cms.remote.service;
 
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.remote.model.request.AcMerchantSettlement;
+import com.nuanyou.cms.remote.model.request.AcMerchantSettlementBank;
 import com.nuanyou.cms.remote.model.request.AcMerchantSettlementCommission;
 import com.nuanyou.cms.util.MimeTypes;
 import io.swagger.annotations.*;
@@ -44,6 +45,13 @@ public interface RemoteSettlementService {
     @RequestMapping(value = "/merchant/settlement/commission", method = {RequestMethod.POST})
     @ResponseBody
     public APIResult<AcMerchantSettlement> addOrUpdateCommission(@RequestBody AcMerchantSettlementCommission settlementCommission);
+
+
+    @ApiOperation(value = "增加结算银行", notes = "...")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "...")})
+    @RequestMapping(value = "/merchant/settlement/bank", method = {RequestMethod.POST})
+    @ResponseBody
+    public APIResult<AcMerchantSettlementBank> addBank(AcMerchantSettlementBank settlementBank) ;
 
 
 }
