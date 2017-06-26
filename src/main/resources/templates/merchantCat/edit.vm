@@ -39,11 +39,10 @@
                                 </div>
                                 <label class="col-sm-2 control-label">名称：</label>
                                 <div class="controls">
-                                    <input name="nameLabel" for="name" type="text" class="langsAutoComplete" langsKeyName="name"
-                                           value="$!entity.name">
-                                    <input name="name" type="hidden" value="$!entity.keyCode">
+                                    <input name="nameLabel" for="name" type="text" placeholder="名称" class="langsAutoComplete" langsKeyName="name" value="$!entity.name">
+                                    <input name="name" class="checked-keycode" type="hidden" value="$!entity.name">
 
-                                    <a class="btn btn-info btn-mini addLang" langsKeyName="remark" langsValueName="remarkLabel">
+                                    <a class="btn btn-info btn-mini add-lang" langsKeyName="remark" langsValueName="remarkLabel">
                                         <i class="icon-plus"></i>
                                     </a>
                                 </div>
@@ -60,8 +59,14 @@
                                 </div>
                                 <label class="col-sm-2 control-label">简称：</label>
                                 <div class="controls">
-                                    <input name="shortname" for="shortname" type="text" class="form-control" placeholder="简称"
-                                           value="$!entity.shortname">
+                                    <input name="shortname" for="shortname" type="text" class="form-control langsAutoComplete" placeholder="简称"
+                                           langsKeyName="name" value="$!entity.shortname">
+
+                                    <input name="shnName" type="hidden" value="$!entity.shnName">
+
+                                    <a class="btn btn-info btn-mini add-lang" langsKeyName="remark" langsValueName="remarkLabel">
+                                        <i class="icon-plus"></i>
+                                    </a>
                                 </div>
                                 <label class="col-sm-2 control-label">code编码：</label>
                                 <div class="controls">
@@ -71,22 +76,26 @@
                                         <option value="site" #if($!entity.code=="site")#end>景点</option>
                                     </select>
                                 </div>
+                                #if("$!entity.pcat" == "")
                                 <div class="pCat" style="display: none;">
-                                    <label class="control-label">所属一级分类：</label>
-                                    <div class="controls">
-                                        #if("$!entity.pcat" == "")
-                                            <select id="pcat.id" name="pcat.id" for="parentNode" disabled>
-                                            #else
-                                            <select id="pcat.id" name="pcat.id" for="parentNode">
-                                        #end
-                                            <option value="">无</option>
-                                            #foreach($cat in $!merchantCats)
-                                                <option value="$!cat.id" #if($!entity.pcat.id == $!cat.id)
-                                                        selected #end> $!cat.name</option>
-                                            #end
-                                        </select>
-                                    </div>
+                                #else
+                                <div class="pCat">
+                                #end
+                                <label class="control-label">所属一级分类：</label>
+                                <div class="controls">
+                                    #if("$!entity.pcat" == "")
+                                    <select id="pcat.id" name="pcat.id" for="parentNode" disabled>
+                                    #else
+                                    <select id="pcat.id" name="pcat.id" for="parentNode">
+                                    #end
+                                    <option value="">无</option>
+                                    #foreach($cat in $!merchantCats)
+                                        <option value="$!cat.id" #if($!entity.pcat.id == $!cat.id)
+                                                selected #end> $!cat.name</option>
+                                    #end
+                                </select>
                                 </div>
+                            </div>
                                 <label class="control-label">是否显示：</label>
                                 <div class="controls">
                                     <select id="display" name="display" class="span11">
@@ -116,14 +125,14 @@
                                     <p>尺寸: 60 * 60, 限制: 5k</p>
                                 </div>
                             </div>
-                            <div class="form-actions" style="text-align: center">
-                                #if($!type==2 || $!type==1)
-                                    <button onclick="return verifyNode()" type="submit" class="btn btn-success">保存</button>
-                                #elseif($!type==3)
-                                    <a onclick="return verifyNode()" href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
-                                #end
-                                <a class="btn btn-primary" href="list">返回</a>
-                            </div>
+                                <div class="form-actions" style="text-align: center">
+                                    #if($!type==2 || $!type==1)
+                                        <button onclick="return verifyNode()" type="submit" class="btn btn-success">保存</button>
+                                    #elseif($!type==3)
+                                        <a onclick="return verifyNode()" href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
+                                    #end
+                                    <a class="btn btn-primary" href="list">返回</a>
+                                </div>
                         </form>
                     </div>
                 </div>
@@ -192,7 +201,6 @@
     </div>
 </div>
 <!--***************************************通用新增语言*************************************************************-->
-
 </body>
     #include("common/js-support.vm")
 <script type="text/javascript">
@@ -205,12 +213,12 @@
             alert("请选择所属一级分类");
             return false;
         }
-
         return true;
     }
 
     $(document).ready(function () {
         var currLangKeyInput;
+        var currLangShnKeyInput;
         var currLangValueInput;
 
         var type = $!type;
@@ -234,11 +242,13 @@
             });
         });
 
-        $("body").delegate(".addLang", "click", function (e) {
+        $("body").delegate(".add-lang", "click", function (e) {
+            console.log(1);
             var currEle = e.currentTarget;
             var td = $(currEle).parent();
 
             currLangKeyInput = td.find("input[name='name']");
+            currLangShnKeyInput = td.find("input[name='shnName']");
             currLangValueInput = td.find("input[langskeyname='name']");
 
             $("input[id='keyCode']").css("border", "");
@@ -247,7 +257,7 @@
             $("input[name='1']").css("border", "");
             $("#requiredKey_2").hide();
             $("input[name='2']").css("border", "");
-            langsCommonDialog();
+            langsCommonDialog($(currLangValueInput).val());
         });
 
         $(".saveLangsDictionary").on("click", function () {
@@ -293,11 +303,10 @@
                     success: function (result) {
                         if (result.code == 0) {
                             $('#addLangsModal').modal('hide');
-                            console.log(localelangsKey);
-                            console.log(langsMessageList);
                             for (var i = 0; i < langsMessageList.length; i++) {
                                 if (localelangsKey == langsMessageList[i].langsKey) {
                                     currLangKeyInput.val(request.keyCode);
+                                    currLangShnKeyInput.val(request.keyCode);
                                     currLangValueInput.val(langsMessageList[i].message + "(" + request.keyCode + ")");
                                 }
                             }
@@ -407,7 +416,8 @@
         verifykeyCode();
     }
 
-    function langsCommonDialog() {
+    function langsCommonDialog(nameVal) {
+        console.log(nameVal);
         $("input[id='keyCode']").val("");
         $("input[data-name='langs']").val("");
         $("#categoryId").val("");
@@ -423,7 +433,6 @@
             contentType: 'application/json',
             success: function (result) {
                 if (result.code == 0) {
-                    console.log(result.data);
                     if (result.data != null && localeLangs == false) {
                         localeLangs = true;
                         // 如果不是必填项中文和英文
@@ -445,10 +454,12 @@
                 }
             }
         });
+        $("input[data-key='2']").val(nameVal);
     }
 
 </script>
-    #include("common/image-support.vm")
+<script type="text/javascript" src="/dist/js/suggest/suggest-search.js"/>
+ #include("common/image-support.vm")
 </html>
 
 

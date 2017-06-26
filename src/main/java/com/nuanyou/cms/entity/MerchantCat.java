@@ -29,7 +29,8 @@ public class MerchantCat {
     private String mapimgurl;
     // keycode
     private String keyCode;
-
+    // shortname keycode
+    private String shnKeyCode;
 
 
     public MerchantCat(String name, String shortname, Boolean display, Integer sort, String imageUrl, String mapimgurl) {
@@ -71,13 +72,22 @@ public class MerchantCat {
         this.shortname = shortname;
     }
 
-    @Column(name = "keycode", nullable = false, length = 50)
+    @Column(name = "keycode", nullable = false, length = 100)
     public String getKeyCode() {
         return keyCode;
     }
 
     public void setKeyCode(String keyCode) {
         this.keyCode = keyCode;
+    }
+
+    @Column(name = "shnkeycode", nullable = false, length = 100)
+    public String getShnKeyCode() {
+        return shnKeyCode;
+    }
+
+    public void setShnKeyCode(String shnKeyCode) {
+        this.shnKeyCode = shnKeyCode;
     }
 
     @Column(name = "kpname", nullable = true, length = 50)

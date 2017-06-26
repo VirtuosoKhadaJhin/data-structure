@@ -37,7 +37,7 @@
                                 <label class="control-label">中文名称</label>
                                 <div class="controls">
                                     <input name="nameLabel" for="name" type="text" class="span7 langsAutoComplete" langsKeyName="name"
-                                           value="$!entity.name" placeholder="中文名称" >
+                                           value="$!entity.name" placeholder="中文名称">
                                     <input name="name" type="hidden" value="$!entity.keyCode">
                                     <a class="btn btn-info btn-mini addLang" langskeyname="remark" langsvaluename="remarkLabel">
                                         <i class="icon-plus"></i>
@@ -189,17 +189,18 @@
     #include("common/js-support.vm")
     #include("common/image-support.vm")
     #include("common/langs.vm")
-<script src="/dist/js/cascade-select.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        var type = $!type;
-        //禁用所有表单
-        if (type == 3) {
-            $(":text").attr("disabled", "disabled");
-            $("select").attr("disabled", "disabled");
+<script type="text/javascript" src="/dist/js/suggest/suggest-search.js"/>
+<script src="/dist/js/cascade-select.js"/>
 
-        }
-    });
+<script>
+    var type = $!type;
+    //禁用所有表单
+    if (type == 3) {
+        $(":text").attr("disabled", "disabled");
+        $("select").attr("disabled", "disabled");
+
+    }
 
 </script>
+
 </html>

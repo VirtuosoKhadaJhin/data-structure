@@ -15,6 +15,9 @@ public class MerchantCatVo {
     // keycode
     private String name;
 
+    // shortname keycode
+    private String shnName;
+
     // 名称
     private String nameLabel;
 
@@ -45,12 +48,12 @@ public class MerchantCatVo {
     public MerchantCatVo() {
     }
 
-    public String getName() {
-        return name;
+    public Long getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getIndex() {
@@ -59,6 +62,22 @@ public class MerchantCatVo {
 
     public void setIndex(Integer index) {
         this.index = index;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getShnName() {
+        return shnName;
+    }
+
+    public void setShnName(String shnName) {
+        this.shnName = shnName;
     }
 
     public String getNameLabel() {
@@ -115,14 +134,6 @@ public class MerchantCatVo {
 
     public void setMapimgurl(String mapimgurl) {
         this.mapimgurl = mapimgurl;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getEnNameLabel() {
