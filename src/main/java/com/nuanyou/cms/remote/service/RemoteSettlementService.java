@@ -46,6 +46,9 @@ public interface RemoteSettlementService {
     @ResponseBody
     public APIResult<AcMerchantSettlement> addOrUpdateCommission(@RequestBody AcMerchantSettlementCommission settlementCommission);
 
-
+    @ApiOperation(value = "增加或者更新一个团购佣金", notes = "...")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "...")})
+    @RequestMapping(value = "/merchant/settlement/bank", method = {RequestMethod.POST})
+    @ResponseBody
     APIResult<AcMerchantSettlementBank> addBank(AcMerchantSettlementBank settlementBankRequest);
 }
