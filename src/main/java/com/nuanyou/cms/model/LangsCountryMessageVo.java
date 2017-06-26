@@ -28,8 +28,6 @@ public class LangsCountryMessageVo implements Serializable {
         this.message = message;
     }
 
-
-
     public Long getId() {
         return id;
     }

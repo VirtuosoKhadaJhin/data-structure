@@ -72,7 +72,7 @@ public interface LangsDictionaryService {
      * @param dictionaryVo
      * @return
      */
-    LangsDictionary saveLangsDictionary(LangsDictionaryVo dictionaryVo);
+    Boolean saveLangsDictionary(LangsDictionaryVo dictionaryVo);
 
     /**
      * 新增单个语言记录
