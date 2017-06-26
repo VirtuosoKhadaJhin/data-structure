@@ -85,15 +85,19 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     }
 
     @Override
-    public void modifyLangsDictionary(String keyCode, LangsDictionaryVo requestVo) {
+    public void modifyLangsDictionary(LangsDictionaryVo requestVo) {
         EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne(requestVo.getCategoryId());
-
-        Long userid = UserHolder.getUser().getUserid();
-
+        Long userId = null;
+        try {
+            userId = UserHolder.getUser().getUserid();
+        } catch (Exception e) {
+            LOGGER.error("获取系统用户出错！", e);
+        }
         // 迭代每一个语言的数据
         EntityNyLangsDictionary entityNyLangsDictionary;
         // 批量保存
         List<EntityNyLangsDictionary> entityNyLangsDictionarys = Lists.newArrayList();
+        Date nowDate = new Date();
         for (LangsCountryMessageVo langsCountryMessageVo : requestVo.getLangsMessageList()) {
             if (StringUtils.isNotEmpty(langsCountryMessageVo.getMessage())) {
                 // ENUM
@@ -102,15 +106,15 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
                 entityNyLangsDictionary = new EntityNyLangsDictionary();
 
-                entityNyLangsDictionary.setUserId(userid);
+                entityNyLangsDictionary.setUserId(userId);
                 if(null != langsCountryMessageVo.getId()){
                     entityNyLangsDictionary.setId(langsCountryMessageVo.getId());
                 }
-                entityNyLangsDictionary.setKeyCode(requestVo.getNewKeyCode());
+                entityNyLangsDictionary.setKeyCode(requestVo.getKeyCode());
                 entityNyLangsDictionary.setCategory(entityNyLangsCategory);
-                entityNyLangsDictionary.setDelFlag(false);
-                entityNyLangsDictionary.setCreateDt(new Date());
-                entityNyLangsDictionary.setUpdateDt(new Date());
+
+                entityNyLangsDictionary.setCreateDt(nowDate);
+                entityNyLangsDictionary.setUpdateDt(nowDate);
                 entityNyLangsDictionary.setLanguage(langsCountrys[0]);
                 entityNyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
                 entityNyLangsDictionary.setMessage(langsCountryMessageVo.getMessage());
@@ -301,7 +305,12 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         if (entityNyLangsCategory == null) {
             return null;
         }
-        User user = UserHolder.getUser();
+        Long userid = null;
+        try {
+            userid = UserHolder.getUser().getUserid();
+        } catch (Exception e) {
+            LOGGER.error("获取用户信息失败！", e);
+        }
         Date nowDate = new Date();
         for (LangsCountryMessageVo langsCountryMessageVo : dictionaryVo.getLangsMessageList()) {
             String message = langsCountryMessageVo.getMessage();
@@ -318,7 +327,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                 nyLangsDictionary.setLanguage(langsCountrys[0]);
                 nyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
 
-                nyLangsDictionary.setUserId(user.getUserid());
+                nyLangsDictionary.setUserId(userid);
                 nyLangsDictionary.setCreateDt(nowDate);
                 nyLangsDictionary.setUpdateDt(nowDate);
                 entities.add(nyLangsDictionary);

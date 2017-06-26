@@ -71,13 +71,13 @@
 
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span6" style="width: 70%;min-width:994px;">
+                <div class="span6" style="width: 80%;">
                     <div class="widget-box" style="width: 78%">
                         <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                             <h5>编辑&查看</h5>
                         </div>
-                        <form class="form-horizontal langsDicFormValidate" role="form" id="uploadForm"
-                              action="/langsMessageTip/uploadImg" name="uploadForm" enctype="multipart/form-data">
+                        <form class="form-horizontal langsDicFormValidate" role="form" id="uploadForm" action="/langsMessageTip/uploadImg" name="uploadForm"
+                              enctype="multipart/form-data">
 
                             <div class="nopadding" style="width: 100%;">
                                 <div class="fl" style="border-right:1px solid #eeeeee;box-sizing:border-box;width:48%;">
@@ -98,7 +98,7 @@
                                         <div class="controls" style="margin-left: 152px;">
                                             <select class="span7 select2 " name="categoryId"
                                                     onchange="keyCodeRealTime()" style="width: 80%">
-                                                #foreach($e in $!selectableLangsCategory)
+                                                #foreach($e in $!langsCategories)
                                                     #if($!langsDictionary.categoryId == $!e.id)
                                                         <option value="$!e.id" selected>$!e.name</option>
                                                     #else
@@ -141,28 +141,25 @@
 
                                 </div>
 
-                                <div class="fr" style="width:50%;float: left">
+                                <div class="fr langs-messagetip" style="width:50%;float: left" data-messagetip="$!langsDictionary.messagetip.id">
                                     <div class="">
                                         <label class="control-label" style="min-width: 100px;max-width: 100px;">描&nbsp;&nbsp;&nbsp;述：</label>
-                                        <div class="controls" style="margin-left: 80px">
-                                            <textarea placeholder="多语言描述" class="form-control" id="remark"
-                                                      style="margin-left: 40px;min-width: 253px;" cols="4" rows="4">#if(
-                                                "$!langsDictionary.messageTip.remark" != "")$!langsDictionary.messageTip.remark#end</textarea>
+                                        <div class="controls" style="margin-left: 110px">
+                                            <textarea placeholder="多语言描述" class="form-control" id="remark" style="min-width: 250px;resize: none;" cols="4"
+                                                      rows="4" text="$!langsDictionary.messageTip.remark">
+                                            </textarea>
                                         </div>
                                     </div>
                                     <div class="">
                                         <label class="control-label" style="min-width: 100px;max-width: 100px;">场景图：</label>
-                                        <div class="controls" style="margin-left: 80px">
+                                        <div class="controls" style="margin-left: 110px">
                                             <input id="lefile" name="file" type="file" style="display:none">
                                             <div class="input-append">
-                                                <input id="photoCover" style="margin-left: 40px;" class="span3" type="text">
-                                                <a class="btn span4" onclick="$('input[id=lefile]').click();"
-                                                   style="background-color: #eee;float: right;width: 80px;position: absolute;">
-                                                    <i class="icon-folder-open" style="padding-right"></i>选择文件</a>
+                                                <input id="photoCover" class="span4" type="text">
+                                                <a class="btn btn-mini btn-primary" onclick="$('input[id=lefile]').click();">
+                                                    <i class="icon-folder-open" style="padding-right"></i>选择图片
+                                                </a>
                                             </div>
-                                            <label name="lefile" class="lefile">
-                                                请选择图片
-                                            </label>
                                         </div>
                                         <div style="text-align: center;padding-top: 1em;">
                                             #if("$!langsDictionary.messageTip.imgUrl" != "")
@@ -175,6 +172,7 @@
                                 <div class="form-actions" style="clear:both;text-align: center">
                                     <a onclick="modifyLangsDictionary()" id="editBtn" class="btn btn-info btn-ok">确定</a>
                                     <a class="btn btn-primary btn-back" onclick="back()">返回</a>
+                                    <input type="hidden" class="hide-keycode" value="$!langsDictionary.keyCode"/>
                                 </div>
                         </form>
 
@@ -188,8 +186,9 @@
 
     <script type="text/javascript">
         keyCodeRealTime();
-        $(document).ready(function () {
+        var oldKeyCode = $(".hide-keycode").val();
 
+        $(document).ready(function () {
             // file 上传文件
             $('input[id=lefile]').change(function () {
                 // $('#photoCover').val($(this).val());
@@ -210,14 +209,12 @@
                     }
                 });
             });
-
         });
 
         /**
          * 上传图文消息
          */
         function addLangsMessageTip() {
-            var keyCode = getUrlParam("keyCode");
             var remark = $("textarea[id='remark']").val();
             var imgUrl = $("input[id='lefile']").val();
 
@@ -244,13 +241,9 @@
                 return false;
             }
 
-            var request = {};
-            var keyCode = $("input[name='keyCode']").val();
-
-            request.keyCode = keyCode;
             $.ajax({
                 url: 'verifykeyCode',
-                data: JSON.stringify(request),
+                data: JSON.stringify({"keyCode": $("input[name='keyCode']").val()}),
                 type: 'post',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -260,7 +253,7 @@
                         if (!result.data) {
                             // 如果和当前的URL中的keyCode相同,则不提示keyCode重复
                             // 反之不能覆盖其他同名的keyCode
-                            if (getUrlParam("keyCode") != $("#keyCode").val()) {
+                            if (oldKeyCode != $("#keyCode").val()) {
                                 $("#keyCodeStatus").show();
                                 $("#editBtn").attr("onclick", "");
                                 $("#keyCode").css("border", "1px solid red");
@@ -333,67 +326,65 @@
             return true;
         }
 
-
         /**
          * 修改语言
          */
         function modifyLangsDictionary() {
+            var saveBtn_distabled = $("#editBtn").attr("disabled");
+            if (saveBtn_distabled || saveBtn_distabled == "disabled") {
+                return false;
+            }
             keyCodeRealTime();
             var checkResult = checkRequiredParams();
             if (!checkResult) {
                 return false;
             }
 
-            var request = {};
-            request.keyCode = getUrlParam("keyCode");
-            request.newKeyCode = $("input[name='keyCode']").val();
-            request.categoryId = Number($("select[name='categoryId']").val());
-
-            // 页面所有的语言message
-            var countryLanguages = $("input[class='span7 countryLanguage']");
-            // langsMessageList
             var langsMessageList = [];
-            for (var i = 0; i < countryLanguages.length; i++) {
-                var countryLanguage = countryLanguages.eq(i);
-                // id
-                var id = countryLanguage.attr("data-id");
-                // keyCode
-                var langsKey = countryLanguage.attr("name");
-                // message
-                var message = countryLanguage.val().trim();
+
+            $("input[class='span7 countryLanguage']").each(function () {
+                var message = $(this).val();
+                if (message == null || message.trim().length == 0) {
+                    return false;
+                }
                 var langsCountryMessageVo = {
-                    id : id,
-                    langsKey: langsKey,
+                    id: $(this).attr("data-id"),
+                    langsKey: $(this).attr("name"),
                     message: message
                 };
                 langsMessageList.push(langsCountryMessageVo);
-            }
-            // 封装LangsDictionaryVo传输约束
-            request.langsMessageList = langsMessageList;
+            });
+            var requestParam = {
+                "keyCode": $("input[name='keyCode']").val(),
+                "categoryId": Number($("select[name='categoryId']").val()),
+                "langsMessageList": langsMessageList
+            };
 
+            // 防止重复提交
+            $("#editBtn").attr("disabled", "disabled");
             $.ajax({
                 url: 'modifyLangsDictionary',
-                data: JSON.stringify(request),
+                data: JSON.stringify(requestParam),
                 type: 'post',
                 dataType: 'json',
                 contentType: 'application/json',
                 success: function (result) {
+                    // 防止重复提交
+                    $("#editBtn").removeAttr("disabled");
                     if (result.code == 0) {
+                    } else {
+                        alert(result.msg);
                     }
                 }
             });
 
-            var messRequest = {};
-
-            var keyCode = getUrlParam("keyCode");
-            var newKeyCode = $("input[name='keyCode']").val();
-            var remark = $("textarea[id='remark']").val();
-            var imgUrl = $("input[id='photoCover']").val();
-
-            messRequest.keyCode = keyCode;
-            messRequest.newKeyCode = newKeyCode;
-            messRequest.remark = remark;
-            messRequest.imgUrl = imgUrl;
+            var messRequest = {
+                "id": $(".langs-messagetip").attr("data-messagetip"),
+                "keyCode": oldKeyCode,
+                "newKeyCode": $("input[name='keyCode']").val(),
+                "remark": $("textarea[id='remark']").val(),
+                "imgUrl": $("input[id='photoCover']").val()
+            };
 
             $.ajax({
                 url: '/langsMessageTip/add',
@@ -404,26 +395,16 @@
                 success: function (result) {
                     if (result.code == 0) {
                         alert("操作成功!");
-                        location.href = "list?index=" + getUrlParam("pageIndex");
+                        window.location.href = "list";
                     }
                 }
             });
-
-        }
-
-        //获取url中的参数
-        function getUrlParam(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-            var r = window.location.search.substr(1).match(reg);
-            if (r != null) return unescape(r[2]);
-            return null;
         }
 
         // 返回列表页
         function back() {
-            location.href = "list?index=" + getUrlParam("pageIndex");
+            window.location.href = "list";
         }
-
     </script>
 </body>
 </html>
