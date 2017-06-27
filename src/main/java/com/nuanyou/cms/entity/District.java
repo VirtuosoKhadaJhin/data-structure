@@ -59,14 +59,6 @@ public class District {
     }
 
     @Column(name = "kpname", nullable = true, length = 30)
-    public String getLocalname() {
-        return kpname;
-    }
-
-    public void setLocalname(String kpname) {
-        this.kpname = kpname;
-    }
-
     public String getKpname() {
         return kpname;
     }
