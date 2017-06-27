@@ -34,6 +34,7 @@ public class Contract {
     private String username;
     private Long mchId;
     private Long countryId;
+    private String countryName;
     private String mchName;//企业名称
     private String relatedMchName;
     private String signImgUrl;
@@ -352,5 +353,13 @@ public class Contract {
 
     public void setRelatedMchName(String relatedMchName) {
         this.relatedMchName = relatedMchName;
+    }
+
+    public String getCountryName() {
+        return countryName;
+    }
+
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
     }
 }

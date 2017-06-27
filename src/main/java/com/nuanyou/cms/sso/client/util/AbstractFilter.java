@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a
  * copy of the License at:
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -28,98 +28,66 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *  Abstract filter that contains code that is common to all related filters.
+ *  抽象的公共Filter(目的是为了初始化一些公共属性)
  */
 public abstract class AbstractFilter extends AbstractConfigurationFilter {
 
-    /** Represents the constant for where the assertion will be located in memory. */
+    /*放在内存的用户实例标志*/
     public static final String SSO_USER = "sso_user";
 
-    /** Instance of commons logging for logging purposes. */
+    /** 记录日志. */
     protected static final Logger log = LoggerFactory.getLogger(AbstractFilter.class.getSimpleName());
 
-    /** Defines the parameter to look for for the artifact. */
+    /** 定义这个参数目的是为了寻找生成的code */
     private String artifactParameterName = "code";
 
-    /** Defines the parameter to look for for the service. */
+    /** 寻找service */
     private String serviceParameterName = "ret";
-    
-    /** Sets where response.encodeUrl should be called on service urls when constructed. */
-    private boolean encodeServiceUrl = true;
 
-    /**
-     * The name of the server.  Should be in the following format: {protocol}:{hostName}:{port}.
-     * Standard ports can be excluded. */
+    /*服务器地址,格式是http/https：hostname:port ,标准的端口号可以不写*/
     private String serverName;
 
-    /** The exact url of the service. */
-    private String service;
 
-    public final void init(final FilterConfig filterConfig) throws ServletException {
-        if (!isIgnoreInitConfiguration()) {
-            setServerName(getPropertyFromInitParams(filterConfig, "serverName", null));
-            log.trace("Loading serverName property: " + this.serverName);
-            setService(getPropertyFromInitParams(filterConfig, "service", null));
-            log.trace("Loading service property: " + this.service);
-            setArtifactParameterName(getPropertyFromInitParams(filterConfig, "artifactParameterName", "ticket"));
-            log.trace("Loading artifact parameter name property: " + this.artifactParameterName);
-            setServiceParameterName(getPropertyFromInitParams(filterConfig, "serviceParameterName", "service"));
-            log.trace("Loading serviceParameterName property: " + this.serviceParameterName);
-            setEncodeServiceUrl(parseBoolean(getPropertyFromInitParams(filterConfig, "encodeServiceUrl", "true")));
-            log.trace("Loading encodeServiceUrl property: " + this.encodeServiceUrl);
-
-            initInternal(filterConfig);
-        }
-        init();
-    }
-
-    /** Controls the ordering of filter initialization and checking by defining a method that runs before the init.
-     * @param filterConfig the original filter configuration.
-     * @throws ServletException if there is a problem.
-     *
-     */
-    protected void initInternal(final FilterConfig filterConfig) throws ServletException {
-        // template method
-    }
 
     /**
-     * Initialization method.  Called by Filter's init method or by Spring.  Similar in concept to the InitializingBean interface's
-     * afterPropertiesSet();
+     * 初始化serverName,ticketName：code,serviceCallbackName：ret
+     * @param filterConfig
+     * @throws ServletException
      */
-    public void init() {
+    public  void init(final FilterConfig filterConfig) throws ServletException {
+        setServerName(getPropertyFromInitParams(filterConfig, "serverName", null));
+        setArtifactParameterName(getPropertyFromInitParams(filterConfig, "artifactParameterName", "code"));
+        setServiceParameterName(getPropertyFromInitParams(filterConfig, "serviceParameterName", "ret"));
         CommonUtils.assertNotNull(this.artifactParameterName, "artifactParameterName cannot be null.");
         CommonUtils.assertNotNull(this.serviceParameterName, "serviceParameterName cannot be null.");
-        CommonUtils.assertTrue(CommonUtils.isNotEmpty(this.serverName) || CommonUtils.isNotEmpty(this.service), "serverName or service must be set.");
-        CommonUtils.assertTrue(CommonUtils.isBlank(this.serverName) || CommonUtils.isBlank(this.service), "serverName and service cannot both be set.  You MUST ONLY set one.");
+        CommonUtils.assertTrue(CommonUtils.isNotEmpty(this.serverName), "serverName must be set.");
     }
 
-    // empty implementation as most filters won't need this.
+
+
+
+
     public void destroy() {
         // nothing to do
     }
 
     protected final String constructServiceUrl(final HttpServletRequest request, final HttpServletResponse response) {
-        return CommonUtils.constructServiceUrl(request, response, this.service, this.serverName, this.artifactParameterName, this.encodeServiceUrl);
+        return CommonUtils.constructServiceUrl(request, response, this.serverName, this.artifactParameterName);
     }
 
     /**
-     * Note that trailing slashes should not be used in the serverName.  As a convenience for this common misconfiguration, we strip them from the provided
-     * value.
      *
-     * @param serverName the serverName. If this method is called, this should not be null.  This AND service should not be both configured.
+     *serverName不应该有斜杠
+     * @param serverName
      */
     public final void setServerName(final String serverName) {
         if (serverName != null && serverName.endsWith("/")) {
-            this.serverName = serverName.substring(0, serverName.length()-1);
-            log.info(String.format("Eliminated extra slash from serverName [%s].  It is now [%s]", serverName, this.serverName));
+            this.serverName = serverName.substring(0, serverName.length() - 1);
         } else {
             this.serverName = serverName;
         }
     }
 
-    public final void setService(final String service) {
-        this.service = service;
-    }
 
     public final void setArtifactParameterName(final String artifactParameterName) {
         this.artifactParameterName = artifactParameterName;
@@ -128,10 +96,7 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
     public final void setServiceParameterName(final String serviceParameterName) {
         this.serviceParameterName = serviceParameterName;
     }
-    
-    public final void setEncodeServiceUrl(final boolean encodeServiceUrl) {
-    	this.encodeServiceUrl = encodeServiceUrl;
-    }
+
 
     public final String getArtifactParameterName() {
         return this.artifactParameterName;

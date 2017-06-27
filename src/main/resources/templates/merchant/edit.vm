@@ -152,6 +152,20 @@
                                     <button type="button" class="btn btn-success viewMap">查看地图</button>
                                 </div>
 
+                                #if ($!entity.id)
+                                    <label class="control-label">定位为默认经纬度</label>
+                                    <div class="controls">
+                                        #if($!entity.locateExactly==true)
+                                            否
+                                        #elseif($!entity.locateExactly==false)
+                                            是
+                                        #end
+                                    </div>
+                                    <input type="hidden" value="$!entity.locateExactly"  name="locateExactly">
+                                #end
+
+
+
                                 <label class="control-label">商圈信息</label>
                                 <div class="controls">
                                     <select class="span10" name="district.Id">

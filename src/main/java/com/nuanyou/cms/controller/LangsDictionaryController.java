@@ -8,6 +8,7 @@ import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsCategoryService;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import com.nuanyou.cms.service.LangsMessageTipService;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -80,7 +81,7 @@ public class LangsDictionaryController {
         List<LangsCategory> categories = categoryService.findAllCategories();
 
         // 页面显示当地语言
-        if(requestVo.getCountryKey() != 0){
+        if (requestVo.getCountryKey() != 0) {
             String localLangs = LangsCountry.toEnum(requestVo.getCountryKey()).getValue();
             model.addAttribute("localLangs", localLangs);
         }
@@ -132,10 +133,10 @@ public class LangsDictionaryController {
     @RequestMapping("add")
     public String add(Model model) {
         LangsCountry[] values = LangsCountry.values();
-        List<LangsCategory> selectableLangsCategory = categoryService.findAllCategories();
+        List<LangsCategory> langsCategories = categoryService.findAllCategories();
 
         model.addAttribute("langsCountries", values);
-        model.addAttribute("selectableLangsCategory", selectableLangsCategory);
+        model.addAttribute("langsCategories", langsCategories);
         return "langsDictionary/add";
     }
 
@@ -146,12 +147,21 @@ public class LangsDictionaryController {
      * @return
      */
     @RequestMapping("edit")
-    public String edit(Model model) {
+    public String edit(String keyCode, Model model) throws UnsupportedEncodingException {
+        keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
+
+        // 多语言种类
         LangsCountry[] values = LangsCountry.values();
-        List<LangsCategory> selectableLangsCategory = categoryService.findAllCategories();
+
+        // 多语言分类
+        List<LangsCategory> langsCategories = categoryService.findAllCategories();
+
+        // 多语言数据
+        LangsDictionaryVo langsDictionary = dictionaryService.findLangsDictionary(keyCode, null);
 
         model.addAttribute("langsCountries", values);
-        model.addAttribute("selectableLangsCategory", selectableLangsCategory);
+        model.addAttribute("langsDictionary", langsDictionary);
+        model.addAttribute("langsCategories", langsCategories);
         return "langsDictionary/edit";
     }
 
@@ -218,7 +228,6 @@ public class LangsDictionaryController {
         APIResult result = new APIResult(ResultCodes.Success);
         boolean verifykeyCodeResult = dictionaryService.verifykeyCode(dictionaryVo);
         result.setData(verifykeyCodeResult);
-
         return result;
     }
 
@@ -248,8 +257,14 @@ public class LangsDictionaryController {
     @ResponseBody
     public APIResult saveLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
         APIResult<LangsDictionary> result = new APIResult<LangsDictionary>(ResultCodes.Success);
-        LangsDictionary langsDictionary = dictionaryService.saveLangsDictionary(dictionaryVo);
-        result.setData(langsDictionary);
+        Boolean recordResult = dictionaryService.saveLangsDictionary(dictionaryVo);
+        if (BooleanUtils.isFalse(recordResult)) {
+            result.setCode(ResultCodes.Fail.getCode());
+            result.setMsg("保存失败，请重新尝试！");
+        } else if (recordResult == null) {
+            result.setCode(ResultCodes.Fail.getCode());
+            result.setMsg("请求参数异常，请重试尝试！");
+        }
         return result;
     }
 
@@ -276,8 +291,10 @@ public class LangsDictionaryController {
      */
     @RequestMapping(value = "modifyLangsDictionary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public APIResult modifyLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
+    public APIResult modifyLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) throws UnsupportedEncodingException {
         APIResult<EntityNyLangsDictionary> result = new APIResult<EntityNyLangsDictionary>(ResultCodes.Success);
+        String keyCode = dictionaryVo.getKeyCode();
+        dictionaryVo.setKeyCode((new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim());
         dictionaryService.modifyLangsDictionary(dictionaryVo);
         return result;
     }

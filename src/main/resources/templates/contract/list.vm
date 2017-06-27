@@ -30,7 +30,6 @@
             <th>电子合同</th>
             <th>营业执照</th>
             <th>纸质合同</th>
-            <th>生效</th>
             <th>操作</th>
         </tr>
         </thead>
@@ -72,7 +71,6 @@
                            href="javascript:void(0);">上传</a>
                     #end
                 </td>
-                <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.approveTime)</td>
                 <td>
                     <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">审核</a>
 
@@ -88,7 +86,7 @@
         <label>ID</label>
         <input type="text" class="span11" name="id" value="$!id">
 
-        <label>本地名称</label>
+        <label>商户本地名称</label>
         <input type="text" class="span11" name="merchantname" value="$!merchantname">
 
 
@@ -156,7 +154,7 @@
     <form action="upload" target="hidden_frame" enctype="multipart/form-data" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3>新增图片</h3>
+            <h3>新增文件</h3>
         </div>
         <div class="modal-body">
             <input type="hidden" class="span11" id="img-id" name="id">

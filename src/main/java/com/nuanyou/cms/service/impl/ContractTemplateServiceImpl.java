@@ -26,7 +26,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
@@ -121,11 +120,11 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
 
 
     @Override
-    public APIResult saveTemplate(List<Long> paramIds, List<TemplateParameterRequest> requests, Integer templateType, String title, Long countryId, Long id) {
+    public APIResult saveTemplate(String shortCode, List<Long> paramIds, List<TemplateParameterRequest> requests, Integer templateType, String title, Long countryId, Long id) {
         //验证表单信息
         validateRequest(paramIds,requests);
         //验证模板基本信息
-        validateBasic(templateType, title, countryId);
+        validateBasic(shortCode,templateType, title, countryId);
         //fetch param ids
         BatchTemplateParameterRequest batch = new BatchTemplateParameterRequest();
         batch.setParameterRequests(requests);
@@ -146,6 +145,7 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
             templateRequest.setParamterids(idsSum);
             templateRequest.setType(templateType);
             templateRequest.setCountryId(countryId);
+            templateRequest.setShortCode(shortCode);
             templateRequest.setTitle(title);
             APIResult<ContractTemplate> res = this.contractService.saveTemplate(templateRequest);
             if (res.getCode() != 0) {
@@ -157,6 +157,7 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
             TemplateUpdateRequest request = new TemplateUpdateRequest();
             request.setTitle(title);
             request.setParamterids(idsSum);
+            request.setShortCode(shortCode);
             APIResult<ContractTemplate> res = this.contractService.updateTemplate(id, request);
             if (res.getCode() != 0) {
                 throw new APIException(res.getCode(), res.getMsg());
@@ -189,7 +190,7 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
         return list;
     }
 
-    private void validateBasic(Integer templateType, String title, Long countryId) {
+    private void validateBasic(String shortCode, Integer templateType, String title, Long countryId) {
 
         if (templateType == null) {
             throw new APIException(ResultCodes.Fail, "类型不能为空");
@@ -197,6 +198,10 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
             throw new APIException(ResultCodes.Fail, "title不能为空");
         } else if (countryId == null) {
             throw new APIException(ResultCodes.Fail, "国家不能为空");
+        }else if (countryId == null) {
+            throw new APIException(ResultCodes.Fail, "国家不能为空");
+        }else if (StringUtils.isBlank(shortCode)) {
+            throw new APIException(ResultCodes.Fail, "简称不能为空");
         }
     }
 

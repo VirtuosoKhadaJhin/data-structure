@@ -89,6 +89,15 @@
         <label>合同编号</label>
         <input type="text" class="span11" name="" value="$!merchantname">
 
+
+        <label>国家</label>
+        <select id="country.id" name="countryId" class="span11" target-name="templateid" target-url="api/templates">
+            <option value="">请选择</option>
+            #foreach($e in $!countries)
+                <option value="$!e.id" #if($!countryId==$!e.id) selected #end>$!e.id:$!e.name</option>
+            #end
+        </select>
+
         <label>合同模板</label>
         <select id="templateid" name="templateid" class="span11">
             <option value="">全部</option>

@@ -7,18 +7,16 @@ import com.nuanyou.cms.entity.EntityNyLangsMessageTip;
 import com.nuanyou.cms.model.LangsMessageTipVo;
 import com.nuanyou.cms.service.LangsMessageTipService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by 孙昊 on 2017/6/13.
@@ -40,39 +38,29 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
 
     @Override
     public EntityNyLangsMessageTip add(LangsMessageTipVo requestVo) {
-        String keyCode = requestVo.getKeyCode();
-        String newKeyCode = requestVo.getNewKeyCode();
         String imgUrl = requestVo.getImgUrl();
-        try {
-            keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        EntityNyLangsMessageTip entityNyLangsMessageTip = new EntityNyLangsMessageTip();
-        entityNyLangsMessageTip.setKeyCode(keyCode);
-
-        Example<EntityNyLangsMessageTip> example = Example.of(entityNyLangsMessageTip);
-        List<EntityNyLangsMessageTip> entityResult = messageTipDao.findAll(example);
-
-        if (entityResult.size() > 0) {
-            messageTipDao.delete(entityResult);
-        }
-
-        if (imgUrl == null || imgUrl == "") {
-            if (entityResult.size() > 0) {
-                imgUrl = entityResult.get(0).getImgUrl();
+        EntityNyLangsMessageTip entityResult = messageTipDao.findByKeyCode(requestVo.getKeyCode());
+        if (StringUtils.isEmpty(imgUrl)) {
+            if (null != entityResult) {
+                imgUrl = entityResult.getImgUrl();
             }
         }
 
-        Long userid = UserHolder.getUser().getUserid();
+        Long userId = null;
+        try {
+            userId = UserHolder.getUser().getUserid();
+        } catch (Exception e) {
+            LOGGER.error("获取系统用户出错！", e);
+        }
 
-        entityNyLangsMessageTip = new EntityNyLangsMessageTip(newKeyCode, requestVo.getRemark(), imgUrl, new Date(), false);
-        entityNyLangsMessageTip.setUserId(userid);
-
-        EntityNyLangsMessageTip result = messageTipDao.save(entityNyLangsMessageTip);
-
-        return result;
+        EntityNyLangsMessageTip entityNyLangsMessageTip = new EntityNyLangsMessageTip(requestVo.getNewKeyCode(), requestVo.getRemark(), imgUrl);
+        entityNyLangsMessageTip.setKeyCode(requestVo.getKeyCode());
+        if(null != entityResult){
+            entityNyLangsMessageTip.setId(entityResult.getId());
+        }
+        entityNyLangsMessageTip.setCreateDt(new Date());
+        entityNyLangsMessageTip.setUserId(userId);
+        return messageTipDao.save(entityNyLangsMessageTip);
     }
 
     @Override
@@ -85,7 +73,7 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
             InputStream is = file.getInputStream();
             String imgUrl = fileClient.uploadFile(is, fileType);
 
-            imgUrl = imgUrl.replace("https://", "http://dev.");
+            // imgUrl = imgUrl.replace("https://", "http://dev.");
             // https://kr.file.91nuanyou.com/14975265854394393273.png
             return imgUrl;
         } catch (Exception e) {
@@ -95,24 +83,12 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
     }
 
     @Override
-    public LangsMessageTipVo viewLangsMessageTip(LangsMessageTipVo requestVo) {
-        String keyCode = requestVo.getKeyCode();
-        try {
-            keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+    public LangsMessageTipVo viewLangsMessageTip(LangsMessageTipVo requestVo, String keyCode) {
+        EntityNyLangsMessageTip entityResult = messageTipDao.findByKeyCode(keyCode);
 
-        EntityNyLangsMessageTip entityNyLangsMessageTip = new EntityNyLangsMessageTip();
-        entityNyLangsMessageTip.setKeyCode(keyCode);
-
-        Example<EntityNyLangsMessageTip> example = Example.of(entityNyLangsMessageTip);
-        List<EntityNyLangsMessageTip> entityResult = messageTipDao.findAll(example);
-
-        if (entityResult.size() > 0) {
-            entityNyLangsMessageTip = entityResult.get(0);
-            LangsMessageTipVo langsMessageTipVo = new LangsMessageTipVo(entityNyLangsMessageTip.getRemark(),
-                    entityNyLangsMessageTip.getImgUrl());
+        if (null != entityResult) {
+            LangsMessageTipVo langsMessageTipVo = new LangsMessageTipVo(entityResult.getRemark(),
+                    entityResult.getImgUrl());
             return langsMessageTipVo;
         }
 
