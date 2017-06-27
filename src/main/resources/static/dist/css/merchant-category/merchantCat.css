@@ -1,0 +1,53 @@
+table .tr-class:hover {
+    cursor: pointer;
+}
+
+.table th, .table td {
+    padding: 8px;
+    line-height: 20px;
+    text-align: center;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+
+.icon-right {
+    margin-right: 12px;
+}
+
+.empty-data {
+    color: #b3afaf;
+}
+
+.table .sub-table .sub-td {
+    height: 10px;
+    padding: 3px;
+    line-height: 20px;
+    text-align: center;
+    vertical-align: top;
+    border-left: 1px solid #ddd;
+}
+
+.sub-tr-color1{
+    background-color: #fffffff;
+}
+
+.sub-tr-color2{
+    background-color: #e6e6e6;
+}
+
+.sub-tr-color3{
+    background-color: #fcf8e3;
+}
+
+.sub-tr-color4{
+    background-color: #d9edf7;
+}
+
+.sub-button{
+    margin-left: 5px;
+}
+.sub-search-input{
+    margin: 20px;
+    width: 8%;
+    float: right;
+}

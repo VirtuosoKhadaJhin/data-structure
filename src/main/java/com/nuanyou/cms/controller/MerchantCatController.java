@@ -5,6 +5,10 @@ import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.dao.MerchantCatDao;
 import com.nuanyou.cms.entity.MerchantCat;
+import com.nuanyou.cms.model.LangsCategory;
+import com.nuanyou.cms.model.MerchantCatVo;
+import com.nuanyou.cms.model.enums.LangsCountry;
+import com.nuanyou.cms.service.LangsCategoryService;
 import com.nuanyou.cms.service.MerchantCatService;
 import com.nuanyou.cms.util.NodeData;
 import com.nuanyou.cms.util.NumberUtils;
@@ -14,27 +18,26 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("merchantCat")
 public class MerchantCatController {
 
     @Autowired
+    private MerchantCatDao merchantCatDao;
+
+    @Autowired
     private MerchantCatService merchantCatService;
 
     @Autowired
-    private MerchantCatDao merchantCatDao;
+    private LangsCategoryService categoryService;
 
     @RequestMapping("add")
     public String add(MerchantCat merchantCat) {
@@ -44,32 +47,41 @@ public class MerchantCatController {
 
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
-    public String edit(Long id, Model model, Integer type) {
+    public String edit(Long id, Model model, Integer type, HttpServletRequest request) {
         MerchantCat entity = null;
         if (id != null) {
             entity = merchantCatDao.findOne(id);
         }
+
+        List<MerchantCatVo> parentCats = merchantCatService.findAllParentCats();
         List<MerchantCat> merchantCats = merchantCatService.getIdNameList();
+
+        //本地语言
+        List<LangsCountry> langsCountries = getNativeLangs(request);
+
+        // 语言分类, 用于增加多语言弹窗里面的select下拉列表
+        List<LangsCategory> categories = categoryService.findAllCategories();
+
+        model.addAttribute("langsCountries", langsCountries);
+        model.addAttribute("categories", categories);
         model.addAttribute("merchantCats", merchantCats);
+        model.addAttribute("parentCats", parentCats);
         model.addAttribute("entity", entity);
         model.addAttribute("type", type);
         return "merchantCat/edit";
     }
 
     @RequestMapping("update")
-    public String update(MerchantCat entity, HttpServletResponse response, Model model) throws IOException {
-        if (entity.getPcat().getId() == null) {
-            entity.setPcat(null);
-        }
-        merchantCatService.saveNotNull(entity);
-        String url = "edit?type=3&id=" + entity.getId();
-        return "redirect:" + url;
+    public String update(MerchantCatVo merchantCatVo) throws IOException {
+        merchantCatService.updateMerchantCat(merchantCatVo);
+        return "redirect:list";
     }
 
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index,
                        @RequestParam(required = false) String nameOrId,
-                       MerchantCat entity, Model model) {
+                       MerchantCat entity, Model model,
+                       HttpServletRequest request) {
         if (StringUtils.isNotBlank(nameOrId)) {
             if (StringUtils.isNumeric(nameOrId)) {
                 entity.setId(NumberUtils.toLong(nameOrId));
@@ -78,13 +90,41 @@ public class MerchantCatController {
             }
         }
 
-        Page<MerchantCat> page = merchantCatService.findByCondition(entity, index);
+        Locale locale = request.getLocale();
+        List<MerchantCatVo> page = merchantCatService.findParentCat(entity, index, locale);
+
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
         model.addAttribute("nameOrId", nameOrId);
         return "merchantCat/list";
     }
 
+    /**
+     * 根据一级分类的ID分页查询二级分类
+     *
+     * @return
+     */
+    @RequestMapping("viewCat")
+    @ResponseBody
+    public APIResult<Page<MerchantCatVo>> viewCat(@RequestBody MerchantCatVo merchantCatVo, HttpServletRequest request) {
+        Locale locale = request.getLocale();
+        Page<MerchantCatVo> page = merchantCatService.findChildCat(merchantCatVo, merchantCatVo.getIndex(), locale, merchantCatVo.getPcat());
+        return new APIResult(page);
+    }
+
+    /**
+     * 根据ID删除分类
+     *
+     * @return
+     */
+    @RequestMapping("delCat")
+    @ResponseBody
+    public APIResult<Boolean> viewCat(@RequestBody MerchantCatVo merchantCatVo) {
+        APIResult<Boolean> result = new APIResult<Boolean>();
+        Boolean delResult = merchantCatService.delCat(merchantCatVo);
+        result.setData(delResult);
+        return result;
+    }
 
     @RequestMapping("api/list")
     @ResponseBody
@@ -98,23 +138,23 @@ public class MerchantCatController {
 
     @RequestMapping("treeList")
     public String treeList(@RequestParam(required = false, defaultValue = "1") int index,
-                       @RequestParam(required = false) String nameOrId,
-                       MerchantCat entity, Model model) {
+                           @RequestParam(required = false) String nameOrId,
+                           MerchantCat entity, Model model) {
         List<NodeData> rs = new ArrayList<>();
-        NodeData n1 = new NodeData(0,-1,"root",false);
+        NodeData n1 = new NodeData(0, -1, "root", false);
         rs.add(n1);
         List<MerchantCat> list = merchantCatDao.findByPcat(null);
         for (MerchantCat merchantCat : list) {
-            NodeData n = new NodeData(merchantCat.getId(),0,merchantCat.getName(),false);
+            NodeData n = new NodeData(merchantCat.getId(), 0, merchantCat.getName(), false);
             rs.add(n);
-            List<MerchantCat> children=merchantCatDao.findByPcat(merchantCat);
+            List<MerchantCat> children = merchantCatDao.findByPcat(merchantCat);
             for (MerchantCat child : children) {
-                NodeData ch = new NodeData(child.getId(),child.getPcat().getId(),child.getName(),false);
+                NodeData ch = new NodeData(child.getId(), child.getPcat().getId(), child.getName(), false);
                 rs.add(ch);
             }
         }
-        String nodeData=toJsonString(rs);
-        model.addAttribute("nodeData",nodeData);
+        String nodeData = toJsonString(rs);
+        model.addAttribute("nodeData", nodeData);
         return "merchantCat/list1";
     }
 
@@ -124,4 +164,20 @@ public class MerchantCatController {
         return JSON.toJSONString(rs);
         //return JSON.toJSONStringZ(rs, mapping, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullListAsEmpty);
     }
+
+    private List<LangsCountry> getNativeLangs(HttpServletRequest request) {
+        List<LangsCountry> langsCountries = new ArrayList<>();
+        Locale locale = request.getLocale();
+        String lang = locale.toLanguageTag();
+        LangsCountry langsCountry = LangsCountry.toEnum(lang);
+        langsCountries.add(langsCountry);
+        if (!langsCountry.equals((LangsCountry.ZH_CN))) {
+            langsCountries.add(LangsCountry.ZH_CN);
+        }
+        if (!langsCountry.equals((LangsCountry.EN_UK))) {
+            langsCountries.add(LangsCountry.EN_UK);
+        }
+        return langsCountries;
+    }
+
 }

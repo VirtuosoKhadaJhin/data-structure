@@ -232,6 +232,7 @@
     <!--***************************************通用新增语言*************************************************************-->
 
     #include("common/js-support.vm")
+    <script type="text/javascript" src="/dist/js/suggest/suggest-search.js" />
 
     <script type="text/javascript">
         $("body").delegate(".langsAutoComplete", "keyup", function (e) {

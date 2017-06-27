@@ -136,7 +136,7 @@
                                                 </td>
                                                 <td>
                                                     <input name="nameLabel" style="width: 150px" class="langsAutoComplete" langsKeyName="name">
-                                                    <input name="name" type="hidden" >
+                                                    <input name="name" type="hidden">
                                                     <a class="btn btn-info btn-mini addLang" langsKeyName="name" langsValueName="nameLabel">
                                                         <i class="icon-plus"></i>
                                                     </a>
@@ -167,7 +167,7 @@
                                                 <td>
 
                                                     <input name="remarkLabel" style="width: 150px" class="langsAutoComplete" langsKeyName="remark">
-                                                    <input name="remark"  type="hidden">
+                                                    <input name="remark" type="hidden">
                                                     <a class="btn btn-info btn-mini addLang" langsKeyName="remark" langsValueName="remarkLabel">
                                                         <i class="icon-plus"></i>
                                                     </a>
@@ -391,7 +391,8 @@
 </body>
     #include("common/js-support.vm")
     #include("common/image-support.vm")
-<script src="/dist/js/cascade-select.js"></script>
+<script type="text/javascript" src="/dist/js/cascade-select.js"/>
+<script type="text/javascript" src="/dist/js/suggest/suggest-search.js"/>
 ##<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
     keyCodeRealTime();
@@ -668,17 +669,17 @@
             if ($('#mytable .editRow').length <= 0) {
                 lastInputRow = $("#mytable tr:last");
             } else {
-                lastInputRow  = $('#mytable .editRow').eq(0);
+                lastInputRow = $('#mytable .editRow').eq(0);
             }
             var table = $("#mytable");
 
-            var selectedParamIds=$("select[name='selectedParamId']").val();
+            var selectedParamIds = $("select[name='selectedParamId']").val();
             var trHTML = "";
-            for(var i=0;i<selectedParamIds.length;i++){
-                if(trHTML==""){
+            for (var i = 0; i < selectedParamIds.length; i++) {
+                if (trHTML == "") {
                     trHTML = "<tr class='rowSpan eachRow'>" + spanRowExample + "</tr>";
                     $(trHTML).insertBefore(lastInputRow);
-                }else{
+                } else {
                     trHTML = "<tr class='rowSpan eachRow'>" + spanRowExample + "</tr>";
                     $(trHTML).insertBefore($("#mytable tr:last"));
                 }
@@ -690,7 +691,7 @@
                     type: 'post',
                     dataType: 'json',
                     contentType: 'application/json',
-                    async:false,
+                    async: false,
                     success: function (result) {
                         if (result.code == 0) {
                             var parameter = result.data;
@@ -734,9 +735,6 @@
                 });
             }
         });
-
-
-
 
 
         $("#mytable").delegate(".addLang", "click", function (e) {
@@ -797,14 +795,13 @@
         }
 
 
-
         $("#mytable").delegate(".referParam", "click", function (e) {
             var currEle = e.currentTarget;
             var td = $(currEle).parent().parent();
 
             curRefer = td.find("input[name='referenceId']");
             $("#referIds").empty();
-            $("#referIds").append("<option value=''>" +"无" + "</option>");
+            $("#referIds").append("<option value=''>" + "无" + "</option>");
             console.log($(".rowSpan"));
             $(".rowSpan").each(function (i, o) {
                 var keyName = $(o).find("span[class='key']").html();
@@ -827,8 +824,7 @@
         });
 
 
-
-        $(".saveLangsDictionary").on("click",function () {
+        $(".saveLangsDictionary").on("click", function () {
             saveLangsDictionary();
         });
 
@@ -836,7 +832,7 @@
          * 保存多语言
          */
         function saveLangsDictionary() {
-            if($("#addLangSave").attr("disabled") != "disabled"){
+            if ($("#addLangSave").attr("disabled") != "disabled") {
                 keyCodeRealTime();
 
                 var checkResult = checkRequiredParams();
@@ -876,7 +872,7 @@
                             for (var i = 0; i < langsMessageList.length; i++) {
                                 if (localelangsKey == langsMessageList[i].langsKey) {
                                     currLangKeyInput.val(request.keyCode);
-                                    currLangValueInput.val(langsMessageList[i].message+"("+request.keyCode+")");
+                                    currLangValueInput.val(langsMessageList[i].message + "(" + request.keyCode + ")");
                                 }
                             }
                         } else {
@@ -886,7 +882,6 @@
                 });
             }
         }
-
 
 
         $(".templateFormValidate").validate({
@@ -907,7 +902,6 @@
             },
             errorElement: "span"
         });
-
 
 
     });

@@ -4,6 +4,7 @@ import com.nuanyou.cms.entity.MerchantCat;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
 
 import java.util.List;
 
@@ -14,6 +15,9 @@ public interface MerchantCatDao extends JpaRepository<MerchantCat, Long>, JpaSpe
 
     List<MerchantCat> findByPcat(MerchantCat pid);
 
-    @Query(value = "select new MerchantCat(t.id,t.name) from  MerchantCat t")
+    @Query(value = "select new MerchantCat(t.id,t.name) from  MerchantCat t where pcat = null")
     List<MerchantCat> getIdNameList();
+
+
+
 }
