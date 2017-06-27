@@ -55,7 +55,7 @@
                 <td class="tdInput">$!entity.id</td>
                 <td class="tdInput">$!entity.name</td>
                 <td class="tdInput">$!entity.shortname</td>
-                <td class="tdInput">$!entity.localname</td>
+                <td class="tdInput">$!entity.kpname</td>
                 <td class="tdInput">$!entity.enname</td>
                 <td class="tdInput">
                     #if($!entity.display)显示#else 隐藏#end

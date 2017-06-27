@@ -19,7 +19,7 @@ public class District {
     private Long id;
     private String name;
     private String shortname;
-    private String localname;
+    private String kpname;
     private String enname;
     private Double startlongitude;
     private Double endlongitude;
@@ -58,13 +58,21 @@ public class District {
         this.name = name;
     }
 
-    @Column(name = "localname", nullable = true, length = 30)
+    @Column(name = "kpname", nullable = true, length = 30)
     public String getLocalname() {
-        return localname;
+        return kpname;
     }
 
-    public void setLocalname(String localname) {
-        this.localname = localname;
+    public void setLocalname(String kpname) {
+        this.kpname = kpname;
+    }
+
+    public String getKpname() {
+        return kpname;
+    }
+
+    public void setKpname(String kpname) {
+        this.kpname = kpname;
     }
 
     @Column(name = "enname", nullable = true, length = 30)

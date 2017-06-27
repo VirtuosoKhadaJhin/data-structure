@@ -17,7 +17,7 @@ public class DistrictVo {
 
     private String shortname;
 
-    private String localname;
+    private String kpname;
 
     private String enname;
 
@@ -75,12 +75,12 @@ public class DistrictVo {
         this.shortname = shortname;
     }
 
-    public String getLocalname() {
-        return localname;
+    public String getKpname() {
+        return kpname;
     }
 
-    public void setLocalname(String localname) {
-        this.localname = localname;
+    public void setKpname(String kpname) {
+        this.kpname = kpname;
     }
 
     public String getEnname() {

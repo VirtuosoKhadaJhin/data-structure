@@ -45,7 +45,7 @@
                                 </div>
                                 <label class="control-label">本地名称</label>
                                 <div class="controls">
-                                    <input name="localname" for="localname" type="text" class="span7 langsAutoComplete" value="$!entity.localname"
+                                    <input name="kpname" for="kpname" type="text" class="span7 langsAutoComplete" value="$!entity.kpname"
                                            placeholder="本地名称">
                                 </div>
                                 <label class="control-label">英文名称</label>
