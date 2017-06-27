@@ -19,7 +19,8 @@ public class District {
     private Long id;
     private String name;
     private String shortname;
-    private String kpname;
+    private String localname;
+    private String enname;
     private Double startlongitude;
     private Double endlongitude;
     private Double startlatitude;
@@ -35,8 +36,6 @@ public class District {
     private City city;
     private Country country;
     private BigDecimal radio;
-    // keycode
-    private String keyCode;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,16 +58,23 @@ public class District {
         this.name = name;
     }
 
-
-    @Column(name = "kpname", nullable = true, length = 30)
-    public String getKpname() {
-        return kpname;
+    @Column(name = "localname", nullable = true, length = 30)
+    public String getLocalname() {
+        return localname;
     }
 
-    public void setKpname(String kpname) {
-        this.kpname = kpname;
+    public void setLocalname(String localname) {
+        this.localname = localname;
     }
 
+    @Column(name = "enname", nullable = true, length = 30)
+    public String getEnname() {
+        return enname;
+    }
+
+    public void setEnname(String enname) {
+        this.enname = enname;
+    }
 
     @Column(name = "startlongitude", nullable = true, precision = 0)
     public Double getStartlongitude() {
@@ -77,15 +83,6 @@ public class District {
 
     public void setStartlongitude(Double startlongitude) {
         this.startlongitude = startlongitude;
-    }
-
-    @Column(name = "keycode", nullable = false, length = 100)
-    public String getKeyCode() {
-        return keyCode;
-    }
-
-    public void setKeyCode(String keyCode) {
-        this.keyCode = keyCode;
     }
 
     @Column(name = "endlongitude", nullable = true, precision = 0)
@@ -250,15 +247,4 @@ public class District {
     public District() {
     }
 
-    public District(Long id, String name, String shortname, Boolean display, Integer sort, String link, City city, Country country, BigDecimal radio) {
-        this.id = id;
-        this.name = name;
-        this.shortname = shortname;
-        this.display = display;
-        this.sort = sort;
-        this.link = link;
-        this.city = city;
-        this.country = country;
-        this.radio = radio;
-    }
 }

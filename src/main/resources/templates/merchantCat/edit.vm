@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>暖游 后台管理系统 菜单管理</title>
+    <title>暖游 后台管理系统 商户分类编辑</title>
     #include("common/css-support.vm")
 </head>
 <body>
@@ -20,7 +20,7 @@
             <div class="span6">
                 <div class="widget-box">
                     <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
-                        <h5>商户类别编辑&查看</h5>
+                        <h5>商户分类编辑&查看</h5>
                         <input id="type" name="type" type="hidden" value="$!type">
                     </div>
                     <div class="widget-content nopadding">
@@ -48,14 +48,11 @@
                                 </div>
                                 <label class="col-sm-2 control-label">分类属性：</label>
                                 <div class="controls">
-                                    #if("$!entity.pcat" == "")
-                                        <input name="classification" type="radio" value="0" checked> <span>一级分类</span>&nbsp;&nbsp;&nbsp;
-                                        <input name="classification" type="radio" value="1" style="padding-left: 20px;"> <span>二级分类</span>
-                                    #else
-                                        <input name="classification" type="radio" value="0"> <span>一级分类</span>&nbsp;&nbsp;&nbsp;
-                                        <input name="classification" type="radio" value="1" style="padding-left: 20px;" checked> <span>二级分类</span>
-                                    #end
-
+                                    <select class="span10" name="verifyType">
+                                        #foreach($e in $!parentCats)
+                                            <option value="$!e" #if($!e.name == $!entity.name)selected#end>$!e.name</option>
+                                        #end
+                                    </select>
                                 </div>
                                 <label class="col-sm-2 control-label">简称：</label>
                                 <div class="controls">

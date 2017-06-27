@@ -4,6 +4,7 @@ import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.Country;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Created by mylon on 2017/6/20.
@@ -12,41 +13,43 @@ public class DistrictVo {
 
     private Long id;
 
-    // 用来接收keyCode
     private String name;
 
-    // 中文名称
-    private String nameLabel;
-
-    // 简称
     private String shortname;
 
-    // 汇率系数
-    private BigDecimal radio;
+    private String localname;
 
-    // 是否显示
+    private String enname;
+
+    private Double startlongitude;
+
+    private Double endlongitude;
+
+    private Double startlatitude;
+
+    private Double endlatitude;
+
+    private String indeximgurl;
+
+    private String bgimgurl;
+
     private Boolean display;
 
-    // 城市
-    private City city;
-
-    // 国家
-    private Country country;
-
-    // 排序
     private Integer sort;
 
-    // 跳转链接
     private String link;
 
-    // 英文
-    private String enNameLabel;
+    private String icon;
 
-    // 本地语言
-    private String localNameLabel;
+    private Date createtime;
 
-    public DistrictVo() {
-    }
+    private Date updatetime;
+
+    private City city;
+
+    private Country country;
+
+    private BigDecimal radio;
 
     public Long getId() {
         return id;
@@ -64,14 +67,6 @@ public class DistrictVo {
         this.name = name;
     }
 
-    public String getNameLabel() {
-        return nameLabel;
-    }
-
-    public void setNameLabel(String nameLabel) {
-        this.nameLabel = nameLabel;
-    }
-
     public String getShortname() {
         return shortname;
     }
@@ -80,12 +75,68 @@ public class DistrictVo {
         this.shortname = shortname;
     }
 
-    public BigDecimal getRadio() {
-        return radio;
+    public String getLocalname() {
+        return localname;
     }
 
-    public void setRadio(BigDecimal radio) {
-        this.radio = radio;
+    public void setLocalname(String localname) {
+        this.localname = localname;
+    }
+
+    public String getEnname() {
+        return enname;
+    }
+
+    public void setEnname(String enname) {
+        this.enname = enname;
+    }
+
+    public Double getStartlongitude() {
+        return startlongitude;
+    }
+
+    public void setStartlongitude(Double startlongitude) {
+        this.startlongitude = startlongitude;
+    }
+
+    public Double getEndlongitude() {
+        return endlongitude;
+    }
+
+    public void setEndlongitude(Double endlongitude) {
+        this.endlongitude = endlongitude;
+    }
+
+    public Double getStartlatitude() {
+        return startlatitude;
+    }
+
+    public void setStartlatitude(Double startlatitude) {
+        this.startlatitude = startlatitude;
+    }
+
+    public Double getEndlatitude() {
+        return endlatitude;
+    }
+
+    public void setEndlatitude(Double endlatitude) {
+        this.endlatitude = endlatitude;
+    }
+
+    public String getIndeximgurl() {
+        return indeximgurl;
+    }
+
+    public void setIndeximgurl(String indeximgurl) {
+        this.indeximgurl = indeximgurl;
+    }
+
+    public String getBgimgurl() {
+        return bgimgurl;
+    }
+
+    public void setBgimgurl(String bgimgurl) {
+        this.bgimgurl = bgimgurl;
     }
 
     public Boolean getDisplay() {
@@ -94,22 +145,6 @@ public class DistrictVo {
 
     public void setDisplay(Boolean display) {
         this.display = display;
-    }
-
-    public City getCity() {
-        return city;
-    }
-
-    public void setCity(City city) {
-        this.city = city;
-    }
-
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
     }
 
     public Integer getSort() {
@@ -128,19 +163,51 @@ public class DistrictVo {
         this.link = link;
     }
 
-    public String getEnNameLabel() {
-        return enNameLabel;
+    public String getIcon() {
+        return icon;
     }
 
-    public void setEnNameLabel(String enNameLabel) {
-        this.enNameLabel = enNameLabel;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
-    public String getLocalNameLabel() {
-        return localNameLabel;
+    public Date getCreatetime() {
+        return createtime;
     }
 
-    public void setLocalNameLabel(String localNameLabel) {
-        this.localNameLabel = localNameLabel;
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
+    }
+
+    public Date getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+    public BigDecimal getRadio() {
+        return radio;
+    }
+
+    public void setRadio(BigDecimal radio) {
+        this.radio = radio;
     }
 }

@@ -23,7 +23,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by nuanyou on 2016/9/6.
@@ -31,7 +34,6 @@ import java.util.*;
 @Service
 public class MerchantCatServiceImpl implements MerchantCatService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MerchantCatServiceImpl.class);
-
 
     @Autowired
     private MerchantCatDao merchantCatDao;
@@ -43,6 +45,26 @@ public class MerchantCatServiceImpl implements MerchantCatService {
     @Override
     public void add(MerchantCat merchantCat) {
         merchantCatDao.save(merchantCat);
+    }
+
+    @Override
+    public List<MerchantCatVo> findAllParentCats() {
+        List<MerchantCat> merchantCats = merchantCatDao.findAll(new Specification() {
+
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                predicate.add(cb.isNull(root.get("pcat")));
+                Predicate[] arrays = new Predicate[predicate.size()];
+                ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("sort")), cb.asc(root.get("updatetime")));
+                return query.where(predicate.toArray(arrays)).orderBy(orderBys).getRestriction();
+            }
+        });
+        List<MerchantCatVo> vos = Lists.newArrayList();
+        for (MerchantCat entity : merchantCats) {
+            vos.add(convertToMerchantCatVo(entity));
+        }
+        return vos;
     }
 
     @Override
@@ -113,8 +135,6 @@ public class MerchantCatServiceImpl implements MerchantCatService {
                 }
             });
 
-
-
             for (EntityNyLangsDictionary dict : dicts) {
                 Integer location = 0;
                 Integer keyCodeIndex = -1;
@@ -151,7 +171,6 @@ public class MerchantCatServiceImpl implements MerchantCatService {
                 merchantCatVos.set(keyCodeIndex, merchantCatVo);
 
             }
-
 
             // Page<MerchantCatVo> lists = new PageImpl<MerchantCatVo>(merchantCatVos, pageable, merchantCats.getTotalElements());
 

@@ -52,6 +52,8 @@ public class MerchantCatController {
         if (id != null) {
             entity = merchantCatDao.findOne(id);
         }
+
+        List<MerchantCatVo> parentCats = merchantCatService.findAllParentCats();
         List<MerchantCat> merchantCats = merchantCatService.getIdNameList();
 
         //本地语言
@@ -63,6 +65,7 @@ public class MerchantCatController {
         model.addAttribute("langsCountries", langsCountries);
         model.addAttribute("categories", categories);
         model.addAttribute("merchantCats", merchantCats);
+        model.addAttribute("parentCats", parentCats);
         model.addAttribute("entity", entity);
         model.addAttribute("type", type);
         return "merchantCat/edit";

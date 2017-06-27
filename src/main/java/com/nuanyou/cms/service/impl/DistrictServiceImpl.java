@@ -49,7 +49,7 @@ public class DistrictServiceImpl implements DistrictService {
                     predicate.add(cb.equal(root.get("display"), entity.getDisplay().booleanValue()));
                 }
                 Predicate[] arrays = new Predicate[predicate.size()];
-                ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("sort")), cb.asc(root.get("updatetime")));
+                ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("sort")), cb.desc(root.get("updatetime")));
                 return query.where(predicate.toArray(arrays)).orderBy(orderBys).getRestriction();
             }
         }, pageable);
@@ -61,13 +61,7 @@ public class DistrictServiceImpl implements DistrictService {
         List<District> pageLists = districts.getContent();
         List<DistrictVo> districtVos = Lists.newArrayList();
         for (District dis : pageLists) {
-            DistrictVo vo = convertToDistrictVo(dis);
-            districtVos.add(vo);
-            if (dis.getKeyCode() != null) {
-                keyCodes.add(dis.getKeyCode());
-            } else {
-                keyCodes.add("");
-            }
+            districtVos.add(convertToDistrictVo(dis));
         }
 
         if (keyCodes != null && keyCodes.size() > 0) {
@@ -88,18 +82,11 @@ public class DistrictServiceImpl implements DistrictService {
 
                 DistrictVo districtVo = districtVos.get(keyCodeIndex);
 
-                if (dict.getLanguage().equals("en")) {
-                    districtVo.setEnNameLabel(dict.getMessage());
-                } else if (dict.getLanguage().equals(locale.getLanguage())) {
-                    districtVo.setLocalNameLabel(dict.getMessage());
-                }
-
                 // 更新链表的甘油中英文的数据
                 districtVos.set(keyCodeIndex, districtVo);
             }
 
             Page<DistrictVo> lists = new PageImpl<DistrictVo>(districtVos, pageable, districts.getTotalElements());
-
             return lists;
         }
 
@@ -125,26 +112,16 @@ public class DistrictServiceImpl implements DistrictService {
 
     @Override
     public void updateDistrict(DistrictVo districtVo) {
-        District district = new District(districtVo.getId(), districtVo.getNameLabel(), districtVo.getShortname(),
-                districtVo.getDisplay(), districtVo.getSort(), districtVo.getLink(), districtVo.getCity(), districtVo.getCountry(), districtVo.getRadio());
-
-        // keyCode
-        if (districtVo.getName() != null) {
-            district.setKeyCode(districtVo.getName());
-            String replaceStr = "(" + districtVo.getName() + ")";
-            if (districtVo.getNameLabel().contains(replaceStr)) {
-                String nameLabel = districtVo.getNameLabel().replaceAll(replaceStr, "");
-                districtVo.setNameLabel(nameLabel);
-                district.setName(nameLabel);
-            }
-        }
-
+        District district = BeanUtils.copyBeanNotNull(districtVo, new District());
+        Date nowDate = new Date();
         if (districtVo.getId() == null) {
+            district.setCreatetime(nowDate);
+            district.setUpdatetime(nowDate);
             districtDao.save(district);
         } else {
             District oldEntity = districtDao.findOne(districtVo.getId());
             BeanUtils.copyBeanNotNull(district, oldEntity);
-            oldEntity.setUpdatetime(new Date());
+            oldEntity.setUpdatetime(nowDate);
             districtDao.save(oldEntity);
         }
 

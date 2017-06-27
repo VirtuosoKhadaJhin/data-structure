@@ -15,6 +15,13 @@ public interface MerchantCatService {
     void add(MerchantCat merchantCat);
 
     /**
+     * 查找所有一级分类
+     *
+     * @return
+     */
+    List<MerchantCatVo> findAllParentCats();
+
+    /**
      * 分页查找一级分类(含中英文)
      *
      * @param merchantCat
