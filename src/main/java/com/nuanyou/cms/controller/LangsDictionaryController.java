@@ -133,10 +133,10 @@ public class LangsDictionaryController {
     @RequestMapping("add")
     public String add(Model model) {
         LangsCountry[] values = LangsCountry.values();
-        List<LangsCategory> selectableLangsCategory = categoryService.findAllCategories();
+        List<LangsCategory> langsCategories = categoryService.findAllCategories();
 
         model.addAttribute("langsCountries", values);
-        model.addAttribute("selectableLangsCategory", selectableLangsCategory);
+        model.addAttribute("langsCategories", langsCategories);
         return "langsDictionary/add";
     }
 
@@ -154,14 +154,14 @@ public class LangsDictionaryController {
         LangsCountry[] values = LangsCountry.values();
 
         // 多语言分类
-        List<LangsCategory> selectableLangsCategory = categoryService.findAllCategories();
+        List<LangsCategory> langsCategories = categoryService.findAllCategories();
 
         // 多语言数据
         LangsDictionaryVo langsDictionary = dictionaryService.findLangsDictionary(keyCode, null);
 
         model.addAttribute("langsCountries", values);
         model.addAttribute("langsDictionary", langsDictionary);
-        model.addAttribute("selectableLangsCategory", selectableLangsCategory);
+        model.addAttribute("langsCategories", langsCategories);
         return "langsDictionary/edit";
     }
 
@@ -294,8 +294,8 @@ public class LangsDictionaryController {
     public APIResult modifyLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) throws UnsupportedEncodingException {
         APIResult<EntityNyLangsDictionary> result = new APIResult<EntityNyLangsDictionary>(ResultCodes.Success);
         String keyCode = dictionaryVo.getKeyCode();
-        keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
-        dictionaryService.modifyLangsDictionary(keyCode, dictionaryVo);
+        dictionaryVo.setKeyCode((new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim());
+        dictionaryService.modifyLangsDictionary(dictionaryVo);
         return result;
     }
 
