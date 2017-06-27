@@ -50,14 +50,14 @@
                                 <div class="controls">
                                     <select name="pcat">
                                         #if("$!entity.pcat" == "")
-                                            <option value="">无</option>
+                                            <option value>无</option>
                                             #foreach($e in $!parentCats)
                                                 #if($!e.id != $!entity.id)
                                                     <option value="$!e.id">$!e.name</option>
                                                 #end
                                             #end
                                         #else
-                                            <option>无</option>
+                                            <option value>无</option>
                                             #foreach($e in $!parentCats)
                                                 <option value="$!e.id" #if($!e.name == $!entity.name)selected#end>$!e.name</option>
                                             #end
@@ -83,26 +83,6 @@
                                         <option value="site" #if($!entity.code=="site")#end>景点</option>
                                     </select>
                                 </div>
-                                #if("$!entity.pcat" == "")
-                                <div class="pCat" style="display: none;">
-                                #else
-                                <div class="pCat">
-                                #end
-                                <label class="control-label">所属一级分类：</label>
-                                <div class="controls">
-                                    #if("$!entity.pcat" == "")
-                                    <select id="pcat.id" name="pcat.id" for="parentNode" disabled>
-                                    #else
-                                    <select id="pcat.id" name="pcat.id" for="parentNode">
-                                    #end
-                                    <option value="">无</option>
-                                    #foreach($cat in $!merchantCats)
-                                        <option value="$!cat.id" #if($!entity.pcat.id == $!cat.id)
-                                                selected #end> $!cat.name</option>
-                                    #end
-                                </select>
-                                </div>
-                            </div>
                                 <label class="control-label">是否显示：</label>
                                 <div class="controls">
                                     <select id="display" name="display" class="span11">
@@ -134,9 +114,9 @@
                             </div>
                                 <div class="form-actions" style="text-align: center">
                                     #if($!type==2 || $!type==1)
-                                        <button onclick="return verifyNode()" type="submit" class="btn btn-success">保存</button>
+                                        <button type="submit" class="btn btn-success">保存</button>
                                     #elseif($!type==3)
-                                        <a onclick="return verifyNode()" href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
+                                        <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
                                     #end
                                     <a class="btn btn-primary" href="list">返回</a>
                                 </div>
@@ -211,18 +191,6 @@
 </body>
     #include("common/js-support.vm")
 <script type="text/javascript">
-    // 验证父节点
-    function verifyNode() {
-        var parentNode = $("select[for=parentNode]").val();
-        var parentNodeAuth = $("select[for=parentNode]").attr("disabled");
-
-        if (parentNodeAuth != "disabled" && (parentNode == null || parentNode == "")) {
-            alert("请选择所属一级分类");
-            return false;
-        }
-        return true;
-    }
-
     $(document).ready(function () {
         var currLangKeyInput;
         var currLangShnKeyInput;
