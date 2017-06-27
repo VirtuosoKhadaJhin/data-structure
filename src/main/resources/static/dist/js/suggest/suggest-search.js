@@ -28,7 +28,6 @@ $(function () {
                         listComplete.push(complate);
                         complate = {};
                     }
-                    console.log(listComplete);
                 } else {
                     alert(result.msg);
                 }
@@ -37,13 +36,15 @@ $(function () {
     }).autocomplete({
         source: listComplete,
         focus: function (event, ui) {
-            $(this).val(ui.item.labelDisplay);
+            $(this).val(ui.item.value);
+            console.log(ui);
             $(this).next().val(ui.item.value);
             return false;
 
         },
         select: function (event, ui) {
             $(this).val(ui.item.labelDisplay);
+            console.log(ui);
             $(this).next().val(ui.item.value);
             return false;
         }

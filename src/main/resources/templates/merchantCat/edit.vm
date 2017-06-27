@@ -112,14 +112,14 @@
                                     <p>尺寸: 60 * 60, 限制: 5k</p>
                                 </div>
                             </div>
-                                <div class="form-actions" style="text-align: center">
-                                    #if($!type==2 || $!type==1)
-                                        <button type="submit" class="btn btn-success">保存</button>
-                                    #elseif($!type==3)
-                                        <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
-                                    #end
-                                    <a class="btn btn-primary" href="list">返回</a>
-                                </div>
+                            <div class="form-actions" style="text-align: center">
+                                #if($!type==2 || $!type==1)
+                                    <button type="submit" class="btn btn-success">保存</button>
+                                #elseif($!type==3)
+                                    <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
+                                #end
+                                <a class="btn btn-primary" href="list">返回</a>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -188,8 +188,9 @@
     </div>
 </div>
 <!--***************************************通用新增语言*************************************************************-->
-</body>
-    #include("common/js-support.vm")
+#include("common/js-support.vm")
+#include("common/image-support.vm")
+<script type="text/javascript" src="/dist/js/suggest/suggest-search.js"/>
 <script type="text/javascript">
     $(document).ready(function () {
         var currLangKeyInput;
@@ -431,10 +432,8 @@
         });
         $("input[data-key='2']").val(nameVal);
     }
-
 </script>
-<script type="text/javascript" src="/dist/js/suggest/suggest-search.js"/>
-    #include("common/image-support.vm")
+</body>
 </html>
 
 
