@@ -39,18 +39,28 @@
                                 </div>
                                 <label class="col-sm-2 control-label">名称：</label>
                                 <div class="controls">
-                                    <input name="nameLabel" for="name" type="text" placeholder="名称" class="langsAutoComplete" langsKeyName="name" value="$!entity.name">
-                                    <input name="name" class="checked-keycode" type="hidden" value="$!entity.name">
+                                    <input name="name" for="name" type="text" placeholder="名称" class="langsAutoComplete" langsKeyName="name" value="$!entity.name">
+                                    <input name="keycode" class="checked-keycode" type="hidden" value="$!entity.keyCode">
 
                                     <a class="btn btn-info btn-mini add-lang" langsKeyName="remark" langsValueName="remarkLabel">
                                         <i class="icon-plus"></i>
                                     </a>
                                 </div>
-                                <label class="col-sm-2 control-label">分类属性：</label>
+                                <label class="col-sm-2 control-label">父节点：</label>
                                 <div class="controls">
-                                    <select class="span10" name="verifyType">
-                                        #foreach($e in $!parentCats)
-                                            <option value="$!e" #if($!e.name == $!entity.name)selected#end>$!e.name</option>
+                                    <select name="pcat">
+                                        #if("$!entity.pcat" == "")
+                                            <option value="">无</option>
+                                            #foreach($e in $!parentCats)
+                                                #if($!e.id != $!entity.id)
+                                                    <option value="$!e.id">$!e.name</option>
+                                                #end
+                                            #end
+                                        #else
+                                            <option>无</option>
+                                            #foreach($e in $!parentCats)
+                                                <option value="$!e.id" #if($!e.name == $!entity.name)selected#end>$!e.name</option>
+                                            #end
                                         #end
                                     </select>
                                 </div>
@@ -59,7 +69,7 @@
                                     <input name="shortname" for="shortname" type="text" class="form-control langsAutoComplete" placeholder="简称"
                                            langsKeyName="name" value="$!entity.shortname">
 
-                                    <input name="shnName" type="hidden" value="$!entity.shnName">
+                                    <input name="shnKeyCode" type="hidden" value="$!entity.shnKeyCode">
 
                                     <a class="btn btn-info btn-mini add-lang" langsKeyName="remark" langsValueName="remarkLabel">
                                         <i class="icon-plus"></i>
@@ -456,7 +466,7 @@
 
 </script>
 <script type="text/javascript" src="/dist/js/suggest/suggest-search.js"/>
- #include("common/image-support.vm")
+    #include("common/image-support.vm")
 </html>
 
 

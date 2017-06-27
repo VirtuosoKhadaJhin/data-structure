@@ -20,7 +20,6 @@
         <th>分类名称（本地）</th>
         <th>分类名称（英语）</th>
         <th>简称</th>
-        <th>分类属性</th>
         <th>是否显示</th>
         <th>操作</th>
     </tr>
@@ -69,13 +68,6 @@
                     $!entity.shortname
                 #else
                     <span class="empty-data">暂无</span>
-                #end
-            </td>
-            <td class="td-cate">
-                #if("$!entity.pcat" == "")
-                    一级
-                #else
-                    二级
                 #end
             </td>
             <td class="td-display">
@@ -320,9 +312,8 @@
 
                 // 子集
                 function subDataList(pcatId, subSearch) {
-                    var pcat = {id: pcatId};
                     var data = {
-                        pcat: pcat,
+                        pcat: pcatId,
                         index: pageNum
                     };
                     if (subSearch != null) {

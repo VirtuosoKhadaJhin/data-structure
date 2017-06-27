@@ -10,7 +10,6 @@ import com.nuanyou.cms.model.MerchantCatResultVo;
 import com.nuanyou.cms.model.MerchantCatVo;
 import com.nuanyou.cms.service.MerchantCatService;
 import com.nuanyou.cms.util.BeanUtils;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +77,6 @@ public class MerchantCatServiceImpl implements MerchantCatService {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 predicate.add(cb.isNull(root.get("pcat")));
 
-                predicate.add(cb.equal(root.get("kpname"), "test"));
                 if (entity.getId() != null) {
                     predicate.add(cb.equal(root.get("id"), entity.getId()));
                 }
@@ -103,12 +101,8 @@ public class MerchantCatServiceImpl implements MerchantCatService {
         List<MerchantCat> pageLists = merchantCats;
         List<MerchantCatVo> merchantCatVos = Lists.newArrayList();
 
-        List<Integer> repeatKeyCodes = Lists.newArrayList();
         MerchantCatResultVo merchantCatResultVo;
         for (MerchantCat cat : pageLists) {
-            if (searchKeyCodes.contains(cat.getKeyCode()) && BooleanUtils.isFalse(cat.getKeyCode().equals(""))) {
-                repeatKeyCodes.add(Integer.MIN_VALUE);
-            }
             MerchantCatVo vo = convertToMerchantCatVo(cat);
             merchantCatVos.add(vo);
             if (cat.getKeyCode() != null) {
@@ -135,49 +129,23 @@ public class MerchantCatServiceImpl implements MerchantCatService {
                 }
             });
 
-            for (EntityNyLangsDictionary dict : dicts) {
-                Integer location = 0;
-                Integer keyCodeIndex = -1;
-                for (MerchantCatResultVo vo : merchantCatResultVos) {
-                    if (dict.getKeyCode().equals(vo.getKeyCode()) && BooleanUtils.isFalse(vo.isAllHandled())
-                            && BooleanUtils.isFalse(vo.getKeyCode().equals(""))) {
-                        keyCodeIndex = location;
-                        continue;
-                    }
-                    location++;
-                }
-
-                MerchantCatVo merchantCatVo = merchantCatVos.get(keyCodeIndex);
-
-                if (dict.getLanguage().equals("en")) {
-                    merchantCatVo.setEnNameLabel(dict.getMessage());
-                    if (keyCodeIndex > -1) {
-                        MerchantCatResultVo vo = merchantCatResultVos.get(keyCodeIndex);
-                        vo.setEnFlag(true);
-
-                        merchantCatResultVos.set(keyCodeIndex, vo);
-                    }
-                } else if (dict.getLanguage().equals(locale.getLanguage())) {
-                    merchantCatVo.setLocalNameLabel(dict.getMessage());
-                    if (keyCodeIndex > -1) {
-                        MerchantCatResultVo vo = merchantCatResultVos.get(keyCodeIndex);
-                        vo.setZhFlag(true);
-
-                        merchantCatResultVos.set(keyCodeIndex, vo);
+            for (MerchantCatVo vo : merchantCatVos) {
+                if (StringUtils.isNotEmpty(vo.getKeyCode())) {
+                    for (EntityNyLangsDictionary dict : dicts) {
+                        if (dict.getKeyCode().equals(vo.getKeyCode())) {
+                            if (dict.getLanguage().equals("en")) {
+                                vo.setEnNameLabel(dict.getMessage());
+                            } else if (dict.getLanguage().equals(locale.getLanguage())) {
+                                vo.setLocalNameLabel(dict.getMessage());
+                            }
+                        }
                     }
                 }
-
-                // 更新链表中英文的数据
-                merchantCatVos.set(keyCodeIndex, merchantCatVo);
-
             }
-
-            // Page<MerchantCatVo> lists = new PageImpl<MerchantCatVo>(merchantCatVos, pageable, merchantCats.getTotalElements());
 
             return merchantCatVos;
         }
 
-        // Page<MerchantCatVo> lists = new PageImpl<MerchantCatVo>(merchantCatVos, pageable, merchantCats.getTotalElements());
         return merchantCatVos;
     }
 
@@ -267,30 +235,35 @@ public class MerchantCatServiceImpl implements MerchantCatService {
             merchantCatVo.setPcat(null);
         }
 
-        String nameLabel = merchantCatVo.getNameLabel();
+        String nameLabel = merchantCatVo.getName();
         String shnName = merchantCatVo.getShortname();
 
         try {
             if (StringUtils.isNotEmpty(nameLabel)) {
                 nameLabel = nameLabel.substring(0, nameLabel.indexOf("("));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
             if (StringUtils.isNotEmpty(shnName)) {
                 shnName = shnName.substring(0, shnName.indexOf("("));
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         MerchantCat merchantCat = new MerchantCat(nameLabel, shnName, merchantCatVo.getDisplay(), merchantCatVo.getSort(),
                 merchantCatVo.getImageUrl(), merchantCatVo.getMapimgurl());
 
-        if (StringUtils.isNotEmpty(merchantCatVo.getName())) {
-            merchantCat.setKeyCode(merchantCatVo.getName());
-        }
-        if (StringUtils.isNotEmpty(merchantCatVo.getShnName())) {
-            merchantCat.setShnKeyCode(merchantCatVo.getShnName());
-        }
+        merchantCat.setKeyCode(merchantCatVo.getKeycode());
+        merchantCat.setShnKeyCode(merchantCatVo.getShnKeyCode());
 
+        if (merchantCatVo.getPcat() != null) {
+            MerchantCat cat = merchantCatDao.findOne(merchantCatVo.getPcat());
+            merchantCat.setPcat(cat);
+        }
         if (merchantCatVo.getId() == null) {
             merchantCatDao.save(merchantCat);
         } else {

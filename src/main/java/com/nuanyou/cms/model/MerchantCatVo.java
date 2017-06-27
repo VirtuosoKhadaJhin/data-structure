@@ -1,7 +1,5 @@
 package com.nuanyou.cms.model;
 
-import com.nuanyou.cms.entity.MerchantCat;
-
 /**
  * Created by mylon on 2017/6/19.
  */
@@ -12,14 +10,8 @@ public class MerchantCatVo {
     // 分页
     private Integer index;
 
-    // keycode
-    private String name;
-
-    // shortname keycode
-    private String shnName;
-
     // 名称
-    private String nameLabel;
+    private String name;
 
     // 简称
     private String shortname;
@@ -28,7 +20,7 @@ public class MerchantCatVo {
     private Boolean display;
 
     // 父节点
-    private MerchantCat pcat;
+    private Long pcat;
 
     // 排序
     private Integer sort;
@@ -44,6 +36,15 @@ public class MerchantCatVo {
 
     // 本地语言
     private String localNameLabel;
+
+    // convert keycode
+    private String keycode;
+
+    // convert keyCode
+    private String keyCode;
+
+    // convert shnKeyCode
+    private String shnKeyCode;
 
     public MerchantCatVo() {
     }
@@ -72,22 +73,6 @@ public class MerchantCatVo {
         this.name = name;
     }
 
-    public String getShnName() {
-        return shnName;
-    }
-
-    public void setShnName(String shnName) {
-        this.shnName = shnName;
-    }
-
-    public String getNameLabel() {
-        return nameLabel;
-    }
-
-    public void setNameLabel(String nameLabel) {
-        this.nameLabel = nameLabel;
-    }
-
     public String getShortname() {
         return shortname;
     }
@@ -104,11 +89,11 @@ public class MerchantCatVo {
         this.display = display;
     }
 
-    public MerchantCat getPcat() {
+    public Long getPcat() {
         return pcat;
     }
 
-    public void setPcat(MerchantCat pcat) {
+    public void setPcat(Long pcat) {
         this.pcat = pcat;
     }
 
@@ -150,5 +135,29 @@ public class MerchantCatVo {
 
     public void setLocalNameLabel(String localNameLabel) {
         this.localNameLabel = localNameLabel;
+    }
+
+    public String getKeyCode() {
+        return keyCode;
+    }
+
+    public void setKeyCode(String keyCode) {
+        this.keyCode = keyCode;
+    }
+
+    public String getKeycode() {
+        return keycode;
+    }
+
+    public void setKeycode(String keycode) {
+        this.keycode = keycode;
+    }
+
+    public String getShnKeyCode() {
+        return shnKeyCode;
+    }
+
+    public void setShnKeyCode(String shnKeyCode) {
+        this.shnKeyCode = shnKeyCode;
     }
 }

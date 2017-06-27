@@ -139,7 +139,7 @@ public class MerchantCat {
         this.updatetime = updatetime;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne/*(fetch = FetchType.LAZY)*/
     @JoinColumn(name = "pid", nullable = true)
     @JsonIgnore
     public MerchantCat getPcat() {

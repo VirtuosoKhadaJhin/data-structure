@@ -108,7 +108,7 @@ public class MerchantCatController {
     @ResponseBody
     public APIResult<Page<MerchantCatVo>> viewCat(@RequestBody MerchantCatVo merchantCatVo, HttpServletRequest request) {
         Locale locale = request.getLocale();
-        Page<MerchantCatVo> page = merchantCatService.findChildCat(merchantCatVo, merchantCatVo.getIndex(), locale, merchantCatVo.getPcat().getId());
+        Page<MerchantCatVo> page = merchantCatService.findChildCat(merchantCatVo, merchantCatVo.getIndex(), locale, merchantCatVo.getPcat());
         return new APIResult(page);
     }
 
