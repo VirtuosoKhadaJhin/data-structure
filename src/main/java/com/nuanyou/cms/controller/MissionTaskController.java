@@ -2,11 +2,9 @@ package com.nuanyou.cms.controller;
 
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
-import com.nuanyou.cms.entity.City;
-import com.nuanyou.cms.entity.Country;
-import com.nuanyou.cms.entity.Merchant;
-import com.nuanyou.cms.entity.MissionGroup;
+import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
+import com.nuanyou.cms.model.DistrictVo;
 import com.nuanyou.cms.model.MissionRequestVo;
 import com.nuanyou.cms.model.MissionTaskVo;
 import com.nuanyou.cms.service.*;
@@ -35,6 +33,9 @@ public class MissionTaskController {
 
     @Autowired
     private CityService cityService;
+
+    @Autowired
+    private DistrictService districtService;
 
     @Autowired
     private MissionGroupService missionGroupService;
@@ -77,5 +78,28 @@ public class MissionTaskController {
     public APIResult approvalTask(@RequestBody MissionRequestVo vo) {
         missionTaskService.approvalTask(vo);
         return new APIResult(ResultCodes.Success);
+    }
+
+    /**
+     * 指派任务到队员
+     *
+     * @param requestVo
+     * @param model
+     * @return
+     */
+    @RequestMapping("distribute")
+    public String distributeTask(MissionRequestVo requestVo, Model model) {
+        List<City> cities = cityService.findCityByCountryId(requestVo.getCountry());
+        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCountry(), requestVo.getCity());
+        List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(1L);
+        List<DistrictVo> districts = districtService.findByCity(requestVo.getCity());
+        requestVo.setStatus(MissionTaskStatus.UN_FINISH);
+        Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
+        model.addAttribute("page", page);
+        model.addAttribute("cities", cities);
+        model.addAttribute("bdUsers", bdUsers);
+        model.addAttribute("merchants", merchants);
+        model.addAttribute("requestVo", requestVo);
+        return null;
     }
 }
