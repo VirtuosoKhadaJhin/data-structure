@@ -1,12 +1,12 @@
 #parse("common/list_start.vm")
 <div id="breadcrumb">
     <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-    <a href="list" class="tip-bottom" data-original-title="">多语言管理</a>
+    <a href="list" class="tip-bottom" data-original-title="">bd宝用户管理</a>
     <a href="#" class="tip-bottom" data-original-title="">列表</a>
 </div>
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
-    <h5>多语言列表</h5>
+    <h5>bd宝用户列表</h5>
     <a class="btn btn-mini btn-info buttons" href="add">新增</a>
 #*<a class="btn btn-mini btn-info buttons" onclick="langsCommonDialog()">通用新增</a>*#
 </div>
@@ -39,6 +39,7 @@
             <th>所属国家</th>
             <th>邮箱</th>
             <th>角色</th>
+            <th>操作</th>
 
         </tr>
         </thead>
@@ -54,22 +55,28 @@
             </tr>那么那么
             #end
 
-            #foreach($entity in $!page.content)
+            #foreach($vo in $!vos.content)
             <tr class="odd gradeX">
                 <td class="td-sort">
-                    <label style="text-align: center;">$!entity.id</label>
+                    <label style="text-align: center;">$!vo.user.id</label>
                 </td>
                 <td class="td-sort">
-                    <label style="text-align: center;">$!entity.name</label>
+                    <label style="text-align: center;">$!vo.user.name</label>
                 </td>
                 <td class="td-sort">
-                    <label style="text-align: center;">$!entity.countryName</label>
+                    <label style="text-align: center;">$!vo.country.name</label>
                 </td>
                 <td class="td-sort">
-                    <label style="text-align: center;">$!entity.email</label>
+                    <label style="text-align: center;">$!vo.user.email</label>
                 </td>
                 <td class="td-sort">
-                    <label style="text-align: center;">$!entity.role</label>
+                    <label style="text-align: center;">$!vo.role.desc</label>
+                </td>
+
+                <td style="min-width: 80px;">
+                    <div style="text-align: center">
+                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item" href="edit?id=$!vo.user.id">编辑</a>
+                    </div>
                 </td>
 
             </tr>
@@ -84,20 +91,6 @@
 <form class="form-horizontal search-form" method="get" action="list">
 
 
-    <div class="control-group" style="margin-bottom: 10px">
-        <label>keyCode</label>
-        <input type="text" class="span11" name="keyCode" value="$!requestVo.keyCode">
-    </div>
-    <div class="control-group" style="margin-bottom: 10px">
-        <label>内容</label>
-        <input type="text" class="span11" name="message" value="$!requestVo.message">
-    </div>
-
-
-    <div class="control-group" style="clear: both;margin-top: 10px;">
-        <button type="submit" class="btn btn-primary">查询</button>
-        <button class="btn btn-warning search-reset">重置</button>
-    </div>
 </form>
 
 #parse("common/list_end.vm")

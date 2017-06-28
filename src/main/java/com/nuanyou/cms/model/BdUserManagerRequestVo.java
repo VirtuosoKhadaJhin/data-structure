@@ -10,7 +10,7 @@ public class BdUserManagerRequestVo {
     private Long id;
     private String email;
     private Long conturyid;
-//    private String role; //角色
+    private String role; //角色
     
     Integer index = 1;
     Integer pageNum = 8;

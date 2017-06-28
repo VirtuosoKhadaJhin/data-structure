@@ -8,50 +8,8 @@
     #include("common/css-support.vm")
 
     <style>
-        .form-horizontal .control-label {
-            padding-top: 15px;
-            width: 140px;
-        }
 
-        .form-horizontal .controls {
-            margin-left: 180px;
-            padding: 10px 0;
-        }
 
-        .required-waring {
-            display: none;
-            padding-top: 2px;
-            text-align: left;
-            width: 140px;
-            padding-right: 8em;
-            color: red;
-            text-align: left;
-            padding-top: 5px;
-        }
-
-        .lefile {
-            width: 110px;
-            display: none;
-            padding-right: 8em;
-            float: right;
-            color: red;
-            text-align: left;
-            padding-top: 5px;
-        }
-
-        #imgUrl {
-            width: 250px;
-            height: 250px;
-        }
-
-        .keyCodeStatus {
-            display: none;
-            padding-right: 8em;
-            float: left;
-            color: red;
-            text-align: left;
-            padding-top: 5px;
-        }
     </style>
 </head>
 <body>
@@ -59,119 +17,95 @@
     <div id="content-header">
         <div id="breadcrumb">
             <div id="breadcrumb">
-                <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-                <a href="list" class="tip-bottom" data-original-title="">多语言管理</a>
+                <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i
+                        class="icon-home"></i> 主页</a>
+                <a href="list" class="tip-bottom" data-original-title="">bd宝用户管理</a>
                 <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
             </div>
         </div>
 
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span6" style="width: 70%;min-width:994px;">
-                    <div class="widget-box" style="width: 78%">
-                        <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                <div class="span6">
+                    <div class="widget-box">
+                        <div class="widget-title"><span class="icon"> <i
+                                class="icon-align-justify"></i> </span>
                             <h5>编辑&查看</h5>
                         </div>
-                        <form class="form-horizontal langsDicFormValidate" role="form" id="uploadForm"
-                              action="/langsMessageTip/uploadImg" name="uploadForm" enctype="multipart/form-data">
+                        <form class="form-horizontal" action="saveEdit" method="post"
+                              onsubmit="return emailChekc()">
 
                             <div class="nopadding" style="width: 100%;">
-                                <div class="fl" style="border-right:1px solid #eeeeee;box-sizing:border-box;width:48%;">
+                                <div >
                                 #*<div class="control-group">*#
+
                                     <div class="">
-                                        <label class="control-label" style="width: 140px;">keyCode<font
-                                                style="color: red;margin: 0px;padding: 5px;">*</font>：</label>
+                                        <label class="control-label"
+                                               style="width: 140px;">id：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" name="keyCode" id="keyCode" type="text" class="span7"
-                                                   readonly="readonly" style="width: 80%" value="$!langsDictionary.keyCode">
-                                            <label id="keyCodeStatus" class="keyCodeStatus">KeyCode重复</label>
+                                            <input for="name" name="id" id="id" type="text"
+                                                   class="span7"
+                                                   readonly="readonly" style="width: 80%"
+                                                   value="$!vo.user.id">
                                         </div>
                                     </div>
                                     <div class="">
-                                        <label class="control-label" style="width: 140px;">多语言分类
-                                            <font style="color: red;margin: 0px;padding: 5px;">*</font>：
-                                        </label>
+                                        <label class="control-label"
+                                               style="width: 140px;">用户名：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <select class="span7 select2 " name="categoryId"
-                                                    onchange="keyCodeRealTime()" style="width: 80%">
-                                                #foreach($e in $!selectableLangsCategory)
-                                                    #if($!langsDictionary.categoryId == $!e.id)
-                                                        <option value="$!e.id" selected>$!e.name</option>
-                                                    #else
-                                                        <option value="$!e.id">$!e.name</option>
-                                                    #end
+                                            <input for="name" name="name" id="name" type="text"
+                                                   class="span7"
+                                                   style="width: 80%" value="$!vo.user.name">
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <label class="control-label"
+                                               style="width: 140px;">所属国家：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select name="countryId" style="width:80%">
+##                                                <option selected="selected"
+##                                                        value="$!vo.country.id">$!vo.country.name</option>
+##                                                #foreach($country in $!countries)
+##                                                    <option value="$!country.id">$!country.name</option>
+##                                                #end
+                                                #foreach($country in $!countries)
+                                                    <option value="$!country.id" #if($!vo.country.id==$!country.id) selected  #end>$!country.name</option>
                                                 #end
                                             </select>
                                         </div>
                                     </div>
-
-
-                                    #foreach($langCountry in $!langsCountries)
-                                        <div class="">
-                                            <label class="control-label" style="width: 140px;">$!langCountry.desc
-                                                ($!langCountry.value)
-                                                #if($!langCountry.key == 1 || $!langCountry.key == 2)
-                                                    <font style="color: red;margin: 0px;padding: 5px;">*</font>
-                                                #end
-                                                ：</label>
-                                            <div class="controls" style="margin-left: 152px;">
-                                            ##多语言##
-                                                #set($hasNullMessage=true)
-                                                #foreach($message in $!langsDictionary.langsMessageList)
-                                                    #if($!message.langsKey == $!langCountry.key)
-                                                        <input name="$!langCountry.key" type="text" style="width: 80%"
-                                                               class="span7 countryLanguage" value="$!message.message">
-                                                        #set($hasNullMessage=false)
-                                                    #end
-                                                #end
-                                                #if($hasNullMessage)
-                                                    <input name="$!langCountry.key" type="text" style="width: 80%"
-                                                           class="span7 countryLanguage" value="$!message.message">
-                                                #end
-                                            ##多语言##
-                                                <label id="requiredKey_$!langCountry.key"
-                                                       class="control-label required-waring"
-                                                       style="padding-top: 2px;text-align: left;width: 140px;">必填项</label>
-                                            </div>
-                                        </div>
-                                    #end
-
-                                </div>
-
-                                <div class="fr" style="width:50%;float: left">
                                     <div class="">
-                                        <label class="control-label" style="min-width: 100px;max-width: 100px;">描&nbsp;&nbsp;&nbsp;述：</label>
-                                        <div class="controls" style="margin-left: 80px">
-                                            <textarea placeholder="多语言描述" class="form-control" id="remark"
-                                                      style="margin-left: 40px;min-width: 253px;" cols="4" rows="4">#if(
-                                                "$!langsDictionary.messageTip.remark" != "")$!langsDictionary.messageTip.remark#end</textarea>
+                                        <label class="control-label"
+                                               style="width: 140px;">邮箱：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <input for="name" name="email" id="email" type="text"
+                                                   class="span7"
+                                                   style="width: 80%" value="$!vo.user.email">
                                         </div>
                                     </div>
                                     <div class="">
-                                        <label class="control-label" style="min-width: 100px;max-width: 100px;">场景图：</label>
-                                        <div class="controls" style="margin-left: 80px">
-                                            <input id="lefile" name="file" type="file" style="display:none">
-                                            <div class="input-append">
-                                                <input id="photoCover" style="margin-left: 40px;" class="span3" type="text">
-                                                <a class="btn span4" onclick="$('input[id=lefile]').click();"
-                                                   style="background-color: #eee;float: right;width: 80px;position: absolute;">
-                                                    <i class="icon-folder-open" style="padding-right"></i>选择文件</a>
-                                            </div>
-                                            <label name="lefile" class="lefile">
-                                                请选择图片
-                                            </label>
-                                        </div>
-                                        <div style="text-align: center;padding-top: 1em;">
-                                            #if("$!langsDictionary.messageTip.imgUrl" != "")
-                                                <img id="imgUrl" src="$!langsDictionary.messageTip.imgUrl">
-                                            #end
+                                        <label class="control-label"
+                                               style="width: 140px;">角色：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select name="roleId" style="width:80%">
+                                                #foreach($role in $!roles)
+                                                    <option value="$!role.id" #if($!vo.role.id==$!role.id) selected  #end>$!role.desc</option>
+                                                #end
+##                                                <option selected="selected"
+##                                                        value="$!vo.role.id">$!vo.role.desc</option>
+##                                                #foreach($role in $!roles)
+##                                                    <option value="$!role.id">$!role.desc</option>
+##                                                #end
+                                            </select>
                                         </div>
                                     </div>
+
                                 </div>
+
 
                                 <div class="form-actions" style="clear:both;text-align: center">
-                                    <a onclick="modifyLangsDictionary()" id="editBtn" class="btn btn-info">确定</a>
-                                    <a class="btn btn-primary" onclick="back()">返回</a>
+                                    <button type="submit" class="btn btn-info">确定</button>
+                                ##                                    <a class="btn btn-primary" onclick="back()">返回</a>
                                 </div>
                         </form>
 
@@ -184,235 +118,17 @@
     #include("common/js-support.vm")
 
     <script type="text/javascript">
-        $(document).ready(function () {
-
-            // file 上传文件
-            $('input[id=lefile]').change(function () {
-                // $('#photoCover').val($(this).val());
-                $("#editBtn").attr("onclick", "");
-                $("#editBtn").attr("style", "background-color: gray;");
-                $("#uploadForm").ajaxSubmit({
-                    type: 'post',
-                    url: "/langsMessageTip/uploadImg",
-                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                    success: function (result) {
-                        if (result.code == 0) {
-                            alert("上传图片成功!");
-                            $("#editBtn").attr("onclick", "modifyLangsDictionary()");
-                            $("#editBtn").attr("style", "");
-                            $("#photoCover").val(result.data);
-                            $("#imgUrl").attr("src", result.data).show();
-                        }
-                    }
-                });
-            });
-
-        });
-
-        /**
-         * 上传图文消息
-         */
-        function addLangsMessageTip() {
-            var keyCode = getUrlParam("keyCode");
-            var remark = $("textarea[id='remark']").val();
-            var imgUrl = $("input[id='lefile']").val();
-
-            if (remark == null || remark == "") {
-                $("label[name='remark']").show();
-                $("textarea[id='remark']").css("border", "1px solid red");
-                return false;
-            } else if (imgUrl == null || imgUrl == "") {
-                $("label[name='remark']").hide();
-                $("textarea[id='remark']").css("border", "");
-                $("label[name='lefile']").show();
-                return true;
-            } else {
-                $("label[name='lefile']").hide();
-            }
-        }
-
-        /**
-         * 验证keyCode是否重复
-         */
-        function verifykeyCode() {
-
-            var request = {};
-            var keyCode = $("input[name='keyCode']").val();
-
-            request.keyCode = keyCode;
-            $.ajax({
-                url: 'verifykeyCode',
-                data: JSON.stringify(request),
-                type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                success: function (result) {
-                    console.log(result.data);
-                    if (result.code == 0) {
-                        if (!result.data) {
-                            // 如果和当前的URL中的keyCode相同,则不提示keyCode重复
-                            // 反之不能覆盖其他同名的keyCode
-                            if (getUrlParam("keyCode") != $("#keyCode").val()) {
-                                $("#keyCodeStatus").show();
-                                $("#editBtn").attr("onclick", "");
-                                $("#keyCode").css("border", "1px solid red");
-                                $("#editBtn").attr("style", "background-color: gray;");
-                            }
-                        } else {
-                            $("#keyCodeStatus").hide();
-                            $("#editBtn").attr("style", "");
-                            $("#keyCode").css("border", "");
-                            $("#editBtn").attr("onclick", "modifyLangsDictionary()");
-                        }
-                    }
-                }
-            });
-        }
-
-        /**
-         * 实时更新keyCode展示
-         */
-        function keyCodeRealTime() {
-            // 拼接KeyCode
-            var requiredUS = $("input[name='1']").val();
-            // 如果是英文,则要增加改变事件,用来改变keyCode
-            $("input[name='1']").attr("onkeyup", "keyCodeRealTime()");
-            // 选择的分类
-            var categoryId = $("select[name='categoryId']").val();
-            if (categoryId != null && categoryId != "") {
-                var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
-                $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
-            }
-            if (categoryId == null || categoryId == "") {
-                $("input[name='keyCode']").val(requiredUS);
-            }
-            // keyCode初始化值
-            if (requiredUS != null && requiredUS != "") {
-                if (categoryId != null && categoryId != "") {
-                    var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
-                    $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
-                }
-            }
-            verifykeyCode();
-        }
-
-        /**
-         * 检验必填项
-         */
-        function checkRequiredParams() {
-            var requiredUS = $("input[name='1']").val();
-            var requiredZH = $("input[name='2']").val();
-            var categoryId = $("select[name='categoryId']").val();
-
-            if (requiredUS == null || requiredUS == "") {
-                $("#requiredKey_1").show();
-                $("input[name='1']").css("border", "1px solid red");
-                return false;
-            } else if (requiredZH == null || requiredZH == "") {
-                $("#requiredKey_2").show();
-                $("input[name='2']").css("border", "1px solid red");
-                return false;
-            } else if (categoryId == null || categoryId == "") {
-                alert("请选择分类!");
-                return false;
-            } else {
-                $("#requiredKey_1").hide();
-                $("input[name='1']").css("border", "");
-                $("#requiredKey_2").hide();
-                $("input[name='2']").css("border", "");
-                return true;
-            }
-            return true;
-        }
-
-
-        /**
-         * 修改语言
-         */
-        function modifyLangsDictionary() {
-            keyCodeRealTime();
-            var checkResult = checkRequiredParams();
-            if (!checkResult) {
-                return false;
+        //邮箱验证
+        function emailChekc() {
+            var email = document.getElementsByName("email")[0].value;
+            var reg = /^([a-z0-9A-Z]+[-|\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\.)+[a-zA-Z]{2,}$/;
+            var res = reg.test(email);
+            if (res == false) {
+                alert("邮箱规则错误，请输入正确的邮箱");
             }
 
-            var request = {};
-            request.keyCode = getUrlParam("keyCode");
-            request.newKeyCode = $("input[name='keyCode']").val();
-            request.categoryId = Number($("select[name='categoryId']").val());
-
-            // 页面所有的语言message
-            var countryLanguages = $("input[class='span7 countryLanguage']");
-            // langsMessageList
-            var langsMessageList = [];
-            for (var i = 0; i < countryLanguages.length; i++) {
-                var countryLanguage = countryLanguages.eq(i);
-                // keyCode
-                var langsKey = countryLanguage.attr("name");
-                // message
-                var message = countryLanguage.val().trim();
-                var langsCountryMessageVo = {
-                    langsKey: langsKey,
-                    message: message
-                };
-                langsMessageList.push(langsCountryMessageVo);
-            }
-            // 封装LangsDictionaryVo传输约束
-            request.langsMessageList = langsMessageList;
-
-            $.ajax({
-                url: 'modifyLangsDictionary',
-                data: JSON.stringify(request),
-                type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                success: function (result) {
-                    if (result.code == 0) {
-                    }
-                }
-            });
-
-            var messRequest = {};
-
-            var keyCode = getUrlParam("keyCode");
-            var newKeyCode = $("input[name='keyCode']").val();
-            var remark = $("textarea[id='remark']").val();
-            var imgUrl = $("input[id='photoCover']").val();
-
-            messRequest.keyCode = keyCode;
-            messRequest.newKeyCode = newKeyCode;
-            messRequest.remark = remark;
-            messRequest.imgUrl = imgUrl;
-
-            $.ajax({
-                url: '/langsMessageTip/add',
-                data: JSON.stringify(messRequest),
-                type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                success: function (result) {
-                    if (result.code == 0) {
-                        alert("操作成功!");
-                        location.href = "list?index=" + getUrlParam("pageIndex");
-                    }
-                }
-            });
-
+            return res;
         }
-
-        //获取url中的参数
-        function getUrlParam(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-            var r = window.location.search.substr(1).match(reg);
-            if (r != null) return unescape(r[2]);
-            return null;
-        }
-
-        // 返回列表页
-        function back() {
-            location.href = "list?index=" + getUrlParam("pageIndex");
-        }
-
     </script>
 </body>
 </html>

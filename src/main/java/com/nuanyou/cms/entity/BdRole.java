@@ -11,15 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * bd宝用户
- * <p>
- * Created by sharp on 2017/6/22 - 15:12
+ * bd宝用户角色
+ * Created by sharp on 2017/6/26 - 11:34
  */
 @Entity
-@Table(name = "bd_user", catalog = "bd") //catalog配置访问的数据库
+@Table(name = "bd_role", catalog = "bd")
+
 @EntityListeners({AuditingEntityListener.class})
-public class BdUser {
-    
+public class BdRole {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -28,14 +28,8 @@ public class BdUser {
     @Column(name = "name")
     private String name;
     
-    @Column(name = "pwd")
-    private String pwd;
-    
-    @Column(name = "email")
-    private String email;
-    
-    @Column(name = "countryid")
-    private Long countryId;
+    @Column(name = "desc")
+    private String desc;
     
     public Long getId() {
         return id;
@@ -53,27 +47,11 @@ public class BdUser {
         this.name = name;
     }
     
-    public String getPwd() {
-        return pwd;
+    public String getDesc() {
+        return desc;
     }
     
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-    
-    public String getEmail() {
-        return email;
-    }
-    
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    
-    public Long getCountryId() {
-        return countryId;
-    }
-    
-    public void setCountryId(Long countryId) {
-        this.countryId = countryId;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

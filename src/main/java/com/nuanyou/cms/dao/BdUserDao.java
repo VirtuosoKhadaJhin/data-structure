@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * Created by sharp on 2017/6/22 - 18:29
  */
 public interface BdUserDao extends JpaRepository<BdUser, Long>, JpaSpecificationExecutor {
+    BdUser findUserById(Long id);
 }

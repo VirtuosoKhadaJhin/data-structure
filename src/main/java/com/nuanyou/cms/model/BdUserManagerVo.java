@@ -1,60 +1,45 @@
 package com.nuanyou.cms.model;
 
+import com.nuanyou.cms.entity.BdRole;
+import com.nuanyou.cms.entity.BdUser;
+import com.nuanyou.cms.entity.Country;
+
 /**
  * // TODO: 2017/6/22 注释
  * Created by sharp on 2017/6/22 - 14:53
  */
 public class BdUserManagerVo {
-    private Long id;
-    private String name;
-    private String pwd;
-    private String countryName; //所属国家
-    private String email; //邮箱
+    private BdUser user;
+    private BdRole role; //角色
+    private Country country;
+    
     
     public BdUserManagerVo() {
     }
     
-    public BdUserManagerVo(long id) {
-        this.id = id;
+    public Country getCountry() {
+        return country;
     }
     
-    public Long getId() {
-        return id;
+    public void setCountry(Country country) {
+        this.country = country;
     }
     
-    public void setId(Long id) {
-        this.id = id;
+    public BdUser getUser() {
+        return user;
     }
     
-    public String getName() {
-        return name;
+    public void setUser(BdUser user) {
+        this.user = user;
     }
     
-    public void setName(String name) {
-        this.name = name;
+    
+    
+    public BdRole getRole() {
+        return role;
     }
     
-    public String getPwd() {
-        return pwd;
-    }
-    
-    public String getCountryName() {
-        return countryName;
-    }
-    
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
-    }
-    
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-    
-    public String getEmail() {
-        return email;
-    }
-    
-    public void setEmail(String email) {
-        this.email = email;
+    public void setRole(BdRole role) {
+        this.role = role;
     }
 }
