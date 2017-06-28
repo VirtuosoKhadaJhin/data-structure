@@ -19,10 +19,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * Created by sharp on 2017/6/28 - 15:56
@@ -77,12 +83,25 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     }
     
     @Override
-    public List<MissionGroup> findByCountryAndCityId(Long country, Long city) {
+    public List<MissionGroup> findByCountryAndCityId(final Long country, final Long city) {
         if (country == null && city == null) {
             throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
         }
-        
-       return null;
+        Specification specification = new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (country != null) {
+                    predicate.add(cb.equal(root.get("country").get("id"), country));
+                }
+                if (city != null) {
+                    predicate.add(cb.equal(root.get("id"), city));
+                }
+                Predicate[] arrays = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(arrays)).getRestriction();
+            }
+        };
+        return cityDao.findAll(specification);
     }
     
     private List<MissionGroupManagerVo> convertToBdUserManagerVo(List<MissionGroup> groups) {
@@ -92,7 +111,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
             
             Country country = countryService.findOne(group.getCountryId());
             City city = cityDao.findOne(group.getCityId());
-    
+            
             vo.setGroup(group);
             vo.setCountry(country);
             vo.setCity(city);
