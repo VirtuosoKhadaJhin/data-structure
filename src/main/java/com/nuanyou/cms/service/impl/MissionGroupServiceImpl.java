@@ -4,9 +4,10 @@ import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.BdCountryDao;
 import com.nuanyou.cms.dao.CityDao;
-import com.nuanyou.cms.dao.NyMissionGroupBdDao;
-import com.nuanyou.cms.dao.NyMissionGroupDao;
+import com.nuanyou.cms.dao.MissionGroupBdDao;
+import com.nuanyou.cms.dao.MissionGroupDao;
 import com.nuanyou.cms.entity.BdCountry;
+import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.MissionGroup;
@@ -37,10 +38,10 @@ import javax.persistence.criteria.Root;
 public class MissionGroupServiceImpl implements MissionGroupService {
     
     @Autowired
-    private NyMissionGroupDao groupDao;
+    private MissionGroupDao groupDao;
     
     @Autowired
-    private NyMissionGroupBdDao groupBdDao;
+    private MissionGroupBdDao groupBdDao;
     
     @Autowired
     private CountryService countryService;
@@ -102,6 +103,12 @@ public class MissionGroupServiceImpl implements MissionGroupService {
             }
         };
         return cityDao.findAll(specification);
+    }
+    
+    @Override
+    public List<BdUser> findBdUsersByGroupId(Long groupId) {
+        // TODO: 2017/6/28 待实现
+        return null;
     }
     
     private List<MissionGroupManagerVo> convertToBdUserManagerVo(List<MissionGroup> groups) {

@@ -24,35 +24,17 @@ import javax.persistence.Table;
 public class MissionGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
-    
-    @Column(name = "name")
     private String name;
-    
-    @Column(name = "countryid")
     private Long countryId;
-    
-    @Column(name = "cityid")
     private Long cityId;
-    
-    @Column(name = "ispublic")
     private Byte isPublic;
-    
-    @Column(name = "desc")
     private String  desc;
-    
-    @CreatedAt //自动添加创建时间
-    @Column(name = "createdt")
     private Date createDt;
-    
-    @LastModified //自动更新时间
-    @Column(name = "updatedt")
     private Date updateDt;
-    
-    @Column(name = "delflag")
     private Byte delFlag;
     
+    @Column(name = "id")
     public Long getId() {
         return id;
     }
@@ -61,6 +43,7 @@ public class MissionGroup {
         this.id = id;
     }
     
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -69,6 +52,7 @@ public class MissionGroup {
         this.name = name;
     }
     
+    @Column(name = "countryid")
     public Long getCountryId() {
         return countryId;
     }
@@ -77,6 +61,7 @@ public class MissionGroup {
         this.countryId = countryId;
     }
     
+    @Column(name = "cityid")
     public Long getCityId() {
         return cityId;
     }
@@ -85,6 +70,7 @@ public class MissionGroup {
         this.cityId = cityId;
     }
     
+    @Column(name = "ispublic")
     public Byte getIsPublic() {
         return isPublic;
     }
@@ -93,6 +79,7 @@ public class MissionGroup {
         this.isPublic = isPublic;
     }
     
+    @Column(name = "`desc`")
     public String getDesc() {
         return desc;
     }
@@ -101,6 +88,8 @@ public class MissionGroup {
         this.desc = desc;
     }
     
+    @CreatedAt //自动添加创建时间
+    @Column(name = "createdt")
     public Date getCreateDt() {
         return createDt;
     }
@@ -109,6 +98,8 @@ public class MissionGroup {
         this.createDt = createDt;
     }
     
+    @LastModified //自动更新时间
+    @Column(name = "updatedt")
     public Date getUpdateDt() {
         return updateDt;
     }
@@ -117,6 +108,7 @@ public class MissionGroup {
         this.updateDt = updateDt;
     }
     
+    @Column(name = "delflag")
     public Byte getDelFlag() {
         return delFlag;
     }
