@@ -35,7 +35,7 @@ public class MissionTaskController {
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
         model.addAttribute("requestVo", requestVo);
-        return "misssion/list";
+        return "mission/list";
     }
 
     @RequestMapping("approval")
