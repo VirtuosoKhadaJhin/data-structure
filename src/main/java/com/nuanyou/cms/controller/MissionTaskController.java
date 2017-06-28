@@ -60,7 +60,7 @@ public class MissionTaskController {
         model.addAttribute("countries", countries);
         model.addAttribute("merchants", merchants);
         model.addAttribute("taskStatus", MissionTaskStatus.values());
-        return "misssion/list";
+        return "mission/list";
     }
 
     @RequestMapping("approval")
