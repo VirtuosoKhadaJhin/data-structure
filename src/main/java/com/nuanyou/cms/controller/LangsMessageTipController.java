@@ -36,7 +36,8 @@ public class LangsMessageTipController {
         APIResult<EntityNyLangsMessageTip> result = new APIResult<EntityNyLangsMessageTip>(ResultCodes.Success);
         String keyCode = requestVo.getKeyCode();
         keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
-        EntityNyLangsMessageTip entityNyLangsMessageTip = messageTipService.add(requestVo, keyCode);
+        requestVo.setKeyCode(keyCode);
+        EntityNyLangsMessageTip entityNyLangsMessageTip = messageTipService.add(requestVo);
         result.setData(entityNyLangsMessageTip);
         return result;
     }

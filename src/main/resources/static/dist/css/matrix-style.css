@@ -1596,3 +1596,23 @@ div.dataTables_wrapper .ui-widget-header {
 	margin-top:0px;
 	margin-bottom:0px;"
 }
+
+.content-container .table th, .content-container .table td {
+	vertical-align: middle;
+}
+
+form .btn.disabled, form .btn[disabled] {
+	cursor: not-allowed;
+}
+
+form .btn.disabled:hover, form .btn[disabled]:hover {
+	cursor: not-allowed;
+}
+
+.content-container .table td label {
+	margin-bottom: 0;
+}
+
+.row-fluid form .select2, .row-fluid form .select2-container {
+	width: 91.45299145299145%;
+}

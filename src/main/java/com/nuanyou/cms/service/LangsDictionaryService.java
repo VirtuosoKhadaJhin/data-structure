@@ -72,7 +72,7 @@ public interface LangsDictionaryService {
      * @param dictionaryVo
      * @return
      */
-    LangsDictionary saveLangsDictionary(LangsDictionaryVo dictionaryVo);
+    Boolean saveLangsDictionary(LangsDictionaryVo dictionaryVo);
 
     /**
      * 新增单个语言记录
@@ -98,12 +98,11 @@ public interface LangsDictionaryService {
     void remove(LangsDictionaryRequestVo requestVo);
 
     /**
-     * 修改单个语言
+     * 修改多语言字典项
      *
-     * @param keyCode
      * @param requestVo
      */
-    void modifyLangsDictionary(String keyCode, LangsDictionaryVo requestVo);
+    void modifyLangsDictionary(LangsDictionaryVo requestVo);
 
     /**
      * 根据keyCode查询当地语言

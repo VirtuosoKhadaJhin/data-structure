@@ -8,6 +8,7 @@ import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsCategoryService;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import com.nuanyou.cms.service.LangsMessageTipService;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -132,10 +133,10 @@ public class LangsDictionaryController {
     @RequestMapping("add")
     public String add(Model model) {
         LangsCountry[] values = LangsCountry.values();
-        List<LangsCategory> selectableLangsCategory = categoryService.findAllCategories();
+        List<LangsCategory> langsCategories = categoryService.findAllCategories();
 
         model.addAttribute("langsCountries", values);
-        model.addAttribute("selectableLangsCategory", selectableLangsCategory);
+        model.addAttribute("langsCategories", langsCategories);
         return "langsDictionary/add";
     }
 
@@ -153,14 +154,14 @@ public class LangsDictionaryController {
         LangsCountry[] values = LangsCountry.values();
 
         // 多语言分类
-        List<LangsCategory> selectableLangsCategory = categoryService.findAllCategories();
+        List<LangsCategory> langsCategories = categoryService.findAllCategories();
 
         // 多语言数据
         LangsDictionaryVo langsDictionary = dictionaryService.findLangsDictionary(keyCode, null);
 
         model.addAttribute("langsCountries", values);
         model.addAttribute("langsDictionary", langsDictionary);
-        model.addAttribute("selectableLangsCategory", selectableLangsCategory);
+        model.addAttribute("langsCategories", langsCategories);
         return "langsDictionary/edit";
     }
 
@@ -256,8 +257,14 @@ public class LangsDictionaryController {
     @ResponseBody
     public APIResult saveLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) {
         APIResult<LangsDictionary> result = new APIResult<LangsDictionary>(ResultCodes.Success);
-        LangsDictionary langsDictionary = dictionaryService.saveLangsDictionary(dictionaryVo);
-        result.setData(langsDictionary);
+        Boolean recordResult = dictionaryService.saveLangsDictionary(dictionaryVo);
+        if (BooleanUtils.isFalse(recordResult)) {
+            result.setCode(ResultCodes.Fail.getCode());
+            result.setMsg("保存失败，请重新尝试！");
+        } else if (recordResult == null) {
+            result.setCode(ResultCodes.Fail.getCode());
+            result.setMsg("请求参数异常，请重试尝试！");
+        }
         return result;
     }
 
@@ -287,8 +294,8 @@ public class LangsDictionaryController {
     public APIResult modifyLangsDictionary(@RequestBody LangsDictionaryVo dictionaryVo) throws UnsupportedEncodingException {
         APIResult<EntityNyLangsDictionary> result = new APIResult<EntityNyLangsDictionary>(ResultCodes.Success);
         String keyCode = dictionaryVo.getKeyCode();
-        keyCode = (new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim();
-        dictionaryService.modifyLangsDictionary(keyCode, dictionaryVo);
+        dictionaryVo.setKeyCode((new String(keyCode.getBytes("ISO-8859-1"), "utf-8")).trim());
+        dictionaryService.modifyLangsDictionary(dictionaryVo);
         return result;
     }
 

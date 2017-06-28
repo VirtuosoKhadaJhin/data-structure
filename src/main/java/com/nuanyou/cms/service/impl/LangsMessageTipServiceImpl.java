@@ -7,11 +7,11 @@ import com.nuanyou.cms.entity.EntityNyLangsMessageTip;
 import com.nuanyou.cms.model.LangsMessageTipVo;
 import com.nuanyou.cms.service.LangsMessageTipService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,32 +37,30 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
     private EntityNyLangsMessageTipDao messageTipDao;
 
     @Override
-    public EntityNyLangsMessageTip add(LangsMessageTipVo requestVo, String keyCode) {
-        String newKeyCode = requestVo.getNewKeyCode();
+    public EntityNyLangsMessageTip add(LangsMessageTipVo requestVo) {
         String imgUrl = requestVo.getImgUrl();
-
-        EntityNyLangsMessageTip entityNyLangsMessageTip = new EntityNyLangsMessageTip();
-        entityNyLangsMessageTip.setKeyCode(keyCode);
-
-        Example<EntityNyLangsMessageTip> example = Example.of(entityNyLangsMessageTip);
-        EntityNyLangsMessageTip entityResult = messageTipDao.findByKeyCode(keyCode);
-
-        if (imgUrl == null || imgUrl == "") {
+        EntityNyLangsMessageTip entityResult = messageTipDao.findByKeyCode(requestVo.getKeyCode());
+        if (StringUtils.isEmpty(imgUrl)) {
             if (null != entityResult) {
                 imgUrl = entityResult.getImgUrl();
             }
         }
 
-        Long userid = UserHolder.getUser().getUserid();
+        Long userId = null;
+        try {
+            userId = UserHolder.getUser().getUserid();
+        } catch (Exception e) {
+            LOGGER.error("获取系统用户出错！", e);
+        }
 
-        entityNyLangsMessageTip = new EntityNyLangsMessageTip(newKeyCode, requestVo.getRemark(), imgUrl, new Date(), false);
+        EntityNyLangsMessageTip entityNyLangsMessageTip = new EntityNyLangsMessageTip(requestVo.getNewKeyCode(), requestVo.getRemark(), imgUrl);
+        entityNyLangsMessageTip.setKeyCode(requestVo.getKeyCode());
         if(null != entityResult){
             entityNyLangsMessageTip.setId(entityResult.getId());
         }
-
-        entityNyLangsMessageTip.setUserId(userid);
-        EntityNyLangsMessageTip result = messageTipDao.save(entityNyLangsMessageTip);
-        return result;
+        entityNyLangsMessageTip.setCreateDt(new Date());
+        entityNyLangsMessageTip.setUserId(userId);
+        return messageTipDao.save(entityNyLangsMessageTip);
     }
 
     @Override
@@ -75,7 +73,7 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
             InputStream is = file.getInputStream();
             String imgUrl = fileClient.uploadFile(is, fileType);
 
-            imgUrl = imgUrl.replace("https://", "http://dev.");
+            // imgUrl = imgUrl.replace("https://", "http://dev.");
             // https://kr.file.91nuanyou.com/14975265854394393273.png
             return imgUrl;
         } catch (Exception e) {

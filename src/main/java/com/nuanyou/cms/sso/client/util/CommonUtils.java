@@ -1,21 +1,4 @@
-/**
- * Licensed to Jasig under one or more contributor license
- * agreements. See the NOTICE file distributed with this work
- * for additional information regarding copyright ownership.
- * Jasig licenses this file to you under the Apache License,
- * Version 2.0 (the "License"); you may not use this file
- * except in compliance with the License. You may obtain a
- * copy of the License at:
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
+
 
 package com.nuanyou.cms.sso.client.util;
 
@@ -42,7 +25,6 @@ import java.util.regex.Pattern;
 public final class CommonUtils {
 
     private static final Log LOG = LogFactory.getLog(CommonUtils.class);
-    //protected static final Logger log = LoggerFactory.getLogger(CommonUtils.class.getSimpleName());
 
 
     private CommonUtils() {
@@ -92,12 +74,23 @@ public final class CommonUtils {
 
 
     public static String constructRedirectUrl(final String loginUrl, final String serviceParameterName, final String serviceUrl, final String state, Boolean relogin) {
+        String reloginParam = relogin.toString();
+//        if (new Boolean(urlRelogin)) {
+//            reloginParam = new Boolean(urlRelogin).toString();
+//        } else {
+//            reloginParam = relogin.toString();
+//        }
+
+        //final String modifiedServiceUrl=omitRelginURL(serviceUrl);
+
         try {
-            String url = loginUrl + (loginUrl.indexOf("?") != -1 ? "&" : "?") + serviceParameterName + "="
+            String url = loginUrl +
+                    (loginUrl.indexOf("?") != -1 ? "&" : "?")
+                    + serviceParameterName + "="
                     + URLEncoder.encode(serviceUrl, "UTF-8")
                     + (state != null ? "&state=#state" : "")
                     + (relogin != null ? "&relogin=#relogin" : "");
-            return url.replace("#state", state).replace("#relogin", relogin.toString());
+            return url.replace("#state", state).replace("#relogin", reloginParam);
         } catch (final UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -105,57 +98,59 @@ public final class CommonUtils {
 
 
     /**
-     * 组装第一次重定向的URL有这些参数
-     * 1 http / https   serverName   资源路径  参数路径
-     * 2 response.encodeURL一下
-     * 1 http / https   serverName   资源路径  参数路径
-     * 2 response.encodeURL一下
+     * 两个作用
+     * 1 组装第一次重定向的URL有这些参数 serverName   资源路径  参数路径
+     * 2 最后一次重定向时去掉code=...
+     *
      * @param request
      * @param response
      * @param serverName
      * @param artifactParameterName
-     * @param encode
      * @return
      */
     public static String constructServiceUrl(final HttpServletRequest request,
-                                             final HttpServletResponse response, final String serverName, final String artifactParameterName, final boolean encode) {
-//        if (CommonUtils.isNotBlank(service)) {
-//            return encode ? response.encodeURL(service) : service;
-//        }
-        final StringBuilder buffer = new StringBuilder();
-        if (!serverName.startsWith("https://") && !serverName.startsWith("http://")) {
-            buffer.append(request.isSecure() ? "https://" : "http://");
-        }
+                                             final HttpServletResponse response, final String serverName, final String artifactParameterName) {
+        StringBuilder buffer = new StringBuilder();
         buffer.append(serverName);
         buffer.append(request.getRequestURI());
-        if (CommonUtils.isNotBlank(request.getQueryString())) {
-            final int location = request.getQueryString().indexOf(artifactParameterName + "=");
-            if (location == 0) {
-                final String returnValue = encode ? response.encodeURL(buffer.toString()) : buffer.toString();
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("serviceUrl generated: " + returnValue);
-                }
-                return returnValue;
-            }
-            buffer.append("?");
-            if (location == -1) {
-                buffer.append(request.getQueryString());
-            } else if (location > 0) {
-                final int actualLocation = request.getQueryString()
-                        .indexOf("&" + artifactParameterName + "=");
-                if (actualLocation == -1) {
-                    buffer.append(request.getQueryString());
-                } else if (actualLocation > 0) {
-                    buffer.append(request.getQueryString().substring(0,
-                            actualLocation));
-                }
-            }
-        }
-        final String returnValue = encode ? response.encodeURL(buffer.toString()) : buffer.toString();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("serviceUrl generated: " + returnValue);
-        }
+        String queryString = request.getQueryString();
+        StringBuilder newQueryString = new StringBuilder();
+        String returnValue = "";
+        omitArtifitParam(artifactParameterName, buffer, queryString);
+        buffer = omitReloginParam(buffer);
+        returnValue = response.encodeURL(buffer.toString());
+        LOG.debug("serviceUrl generated: " + returnValue);
         return returnValue;
+    }
+
+    private static StringBuilder omitReloginParam(StringBuilder buffer) {
+        buffer = new StringBuilder(buffer.toString().replaceAll("\\?relogin=(true|false)", ""));
+        buffer = new StringBuilder(buffer.toString().replaceAll("&relogin=(true|false)", ""));
+        return buffer;
+    }
+
+
+    private static void omitArtifitParam(String artifactParameterName, StringBuilder buffer, String queryString) {
+        if (CommonUtils.isNotBlank(queryString)) {
+            final int location = queryString.indexOf(artifactParameterName + "=");
+            if (location != 0) {//http://serverName:8080?ret=
+                if (buffer.toString().contains("?")) {
+                    buffer.append("&");
+                } else {
+                    buffer.append("?");
+                }
+                if (location == -1) {//ttp://serverName:8080?sdf=df
+                    buffer.append(queryString);
+                } else if (location > 0) {//http://serverName:8080?sdf=df&ret= 确保存在&ret 而非ret
+                    final int actualLocation = queryString.indexOf("&" + artifactParameterName + "=");
+                    if (actualLocation == -1) {
+                        buffer.append(queryString);
+                    } else if (actualLocation > 0) {
+                        buffer.append(queryString.substring(0, actualLocation));
+                    }
+                }
+            }
+        }
     }
 
 
@@ -229,4 +224,15 @@ public final class CommonUtils {
 //            && compile.matcher(url).matches();
 //        System.out.println(excluded);
 //    }
+
+//    public static void main11(String[] args) {
+//        String bb="abd";
+//        String a="ggg?sdf=a1&relogin=true";
+//        String b=".*relogin=(true|false)+&.*";
+//        System.out.println(a.matches(b));
+//        System.out.println(a.replaceAll("\\?relogin=(true|false)","*"));
+//        String v="http://127.0.0.1:8085/index?relogin=true";
+//        System.out.println(v.replaceAll("\\?relogin=true",""));
+//    }
+
 }

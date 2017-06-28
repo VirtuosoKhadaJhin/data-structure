@@ -12,22 +12,27 @@
 </div>
 <style>
     .tdInput {
-        width: 75%;
+        width: 90%;
     }
 
     .text-gray {
         background-color: grey;
     }
 
-    #select2-categoryId-xe-container {
-        min-width: 180px;
-    }
-
-    .td-update-time{
-        min-width: 120px;
-    }
     .td-sort{
         min-width: 60px;
+    }
+
+    td.lang-message .tdInput {
+        margin-bottom: 0;
+    }
+
+    .table td {
+        word-break: break-all;
+    }
+
+    .table td input {
+        max-width: 110px;
     }
 </style>
 <div style="width: 100%">
@@ -78,7 +83,7 @@
                             #end
                         #end
                         #if($hasNullMessage)
-                            <input style="padding-top: 5%" class='tdInput' onchange='saveMessage(this)' type='text'/>
+                            <input class='tdInput' onchange='saveMessage(this)' type='text'/>
                         #end
                     </td>
                 #end
@@ -161,7 +166,7 @@
 <form class="form-horizontal search-form" method="get" action="list">
     <div class="control-group" style="margin-bottom: 10px">
         <label>分类</label>
-        <select class="span7 select2 " name="baseNameId" style="min-width: 203px;">
+        <select class="span11 select2 " name="baseNameId">
             <option value="">全部分类</option>
             #foreach($e in $!categories)
                 <option value="$!e.id" #if($!e.id==$!requestVo.baseNameId) selected #end>$!e.name</option>

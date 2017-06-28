@@ -44,9 +44,6 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
     /** 寻找service */
     private String serviceParameterName = "ret";
 
-    /** 如果为true则对于serviceURL进行编号response.encodeUrl */
-    private boolean encodeServiceUrl = true;
-
     /*服务器地址,格式是http/https：hostname:port ,标准的端口号可以不写*/
     private String serverName;
 
@@ -75,7 +72,7 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
     }
 
     protected final String constructServiceUrl(final HttpServletRequest request, final HttpServletResponse response) {
-        return CommonUtils.constructServiceUrl(request, response, this.serverName, this.artifactParameterName, this.encodeServiceUrl);
+        return CommonUtils.constructServiceUrl(request, response, this.serverName, this.artifactParameterName);
     }
 
     /**
@@ -100,9 +97,6 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
         this.serviceParameterName = serviceParameterName;
     }
 
-    public final void setEncodeServiceUrl(final boolean encodeServiceUrl) {
-        this.encodeServiceUrl = encodeServiceUrl;
-    }
 
     public final String getArtifactParameterName() {
         return this.artifactParameterName;

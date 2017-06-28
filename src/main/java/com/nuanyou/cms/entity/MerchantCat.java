@@ -23,9 +23,24 @@ public class MerchantCat {
     private Boolean display;
     private Integer sort;
     private Date createtime;
+    private Date updatetime;
     private MerchantCat pcat;
     private String imageUrl;
     private String mapimgurl;
+    // keycode
+    private String keyCode;
+    // shortname keycode
+    private String shnKeyCode;
+
+
+    public MerchantCat(String name, String shortname, Boolean display, Integer sort, String imageUrl, String mapimgurl) {
+        this.name = name;
+        this.shortname = shortname;
+        this.display = display;
+        this.sort = sort;
+        this.imageUrl = imageUrl;
+        this.mapimgurl = mapimgurl;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,6 +70,24 @@ public class MerchantCat {
 
     public void setShortname(String shortname) {
         this.shortname = shortname;
+    }
+
+    @Column(name = "keycode", nullable = false, length = 100)
+    public String getKeyCode() {
+        return keyCode;
+    }
+
+    public void setKeyCode(String keyCode) {
+        this.keyCode = keyCode;
+    }
+
+    @Column(name = "shnkeycode", nullable = false, length = 100)
+    public String getShnKeyCode() {
+        return shnKeyCode;
+    }
+
+    public void setShnKeyCode(String shnKeyCode) {
+        this.shnKeyCode = shnKeyCode;
     }
 
     @Column(name = "kpname", nullable = true, length = 50)
@@ -96,8 +129,17 @@ public class MerchantCat {
         this.createtime = createtime;
     }
 
+    @CreatedAt
+    @Column(name = "updatetime", nullable = true)
+    public Date getUpdatetime() {
+        return updatetime;
+    }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    @ManyToOne/*(fetch = FetchType.LAZY)*/
     @JoinColumn(name = "pid", nullable = true)
     @JsonIgnore
     public MerchantCat getPcat() {
