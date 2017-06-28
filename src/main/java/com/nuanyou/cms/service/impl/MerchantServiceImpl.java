@@ -1,6 +1,7 @@
 package com.nuanyou.cms.service.impl;
 
 import com.nuanyou.cms.commons.APIException;
+import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.ChannelType;
@@ -14,9 +15,15 @@ import com.nuanyou.cms.util.MyCacheManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -192,5 +199,27 @@ public class MerchantServiceImpl implements MerchantService {
             merchantDao.save(merchant);
         }
         return channel;
+    }
+
+    @Override
+    public List<Merchant> findMerchant(final Long country, final Long city) {
+        if (country == null && city == null) {
+            throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
+        }
+        Specification specification = new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (country != null) {
+                    predicate.add(cb.equal(root.get("district").get("country").get("id"), country));
+                }
+                if (city != null) {
+                    predicate.add(cb.equal(root.get("district").get("city").get("id"), city));
+                }
+                Predicate[] arrays = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(arrays)).getRestriction();
+            }
+        };
+        return merchantDao.findAll(specification);
     }
 }

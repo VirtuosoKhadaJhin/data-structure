@@ -50,9 +50,9 @@ public class MissionTaskController {
      */
     @RequestMapping("list")
     public String findAllMissionTask(MissionRequestVo requestVo, Model model) {
-        List<Merchant> merchants = merchantService.getIdNameList();
         List<Country> countries = countryService.getIdNameList();
         List<City> cities = cityService.findCityByCountryId(requestVo.getCountry());
+        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCountry(), requestVo.getCity());
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
         model.addAttribute("requestVo", requestVo);

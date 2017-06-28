@@ -23,4 +23,12 @@ public interface MerchantService {
 
     Channel genPayUrl(Long id);
 
+    /**
+     * 查询国家或者城市下的商户
+     *
+     * @param country
+     * @param city
+     * @return
+     */
+    List<Merchant> findMerchant(Long country, Long city);
 }
