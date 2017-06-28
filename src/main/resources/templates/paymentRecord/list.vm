@@ -241,7 +241,7 @@
 
         function extractedAjax(_this, item_id) {
             $.ajax({
-                url: "findPaymentOrderRecord?orderId=" + item_id,
+                url: "findPaymentOrderRecord.json?orderId=" + item_id,
                 type: "post",
                 dataType: "json",
                 success: function (response) {
