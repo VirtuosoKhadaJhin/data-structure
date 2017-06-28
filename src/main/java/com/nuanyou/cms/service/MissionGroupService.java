@@ -1,6 +1,7 @@
 package com.nuanyou.cms.service;
 
 import com.nuanyou.cms.entity.BdCountry;
+import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.MissionGroup;
 import com.nuanyou.cms.model.MissionGroupManagerVo;
@@ -42,4 +43,11 @@ public interface MissionGroupService {
      * @return
      */
     List<MissionGroup> findByCountryAndCityId(Long countryId, Long cityId);
+    
+    /**
+     * 通过groupId查找该组的所有bduser
+     * @param groupId
+     * @return
+     */
+    List<BdUser> findBdUsersByGroupId(Long groupId);
 }
