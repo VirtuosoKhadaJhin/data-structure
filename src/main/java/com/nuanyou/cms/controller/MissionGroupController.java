@@ -1,9 +1,11 @@
 package com.nuanyou.cms.controller;
 
 import com.nuanyou.cms.entity.BdCountry;
+import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
-import com.nuanyou.cms.entity.MissionGroup;
 import com.nuanyou.cms.model.MissionGroupManagerVo;
+import com.nuanyou.cms.model.MissionGroupParamVo;
+import com.nuanyou.cms.service.BdUserManagerService;
 import com.nuanyou.cms.service.MissionGroupService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +27,11 @@ public class MissionGroupController {
     @Autowired
     private MissionGroupService missionGroupService;
     
+    @Autowired
+    private BdUserManagerService bdUserManagerService;
+    
     /**
      * 获取列表
-     *
      */
     @RequestMapping("list")
     public String list(MissionGroupManagerVo requestVo, Model model) {
@@ -38,7 +42,6 @@ public class MissionGroupController {
     
     /**
      * 添加
-     *
      */
     @RequestMapping("add")
     public String add(Model model) {
@@ -50,6 +53,27 @@ public class MissionGroupController {
         return "missionGroup/add";
     }
     
+    @RequestMapping("edit")
+    public String edit(Model model, String id) {
+    
+        return "missionGroup/edit";
+    }
+    
+    /**
+     * 添加bdUser
+     */
+    @RequestMapping("addBdUser")
+    public String addBdUser(Model model, String groupId) {
+        //所有的bduser
+        List<BdUser> bdUsers = bdUserManagerService.findAllBdUsers();
+        
+        //该组的bduser
+        List<BdUser> bdUsersByGroupId = missionGroupService.findBdUsersByGroupId(Long.valueOf(groupId));
+        
+        model.addAttribute("bdUsers", bdUsers);
+        
+        return "missionGroup/addBdUser";
+    }
     
     /**
      * 保存添加内容
@@ -57,52 +81,31 @@ public class MissionGroupController {
      * @return
      */
     @RequestMapping("saveAdd")
-    public String saveAdd(Model model, String name, String countryId, String cityId, String isPublic, String desc) {
-    
-        MissionGroup group = new MissionGroup();
-        
-        //设置战队信息
-        group.setName(name);
-        // TODO: 2017/6/28 jap 将string 转化为long
-        group.setCountryId(Long.valueOf(countryId));
-        group.setCityId(Long.parseLong(cityId));
-        group.setIsPublic(Byte.parseByte(isPublic));
-        group.setDesc(desc);
-        group.setDelFlag(Byte.decode("0")); //设置默认值
-        
-        //存储战队信息
-        missionGroupService.saveGroup(group);
-        
-        return "forward:/missionGroup/list";
+    public String saveAdd(Model model, MissionGroupParamVo paramVo) {
+        missionGroupService.saveGroup(paramVo);
+        return "missionGroup/list";
     }
     
+    
+    /**
+     * 保存编辑
+     * @return
+     */
     @RequestMapping("saveEdit")
     public String saveEdit(String id, String name, String countryId, String email, String roleId) {
-    
-//        BdUser user = userManagerService.findBdUserById(Long.parseLong(id));
-//        user.setId(Long.parseLong(id));
-//        user.setName(name);
-//        user.setCountryId(Long.parseLong(countryId));
-//        user.setEmail(email);
-//        userManagerService.updateUser(user);
-//
-//        BdRelUserRole userRole = new BdRelUserRole();
-//        BdRole role = userManagerService.findRoleById(Long.parseLong(roleId));
-//        userRole.setUser(user);
-//        userRole.setRole(role);
-//        userManagerService.updateUserRole(userRole);
+        
         
         return "forward:/missionGroup/list";
     }
     
     
     /**
-     *
+     * 保存添加组员
      */
+    @RequestMapping("saveAddBdUser")
+    public String saveAddBdUser() {
     
-    
-    /**
-     *
-     */
+        return "forward:/missionGroup/list";
+    }
     
 }

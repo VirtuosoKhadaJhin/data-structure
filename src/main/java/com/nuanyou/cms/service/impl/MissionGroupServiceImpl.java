@@ -1,20 +1,25 @@
 package com.nuanyou.cms.service.impl;
 
+import com.google.common.collect.Lists;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.BdCountryDao;
+import com.nuanyou.cms.dao.BdUserDao;
 import com.nuanyou.cms.dao.CityDao;
+import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.dao.MissionGroupBdDao;
 import com.nuanyou.cms.dao.MissionGroupDao;
 import com.nuanyou.cms.entity.BdCountry;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
-import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.MissionGroup;
+import com.nuanyou.cms.entity.MissionGroupBd;
 import com.nuanyou.cms.model.MissionGroupManagerVo;
-import com.nuanyou.cms.service.CountryService;
+import com.nuanyou.cms.model.MissionGroupParamVo;
 import com.nuanyou.cms.service.MissionGroupService;
+import com.nuanyou.cms.util.BeanUtils;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -44,13 +49,16 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     private MissionGroupBdDao groupBdDao;
     
     @Autowired
-    private CountryService countryService;
+    private CountryDao countryDao;
     
     @Autowired
     private BdCountryDao bdCountryDao;
     
     @Autowired
     private CityDao cityDao;
+    
+    @Autowired
+    private BdUserDao bdUserDao;
     
     @Override
     public Page<MissionGroupManagerVo> findAllGroups(MissionGroupManagerVo requestVo) {
@@ -79,7 +87,10 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     }
     
     @Override
-    public void saveGroup(MissionGroup group) {
+    public void saveGroup(MissionGroupParamVo vo) {
+        MissionGroup group = new MissionGroup(vo.getName(), countryDao.findOne(vo.getCountryId()), cityDao.findOne(vo.getCityId()));
+        group.setIsPublic(Byte.parseByte(vo.getIsPublic()));
+        group.setDesc(vo.getDesc());
         groupDao.save(group);
     }
     
@@ -107,25 +118,23 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     
     @Override
     public List<BdUser> findBdUsersByGroupId(Long groupId) {
-        // TODO: 2017/6/28 待实现
-        return null;
+        List<MissionGroupBd> groupUsers = groupBdDao.findByGroupId(groupId);
+        List<Long> userIds = Lists.newArrayList();
+        for (MissionGroupBd groupUser : groupUsers) {
+            userIds.add(groupUser.getBdUserId());
+        }
+        return bdUserDao.findByIdIn(userIds);
     }
     
     private List<MissionGroupManagerVo> convertToBdUserManagerVo(List<MissionGroup> groups) {
-        ArrayList<MissionGroupManagerVo> list = new ArrayList<>();
-        for (MissionGroup group : groups) {
-            MissionGroupManagerVo vo = new MissionGroupManagerVo();
-            
-            Country country = countryService.findOne(group.getCountryId());
-            City city = cityDao.findOne(group.getCityId());
-            
-            vo.setGroup(group);
-            vo.setCountry(country);
-            vo.setCity(city);
-            
-            list.add(vo);
+        if (CollectionUtils.isEmpty(groups)) {
+            return Lists.newArrayList();
         }
-        
-        return list;
+        List<MissionGroupManagerVo> vos = Lists.newArrayList();
+        for (MissionGroup group : groups) {
+            MissionGroupManagerVo managerVo = BeanUtils.copyBean(group, new MissionGroupManagerVo());
+            vos.add(managerVo);
+        }
+        return vos;
     }
 }

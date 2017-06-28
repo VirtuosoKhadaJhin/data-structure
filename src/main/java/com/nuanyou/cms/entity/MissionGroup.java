@@ -4,14 +4,17 @@ import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.commons.LastModified;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -22,18 +25,38 @@ import javax.persistence.Table;
 @EntityListeners(DateEntityListener.class) //自动更新时间
 @Table(name = "ny_mission_group", catalog = "nuanyou20") //catalog配置访问的数据库
 public class MissionGroup {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
     private Long id;
     private String name;
-    private Long countryId;
-    private Long cityId;
+    private Country country;
+    private City city;
     private Byte isPublic;
-    private String  desc;
+    private String desc;
     private Date createDt;
     private Date updateDt;
-    private Byte delFlag;
+    private Byte delFlag = 0;
+    private BdUser leaderId;
     
+    public MissionGroup() {
+    }
+    
+    public MissionGroup(String name, Country country, City city) {
+        this.name = name;
+        this.country = country;
+        this.city = city;
+    }
+    
+    public MissionGroup(String name, Country country, City city, Byte isPublic, String desc, BdUser leaderId) {
+        this.name = name;
+        this.country = country;
+        this.city = city;
+        this.isPublic = isPublic;
+        this.desc = desc;
+        this.leaderId = leaderId;
+    }
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public Long getId() {
         return id;
@@ -52,22 +75,24 @@ public class MissionGroup {
         this.name = name;
     }
     
-    @Column(name = "countryid")
-    public Long getCountryId() {
-        return countryId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "countryid")
+    public Country getCountry() {
+        return country;
     }
     
-    public void setCountryId(Long countryId) {
-        this.countryId = countryId;
+    public void setCountry(Country country) {
+        this.country = country;
     }
     
-    @Column(name = "cityid")
-    public Long getCityId() {
-        return cityId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cityid")
+    public City getCity() {
+        return city;
     }
     
-    public void setCityId(Long cityId) {
-        this.cityId = cityId;
+    public void setCity(City city) {
+        this.city = city;
     }
     
     @Column(name = "ispublic")
@@ -115,5 +140,15 @@ public class MissionGroup {
     
     public void setDelFlag(Byte delFlag) {
         this.delFlag = delFlag;
+    }
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "leaderid")
+    public BdUser getLeaderId() {
+        return leaderId;
+    }
+    
+    public void setLeaderId(BdUser leaderId) {
+        this.leaderId = leaderId;
     }
 }

@@ -1,24 +1,51 @@
 package com.nuanyou.cms.model;
 
+import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.Country;
-import com.nuanyou.cms.entity.MissionGroup;
-import com.nuanyou.cms.entity.MissionGroupBd;
+
+import java.util.Date;
 
 /**
  * 在视图显示的实体
  * Created by sharp on 2017/6/28 - 15:58
  */
 public class MissionGroupManagerVo {
+    private Long id;
+    private String name;
+    private Country country;
+    private City city;
+    private Byte isPublic;
+    private String desc;
+    private Date createDt;
+    private Date updateDt;
+    private Byte delFlag;
+    private BdUser leaderId;
     Integer index = 1;
     Integer pageNum = 8;
     
-    private MissionGroup group;
-    private MissionGroupBd groupBd;
-    private Country country;
-    private City city;
+    public Long getId() {
+        return id;
+    }
     
-    public MissionGroupManagerVo() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public Country getCountry() {
+        return country;
+    }
+    
+    public void setCountry(Country country) {
+        this.country = country;
     }
     
     public City getCity() {
@@ -29,12 +56,52 @@ public class MissionGroupManagerVo {
         this.city = city;
     }
     
-    public Country getCountry() {
-        return country;
+    public Byte getIsPublic() {
+        return isPublic;
     }
     
-    public void setCountry(Country country) {
-        this.country = country;
+    public void setIsPublic(Byte isPublic) {
+        this.isPublic = isPublic;
+    }
+    
+    public String getDesc() {
+        return desc;
+    }
+    
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+    
+    public Date getCreateDt() {
+        return createDt;
+    }
+    
+    public void setCreateDt(Date createDt) {
+        this.createDt = createDt;
+    }
+    
+    public Date getUpdateDt() {
+        return updateDt;
+    }
+    
+    public void setUpdateDt(Date updateDt) {
+        this.updateDt = updateDt;
+    }
+    
+    public Byte getDelFlag() {
+        return delFlag;
+    }
+    
+    public void setDelFlag(Byte delFlag) {
+        this.delFlag = delFlag;
+    }
+    
+    public BdUser getLeaderId() {
+        return leaderId;
+    }
+    
+    public void setLeaderId(BdUser leaderId) {
+        this.leaderId = leaderId;
     }
     
     public Integer getIndex() {
@@ -51,21 +118,5 @@ public class MissionGroupManagerVo {
     
     public void setPageNum(Integer pageNum) {
         this.pageNum = pageNum;
-    }
-    
-    public MissionGroup getGroup() {
-        return group;
-    }
-    
-    public void setGroup(MissionGroup group) {
-        this.group = group;
-    }
-    
-    public MissionGroupBd getGroupBd() {
-        return groupBd;
-    }
-    
-    public void setGroupBd(MissionGroupBd groupBd) {
-        this.groupBd = groupBd;
     }
 }

@@ -5,6 +5,7 @@ import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.MissionGroup;
 import com.nuanyou.cms.model.MissionGroupManagerVo;
+import com.nuanyou.cms.model.MissionGroupParamVo;
 
 import org.springframework.data.domain.Page;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 /**
  * 战队用户管理
- *
+ * <p>
  * Created by sharp on 2017/6/28 - 15:55
  */
 public interface MissionGroupService {
@@ -31,9 +32,10 @@ public interface MissionGroupService {
     
     /**
      * 保存战队信息
-     * @param group
+     *
+     * @param vo
      */
-    void saveGroup(MissionGroup group);
+    void saveGroup(MissionGroupParamVo vo);
     
     /**
      * 按照国家id或者城市id查询战队
@@ -46,6 +48,7 @@ public interface MissionGroupService {
     
     /**
      * 通过groupId查找该组的所有bduser
+     *
      * @param groupId
      * @return
      */

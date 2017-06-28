@@ -23,11 +23,12 @@
         min-width: 180px;
     }
 
-    .td-update-time{
-        min-width: 120px;
-    }
     .td-sort{
         min-width: 60px;
+    }
+
+    .td-sort label {
+        text-align: center;
     }
 </style>
 <div style="width: 100%">
@@ -42,6 +43,7 @@
             <th>创建时间</th>
             <th>更新时间</th>
             <th>描述</th>
+            <th>操作</th>
 
         </tr>
         </thead>
@@ -49,37 +51,37 @@
 
             #foreach($vo in $!vos.content)
             <tr class="odd gradeX">
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.user.id</label>
+                <td class="td-sort td-id">
+##                    $!vo.group.id 和entity里的字段对应
+                    <label class="label-id">$!vo.id</label>
                 </td>
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.group.id</label>
+                <td class="td-sort td-group">
+                    <label class="lebel-group">$!vo.name</label>
                 </td>
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.group.name</label>
+                <td class="td-sort td-country">
+                    <label class="label-country">$!vo.country.name</label>
                 </td>
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.country.name</label>
+                <td class="td-sort td-city">
+                    <label class="label-city">$!vo.city.name</label>
                 </td>
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.group.city.name</label>
+                <td class="td-sort td-isPublic">
+                    <label class="label-isPublic">$!vo.isPublic</label>
                 </td>
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.group.ispublic</label>
+                <td class="td-sort td-createDt">
+                    <label class="label-createDt">$!vo.createDt</label>
                 </td>
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.group.createdt</label>
+                <td class="td-sort td-updateDt">
+                    <label class="label-updateDt">$!vo.updateDt</label>
                 </td>
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.group.updatedt</label>
-                </td>
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.group.desc</label>
+                <td class="td-sort td-desc">
+                    <label class="label-desc">$!vo.desc</label>
                 </td>
 
-                <td style="min-width: 80px;">
+                <td style="min-width: 120px;">
                     <div style="text-align: center">
-                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item" href="edit?id=$!vo.user.id">编辑</a>
+                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item" href="edit?id=$!vo.group.id">编辑</a>
+                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item" href="addBdUser?id=$!vo.group.id">添加组员</a>
+                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item" href="del?id=$!vo.group.id">删除</a>
                     </div>
                 </td>
 

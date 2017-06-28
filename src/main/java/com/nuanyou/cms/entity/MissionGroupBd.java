@@ -20,10 +20,10 @@ public class MissionGroupBd {
     private Long id;
     
     @Column(name = "gourpid")
-    private Long gourpId;
+    private Long groupId;
     
     @Column(name = "bdid")
-    private Long bdId;
+    private Long bdUserId;
     
     public Long getId() {
         return id;
@@ -33,19 +33,19 @@ public class MissionGroupBd {
         this.id = id;
     }
     
-    public Long getGourpId() {
-        return gourpId;
+    public Long getGroupId() {
+        return groupId;
     }
     
-    public void setGourpId(Long gourpId) {
-        this.gourpId = gourpId;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
     
-    public Long getBdId() {
-        return bdId;
+    public Long getBdUserId() {
+        return bdUserId;
     }
     
-    public void setBdId(Long bdId) {
-        this.bdId = bdId;
+    public void setBdUserId(Long bdUserId) {
+        this.bdUserId = bdUserId;
     }
 }
