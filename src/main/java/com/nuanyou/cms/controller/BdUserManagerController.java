@@ -36,7 +36,7 @@ public class BdUserManagerController {
      */
     @RequestMapping("list")
     public String list(BdUserManagerRequestVo requestVo, Model model) {
-        Page<BdUserManagerVo> vos = userManagerService.findAllBdUsers(requestVo);
+        Page<BdUserManagerVo> vos = userManagerService.findAllBdUserManagerVos(requestVo);
         model.addAttribute("vos", vos);
         return "bdUser/list";
     }

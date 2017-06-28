@@ -22,7 +22,7 @@ public interface BdUserManagerService {
      *
      * @return bd宝用户列表
      */
-    Page<BdUserManagerVo> findAllBdUsers(final BdUserManagerRequestVo requestVo);
+    Page<BdUserManagerVo> findAllBdUserManagerVos(final BdUserManagerRequestVo requestVo);
     
     /**
      * 查询所有的用户角色
@@ -38,14 +38,6 @@ public interface BdUserManagerService {
      */
     List<BdCountry> findAllCountry();
     
-    /**
-     * 通过id找到用户信息
-     *
-     * @param id 用户id
-     *
-     * @return 用户信息
-     */
-//    BdUserManagerVo findUserById(Long id);
     
     /**
      * 保存bd宝用户信息
@@ -80,4 +72,6 @@ public interface BdUserManagerService {
     void updateUserRole(BdRelUserRole userRole);
     
     BdUser findBdUserById(long id);
+    
+    List<BdUser> findAllBdUsers();
 }

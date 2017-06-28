@@ -50,7 +50,7 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
     
     //    private BdUserDao bdUserDao;
     @Override
-    public Page<BdUserManagerVo> findAllBdUsers(final BdUserManagerRequestVo requestVo) {
+    public Page<BdUserManagerVo> findAllBdUserManagerVos(final BdUserManagerRequestVo requestVo) {
         // TODO: 2017/6/22 Spring data， Spring data jpa需要学习
         
         //分页请求
@@ -186,5 +186,11 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
     @Override
     public BdUser findBdUserById(long id) {
         return this.bdUserDao.findOne(id);
+    }
+    
+    @Override
+    public List<BdUser> findAllBdUsers() {
+        List<BdUser> bdUsers = bdUserDao.findAll();
+        return bdUsers;
     }
 }
