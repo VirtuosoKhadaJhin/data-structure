@@ -263,6 +263,8 @@ public class MerchantCatServiceImpl implements MerchantCatService {
         if (merchantCatVo.getPcat() != null) {
             MerchantCat cat = merchantCatDao.findOne(merchantCatVo.getPcat());
             merchantCat.setPcat(cat);
+        } else {
+            merchantCat.setPcat(null);
         }
         if (merchantCatVo.getId() == null) {
             merchantCatDao.save(merchantCat);
@@ -270,6 +272,9 @@ public class MerchantCatServiceImpl implements MerchantCatService {
             MerchantCat oldEntity = merchantCatDao.findOne(merchantCatVo.getId());
             BeanUtils.copyBeanNotNull(merchantCat, oldEntity);
             oldEntity.setUpdatetime(new Date());
+            if (merchantCatVo.getPcat() == null) {
+                oldEntity.setPcat(null);
+            }
             merchantCatDao.save(oldEntity);
         }
 

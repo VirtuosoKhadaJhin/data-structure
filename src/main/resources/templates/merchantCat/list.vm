@@ -104,13 +104,13 @@
             <script src="/dist/js/page-support.js"></script>
 
             <form class="form-horizontal search-form" method="get">
-                <div class="control-group" style="margin-bottom: 10px;width: 90%;">
+                <div class="control-group" style="margin-bottom: 10px;">
                     <label>分类名称 或ID</label>
                     <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
                 </div>
                 <div class="control-group" style="margin-bottom: 10px;">
                     <label>是否显示</label>
-                    <select name="display" style="width: 85%;">
+                    <select name="display" style="width: 91%;">
                         <option value="">全部</option>
                         <option value="true"  #if($!entity.display==true)  selected #end>显示</option>
                         <option value="false"  #if($!entity.display==false)  selected #end>隐藏</option>

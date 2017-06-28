@@ -77,6 +77,11 @@ public class MerchantCatController {
         return "redirect:list";
     }
 
+    @RequestMapping("mission")
+    public String mission() {
+        return "merchantCat/mission";
+    }
+
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index,
                        @RequestParam(required = false) String nameOrId,
