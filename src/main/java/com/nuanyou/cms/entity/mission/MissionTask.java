@@ -2,6 +2,8 @@ package com.nuanyou.cms.entity.mission;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nuanyou.cms.commons.DateEntityListener;
+import com.nuanyou.cms.entity.BdUser;
+import com.nuanyou.cms.entity.MissionGroup;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -27,11 +29,13 @@ public class MissionTask {
     @Column(name = "mchname")
     private String mchName;
 
-    @Column(name = "groupid")
-    private Long groupId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "groupid")
+    private MissionGroup group;
 
-    @Column(name = "bdid")
-    private Long bdId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bdid")
+    private BdUser bdId;
 
     @Column(name = "status")
     private MissionTaskStatus status;
@@ -76,19 +80,19 @@ public class MissionTask {
         this.mchName = mchName;
     }
 
-    public Long getGroupId() {
-        return groupId;
+    public MissionGroup getGroup() {
+        return group;
     }
 
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
+    public void setGroup(MissionGroup group) {
+        this.group = group;
     }
 
-    public Long getBdId() {
+    public BdUser getBdId() {
         return bdId;
     }
 
-    public void setBdId(Long bdId) {
+    public void setBdId(BdUser bdId) {
         this.bdId = bdId;
     }
 
