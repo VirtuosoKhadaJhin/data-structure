@@ -19,6 +19,8 @@ public class MissionRequestVo {
 
     private Long city;
 
+    private Long district;
+
     private String other;
 
     private int pageNum = 1;
