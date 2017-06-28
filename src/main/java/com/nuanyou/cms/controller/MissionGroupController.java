@@ -73,25 +73,6 @@ public class MissionGroupController {
         //存储战队信息
         missionGroupService.saveGroup(group);
         
-        //        BdUser user = new BdUser();
-//        BdRelUserRole userRole = new BdRelUserRole();
-//
-//        //保存用户信息
-//        user.setName(name);
-//        user.setCountryId(countryId);
-//        user.setEmail(email);
-//        String pwd = MD5Utils.encrypt("12345");
-//        user.setPwd(pwd);
-//        userManagerService.saveUser(user);
-//
-//        //保存用户角色信息
-//        userRole.setUser(user);
-//        BdRole role = userManagerService.findRoleById(roleId);
-//
-//        userRole.setRole(role);
-//
-//        userManagerService.saveUserRole(userRole);
-        
         return "forward:/missionGroup/list";
     }
     
