@@ -49,7 +49,7 @@ public class MissionTask {
     @Column(name = "updateDt", nullable = true)
     private Date updateDt;
 
-    @Column(name = "delFlag")
+    @Column(name = "del_flag")
     private Boolean delFlag = false;
 
     public Long getId() {
