@@ -39,7 +39,8 @@
                                 </div>
                                 <label class="col-sm-2 control-label">名称：</label>
                                 <div class="controls">
-                                    <input name="name" for="name" type="text" placeholder="名称" class="langsAutoComplete" langsKeyName="name" value="$!entity.name">
+                                    <input name="name" for="name" type="text" placeholder="名称" class="langsAutoComplete"
+                                           langsKeyName="name" value="$!entity.name #if("$!entity.keyCode" != "")($!entity.keyCode) #end">
                                     <input name="keycode" class="checked-keycode" type="hidden" value="$!entity.keyCode">
 
                                     <a class="btn btn-info btn-mini add-lang" langsKeyName="remark" langsValueName="remarkLabel">
