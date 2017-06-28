@@ -1,0 +1,99 @@
+#parse("common/list_start.vm")
+<div id="breadcrumb">
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="list" class="tip-bottom" data-original-title="">bd宝用户管理</a>
+    <a href="#" class="tip-bottom" data-original-title="">列表</a>
+</div>
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>bd宝用户列表</h5>
+    <a class="btn btn-mini btn-info buttons" href="add">新增</a>
+#*<a class="btn btn-mini btn-info buttons" onclick="langsCommonDialog()">通用新增</a>*#
+</div>
+<style>
+    .tdInput {
+        width: 75%;
+    }
+
+    .text-gray {
+        background-color: grey;
+    }
+
+    #select2-categoryId-xe-container {
+        min-width: 180px;
+    }
+
+    .td-update-time{
+        min-width: 120px;
+    }
+    .td-sort{
+        min-width: 60px;
+    }
+</style>
+<div style="width: 100%">
+    <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+        <thead role="row">
+        <tr>
+            <th>ID</th>
+            <th>用户名</th>
+            <th>所属国家</th>
+            <th>邮箱</th>
+            <th>角色</th>
+            <th>操作</th>
+
+        </tr>
+        </thead>
+        <tbody>
+            #if ($null.isNull($page.content) || $page.content.size()==0)
+            <tr>
+                <td colspan="11" style="text-align:center;">
+                    <div class="no-result-div"
+                         style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                        <p>没有符合条件的多语言记录信息！</p>
+                    </div>
+                </td>
+            </tr>那么那么
+            #end
+
+            #foreach($vo in $!vos.content)
+            <tr class="odd gradeX">
+                <td class="td-sort">
+                    <label style="text-align: center;">$!vo.user.id</label>
+                </td>
+                <td class="td-sort">
+                    <label style="text-align: center;">$!vo.user.name</label>
+                </td>
+                <td class="td-sort">
+                    <label style="text-align: center;">$!vo.country.name</label>
+                </td>
+                <td class="td-sort">
+                    <label style="text-align: center;">$!vo.user.email</label>
+                </td>
+                <td class="td-sort">
+                    <label style="text-align: center;">$!vo.role.desc</label>
+                </td>
+
+                <td style="min-width: 80px;">
+                    <div style="text-align: center">
+                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item" href="edit?id=$!vo.user.id">编辑</a>
+                    </div>
+                </td>
+
+            </tr>
+                #set($sort = $sort + 1)
+            #end
+        </tbody>
+    </table>
+</div>
+
+
+#parse("common/list_mid.vm")
+<form class="form-horizontal search-form" method="get" action="list">
+
+
+</form>
+
+#parse("common/list_end.vm")
+
+
+

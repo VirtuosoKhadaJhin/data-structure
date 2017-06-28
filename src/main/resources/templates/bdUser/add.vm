@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 菜单管理</title>
+
+    #include("common/css-support.vm")
+    <style>
+        .required-waring {
+            display: none;
+            text-align: left;
+            width: 140px;
+            padding-right: 8em;
+            color: red;
+            text-align: left;
+        }
+    </style>
+
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <div id="breadcrumb">
+                <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+                <a href="list" class="tip-bottom" data-original-title="">bd宝用户管理</a>
+                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">新增</a>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span6" style="width: 70%;min-width:994px;">
+                    <div class="widget-box" style="width: 78%">
+                        <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                            <h5>新增用户</h5>
+                        </div>
+                        <form class="form-horizontal" action="saveAdd" method="post" onsubmit="return emailChekc()">
+
+                            <div class="nopadding" style="width: 100%;">
+                                <div >
+
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">用户名：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <input for="name" id="name"
+                                                   class="span7" name="name" type="text" style="width: 80%"
+                                                   value=""/>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">所属国家：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select name="countryId"  style="width:80%">
+                                                #foreach($country in $!countries)
+                                                    <option value="$!country.id" >$country.name</option>
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">
+                                            <font style="color: red;margin: 0px;padding: 5px;"></font>邮箱：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <input for="name" id="email"
+                                                   class="span7" name="email" type="text" style="width: 80%"
+                                                   value="" >
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">角色：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select name="roleId"  style="width:80%">
+                                                #foreach($role in $!roles)
+                                                    <option value="$!role.id" >$role.desc</option>
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="form-actions" style="clear:both;text-align: center">
+                                    <button type="submit" class="btn btn-info">确定</button>
+##                                    <a class="btn btn-primary" onclick="backLangsDictionaryList()">返回</a>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    #include("common/js-support.vm")
+
+<script type="text/javascript">
+    function emailChekc() {
+        var email = document.getElementsByName("email")[0].value;
+        var reg = /^[A-z]+[A-z0-9_-]*\@[A-z0-9]+\.[A-z]+$/;
+        var res=reg.test(email);
+        if (res == false) {
+            alert("邮箱规则错误，请输入正确的邮箱");
+        }
+        return res;
+    }
+</script>
+
+</body>
+</html>
