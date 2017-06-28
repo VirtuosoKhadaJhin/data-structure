@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * Created by sharp on 2017/6/26 - 15:21
  */
 @Entity
-@Table(name = "bd_rel_user_roles", catalog = "bd" )
+@Table(name = "bd_rel_user_roles", catalog = "nuanyou20" )
 public class BdRelUserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

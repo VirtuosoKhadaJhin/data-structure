@@ -1,6 +1,10 @@
 package com.nuanyou.cms.entity;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import com.nuanyou.cms.commons.CreatedAt;
+import com.nuanyou.cms.commons.DateEntityListener;
+import com.nuanyou.cms.commons.LastModified;
+
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,8 +20,8 @@ import javax.persistence.Table;
  * Created by sharp on 2017/6/22 - 15:12
  */
 @Entity
-@Table(name = "bd_user", catalog = "bd") //catalog配置访问的数据库
-@EntityListeners({AuditingEntityListener.class})
+@Table(name = "bd_user", catalog = "nuanyou20") //catalog配置访问的数据库
+@EntityListeners(DateEntityListener.class)
 public class BdUser {
     
     @Id
@@ -31,11 +35,28 @@ public class BdUser {
     @Column(name = "pwd")
     private String pwd;
     
+    @Column(name = "countryid")
+    private Long countryId;
+    
     @Column(name = "email")
     private String email;
     
-    @Column(name = "countryid")
-    private Long countryId;
+    @Column(name = "chinesename")
+    private String chineseName;
+    
+    @Column(name = "dmail")
+    private String dmail;
+    
+    @Column(name = "deleted")
+    private Byte deleted;
+    
+    @CreatedAt //自动添加创建时间
+    @Column(name = "createtime")
+    private Date createTime;
+    
+    @LastModified //自动更新时间
+    @Column(name = "updatetime")
+    private Date updateTime;
     
     public Long getId() {
         return id;
@@ -61,6 +82,14 @@ public class BdUser {
         this.pwd = pwd;
     }
     
+    public Long getCountryId() {
+        return countryId;
+    }
+    
+    public void setCountryId(Long countryId) {
+        this.countryId = countryId;
+    }
+    
     public String getEmail() {
         return email;
     }
@@ -69,11 +98,43 @@ public class BdUser {
         this.email = email;
     }
     
-    public Long getCountryId() {
-        return countryId;
+    public String getChineseName() {
+        return chineseName;
     }
     
-    public void setCountryId(Long countryId) {
-        this.countryId = countryId;
+    public void setChineseName(String chineseName) {
+        this.chineseName = chineseName;
+    }
+    
+    public String getDmail() {
+        return dmail;
+    }
+    
+    public void setDmail(String dmail) {
+        this.dmail = dmail;
+    }
+    
+    public Byte getDeleted() {
+        return deleted;
+    }
+    
+    public void setDeleted(Byte deleted) {
+        this.deleted = deleted;
+    }
+    
+    public Date getCreateTime() {
+        return createTime;
+    }
+    
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+    
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+    
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

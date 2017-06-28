@@ -15,7 +15,7 @@ import javax.persistence.Table;
  * Created by sharp on 2017/6/26 - 11:34
  */
 @Entity
-@Table(name = "bd_role", catalog = "bd")
+@Table(name = "bd_role", catalog = "nuanyou20")
 
 @EntityListeners({AuditingEntityListener.class})
 public class BdRole {
