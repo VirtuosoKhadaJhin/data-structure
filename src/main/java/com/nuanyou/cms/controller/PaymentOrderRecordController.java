@@ -91,9 +91,9 @@ public class PaymentOrderRecordController {
      */
     @RequestMapping("findPaymentOrderRecord")
     @ResponseBody
-    public APIResult findPaymentOrderRecord(@RequestParam("app") String app, @RequestParam("orderId") Long orderId) {
+    public APIResult findPaymentOrderRecord(@RequestParam("orderId") Long orderId) {
         PaymentOrderRecordVo vo = paymentOrderRecordService.findPaymentOrderRecord(orderId);
-        return new APIResult<>(vo);
+        return new APIResult<PaymentOrderRecordVo>(vo);
     }
 
     /**
