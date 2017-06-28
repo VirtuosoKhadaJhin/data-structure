@@ -60,7 +60,7 @@ public class MissionTaskServiceImpl implements MissionTaskService {
 
     @Override
     public void approvalTask(MissionRequestVo vo) {
-        if (vo.getStatus() == null || vo.getMchId() != null) {
+        if (vo.getStatus() == null || vo.getMchId() == null) {
             throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
         }
         missionTaskDao.updateTaskStatus(vo.getMchId(), vo.getStatus().getKey(), vo.getRemark());
