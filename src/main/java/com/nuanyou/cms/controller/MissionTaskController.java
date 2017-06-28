@@ -53,11 +53,11 @@ public class MissionTaskController {
         List<Merchant> merchants = merchantService.getIdNameList();
         List<Country> countries = countryService.getIdNameList();
         List<City> cities = cityService.findCityByCountryId(requestVo.getCountry());
-
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
         model.addAttribute("requestVo", requestVo);
         model.addAttribute("countries", countries);
+        model.addAttribute("cities",cities);
         model.addAttribute("merchants", merchants);
         model.addAttribute("taskStatus", MissionTaskStatus.values());
         return "mission/list";

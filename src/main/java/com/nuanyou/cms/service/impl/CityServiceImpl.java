@@ -61,7 +61,7 @@ public class CityServiceImpl implements CityService {
         if (countryId == null) {
             throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
         }
-       return cityDao.findByCountryid(countryId);
+       return cityDao.findIdNameList(countryId);
     }
 
 }

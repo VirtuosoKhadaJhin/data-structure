@@ -17,6 +17,4 @@ public interface CityDao extends JpaRepository<City, Long>, JpaSpecificationExec
 
     @Query(value = "select new City(t.id,t.name) from City t where t.country.id=:id")
     List<City> findIdNameList(@Param("id") Long id);
-
-    List<City> findByCountryid(Long countryId);
 }
