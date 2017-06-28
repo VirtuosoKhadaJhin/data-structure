@@ -49,7 +49,7 @@ public class MissionTaskController {
      * @return
      */
     @RequestMapping("list")
-    public String findAllMissionTask(MissionRequestVo requestVo, Model model) {
+    public String list(MissionRequestVo requestVo, Model model) {
         List<Country> countries = countryService.getIdNameList();
         List<City> cities = cityService.findCityByCountryId(requestVo.getCountry());
         List<Merchant> merchants = merchantService.findMerchant(requestVo.getCountry(), requestVo.getCity());
@@ -63,6 +63,12 @@ public class MissionTaskController {
         return "mission/list";
     }
 
+    /**
+     * 审核
+     *
+     * @param vo
+     * @return
+     */
     @RequestMapping("approval")
     @ResponseBody
     public APIResult approvalTask(@RequestBody MissionRequestVo vo) {
