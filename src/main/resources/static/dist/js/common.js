@@ -140,7 +140,8 @@ window.onload = function () {
         errorElement: "span"
     });
 
-    $("body").delegate(".langsAutoComplete", "keyup", function (e) {
+    var listComplete = [];
+    $(".langsAutoComplete").on("keyup", function (e) {
         var keyWord = $(this).val();
         if (!keyWord) {
             return;
@@ -155,7 +156,6 @@ window.onload = function () {
             success: function (result) {
                 if (result.code == 0) {
                     var currEle = e.currentTarget;
-                    var listComplete = [];
                     var list = result.data;
                     if(list.length==0){
                         $(currEle).next().val("");
@@ -169,25 +169,24 @@ window.onload = function () {
                         complate.value =   o.keyCode;
                         listComplete.push(complate);
                     }
-                    $(currEle).autocomplete({
-                        source: listComplete,
-                        focus: function (event, ui) {
-                            $(this).val(ui.item.label);
-                            $(this).next().val(ui.item.value);
-                            return false;
-                        },
-                        select: function (event, ui) {
-                            $(this).val(ui.item.label);
-                            $(this).next().val(ui.item.value);
-                            return false;
-                        }
-                    })
                 } else {
                     alert(result.msg);
                 }
             }
         });
-    });
+    }).autocomplete({
+        source: listComplete,
+        focus: function (event, ui) {
+            $(this).val(ui.item.label);
+            $(this).next().val(ui.item.value);
+            return false;
+        },
+        select: function (event, ui) {
+            $(this).val(ui.item.label);
+            $(this).next().val(ui.item.value);
+            return false;
+        }
+    })
 
 
 
