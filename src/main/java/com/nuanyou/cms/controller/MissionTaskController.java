@@ -5,13 +5,11 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.Merchant;
+import com.nuanyou.cms.entity.MissionGroup;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import com.nuanyou.cms.model.MissionRequestVo;
 import com.nuanyou.cms.model.MissionTaskVo;
-import com.nuanyou.cms.service.CityService;
-import com.nuanyou.cms.service.CountryService;
-import com.nuanyou.cms.service.MerchantService;
-import com.nuanyou.cms.service.MissionTaskService;
+import com.nuanyou.cms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -39,6 +37,9 @@ public class MissionTaskController {
     private CityService cityService;
 
     @Autowired
+    private MissionGroupService missionGroupService;
+
+    @Autowired
     private MissionTaskService missionTaskService;
 
     /**
@@ -53,11 +54,13 @@ public class MissionTaskController {
         List<Country> countries = countryService.getIdNameList();
         List<City> cities = cityService.findCityByCountryId(requestVo.getCountry());
         List<Merchant> merchants = merchantService.findMerchant(requestVo.getCountry(), requestVo.getCity());
+        List<MissionGroup> groups = missionGroupService.findByCountryAndCityId(requestVo.getCountry(), requestVo.getCity());
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
         model.addAttribute("requestVo", requestVo);
         model.addAttribute("countries", countries);
         model.addAttribute("cities",cities);
+        model.addAttribute("groups", groups);
         model.addAttribute("merchants", merchants);
         model.addAttribute("taskStatus", MissionTaskStatus.values());
         return "mission/list";
