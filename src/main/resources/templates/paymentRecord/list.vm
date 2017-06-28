@@ -21,13 +21,18 @@
         cursor: default;
     }
 
-    .td-mchId, .td-userId, .td-price, .td-oprice, .td-status-name, .td-method-name, .td-channel-name, .td-pay-time {
-        width: 60px;
-        max-width: 80px;
+    .td-opt, .td-mchId, .td-userId, .td-price, .td-oprice {
+        width: 50px;
+        max-width: 60px;
+    }
+
+    .td-status-name, .td-method-name, .td-channel-name, .td-pay-time {
+        width: 70px;
+        max-width: 70px;
     }
 
     .td-mchName, .td-mchKpName {
-        min-width: 60px;
+        min-width: 80px;
         max-width: 120px;
         overflow: hidden;
         white-space: nowrap;
@@ -236,7 +241,7 @@
 
         function extractedAjax(_this, item_id) {
             $.ajax({
-                url: "findPaymentOrderRecord?orderId=" + item_id,
+                url: "findPaymentOrderRecord.json?orderId=" + item_id,
                 type: "post",
                 dataType: "json",
                 success: function (response) {
