@@ -100,6 +100,6 @@ public class MissionTaskController {
         model.addAttribute("bdUsers", bdUsers);
         model.addAttribute("merchants", merchants);
         model.addAttribute("requestVo", requestVo);
-        return null;
+        return "distribute/list";
     }
 }
