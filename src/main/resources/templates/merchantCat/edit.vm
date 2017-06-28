@@ -60,7 +60,7 @@
                                         #else
                                             <option value>无</option>
                                             #foreach($e in $!parentCats)
-                                                <option value="$!e.id" #if($!e.name == $!entity.name)selected#end>$!e.name</option>
+                                                <option value="$!e.id" #if($!e.name == $!entity.pcat.name)selected#end>$!e.name</option>
                                             #end
                                         #end
                                     </select>
@@ -191,7 +191,6 @@
 <!--***************************************通用新增语言*************************************************************-->
 #include("common/js-support.vm")
 #include("common/image-support.vm")
-<script type="text/javascript" src="/dist/js/suggest/suggest-search.js"/>
 <script type="text/javascript">
     $(document).ready(function () {
         var currLangKeyInput;
