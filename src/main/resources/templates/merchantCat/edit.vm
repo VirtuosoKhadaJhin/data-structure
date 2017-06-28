@@ -68,7 +68,7 @@
                                 <label class="col-sm-2 control-label">简称：</label>
                                 <div class="controls">
                                     <input name="shortname" for="shortname" type="text" class="form-control langsAutoComplete" placeholder="简称"
-                                           langsKeyName="name" value="$!entity.shortname">
+                                           langsKeyName="name" value="$!entity.shortname#if("$!entity.shnKeyCode" != "")($!entity.shnKeyCode) #end" >
 
                                     <input name="shnKeyCode" type="hidden" value="$!entity.shnKeyCode">
 

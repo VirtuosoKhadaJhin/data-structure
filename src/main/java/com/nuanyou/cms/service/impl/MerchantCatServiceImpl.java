@@ -260,6 +260,13 @@ public class MerchantCatServiceImpl implements MerchantCatService {
         merchantCat.setKeyCode(merchantCatVo.getKeycode());
         merchantCat.setShnKeyCode(merchantCatVo.getShnKeyCode());
 
+        if(StringUtils.isEmpty(merchantCatVo.getKeycode())){
+            merchantCat.setKeyCode(null);
+        }
+        if(StringUtils.isEmpty(merchantCatVo.getShnKeyCode())){
+            merchantCat.setShnKeyCode(null);
+        }
+
         if (merchantCatVo.getPcat() != null) {
             MerchantCat cat = merchantCatDao.findOne(merchantCatVo.getPcat());
             merchantCat.setPcat(cat);
@@ -274,6 +281,12 @@ public class MerchantCatServiceImpl implements MerchantCatService {
             oldEntity.setUpdatetime(new Date());
             if (merchantCatVo.getPcat() == null) {
                 oldEntity.setPcat(null);
+            }
+            if(StringUtils.isEmpty(merchantCatVo.getKeycode())){
+                oldEntity.setKeyCode(null);
+            }
+            if(StringUtils.isEmpty(merchantCatVo.getShnKeyCode())){
+                oldEntity.setShnKeyCode(null);
             }
             merchantCatDao.save(oldEntity);
         }
