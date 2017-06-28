@@ -27,16 +27,13 @@ public class MissionTask {
     @Column(name = "mchName")
     private String mchName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "groupId")
+    @Column(name = "groupId")
     private Long groupId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bdId")
+    @Column(name = "bdId")
     private Long bdId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status")
+    @Column(name = "status")
     private MissionTaskStatus status;
 
     @Column(name = "remark")
