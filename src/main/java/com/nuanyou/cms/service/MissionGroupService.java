@@ -33,4 +33,13 @@ public interface MissionGroupService {
      * @param group
      */
     void saveGroup(MissionGroup group);
+    
+    /**
+     * 按照国家id或者城市id查询战队
+     *
+     * @param countryId
+     * @param cityId
+     * @return
+     */
+    List<MissionGroup> findByCountryAndCityId(Long countryId, Long cityId);
 }

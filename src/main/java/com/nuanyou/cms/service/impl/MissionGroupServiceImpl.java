@@ -1,5 +1,7 @@
 package com.nuanyou.cms.service.impl;
 
+import com.nuanyou.cms.commons.APIException;
+import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.BdCountryDao;
 import com.nuanyou.cms.dao.CityDao;
 import com.nuanyou.cms.dao.NyMissionGroupBdDao;
@@ -72,6 +74,15 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     @Override
     public void saveGroup(MissionGroup group) {
         groupDao.save(group);
+    }
+    
+    @Override
+    public List<MissionGroup> findByCountryAndCityId(Long country, Long city) {
+        if (country == null && city == null) {
+            throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
+        }
+        
+       return null;
     }
     
     private List<MissionGroupManagerVo> convertToBdUserManagerVo(List<MissionGroup> groups) {
