@@ -18,38 +18,38 @@ public class MissionTask {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "mchId")
+    @Column(name = "MCH_ID")
     private Long mchId;
 
-    @Column(name = "mchName")
+    @Column(name = "MCH_NAME")
     private String mchName;
 
-    @Column(name = "groupId")
+    @Column(name = "GROUP_ID")
     private Long groupId;
 
-    @Column(name = "bdId")
+    @Column(name = "BD_ID")
     private Long bdId;
 
-    @Column(name = "status")
+    @Column(name = "STATUS")
     private MissionTaskStatus status;
 
-    @Column(name = "remark")
+    @Column(name = "REMARK")
     private String remark;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Column(name = "createDt", nullable = true)
+    @Column(name = "CREATE_DT", nullable = true)
     private Date createDt;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Column(name = "updateDt", nullable = true)
+    @Column(name = "UPDATE_DT", nullable = true)
     private Date updateDt;
 
-    @Column(name = "del_flag")
+    @Column(name = "DEL_FLAG")
     private Boolean delFlag = false;
 
     public Long getId() {
