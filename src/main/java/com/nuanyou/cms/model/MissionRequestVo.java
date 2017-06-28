@@ -9,13 +9,15 @@ public class MissionRequestVo {
 
     private Long mchId;
 
-    private MissionTaskStatus status;
+    private Long bdId;
+
+    private MissionTaskStatus status = MissionTaskStatus.FINISHED;
 
     private String remark;
 
-    private int country;
+    private Long country = 1L;
 
-    private int city;
+    private Long city;
 
     private String other;
 
@@ -25,6 +27,14 @@ public class MissionRequestVo {
 
     public void setMchId(Long mchId) {
         this.mchId = mchId;
+    }
+
+    public Long getBdId() {
+        return bdId;
+    }
+
+    public void setBdId(Long bdId) {
+        this.bdId = bdId;
     }
 
     public MissionTaskStatus getStatus() {
@@ -43,19 +53,19 @@ public class MissionRequestVo {
         this.remark = remark;
     }
 
-    public int getCountry() {
+    public Long getCountry() {
         return country;
     }
 
-    public void setCountry(int country) {
+    public void setCountry(Long country) {
         this.country = country;
     }
 
-    public int getCity() {
+    public Long getCity() {
         return city;
     }
 
-    public void setCity(int city) {
+    public void setCity(Long city) {
         this.city = city;
     }
 

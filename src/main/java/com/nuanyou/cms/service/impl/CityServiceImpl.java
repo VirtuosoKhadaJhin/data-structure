@@ -1,13 +1,20 @@
 package com.nuanyou.cms.service.impl;
 
+import com.nuanyou.cms.commons.APIException;
+import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.CityDao;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.service.CityService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by Felix on 2016/9/7.
@@ -47,6 +54,14 @@ public class CityServiceImpl implements CityService {
         City oldEntity = cityDao.findOne(entity.getId());
         BeanUtils.copyBeanNotNull(entity, oldEntity);
         return cityDao.save(oldEntity);
+    }
+
+    @Override
+    public List<City> findCityByCountryId(Long countryId) {
+        if (countryId == null) {
+            throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
+        }
+       return cityDao.findByCountryid(countryId);
     }
 
 }
