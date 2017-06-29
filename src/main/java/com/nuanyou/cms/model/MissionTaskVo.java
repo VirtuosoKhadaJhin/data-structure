@@ -1,5 +1,8 @@
 package com.nuanyou.cms.model;
 
+import com.nuanyou.cms.entity.BdUser;
+import com.nuanyou.cms.entity.Merchant;
+import com.nuanyou.cms.entity.MissionGroup;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import com.nuanyou.cms.entity.mission.BdMerchantTrack;
 
@@ -12,13 +15,13 @@ public class MissionTaskVo {
 
     private Long id;
 
-    private Long mchId;
+    private Merchant merchant;
 
     private String mchName;
 
-    private Long groupId;
+    private MissionGroup group;
 
-    private Long bdId;
+    private BdUser bdUser;
 
     private MissionTaskStatus status;
 
@@ -30,9 +33,9 @@ public class MissionTaskVo {
 
     private Long auditor;
 
-    private Date auditdt;
+    private Date auditDt;
 
-    private Date finishdt;
+    private Date finishDt;
 
     private Date createDt;
 
@@ -50,12 +53,12 @@ public class MissionTaskVo {
         this.id = id;
     }
 
-    public Long getMchId() {
-        return mchId;
+    public Merchant getMerchant() {
+        return merchant;
     }
 
-    public void setMchId(Long mchId) {
-        this.mchId = mchId;
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
     }
 
     public String getMchName() {
@@ -66,20 +69,20 @@ public class MissionTaskVo {
         this.mchName = mchName;
     }
 
-    public Long getGroupId() {
-        return groupId;
+    public MissionGroup getGroup() {
+        return group;
     }
 
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
+    public void setGroup(MissionGroup group) {
+        this.group = group;
     }
 
-    public Long getBdId() {
-        return bdId;
+    public BdUser getBdUser() {
+        return bdUser;
     }
 
-    public void setBdId(Long bdId) {
-        this.bdId = bdId;
+    public void setBdUser(BdUser bdUser) {
+        this.bdUser = bdUser;
     }
 
     public MissionTaskStatus getStatus() {
@@ -122,20 +125,20 @@ public class MissionTaskVo {
         this.auditor = auditor;
     }
 
-    public Date getAuditdt() {
-        return auditdt;
+    public Date getAuditDt() {
+        return auditDt;
     }
 
-    public void setAuditdt(Date auditdt) {
-        this.auditdt = auditdt;
+    public void setAuditDt(Date auditDt) {
+        this.auditDt = auditDt;
     }
 
-    public Date getFinishdt() {
-        return finishdt;
+    public Date getFinishDt() {
+        return finishDt;
     }
 
-    public void setFinishdt(Date finishdt) {
-        this.finishdt = finishdt;
+    public void setFinishDt(Date finishDt) {
+        this.finishDt = finishDt;
     }
 
     public Date getCreateDt() {

@@ -119,6 +119,7 @@ public class MissionTaskServiceImpl implements MissionTaskService {
         Map<Long, MissionTaskVo> maps = new LinkedHashMap<Long, MissionTaskVo>(missionTasks.size());
         for (MissionTask missionTask : missionTasks) {
             MissionTaskVo taskVo = BeanUtils.copyBeanNotNull(missionTask, new MissionTaskVo());
+            taskVo.setStatus(MissionTaskStatus.toEnum(missionTask.getStatus()));
             maps.put(missionTask.getMerchant().getId(), taskVo);
         }
         if (CollectionUtils.isEmpty(ids)) {
@@ -137,13 +138,13 @@ public class MissionTaskServiceImpl implements MissionTaskService {
         Iterator<BdMerchantTrack> iterator = tracks.iterator();
         while (iterator.hasNext()) {
             BdMerchantTrack next = iterator.next();
-            Long mchId = next.getId();
+            Long mchId = next.getMchId();
             Long userId = next.getUserId();
             if (!maps.containsKey(mchId)) {
                 continue;
             }
             MissionTaskVo missionTaskVo = maps.get(mchId);
-            if (userId.equals(missionTaskVo.getBdId())) {//相同BD的时候才需要添加(存在多个BD录入商户信息)
+            if (userId.equals(missionTaskVo.getBdUser().getId())) {//相同BD的时候才需要添加(存在多个BD录入商户信息)
                 missionTaskVo.setMerchantTrack(next);
                 iterator.remove();
             }

@@ -36,7 +36,7 @@ public class MissionTask {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bdid")
-    private BdUser bdId;
+    private BdUser bdUser;
 
     @Column(name = "status")
     private int status;
@@ -108,12 +108,12 @@ public class MissionTask {
         this.group = group;
     }
 
-    public BdUser getBdId() {
-        return bdId;
+    public BdUser getBdUser() {
+        return bdUser;
     }
 
-    public void setBdId(BdUser bdId) {
-        this.bdId = bdId;
+    public void setBdUser(BdUser bdUser) {
+        this.bdUser = bdUser;
     }
 
     public int getStatus() {
