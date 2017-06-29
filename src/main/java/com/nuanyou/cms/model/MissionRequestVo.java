@@ -1,6 +1,8 @@
 package com.nuanyou.cms.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -23,8 +25,12 @@ public class MissionRequestVo {
 
     private Long district;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date finshDt;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date auditDt;
 
     private Boolean isAudit = true;
