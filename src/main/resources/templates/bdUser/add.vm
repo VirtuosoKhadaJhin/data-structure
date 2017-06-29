@@ -122,13 +122,26 @@
         var email = document.getElementsByName("email")[0].value;
         var dmail = document.getElementsByName("dmail")[0].value;
 
-        var reg = /^[A-z]+[A-z0-9_-]*\@[A-z0-9]+\.[A-z]+$/;
-        var res1=reg.test(email);
+//        var reg = /^[A-z]+[A-z0-9_-]*\@[A-z0-9]+\.[A-z]+$/;
+        var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/ ;
+
+        if (email == "") {
+            var res1 = true;
+        } else {
+            var res1=reg.test(email);
+        }
+
+        if (dmail == "") {
+            var res2 = true;
+        } else {
+            var res2=reg.test(dmail);
+        }
+
+
         if (res1 == false) {
             alert("合归邮箱规则错误，请输入正确的邮箱");
         }
 
-        var res2=reg.test(dmail);
         if (res2 == false) {
             alert("合归邮箱规则错误，请输入正确的邮箱");
         }

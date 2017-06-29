@@ -1,6 +1,7 @@
 #parse("common/list_start.vm")
 <div id="breadcrumb">
-    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
+        主页</a>
     <a href="list" class="tip-bottom" data-original-title="">bd宝用户管理</a>
     <a href="#" class="tip-bottom" data-original-title="">列表</a>
 </div>
@@ -23,10 +24,11 @@
         min-width: 180px;
     }
 
-    .td-update-time{
+    .td-update-time {
         min-width: 120px;
     }
-    .td-sort{
+
+    .td-sort {
         min-width: 60px;
     }
 </style>
@@ -59,7 +61,7 @@
             </tr>
             #end
 
-            #foreach($vo in $!vos.content)
+            #foreach($vo in $!page.content)
             <tr class="odd gradeX">
                 <td class="td-sort">
                     <label style="text-align: center;">$!vo.id</label>
@@ -83,15 +85,22 @@
                     <label style="text-align: center;">$!vo.role.desc</label>
                 </td>
                 <td class="td-sort">
-                    <label style="text-align: center;">$!vo.createTime</label>
+                ##                    <label style="text-align: center;">$!vo.createTime</label>
+                    <label style="text-align: center;">$!dateFormatter.format(
+                        "yyyy-MM-dd HH:mm:ss",$!vo.createTime)</label>
                 </td>
                 <td class="td-sort">
-                    <label style="text-align: center;">$!vo.updateTime</label>
+                ##                    <label style="text-align: center;">$!vo.updateTime</label>
+                    <label style="text-align: center;">$!dateFormatter.format(
+                        "yyyy-MM-dd HH:mm:ss",$!vo.updateTime)</label>
                 </td>
 
                 <td style="min-width: 80px;">
                     <div style="text-align: center">
-                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item" href="edit?id=$!vo.id">编辑</a>
+                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item"
+                           href="edit?id=$!vo.id">编辑</a>
+                        <a style="background red" key-code="$!vo.id"
+                           class="btn btn-primary btn-mini modify-item" href="del?id=$!vo.id">删除</a>
                     </div>
                 </td>
 
@@ -104,12 +113,23 @@
 
 
 #parse("common/list_mid.vm")
-<form class="form-horizontal search-form" method="get" action="list">
-
-
-</form>
+##<form class="form-horizontal search-form" method="get" action="list">
+##    <div class="control-group" style="clear: both;margin-top: 10px;">
+##        <button type="submit" class="btn btn-primary">查询</button>
+##        <button class="btn btn-warning search-reset">重置</button>
+##    </div>
+##</form>
 
 #parse("common/list_end.vm")
+
+##重置
+<script>
+    $(".search-reset").click(function () {
+        $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
+        $(".search-form").find(".select2").val('').trigger('change');
+    });
+
+</script>
 
 
 

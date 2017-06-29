@@ -53,7 +53,7 @@
                                         <label class="control-label"
                                                style="width: 140px;">用户名：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" name="name" id="name" type="text"
+                                            <input for="name" name="name" id="name" type="text" readonly="readonly"
                                                    class="span7"
                                                    style="width: 80%" value="$!vo.name">
                                         </div>
@@ -136,18 +136,30 @@
     #include("common/js-support.vm")
 
     <script type="text/javascript">
-        //邮箱验证
         function emailChekc() {
             var email = document.getElementsByName("email")[0].value;
             var dmail = document.getElementsByName("dmail")[0].value;
 
-            var reg = /^[A-z]+[A-z0-9_-]*\@[A-z0-9]+\.[A-z]+$/;
-            var res1=reg.test(email);
+//        var reg = /^[A-z]+[A-z0-9_-]*\@[A-z0-9]+\.[A-z]+$/;
+            var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/ ;
+
+            if (email == "") {
+                var res1 = true;
+            } else {
+                var res1=reg.test(email);
+            }
+
+            if (dmail == "") {
+                var res2 = true;
+            } else {
+                var res2=reg.test(dmail);
+            }
+
+
             if (res1 == false) {
                 alert("合归邮箱规则错误，请输入正确的邮箱");
             }
 
-            var res2=reg.test(dmail);
             if (res2 == false) {
                 alert("合归邮箱规则错误，请输入正确的邮箱");
             }

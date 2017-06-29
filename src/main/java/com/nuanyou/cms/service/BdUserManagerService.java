@@ -5,6 +5,7 @@ import com.nuanyou.cms.entity.BdRelUserRole;
 import com.nuanyou.cms.entity.BdRole;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.model.BdUserManagerRequestVo;
+import com.nuanyou.cms.model.BdUserParamVo;
 import com.nuanyou.cms.model.BdUserVo;
 
 import org.springframework.data.domain.Page;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public interface BdUserManagerService {
     /**
-//     * 查询所有bd宝用户列表
+     * //     * 查询所有bd宝用户列表
      *
      * @return bd宝用户列表
      */
@@ -49,6 +50,7 @@ public interface BdUserManagerService {
     
     /**
      * 更新用户信息
+     *
      * @param user 用户信息
      */
     void updateUser(BdUser user);
@@ -74,4 +76,25 @@ public interface BdUserManagerService {
     BdUser findBdUserById(long id);
     
     List<BdUser> findAllBdUsers();
+    
+    /**
+     * 保存新增的bduser和角色信息
+     *
+     * @param paramVo
+     */
+    void saveAddUserAndRole(BdUserParamVo paramVo);
+    
+    /**
+     * 保存编辑的bduser和角色信息
+     *
+     * @param paramVo
+     */
+    void saveEditUserAndRole(BdUserParamVo paramVo);
+    
+    /**
+     * 删除bduser信息
+     *
+     * @param aLong
+     */
+    void del(Long aLong);
 }

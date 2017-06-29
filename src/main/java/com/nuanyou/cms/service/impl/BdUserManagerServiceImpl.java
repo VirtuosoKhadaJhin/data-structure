@@ -10,19 +10,28 @@ import com.nuanyou.cms.entity.BdRole;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.BdUserManagerRequestVo;
+import com.nuanyou.cms.model.BdUserParamVo;
 import com.nuanyou.cms.model.BdUserVo;
+import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.BdUserManagerService;
 import com.nuanyou.cms.service.CountryService;
+import com.nuanyou.cms.util.MD5Utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * bd宝用户管理
@@ -48,25 +57,35 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
     private BdCountryDao bdCountryDao;
     
     
-    //    private BdUserDao bdUserDao;
     @Override
     public Page<BdUserVo> findAllBdUserVos(final BdUserManagerRequestVo requestVo) {
         // TODO: 2017/6/22 Spring data， Spring data jpa需要学习
         
         //分页请求
-        final Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageNum());
+        Pageable pageable = new PageRequest(requestVo.getIndex() - 1, PageUtil.pageSize);
         
         //配置查询条件,查询表中数据
-        List<BdUser> bdUsers = bdUserDao.findAll();
+        Page<BdUser> bdUsers = bdUserDao.findAll(new Specification() {
+        
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                predicate.add(cb.equal(root.get("deleted"), 0));
+                
+                Predicate[] arrays = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(arrays)).getRestriction();
+            }
+        }, pageable);
+        
 //        List<BdRole> bdRoles = bdRoleDao.findAll();
         
         //应该使用联合查询，
         List<BdRelUserRole> bdRelUserRoles = bdRelUserRoleDao.findAll();
         
         //        List<BdUserVo> allCate = this.convertToBdUserManagerVo(bdUsers, bdRoles, bdRelUserRoles);
-        List<BdUserVo> allCate = this.convertToBdUserManagerVo(bdUsers, bdRelUserRoles);
+        List<BdUserVo> allCate = this.convertToBdUserManagerVo(bdUsers.getContent(), bdRelUserRoles);
         
-        Page<BdUserVo> pageVOs = new PageImpl<>(allCate, pageable, bdUsers.size());
+        Page<BdUserVo> pageVOs = new PageImpl<>(allCate, pageable, bdUsers.getTotalElements());
         
         return pageVOs;
     }
@@ -136,6 +155,68 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
         BdRole role = bdRoleDao.findOne(roleId);
         return role;
     }
+    
+    @Override
+    public void saveAddUserAndRole(BdUserParamVo paramVo) {
+        BdUser user = new BdUser();
+        BdRelUserRole userRole = new BdRelUserRole();
+        
+        //保存用户信息
+        user.setName(paramVo.getName());
+        user.setChineseName(paramVo.getChineseName());
+        user.setCountryId(paramVo.getCountryId());
+        user.setEmail(paramVo.getEmail());
+        user.setDmail(paramVo.getDmail());
+        
+        //设置默认密码
+        String pwd = MD5Utils.encrypt("123456");
+        user.setPwd(pwd);
+        
+        //设置默认显示
+        user.setDeleted(Byte.valueOf("0"));
+        
+        //保存用户角色信息
+        userRole.setUser(user);
+        BdRole role = this.findRoleById(paramVo.getRoleId());
+        
+        userRole.setRole(role);
+        
+        this.saveUser(user);
+        this.saveUserRole(userRole);
+    }
+    
+    @Override
+    public void saveEditUserAndRole(BdUserParamVo paramVo) {
+        //获取数据
+        BdUser user = this.findBdUserById(paramVo.getId());
+        BdRelUserRole userRole = new BdRelUserRole();
+        BdRole role = this.findRoleById(paramVo.getRoleId());
+    
+        //设置数据
+        user.setName(paramVo.getName());
+        user.setChineseName(paramVo.getChineseName());
+        user.setCountryId(paramVo.getCountryId());
+        user.setEmail(paramVo.getEmail());
+        user.setDmail(paramVo.getDmail());
+    
+        //保存用户角色信息
+        userRole.setUser(user);
+        userRole.setRole(role);
+    
+        //保存数据
+        this.updateUser(user);
+        this.updateUserRole(userRole);
+    }
+    
+    @Override
+    public void del(Long id) {
+        BdUser user = bdUserDao.findOne(id);
+        user.setDeleted(Byte.valueOf("1"));
+    
+        //保存信息
+        bdUserDao.save(user);
+    }
+    
     
     @Override
     public void updateUserRole(BdRelUserRole userRole) {
@@ -210,7 +291,7 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
     
     @Override
     public List<BdUser> findAllBdUsers() {
-        List<BdUser> bdUsers = bdUserDao.findAll();
+        List<BdUser> bdUsers = bdUserDao.findallBdUser();
         return bdUsers;
     }
 }
