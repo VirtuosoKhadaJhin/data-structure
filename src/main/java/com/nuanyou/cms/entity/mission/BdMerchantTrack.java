@@ -2,7 +2,6 @@ package com.nuanyou.cms.entity.mission;
 
 import com.google.common.collect.Lists;
 import com.nuanyou.cms.commons.DateEntityListener;
-import com.nuanyou.cms.entity.Merchant;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
@@ -16,10 +15,6 @@ import java.util.List;
 @Table(name = "bd_merchant_track")
 @EntityListeners({DateEntityListener.class})
 public class BdMerchantTrack {
-
-    public static final Integer ADD = 1;
-    public static final Integer EDIT = 2;
-    public static final Integer DELETE = 3;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,9 +36,8 @@ public class BdMerchantTrack {
     @Column(name = "userid")
     private Long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "mchid")
-    private Merchant merchant;
+    @Column(name = "mchid")
+    private Long mchId;
 
     @Column(name = "content")
     private String content;
@@ -99,12 +93,12 @@ public class BdMerchantTrack {
         this.userId = userId;
     }
 
-    public Merchant getMerchant() {
-        return merchant;
+    public Long getMchId() {
+        return mchId;
     }
 
-    public void setMerchant(Merchant merchant) {
-        this.merchant = merchant;
+    public void setMchId(Long mchId) {
+        this.mchId = mchId;
     }
 
     public String getContent() {
