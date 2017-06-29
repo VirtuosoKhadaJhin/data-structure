@@ -4,6 +4,7 @@ import com.nuanyou.cms.entity.BdUser;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -14,4 +15,12 @@ public interface BdUserDao extends JpaRepository<BdUser, Long>, JpaSpecification
     BdUser findUserById(Long id);
     
     List<BdUser> findByIdIn(List<Long> userIds);
+    
+    /**
+     * 查找所有可见的bduser
+     *
+     * @return
+     */
+    @Query(value = "SELECT t from BdUser t where deleted=0")
+    List<BdUser> findallBdUser();
 }

@@ -13,7 +13,7 @@ public class BdUserManagerRequestVo {
     private String role; //角色
     
     Integer index = 1;
-    Integer pageNum = 8;
+    Integer pageNum = 20;
     
     public BdUserManagerRequestVo() {
     }
