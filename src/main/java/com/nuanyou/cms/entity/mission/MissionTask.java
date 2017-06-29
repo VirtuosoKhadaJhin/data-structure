@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.MissionGroup;
-import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -38,7 +37,7 @@ public class MissionTask {
     private BdUser bdId;
 
     @Column(name = "status")
-    private MissionTaskStatus status;
+    private int status;
 
     @Column(name = "remark")
     private String remark;
@@ -109,11 +108,11 @@ public class MissionTask {
         this.bdId = bdId;
     }
 
-    public MissionTaskStatus getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(MissionTaskStatus status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

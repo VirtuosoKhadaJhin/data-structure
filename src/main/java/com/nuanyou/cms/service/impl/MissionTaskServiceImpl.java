@@ -4,10 +4,12 @@ import com.google.common.collect.Lists;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.MissionTaskDao;
+import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import com.nuanyou.cms.entity.mission.MissionTask;
 import com.nuanyou.cms.model.MissionRequestVo;
 import com.nuanyou.cms.model.MissionTaskVo;
 import com.nuanyou.cms.service.MissionTaskService;
+import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -63,7 +66,8 @@ public class MissionTaskServiceImpl implements MissionTaskService {
         if (vo.getStatus() == null || vo.getMchId() == null) {
             throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
         }
-        missionTaskDao.updateTaskStatus(vo.getMchId(), vo.getStatus().getKey(), vo.getRemark());
+        Long userid = UserHolder.getUser().getUserid();
+        missionTaskDao.updateTaskStatus(vo.getMchId(), vo.getStatus().getKey(), vo.getRemark(), userid, new Date());
     }
 
     private List<MissionTaskVo> covertToMissionTaskVos(List<MissionTask> missionTasks) {
@@ -72,7 +76,9 @@ public class MissionTaskServiceImpl implements MissionTaskService {
         }
         List<MissionTaskVo> taskVos = Lists.newArrayList();
         for (MissionTask task : missionTasks) {
-            taskVos.add(BeanUtils.copyBeanNotNull(task, new MissionTaskVo()));
+            MissionTaskVo vo = BeanUtils.copyBeanNotNull(task, new MissionTaskVo());
+            vo.setStatus(MissionTaskStatus.toEnum(task.getStatus()));
+            taskVos.add(vo);
         }
         return taskVos;
     }
