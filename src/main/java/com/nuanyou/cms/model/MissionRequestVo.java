@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -27,7 +28,7 @@ public class MissionRequestVo {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date finshDt;
+    private Date finishDt;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -95,12 +96,12 @@ public class MissionRequestVo {
         this.district = district;
     }
 
-    public Date getFinshDt() {
-        return finshDt;
+    public Date getFinishDt() {
+        return finishDt;
     }
 
-    public void setFinshDt(Date finshDt) {
-        this.finshDt = finshDt;
+    public void setFinishDt(Date finishDt) {
+        this.finishDt = finishDt;
     }
 
     public Date getAuditDt() {
@@ -133,5 +134,19 @@ public class MissionRequestVo {
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getFinishDtStr() {
+        if (finishDt == null) {
+            return null;
+        }
+        return new SimpleDateFormat("yyyy-MM-dd").format(finishDt);
+    }
+
+    public String getAuditDtStr(){
+        if (auditDt == null) {
+            return null;
+        }
+        return new SimpleDateFormat("yyyy-MM-dd").format(auditDt);
     }
 }

@@ -158,13 +158,13 @@
                             #if($!requestVo.status.key != 2)
                                 <div class="search-select task-status-time">
                                     <label>审核时间：</label>
-                                    <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!dateFormatter.format("yyyy-MM-dd",$!requestVo.auditDt)" placeholder="审核时间">
+                                    <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
                                 </div>
                             #end
 
                             <div class="search-select">
                                 <label>完成时间：</label>
-                                <input type="text" name="finshDt" class="span11 dateTimeFormatDay" value="$!dateFormatter.format("yyyy-MM-dd",$!requestVo.finishDt)" placeholder="完成时间">
+                                <input type="text" name="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="完成时间">
                             </div>
 
                             <button type="submit" class="btn btn-primary">查询</button>
