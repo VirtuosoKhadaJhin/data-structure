@@ -10,7 +10,7 @@ import java.util.Date;
  * 在视图显示的实体
  * Created by sharp on 2017/6/28 - 15:58
  */
-public class MissionGroupManagerVo {
+public class MissionGroupVo {
     private Long id;
     private String name;
     private Country country;
@@ -20,7 +20,7 @@ public class MissionGroupManagerVo {
     private Date createDt;
     private Date updateDt;
     private Byte delFlag;
-    private BdUser leaderId;
+    private BdUser leader;
     Integer index = 1;
     Integer pageNum = 8;
     
@@ -96,12 +96,12 @@ public class MissionGroupManagerVo {
         this.delFlag = delFlag;
     }
     
-    public BdUser getLeaderId() {
-        return leaderId;
+    public BdUser getLeader() {
+        return leader;
     }
     
-    public void setLeaderId(BdUser leaderId) {
-        this.leaderId = leaderId;
+    public void setLeader(BdUser leader) {
+        this.leader = leader;
     }
     
     public Integer getIndex() {

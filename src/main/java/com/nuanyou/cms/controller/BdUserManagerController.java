@@ -5,7 +5,8 @@ import com.nuanyou.cms.entity.BdRelUserRole;
 import com.nuanyou.cms.entity.BdRole;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.model.BdUserManagerRequestVo;
-import com.nuanyou.cms.model.BdUserManagerVo;
+import com.nuanyou.cms.model.BdUserParamVo;
+import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.service.BdUserManagerService;
 import com.nuanyou.cms.util.MD5Utils;
 
@@ -36,7 +37,7 @@ public class BdUserManagerController {
      */
     @RequestMapping("list")
     public String list(BdUserManagerRequestVo requestVo, Model model) {
-        Page<BdUserManagerVo> vos = userManagerService.findAllBdUserManagerVos(requestVo);
+        Page<BdUserVo> vos = userManagerService.findAllBdUserVos(requestVo);
         model.addAttribute("vos", vos);
         return "bdUser/list";
     }
@@ -48,8 +49,8 @@ public class BdUserManagerController {
      */
     @RequestMapping("edit")
     public String edit(Long id, Model model) {
-        BdUserManagerVo vo = userManagerService.findUserById(id);
-        List<BdRole> roles = userManagerService.findAllRole();
+        BdUserVo vo = userManagerService.findUserById(id);
+        List<BdRole> roles = userManagerService.findAllRoles();
         List<BdCountry> countries = userManagerService.findAllCountry();
     
         model.addAttribute("countries", countries);
@@ -61,7 +62,7 @@ public class BdUserManagerController {
     
     @RequestMapping("add")
     public String add(Model model) {
-        List<BdRole> roles = userManagerService.findAllRole();
+        List<BdRole> roles = userManagerService.findAllRoles();
         List<BdCountry> countries = userManagerService.findAllCountry();
         model.addAttribute("roles", roles);
         model.addAttribute("countries", countries);
@@ -74,44 +75,57 @@ public class BdUserManagerController {
      * @return
      */
     @RequestMapping("saveAdd")
-    public String saveAdd(Model model, String name, Long countryId, String email, Long roleId) {
+    public String saveAdd(Model model, BdUserParamVo paramVo) {
     
         BdUser user = new BdUser();
         BdRelUserRole userRole = new BdRelUserRole();
     
         //保存用户信息
-        user.setName(name);
-        user.setCountryId(countryId);
-        user.setEmail(email);
-        String pwd = MD5Utils.encrypt("12345");
+        user.setName(paramVo.getName());
+        user.setChineseName(paramVo.getChineseName());
+        user.setCountryId(paramVo.getCountryId());
+        user.setEmail(paramVo.getEmail());
+        user.setDmail(paramVo.getDmail());
+    
+        //设置默认密码
+        String pwd = MD5Utils.encrypt("123456");
         user.setPwd(pwd);
-        userManagerService.saveUser(user);
+    
+        //设置默认显示
+        user.setDeleted(Byte.valueOf("0"));
     
         //保存用户角色信息
         userRole.setUser(user);
-        BdRole role = userManagerService.findRoleById(roleId);
-        
+        BdRole role = userManagerService.findRoleById(paramVo.getRoleId());
+    
         userRole.setRole(role);
-        
+    
+        userManagerService.saveUser(user);
         userManagerService.saveUserRole(userRole);
         
         return "forward:/bdUser/list";
     }
     
     @RequestMapping("saveEdit")
-    public String saveEdit(String id, String name, String countryId, String email, String roleId) {
-        
-        BdUser user = userManagerService.findBdUserById(Long.parseLong(id));
-        user.setId(Long.parseLong(id));
-        user.setName(name);
-        user.setCountryId(Long.parseLong(countryId));
-        user.setEmail(email);
-        userManagerService.updateUser(user);
-        
+    public String saveEdit(BdUserParamVo paramVo) {
+        //获取数据
+        BdUser user = userManagerService.findBdUserById(paramVo.getId());
         BdRelUserRole userRole = new BdRelUserRole();
-        BdRole role = userManagerService.findRoleById(Long.parseLong(roleId));
+        BdRole role = userManagerService.findRoleById(paramVo.getRoleId());
+    
+        //设置数据
+        user.setName(paramVo.getName());
+        user.setChineseName(paramVo.getChineseName());
+        user.setCountryId(paramVo.getCountryId());
+        user.setEmail(paramVo.getEmail());
+        user.setDmail(paramVo.getDmail());
+    
+        //保存用户角色信息
         userRole.setUser(user);
         userRole.setRole(role);
+        
+        //保存数据
+        userManagerService.updateUser(user);
         userManagerService.updateUserRole(userRole);
         
         return "forward:/bdUser/list";

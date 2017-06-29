@@ -10,7 +10,7 @@ import com.nuanyou.cms.entity.BdRole;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.BdUserManagerRequestVo;
-import com.nuanyou.cms.model.BdUserManagerVo;
+import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.service.BdUserManagerService;
 import com.nuanyou.cms.service.CountryService;
 
@@ -50,7 +50,7 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
     
     //    private BdUserDao bdUserDao;
     @Override
-    public Page<BdUserManagerVo> findAllBdUserManagerVos(final BdUserManagerRequestVo requestVo) {
+    public Page<BdUserVo> findAllBdUserVos(final BdUserManagerRequestVo requestVo) {
         // TODO: 2017/6/22 Spring data， Spring data jpa需要学习
         
         //分页请求
@@ -63,16 +63,16 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
         //应该使用联合查询，
         List<BdRelUserRole> bdRelUserRoles = bdRelUserRoleDao.findAll();
         
-        //        List<BdUserManagerVo> allCate = this.convertToBdUserManagerVo(bdUsers, bdRoles, bdRelUserRoles);
-        List<BdUserManagerVo> allCate = this.convertToBdUserManagerVo(bdUsers, bdRelUserRoles);
+        //        List<BdUserVo> allCate = this.convertToBdUserManagerVo(bdUsers, bdRoles, bdRelUserRoles);
+        List<BdUserVo> allCate = this.convertToBdUserManagerVo(bdUsers, bdRelUserRoles);
         
-        Page<BdUserManagerVo> pageVOs = new PageImpl<>(allCate, pageable, bdUsers.size());
+        Page<BdUserVo> pageVOs = new PageImpl<>(allCate, pageable, bdUsers.size());
         
         return pageVOs;
     }
     
     @Override
-    public List<BdRole> findAllRole() {
+    public List<BdRole> findAllRoles() {
         List<BdRole> bdRoles = bdRoleDao.findAll();
         return bdRoles;
     }
@@ -102,14 +102,26 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
     }
     
     @Override
-    public BdUserManagerVo findUserById(Long id) {
+    public BdUserVo findUserById(Long id) {
         List<BdRelUserRole> userRoles = bdRelUserRoleDao.findAll();
         BdUser user = bdUserDao.findUserById(id);
         
-        BdUserManagerVo vo = new BdUserManagerVo();
-        vo.setUser(user);
+        BdUserVo vo = new BdUserVo();
+        vo.setId(user.getId());
+        vo.setName(user.getName());
+        vo.setChineseName(user.getChineseName());
+    
+        //设置国家
         Country country = countryService.findOne(user.getCountryId());
         vo.setCountry(country);
+    
+        vo.setEmail(user.getEmail());
+        vo.setDmail(user.getDmail());
+        vo.setDeleted(user.getDeleted());
+        vo.setCreateTime(user.getCreateTime());
+        vo.setUpdateTime(user.getUpdateTime());
+        
+        //判断用户是否有角色
         for (BdRelUserRole userRole : userRoles) {
             if (user.equals(userRole.getUser())) {
                 vo.setRole(userRole.getRole());
@@ -146,16 +158,24 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
      * @param userRoles
      * @return
      */
-    private List<BdUserManagerVo> convertToBdUserManagerVo(List<BdUser> users, List<BdRelUserRole> userRoles) {
+    private List<BdUserVo> convertToBdUserManagerVo(List<BdUser> users, List<BdRelUserRole> userRoles) {
     
-        ArrayList<BdUserManagerVo> list = new ArrayList<>();
+        ArrayList<BdUserVo> list = new ArrayList<>();
         for (BdUser user : users) {
-            BdUserManagerVo vo = new BdUserManagerVo();
-            vo.setUser(user);
+            BdUserVo vo = new BdUserVo();
+            vo.setId(user.getId());
+            vo.setName(user.getName());
+            vo.setChineseName(user.getChineseName());
     
             //设置国家
             Country country = countryService.findOne(user.getCountryId());
             vo.setCountry(country);
+    
+            vo.setEmail(user.getEmail());
+            vo.setDmail(user.getDmail());
+            vo.setDeleted(user.getDeleted());
+            vo.setCreateTime(user.getCreateTime());
+            vo.setUpdateTime(user.getUpdateTime());
     
             //判断用户是否有角色
             for (BdRelUserRole userRole : userRoles) {

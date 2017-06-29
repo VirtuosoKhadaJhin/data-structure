@@ -51,6 +51,15 @@
                                     </div>
 
                                     <div>
+                                        <label class="control-label" style="width: 140px;">中文名：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <input for="name" id="chineseName"
+                                                   class="span7" name="chineseName" type="text" style="width: 80%"
+                                                   value=""/>
+                                        </div>
+                                    </div>
+
+                                    <div>
                                         <label class="control-label" style="width: 140px;">所属国家：</label>
                                         <div class="controls" style="margin-left: 152px;">
                                             <select name="countryId"  style="width:80%">
@@ -63,10 +72,20 @@
 
                                     <div>
                                         <label class="control-label" style="width: 140px;">
-                                            <font style="color: red;margin: 0px;padding: 5px;"></font>邮箱：</label>
+                                            <font style="color: red;margin: 0px;padding: 5px;"></font>合归邮箱：</label>
                                         <div class="controls" style="margin-left: 152px;">
                                             <input for="name" id="email"
                                                    class="span7" name="email" type="text" style="width: 80%"
+                                                   value="" >
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">
+                                            <font style="color: red;margin: 0px;padding: 5px;"></font>钉钉邮箱：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <input for="name" id="dmail"
+                                                   class="span7" name="dmail" type="text" style="width: 80%"
                                                    value="" >
                                         </div>
                                     </div>
@@ -101,12 +120,20 @@
 <script type="text/javascript">
     function emailChekc() {
         var email = document.getElementsByName("email")[0].value;
+        var dmail = document.getElementsByName("dmail")[0].value;
+
         var reg = /^[A-z]+[A-z0-9_-]*\@[A-z0-9]+\.[A-z]+$/;
-        var res=reg.test(email);
-        if (res == false) {
-            alert("邮箱规则错误，请输入正确的邮箱");
+        var res1=reg.test(email);
+        if (res1 == false) {
+            alert("合归邮箱规则错误，请输入正确的邮箱");
         }
-        return res;
+
+        var res2=reg.test(dmail);
+        if (res2 == false) {
+            alert("合归邮箱规则错误，请输入正确的邮箱");
+        }
+
+        return res1 && res2;
     }
 </script>
 

@@ -4,7 +4,7 @@ import com.nuanyou.cms.entity.BdCountry;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.MissionGroup;
-import com.nuanyou.cms.model.MissionGroupManagerVo;
+import com.nuanyou.cms.model.MissionGroupVo;
 import com.nuanyou.cms.model.MissionGroupParamVo;
 
 import org.springframework.data.domain.Page;
@@ -24,7 +24,7 @@ public interface MissionGroupService {
      * @param requestVo
      * @return
      */
-    Page<MissionGroupManagerVo> findAllGroups(MissionGroupManagerVo requestVo);
+    Page<MissionGroupVo> findAllGroups(MissionGroupVo requestVo);
     
     List<BdCountry> findAllCountries();
     

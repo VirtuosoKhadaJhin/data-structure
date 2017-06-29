@@ -14,7 +14,7 @@ import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.MissionGroup;
 import com.nuanyou.cms.entity.MissionGroupBd;
-import com.nuanyou.cms.model.MissionGroupManagerVo;
+import com.nuanyou.cms.model.MissionGroupVo;
 import com.nuanyou.cms.model.MissionGroupParamVo;
 import com.nuanyou.cms.service.MissionGroupService;
 import com.nuanyou.cms.util.BeanUtils;
@@ -61,15 +61,15 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     private BdUserDao bdUserDao;
     
     @Override
-    public Page<MissionGroupManagerVo> findAllGroups(MissionGroupManagerVo requestVo) {
+    public Page<MissionGroupVo> findAllGroups(MissionGroupVo requestVo) {
         //分页请求
         final Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageNum());
         
         List<MissionGroup> groups = groupDao.findAll();
         
-        List<MissionGroupManagerVo> allCate = convertToBdUserManagerVo(groups);
+        List<MissionGroupVo> allCate = convertToBdUserManagerVo(groups);
         
-        Page<MissionGroupManagerVo> pageVOs = new PageImpl<>(allCate, pageable, groups.size());
+        Page<MissionGroupVo> pageVOs = new PageImpl<>(allCate, pageable, groups.size());
         
         return pageVOs;
     }
@@ -126,13 +126,13 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         return bdUserDao.findByIdIn(userIds);
     }
     
-    private List<MissionGroupManagerVo> convertToBdUserManagerVo(List<MissionGroup> groups) {
+    private List<MissionGroupVo> convertToBdUserManagerVo(List<MissionGroup> groups) {
         if (CollectionUtils.isEmpty(groups)) {
             return Lists.newArrayList();
         }
-        List<MissionGroupManagerVo> vos = Lists.newArrayList();
+        List<MissionGroupVo> vos = Lists.newArrayList();
         for (MissionGroup group : groups) {
-            MissionGroupManagerVo managerVo = BeanUtils.copyBean(group, new MissionGroupManagerVo());
+            MissionGroupVo managerVo = BeanUtils.copyBean(group, new MissionGroupVo());
             vos.add(managerVo);
         }
         return vos;

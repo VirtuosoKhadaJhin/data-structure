@@ -24,40 +24,20 @@ import javax.persistence.Table;
 @EntityListeners(DateEntityListener.class)
 public class BdUser {
     
+    private Long id;
+    private String name;
+    private String chineseName;
+    private String pwd;
+    private Long countryId;
+    private String email;
+    private String dmail;
+    private Byte deleted;
+    private Date createTime;
+    private Date updateTime;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
-    
-    @Column(name = "name")
-    private String name;
-    
-    @Column(name = "pwd")
-    private String pwd;
-    
-    @Column(name = "countryid")
-    private Long countryId;
-    
-    @Column(name = "email")
-    private String email;
-    
-    @Column(name = "chinesename")
-    private String chineseName;
-    
-    @Column(name = "dmail")
-    private String dmail;
-    
-    @Column(name = "deleted")
-    private Byte deleted;
-    
-    @CreatedAt //自动添加创建时间
-    @Column(name = "createtime")
-    private Date createTime;
-    
-    @LastModified //自动更新时间
-    @Column(name = "updatetime")
-    private Date updateTime;
-    
     public Long getId() {
         return id;
     }
@@ -66,6 +46,7 @@ public class BdUser {
         this.id = id;
     }
     
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -74,30 +55,7 @@ public class BdUser {
         this.name = name;
     }
     
-    public String getPwd() {
-        return pwd;
-    }
-    
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-    
-    public Long getCountryId() {
-        return countryId;
-    }
-    
-    public void setCountryId(Long countryId) {
-        this.countryId = countryId;
-    }
-    
-    public String getEmail() {
-        return email;
-    }
-    
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    
+    @Column(name = "chinesename")
     public String getChineseName() {
         return chineseName;
     }
@@ -106,6 +64,34 @@ public class BdUser {
         this.chineseName = chineseName;
     }
     
+    @Column(name = "pwd")
+    public String getPwd() {
+        return pwd;
+    }
+    
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+    
+    @Column(name = "countryid")
+    public Long getCountryId() {
+        return countryId;
+    }
+    
+    public void setCountryId(Long countryId) {
+        this.countryId = countryId;
+    }
+    
+    @Column(name = "email")
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    @Column(name = "dmail")
     public String getDmail() {
         return dmail;
     }
@@ -114,6 +100,7 @@ public class BdUser {
         this.dmail = dmail;
     }
     
+    @Column(name = "deleted")
     public Byte getDeleted() {
         return deleted;
     }
@@ -122,6 +109,8 @@ public class BdUser {
         this.deleted = deleted;
     }
     
+    @CreatedAt //自动添加创建时间
+    @Column(name = "createtime")
     public Date getCreateTime() {
         return createTime;
     }
@@ -130,6 +119,8 @@ public class BdUser {
         this.createTime = createTime;
     }
     
+    @LastModified //自动更新时间
+    @Column(name = "updatetime")
     public Date getUpdateTime() {
         return updateTime;
     }

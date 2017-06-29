@@ -46,7 +46,7 @@
                                             <input for="name" name="id" id="id" type="text"
                                                    class="span7"
                                                    readonly="readonly" style="width: 80%"
-                                                   value="$!vo.user.id">
+                                                   value="$!vo.id">
                                         </div>
                                     </div>
                                     <div class="">
@@ -55,7 +55,16 @@
                                         <div class="controls" style="margin-left: 152px;">
                                             <input for="name" name="name" id="name" type="text"
                                                    class="span7"
-                                                   style="width: 80%" value="$!vo.user.name">
+                                                   style="width: 80%" value="$!vo.name">
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <label class="control-label"
+                                               style="width: 140px;">中文名：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <input for="name" name="chineseName" id="chineseName" type="text"
+                                                   class="span7"
+                                                   style="width: 80%" value="$!vo.chineseName">
                                         </div>
                                     </div>
                                     <div class="">
@@ -76,11 +85,20 @@
                                     </div>
                                     <div class="">
                                         <label class="control-label"
-                                               style="width: 140px;">邮箱：</label>
+                                               style="width: 140px;">合归邮箱：</label>
                                         <div class="controls" style="margin-left: 152px;">
                                             <input for="name" name="email" id="email" type="text"
                                                    class="span7"
-                                                   style="width: 80%" value="$!vo.user.email">
+                                                   style="width: 80%" value="$!vo.email">
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <label class="control-label"
+                                               style="width: 140px;">合归邮箱：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <input for="name" name="dmail" id="dmail" type="text"
+                                                   class="span7"
+                                                   style="width: 80%" value="$!vo.dmail">
                                         </div>
                                     </div>
                                     <div class="">
@@ -121,13 +139,20 @@
         //邮箱验证
         function emailChekc() {
             var email = document.getElementsByName("email")[0].value;
-            var reg = /^([a-z0-9A-Z]+[-|\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\.)+[a-zA-Z]{2,}$/;
-            var res = reg.test(email);
-            if (res == false) {
-                alert("邮箱规则错误，请输入正确的邮箱");
+            var dmail = document.getElementsByName("dmail")[0].value;
+
+            var reg = /^[A-z]+[A-z0-9_-]*\@[A-z0-9]+\.[A-z]+$/;
+            var res1=reg.test(email);
+            if (res1 == false) {
+                alert("合归邮箱规则错误，请输入正确的邮箱");
             }
 
-            return res;
+            var res2=reg.test(dmail);
+            if (res2 == false) {
+                alert("合归邮箱规则错误，请输入正确的邮箱");
+            }
+
+            return res1 && res2;
         }
     </script>
 </body>

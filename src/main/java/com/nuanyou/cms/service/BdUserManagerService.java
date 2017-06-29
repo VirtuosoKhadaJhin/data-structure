@@ -5,7 +5,7 @@ import com.nuanyou.cms.entity.BdRelUserRole;
 import com.nuanyou.cms.entity.BdRole;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.model.BdUserManagerRequestVo;
-import com.nuanyou.cms.model.BdUserManagerVo;
+import com.nuanyou.cms.model.BdUserVo;
 
 import org.springframework.data.domain.Page;
 
@@ -22,14 +22,14 @@ public interface BdUserManagerService {
      *
      * @return bd宝用户列表
      */
-    Page<BdUserManagerVo> findAllBdUserManagerVos(final BdUserManagerRequestVo requestVo);
+    Page<BdUserVo> findAllBdUserVos(final BdUserManagerRequestVo requestVo);
     
     /**
      * 查询所有的用户角色
      *
      * @return 用户角色列表
      */
-    List<BdRole> findAllRole();
+    List<BdRole> findAllRoles();
     
     /**
      * 查询所有的国家
@@ -60,7 +60,7 @@ public interface BdUserManagerService {
      */
     void saveUserRole(BdRelUserRole userRole);
     
-    BdUserManagerVo findUserById(Long id);
+    BdUserVo findUserById(Long id);
     
     BdRole findRoleById(Long roleId);
     

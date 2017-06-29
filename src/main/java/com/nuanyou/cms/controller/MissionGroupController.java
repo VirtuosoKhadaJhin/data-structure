@@ -3,7 +3,7 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.entity.BdCountry;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
-import com.nuanyou.cms.model.MissionGroupManagerVo;
+import com.nuanyou.cms.model.MissionGroupVo;
 import com.nuanyou.cms.model.MissionGroupParamVo;
 import com.nuanyou.cms.service.BdUserManagerService;
 import com.nuanyou.cms.service.MissionGroupService;
@@ -34,8 +34,8 @@ public class MissionGroupController {
      * 获取列表
      */
     @RequestMapping("list")
-    public String list(MissionGroupManagerVo requestVo, Model model) {
-        Page<MissionGroupManagerVo> vos = missionGroupService.findAllGroups(requestVo);
+    public String list(MissionGroupVo requestVo, Model model) {
+        Page<MissionGroupVo> vos = missionGroupService.findAllGroups(requestVo);
         model.addAttribute("vos", vos);
         return "missionGroup/list";
     }
@@ -83,7 +83,8 @@ public class MissionGroupController {
     @RequestMapping("saveAdd")
     public String saveAdd(Model model, MissionGroupParamVo paramVo) {
         missionGroupService.saveGroup(paramVo);
-        return "missionGroup/list";
+        
+        return "forward:/missionGroup/list";
     }
     
     

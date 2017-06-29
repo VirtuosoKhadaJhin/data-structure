@@ -19,7 +19,7 @@ public class MissionGroupBd {
     @Column(name = "id")
     private Long id;
     
-    @Column(name = "gourpid")
+    @Column(name = "groupid")
     private Long groupId;
     
     @Column(name = "bdid")
