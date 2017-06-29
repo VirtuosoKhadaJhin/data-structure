@@ -5,15 +5,18 @@ $(function () {
     var mchId;
     var status;
 
+    // 搜索框重置
     $(".search-reset").click(function () {
         $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
         $(".search-form").find(".select2").val('').trigger('change');
     });
 
+    // 改变国家
     $(".select-country").on("change", function () {
         location.href = "list?country=" + $(this).val();
     });
 
+    // 审批弹窗
     $(".approval").on("click", function () {
         $(".approval-status").val("APPROVED");
         $(".remark-text").val('');
@@ -21,6 +24,7 @@ $(function () {
         mchId = $(this).parent().attr("data-mchId");
     });
 
+    // 改变备注的显示与隐藏
     $(".approval-status").on("change", function () {
         if ("NON_APPROVAL" == $(this).val()) {
             $(".remark-info").show();
@@ -29,10 +33,12 @@ $(function () {
         }
     });
 
+    // 审批弹窗事件
     $('.approvalModel').on('shown.bs.modal', function () {
         $(".remark-info").hide();
-    })
+    });
 
+    // 确认审批
     $(".sure-approval").on("click", function () {
         var remark = $(".remark-text").val();
 
