@@ -21,13 +21,23 @@
         cursor: default;
     }
 
-    .td-mchId, .td-userId, .td-price, .td-oprice, .td-status-name, .td-method-name, .td-channel-name, .td-pay-time {
-        width: 60px;
-        max-width: 80px;
+    .td-opt {
+        width: 70px;
+        max-width: 70px;
+    }
+
+    .td-mchId, .td-userId, .td-price, .td-oprice {
+        width: 50px;
+        max-width: 60px;
+    }
+
+    .td-status-name, .td-method-name, .td-channel-name, .td-pay-time {
+        width: 70px;
+        max-width: 70px;
     }
 
     .td-mchName, .td-mchKpName {
-        min-width: 60px;
+        min-width: 80px;
         max-width: 120px;
         overflow: hidden;
         white-space: nowrap;
@@ -213,7 +223,31 @@
                         var status = data.status;
                         var parentTr = $(_this).parent("tr");
                         if (status == 0) {
-                            extractedAjax(_this, item_id);
+                            $.ajax({
+                                url: "findPaymentOrderRecord?orderId=" + item_id,
+                                type: "post",
+                                dataType: "json",
+                                success: function (response) {
+                                    var item = response.data, parentTr = $(_this).parent("tr");
+                                    parentTr.find(".td-mchId").text(item.mchId).attr("title", item.mchId);
+                                    parentTr.find(".td-mchName").text(item.mchName).attr("title", item.mchName);
+                                    parentTr.find(".td-mchKpName").text(item.mchKpName).attr("title", item.mchKpName);
+                                    parentTr.find(".td-userId").text(item.userId).attr("title", item.userId);
+                                    parentTr.find(".td-outTradeNo").text(item.outTradeNo).attr("title", item.outTradeNo);
+                                    parentTr.find(".td-transactionId").text(item.transactionId).attr("title", item.transactionId);
+                                    parentTr.find(".td-price").text(item.price).attr("title", item.price);
+                                    parentTr.find(".td-oprice").text(item.oprice).attr("title", item.oprice);
+                                    parentTr.find(".td-status-name").text(item.status.name).attr("title", item.status.name);
+                                    parentTr.find(".td-method-name").text(item.method.name).attr("title", item.method.name);
+                                    parentTr.find(".td-channel-name").text(item.channelName).attr("title", item.channelName);
+                                    parentTr.find(".td-pay-time").text(item.payTimeStr).attr("title", item.payTimeStr);
+                                    $(_this).remove();
+                                    alert("支付成功！");
+                                },
+                                error: function (response) {
+                                    alert("请求失败，请稍后重试！");
+                                }
+                            });
                         } else if (status == 1) {
                             alert("付款中，请稍后...");
                         } else if (status == 2) {
@@ -233,33 +267,5 @@
                 }
             });
         });
-
-        function extractedAjax(_this, item_id) {
-            $.ajax({
-                url: "findPaymentOrderRecord?orderId=" + item_id,
-                type: "post",
-                dataType: "json",
-                success: function (response) {
-                    var item = response.data, parentTr = $(_this).parent("tr");
-                    parentTr.find(".td-mchId").text(item.mchId).attr("title", item.mchId);
-                    parentTr.find(".td-mchName").text(item.mchName).attr("title", item.mchName);
-                    parentTr.find(".td-mchKpName").text(item.mchKpName).attr("title", item.mchKpName);
-                    parentTr.find(".td-userId").text(item.userId).attr("title", item.userId);
-                    parentTr.find(".td-outTradeNo").text(item.outTradeNo).attr("title", item.outTradeNo);
-                    parentTr.find(".td-transactionId").text(item.transactionId).attr("title", item.transactionId);
-                    parentTr.find(".td-price").text(item.price).attr("title", item.price);
-                    parentTr.find(".td-oprice").text(item.oprice).attr("title", item.oprice);
-                    parentTr.find(".td-status-name").text(item.status.name).attr("title", item.status.name);
-                    parentTr.find(".td-method-name").text(item.method.name).attr("title", item.method.name);
-                    parentTr.find(".td-channel-name").text(item.channelName).attr("title", item.channelName);
-                    parentTr.find(".td-pay-time").text(item.payTimeStr).attr("title", item.payTimeStr);
-                    $(_this).remove();
-                    alert("支付成功！");
-                },
-                error: function (response) {
-                    alert("请求失败，请稍后重试！");
-                }
-            });
-        }
     });
 </script>
