@@ -140,13 +140,23 @@ window.onload = function () {
         errorElement: "span"
     });
 
-    var listComplete = [];
+
+    $("body").delegate(".langsAutoCompleteDynamic", "keyup", function (e) {
+        var keyWord = $(this).val();
+        var currEle = e.currentTarget;
+        autocompleteKeyword(keyWord,currEle);
+    });
+
     $(".langsAutoComplete").on("keyup", function (e) {
         var keyWord = $(this).val();
+        var currEle = e.currentTarget;
+        autocompleteKeyword(keyWord,currEle);
+    });
+
+    function autocompleteKeyword( keyWord,  currEle){
         if (!keyWord) {
             return;
         }
-        var obj = $(this);
         $.ajax({
             url: '/langsDictionary/suggest',
             data: {"key": keyWord},
@@ -155,7 +165,7 @@ window.onload = function () {
             async: false,
             success: function (result) {
                 if (result.code == 0) {
-                    var currEle = e.currentTarget;
+                    var listComplete = [];
                     var list = result.data;
                     if(list.length==0){
                         $(currEle).next().val("");
@@ -169,24 +179,32 @@ window.onload = function () {
                         complate.value =   o.keyCode;
                         listComplete.push(complate);
                     }
+                    $(currEle).autocomplete({
+                        minLength: 0,
+                        source: listComplete,
+                        delay:500,
+                        focus: function (event, ui) {
+                            $(this).val(ui.item.labelDisplay);
+                            $(this).next().val(ui.item.value);
+                            return false;
+                        },
+                        select: function (event, ui) {
+                            $(this).val(ui.item.labelDisplay);
+                            $(this).next().val(ui.item.value);
+                            return false;
+                        }
+                    })
                 } else {
                     alert(result.msg);
                 }
             }
         });
-    }).autocomplete({
-        source: listComplete,
-        focus: function (event, ui) {
-            $(this).val(ui.item.label);
-            $(this).next().val(ui.item.value);
-            return false;
-        },
-        select: function (event, ui) {
-            $(this).val(ui.item.label);
-            $(this).next().val(ui.item.value);
-            return false;
-        }
-    })
+    }
+
+
+
+
+
 
 
 
