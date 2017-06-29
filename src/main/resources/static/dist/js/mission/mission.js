@@ -5,6 +5,16 @@ $(function () {
     var mchId;
     var status;
 
+    // 改变任务状态
+    $(".task-status").on("change", function () {
+        console.log($(this).val());
+        if ($(this).val() != "FINISHED") {
+            $(".task-status-time").show();
+        } else {
+            $(".task-status-time").hide();
+        }
+    });
+
     // 搜索框重置
     $(".search-reset").click(function () {
         $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
@@ -71,7 +81,6 @@ $(function () {
                 }
             }
         });
-
     });
 
 });

@@ -165,7 +165,7 @@
                             </div>
                             <div class="search-select">
                                 <label>任务状态</label>
-                                <select class="span11 select2" name="status">
+                                <select class="span11 select2 task-status" name="status">
                                     #foreach($e in $!taskStatus)
                                         #if($!e.key !=0 && $!e.key != 1)
                                             <option value="$!e" #if($!requestVo.status.key == $!e.key) selected #end>$!e.value</option>
@@ -174,9 +174,16 @@
                                 </select>
                             </div>
 
+                            #if($!requestVo.status.key != 2)
+                                <div class="search-select task-status-time">
+                                    <label>审核时间：</label>
+                                    <input type="text" class="span11 dateTimeFormatDay" value="$!requestVo.auditDt" placeholder="审核时间">
+                                </div>
+                            #end
+
                             <div class="search-select">
-                                <label>审核通过时间：</label>
-                                <input type="text" class="span11 dateTimeFormatDay" value="$!requestVo.auditdt" placeholder="审核通过时间">
+                                <label>完成时间：</label>
+                                <input type="text" class="span11 timeFormatNoDay" value="$!requestVo.finishDt" placeholder="完成时间">
                             </div>
 
                             <button type="submit" class="btn btn-primary">查询</button>

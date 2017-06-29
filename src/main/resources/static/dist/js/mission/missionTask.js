@@ -6,6 +6,20 @@ $(function () {
     var mchId;
     var status;
 
+    // 可见
+    $(".ispublic").on("click", function () {
+        $(".publicSwichModel").modal('show');
+        $(".public-swich-text").text("确定所有成员可见吗？");
+
+    });
+
+    // 不可见
+    $(".nepublic").on("click", function () {
+        $(".publicSwichModel").modal('show');
+        $(".public-swich-text").text("确定所有成员不可见吗？");
+
+    });
+
     // 搜索框重置
     $(".search-reset").click(function () {
         $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
