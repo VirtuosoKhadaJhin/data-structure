@@ -75,12 +75,12 @@ public class MissionRequestVo {
         this.city = city;
     }
 
-    public boolean isAudit() {
+    public boolean getIsAudit() {
         return isAudit;
     }
 
-    public void setAudit(boolean audit) {
-        isAudit = audit;
+    public void setIsAudit(boolean isAudit) {
+        isAudit = isAudit;
     }
 
     public Long getDistrict() {
