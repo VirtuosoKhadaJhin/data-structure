@@ -117,7 +117,8 @@ public class MissionTaskServiceImpl implements MissionTaskService {
             maps.put(missionTask.getMchId(), taskVo);
         }
         //多个bd录入同一个商户信息需要筛选
-        List<BdMerchantTrack> tracks = trackDao.findByMchId(ids);
+//        List<BdMerchantTrack> tracks = trackDao.findMerchantTrackByMchId(Lists.newArrayList(ids));
+        List<BdMerchantTrack> tracks = null;
         Iterator<BdMerchantTrack> iterator = tracks.iterator();
         while (iterator.hasNext()) {
             BdMerchantTrack next = iterator.next();
