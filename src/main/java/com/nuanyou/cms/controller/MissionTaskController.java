@@ -9,6 +9,7 @@ import com.nuanyou.cms.model.MissionDistributeParamVo;
 import com.nuanyou.cms.model.MissionRequestVo;
 import com.nuanyou.cms.model.MissionTaskVo;
 import com.nuanyou.cms.service.*;
+import com.nuanyou.cms.sso.client.util.UserHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -92,6 +93,8 @@ public class MissionTaskController {
     public String distributeTask(MissionRequestVo requestVo, Model model) {
         List<City> cities = cityService.findCityByCountryId(requestVo.getCountry());
         List<Merchant> merchants = merchantService.findMerchant(requestVo.getCountry(), requestVo.getCity());
+        Long userid = UserHolder.getUser().getUserid();
+        //TODO 获取当前用户所在的组
         List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(1L);
         List<DistrictVo> districts = districtService.findByCity(requestVo.getCity());
         requestVo.setStatus(MissionTaskStatus.UN_FINISH);

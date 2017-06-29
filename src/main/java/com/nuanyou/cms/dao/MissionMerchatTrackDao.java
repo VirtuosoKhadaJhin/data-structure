@@ -13,6 +13,6 @@ import java.util.List;
  */
 public interface MissionMerchatTrackDao extends JpaRepository<BdMerchantTrack, Long>, JpaSpecificationExecutor {
 
-    @Query(value="select * from (select * from BdMerchantTrack where mchid in ?1 order by id desc) t group by t.mchid")
+    @Query(value="select * from (select * from BdMerchantTrack where mchid in ?1 order by id desc) t group by t.mchid, t.userid")
     List<BdMerchantTrack> findByMchId(Collection<Long> ids);
 }

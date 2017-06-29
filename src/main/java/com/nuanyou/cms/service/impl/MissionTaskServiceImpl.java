@@ -116,13 +116,19 @@ public class MissionTaskServiceImpl implements MissionTaskService {
             MissionTaskVo taskVo = BeanUtils.copyBeanNotNull(missionTask, new MissionTaskVo());
             maps.put(missionTask.getMchId(), taskVo);
         }
+        //多个bd录入同一个商户信息需要筛选
         List<BdMerchantTrack> tracks = trackDao.findByMchId(ids);
         Iterator<BdMerchantTrack> iterator = tracks.iterator();
         while (iterator.hasNext()) {
             BdMerchantTrack next = iterator.next();
             Long mchId = next.getMerchant().getId();
-            if (maps.containsKey(mchId)) {
-                maps.get(mchId).setMerchantTrack(next);
+            Long userId = next.getUserId();
+            if (!maps.containsKey(mchId)) {
+                continue;
+            }
+            MissionTaskVo missionTaskVo = maps.get(mchId);
+            if (userId.equals(missionTaskVo.getBdId())) {//相同BD的时候才需要添加(存在多个BD录入商户信息)
+                missionTaskVo.setMerchantTrack(next);
                 iterator.remove();
             }
         }
