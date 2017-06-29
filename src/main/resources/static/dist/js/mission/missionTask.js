@@ -49,7 +49,7 @@ $(function () {
             }
         }
 
-        console.log("bdId:" + bdId);
+        console.log("bdId:" + (typeof(bdId) == "undefined"));
         console.log("taskIds:" + taskIds.length);
 
         $(".taskDistributeModel").modal('hide');
@@ -57,6 +57,10 @@ $(function () {
         // 如果没有选择任务
         if (taskIds.length == 0) {
             $(".distributeResult-text").html("<strong style='color: red'>请选择任务！</strong>");
+        }else if (typeof(bdId) == "undefined") {
+            $(".distributeResult-text").html("<strong style='color: red'>请选择BD！</strong>");
+        }else{
+            $(".distributeResult-text").html("任务指派成功！");
         }
         $(".taskDistributeResultModel").modal('show');
     });

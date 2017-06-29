@@ -13,6 +13,14 @@ window.onload = function () {
         yearEnd: 2050,
         todayButton: false
     });
+    //不显示时分秒
+    $('.dateTimeFormatDay').datetimepicker({
+        format: "Y-m-d",
+        timepicker: false,
+        yearStart: 2000,
+        yearEnd: 2050,
+        todayButton: true
+    });
     $('.timeFormat').datetimepicker({
         format: "H:i:s",
         timepicker: true,

@@ -12,11 +12,6 @@ table .tr-class:hover {
     text-align: center;
 }
 
-.remark-text {
-    width: 97%;
-    height: 100px;
-}
-
 .th-img {
     width: 34%;
 }
@@ -24,9 +19,11 @@ table .tr-class:hover {
 .th-op {
     width: 6%;
 }
-.td-bz{
-    word-break:break-all
+
+.td-bz {
+    word-break: break-all
 }
+
 .td-op {
     text-align: center;
 }
@@ -50,11 +47,25 @@ table .tr-class:hover {
     max-height: 500px;
 }
 
+.remark {
+    display: none;
+}
+
 .country-select {
     margin: 4px;
     float: right;
     width: 260px;
     margin-right: -100px;
+}
+
+.label-approval {
+    width: 18%;
+    float: left;
+    margin: 4px;
+}
+
+.audit-info, .remark-info {
+    margin: 20px;
 }
 
 .hovereffect {
@@ -84,8 +95,8 @@ table .tr-class:hover {
 }
 
 .hovereffect img {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     position: relative;
     -webkit-transition: all .4s linear;
     transition: all .4s linear;

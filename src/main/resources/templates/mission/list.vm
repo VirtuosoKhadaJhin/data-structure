@@ -159,7 +159,7 @@
                             </div>
                             <div class="search-select">
                                 <label>BD名称</label>
-                                <select class="span11 select2" name="bd">
+                                <select class="span11 select2" name="bdId">
                                     <option value="">全部</option>
                                 </select>
                             </div>
@@ -173,6 +173,12 @@
                                     #end
                                 </select>
                             </div>
+
+                            <div class="search-select">
+                                <label>审核通过时间：</label>
+                                <input type="text" class="span11 dateTimeFormatDay" value="$!requestVo.auditdt" placeholder="审核通过时间">
+                            </div>
+
                             <button type="submit" class="btn btn-primary">查询</button>
                             <button class="btn btn-warning search-reset">重置</button>
                         </form>
@@ -190,16 +196,16 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="myModalLabel">任务审批</h3>
     </div>
-    <div class="modal-body">
-        <div class="search-select">
-            <label>审批结果：</label>
-            <select class="span4 select2 approval-status">
+    <div class="modal-body" style="margin-left: 10%;">
+        <div class="audit-info">
+            <label class="span5 label-approval">审批结果：</label>
+            <select class="approval-status">
                 <option value="APPROVED">审核通过</option>
                 <option value="NON_APPROVAL">审核不通过</option>
             </select>
         </div>
-        <div class="search-select">
-            <label>驳回理由：</label>
+        <div class="remark-info" style="display: none;">
+            <label class="span5 label-approval">驳回理由：</label>
             <textarea class="remark-text" placeholder="请填写备注信息"></textarea>
         </div>
     </div>
@@ -222,7 +228,6 @@
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
     </div>
 </div>
-
 <script type="text/javascript" src="/dist/js/page-support.js"></script>
 <script type="text/javascript" src="/dist/js/mission/mission.js"></script>
 </body>

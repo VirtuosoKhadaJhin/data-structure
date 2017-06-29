@@ -2,6 +2,8 @@ package com.nuanyou.cms.model;
 
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 
+import java.util.Date;
+
 /**
  * Created by Byron on 2017/6/27.
  */
@@ -20,6 +22,8 @@ public class MissionRequestVo {
     private Long city;
 
     private Long district;
+
+    private Date auditdt;
 
     private boolean isAudit = true;
 
@@ -73,6 +77,14 @@ public class MissionRequestVo {
 
     public void setCity(Long city) {
         this.city = city;
+    }
+
+    public Date getAuditdt() {
+        return auditdt;
+    }
+
+    public void setAuditdt(Date auditdt) {
+        this.auditdt = auditdt;
     }
 
     public boolean getIsAudit() {

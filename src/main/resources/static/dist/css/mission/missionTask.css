@@ -12,6 +12,10 @@ table .tr-class:hover {
     text-align: center;
 }
 
+.search-reset{
+    margin-left: 2px;
+}
+
 .th-img {
     width: 27%;
 }
@@ -126,14 +130,17 @@ table .tr-class:hover {
 .checkbox.checkbox-single label {
     height: 17px;
 }
-.task-distribute{
+
+.task-distribute {
     float: left;
     margin: 5px 10px 0 0;
 }
-.bd-checkbox{
+
+.bd-checkbox {
     margin: 5px;
     margin-left: 20%;
 }
-.bd-checkbox-label{
+
+.bd-checkbox-label {
 
 }

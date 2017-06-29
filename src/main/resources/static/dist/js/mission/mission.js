@@ -15,25 +15,37 @@ $(function () {
     });
 
     $(".approval").on("click", function () {
+        $(".approval-status").val("APPROVED");
+        $(".remark-text").val('');
         $(".approvalModel").modal('show');
         mchId = $(this).parent().attr("data-mchId");
-        status = $(".approval-status").val();
     });
 
-    $('.approval').on('show.bs.modal', function () {
-        mchId = "";
-        status = "";
-        $(".remark-text").val("");
+    $(".approval-status").on("change", function () {
+        if ("NON_APPROVAL" == $(this).val()) {
+            $(".remark-info").show();
+        } else {
+            $(".remark-info").hide();
+        }
+    });
+
+    $('.approvalModel').on('shown.bs.modal', function () {
+        $(".remark-info").hide();
     })
 
     $(".sure-approval").on("click", function () {
         var remark = $(".remark-text").val();
 
+        status = $(".approval-status").val();
+        if (status == "APPROVED") {
+            remark = "";
+        }
         var data = {
             mchId: mchId,
             status: status,
             remark: remark,
         };
+        console.log(data);
         $.ajax({
             url: 'approval',
             data: JSON.stringify(data),
@@ -44,8 +56,9 @@ $(function () {
                 if (result.code == 0) {
                     $(".approvalModel").modal('hide');
                     $(".approvalResult-text").text("审批成功！");
+                    $("#data-" + mchId).remove();
                     $(".approvalResultModel").modal('show');
-                }else{
+                } else {
                     $(".approvalModel").modal('hide');
                     $(".approvalResult-text").text(result.msg);
                     $(".approvalResultModel").modal('show');
