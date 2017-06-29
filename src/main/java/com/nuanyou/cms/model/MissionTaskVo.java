@@ -25,7 +25,9 @@ public class MissionTaskVo {
 
     private Long auditor;
 
-    private Date auditTime;
+    private Date auditdt;
+
+    private Date finishdt;
 
     private Date createDt;
 
@@ -97,12 +99,20 @@ public class MissionTaskVo {
         this.auditor = auditor;
     }
 
-    public Date getAuditTime() {
-        return auditTime;
+    public Date getAuditdt() {
+        return auditdt;
     }
 
-    public void setAuditTime(Date auditTime) {
-        this.auditTime = auditTime;
+    public void setAuditdt(Date auditdt) {
+        this.auditdt = auditdt;
+    }
+
+    public Date getFinishdt() {
+        return finishdt;
+    }
+
+    public void setFinishdt(Date finishdt) {
+        this.finishdt = finishdt;
     }
 
     public Date getCreateDt() {
