@@ -47,61 +47,42 @@
                                     <td colspan="11" style="text-align:center;">
                                         <div class="no-result-div"
                                              style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
-                                            <p>没有符合条件的商户信息审核信息！</p>
+                                            <p>没有符合条件的商户审核信息！</p>
                                         </div>
                                     </td>
                                 </tr>
                                 #end
                                 #foreach($entity in $!page.content)
-                                <tr>
+                                <tr data-mchId="$!entity.merchant.id">
                                     <td>
                                         <div class="td-op" data-mchId="$!entity.mchId">
                                             <button type="button" class="btn btn-success btn-small td-button approval">审批</button>
                                         </div>
                                     </td>
                                     <td>
-                                        <span>$!entity.mchId</span>
+                                        <span>$!entity.merchant.id</span>
                                         <br/>
-                                        <a target="_blank" href="">$!entity.mchName</a>
+                                        <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a>
                                     </td>
                                     <td>首尔</td>
                                     <td>$!entity.groupId - $!entity.bdId</td>
-                                    <td>
-                                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                            <div class="hovereffect">
-                                                <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                </a>
-                                            </div>
-                                            <div class="hovereffect">
-                                                <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                </a>
-                                            </div>
-                                            <div class="hovereffect">
-                                                <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                </a>
-                                            </div>
-                                            <div class="hovereffect">
-                                                <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                </a>
-                                            </div>
-                                            <div class="hovereffect">
-                                                <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                </a>
-                                            </div>
-                                            <div class="hovereffect">
-                                                <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                </a>
-                                            </div>
+                                    <td class="td-imgurl">
+                                        <div class="imgurl-info">
+                                            #if($!entity.merchantTrack.imgUrls.size()==0)
+                                                暂无签到图片
+                                            #else
+                                                #foreach($imgUrl in $!entity.merchantTrack.imgUrls)
+                                                    <div class="hovereffect">
+                                                        <a target="_blank" href="$!imgUrl">
+                                                            <img class="img-polaroid td-img" src="$!imgUrl">
+                                                        </a>
+                                                    </div>
+                                                #end
+                                            #end
                                         </div>
                                     </td>
-                                    <td>v2.3.3</td>
-                                    <td><a target="_blank" href="">201682945</a></td>
+                                    <td>$!entity.version</td>
+                                    <td class="td-bz"><a target="_blank" href="/order/edit?type=3&id=$!entity.orderno">$!entity.orderno</a></td>
                                     <td>$!entity.status.value</td>
                                     <td class="td-bz">$!entity.remark</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditdt)</td>
@@ -177,13 +158,13 @@
                             #if($!requestVo.status.key != 2)
                                 <div class="search-select task-status-time">
                                     <label>审核时间：</label>
-                                    <input type="text" class="span11 dateTimeFormatDay" value="$!requestVo.auditDt" placeholder="审核时间">
+                                    <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!dateFormatter.format("yyyy-MM-dd",$!requestVo.auditDt)" placeholder="审核时间">
                                 </div>
                             #end
 
                             <div class="search-select">
                                 <label>完成时间：</label>
-                                <input type="text" class="span11 timeFormatNoDay" value="$!requestVo.finishDt" placeholder="完成时间">
+                                <input type="text" name="finshDt" class="span11 dateTimeFormatDay" value="$!dateFormatter.format("yyyy-MM-dd",$!requestVo.finishDt)" placeholder="完成时间">
                             </div>
 
                             <button type="submit" class="btn btn-primary">查询</button>
@@ -217,6 +198,7 @@
         </div>
     </div>
     <div class="modal-footer">
+        <input type="hidden" class="hide-mchId"/>
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
         <button class="btn btn-primary sure-approval">确认</button>
     </div>
@@ -232,6 +214,7 @@
         <p class="approvalResult-text"></p>
     </div>
     <div class="modal-footer">
+        <input type="hidden" class="audit-result"/>
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
     </div>
 </div>

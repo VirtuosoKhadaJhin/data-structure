@@ -201,12 +201,12 @@
 
                             <div class="search-select">
                                 <label>审核时间：</label>
-                                <input type="text" class="span11 timeFormatNoDay" value="$!requestVo.auditDt" placeholder="审核时间">
+                                <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!dateFormatter.format("yyyy-MM-dd",$!requestVo.auditDt)" placeholder="审核时间">
                             </div>
 
                             <div class="search-select">
                                 <label>完成时间：</label>
-                                <input type="text" class="span11 timeFormatNoDay" value="$!requestVo.finishDt" placeholder="完成时间">
+                                <input type="text" name="finshDt" class="span11 dateTimeFormatDay" value="$!dateFormatter.format("yyyy-MM-dd",$!requestVo.finishDt)" placeholder="完成时间">
                             </div>
 
                             <div class="btn-group">
