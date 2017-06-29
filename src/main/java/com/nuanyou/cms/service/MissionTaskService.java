@@ -1,8 +1,8 @@
 package com.nuanyou.cms.service;
 
+import com.nuanyou.cms.model.MissionDistributeParamVo;
 import com.nuanyou.cms.model.MissionRequestVo;
 import com.nuanyou.cms.model.MissionTaskVo;
-
 import org.springframework.data.domain.Page;
 
 /**
@@ -24,4 +24,12 @@ public interface MissionTaskService {
      * @param vo
      */
     void approvalTask(MissionRequestVo vo);
+
+    /**
+     * 指派任务到BD
+     *
+     * @param vo
+     */
+    void distributeTask(MissionDistributeParamVo vo);
+
 }

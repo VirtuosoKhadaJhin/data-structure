@@ -1,6 +1,7 @@
 package com.nuanyou.cms.model;
 
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
+import com.nuanyou.cms.entity.mission.BdMerchantTrack;
 
 import java.util.Date;
 
@@ -21,6 +22,10 @@ public class MissionTaskVo {
 
     private MissionTaskStatus status;
 
+    private String version;
+
+    private String orderno;
+
     private String remark;
 
     private Long auditor;
@@ -34,6 +39,8 @@ public class MissionTaskVo {
     private Date updateDt;
 
     private Boolean delFlag = false;
+
+    private BdMerchantTrack merchantTrack;
 
     public Long getId() {
         return id;
@@ -81,6 +88,22 @@ public class MissionTaskVo {
 
     public void setStatus(MissionTaskStatus status) {
         this.status = status;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getOrderno() {
+        return orderno;
+    }
+
+    public void setOrderno(String orderno) {
+        this.orderno = orderno;
     }
 
     public String getRemark() {
@@ -137,5 +160,13 @@ public class MissionTaskVo {
 
     public void setDelFlag(Boolean delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public BdMerchantTrack getMerchantTrack() {
+        return merchantTrack;
+    }
+
+    public void setMerchantTrack(BdMerchantTrack merchantTrack) {
+        this.merchantTrack = merchantTrack;
     }
 }

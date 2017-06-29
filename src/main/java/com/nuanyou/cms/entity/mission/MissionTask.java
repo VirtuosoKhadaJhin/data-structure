@@ -39,6 +39,12 @@ public class MissionTask {
     @Column(name = "status")
     private int status;
 
+    @Column(name = "version")
+    private String version;
+
+    @Column(name = "orderno")
+    private String orderno;
+
     @Column(name = "remark")
     private String remark;
 
@@ -114,6 +120,22 @@ public class MissionTask {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getOrderno() {
+        return orderno;
+    }
+
+    public void setOrderno(String orderno) {
+        this.orderno = orderno;
     }
 
     public String getRemark() {

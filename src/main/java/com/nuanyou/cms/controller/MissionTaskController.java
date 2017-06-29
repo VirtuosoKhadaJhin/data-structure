@@ -5,6 +5,7 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import com.nuanyou.cms.model.DistrictVo;
+import com.nuanyou.cms.model.MissionDistributeParamVo;
 import com.nuanyou.cms.model.MissionRequestVo;
 import com.nuanyou.cms.model.MissionTaskVo;
 import com.nuanyou.cms.service.*;
@@ -81,7 +82,7 @@ public class MissionTaskController {
     }
 
     /**
-     * 指派任务到队员
+     * 指派任务列表
      *
      * @param requestVo
      * @param model
@@ -103,5 +104,18 @@ public class MissionTaskController {
         model.addAttribute("requestVo", requestVo);
         model.addAttribute("taskStatus", MissionTaskStatus.values());
         return "distribute/list";
+    }
+
+    /**
+     * 指派任务到队员
+     *
+     * @param vo
+     * @return
+     */
+    @RequestMapping("distributeTask")
+    @ResponseBody
+    public APIResult distributeTask(@RequestBody MissionDistributeParamVo vo) {
+        missionTaskService.distributeTask(vo);
+        return new APIResult(ResultCodes.Success);
     }
 }

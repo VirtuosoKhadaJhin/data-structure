@@ -23,9 +23,9 @@ public class MissionRequestVo {
 
     private Long district;
 
-    private Date auditdt;
+    private Boolean isAudit = true;
 
-    private boolean isAudit = true;
+    private Date todayDt;
 
     private int pageNum = 1;
 
@@ -79,20 +79,20 @@ public class MissionRequestVo {
         this.city = city;
     }
 
-    public Date getAuditdt() {
-        return auditdt;
+    public Date getTodayDt() {
+        return todayDt;
     }
 
-    public void setAuditdt(Date auditdt) {
-        this.auditdt = auditdt;
+    public void setTodayDt(Date todayDt) {
+        this.todayDt = todayDt;
     }
 
-    public boolean getIsAudit() {
+    public Boolean getIsAudit() {
         return isAudit;
     }
 
-    public void setIsAudit(boolean isAudit) {
-        isAudit = isAudit;
+    public void setIsAudit(Boolean isAudit) {
+        this.isAudit = isAudit;
     }
 
     public Long getDistrict() {
