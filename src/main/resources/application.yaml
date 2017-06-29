@@ -1,8 +1,8 @@
 spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://rdsw9r566jxer973wqi2.mysql.rds.aliyuncs.com:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
-    username: dev
+    url: jdbc:mysql://test20-db.9ny.me:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
+    username: nuanyou20
     password: 1qaz2wsxE
     test-on-borrow: true
     validation-query: select 1
@@ -35,7 +35,7 @@ server:
       directory: /var/log/accesslog/
 
 logging:
-  config: classpath:logback-dev.xml
+  config: classpath:logback-test.xml
 
 oss:
   bucketName: nuanyou-image
@@ -51,7 +51,7 @@ s3:
 
 nuanyou-host: http://testh5.91nuanyou.com
 withdrawurl: http://testuser.api.91nuanyou.com
-nuanyou-api: http://127.0.0.1:8081
+nuanyou-api: http://testapi30.99mice.com:8081
 
 upload:
   s3server: https://kr.file.91nuanyou.com
@@ -60,7 +60,6 @@ elasticsearch:
   index: test-cms-operation
 
 AWS:
-  region: ap-northeast-2
   sns:
     topic:
       refund: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refund
@@ -69,15 +68,16 @@ AWS:
 
 sso:
   urlPatterns: /*
-  urlExcludePattern: ^/test|^/dist/.*|^/favicon.*|/
+  urlExcludePattern: ^/test|^/dist/.*|^/favicon.*
   loginUrl: https://testuser.api.91nuanyou.com/oauth/corp
   reLogin: false
-  serverName: http://127.0.0.1:8085
+  serverName: http://testmerchant.99mice.com
   validateCodeUrl: https://testuser.api.91nuanyou.com/corp/oauth/access_token
   stateExpiredInMilliSeconds: 120000
 
 
-contractService: http://127.0.0.1:8200
+
+contractService: http://test.contract.91nuanyou.com
 accountService: http://testaccount.99mice.com
 merchantSettlement:
   default:
