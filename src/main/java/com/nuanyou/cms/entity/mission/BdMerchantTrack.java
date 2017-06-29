@@ -123,8 +123,8 @@ public class BdMerchantTrack {
         this.operation = operation;
     }
 
-    public List<String> getImgUrls() {
-        if (StringUtils.isEmpty(signImgUrls)) {
+    public List<String> getImgUrls(){
+        if(StringUtils.isEmpty(signImgUrls)){
             return Lists.newArrayList();
         }
         return Lists.newArrayList(signImgUrls.split(","));

@@ -14,8 +14,10 @@ import com.nuanyou.cms.model.MissionTaskVo;
 import com.nuanyou.cms.service.MissionTaskService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.BeanUtils;
+import com.nuanyou.cms.util.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -49,26 +51,29 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 if (requestVo.getMchId() != null) {
                     predicate.add(cb.equal(root.get("mchId"), requestVo.getMchId()));
                 }
-                if (requestVo.getIsAudit()) {//审核列表
-                    ArrayList<MissionTaskStatus> auditStatus = null;
-                    if (requestVo.getStatus() == null) {
-                        auditStatus = Lists.newArrayList(MissionTaskStatus.FINISHED, MissionTaskStatus.APPROVED, MissionTaskStatus.NON_APPROVAL);
+                if (requestVo.getStatus() == null) {
+                    if (requestVo.getAudit()) {//审核列表
+                        ArrayList<MissionTaskStatus> auditStatus = Lists.newArrayList(MissionTaskStatus.FINISHED, MissionTaskStatus.APPROVED, MissionTaskStatus.NON_APPROVAL);
                         predicate.add(root.get("status").in(auditStatus));
-                    } else {
-                        predicate.add(cb.equal(root.get("status"), requestVo.getStatus().getKey()));
                     }
-                    if (requestVo.getTodayDt() != null) {
-
-                    }
-                } else {//指派任务列表
-                    if (requestVo.getTodayDt() != null) {
-
-                    }
+                } else {
+                    predicate.add(cb.equal(root.get("status"), requestVo.getStatus().getKey()));
                 }
-
+                if (requestVo.getDistrict() != null) {
+                    predicate.add(cb.equal(root.get("merchant").get("district").get("id"), requestVo.getDistrict()));
+                }
+                if (requestVo.getFinshDt() != null) {
+                    Pair<Date, Date> dayStartEndTime = DateUtils.getDayStartEndTime(requestVo.getFinshDt());
+                    predicate.add(cb.greaterThanOrEqualTo(root.get("finshDt").as(Date.class), dayStartEndTime.getLeft()));
+                    predicate.add(cb.lessThanOrEqualTo(root.get("finshDt").as(Date.class), dayStartEndTime.getRight()));
+                }
+                if (requestVo.getAuditDt() != null) {
+                    Pair<Date, Date> dayStartEndTime = DateUtils.getDayStartEndTime(requestVo.getAuditDt());
+                    predicate.add(cb.greaterThanOrEqualTo(root.get("auditDt").as(Date.class), dayStartEndTime.getLeft()));
+                    predicate.add(cb.lessThanOrEqualTo(root.get("auditDt").as(Date.class), dayStartEndTime.getRight()));
+                }
                 predicate.add(cb.equal(root.get("delFlag").as(Boolean.class), false));
                 Predicate[] arrays = new Predicate[predicate.size()];
-                ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("updateDt")));
                 return query.where(predicate.toArray(arrays)).getRestriction();
             }
         };
@@ -104,25 +109,35 @@ public class MissionTaskServiceImpl implements MissionTaskService {
      * @return
      */
     private List<MissionTaskVo> setMerchantTrackValue(List<MissionTask> missionTasks) {
-        Collection<Long> ids = CollectionUtils.collect(missionTasks, new Transformer() {
+        final Collection<Long> ids = CollectionUtils.collect(missionTasks, new Transformer() {
             @Override
             public Long transform(Object input) {
-                return ((MissionTask) input).getMchId();
+                return ((MissionTask) input).getMerchant().getId();
             }
         });
 
         Map<Long, MissionTaskVo> maps = new LinkedHashMap<Long, MissionTaskVo>(missionTasks.size());
         for (MissionTask missionTask : missionTasks) {
             MissionTaskVo taskVo = BeanUtils.copyBeanNotNull(missionTask, new MissionTaskVo());
-            maps.put(missionTask.getMchId(), taskVo);
+            maps.put(missionTask.getMerchant().getId(), taskVo);
         }
-        //多个bd录入同一个商户信息需要筛选
-//        List<BdMerchantTrack> tracks = trackDao.findMerchantTrackByMchId(Lists.newArrayList(ids));
-        List<BdMerchantTrack> tracks = null;
+        if (CollectionUtils.isEmpty(ids)) {
+            return Lists.newArrayList(maps.values());
+        }
+        List<BdMerchantTrack> tracks = trackDao.findAll(new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                predicate.add(root.get("mchId").in(ids));
+                Predicate[] arrays = new Predicate[predicate.size()];
+                ArrayList<Order> orderBys = Lists.newArrayList(cb.desc(root.get("id")));
+                return query.where(predicate.toArray(arrays)).getRestriction();
+            }
+        });
         Iterator<BdMerchantTrack> iterator = tracks.iterator();
         while (iterator.hasNext()) {
             BdMerchantTrack next = iterator.next();
-            Long mchId = next.getMerchant().getId();
+            Long mchId = next.getId();
             Long userId = next.getUserId();
             if (!maps.containsKey(mchId)) {
                 continue;

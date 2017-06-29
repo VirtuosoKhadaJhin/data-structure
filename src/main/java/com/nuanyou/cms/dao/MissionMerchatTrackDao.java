@@ -9,6 +9,4 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface MissionMerchatTrackDao extends JpaRepository<BdMerchantTrack, Long>, JpaSpecificationExecutor {
 
-   /* @Query(value="select * from (select * from BdMerchantTrack where mchid in ?1 order by id desc) t group by t.mchid, t.userid")
-    List<BdMerchantTrack> findMerchantTrackByMchId(List<Long> ids);*/
 }
