@@ -30,16 +30,6 @@
 
                         <table class="table table-bordered data-table dataTable">
                             <thead class="thead-class">
-                                #if ($null.isNull($page.content) || $page.content.size()==0)
-                                <tr>
-                                    <td colspan="11" style="text-align:center;">
-                                        <div class="no-result-div"
-                                             style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
-                                            <p>没有符合条件的战地任务信息！</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                #end
                             <tr class="thread-tr">
                                 <th class="th-op">
                                     <div class="checkbox bd-checkbox">
@@ -59,6 +49,16 @@
                             </tr>
                             </thead>
                             <tbody class="tbody-list">
+                                #if ($null.isNull($page.content) || $page.content.size()==0)
+                                <tr>
+                                    <td colspan="11" style="text-align:center;">
+                                        <div class="no-result-div"
+                                             style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                                            <p>没有符合条件的战地任务信息！</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                #end
                                 #foreach($entity in $!page.content)
                                 <tr>
                                     <td>
