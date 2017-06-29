@@ -97,6 +97,7 @@ public class MissionTaskController {
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
         model.addAttribute("cities", cities);
+        model.addAttribute("districts", districts);
         model.addAttribute("bdUsers", bdUsers);
         model.addAttribute("merchants", merchants);
         model.addAttribute("requestVo", requestVo);
