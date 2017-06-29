@@ -83,6 +83,14 @@ public class MissionRequestVo {
         this.other = other;
     }
 
+    public Long getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(Long district) {
+        this.district = district;
+    }
+
     public int getPageNum() {
         return pageNum;
     }

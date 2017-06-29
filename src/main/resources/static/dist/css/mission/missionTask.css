@@ -34,10 +34,6 @@ table .tr-class:hover {
     width: 10%;
 }
 
-.td-bz {
-    word-break: break-all
-}
-
 .td-img {
     width: 60%;
     height: auto;
@@ -130,8 +126,13 @@ table .tr-class:hover {
 .checkbox.checkbox-single label {
     height: 17px;
 }
-
-.task-distribute {
+.task-distribute{
     float: left;
     margin: 5px 10px 0 0;
+}
+.bd-checkbox{
+    margin: 5px;
+}
+.bd-checkbox-label{
+
 }
