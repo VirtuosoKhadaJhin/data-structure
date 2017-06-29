@@ -122,8 +122,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
                     <button class="btn btn-primary sure-distribute">确认</button>
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
                 </div>
             </div>
 
