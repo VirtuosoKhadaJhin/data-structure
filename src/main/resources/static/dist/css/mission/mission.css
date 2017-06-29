@@ -1,6 +1,7 @@
-a{
+.table a {
     color: #08c;
 }
+
 table .tr-class:hover {
     cursor: pointer;
 }
@@ -10,20 +11,30 @@ table .tr-class:hover {
     line-height: 20px;
     text-align: center;
 }
+
+.remark-text {
+    width: 97%;
+    height: 100px;
+}
+
 .th-img {
     width: 27%;
 }
+
 .th-op {
     width: 8%;
+}
+.td-bz{
+    word-break:break-all
 }
 .td-op {
     text-align: center;
 }
-.td-button{
-    float: left;
-    width: 49%;
-    margin-left: 1%;
+
+.td-button {
+
 }
+
 .th-number {
     width: 10%;
 }

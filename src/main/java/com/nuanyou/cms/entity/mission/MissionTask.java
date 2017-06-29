@@ -43,6 +43,19 @@ public class MissionTask {
     @Column(name = "remark")
     private String remark;
 
+    @Column(name = "auditor")
+    private Long auditor;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @Column(name = "auditdt", nullable = true)
+    private Date auditDt;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @Column(name = "finishdt", nullable = true)
+    private Date finishDt;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Column(name = "createdt", nullable = true)
@@ -110,6 +123,30 @@ public class MissionTask {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Long getAuditor() {
+        return auditor;
+    }
+
+    public void setAuditor(Long auditor) {
+        this.auditor = auditor;
+    }
+
+    public Date getAuditDt() {
+        return auditDt;
+    }
+
+    public void setAuditDt(Date auditDt) {
+        this.auditDt = auditDt;
+    }
+
+    public Date getFinishDt() {
+        return finishDt;
+    }
+
+    public void setFinishDt(Date finishDt) {
+        this.finishDt = finishDt;
     }
 
     public Date getCreateDt() {

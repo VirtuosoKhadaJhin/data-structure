@@ -23,6 +23,12 @@ public class MissionTaskVo {
 
     private String remark;
 
+    private Long auditor;
+
+    private Date auditdt;
+
+    private Date finishdt;
+
     private Date createDt;
 
     private Date updateDt;
@@ -83,6 +89,30 @@ public class MissionTaskVo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Long getAuditor() {
+        return auditor;
+    }
+
+    public void setAuditor(Long auditor) {
+        this.auditor = auditor;
+    }
+
+    public Date getAuditdt() {
+        return auditdt;
+    }
+
+    public void setAuditdt(Date auditdt) {
+        this.auditdt = auditdt;
+    }
+
+    public Date getFinishdt() {
+        return finishdt;
+    }
+
+    public void setFinishdt(Date finishdt) {
+        this.finishdt = finishdt;
     }
 
     public Date getCreateDt() {

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>暖游 后台管理系统</title>
     #include("common/css-support.vm")
+    #include("common/js-support.vm")
     <link href="/dist/css/mission/mission.css" rel="stylesheet"/>
 </head>
 <body>
@@ -22,18 +23,13 @@
                         <div class="widget-title">
                             <span class="icon"><i class="icon-th"></i></span>
                             <h5>商户审核列表</h5>
-                            <div class="country-select">
-                                <select class="span7 select2 " id="country" name="country" onchange="interchangeCountry()">
-                                    <option value="">选择国家</option>
-                                </select>
-                            </div>
                         </div>
 
                         <table class="table table-bordered data-table dataTable">
                             <thead class="thead-class">
                             <tr class="thread-tr">
                                 <th class="th-op">操作</th>
-                                <th class="th-op">门店名称</th>
+                                <th class="th-op">商户名称</th>
                                 <th class="th-op">城市</th>
                                 <th class="th-op">组名-BD名</th>
                                 <th class="th-img">签到图</th>
@@ -45,54 +41,68 @@
                             </tr>
                             </thead>
                             <tbody class="tbody-list">
-                            <tr>
-                                <td>
-                                    <div class="td-op">
-                                        <button type="button" class="btn btn-success btn-small td-button">通过</button>
-                                        <button type="button" class="btn btn-danger btn-small td-button">拒绝</button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span>26487</span>
-                                    <br/>
-                                    <a target="_blank" href="">商户名</a>
-                                </td>
-                                <td>韩国</td>
-                                <td>1组-孙昊</td>
-                                <td>
-                                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="hovereffect">
-                                            <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                            </a>
+                                #if ($null.isNull($page.content) || $page.content.size()==0)
+                                <tr>
+                                    <td colspan="11" style="text-align:center;">
+                                        <div class="no-result-div"
+                                             style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                                            <p>没有符合条件的商户信息审核信息！</p>
                                         </div>
-                                        <div class="hovereffect">
-                                            <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                            </a>
+                                    </td>
+                                </tr>
+                                #end
+                                #foreach($entity in $!page.content)
+                                <tr>
+                                    <td>
+                                        <div class="td-op" data-mchId="$!entity.mchId">
+                                            <button type="button" class="btn btn-success btn-small td-button approval">审批</button>
                                         </div>
-                                        <div class="hovereffect">
-                                            <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                            </a>
+                                    </td>
+                                    <td>
+                                        <span>$!entity.mchId</span>
+                                        <br/>
+                                        <a target="_blank" href="">$!entity.mchName</a>
+                                    </td>
+                                    <td>首尔</td>
+                                    <td>$!entity.groupId - $!entity.bdId</td>
+                                    <td>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                            <div class="hovereffect">
+                                                <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
+                                                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
+                                                </a>
+                                            </div>
+                                            <div class="hovereffect">
+                                                <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
+                                                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
+                                                </a>
+                                            </div>
+                                            <div class="hovereffect">
+                                                <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
+                                                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
+                                                </a>
+                                            </div>
+                                            <div class="hovereffect">
+                                                <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
+                                                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
+                                                </a>
+                                            </div>
                                         </div>
-                                        <div class="hovereffect">
-                                            <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                                <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>v2.3.3</td>
-                                <td><a target="_blank" href="">201682945</a></td>
-                                <td>状态</td>
-                                <td>备注</td>
-                                <td>2017/6/28 12:23</td>
-                            </tr>
+                                    </td>
+                                    <td>v2.3.3</td>
+                                    <td><a target="_blank" href="">201682945</a></td>
+                                    <td>$!entity.status.value</td>
+                                    <td class="td-bz">$!entity.remark</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.updateDt)</td>
+                                </tr>
+                                #end
                             </tbody>
                         </table>
-
                     </div>
+                </div>
+                #set($i=$!page.number + 1)
+                <div class="pagination" style="float:right">
+                    <ul total="$!page.totalPages" index="$!i"></ul>
                 </div>
             </div>
             <div class="span2">
@@ -101,44 +111,54 @@
                         <h5>筛选列表</h5>
                     </div>
                     <div class="widget-content">
-                        #include("common/js-support.vm")
-                        <script src="/dist/js/mission/mission.js"></script>
-                        <script src="/dist/js/page-support.js"></script>
-
                         <form class="form-horizontal search-form" method="get">
+                            <div class="search-select">
+                                <label>国家</label>
+                                <select class="span11 select2 select-country" id="country" name="country">
+                                    <option value="">全部</option>
+                                    #foreach($e in $!countries)
+                                        <option value="$!e.id" #if($!requestVo.country==$!e.id)selected #end>$!e.name</option>
+                                    #end
+                                </select>
+                            </div>
                             <div class="search-select">
                                 <label>城市</label>
                                 <select class="span11 select2" name="city">
-                                    <option value=1>全部城市</option>
-                                    <option value>全部城市</option>
-                                    <option value>全部城市</option>
-                                    <option value>全部城市</option>
-                                    <option value>全部城市</option>
-                                    <option value>全部城市</option>
-                                    <option value>全部城市</option>
-                                    <option value>全部城市</option>
-                                    <option value>全部城市</option>
-                                    <option value>全部城市</option>
-                                    <option value>全部城市</option>
-                                    <option value>全部城市</option>
+                                    <option value>全部</option>
+                                    #foreach($e in $!cities)
+                                        <option value="$!e.id" #if($!requestVo.city == $!e.id) selected #end>$!e.name</option>
+                                    #end
                                 </select>
                             </div>
                             <div class="search-select">
-                                <label>商户信息</label>
+                                <label>商户名称</label>
                                 <select class="span11 select2" name="mchId">
-                                    <option value>商户信息</option>
+                                    <option value>全部</option>
+                                    #foreach($e in $!merchants)
+                                        <option value="$!e.id #if($!requestVo.mchId == $!e.id) selected #end">$!e.id : $!e.name</option>
+                                    #end
                                 </select>
                             </div>
                             <div class="search-select">
-                                <label>BD信息</label>
+                                <label>战队名称</label>
+                                <select class="span11 select2" name="zu">
+                                    <option value="">全部</option>
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>BD名称</label>
                                 <select class="span11 select2" name="bd">
-                                    <option value>BD信息</option>
+                                    <option value="">全部</option>
                                 </select>
                             </div>
                             <div class="search-select">
                                 <label>任务状态</label>
                                 <select class="span11 select2" name="status">
-                                    <option value>任务状态</option>
+                                    #foreach($e in $!taskStatus)
+                                        #if($!e.key !=0)
+                                            <option value="$!e" #if($!requestVo.status.key == $!e.key) selected #end>$!e.value</option>
+                                        #end
+                                    #end
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary">查询</button>
@@ -151,5 +171,47 @@
         </div>
     </div>
 </div>
+
+<!-- 审批弹窗 -->
+<div class="modal hide fade approvalModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">任务审批</h3>
+    </div>
+    <div class="modal-body">
+        <div class="search-select">
+            <label>审批结果：</label>
+            <select class="span4 select2 approval-status">
+                <option value="APPROVED">审核通过</option>
+                <option value="NON_APPROVAL">审核不通过</option>
+            </select>
+        </div>
+        <div class="search-select">
+            <label>驳回理由：</label>
+            <textarea class="remark-text" placeholder="请填写备注信息"></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        <button class="btn btn-primary sure-approval">确认</button>
+    </div>
+</div>
+
+<!-- 审批结果弹窗 -->
+<div class="modal hide fade approvalResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">审批通知</h3>
+    </div>
+    <div class="modal-body">
+        <p class="approvalResult-text"></p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+
+<script type="text/javascript" src="/dist/js/page-support.js"></script>
+<script type="text/javascript" src="/dist/js/mission/mission.js"></script>
 </body>
 </html>
