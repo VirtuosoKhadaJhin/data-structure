@@ -44,7 +44,17 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 if (requestVo.getMchId() != null) {
                     predicate.add(cb.equal(root.get("mchId"), requestVo.getMchId()));
                 }
-                predicate.add(cb.equal(root.get("status"), requestVo.getStatus().getKey()));
+                if (requestVo.getStatus() == null) {
+                    ArrayList<MissionTaskStatus> auditStatus = null;
+                    if (requestVo.getIsAudit()) {//审核列表
+                        auditStatus = Lists.newArrayList(MissionTaskStatus.FINISHED, MissionTaskStatus.APPROVED, MissionTaskStatus.NON_APPROVAL);
+                    } else {//指派任务列表
+                        auditStatus = Lists.newArrayList(MissionTaskStatus.UN_FINISH, MissionTaskStatus.NON_APPROVAL);
+                    }
+                    predicate.add(root.get("status").in(auditStatus));
+                } else {
+                    predicate.add(cb.equal(root.get("status"), requestVo.getStatus().getKey()));
+                }
                 predicate.add(cb.equal(root.get("delFlag").as(Boolean.class), false));
                 Predicate[] arrays = new Predicate[predicate.size()];
                 ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("updateDt")));

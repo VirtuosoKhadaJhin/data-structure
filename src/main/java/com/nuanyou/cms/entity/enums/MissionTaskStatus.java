@@ -5,10 +5,11 @@ package com.nuanyou.cms.entity.enums;
  */
 public enum MissionTaskStatus {
 
-    UN_FINISH(0, "新任务"),
-    FINISHED(1, "已完成"),
-    APPROVED(2, "审核通过"),
-    NON_APPROVAL(3, "审核不通过");
+    UN_DISTRIBUTE(0, "未指派"),
+    UN_FINISH(1, "已指派"),
+    FINISHED(2, "已完成"),
+    APPROVED(3, "审核通过"),
+    NON_APPROVAL(4, "审核不通过");
 
     private int key;
     private String value;
