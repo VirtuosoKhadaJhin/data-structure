@@ -21,7 +21,7 @@ public class MissionRequestVo {
 
     private Long district;
 
-    private String other;
+    private boolean isAudit = true;
 
     private int pageNum = 1;
 
@@ -75,12 +75,12 @@ public class MissionRequestVo {
         this.city = city;
     }
 
-    public String getOther() {
-        return other;
+    public boolean isAudit() {
+        return isAudit;
     }
 
-    public void setOther(String other) {
-        this.other = other;
+    public void setAudit(boolean audit) {
+        isAudit = audit;
     }
 
     public Long getDistrict() {
