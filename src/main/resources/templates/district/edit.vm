@@ -27,46 +27,43 @@
                     <div class="widget-content nopadding">
                         <form id="districtForm" action="update" method="post" class="form-horizontal commonValidate" role="form">
                             <div class="control-group">
-                                <label class="col-sm-2 control-label">ID</label>
-                                <div class="controls">
-                                    #if($!type==2)
+                                #if($!type!=1)
+                                    <label class="col-sm-2 control-label">ID</label>
+                                    <div class="controls">
                                         <input name="id" readonly type="text" class="form-control" placeholder="ID"
                                                value="$!entity.id">
-                                    #end
-                                    #if($!type==3)
-                                        <label>$!entity.id</label>
-                                    #end
-                                </div>
+                                    </div>
+                                #end
                                 <label class="control-label">中文名称</label>
                                 <div class="controls">
-                                    <input for="name" name="name" type="text" class="span11" placeholder="中文名称"
-                                           value="$!entity.name">
+                                    <input name="name" for="name" type="text" class="span7 langsAutoComplete" value="$!entity.name" placeholder="中文名称">
                                 </div>
                                 <label class="control-label">简称</label>
                                 <div class="controls">
-                                    <input for="shortname" name="shortname" type="text" class="span11" placeholder="简称"
+                                    <input for="shortname" name="shortname" type="text" class="span7" placeholder="简称"
                                            value="$!entity.shortname">
                                 </div>
-
                                 <label class="control-label">本地名称</label>
                                 <div class="controls">
-                                    <input name="kpname" type="text" class="span11" placeholder="本地名称"
-                                           value="$!entity.kpname">
+                                    <input name="kpname" for="kpname" type="text" class="span7 langsAutoComplete" value="$!entity.kpname"
+                                           placeholder="本地名称">
+                                </div>
+                                <label class="control-label">英文名称</label>
+                                <div class="controls">
+                                    <input name="enname" for="enname" type="text" class="span7 langsAutoComplete" value="$!entity.enname" placeholder="英文名称">
                                 </div>
                                 <label class="control-label">汇率系数</label>
                                 <div class="controls">
-                                    <input name="radio" type="text" class="span11" placeholder="汇率系数"
+                                    <input name="radio" type="text" class="span7" placeholder="汇率系数"
                                            value="$!entity.radio">
                                 </div>
                                 <label class="control-label">是否显示 </label>
                                 <div class="controls">
-                                    <select id="display" name="display">
+                                    <select id="display" name="display" class="span7">
                                         <option value="true"  #if($!entity.display==true)  selected #end>显示</option>
                                         <option value="false"  #if($!entity.display==false)  selected #end>隐藏</option>
                                     </select>
                                 </div>
-
-
                                 <label class="control-label">国家</label>
                                 <div class="controls">
                                     <select id="country.id" name="country.id" class="span7" target-name="city.id" target-url="/city/api/getCitys">
@@ -87,41 +84,22 @@
 
                                 <label class="control-label">排序</label>
                                 <div class="controls">
-                                    <input name="sort" for="sort" type="text" class="span11" placeholder="排序"
+                                    <input name="sort" for="sort" type="text" class="span7" placeholder="排序"
                                            value="$!entity.sort">
                                 </div>
                                 <label class="control-label">跳转链接</label>
                                 <div class="controls">
-                                    <input name="link" type="text" class="span11" placeholder="商圈介绍"
+                                    <input name="link" type="text" class="span7" placeholder="商圈介绍"
                                            value="$!entity.link">
                                 </div>
-##                                <label class="control-label">列表图</label>
-##                                <div class="controls">
-##                                    <input type="text" class="span9" id="indeximgurl" name="indeximgurl"
-##                                           value='$!entity.indeximgurl'/>
-##
-##                                    <button type="button" class="btn btn-success previewBtn" data-id="indeximgurl">预览
-##                                    </button>
-##                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indeximgurl">上传
-##                                    </button>
-##                                </div>
-##                                <label class="control-label">背景图</label>
-##                                <div class="controls">
-##                                    <input type="text" class="span9" id="bgimgurl" name="bgimgurl"
-##                                           value='$!entity.bgimgurl'/>
-##                                    <button type="button" class="btn btn-success previewBtn" data-id="bgimgurl">预览
-##                                    </button>
-##                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="bgimgurl">上传
-##                                    </button>
-##                                </div>
                             </div>
                             <div class="form-actions">
                                 #if($!type==2 || $!type==1)
                                     <button type="submit" class="btn btn-success">保存</button>
                                 #elseif($!type==3)
                                     <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
-                                    <a class="btn btn-primary" href="list">返回</a>
                                 #end
+                                <a class="btn btn-primary" href="list">返回</a>
                             </div>
                         </form>
                     </div>
@@ -133,17 +111,16 @@
 </body>
     #include("common/js-support.vm")
     #include("common/image-support.vm")
-<script src="/dist/js/cascade-select.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        var type = $!type;
-        //禁用所有表单
-        if (type == 3) {
-            $(":text").attr("disabled", "disabled");
-            $("select").attr("disabled", "disabled");
+<script src="/dist/js/cascade-select.js"/>
 
-        }
-    });
+<script>
+    var type = $!type;
+    //禁用所有表单
+    if (type == 3) {
+        $(":text").attr("disabled", "disabled");
+        $("select").attr("disabled", "disabled");
+    }
 
 </script>
+
 </html>

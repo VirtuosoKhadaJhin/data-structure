@@ -26,6 +26,7 @@
         <th>名称（中文）</th>
         <th>简称</th>
         <th>名称（本地）</th>
+        <th>名称（英文）</th>
         <th>是否显示</th>
         <th>所属城市
             #if($!page.sort.getOrderFor("city.name").direction=="ASC")
@@ -50,21 +51,22 @@
     </thead>
     <tbody>
         #foreach($entity in $!page.content)
-        <tr class="odd gradeX">
-            <td>$!entity.id</td>
-            <td>$!entity.name</td>
-            <td>$!entity.shortname</td>
-            <td>$!entity.kpname</td>
-            <td>
-                #if($!entity.display)显示#else 隐藏#end
-            </td>
-            <td>$!entity.city.name</td>
-            <td>$!entity.country.name</td>
-            <td>
-                <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
-            </td>
-        </tr>
+            <tr class="odd gradeX">
+                <td class="tdInput">$!entity.id</td>
+                <td class="tdInput">$!entity.name</td>
+                <td class="tdInput">$!entity.shortname</td>
+                <td class="tdInput">$!entity.kpname</td>
+                <td class="tdInput">$!entity.enname</td>
+                <td class="tdInput">
+                    #if($!entity.display)显示#else 隐藏#end
+                </td>
+                <td class="tdInput">$!entity.city.name</td>
+                <td class="tdInput">$!entity.country.name</td>
+                <td class="tdInput">
+                    <a href="edit?type=3&id=$!entity.id" class="btn btn-success btn-mini">查看</a>
+                    <a href="edit?type=2&id=$!entity.id" class="btn btn-info btn-mini">编辑</a>
+                </td>
+            </tr>
         #end
     </tbody>
 </table>
@@ -77,7 +79,7 @@
         </div>
         <div class="control-group">
             <label>国家</label>
-            <select id="country.id" name="country.id" class="span7">
+            <select id="country.id" name="country.id" class="span11">
                 <option value="">全部</option>
                 #foreach($e in $!countries)
                     <option value="$!e.id" #if($!entity.country.id==$!e.id) selected #end>$!e.id:$!e.name</option>
@@ -97,3 +99,8 @@
 </form>
 #parse("common/list_end.vm")
 
+<style>
+    .tdInput{
+        text-align: center;
+    }
+</style>

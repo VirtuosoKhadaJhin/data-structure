@@ -170,16 +170,14 @@ window.onload = function () {
                         listComplete.push(complate);
                     }
                     $(currEle).autocomplete({
-                        minLength: 0,
                         source: listComplete,
-                        delay:500,
                         focus: function (event, ui) {
-                            $(this).val(ui.item.labelDisplay);
+                            $(this).val(ui.item.label);
                             $(this).next().val(ui.item.value);
                             return false;
                         },
                         select: function (event, ui) {
-                            $(this).val(ui.item.labelDisplay);
+                            $(this).val(ui.item.label);
                             $(this).next().val(ui.item.value);
                             return false;
                         }
