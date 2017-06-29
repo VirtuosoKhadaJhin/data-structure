@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+    <link href="/dist/font-awesome/css/font-awesome-checkbox.css" rel="stylesheet"/>
+    <link href="/dist/css/mission/missionTask.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="content" class="content-container">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10">
+                <div class="widget-box">
+                    <div class="widget-content nopadding">
+                        <div id="breadcrumb"><a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
+                            商户模块</a>
+                            <a href="/mission_task/list" class="tip-bottom" data-original-title="">商户战地任务</a>
+                        </div>
+                        <div class="widget-title">
+                            <span class="icon"><i class="icon-th"></i></span>
+                            <h5>战地任务列表</h5>
+                            <button class="btn btn-small btn-info task-distribute">任务指派</button>
+                        </div>
+
+                        <table class="table table-bordered data-table dataTable">
+                            <thead class="thead-class">
+                            <tr class="thread-tr">
+                                <th class="th-op">
+                                    <div class="checkbox checkbox-success">
+                                        <input id="checkbox3" class="th-checked" type="checkbox">
+                                        <label for="checkbox3" class="label-check">
+                                            全选
+                                        </label>
+                                    </div>
+                                </th>
+                                <th class="th-op">商户信息</th>
+                                <th class="th-op">城市</th>
+                                <th class="th-op">商圈</th>
+                                <th class="th-op">BD名称</th>
+                                <th class="th-op">状态</th>
+                                <th class="th-op">备注</th>
+                                <th class="th-op">完成时间</th>
+                            </tr>
+                            </thead>
+                            <tbody class="tbody-list">
+                            <tr>
+                                <td>
+                                    <div class="checkbox checkbox-info">
+                                        <input id="checkbox4" type="checkbox" class="td-checked">
+                                        <label for="checkbox4" style="margin-bottom: 15px;">
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span>26487</span>
+                                    <br/>
+                                    <a target="_blank" href="">商户名</a>
+                                </td>
+                                <td>首尔</td>
+                                <td>弘大商圈</td>
+                                <td>孙昊</td>
+                                <td>审核不通过</td>
+                                <td class="td-bz">图片模糊看不清，请重新拜访后上传</td>
+                                <td>2017/6/28 12:23</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <div class="span2">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"><i class="icon-list"></i></span>
+                        <h5>筛选列表</h5>
+                    </div>
+                    <div class="widget-content">
+                        #include("common/js-support.vm")
+                        <script src="/dist/js/mission/missionTask.js"></script>
+                        <script src="/dist/js/page-support.js"></script>
+
+                        <form class="form-horizontal search-form" method="get">
+                            <div class="search-select">
+                                <label>城市</label>
+                                <select class="span11 select2" name="city">
+                                    <option value>全部</option>
+                                    #foreach($e in $!cities)
+                                        <option value="$!e.id" #if($!requestVo.city == $!e.id) selected #end>$!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>商圈</label>
+                                <select class="span11 select2" name="city">
+                                    <option value>全部</option>
+                                    #foreach($e in $!districts)
+                                        <option value="$!e.id #if($!requestVo.district == $!e.id) selected #end">$!e.id : $!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>商户名称</label>
+                                <select class="span11 select2" name="mchId">
+                                    <option value>全部</option>
+                                    #foreach($e in $!merchants)
+                                        <option value="$!e.id #if($!requestVo.mchId == $!e.id) selected #end">$!e.id : $!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>BD名称</label>
+                                <select class="span11 select2" name="bdId">
+                                    <option value>全部</option>
+                                    #foreach($e in $!bdUsers)
+                                        <option value="$!e.id #if($!requestVo.bdId == $!e.id) selected #end">$!e.id : $!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>任务状态</label>
+                                <select class="span11 select2" name="status">
+                                    <option value>$!requestVo.status.value</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">查询</button>
+                            <button class="btn btn-warning search-reset">重置</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
