@@ -37,6 +37,7 @@
                                 <th class="th-op">测试订单</th>
                                 <th class="th-op">状态</th>
                                 <th class="th-op">备注</th>
+                                <th class="th-op">审核时间</th>
                                 <th class="th-op">完成时间</th>
                             </tr>
                             </thead>
@@ -87,12 +88,23 @@
                                                     <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
                                                 </a>
                                             </div>
+                                            <div class="hovereffect">
+                                                <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
+                                                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
+                                                </a>
+                                            </div>
+                                            <div class="hovereffect">
+                                                <a target="_blank" href="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
+                                                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg">
+                                                </a>
+                                            </div>
                                         </div>
                                     </td>
                                     <td>v2.3.3</td>
                                     <td><a target="_blank" href="">201682945</a></td>
                                     <td>$!entity.status.value</td>
                                     <td class="td-bz">$!entity.remark</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditdt)</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.updateDt)</td>
                                 </tr>
                                 #end
