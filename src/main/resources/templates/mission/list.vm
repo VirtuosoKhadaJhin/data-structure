@@ -167,7 +167,7 @@
                                 <label>任务状态</label>
                                 <select class="span11 select2" name="status">
                                     #foreach($e in $!taskStatus)
-                                        #if($!e.key !=0)
+                                        #if($!e.key !=0 && $!e.key != 1)
                                             <option value="$!e" #if($!requestVo.status.key == $!e.key) selected #end>$!e.value</option>
                                         #end
                                     #end

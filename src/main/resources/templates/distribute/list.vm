@@ -91,17 +91,16 @@
                     <h3 id="myModalLabel">任务指派</h3>
                 </div>
                 <div class="modal-body">
-                    #foreach($e in $!bdUsers)
-                        <div class="row distribute-bd">
-                            <div class="col-xs-3"></div>
-                            <div class="col-xs-9 bd-checkd-prev bd-checkbox">
+                    <div class="search-select bd-checkd-prev">
+                        #foreach($e in $!bdUsers)
+                            <div class="checkbox bd-checkbox">
                                 <input id="checkbox1$e.id" bd-id="$e.id" class="styled bd-checkd" type="checkbox">
                                 <label for="checkbox1$e.id" class="bd-checkbox-label">
-                                    $!e.chineseName / $!e.email
+                                    $!e.chineseName / $!e.demail
                                 </label>
                             </div>
-                        </div>
-                    #end
+                        #end
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
@@ -134,6 +133,8 @@
                         <script src="/dist/js/page-support.js"></script>
 
                         <form class="form-horizontal search-form" method="get">
+                        ## 页面标志 ##
+
                             <div class="search-select">
                                 <label>城市</label>
                                 <select class="span11 select2" name="city">
@@ -173,11 +174,8 @@
                             <div class="search-select">
                                 <label>任务状态</label>
                                 <select class="span11 select2" name="status">
-                                    <option value="">全部</option>
                                     #foreach($e in $!taskStatus)
-                                        #if($!e.key == 0 || $!e.key==3)
-                                            <option value="$!e.key" #if($!e.key==$!requestVo.status.key) selected #end>$!e.name</option>
-                                        #end
+                                        <option value="$!e.name" #if($!e.key == $!requestVo.status.key) selected #end>$!e.name</option>
                                     #end
                                 </select>
                             </div>
