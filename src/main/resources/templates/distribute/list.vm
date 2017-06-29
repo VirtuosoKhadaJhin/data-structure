@@ -98,17 +98,19 @@
                         #if ($null.isNull($bdUsers) || $bdUsers.size()==0)
                             <strong style="margin-left: 45%;">暂无BD</strong>
                         #end
-                        #foreach($e in $!bdUsers)
-                            <div class="checkbox bd-checkbox">
-                                <input id="checkbox1$e.id" bd-id="$e.id" class="styled bd-checkd" type="checkbox">
-                                <label for="checkbox1$e.id" class="bd-checkbox-label">
-                                    $!e.chineseName / $!e.demail
-                                </label>
+                        #if ($null.isNotNull($bdUsers) || $bdUsers.size()>0)
+                            #foreach($e in $!bdUsers)
+                                <div class="checkbox bd-checkbox">
+                                    <input id="checkbox1$e.id" bd-id="$e.id" class="styled bd-checkd" type="checkbox">
+                                    <label for="checkbox1$e.id" class="bd-checkbox-label">
+                                        $!e.chineseName / $!e.demail
+                                    </label>
+                                </div>
+                            #end
+                            <div class="bd-task-time">
+                                <input type="text" style="margin-left: 20px;" class="span8 timeFormatNoDay" value="$!requestVo.finishdt" placeholder="完成时间">
                             </div>
                         #end
-                        <div class="bd-task-time">
-                            <input type="text" class="span8 timeFormatNoDay" value="$!requestVo.finishdt" placeholder="完成时间">
-                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
