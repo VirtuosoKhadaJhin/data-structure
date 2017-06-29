@@ -20,6 +20,12 @@ $(function () {
         status = $(".approval-status").val();
     });
 
+    $('.approval').on('show.bs.modal', function () {
+        mchId = "";
+        status = "";
+        $(".remark-text").val("");
+    })
+
     $(".sure-approval").on("click", function () {
         var remark = $(".remark-text").val();
 

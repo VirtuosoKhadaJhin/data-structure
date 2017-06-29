@@ -4,10 +4,12 @@ import com.google.common.collect.Lists;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.MissionTaskDao;
+import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import com.nuanyou.cms.entity.mission.MissionTask;
 import com.nuanyou.cms.model.MissionRequestVo;
 import com.nuanyou.cms.model.MissionTaskVo;
 import com.nuanyou.cms.service.MissionTaskService;
+import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,7 +44,17 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 if (requestVo.getMchId() != null) {
                     predicate.add(cb.equal(root.get("mchId"), requestVo.getMchId()));
                 }
-                predicate.add(cb.equal(root.get("status"), requestVo.getStatus().getKey()));
+                if (requestVo.getStatus() == null) {
+                    ArrayList<MissionTaskStatus> auditStatus = null;
+                    if (requestVo.getIsAudit()) {//审核列表
+                        auditStatus = Lists.newArrayList(MissionTaskStatus.FINISHED, MissionTaskStatus.APPROVED, MissionTaskStatus.NON_APPROVAL);
+                    } else {//指派任务列表
+                        auditStatus = Lists.newArrayList(MissionTaskStatus.values());
+                    }
+                    predicate.add(root.get("status").in(auditStatus));
+                } else {
+                    predicate.add(cb.equal(root.get("status"), requestVo.getStatus().getKey()));
+                }
                 predicate.add(cb.equal(root.get("delFlag").as(Boolean.class), false));
                 Predicate[] arrays = new Predicate[predicate.size()];
                 ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("updateDt")));
@@ -63,7 +76,8 @@ public class MissionTaskServiceImpl implements MissionTaskService {
         if (vo.getStatus() == null || vo.getMchId() == null) {
             throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
         }
-        missionTaskDao.updateTaskStatus(vo.getMchId(), vo.getStatus().getKey(), vo.getRemark());
+        Long userid = UserHolder.getUser().getUserid();
+        missionTaskDao.updateTaskStatus(vo.getMchId(), vo.getStatus().getKey(), vo.getRemark(), userid, new Date());
     }
 
     private List<MissionTaskVo> covertToMissionTaskVos(List<MissionTask> missionTasks) {
@@ -72,7 +86,9 @@ public class MissionTaskServiceImpl implements MissionTaskService {
         }
         List<MissionTaskVo> taskVos = Lists.newArrayList();
         for (MissionTask task : missionTasks) {
-            taskVos.add(BeanUtils.copyBeanNotNull(task, new MissionTaskVo()));
+            MissionTaskVo vo = BeanUtils.copyBeanNotNull(task, new MissionTaskVo());
+            vo.setStatus(MissionTaskStatus.toEnum(task.getStatus()));
+            taskVos.add(vo);
         }
         return taskVos;
     }

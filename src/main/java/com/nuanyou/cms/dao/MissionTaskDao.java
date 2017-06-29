@@ -3,14 +3,19 @@ package com.nuanyou.cms.dao;
 import com.nuanyou.cms.entity.mission.MissionTask;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 /**
  * Created by Byron on 2017/6/27.
  */
 public interface MissionTaskDao extends JpaRepository<MissionTask, Long>, JpaSpecificationExecutor {
 
-    @Query(value = "update MissionTask t set status=:status, remark=:remark where mchId=:mchId")
-    void updateTaskStatus(@Param("mchId") Long id, @Param("status") int status, @Param("remark") String remark);
+    @Transactional
+    @Modifying
+    @Query("update MissionTask t set status=?2, remark=?3, auditor=?4, auditDt=?5 where mchId=?1")
+    void updateTaskStatus(Long mchId, int status, String remark, Long auditor, Date date);
 }

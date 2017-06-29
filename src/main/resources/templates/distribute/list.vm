@@ -26,13 +26,24 @@
                         </div>
 
                         <table class="table table-bordered data-table dataTable">
-                            <thead class="thead-class">
+                        <thead class="thead-class">
+                            #if ($null.isNull($page.content) || $page.content.size()==0)
+                            <tr>
+                                <td colspan="11" style="text-align:center;">
+                                    <div class="no-result-div"
+                                         style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                                        <p>没有符合条件的战地任务信息！</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            #end
+                            #foreach($entity in $!page.content)
                             <tr class="thread-tr">
                                 <th class="th-op">
-                                    <div class="checkbox checkbox-success">
-                                        <input id="checkbox3" class="th-checked" type="checkbox">
-                                        <label for="checkbox3" class="label-check">
-                                            全选
+                                    <div class="checkbox bd-checkbox">
+                                        <input id="checkbox-all" class="th-checked" type="checkbox">
+                                        <label for="checkbox-all" class="label-check">
+                                            <strong>全选</strong>
                                         </label>
                                     </div>
                                 </th>
@@ -42,36 +53,75 @@
                                 <th class="th-op">BD名称</th>
                                 <th class="th-op">状态</th>
                                 <th class="th-op">备注</th>
-                                <th class="th-op">完成时间</th>
+                                <th class="th-op">委派时间</th>
                             </tr>
                             </thead>
                             <tbody class="tbody-list">
                             <tr>
                                 <td>
-                                    <div class="checkbox checkbox-info">
-                                        <input id="checkbox4" type="checkbox" class="td-checked">
-                                        <label for="checkbox4" style="margin-bottom: 15px;">
+                                    <div class="checkbox bd-checkbox">
+                                        <input id="checkbox0" class="styled td-checked" type="checkbox" task-id="1">
+                                        <label for="checkbox0" class="bd-checkbox-label" style="margin-bottom: 15px;">
                                         </label>
                                     </div>
                                 </td>
                                 <td>
-                                    <span>26487</span>
+                                    <span>$!entity.mchId</span>
                                     <br/>
-                                    <a target="_blank" href="">商户名</a>
+                                    <a target="_blank" href="">$!entity.mchName</a>
                                 </td>
                                 <td>首尔</td>
                                 <td>弘大商圈</td>
-                                <td>孙昊</td>
-                                <td>审核不通过</td>
-                                <td class="td-bz">图片模糊看不清，请重新拜访后上传</td>
-                                <td>2017/6/28 12:23</td>
+                                <td>$!entity.mchName.bdId</td>
+                                <td>$!entity.status.value</td>
+                                <td class="td-bz">$!entity.remark</td>
+                                <td>$!entity.createDt</td>
                             </tr>
-                            </tbody>
+                            #end
+                        </tbody>
                         </table>
 
                     </div>
                 </div>
             </div>
+            <!-- 指派弹窗 -->
+            <div class="modal hide fade taskDistributeModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel">任务指派</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="search-select bd-checkd-prev">
+                        #foreach($e in $!bdUsers)
+                            <div class="checkbox bd-checkbox">
+                                <input id="checkbox1$e.id" bd-id="$e.id" class="styled bd-checkd" type="checkbox">
+                                <label for="checkbox1$e.id" class="bd-checkbox-label">
+                                    $!e.chineseName / $!e.demail
+                                </label>
+                            </div>
+                        #end
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                    <button class="btn btn-primary sure-distribute">确认</button>
+                </div>
+            </div>
+
+            <!-- 指派结果弹窗 -->
+            <div class="modal hide fade taskDistributeResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel">指派通知</h3>
+                </div>
+                <div class="modal-body">
+                    <p class="distributeResult-text"></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                </div>
+            </div>
+
             <div class="span2">
                 <div class="widget-box">
                     <div class="widget-title"><span class="icon"><i class="icon-list"></i></span>
@@ -83,6 +133,8 @@
                         <script src="/dist/js/page-support.js"></script>
 
                         <form class="form-horizontal search-form" method="get">
+                        ## 页面标志 ##
+
                             <div class="search-select">
                                 <label>城市</label>
                                 <select class="span11 select2" name="city">
@@ -94,10 +146,10 @@
                             </div>
                             <div class="search-select">
                                 <label>商圈</label>
-                                <select class="span11 select2" name="city">
+                                <select class="span11 select2" name="district">
                                     <option value>全部</option>
                                     #foreach($e in $!districts)
-                                        <option value="$!e.id #if($!requestVo.district == $!e.id) selected #end">$!e.id : $!e.name</option>
+                                        <option value="$!e.id" #if($!requestVo.district == $!e.id) selected #end>$!e.id : $!e.name</option>
                                     #end
                                 </select>
                             </div>
@@ -106,7 +158,7 @@
                                 <select class="span11 select2" name="mchId">
                                     <option value>全部</option>
                                     #foreach($e in $!merchants)
-                                        <option value="$!e.id #if($!requestVo.mchId == $!e.id) selected #end">$!e.id : $!e.name</option>
+                                        <option value="$!e.id" #if($!requestVo.mchId == $!e.id) selected #end>$!e.id : $!e.name</option>
                                     #end
                                 </select>
                             </div>
@@ -115,14 +167,16 @@
                                 <select class="span11 select2" name="bdId">
                                     <option value>全部</option>
                                     #foreach($e in $!bdUsers)
-                                        <option value="$!e.id #if($!requestVo.bdId == $!e.id) selected #end">$!e.id : $!e.name</option>
+                                        <option value="$!e.id" #if($!requestVo.bdId == $!e.id) selected #end>$!e.id : $!e.name</option>
                                     #end
                                 </select>
                             </div>
                             <div class="search-select">
                                 <label>任务状态</label>
                                 <select class="span11 select2" name="status">
-                                    <option value>$!requestVo.status.value</option>
+                                    #foreach($e in $!taskStatus)
+                                        <option value="$!e.name" #if($!e.key == $!requestVo.status.key) selected #end>$!e.name</option>
+                                    #end
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary">查询</button>
