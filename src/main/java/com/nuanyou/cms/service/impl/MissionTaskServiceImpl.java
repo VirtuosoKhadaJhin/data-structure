@@ -49,7 +49,7 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                     if (requestVo.getIsAudit()) {//审核列表
                         auditStatus = Lists.newArrayList(MissionTaskStatus.FINISHED, MissionTaskStatus.APPROVED, MissionTaskStatus.NON_APPROVAL);
                     } else {//指派任务列表
-                        auditStatus = Lists.newArrayList(MissionTaskStatus.UN_FINISH, MissionTaskStatus.NON_APPROVAL);
+                        auditStatus = Lists.newArrayList(MissionTaskStatus.values());
                     }
                     predicate.add(root.get("status").in(auditStatus));
                 } else {
