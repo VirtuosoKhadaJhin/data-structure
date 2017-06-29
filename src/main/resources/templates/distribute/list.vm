@@ -96,7 +96,7 @@
                 <div class="modal-body">
                     <div class="search-select bd-checkd-prev">
                         #if ($null.isNull($bdUsers) || $bdUsers.size()==0)
-                            <span>暂无BD</span>
+                            <strong style="margin-left: 45%;">暂无BD</strong>
                         #end
                         #foreach($e in $!bdUsers)
                             <div class="checkbox bd-checkbox">
@@ -106,6 +106,9 @@
                                 </label>
                             </div>
                         #end
+                        <div class="bd-task-time">
+                            <input type="text" class="span8 timeFormatNoDay" value="$!requestVo.finishdt" placeholder="完成时间">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -138,7 +141,7 @@
                             <div class="search-select">
                                 <label>商圈</label>
                                 <select class="span11 select2" name="district">
-                                    <option value>全部</option>
+                                ##<option value>全部</option>##
                                     #foreach($e in $!districts)
                                         <option value="$!e.id" #if($!requestVo.district == $!e.id) selected #end>$!e.id : $!e.name</option>
                                     #end

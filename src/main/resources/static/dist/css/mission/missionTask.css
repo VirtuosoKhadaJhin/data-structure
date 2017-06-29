@@ -12,7 +12,7 @@ table .tr-class:hover {
     text-align: center;
 }
 
-.search-reset{
+.search-reset {
     margin-left: 2px;
 }
 
@@ -141,6 +141,7 @@ table .tr-class:hover {
     margin-left: 20%;
 }
 
-.bd-checkbox-label {
-
+.bd-task-time {
+    margin: 5px;
+    margin-left: 20%;
 }
