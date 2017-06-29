@@ -126,6 +126,11 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         return bdUserDao.findByIdIn(userIds);
     }
     
+    @Override
+    public MissionGroup findGroupByUserId(Long userId) {
+        return null;
+    }
+    
     private List<MissionGroupVo> convertToBdUserManagerVo(List<MissionGroup> groups) {
         if (CollectionUtils.isEmpty(groups)) {
             return Lists.newArrayList();

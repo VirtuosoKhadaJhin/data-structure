@@ -84,7 +84,7 @@ public class MissionGroupController {
     public String saveAdd(Model model, MissionGroupParamVo paramVo) {
         missionGroupService.saveGroup(paramVo);
         
-        return "forward:/missionGroup/list";
+        return "redirect:/missionGroup/list";
     }
     
     
@@ -96,7 +96,7 @@ public class MissionGroupController {
     public String saveEdit(String id, String name, String countryId, String email, String roleId) {
         
         
-        return "forward:/missionGroup/list";
+        return "redirect:/missionGroup/list";
     }
     
     
@@ -106,7 +106,7 @@ public class MissionGroupController {
     @RequestMapping("saveAddBdUser")
     public String saveAddBdUser() {
     
-        return "forward:/missionGroup/list";
+        return "redirect:/missionGroup/list";
     }
     
 }

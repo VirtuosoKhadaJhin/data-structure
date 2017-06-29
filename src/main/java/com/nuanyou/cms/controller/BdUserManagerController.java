@@ -23,10 +23,8 @@ import java.util.List;
 @Controller
 @RequestMapping("bdUser")
 public class BdUserManagerController {
-    
     @Autowired
     private BdUserManagerService userManagerService;
-    
     /**
      * 获取列表
      *
@@ -70,7 +68,7 @@ public class BdUserManagerController {
     @RequestMapping("del")
     public String del(Long id) {
         userManagerService.del(id);
-        return "forward:/bdUser/list";
+        return "redirect:/bdUser/list";
     }
     
     /**
@@ -83,7 +81,7 @@ public class BdUserManagerController {
     
         userManagerService.saveAddUserAndRole(paramVo);
         
-        return "forward:/bdUser/list";
+        return "redirect:/bdUser/list";
     }
     
     
@@ -92,7 +90,7 @@ public class BdUserManagerController {
         
         userManagerService.saveEditUserAndRole(paramVo);
         
-        return "forward:/bdUser/list";
+        return "redirect:/bdUser/list";
     }
     
 }

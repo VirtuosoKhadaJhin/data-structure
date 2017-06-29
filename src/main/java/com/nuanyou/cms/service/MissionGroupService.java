@@ -53,4 +53,12 @@ public interface MissionGroupService {
      * @return
      */
     List<BdUser> findBdUsersByGroupId(Long groupId);
+    
+    /**
+     * 查询用户所在组
+     *
+     * @param userId
+     * @return
+     */
+    MissionGroup findGroupByUserId(Long userId);
 }
