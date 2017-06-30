@@ -25,6 +25,14 @@ public class MissionGroupBd {
     @Column(name = "bdid")
     private Long bdId;
     
+    public MissionGroupBd(Long groupId, Long bdId) {
+        this.groupId = groupId;
+        this.bdId = bdId;
+    }
+    
+    public MissionGroupBd() {
+    }
+    
     public Long getId() {
         return id;
     }

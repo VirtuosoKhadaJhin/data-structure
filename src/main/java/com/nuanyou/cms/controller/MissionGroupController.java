@@ -1,12 +1,13 @@
 package com.nuanyou.cms.controller;
 
 import com.nuanyou.cms.commons.APIResult;
+import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.MissionGroup;
-import com.nuanyou.cms.model.GroupBdParamVo;
 import com.nuanyou.cms.model.MissionGroupParamVo;
+import com.nuanyou.cms.model.MissionGroupRequestVo;
 import com.nuanyou.cms.model.MissionGroupVo;
 import com.nuanyou.cms.service.BdUserManagerService;
 import com.nuanyou.cms.service.MissionGroupService;
@@ -143,22 +144,34 @@ public class MissionGroupController {
      *
      * @return
      */
-    @RequestMapping("addGroupBdUser")
+    @RequestMapping("saveGroupBds")
     @ResponseBody
-    public APIResult<Boolean> addGroupBdUser(@RequestBody MissionGroupVo vo) {
-        APIResult<Boolean> result = new APIResult<>();
-        Boolean saveResult = missionGroupService.addGroupBdUser(vo.getbDUserIds(), vo.getGroupId());
-        result.setData(saveResult);
+    public APIResult<Boolean> saveGroupBds(@RequestBody MissionGroupRequestVo vo) {
+        APIResult<Boolean> result = new APIResult<>(ResultCodes.Success);
+        missionGroupService.saveGroupBds(vo.getGroupId(), vo.getUserIds());
         return result;
     }
     
-
+    //    /**
+    //     * 保存Bd
+    //     *
+    //     * @return
+    //     */
+    //    @RequestMapping("saveGroupBds")
+    //    @ResponseBody
+    //    public APIResult<Boolean> saveGroupBds(@RequestBody MissionGroupVo vo) {
+    //        //[{"groupId":1,"bdId":5},{"groupId":1,"bdId":5}]
+    //        APIResult<Boolean> result = new APIResult<>();
+    //        Boolean saveResult = missionGroupService.saveGroupBds(vos);
+    //        result.setData(saveResult);
+    //        return result;
+    //    }
     
-    @RequestMapping("api/saveGroupBds")
-    @ResponseBody
-    public APIResult saveGroupBds(@RequestBody List<GroupBdParamVo> vos) {
-        //[{"groupId":1,"bdId":5},{"groupId":1,"bdId":5}]
-//        missionGroupService.saveGroupBds(vos);
-        return new APIResult();
-    }
+    
+    //    @RequestMapping("saveGroupBds")
+    //    @ResponseBody
+    //    public APIResult saveGroupBds(@RequestBody List<GroupBdParamVo> vos) {
+    //        missionGroupService.saveGroupBds(vos);
+    //        return new APIResult();
+    //    }
 }

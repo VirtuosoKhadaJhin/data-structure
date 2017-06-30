@@ -98,7 +98,7 @@ public interface MissionGroupService {
      * @return
      */
     Boolean addGroupBdUser(Long[] bDUserIds, Long groupId);
-
+    
     /**
      * 更新组是否可见
      *
@@ -106,4 +106,12 @@ public interface MissionGroupService {
      * @param isPublic
      */
     void updateGroupPublic(Long groupId, boolean isPublic);
+    
+    /**
+     * 添加组成员
+     *
+     * @param groupId
+     * @param bdIds
+     */
+    void saveGroupBds(Long groupId, List<Long> bdIds);
 }

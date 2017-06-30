@@ -2,7 +2,8 @@
 <link href="/dist/font-awesome/css/font-awesome-checkbox.css" rel="stylesheet"/>
 <link href="/dist/css/mission/missionTask.css" rel="stylesheet"/>
 <div id="breadcrumb">
-    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
+        主页</a>
     <a href="list" class="tip-bottom" data-original-title="">战队管理</a>
     <a href="#" class="tip-bottom" data-original-title="">列表</a>
 </div>
@@ -37,7 +38,7 @@
     <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
         <thead role="row">
         <tr>
-            <th>ID</th>
+            <th>序号</th>
             <th>战队名称</th>
             <th>国家</th>
             <th>城市</th>
@@ -46,16 +47,14 @@
             <th>更新时间</th>
             <th>描述</th>
             <th>操作</th>
-
         </tr>
         </thead>
         <tbody>
-
             #foreach($vo in $!page.content)
-            <tr class="odd gradeX">
+            <tr class="odd gradeX" data-groupId="$!vo.id">
                 <td class="td-sort td-id">
                 ##                    $!vo.group.id 和entity里的字段对应
-                    <label class="label-id">$!vo.id</label>
+                    <label class="label-id">$!{velocityCount}</label>
                 </td>
                 <td class="td-sort td-group">
                     <label class="lebel-group">$!vo.name</label>
@@ -67,7 +66,8 @@
                     <label class="label-city">$!vo.city.name</label>
                 </td>
                 <td class="td-sort td-isPublic">
-                    <label class="label-isPublic">#if($!vo.isPublic==0) 显示 #end #if($!vo.isPublic==1) 隐藏 #end </label>
+                    <label class="label-isPublic">#if($!vo.isPublic==0)
+                        显示 #end #if($!vo.isPublic==1) 隐藏 #end </label>
                 ##                    $!vo.isPublic
                 ##                    #if($!vo.role.id==$!role.id) selected  #end
                 </td>
@@ -83,9 +83,13 @@
 
                 <td style="min-width: 120px;">
                     <div style="text-align: center">
-                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item" href="edit?id=$!vo.id">编辑</a>
-                        <a key-code="$!vo.id" class="btn btn-success btn-mini modify-item" onclick="addBdUserModal($!vo.country.id,$!vo.id)">添加组员</a>
-                        <a key-code="$!vo.id" class="btn btn-danger btn-primary btn-mini modify-item" href="del?id=$!vo.id">删除</a>
+                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item"
+                           href="edit?id=$!vo.id">编辑</a>
+                        <a key-code="$!vo.id" class="btn btn-success btn-mini modify-item"
+                           onclick="addBdUserModal($!vo.country.id,$!vo.id)">添加组员</a>
+                        <a key-code="$!vo.id"
+                           class="btn btn-danger btn-primary btn-mini modify-item"
+                           href="del?id=$!vo.id">删除</a>
                     </div>
                 </td>
 
@@ -97,29 +101,25 @@
 </div>
 
 <!-- 指派弹窗 -->
-<div class="modal hide fade taskDistributeModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal hide fade taskDistributeModel" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">任务指派</h3>
+        <h3 id="myModalLabel">添加成员</h3>
     </div>
     <div class="modal-body">
         <div class="search-select bd-users">
 
-##            <div class="checkbox bd-checkbox">
-##                <input id="checkbox-all" class="th-checked" type="checkbox">
-##                <label for="checkbox-all" class="label-check">
-##                    <strong>全选</strong>
-##                </label>
-##            </div>
 
-##            弹框div
+        ##            弹框div
             <div id="listAddBd"></div>
 
         </div>
     </div>
     <div class="modal-footer">
+        <input type="hidden" class="hide-groupId"/>
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-        <button class="btn btn-primary sure-distribute">确认</button>
+        <button class="btn btn-primary " onclick="addUsers()">确认</button>
     </div>
 </div>
 
@@ -131,8 +131,39 @@
 </form>
 
 <script>
+
+
+    function addUsers() {
+        var userIds = new Array();
+        $(".check-bdUser:checked").each(function (target) {
+            userIds.push($(this).val());
+        });
+        var groupId = $(".taskDistributeModel .hide-groupId").val();
+        var requestParam = {
+            groupId: groupId,
+            userIds: userIds,
+        }
+        $.ajax({
+            url: 'saveGroupBds',
+            data: JSON.stringify(requestParam),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    alert("操作成功！")
+                } else {
+                    alert("操作失败，请稍后重试！");
+                }
+
+            }
+        });
+    }
+
+
     function addBdUserModal(countryId, groupId) {
         $(".taskDistributeModel").modal("show");
+        $(".taskDistributeModel .hide-groupId").val(groupId);
         console.log(countryId);
         var request = {};
 
@@ -147,25 +178,12 @@
             success: function (result) {
                 if (result.code == 0) {
                     var bdUsers = result.data;
-                    var htmlData="";
+                    var htmlData = "";
                     for (var i = 0; i < bdUsers.length; i++) {
                         var bdUser = bdUsers[i];
-                        console.log(bdUser);
-                        htmlData+="<input type='checkbox' value=''>"+bdUser.name+" ";
-
-                        var checkHtml = "<div class='checkbox bd-checkbox'>" +
-                                "<input id='checkbox-all' class='th-checked' type='checkbox'>" +
-                                "<label for='checkbox-all' class='label-check'>" +
-                                "<strong>" + bdUser.chineseName + "</strong>" +
-                                "</label>" +
-                                "</div>";
-
-
+                        htmlData += "<label><input type='checkbox' class='check-bdUser' value='" + bdUser.id + "' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
                     }
                     $("#listAddBd").append(htmlData);
-                    /*for (var one result.data){
-
-                    }*/
                 }
             }
         });
