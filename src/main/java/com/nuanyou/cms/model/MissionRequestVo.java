@@ -32,6 +32,10 @@ public class MissionRequestVo {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date distrDt;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date auditDt;
 
     private Boolean isAudit = true;
@@ -102,6 +106,14 @@ public class MissionRequestVo {
 
     public void setFinishDt(Date finishDt) {
         this.finishDt = finishDt;
+    }
+
+    public Date getDistrDt() {
+        return distrDt;
+    }
+
+    public void setDistrDt(Date distrDt) {
+        this.distrDt = distrDt;
     }
 
     public Date getAuditDt() {

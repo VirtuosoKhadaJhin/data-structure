@@ -74,7 +74,7 @@ public class MissionTaskController {
         model.addAttribute("page", page);
         model.addAttribute("requestVo", requestVo);
         model.addAttribute("countries", countries);
-        model.addAttribute("cities",cities);
+        model.addAttribute("cities", cities);
         model.addAttribute("groups", groups);
         model.addAttribute("merchants", merchants);
         model.addAttribute("taskStatus", MissionTaskStatus.values());
@@ -103,16 +103,16 @@ public class MissionTaskController {
      */
     @RequestMapping("distribute")
     public String distributeTask(MissionRequestVo requestVo, Model model) {
-        List<City> cities = cityService.findCityByCountryId(requestVo.getCountry());
-        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCountry(), requestVo.getCity());
-        Long userid = UserHolder.getUser().getUserid();
-        //TODO 获取当前用户所在的组
-        List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(10L);
-        List<DistrictVo> districts = districtService.findByCity(requestVo.getCity());
+        if (requestVo.getAudit() == true) {
+            requestVo.setAudit(false);
+        }
         requestVo.setStatus(null);
+        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCountry(), requestVo.getCity());
+        MissionGroup missionGroup = missionGroupService.findGroupByUserId(UserHolder.getUser().getUserid());
+        List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(missionGroup.getId());
+        List<DistrictVo> districts = districtService.findByCity(missionGroup.getCity().getId());
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
-        model.addAttribute("cities", cities);
         model.addAttribute("districts", districts);
         model.addAttribute("bdUsers", bdUsers);
         model.addAttribute("merchants", merchants);

@@ -60,6 +60,12 @@ public class MissionTask {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @Column(name = "distrdt", nullable = true)
+    private Date distrDt;
+
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Column(name = "finishdt", nullable = true)
     private Date finishDt;
 
@@ -162,6 +168,14 @@ public class MissionTask {
 
     public void setAuditDt(Date auditDt) {
         this.auditDt = auditDt;
+    }
+
+    public Date getDistrDt() {
+        return distrDt;
+    }
+
+    public void setDistrDt(Date distrDt) {
+        this.distrDt = distrDt;
     }
 
     public Date getFinishDt() {

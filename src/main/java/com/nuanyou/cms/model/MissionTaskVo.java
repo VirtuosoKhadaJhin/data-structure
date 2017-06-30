@@ -37,6 +37,8 @@ public class MissionTaskVo {
 
     private Date finishDt;
 
+    private Date distrDt;
+
     private Date createDt;
 
     private Date updateDt;
@@ -139,6 +141,14 @@ public class MissionTaskVo {
 
     public void setFinishDt(Date finishDt) {
         this.finishDt = finishDt;
+    }
+
+    public Date getDistrDt() {
+        return distrDt;
+    }
+
+    public void setDistrDt(Date distrDt) {
+        this.distrDt = distrDt;
     }
 
     public Date getCreateDt() {
