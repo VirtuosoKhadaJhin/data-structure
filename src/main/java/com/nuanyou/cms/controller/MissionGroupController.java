@@ -5,6 +5,7 @@ import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.MissionGroup;
+import com.nuanyou.cms.model.GroupBdParamVo;
 import com.nuanyou.cms.model.MissionGroupParamVo;
 import com.nuanyou.cms.model.MissionGroupVo;
 import com.nuanyou.cms.service.BdUserManagerService;
@@ -45,7 +46,7 @@ public class MissionGroupController {
         Page<MissionGroupVo> vos = missionGroupService.findAllGroups(requestVo);
         model.addAttribute("page", vos);//page统一命名，分页
         model.addAttribute("requestVo", requestVo);//刷新界面
-    
+        
         return "missionGroup/list";
     }
     
@@ -78,7 +79,7 @@ public class MissionGroupController {
     @RequestMapping("del")
     public String del(Model model, Long id) {
         Boolean res = missionGroupService.delGroupById(id);
-    
+        
         return "redirect:/missionGroup/list";
     }
     
@@ -113,22 +114,13 @@ public class MissionGroupController {
     
     /**
      * 保存编辑
+     *
      * @return
      */
     @RequestMapping("saveEdit")
     public String saveEdit(Model model, String id, MissionGroupParamVo paramVo) {
-    
+        
         missionGroupService.updateGroup(id, paramVo);
-        return "redirect:/missionGroup/list";
-    }
-    
-    
-    /**
-     * 保存添加组员
-     */
-    @RequestMapping("saveAddBdUser")
-    public String saveAddBdUser() {
-    
         return "redirect:/missionGroup/list";
     }
     
@@ -158,5 +150,15 @@ public class MissionGroupController {
         Boolean saveResult = missionGroupService.addGroupBdUser(vo.getbDUserIds(), vo.getGroupId());
         result.setData(saveResult);
         return result;
+    }
+    
+
+    
+    @RequestMapping("api/saveGroupBds")
+    @ResponseBody
+    public APIResult saveGroupBds(@RequestBody List<GroupBdParamVo> vos) {
+        //[{"groupId":1,"bdId":5},{"groupId":1,"bdId":5}]
+        missionGroupService.saveGroupBds(vos);
+        return new APIResult();
     }
 }

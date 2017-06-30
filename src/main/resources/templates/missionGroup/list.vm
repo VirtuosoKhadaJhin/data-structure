@@ -105,12 +105,15 @@
     <div class="modal-body">
         <div class="search-select bd-users">
 
-            <div class="checkbox bd-checkbox">
-                <input id="checkbox-all" class="th-checked" type="checkbox">
-                <label for="checkbox-all" class="label-check">
-                    <strong>全选</strong>
-                </label>
-            </div>
+##            <div class="checkbox bd-checkbox">
+##                <input id="checkbox-all" class="th-checked" type="checkbox">
+##                <label for="checkbox-all" class="label-check">
+##                    <strong>全选</strong>
+##                </label>
+##            </div>
+
+##            弹框div
+            <div id="listAddBd"></div>
 
         </div>
     </div>
@@ -144,9 +147,12 @@
             success: function (result) {
                 if (result.code == 0) {
                     var bdUsers = result.data;
+                    var htmlData="";
                     for (var i = 0; i < bdUsers.length; i++) {
                         var bdUser = bdUsers[i];
                         console.log(bdUser);
+                        htmlData+="<input type='checkbox' value=''>"+bdUser.name+" ";
+
                         var checkHtml = "<div class='checkbox bd-checkbox'>" +
                                 "<input id='checkbox-all' class='th-checked' type='checkbox'>" +
                                 "<label for='checkbox-all' class='label-check'>" +
@@ -156,6 +162,7 @@
 
 
                     }
+                    $("#listAddBd").append(htmlData);
                     /*for (var one result.data){
 
                     }*/
