@@ -20,7 +20,7 @@ public interface SsoValidatorService {
 
     public abstract User parseResponseFromServer(final String response) throws TicketValidationException;
 
-    public  String constructValidationUrl(final String ticket, final String validateCodeUrl);
+    public  String constructValidationUrl(final String ticket, final String validateCodeUrl, boolean needAutoLogOut, String serverName);
 
-    User validate(String ticket) throws TicketValidationException;
+    User validate(String ticket, String serverName) throws TicketValidationException;
 }

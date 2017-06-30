@@ -44,23 +44,11 @@ public class TicketValidationFilter extends AbstractFilter {
 
     private static final Logger log = LoggerFactory.getLogger(TicketValidationFilter.class.getSimpleName());
     private SsoValidatorService ssoValidatorService;
-    private boolean redirectAfterValidation = false;
-    private boolean exceptionOnValidationFailure = true;
-    private boolean useSession = true;
+//    private boolean needAutoLogOut = false;
 
-
-    public void setSsoValidatorService(SsoValidatorService ssoValidatorService) {
-        this.ssoValidatorService = ssoValidatorService;
-    }
 
     public void init(final FilterConfig filterConfig) throws ServletException {
         super.init(filterConfig);
-        setExceptionOnValidationFailure(parseBoolean(getPropertyFromInitParams(filterConfig, "exceptionOnValidationFailure", "true")));
-        log.trace("Setting exceptionOnValidationFailure parameter: " + this.exceptionOnValidationFailure);
-        setRedirectAfterValidation(parseBoolean(getPropertyFromInitParams(filterConfig, "redirectAfterValidation", "true")));
-        log.trace("Setting redirectAfterValidation parameter: " + this.redirectAfterValidation);
-        setUseSession(parseBoolean(getPropertyFromInitParams(filterConfig, "useSession", "true")));
-        log.trace("Setting useSession parameter: " + this.useSession);
         setSsoValidatorService(getTicketValidator(filterConfig));
         CommonUtils.assertNotNull(this.ssoValidatorService, "ssoValidatorService cannot be null.");
     }
@@ -70,7 +58,9 @@ public class TicketValidationFilter extends AbstractFilter {
 
     protected final SsoValidatorService getTicketValidator(final FilterConfig filterConfig) {
         final String validateCodeUrl = getPropertyFromInitParams(filterConfig, "validateCodeUrl", null);
-        final SsoValidatorServiceImpl validator = new SsoValidatorServiceImpl(validateCodeUrl);
+        final String needAutoLogOutStr = getPropertyFromInitParams(filterConfig, "needAutoLogOut", null);
+        Boolean needAutoLogOut=new Boolean(needAutoLogOutStr);
+        final SsoValidatorServiceImpl validator = new SsoValidatorServiceImpl(validateCodeUrl,needAutoLogOut);
         validator.setEncoding(getPropertyFromInitParams(filterConfig, "encoding", null));
         final Map<String, String> additionalParameters = new HashMap<String, String>();
         final List<String> params = Arrays.asList(RESERVED_INIT_PARAMS);
@@ -132,64 +122,48 @@ public class TicketValidationFilter extends AbstractFilter {
         if (CommonUtils.isNotBlank(ticket)) {
             log.info("Second Step:Attempting to validate ticket: " + ticket);
             try {
-                final User user = this.ssoValidatorService.validate(ticket);
+                final User user = this.ssoValidatorService.validate(ticket, this.getServerName());
                 log.info("Second Step:Successfully authenticated user: " + user);
                 request.setAttribute(SSO_USER, user);
-                if (this.useSession) {
-                    log.debug("\n" + "**************************************after validate tgt and st ********************************************");
-                    log.debug("put the assertion to the session scope:key:" + SSO_USER + "value:" + user);
-                    log.debug("assertion props" + user.toString());
-                    if (request.getSession(false) != null) {
-                        log.debug("Session Create Time: " + new Date(request.getSession(false).getCreationTime()).toString());
-                        Cookie[] cookies = request.getCookies();
-                        if (cookies == null) {
-                            log.debug("cookie ==null");
-                        } else {
-                            for (Cookie cookie : cookies) {
-                                log.debug("cookie " + cookie.getName() + " = " + cookie.getValue());
-                            }
-                        }
-                        HttpSession session = request.getSession(false);
-                        Enumeration<String> enumeration = session.getAttributeNames();
-                        while (enumeration.hasMoreElements()) {
-                            String key = enumeration.nextElement();
-                            log.debug("session " + key + " = " + session.getAttribute(key));
-                        }
+                log.debug("\n" + "**************************************after validate tgt and st ********************************************");
+                log.debug("put the assertion to the session scope:key:" + SSO_USER + "value:" + user);
+                log.debug("assertion props" + user.toString());
+                if (request.getSession(false) != null) {
+                    log.debug("Session Create Time: " + new Date(request.getSession(false).getCreationTime()).toString());
+                    Cookie[] cookies = request.getCookies();
+                    if (cookies == null) {
+                        log.debug("cookie ==null");
                     } else {
-                        log.debug("sessin is null");
+                        for (Cookie cookie : cookies) {
+                            log.debug("cookie " + cookie.getName() + " = " + cookie.getValue());
+                        }
                     }
-                    log.debug("**************************************after validate tgt and st ********************************************" + "\n");
-                    request.getSession().setAttribute(SSO_USER, user);
+                    HttpSession session = request.getSession(false);
+                    Enumeration<String> enumeration = session.getAttributeNames();
+                    while (enumeration.hasMoreElements()) {
+                        String key = enumeration.nextElement();
+                        log.debug("session " + key + " = " + session.getAttribute(key));
+                    }
+                } else {
+                    log.debug("sessin is null");
                 }
+                log.debug("**************************************after validate tgt and st ********************************************" + "\n");
+                request.getSession().setAttribute(SSO_USER, user);
                 onSuccessfulValidation(request, response, user);
-                if (this.redirectAfterValidation) {
-                    log.debug("Redirecting after successful ticket validation.");
-                    response.sendRedirect(constructServiceUrl(request, response));
-                    return;
-                }
+                log.debug("Redirecting after successful ticket validation.");
+                response.sendRedirect(constructServiceUrl(request, response));
+                return;
             } catch (final TicketValidationException e) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                if (this.exceptionOnValidationFailure) {
-                    throw new ServletException(e);
-                }
-                return;
+                throw new ServletException(e);
             }
         }
         filterChain.doFilter(request, response);
     }
 
 
-    public final void setRedirectAfterValidation(final boolean redirectAfterValidation) {
-        this.redirectAfterValidation = redirectAfterValidation;
+    public void setSsoValidatorService(SsoValidatorService ssoValidatorService) {
+        this.ssoValidatorService = ssoValidatorService;
     }
-
-    public final void setExceptionOnValidationFailure(final boolean exceptionOnValidationFailure) {
-        this.exceptionOnValidationFailure = exceptionOnValidationFailure;
-    }
-
-    public final void setUseSession(final boolean useSession) {
-        this.useSession = useSession;
-    }
-
 
 }

@@ -60,7 +60,7 @@ public final class SingleSignOutFilter extends AbstractConfigurationFilter {
             handler.recordSession(request);
         } else if (handler.isLogoutRequest(request)) {
             log.debug("这是一个注销的链接!");
-            //handler.destroySession(request);
+            handler.destroySession(request);
             return;
         } else {
             log.debug("这是一个其他的链接!");

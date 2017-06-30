@@ -49,6 +49,8 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
 
 
 
+
+
     /**
      * 初始化serverName,ticketName：code,serviceCallbackName：ret
      * @param filterConfig
@@ -104,5 +106,9 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
 
     public final String getServiceParameterName() {
         return this.serviceParameterName;
+    }
+
+    public final String getServerName() {
+        return serverName;
     }
 }

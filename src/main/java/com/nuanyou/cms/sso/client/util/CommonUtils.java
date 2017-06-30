@@ -114,11 +114,9 @@ public final class CommonUtils {
         buffer.append(serverName);
         buffer.append(request.getRequestURI());
         String queryString = request.getQueryString();
-        StringBuilder newQueryString = new StringBuilder();
-        String returnValue = "";
         omitArtifitParam(artifactParameterName, buffer, queryString);
         buffer = omitReloginParam(buffer);
-        returnValue = response.encodeURL(buffer.toString());
+        String returnValue = response.encodeURL(buffer.toString());
         LOG.debug("serviceUrl generated: " + returnValue);
         return returnValue;
     }
