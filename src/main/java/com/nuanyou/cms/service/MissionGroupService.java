@@ -88,7 +88,7 @@ public interface MissionGroupService {
      */
     Boolean delGroupById(Long id);
     
-    List<BdUser> findBdUserSByCountryId(Long countryId);
+    List<BdUser> findBdUsersByCountryId(Long countryId);
     
     /**
      * 给战队添加成员

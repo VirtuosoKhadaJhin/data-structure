@@ -87,7 +87,7 @@
     </table>
 </div>
 
-<!-- 指派弹窗 -->
+<!-- 添加成员弹窗 -->
 <div class="modal hide fade taskDistributeModel" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
@@ -96,11 +96,7 @@
     </div>
     <div class="modal-body">
         <div class="search-select bd-users">
-
-
-        ##            弹框div
             <div id="listAddBd"></div>
-
         </div>
     </div>
     <div class="modal-footer">

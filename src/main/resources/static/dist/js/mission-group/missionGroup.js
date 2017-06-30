@@ -77,62 +77,47 @@ function addUsers() {
 }
 
 function addBdUserModal(countryId, groupId) {
-    $(".taskDistributeModel").modal("show");
-    $(".taskDistributeModel .hide-groupId").val(groupId);
-    var request = {};
-
-    request.groupId = groupId;
-    request.countryId = countryId;
     $.ajax({
         url: 'findBdUserByCountryId',
-        data: JSON.stringify(request),
+        data: JSON.stringify({"groupId": groupId, "countryId": countryId}),
         type: 'post',
         dataType: 'json',
         contentType: 'application/json',
         success: function (result) {
             if (result.code == 0) {
-                findBdUserByGroupId(groupId);
                 var bdUsers = result.data;
                 var htmlData = "";
                 for (var i = 0; i < bdUsers.length; i++) {
                     var bdUser = bdUsers[i];
-                    htmlData += "<label><input class='check-bdUser' style='margin: 10px;margin-top: 8px;' type='checkbox' value='" + bdUser.id + "' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
+                    htmlData += "<label><input class='check-bdUser' style='margin: 10px;margin-top: 8px;' type='checkbox' data-key='" + bdUser.id + "' value='" + bdUser.id + "' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
                 }
-                $("#listAddBd").append(htmlData);
-            }
-        }
-    });
-}
-
-function findBdUserByGroupId(groupId) {
-    console.log("groupId:" + groupId);
-    $.ajax({
-        url: 'findBdUserByGroupId',
-        data: JSON.stringify({groupId: Number(groupId)}),
-        type: 'post',
-        dataType: 'json',
-        contentType: 'application/json',
-        success: function (result) {
-            if (result.code == 0) {
-                var groupBdUsers = result.data;
-                var checkBdUserChecks = $(".check-bdUser");
-                for (var i = 0; i < checkBdUserChecks.length; i++) {
-                    var checkBdUser = checkBdUserChecks[i];
-                    for (var j = 0; j < groupBdUsers.length; j++) {
-                        var groupBdUser = groupBdUsers[j];
-                        if (groupBdUser == $(checkBdUser).val()) {
-                            $(checkBdUser).prop("checked", true);
-                        }
-                    }
-                }
-
-
+                $("#listAddBd").html(htmlData);
+                $(".taskDistributeModel").modal("show");
+                $(".taskDistributeModel .hide-groupId").val(groupId);
             }
         }
     });
 }
 
 $(document).ready(function () {
+    $(".taskDistributeModel").on("shown.bs.modal", function () {
+        var groupId = $(".taskDistributeModel .hide-groupId").val();
+        $.ajax({
+            url: 'findBdUserByGroupId',
+            data: JSON.stringify({groupId: Number(groupId)}),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    for (var itemNum in result.data) {
+                        $(".taskDistributeModel .check-bdUser[data-key=" + result.data[itemNum] + "]").prop("checked", true);
+                    }
+                }
+            }
+        });
+    })
+
     changeCity(false);
 });
 $(".select-country").on("change", function () {
@@ -149,7 +134,7 @@ function changeCity(isReset) {
             $(cityOption).show();
         }
     }
-    if(isReset){
+    if (isReset) {
         $("#city").val("");
     }
 }

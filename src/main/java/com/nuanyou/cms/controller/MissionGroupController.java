@@ -158,7 +158,7 @@ public class MissionGroupController {
     @ResponseBody
     public APIResult<List<BdUser>> findBdUserByCountryId(@RequestBody MissionGroupVo requestVo) {
         APIResult<List<BdUser>> result = new APIResult<List<BdUser>>();
-        List<BdUser> bdUsers = missionGroupService.findBdUserSByCountryId(requestVo.getCountryId());
+        List<BdUser> bdUsers = missionGroupService.findBdUsersByCountryId(requestVo.getCountryId());
         result.setData(bdUsers);
         return result;
     }

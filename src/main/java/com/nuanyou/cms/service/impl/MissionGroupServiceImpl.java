@@ -118,7 +118,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     }
 
     @Override
-    public List<BdUser> findBdUserSByCountryId(Long countryId) {
+    public List<BdUser> findBdUsersByCountryId(Long countryId) {
         List<BdUser> bdUsers = bdUserDao.findBdUsersByCountryId(countryId);
         return bdUsers;
     }
