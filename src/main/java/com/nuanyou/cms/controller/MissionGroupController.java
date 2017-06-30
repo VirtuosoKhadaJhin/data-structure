@@ -158,7 +158,7 @@ public class MissionGroupController {
     @ResponseBody
     public APIResult saveGroupBds(@RequestBody List<GroupBdParamVo> vos) {
         //[{"groupId":1,"bdId":5},{"groupId":1,"bdId":5}]
-        missionGroupService.saveGroupBds(vos);
+//        missionGroupService.saveGroupBds(vos);
         return new APIResult();
     }
 }

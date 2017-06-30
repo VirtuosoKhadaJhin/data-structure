@@ -131,12 +131,60 @@ $(function () {
 
     $(".radio-public").on("click", function () {
         var isPublic = $(this).val();
-        var groupId = $(this).parents(".data-group");
+        var groupId = $(".public-default-val").val();
+        console.log(groupId);
         $(".publicSwichModel .hide-public").val(isPublic);
         $(".publicSwichModel .hide-groupId").val(groupId);
-        var msgStr = isPublic == 1 ? "可见" : "不可见";
-        $(".public-switch-text").html("是否确定对所有成员 <label style = 'color:red; font-weight: bold;'>" + msgStr + "</label >！");
+        var msgStr = "可见";
+        if (isPublic != 1) {
+            msgStr = "不可见";
+        }
+        $(".public-switch-text").html("是否确定对所有成员 <a style = 'color:red; font-weight: bold;'>" + msgStr + "</a>！");
         $(".publicSwichModel").modal("show");
+    });
+
+    $(".sure-public-switch").on("click", function () {
+        var isPublic = $("#hide-isPublic").val();
+        var groupId = $("#hide-groupId").val();
+
+        console.log(isPublic);
+        var data = {isPublic: isPublic, groupId: groupId};
+        $.ajax({
+            url: 'updateGroupPublic',
+            data: JSON.stringify(data),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    $(".public-switch-result-text").text("操作成功");
+                    window.location.reload();
+                } else {
+                    $(".public-switch-result-text").text(result.msg);
+                }
+                $(".publicSwichModel").modal('hide');
+                $(".publicSwichResultModel").modal('show');
+                $(".publicSwichResultModel .isPublic-result").val(result.code);
+            }
+        });
+    });
+
+    $(".publicSwichResultModel").on("hide.bs.modal", function () {
+        var result = $(".isPublic-result").val();
+        if (result == 0) {
+            window.location.reload();
+        }
+    });
+
+    $(".publicSwichModel .btn-colse").click(function () {
+        var oldPublic = $(".public-default-public").val();
+        $(".radio-public[value=" + oldPublic + "]").prop("checked", true);
+
+    });
+
+    $(".publicSwichModel").on("hide.bs.modal", function () {
+        var oldPublic = $(".public-default-public").val();
+        $(".radio-public[value=" + oldPublic + "]").prop("checked", true);
     });
 
 });
