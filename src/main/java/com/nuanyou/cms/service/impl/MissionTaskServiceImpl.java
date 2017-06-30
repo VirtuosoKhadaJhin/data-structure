@@ -99,7 +99,7 @@ public class MissionTaskServiceImpl implements MissionTaskService {
         if (vo.getBdId() == null || vo.getTaskIds() == null) {
             throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
         }
-        missionTaskDao.distributeTask(vo.getBdId(), MissionTaskStatus.UN_FINISH.getKey(), new Date(), vo.getTaskIds());
+        missionTaskDao.distributeTask(vo.getBdId(), MissionTaskStatus.UN_FINISH.getKey(), vo.getDistrDt(), new Date(), vo.getTaskIds());
     }
 
     /**

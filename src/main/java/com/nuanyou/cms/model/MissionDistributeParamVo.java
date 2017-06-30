@@ -1,5 +1,6 @@
 package com.nuanyou.cms.model;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -9,6 +10,8 @@ public class MissionDistributeParamVo {
 
     private Long bdId;
 
+    private Date distrDt;
+
     private List<Long> taskIds;
 
     public Long getBdId() {
@@ -17,6 +20,14 @@ public class MissionDistributeParamVo {
 
     public void setBdId(Long bdId) {
         this.bdId = bdId;
+    }
+
+    public Date getDistrDt() {
+        return distrDt;
+    }
+
+    public void setDistrDt(Date distrDt) {
+        this.distrDt = distrDt;
     }
 
     public List<Long> getTaskIds() {
