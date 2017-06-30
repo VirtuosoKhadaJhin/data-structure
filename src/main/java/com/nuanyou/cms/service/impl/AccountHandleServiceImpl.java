@@ -33,18 +33,20 @@ import java.util.Map;
 @Service
 public class AccountHandleServiceImpl implements AccountHandleService {
 
-    private static String dayTypeNames = "youfu_billing_cycle";
-    private static String poundageNames = "youfu_poundage";
-    private static String paymentDaysNames = "youfu_payment_day";
-    private static String youfuStartTimeNames = "youfu_start_time";
-    private static String startPriceNames = "youfu_start_price";
+    private static String dayTypeNames = "youfu_billing_cycle";//结算周期（月结或者半月结）
+    private static String poundageNames = "youfu_poundage";//手续费
+    private static String paymentDaysNames = "youfu_payment_day";//日结天数
+    private static String youfuStartTimeNames = "youfu_start_time";//生效日期
+    private static String startPriceNames = "youfu_start_price";//起结金额
 
     private static String accountName="account_name";//开户名
     private static String bank="bank";//开户行
     private static String bankBranch="bank_branch";//分行
     private static String bankAccount="bank_account";//账号
-    private static String commissionNames = "group_buying_commission";
-    private static String groupBuyingStartTime = "group_buying_start_time";
+
+    private static String commissionNames = "group_buying_commission";//团购佣金
+    private static String groupBuyingStartTime = "group_buying_start_time";//团购的生效时间
+
     private static DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
 
 
@@ -65,20 +67,20 @@ public class AccountHandleServiceImpl implements AccountHandleService {
             throw new APIException(ResultCodes.ContractNotAssignedForMerchant);
         }
         Map<String, String> result = detail.getParameters();
-        AcMerchantSettlement settlementRequest = new AcMerchantSettlement();//结算
-        AcMerchantSettlementCommission settlementCommissionRequest = new AcMerchantSettlementCommission();//团购佣金
-        AcMerchantSettlementBank settlementBankRequest = new AcMerchantSettlementBank();
+        AcMerchantSettlement settlementRequest = new AcMerchantSettlement();//1 结算
+        AcMerchantSettlementCommission settlementCommissionRequest = new AcMerchantSettlementCommission();//2 团购佣金
+        AcMerchantSettlementBank settlementBankRequest = new AcMerchantSettlementBank();//3 结算银行
         List<ContractParamDistribute> distributes = contractParamDistributeDao.findBySystemId(ACCOUNT_SYSTEM_ID);
         Map<String,String> distributes_map=getDistributeMap(distributes);
 
         setMerchantSettlementRequest(result, settlementRequest, detail.getMchId(),distributes_map);
         setMerchantSettlementCommissionRequest(result, settlementCommissionRequest,distributes_map);
-        //setMerchantSettlementBank(result, settlementBankRequest,distributes_map);
+        setMerchantSettlementBank(result, settlementBankRequest,distributes_map);
 
-        if (detail.getParentId() == null) {//主合同验证优付的参数
+        if (detail.getParentId() == null) {//主合同验证
             validateYoufuSettlement(settlementRequest.getPoundage(), settlementRequest.getDay(), settlementRequest.getDayType(), settlementRequest.getStartPrice());
             validateCommission(settlementCommissionRequest.getGroupon(),settlementCommissionRequest.getStartTime());
-            //validateMerchantSettlentBank(settlementBankRequest.getBankCode(), settlementBankRequest.getName(), settlementBankRequest.getAccount(), settlementBankRequest.getBranch());
+            validateMerchantSettlentBank(settlementBankRequest.getBankCode(), settlementBankRequest.getName(), settlementBankRequest.getAccount(), settlementBankRequest.getBranch());
         }
         APIResult<AcMerchantSettlement> res = remoteAccountSettlementService.getSettlement(settlementRequest.getMerchantId());
         if (res.getCode() != 0) {
@@ -86,7 +88,7 @@ public class AccountHandleServiceImpl implements AccountHandleService {
         }
         AcMerchantSettlement settlement = res.getData();
         Long settlementId = null;
-        if (settlement == null) {//商家结算
+        if (settlement == null) {//1 商家结算
             if (settlementRequest.getStartTime() == null) {
                 settlementRequest.setStartTime(DateUtils.getTodayDate());
             }
@@ -107,19 +109,19 @@ public class AccountHandleServiceImpl implements AccountHandleService {
             settlementId = updateSettlementRes.getData().getId();
         }
         settlementCommissionRequest.setSettlementId(settlementId);
-        if (settlementCommissionRequest.getGroupon() != null) {//团购
+        if (settlementCommissionRequest.getGroupon() != null) {//2 团购
             APIResult<AcMerchantSettlement> settlementCommissionRes = remoteAccountSettlementService.addOrUpdateCommission(settlementCommissionRequest);
             if (settlementCommissionRes.getCode() != 0) {
                 throw new APIException(settlementCommissionRes.getCode(), settlementCommissionRes.getMsg());
             }
         }
-//        settlementBankRequest.setSettlementId(settlementId);
-//        if(settlementBankRequest.getBankCode()!=null){//商家银行
-//            APIResult<AcMerchantSettlementBank> banRes = remoteAccountSettlementService.addBank(settlementBankRequest);
-//            if (banRes.getCode() != 0) {
-//                throw new APIException(banRes.getCode(), banRes.getMsg());
-//            }
-//        }
+        settlementBankRequest.setSettlementId(settlementId);
+        if(settlementBankRequest.getBankCode()!=null){//3 商家银行
+            APIResult<AcMerchantSettlementBank> banRes = remoteAccountSettlementService.addBank(settlementBankRequest);
+            if (banRes.getCode() != 0) {
+                throw new APIException(banRes.getCode(), banRes.getMsg());
+            }
+        }
     }
 
     private void validateMerchantSettlentBank(String bankCode, String name, String account, String branch) {

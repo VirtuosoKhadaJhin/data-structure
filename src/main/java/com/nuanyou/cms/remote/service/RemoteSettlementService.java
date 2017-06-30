@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public interface RemoteSettlementService {
 
 
-
+    @ApiOperation(value = "根据商户ID得到对应的商户结算", notes = "...")
     @RequestMapping("/merchant/settlement")
     @ResponseBody
     public APIResult<AcMerchantSettlement> getSettlement(
@@ -46,7 +46,7 @@ public interface RemoteSettlementService {
     @ResponseBody
     public APIResult<AcMerchantSettlement> addOrUpdateCommission(@RequestBody AcMerchantSettlementCommission settlementCommission);
 
-    @ApiOperation(value = "增加或者更新一个团购佣金", notes = "...")
+    @ApiOperation(value = "增加一个结算银行", notes = "...")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "...")})
     @RequestMapping(value = "/merchant/settlement/bank", method = {RequestMethod.POST})
     @ResponseBody

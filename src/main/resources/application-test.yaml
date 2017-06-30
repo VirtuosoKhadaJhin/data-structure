@@ -79,13 +79,7 @@ sso:
 
 contractService: http://test.contract.91nuanyou.com
 accountService: http://testaccount.99mice.com
-merchantSettlement:
-  default:
-    daytype: 1
-    startprice: 1
-contractConfig:
-  poundageNames: poundage_huigou,poundage_radio,poundage
-  paymentDaysNames: settle_day,account_period_huigou
+
 
 paymentRecord:
   service-address: http://test.payment.91nuanyou.com
