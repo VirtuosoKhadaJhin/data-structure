@@ -42,17 +42,8 @@ public class MissionGroupController {
     @RequestMapping("list")
     public String list(MissionGroupVo requestVo, Model model) {
         Page<MissionGroupVo> vos = missionGroupService.findAllGroups(requestVo);
-
-        for (MissionGroupVo vo : vos.getContent()) {
-            Long groupId = vo.getId();
-            List<Long> bdUserByGroupId = missionGroupService.findBdUserByGroupId(groupId);
-            Long[] bDUserIds = bdUserByGroupId.toArray(new Long[bdUserByGroupId.size()]);
-            vo.setbDUserIds(bDUserIds);
-        }
-
         List<Country> countries = missionGroupService.findAllCountries();
         List<City> cities = missionGroupService.findAllCities();
-
         model.addAttribute("countries", countries);
         model.addAttribute("cities", cities);
         model.addAttribute("page", vos);//page统一命名，分页

@@ -54,7 +54,7 @@
                             <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
                                 <thead role="row">
                                 <tr>
-                                    <th>ID</th>
+                                    <th>序号</th>
                                     <th>用户名</th>
                                     <th>中文名</th>
                                     <th>所属国家</th>
@@ -82,7 +82,7 @@
                                     #foreach($vo in $!list)
                                     <tr class="odd gradeX">
                                         <td class="td-sort">
-                                            <label style="text-align: center;">$!vo.id</label>
+                                            <label style="text-align: center;">$!velocityCount</label>
                                         </td>
                                         <td class="td-sort">
                                             <label style="text-align: center;">$!vo.name</label>

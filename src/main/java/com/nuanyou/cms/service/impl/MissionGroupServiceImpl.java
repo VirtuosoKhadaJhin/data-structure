@@ -20,8 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by sharp on 2017/6/28 - 15:56
@@ -74,10 +73,8 @@ public class MissionGroupServiceImpl implements MissionGroupService {
             }
         });
 
-        List<MissionGroupVo> allCate = convertToBdUserManagerVo(groups);
-
-        Page<MissionGroupVo> pageVOs = new PageImpl<>(allCate, pageable, groups.size());
-
+        List<MissionGroupVo> groupVos = this.getMissionGroupVos(groups);
+        Page<MissionGroupVo> pageVOs = new PageImpl<>(groupVos, pageable, groups.size());
         return pageVOs;
     }
 
@@ -238,6 +235,36 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     public MissionGroup findGroupById(Long id) {
         MissionGroup group = groupDao.findOne(id);
         return group;
+    }
+
+    private List<MissionGroupVo> getMissionGroupVos(List<MissionGroup> groups) {
+        List<MissionGroupVo> groupVos = convertToBdUserManagerVo(groups);
+
+        final Map<Long, MissionGroupVo> maps = new LinkedHashMap<Long, MissionGroupVo>();
+        for (MissionGroupVo groupVo : groupVos) {
+            maps.put(groupVo.getId(), groupVo);
+        }
+        List<MissionGroupBd> groupBds = groupBdDao.findAll(new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                predicate.add(root.get("groupId").in(maps.keySet()));
+                Predicate[] arrays = new Predicate[predicate.size()];
+                ArrayList<Order> orderBys = Lists.newArrayList(cb.desc(root.get("groupId")));
+                return query.where(predicate.toArray(arrays)).orderBy(orderBys).getRestriction();
+            }
+        });
+        Iterator<MissionGroupBd> iterator = groupBds.iterator();
+        while (iterator.hasNext()) {
+            MissionGroupBd groupBd = iterator.next();
+            Long groupId = groupBd.getGroupId();
+            if (!maps.containsKey(groupId)) {
+                continue;
+            }
+            MissionGroupVo missionGroupVo = maps.get(groupId);
+            missionGroupVo.getbDUserIds().add(groupBd.getBdId());
+        }
+        return groupVos;
     }
 
     private List<MissionGroupVo> convertToBdUserManagerVo(List<MissionGroup> groups) {
