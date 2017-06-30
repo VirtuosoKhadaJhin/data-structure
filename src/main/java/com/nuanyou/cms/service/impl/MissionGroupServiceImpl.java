@@ -132,7 +132,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
 
     @Override
     public void updateGroupPublic(Long groupId, boolean isPublic) {
-        groupDao.updatePublicByGroupId(groupId, isPublic ? 1 : 0);
+        groupDao.updatePublicByGroupId(groupId, (byte) (isPublic ? 1 : 0));
     }
 
     @Override
