@@ -4,7 +4,6 @@ import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.MissionGroup;
-import com.nuanyou.cms.model.GroupBdParamVo;
 import com.nuanyou.cms.model.MissionGroupParamVo;
 import com.nuanyou.cms.model.MissionGroupVo;
 
@@ -99,7 +98,7 @@ public interface MissionGroupService {
      * @return
      */
     Boolean addGroupBdUser(Long[] bDUserIds, Long groupId);
-
+    
     /**
      * 更新组是否可见
      *
@@ -109,10 +108,10 @@ public interface MissionGroupService {
     void updateGroupPublic(Long groupId, boolean isPublic);
     
     /**
-     * 保存战队的成员信息
+     * 添加组成员
      *
-     * @param vos
-     * @return
+     * @param groupId
+     * @param bdIds
      */
-    Boolean saveGroupBds(List<GroupBdParamVo> vos);
+    void saveGroupBds(Long groupId, List<Long> bdIds);
 }

@@ -13,7 +13,6 @@ import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.MissionGroup;
 import com.nuanyou.cms.entity.MissionGroupBd;
-import com.nuanyou.cms.model.GroupBdParamVo;
 import com.nuanyou.cms.model.MissionGroupParamVo;
 import com.nuanyou.cms.model.MissionGroupVo;
 import com.nuanyou.cms.service.MissionGroupService;
@@ -100,7 +99,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         group.setCity(cityDao.findOne(vo.getCityId()));
         group.setIsPublic(Byte.valueOf(vo.getIsPublic()));
         group.setDesc(vo.getDesc());
-    
+        
         groupDao.save(group);
     }
     
@@ -133,19 +132,33 @@ public class MissionGroupServiceImpl implements MissionGroupService {
             //设置数据
             groupBd.setGroupId(groupId);
             groupBd.setBdId(userId);
-    
+            
             //保存
             groupBdDao.save(groupBd);
         }
         
         return true;
     }
-
+    
     @Override
     public void updateGroupPublic(Long groupId, boolean isPublic) {
-        groupDao.updatePublicByGroupId(groupId,isPublic);
+        groupDao.updatePublicByGroupId(groupId, isPublic);
     }
-
+    
+    @Override
+    public void saveGroupBds(Long groupId, List<Long> bdIds) {
+        if (groupId == null || CollectionUtils.isEmpty(bdIds)) {
+            throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
+        }
+        List<MissionGroupBd> groupBds = Lists.newArrayList();
+        MissionGroupBd groupBd = null;
+        for (Long bdId : bdIds) {
+            groupBd = new MissionGroupBd(groupId, bdId);
+            groupBds.add(groupBd);
+        }
+        groupBdDao.save(groupBds);
+    }
+    
     @Override
     public List<MissionGroup> findByCountryAndCityId(final Long country, final Long city) {
         if (country == null && city == null) {
@@ -182,7 +195,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     @Override
     public List<BdUser> findBdUsersByGroupId(Long groupId) {
         List<MissionGroupBd> groupBds = groupBdDao.findByGroupId(groupId);
-    
+        
         List<Long> userIds = Lists.newArrayList();
         for (MissionGroupBd groupBd : groupBds) {
             userIds.add(groupBd.getBdId());
@@ -212,21 +225,6 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     public MissionGroup findGroupById(Long id) {
         MissionGroup group = groupDao.findOne(id);
         return group;
-    }
-    
-    
-    @Override
-    public Boolean saveGroupBds(List<GroupBdParamVo> vos) {
-        for (GroupBdParamVo vo : vos) {
-            MissionGroupBd groupBd = new MissionGroupBd();
-            
-            groupBd.setGroupId(vo.getGroupId());
-            groupBd.setBdId(vo.getBdId());
-            
-            groupBdDao.save(groupBd);
-        }
-        
-        return true;
     }
     
     private List<MissionGroupVo> convertToBdUserManagerVo(List<MissionGroup> groups) {
