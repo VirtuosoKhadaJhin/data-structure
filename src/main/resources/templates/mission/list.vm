@@ -85,8 +85,8 @@
                                     <td class="td-bz"><a target="_blank" href="/order/edit?type=3&id=$!entity.orderno">$!entity.orderno</a></td>
                                     <td>$!entity.status.value</td>
                                     <td class="td-bz">$!entity.remark</td>
-                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditdt)</td>
-                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.updateDt)</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditDt)</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishDt)</td>
                                 </tr>
                                 #end
                             </tbody>

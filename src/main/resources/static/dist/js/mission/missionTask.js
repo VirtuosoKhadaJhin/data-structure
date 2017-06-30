@@ -55,7 +55,22 @@ $(function () {
 
     // 指派任务弹框
     $(".task-distribute").on("click", function () {
-        $(".taskDistributeModel").modal('show');
+        var taskIds = [];
+        var tasks = $(".tbody-list :checkbox");
+        for (var i = 0; i < tasks.length; i++) {
+            var task = tasks[i];
+            if ($(task).prop("checked") == true) {
+                taskIds.push($(task).attr("task-id"));
+            }
+        }
+        console.log("taskIds:" + taskIds.length);
+        if (taskIds.length == 0) {
+            $(".distributeResult-text").html("<strong style='color: red'>请选择任务！</strong>");
+            $(".taskDistributeResultModel").modal('show');
+        } else {
+            $(".taskDistributeModel").modal('show');
+        }
+
         $(".bd-checkd-prev :checkbox").removeAttr("checked");
     });
 
@@ -70,21 +85,48 @@ $(function () {
             }
         }
 
-        console.log("bdId:" + (typeof(bdId) == "undefined"));
-        console.log("taskIds:" + taskIds.length);
+        console.log(bdId);
+        console.log(taskIds);
 
         $(".taskDistributeModel").modal('hide');
         $(".distributeResult-text").text("任务指派成功！");
 
         // 如果没有选择任务
         if (taskIds.length == 0) {
-            $(".distributeResult-text").html("<strong style='color: #aaff69'>请选择任务！</strong>");
-        }else if (typeof(bdId) == "undefined") {
+            $(".distributeResult-text").html("<strong style='color: red'>请选择任务！</strong>");
+        } else if (typeof(bdId) == "undefined") {
             $(".distributeResult-text").html("<strong style='color: red'>请选择BD！</strong>");
-        }else{
-            $(".distributeResult-text").html("任务指派成功！");
+        } else {
+            var data = {
+                bdId: bdId,
+                taskIds: taskIds,
+            };
+            $.ajax({
+                url: 'distributeTask',
+                data: JSON.stringify(data),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        $(".distributeResult-text").html("任务指派成功！");
+                        $(".taskDistributeResultModel").modal('show');
+                    }else{
+                        $(".distributeResult-text").html("任务指派失败！");
+                        $(".taskDistributeResultModel").modal('show');
+                    }
+                    $(".taskDistributeResultModel .audit-result").val(result.code);
+                }
+            });
         }
-        $(".taskDistributeResultModel").modal('show');
     });
+
+    $(".taskDistributeResultModel").on("hide.bs.modal", function () {
+        var result = $(".audit-result").val();
+        if (result == 0) {
+            window.location.reload();
+        }
+    });
+
 
 });

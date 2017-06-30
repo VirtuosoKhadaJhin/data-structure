@@ -71,22 +71,22 @@
                                 <tr>
                                     <td>
                                         <div class="checkbox bd-checkbox">
-                                            <input id="checkbox0" class="styled td-checked" type="checkbox" task-id="1">
+                                            <input id="checkbox0" class="styled td-checked" type="checkbox" task-id="$!entity.id">
                                             <label for="checkbox0" class="bd-checkbox-label" style="margin-bottom: 15px;">
                                             </label>
                                         </div>
                                     </td>
                                     <td>
-                                        <span>$!entity.mchId</span>
+                                        <span>$!entity.merchant.id</span>
                                         <br/>
-                                        <a target="_blank" href="">$!entity.mchName</a>
+                                        <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a>
                                     </td>
-                                    <td>弘大商圈</td>
-                                    <td>$!entity.mchName.bdId</td>
+                                    <td>$!entity.merchant.district.name</td>
+                                    <td>$!entity.bdUser.chineseName</td>
                                     <td>$!entity.status.value</td>
                                     <td class="td-bz">$!entity.remark</td>
-                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishdt)</td>
-                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditdt)</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishDt)</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditDt)</td>
                                 </tr>
                                 #end
                             </tbody>
@@ -116,7 +116,7 @@
                                 </div>
                             #end
                             <div class="bd-task-time">
-                                <input type="text" style="margin-left: 20px;" class="span8 timeFormatNoDay" value="$!requestVo.finishdt" placeholder="完成时间">
+                                <input type="text" class="span8 timeFormatNoDay" value="$!requestVo.finishdt" placeholder="完成时间">
                             </div>
                         #end
                     </div>
@@ -150,6 +150,7 @@
                 <div class="modal-body">
                     <p class="distributeResult-text"></p>
                 </div>
+                <input type="hidden" class="audit-result"/>
                 <div class="modal-footer">
                     <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
                 </div>
@@ -201,12 +202,12 @@
 
                             <div class="search-select">
                                 <label>审核时间：</label>
-                                <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!dateFormatter.format("yyyy-MM-dd",$!requestVo.auditDt)" placeholder="审核时间">
+                                <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
                             </div>
 
                             <div class="search-select">
                                 <label>完成时间：</label>
-                                <input type="text" name="finshDt" class="span11 dateTimeFormatDay" value="$!dateFormatter.format("yyyy-MM-dd",$!requestVo.finishDt)" placeholder="完成时间">
+                                <input type="text" name="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="完成时间">
                             </div>
 
                             <div class="btn-group">
