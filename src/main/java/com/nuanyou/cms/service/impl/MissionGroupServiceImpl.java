@@ -95,15 +95,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
 
     @Override
     public Boolean delGroupById(Long id) {
-        //获取group
-        MissionGroup group = groupDao.findOne(id);
-
-        //设置逻辑删除
-        group.setDelFlag(Byte.valueOf("1"));
-
-        //保存
-        groupDao.save(group);
-
+        groupDao.deleteGroup(id);
         return true;
     }
 
@@ -147,6 +139,16 @@ public class MissionGroupServiceImpl implements MissionGroupService {
             groupBds.add(groupBd);
         }
         groupBdDao.save(groupBds);
+    }
+
+    @Override
+    public List<Long> findBdUserByGroupId(Long groupId) {
+        List<MissionGroupBd> missionGroupBds = groupBdDao.findByGroupId(groupId);
+        List<Long> bdUserIds = Lists.newArrayList();
+        for(MissionGroupBd groupBd : missionGroupBds){
+            bdUserIds.add(groupBd.getBdId());
+        }
+        return bdUserIds;
     }
 
     @Override

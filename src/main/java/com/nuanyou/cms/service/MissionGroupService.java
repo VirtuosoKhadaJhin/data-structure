@@ -114,4 +114,13 @@ public interface MissionGroupService {
      * @param bdIds
      */
     void saveGroupBds(Long groupId, List<Long> bdIds);
+
+    /**
+     * 根据组Id查询用户
+     *
+     * @param groupId
+     * @return
+     */
+    List<Long> findBdUserByGroupId(Long groupId);
+
 }

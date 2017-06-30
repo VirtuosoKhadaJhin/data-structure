@@ -41,4 +41,10 @@ public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaS
     @Transactional
     @Query("UPDATE MissionGroup set isPublic=?2 where id=?1")
     void updatePublicByGroupId(Long groupId, byte isPublic);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE MissionGroup set delFlag=1 where id=?1")
+    void deleteGroup(Long groupId);
+
 }

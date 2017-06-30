@@ -33,6 +33,13 @@
     .td-sort label {
         text-align: center;
     }
+
+    h4 {
+        margin: 5px 0;
+    }
+    .modal{
+        width: 450px;
+    }
 </style>
 <div style="width: 100%">
     <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
@@ -40,6 +47,7 @@
         <tr>
             <th>序号</th>
             <th>战队名称</th>
+            <th>战队人员数</th>
             <th>国家</th>
             <th>城市</th>
             <th>对队员显示</th>
@@ -59,6 +67,13 @@
                 <td class="td-sort td-group">
                     <label class="lebel-group">$!vo.name</label>
                 </td>
+                <td class="td-sort td-group-bd-count">
+                    #if($!vo.bDUserIds.size() == 0)
+                        <label class="lebel-bd-count">暂无队员</label>
+                    #else
+                        <label class="lebel-bd-count">$!vo.bDUserIds.size()人</label>
+                    #end
+                </td>
                 <td class="td-sort td-country">
                     <label class="label-country">$!vo.country.name</label>
                 </td>
@@ -72,10 +87,10 @@
                 ##                    #if($!vo.role.id==$!role.id) selected  #end
                 </td>
                 <td class="td-sort td-createDt">
-                    <label class="label-createDt">$!vo.createDt</label>
+                    <label class="label-createDt">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createDt)</label>
                 </td>
                 <td class="td-sort td-updateDt">
-                    <label class="label-updateDt">$!vo.updateDt</label>
+                    <label class="label-updateDt">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateDt)</label>
                 </td>
                 <td class="td-sort td-desc">
                     <label class="label-desc">$!vo.desc</label>
@@ -87,9 +102,7 @@
                            href="edit?id=$!vo.id">编辑</a>
                         <a key-code="$!vo.id" class="btn btn-success btn-mini modify-item"
                            onclick="addBdUserModal($!vo.country.id,$!vo.id)">添加组员</a>
-                        <a key-code="$!vo.id"
-                           class="btn btn-danger btn-primary btn-mini modify-item"
-                           href="del?id=$!vo.id">删除</a>
+                        <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn">删除</button>
                     </div>
                 </td>
 
@@ -127,68 +140,95 @@
 #parse("common/list_mid.vm")
 <form class="form-horizontal search-form" method="get" action="list">
 
+    <div class="search-select">
+        <label>国家</label>
+        <select class="span11 select-country" id="country" name="country">
+            <option value="">全部</option>
+            #foreach($e in $!countries)
+                <option value="$!e.id" #if($!requestVo.country==$!e.id)selected #end>$!e.name</option>
+            #end
+        </select>
+    </div>
 
+    <div class="search-select">
+        <label>城市</label>
+        <select class="span11" id="city" name="city">
+            <option class="city-unit" value>全部</option>
+            #foreach($e in $!cities)
+                <option class="option-city" country-id="$!e.country.id" value="$!e.id" #if($!requestVo.city == $!e.id) selected #end>$!e.name</option>
+            #end
+        </select>
+    </div>
+
+    <div class="search-select">
+        <label>对队员显示：</label>
+        <select class="span11" name="isPublic">
+            <option value>全部</option>
+            <option value="0" #if($!requestVo.isPublic == 0) selected #end>显示</option>
+            <option value="1" #if($!requestVo.isPublic == 1) selected #end>隐藏</option>
+        </select>
+    </div>
+
+    <div class="search-select">
+        <label>战队名称：</label>
+        <input type="text" name="name" class="span11" value="$!requestVo.name" placeholder="战队名称">
+    </div>
+
+    <div class="search-select">
+        <label>战队描述：</label>
+        <input type="text" name="desc" class="span11" value="$!requestVo.desc" placeholder="战队描述">
+    </div>
+
+    <button type="submit" class="btn btn-primary">查询</button>
+    <button class="btn btn-warning search-reset">重置</button>
 </form>
 
-<script>
+<!-- 删除确认弹窗 -->
+<div class="modal hide fade deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="myModalLabel">删除提示</h4>
+    </div>
+    <div class="modal-body">
+        <strong style="margin-left: 20px;font-size: 14px;">确认删除吗？</strong>
+    </div>
+    <div class="modal-footer">
+        <input type="hidden" class="hide-del-id"/>
+        <button class="btn btn-primary sure-del">确认</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
 
+<!-- 删除确认二次确认弹窗 -->
+<div class="modal hide fade secondDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="myModalLabel">删除提示</h4>
+    </div>
+    <div class="modal-body">
+        <strong style="margin-left: 20px;font-size: 14px;">真的确认删除吗？</strong>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary second-sure-del">确认</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
 
-    function addUsers() {
-        var userIds = new Array();
-        $(".check-bdUser:checked").each(function (target) {
-            userIds.push($(this).val());
-        });
-        var groupId = $(".taskDistributeModel .hide-groupId").val();
-        var requestParam = {
-            groupId: groupId,
-            userIds: userIds,
-        }
-        $.ajax({
-            url: 'saveGroupBds',
-            data: JSON.stringify(requestParam),
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.code == 0) {
-                    alert("操作成功！")
-                } else {
-                    alert("操作失败，请稍后重试！");
-                }
+<!-- 删除结果 -->
+<div class="modal hide fade deleteResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="myModalLabel">删除提示</h4>
+    </div>
+    <div class="modal-body">
+        <strong class="deleteResult" style="margin-left: 20px;font-size: 14px;"></strong>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
 
-            }
-        });
-    }
-
-
-    function addBdUserModal(countryId, groupId) {
-        $(".taskDistributeModel").modal("show");
-        $(".taskDistributeModel .hide-groupId").val(groupId);
-        console.log(countryId);
-        var request = {};
-
-        request.groupId = groupId;
-        request.countryId = countryId;
-        $.ajax({
-            url: 'findBdUserByCountryId',
-            data: JSON.stringify(request),
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.code == 0) {
-                    var bdUsers = result.data;
-                    var htmlData = "";
-                    for (var i = 0; i < bdUsers.length; i++) {
-                        var bdUser = bdUsers[i];
-                        htmlData += "<label><input type='checkbox' class='check-bdUser' value='" + bdUser.id + "' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
-                    }
-                    $("#listAddBd").append(htmlData);
-                }
-            }
-        });
-    }
-</script>
+<script type="text/javascript" src="/dist/js/mission-group/missionGroup.js"></script>
 
 #parse("common/list_end.vm")
 

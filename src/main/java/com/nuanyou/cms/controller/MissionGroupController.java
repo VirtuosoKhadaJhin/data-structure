@@ -29,28 +29,38 @@ import java.util.List;
 @Controller
 @RequestMapping("missionGroup")
 public class MissionGroupController {
-    
+
     @Autowired
     private MissionGroupService missionGroupService;
-    
-    @Autowired
-    private BdUserManagerService bdUserManagerService;
-    
+
     @Autowired
     private BdUserManagerService userManagerService;
-    
+
     /**
      * 获取列表
      */
     @RequestMapping("list")
     public String list(MissionGroupVo requestVo, Model model) {
         Page<MissionGroupVo> vos = missionGroupService.findAllGroups(requestVo);
+
+        for (MissionGroupVo vo : vos.getContent()) {
+            Long groupId = vo.getId();
+            List<Long> bdUserByGroupId = missionGroupService.findBdUserByGroupId(groupId);
+            Long[] bDUserIds = bdUserByGroupId.toArray(new Long[bdUserByGroupId.size()]);
+            vo.setbDUserIds(bDUserIds);
+        }
+
+        List<Country> countries = missionGroupService.findAllCountries();
+        List<City> cities = missionGroupService.findAllCities();
+
+        model.addAttribute("countries", countries);
+        model.addAttribute("cities", cities);
         model.addAttribute("page", vos);//page统一命名，分页
         model.addAttribute("requestVo", requestVo);//刷新界面
-        
+
         return "missionGroup/list";
     }
-    
+
     /**
      * 添加
      */
@@ -60,46 +70,55 @@ public class MissionGroupController {
         List<City> cities = missionGroupService.findAllCities();
         model.addAttribute("countries", countries);
         model.addAttribute("cities", cities);
-        
+
         return "missionGroup/add";
     }
-    
+
     @RequestMapping("edit")
     public String edit(Model model, Long id) {
         MissionGroup group = missionGroupService.findGroupById(id);
         List<Country> countries = missionGroupService.findAllCountries();
         List<City> cities = missionGroupService.findAllCities();
-        
+
         model.addAttribute("group", group);
         model.addAttribute("countries", countries);
         model.addAttribute("cities", cities);
-        
+
         return "missionGroup/edit";
     }
-    
+
+    /**
+     * 删除战队
+     *
+     * @param requestVo
+     * @return
+     */
     @RequestMapping("del")
-    public String del(Model model, Long id) {
-        Boolean res = missionGroupService.delGroupById(id);
-        
-        return "redirect:/missionGroup/list";
+    @ResponseBody
+    public APIResult<Boolean> del(@RequestBody MissionGroupVo requestVo) {
+        APIResult<Boolean> result = new APIResult<Boolean>();
+        Boolean res = missionGroupService.delGroupById(requestVo.getId());
+        result.setData(res);
+        return result;
     }
-    
+
+
     /**
      * 添加bdUser
      */
     @RequestMapping("addBdUser")
     public String addBdUser(Model model, String groupId) {
         //所有的bduser
-        List<BdUser> bdUsers = bdUserManagerService.findAllBdUsers();
-        
+        List<BdUser> bdUsers = userManagerService.findAllBdUsers();
+
         //该组的bduser
         List<BdUser> bdUsersByGroupId = missionGroupService.findBdUsersByGroupId(Long.valueOf(groupId));
-        
+
         model.addAttribute("bdUsers", bdUsers);
-        
+
         return "missionGroup/addBdUser";
     }
-    
+
     /**
      * 保存添加内容
      *
@@ -108,11 +127,11 @@ public class MissionGroupController {
     @RequestMapping("saveAdd")
     public String saveAdd(Model model, MissionGroupParamVo paramVo) {
         missionGroupService.saveGroup(paramVo);
-        
+
         return "redirect:/missionGroup/list";
     }
-    
-    
+
+
     /**
      * 保存编辑
      *
@@ -120,11 +139,11 @@ public class MissionGroupController {
      */
     @RequestMapping("saveEdit")
     public String saveEdit(Model model, String id, MissionGroupParamVo paramVo) {
-        
+
         missionGroupService.updateGroup(id, paramVo);
         return "redirect:/missionGroup/list";
     }
-    
+
     /**
      * 查询Bd
      *
@@ -138,7 +157,7 @@ public class MissionGroupController {
         result.setData(bdUsers);
         return result;
     }
-    
+
     /**
      * 保存Bd
      *
@@ -151,7 +170,7 @@ public class MissionGroupController {
         missionGroupService.saveGroupBds(vo.getGroupId(), vo.getUserIds());
         return result;
     }
-    
+
     //    /**
     //     * 保存Bd
     //     *
@@ -166,8 +185,8 @@ public class MissionGroupController {
     //        result.setData(saveResult);
     //        return result;
     //    }
-    
-    
+
+
     //    @RequestMapping("saveGroupBds")
     //    @ResponseBody
     //    public APIResult saveGroupBds(@RequestBody List<GroupBdParamVo> vos) {
