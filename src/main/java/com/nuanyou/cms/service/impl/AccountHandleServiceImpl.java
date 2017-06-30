@@ -75,12 +75,12 @@ public class AccountHandleServiceImpl implements AccountHandleService {
 
         setMerchantSettlementRequest(result, settlementRequest, detail.getMchId(),distributes_map);
         setMerchantSettlementCommissionRequest(result, settlementCommissionRequest,distributes_map);
-        setMerchantSettlementBank(result, settlementBankRequest,distributes_map);
+        //setMerchantSettlementBank(result, settlementBankRequest,distributes_map);
 
         if (detail.getParentId() == null) {//主合同验证
             validateYoufuSettlement(settlementRequest.getPoundage(), settlementRequest.getDay(), settlementRequest.getDayType(), settlementRequest.getStartPrice());
             validateCommission(settlementCommissionRequest.getGroupon(),settlementCommissionRequest.getStartTime());
-            validateMerchantSettlentBank(settlementBankRequest.getBankCode(), settlementBankRequest.getName(), settlementBankRequest.getAccount(), settlementBankRequest.getBranch());
+            //validateMerchantSettlentBank(settlementBankRequest.getBankCode(), settlementBankRequest.getName(), settlementBankRequest.getAccount(), settlementBankRequest.getBranch());
         }
         APIResult<AcMerchantSettlement> res = remoteAccountSettlementService.getSettlement(settlementRequest.getMerchantId());
         if (res.getCode() != 0) {
@@ -116,12 +116,12 @@ public class AccountHandleServiceImpl implements AccountHandleService {
             }
         }
         settlementBankRequest.setSettlementId(settlementId);
-        if(settlementBankRequest.getBankCode()!=null){//3 商家银行
-            APIResult<AcMerchantSettlementBank> banRes = remoteAccountSettlementService.addBank(settlementBankRequest);
-            if (banRes.getCode() != 0) {
-                throw new APIException(banRes.getCode(), banRes.getMsg());
-            }
-        }
+        //if(settlementBankRequest.getBankCode()!=null){//3 商家银行
+            //APIResult<AcMerchantSettlementBank> banRes = remoteAccountSettlementService.addBank(settlementBankRequest);
+            //if (banRes.getCode() != 0) {
+                //throw new APIException(banRes.getCode(), banRes.getMsg());
+            //}
+        //}
     }
 
     private void validateMerchantSettlentBank(String bankCode, String name, String account, String branch) {
