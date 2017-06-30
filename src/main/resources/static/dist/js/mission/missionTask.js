@@ -111,7 +111,7 @@ $(function () {
                     if (result.code == 0) {
                         $(".distributeResult-text").html("任务指派成功！");
                         $(".taskDistributeResultModel").modal('show');
-                    }else{
+                    } else {
                         $(".distributeResult-text").html("任务指派失败！");
                         $(".taskDistributeResultModel").modal('show');
                     }
@@ -128,5 +128,15 @@ $(function () {
         }
     });
 
+
+    $(".radio-public").on("click", function () {
+        var isPublic = $(this).val();
+        var groupId = $(this).parents(".data-group");
+        $(".publicSwichModel .hide-public").val(isPublic);
+        $(".publicSwichModel .hide-groupId").val(groupId);
+        var msgStr = isPublic == 1 ? "可见" : "不可见";
+        $(".public-switch-text").html("是否确定对所有成员 <label style = 'color:red; font-weight: bold;'>" + msgStr + "</label >！");
+        $(".publicSwichModel").modal("show");
+    });
 
 });

@@ -157,5 +157,6 @@ table .tr-class:hover {
     color: white;
 
 }
-.public-span{
+.ispublic{
+    margin-top: -2px;
 }
