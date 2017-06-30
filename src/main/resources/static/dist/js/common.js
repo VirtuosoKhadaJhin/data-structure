@@ -92,7 +92,6 @@ window.onload = function () {
     });
 
 
-
     $(".itemValidate").validate({
         rules: {
             sort: {
@@ -165,16 +164,16 @@ window.onload = function () {
                 if (result.code == 0) {
                     var currEle = e.currentTarget;
                     var list = result.data;
-                    if(list.length==0){
+                    if (list.length == 0) {
                         $(currEle).next().val("");
-                        return ;
+                        return;
                     }
                     for (var i = 0; i < list.length; i++) {
                         var o = list[i];
                         var complate = {};
                         complate.labelDisplay = o.message;
-                        complate.label = o.message+"("+o.keyCode+")";
-                        complate.value =   o.keyCode;
+                        complate.label = o.message + "(" + o.keyCode + ")";
+                        complate.value = o.keyCode;
                         listComplete.push(complate);
                     }
                 } else {
@@ -196,6 +195,20 @@ window.onload = function () {
         }
     })
 
-
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
 
 }

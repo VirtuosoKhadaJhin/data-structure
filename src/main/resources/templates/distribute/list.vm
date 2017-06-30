@@ -226,7 +226,7 @@
 
                             <div class="search-select">
                                 <label>完成时间：</label>
-                                <input type="text" name="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="完成时间">
+                                <input type="text" name="finishDt" id="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="完成时间">
                             </div>
 
                             <div class="btn-group">

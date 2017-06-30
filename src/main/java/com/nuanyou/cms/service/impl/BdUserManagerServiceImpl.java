@@ -1,9 +1,7 @@
 package com.nuanyou.cms.service.impl;
 
-import com.nuanyou.cms.dao.BdCountryDao;
-import com.nuanyou.cms.dao.BdRelUserRoleDao;
-import com.nuanyou.cms.dao.BdRoleDao;
-import com.nuanyou.cms.dao.BdUserDao;
+import com.google.common.collect.Lists;
+import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.model.BdUserManagerRequestVo;
 import com.nuanyou.cms.model.BdUserParamVo;
@@ -34,7 +32,10 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
     
     @Autowired
     private BdUserDao bdUserDao;
-    
+
+    @Autowired
+    private MissionGroupBdDao groupBdDao;
+
     @Autowired
     private BdRoleDao bdRoleDao;
     
@@ -214,6 +215,20 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
     }
 
     @Override
+    public List<BdUser> findByGroupId(Long groupId) {
+        List<MissionGroupBd> missionGroupBds = groupBdDao.findByGroupId(groupId);
+        List<Long> bdUserIds = Lists.newArrayList();
+        for(MissionGroupBd groupBd : missionGroupBds){
+            bdUserIds.add(groupBd.getBdId());
+        }
+
+        // 一次性查询所有用户
+        List<BdUser> bdUsers = bdUserDao.findAll(bdUserIds);
+
+        return bdUsers;
+    }
+
+    @Override
     public void updateUserRole(BdRelUserRole userRole) {
         List<BdRelUserRole> userRoles = bdRelUserRoleDao.findAll();
         for (BdRelUserRole relUserRole : userRoles) {
@@ -289,4 +304,5 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
         List<BdUser> bdUsers = bdUserDao.findallBdUser();
         return bdUsers;
     }
+
 }

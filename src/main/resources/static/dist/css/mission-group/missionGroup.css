@@ -1,0 +1,32 @@
+.tdInput {
+    width: 75%;
+}
+
+.text-gray {
+    background-color: grey;
+}
+
+#select2-categoryId-xe-container {
+    min-width: 180px;
+}
+
+.td-sort {
+    min-width: 60px;
+}
+
+.td-sort label {
+    text-align: center;
+}
+
+h4 {
+    margin: 5px 0;
+}
+
+.modal {
+    width: 450px;
+}
+
+.check-bdUser{
+    margin: 10px;
+    margin-top: 8px;
+}

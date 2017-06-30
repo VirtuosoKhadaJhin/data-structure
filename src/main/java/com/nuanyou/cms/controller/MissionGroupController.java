@@ -62,6 +62,20 @@ public class MissionGroupController {
     }
 
     /**
+     * 查询组员列表
+     *
+     * @param groupId
+     * @param model
+     * @return
+     */
+    @RequestMapping("member")
+    public String member(Long groupId, Model model) {
+        List<BdUser> list = userManagerService.findByGroupId(groupId);
+        model.addAttribute("list", list);
+        return "missionGroup/member";
+    }
+
+    /**
      * 添加
      */
     @RequestMapping("add")

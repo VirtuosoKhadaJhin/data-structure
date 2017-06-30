@@ -55,6 +55,8 @@ $(function () {
 
     // 指派任务弹框
     $(".task-distribute").on("click", function () {
+        var date = new Date().Format("yyyy-MM-dd");
+        $(".datetime-distrDt").val(date);
         var taskIds = [];
         var tasks = $(".tbody-list :checkbox");
         for (var i = 0; i < tasks.length; i++) {

@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content" class="content-container">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10" style="width: 100%">
+                <div class="widget-box">
+                    <div class="widget-content nopadding">
+                        <div id="breadcrumb">
+                            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
+                                主页</a>
+                            <a href="list" class="tip-bottom" data-original-title="">战队管理</a>
+                            <a href="#" class="tip-bottom" data-original-title="">组成员列表</a>
+                        </div>
+                        <div class="widget-title">
+                            <span class="icon"><i class="icon-th"></i></span>
+                            <h5>组成员列表</h5>
+                            <a class="btn btn-mini btn-info buttons" href="add">新增</a>
+                        #*<a class="btn btn-mini btn-info buttons" onclick="langsCommonDialog()">通用新增</a>*#
+                        </div>
+                        <style>
+                            .span10 {
+                                width: 100%;
+                            }
+
+                            .tdInput {
+                                width: 75%;
+                            }
+
+                            .text-gray {
+                                background-color: grey;
+                            }
+
+                            #select2-categoryId-xe-container {
+                                min-width: 180px;
+                            }
+
+                            .td-update-time {
+                                min-width: 120px;
+                            }
+
+                            .td-sort {
+                                min-width: 60px;
+                            }
+                        </style>
+                        <div style="width: 100%">
+                            <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+                                <thead role="row">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>用户名</th>
+                                    <th>中文名</th>
+                                    <th>所属国家</th>
+                                    <th>合同归档邮箱</th>
+                                    <th>钉钉邮箱</th>
+                                    <th>角色</th>
+                                    <th>创建时间</th>
+                                    <th>更新时间</th>
+                                    <th>操作</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    #if ($null.isNull($list) || $list.size()==0)
+                                    <tr>
+                                        <td colspan="11" style="text-align:center;">
+                                            <div class="no-result-div"
+                                                 style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                                                <p>暂无组成员</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    #end
+
+                                    #foreach($vo in $!list)
+                                    <tr class="odd gradeX">
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!vo.id</label>
+                                        </td>
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!vo.name</label>
+                                        </td>
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!vo.chineseName</label>
+                                        </td>
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!vo.country.name</label>
+                                        </td>
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!vo.email</label>
+                                        </td>
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!vo.dmail</label>
+                                        </td>
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!vo.role.desc</label>
+                                        </td>
+                                        <td class="td-sort">
+                                        ##                    <label style="text-align: center;">$!vo.createTime</label>
+                                            <label style="text-align: center;">$!dateFormatter.format(
+                                                "yyyy-MM-dd HH:mm:ss",$!vo.createTime)</label>
+                                        </td>
+                                        <td class="td-sort">
+                                        ##                    <label style="text-align: center;">$!vo.updateTime</label>
+                                            <label style="text-align: center;">$!dateFormatter.format(
+                                                "yyyy-MM-dd HH:mm:ss",$!vo.updateTime)</label>
+                                        </td>
+
+                                        <td style="min-width: 80px;">
+                                            <div style="text-align: center">
+                                                <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item"
+                                                   href="edit?id=$!vo.id">编辑</a>
+                                                <a style="background red" key-code="$!vo.id"
+                                                ##                           class="btn btn-danger btn-primary btn-mini modify-item" href="del?id=$!vo.id">删除</a>
+                                                   class="btn btn-danger btn-primary btn-mini modify-item" href="del?id=$!vo.id">删除</a>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                        #set($sort = $sort + 1)
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    ##<form class="form-horizontal search-form" method="get" action="list">
+                    ##    <div class="control-group" style="clear: both;margin-top: 10px;">
+                    ##        <button type="submit" class="btn btn-primary">查询</button>
+                    ##        <button class="btn btn-warning search-reset">重置</button>
+                    ##    </div>
+                    ##</form>
+
+                        #parse("common/list_end.vm")
+
+                    ##重置
+                        <script>
+                            $(".search-reset").click(function () {
+                                $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
+                                $(".search-form").find(".select2").val('').trigger('change');
+                            });
+
+                        </script>
+
+
+

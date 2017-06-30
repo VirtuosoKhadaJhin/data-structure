@@ -73,7 +73,6 @@ function addUsers() {
 function addBdUserModal(countryId, groupId) {
     $(".taskDistributeModel").modal("show");
     $(".taskDistributeModel .hide-groupId").val(groupId);
-    console.log(countryId);
     var request = {};
 
     request.groupId = groupId;
@@ -90,7 +89,7 @@ function addBdUserModal(countryId, groupId) {
                 var htmlData = "";
                 for (var i = 0; i < bdUsers.length; i++) {
                     var bdUser = bdUsers[i];
-                    htmlData += "<label><input type='checkbox' class='check-bdUser' value='" + bdUser.id + "' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
+                    htmlData += "<label><input class='check-bdUser' style='margin: 10px;margin-top: 8px;' type='checkbox' value='" + bdUser.id + "' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
                 }
                 $("#listAddBd").append(htmlData);
             }

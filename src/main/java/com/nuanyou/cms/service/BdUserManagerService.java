@@ -105,4 +105,16 @@ public interface BdUserManagerService {
      * @return
      */
     BdUser findBdUserByDemail(String email);
+
+
+    // List<BdUser> findBdUsersByCountryId(Long );
+
+    /**
+     * 根据组Id查询组员列表
+     *
+     * @param groupId
+     * @return
+     */
+    List<BdUser> findByGroupId(Long groupId);
+
 }
