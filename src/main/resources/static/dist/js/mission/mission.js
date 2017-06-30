@@ -16,6 +16,7 @@ $(function () {
     $(".search-reset").click(function () {
         $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
         $(".search-form").find(".select2").val('').trigger('change');
+        $(".select-country").val("1");
     });
 
     // 改变国家
