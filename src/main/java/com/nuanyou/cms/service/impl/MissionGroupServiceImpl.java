@@ -3,12 +3,22 @@ package com.nuanyou.cms.service.impl;
 import com.google.common.collect.Lists;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
-import com.nuanyou.cms.dao.*;
-import com.nuanyou.cms.entity.*;
+import com.nuanyou.cms.dao.BdUserDao;
+import com.nuanyou.cms.dao.CityDao;
+import com.nuanyou.cms.dao.CountryDao;
+import com.nuanyou.cms.dao.MissionGroupBdDao;
+import com.nuanyou.cms.dao.MissionGroupDao;
+import com.nuanyou.cms.entity.BdUser;
+import com.nuanyou.cms.entity.City;
+import com.nuanyou.cms.entity.Country;
+import com.nuanyou.cms.entity.MissionGroup;
+import com.nuanyou.cms.entity.MissionGroupBd;
+import com.nuanyou.cms.model.GroupBdParamVo;
 import com.nuanyou.cms.model.MissionGroupParamVo;
 import com.nuanyou.cms.model.MissionGroupVo;
 import com.nuanyou.cms.service.MissionGroupService;
 import com.nuanyou.cms.util.BeanUtils;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,12 +28,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by sharp on 2017/6/28 - 15:56
@@ -203,6 +214,20 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         return group;
     }
     
+    
+    @Override
+    public Boolean saveGroupBds(List<GroupBdParamVo> vos) {
+        for (GroupBdParamVo vo : vos) {
+            MissionGroupBd groupBd = new MissionGroupBd();
+            
+            groupBd.setGroupId(vo.getGroupId());
+            groupBd.setBdId(vo.getBdId());
+            
+            groupBdDao.save(groupBd);
+        }
+        
+        return true;
+    }
     
     private List<MissionGroupVo> convertToBdUserManagerVo(List<MissionGroup> groups) {
         if (CollectionUtils.isEmpty(groups)) {
