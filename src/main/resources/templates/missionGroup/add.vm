@@ -69,21 +69,22 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div>
-                                        <label class="control-label" style="width: 140px;">对队员显示：</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" id="isPublic"
-                                                   class="span7" name="isPublic" type="text" style="width: 80%"
-                                                   value=""/>
-                                        </div>
-                                    </div>
+##                                    <div>
+##                                        <label class="control-label" style="width: 140px;">对队员显示：</label>
+##                                        <div class="controls" style="margin-left: 152px;">
+##                                            <input for="name" id="isPublic"
+##                                                   class="span7" name="isPublic" type="text" style="width: 80%"
+##                                                   value=""/>
+##                                        </div>
+##                                    </div>
 
-                                    <div class="control-group">
-                                        <label class="control-label">是否显示</label>
-                                        <div class="controls">
-                                            <select id="isPublic" name="isPublic" class="span7">
-                                                <option value="true"  #if($!entity.display==true)  selected #end>显示</option>
-                                                <option value="false"  #if($!entity.display==false)  selected #end>隐藏
+##                                    <div class="control-group">
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">是否显示</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select id="isPublic" name="isPublic" class="span7" style="width: 80%">
+                                                <option value="0"  #if($!entity.display==0)  selected #end>显示</option>
+                                                <option value="1"  #if($!entity.display==1)  selected #end>隐藏
                                                 </option>
                                             </select>
                                         </div>
@@ -118,7 +119,8 @@
 <script type="text/javascript">
     function emailChekc() {
         var email = document.getElementsByName("email")[0].value;
-        var reg = /^[A-z]+[A-z0-9_-]*\@[A-z0-9]+\.[A-z]+$/;
+//        var reg = /^[A-z]+[A-z0-9_-]*\@[A-z0-9]+\.[A-z]+$/;
+        var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/;
         var res=reg.test(email);
         if (res == false) {
             alert("邮箱规则错误，请输入正确的邮箱");

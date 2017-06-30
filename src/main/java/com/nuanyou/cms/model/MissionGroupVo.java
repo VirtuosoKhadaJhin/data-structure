@@ -21,8 +21,13 @@ public class MissionGroupVo {
     private Date updateDt;
     private Byte delFlag;
     private BdUser leader;
+    
     Integer index = 1;
     Integer pageNum = 8;
+    
+    private Long countryId;
+    private Long groupId;
+    private Long[] bDUserIds;
     
     public Long getId() {
         return id;
@@ -118,5 +123,29 @@ public class MissionGroupVo {
     
     public void setPageNum(Integer pageNum) {
         this.pageNum = pageNum;
+    }
+    
+    public Long getCountryId() {
+        return countryId;
+    }
+    
+    public void setCountryId(Long countryId) {
+        this.countryId = countryId;
+    }
+    
+    public Long getGroupId() {
+        return groupId;
+    }
+    
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+    
+    public Long[] getbDUserIds() {
+        return bDUserIds;
+    }
+    
+    public void setbDUserIds(Long[] bDUserIds) {
+        this.bDUserIds = bDUserIds;
     }
 }

@@ -10,6 +10,7 @@ public class MissionGroupParamVo {
     private String isPublic;
     private String desc;
     
+    
     public String getName() {
         return name;
     }

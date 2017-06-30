@@ -13,4 +13,6 @@ import java.util.List;
 public interface MissionGroupBdDao extends JpaRepository<MissionGroupBd, Long>, JpaSpecificationExecutor {
     
     List<MissionGroupBd> findByGroupId(Long groupid);
+    
+    List<MissionGroupBd> findByBdId(Long bdid);
 }

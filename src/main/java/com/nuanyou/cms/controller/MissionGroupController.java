@@ -1,10 +1,12 @@
 package com.nuanyou.cms.controller;
 
-import com.nuanyou.cms.entity.BdCountry;
+import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
-import com.nuanyou.cms.model.MissionGroupVo;
+import com.nuanyou.cms.entity.Country;
+import com.nuanyou.cms.entity.MissionGroup;
 import com.nuanyou.cms.model.MissionGroupParamVo;
+import com.nuanyou.cms.model.MissionGroupVo;
 import com.nuanyou.cms.service.BdUserManagerService;
 import com.nuanyou.cms.service.MissionGroupService;
 
@@ -12,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -30,13 +34,18 @@ public class MissionGroupController {
     @Autowired
     private BdUserManagerService bdUserManagerService;
     
+    @Autowired
+    private BdUserManagerService userManagerService;
+    
     /**
      * 获取列表
      */
     @RequestMapping("list")
     public String list(MissionGroupVo requestVo, Model model) {
         Page<MissionGroupVo> vos = missionGroupService.findAllGroups(requestVo);
-        model.addAttribute("vos", vos);
+        model.addAttribute("page", vos);//page统一命名，分页
+        model.addAttribute("requestVo", requestVo);//刷新界面
+    
         return "missionGroup/list";
     }
     
@@ -45,7 +54,7 @@ public class MissionGroupController {
      */
     @RequestMapping("add")
     public String add(Model model) {
-        List<BdCountry> countries = missionGroupService.findAllCountries();
+        List<Country> countries = missionGroupService.findAllCountries();
         List<City> cities = missionGroupService.findAllCities();
         model.addAttribute("countries", countries);
         model.addAttribute("cities", cities);
@@ -54,9 +63,23 @@ public class MissionGroupController {
     }
     
     @RequestMapping("edit")
-    public String edit(Model model, String id) {
-    
+    public String edit(Model model, Long id) {
+        MissionGroup group = missionGroupService.findGroupById(id);
+        List<Country> countries = missionGroupService.findAllCountries();
+        List<City> cities = missionGroupService.findAllCities();
+        
+        model.addAttribute("group", group);
+        model.addAttribute("countries", countries);
+        model.addAttribute("cities", cities);
+        
         return "missionGroup/edit";
+    }
+    
+    @RequestMapping("del")
+    public String del(Model model, Long id) {
+        Boolean res = missionGroupService.delGroupById(id);
+    
+        return "redirect:/missionGroup/list";
     }
     
     /**
@@ -93,9 +116,9 @@ public class MissionGroupController {
      * @return
      */
     @RequestMapping("saveEdit")
-    public String saveEdit(String id, String name, String countryId, String email, String roleId) {
-        
-        
+    public String saveEdit(Model model, String id, MissionGroupParamVo paramVo) {
+    
+        missionGroupService.updateGroup(id, paramVo);
         return "redirect:/missionGroup/list";
     }
     
@@ -109,4 +132,31 @@ public class MissionGroupController {
         return "redirect:/missionGroup/list";
     }
     
+    /**
+     * 查询Bd
+     *
+     * @return
+     */
+    @RequestMapping("findBdUserByCountryId")
+    @ResponseBody
+    public APIResult<List<BdUser>> findBdUserByCountryId(@RequestBody MissionGroupVo requestVo) {
+        APIResult<List<BdUser>> result = new APIResult<>();
+        List<BdUser> bdUsers = missionGroupService.findBdUserSByCountryId(requestVo.getCountryId());
+        result.setData(bdUsers);
+        return result;
+    }
+    
+    /**
+     * 保存Bd
+     *
+     * @return
+     */
+    @RequestMapping("addGroupBdUser")
+    @ResponseBody
+    public APIResult<Boolean> addGroupBdUser(@RequestBody MissionGroupVo vo) {
+        APIResult<Boolean> result = new APIResult<>();
+        Boolean saveResult = missionGroupService.addGroupBdUser(vo.getbDUserIds(), vo.getGroupId());
+        result.setData(saveResult);
+        return result;
+    }
 }

@@ -23,7 +23,7 @@ public class MissionGroupBd {
     private Long groupId;
     
     @Column(name = "bdid")
-    private Long bdUserId;
+    private Long bdId;
     
     public Long getId() {
         return id;
@@ -41,11 +41,11 @@ public class MissionGroupBd {
         this.groupId = groupId;
     }
     
-    public Long getBdUserId() {
-        return bdUserId;
+    public Long getBdId() {
+        return bdId;
     }
     
-    public void setBdUserId(Long bdUserId) {
-        this.bdUserId = bdUserId;
+    public void setBdId(Long bdId) {
+        this.bdId = bdId;
     }
 }

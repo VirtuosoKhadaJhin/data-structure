@@ -49,7 +49,7 @@
         </thead>
         <tbody>
 
-            #foreach($vo in $!vos.content)
+            #foreach($vo in $!page.content)
             <tr class="odd gradeX">
                 <td class="td-sort td-id">
 ##                    $!vo.group.id 和entity里的字段对应
@@ -65,7 +65,9 @@
                     <label class="label-city">$!vo.city.name</label>
                 </td>
                 <td class="td-sort td-isPublic">
-                    <label class="label-isPublic">$!vo.isPublic</label>
+                    <label class="label-isPublic">#if($!vo.isPublic==0) 显示 #end #if($!vo.isPublic==1) 隐藏 #end </label>
+##                    $!vo.isPublic
+##                    #if($!vo.role.id==$!role.id) selected  #end
                 </td>
                 <td class="td-sort td-createDt">
                     <label class="label-createDt">$!vo.createDt</label>
@@ -79,9 +81,9 @@
 
                 <td style="min-width: 120px;">
                     <div style="text-align: center">
-                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item" href="edit?id=$!vo.group.id">编辑</a>
-                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item" href="addBdUser?id=$!vo.group.id">添加组员</a>
-                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item" href="del?id=$!vo.group.id">删除</a>
+                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item" href="edit?id=$!vo.id">编辑</a>
+                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item" onclick="addBdUserModal($!vo.country.id)">添加组员</a>
+                        <a key-code="$!vo.id" class="btn btn-danger btn-primary btn-mini modify-item" href="del?id=$!vo.id">删除</a>
                     </div>
                 </td>
 
@@ -92,12 +94,81 @@
     </table>
 </div>
 
+<!-- 指派弹窗 -->
+<div class="modal hide fade taskDistributeModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">任务指派</h3>
+    </div>
+    <div class="modal-body">
+        <div class="search-select bd-checkd-prev">
+
+##            数据不对
+            #if ($null.isNull($bdUsers) || $bdUsers.size()==0)
+                <strong style="margin-left: 45%;">暂无BD</strong>
+            #end
+    11  $!bdUsers  11
+            #if ($null.isNotNull($bdUsers) || $bdUsers.size()>0)
+                #foreach($e in $!bdUsers)
+                    <div class="checkbox bd-checkbox">
+                        <input id="checkbox1$e.id" bd-id="$e.id" class="styled bd-checkd" type="checkbox">
+                        <label for="checkbox1$e.id" class="bd-checkbox-label">
+                            $!e.chineseName / $!e.demail
+                        </label>
+                    </div>
+                #end
+                <div class="bd-task-time">
+                    <input type="text" style="margin-left: 20px;" class="span8 timeFormatNoDay" value="$!requestVo.finishdt" placeholder="完成时间">
+                </div>
+            #end
+
+            <div class="checkbox bd-checkbox">
+                <input id="checkbox1" bd-id="1" class="styled bd-checkd" type="checkbox">
+                <label for="checkbox1" class="bd-checkbox-label">
+                    123213
+                </label>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        <button class="btn btn-primary sure-distribute">确认</button>
+    </div>
+</div>
+
 
 #parse("common/list_mid.vm")
 <form class="form-horizontal search-form" method="get" action="list">
 
 
 </form>
+
+<script>
+    function addBdUserModal(countryId) {
+        $(".taskDistributeModel").modal("show");
+        console.log(countryId);
+        var request = {};
+
+        request.countryId = countryId;
+        $.ajax({
+            url: 'findBdUserByCountryId',
+            data: JSON.stringify(request),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    console.log(result.data);
+                    for (var one result.data){
+
+                    }
+                }
+            }
+        });
+    }
+</script>
 
 #parse("common/list_end.vm")
 

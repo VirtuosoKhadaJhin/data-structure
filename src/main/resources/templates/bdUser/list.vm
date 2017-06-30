@@ -100,7 +100,8 @@
                         <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item"
                            href="edit?id=$!vo.id">编辑</a>
                         <a style="background red" key-code="$!vo.id"
-                           class="btn btn-primary btn-mini modify-item" href="del?id=$!vo.id">删除</a>
+##                           class="btn btn-danger btn-primary btn-mini modify-item" href="del?id=$!vo.id">删除</a>
+                           class="btn btn-danger btn-primary btn-mini modify-item" href="del?id=$!vo.id">删除</a>
                     </div>
                 </td>
 

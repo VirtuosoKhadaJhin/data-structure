@@ -46,57 +46,59 @@
                                             <input for="name" name="id" id="id" type="text"
                                                    class="span7"
                                                    readonly="readonly" style="width: 80%"
-                                                   value="$!vo.user.id">
+                                                   value="$!group.id">
                                         </div>
                                     </div>
                                     <div class="">
                                         <label class="control-label"
-                                               style="width: 140px;">用户名：</label>
+                                               style="width: 140px;">战队名称：</label>
                                         <div class="controls" style="margin-left: 152px;">
                                             <input for="name" name="name" id="name" type="text"
                                                    class="span7"
-                                                   style="width: 80%" value="$!vo.user.name">
+                                                   style="width: 80%" value="$!group.name">
                                         </div>
                                     </div>
                                     <div class="">
                                         <label class="control-label"
-                                               style="width: 140px;">所属国家：</label>
+                                               style="width: 140px;">国家：</label>
                                         <div class="controls" style="margin-left: 152px;">
                                             <select name="countryId" style="width:80%">
-##                                                <option selected="selected"
-##                                                        value="$!vo.country.id">$!vo.country.name</option>
-##                                                #foreach($country in $!countries)
-##                                                    <option value="$!country.id">$!country.name</option>
-##                                                #end
                                                 #foreach($country in $!countries)
-                                                    <option value="$!country.id" #if($!vo.country.id==$!country.id) selected  #end>$!country.name</option>
+                                                    <option value="$!country.id" #if($!group.country.id==$!country.id) selected  #end>$!country.name</option>
                                                 #end
                                             </select>
                                         </div>
                                     </div>
                                     <div class="">
                                         <label class="control-label"
-                                               style="width: 140px;">邮箱：</label>
+                                               style="width: 140px;">城市：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" name="email" id="email" type="text"
+                                            <select name="cityId" style="width:80%">
+                                                #foreach($city in $!cities)
+                                                    <option value="$!city.id" #if($!group.city.id==$!city.id) selected  #end>$!city.name</option>
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">是否显示</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select id="isPublic" name="isPublic" class="span7" style="width: 80%">
+                                                <option value="0"  #if($!group.isPublic==0)  selected #end>显示</option>
+                                                <option value="1"  #if($!group.isPublic==1)  selected #end>隐藏
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="">
+                                        <label class="control-label"
+                                               style="width: 140px;">描述：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <input for="name" name="desc" id="desc" type="text"
                                                    class="span7"
-                                                   style="width: 80%" value="$!vo.user.email">
-                                        </div>
-                                    </div>
-                                    <div class="">
-                                        <label class="control-label"
-                                               style="width: 140px;">角色：</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <select name="roleId" style="width:80%">
-                                                #foreach($role in $!roles)
-                                                    <option value="$!role.id" #if($!vo.role.id==$!role.id) selected  #end>$!role.desc</option>
-                                                #end
-##                                                <option selected="selected"
-##                                                        value="$!vo.role.id">$!vo.role.desc</option>
-##                                                #foreach($role in $!roles)
-##                                                    <option value="$!role.id">$!role.desc</option>
-##                                                #end
-                                            </select>
+                                                   style="width: 80%" value="$!group.desc">
                                         </div>
                                     </div>
 
@@ -121,7 +123,8 @@
         //邮箱验证
         function emailChekc() {
             var email = document.getElementsByName("email")[0].value;
-            var reg = /^([a-z0-9A-Z]+[-|\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\.)+[a-zA-Z]{2,}$/;
+//            var reg = /^([a-z0-9A-Z]+[-|\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\.)+[a-zA-Z]{2,}$/;
+            var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/;
             var res = reg.test(email);
             if (res == false) {
                 alert("邮箱规则错误，请输入正确的邮箱");

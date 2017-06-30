@@ -104,15 +104,7 @@
     #include("common/js-support.vm")
 
 <script type="text/javascript">
-    function emailChekc() {
-        var email = document.getElementsByName("email")[0].value;
-        var reg = /^[A-z]+[A-z0-9_-]*\@[A-z0-9]+\.[A-z]+$/;
-        var res=reg.test(email);
-        if (res == false) {
-            alert("邮箱规则错误，请输入正确的邮箱");
-        }
-        return res;
-    }
+
 </script>
 
 </body>

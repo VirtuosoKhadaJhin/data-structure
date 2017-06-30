@@ -1,11 +1,11 @@
 package com.nuanyou.cms.service;
 
-import com.nuanyou.cms.entity.BdCountry;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
+import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.MissionGroup;
-import com.nuanyou.cms.model.MissionGroupVo;
 import com.nuanyou.cms.model.MissionGroupParamVo;
+import com.nuanyou.cms.model.MissionGroupVo;
 
 import org.springframework.data.domain.Page;
 
@@ -26,7 +26,7 @@ public interface MissionGroupService {
      */
     Page<MissionGroupVo> findAllGroups(MissionGroupVo requestVo);
     
-    List<BdCountry> findAllCountries();
+    List<Country> findAllCountries();
     
     List<City> findAllCities();
     
@@ -61,4 +61,41 @@ public interface MissionGroupService {
      * @return
      */
     MissionGroup findGroupByUserId(Long userId);
+    
+    /**
+     * 根据groupId更新任务对bduser可见
+     *
+     * @param id
+     * @return
+     */
+    Boolean updateIsPublicByGroupId(Long id);
+    
+    /**
+     * 通过id找到组
+     *
+     * @param id
+     * @return
+     */
+    MissionGroup findGroupById(Long id);
+    
+    void updateGroup(String id, MissionGroupParamVo paramVo);
+    
+    /**
+     * 通过id删除组
+     *
+     * @param id
+     * @return
+     */
+    Boolean delGroupById(Long id);
+    
+    List<BdUser> findBdUserSByCountryId(Long countryId);
+    
+    /**
+     * 给战队添加成员
+     *
+     * @param bDUserIds
+     * @param groupId
+     * @return
+     */
+    Boolean addGroupBdUser(Long[] bDUserIds, Long groupId);
 }
