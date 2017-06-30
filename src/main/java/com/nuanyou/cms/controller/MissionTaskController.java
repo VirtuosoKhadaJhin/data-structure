@@ -120,10 +120,25 @@ public class MissionTaskController {
         model.addAttribute("page", page);
         model.addAttribute("districts", districts);
         model.addAttribute("bdUsers", bdUsers);
+        model.addAttribute("group", missionGroup);
         model.addAttribute("merchants", merchants);
         model.addAttribute("requestVo", requestVo);
         model.addAttribute("taskStatus", MissionTaskStatus.values());
         return "distribute/list";
+    }
+
+    /**
+     * 更新组是否可见
+     *
+     * @param groupId
+     * @param isPublic
+     * @return
+     */
+    @RequestMapping("updateGroupPublic")
+    @ResponseBody
+    public APIResult updateGroupPublic(Long groupId, boolean isPublic) {
+        missionGroupService.updateGroupPublic(groupId, isPublic);
+        return new APIResult(ResultCodes.Success);
     }
 
     /**

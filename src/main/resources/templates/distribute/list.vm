@@ -29,11 +29,9 @@
 
                             <div class="public-div">
                                 <span style="margin-right: 5px;font-size: 14px">未分配商户对所有队员可见：</span>
-                                <button class="btn btn btn-inverse btn-small ispublic" style="background-color: #363636">确定</button>
-                                <button class="btn btn-small nepublic">取消</button>
-
+                                <label><input type="radio" value="true" class="radio-public">可见</label>
+                                <label><input type="radio" value="false" class="radio-public">不可见</label>
                             </div>
-
                         </div>
 
                         <table class="table table-bordered data-table dataTable">
@@ -111,7 +109,7 @@
                                 <div class="checkbox bd-checkbox">
                                     <input id="checkbox1$e.id" bd-id="$e.id" class="styled bd-checkd" type="checkbox">
                                     <label for="checkbox1$e.id" class="bd-checkbox-label">
-                                        $!e.chineseName / $!e.demail
+                                        $!e.chineseName / $!e.dmail
                                     </label>
                                 </div>
                             #end
@@ -167,7 +165,7 @@
                             <div class="search-select">
                                 <label>商圈</label>
                                 <select class="span11 select2" name="district">
-                                ##<option value>全部</option>##
+                                    <option value>全部</option>
                                     #foreach($e in $!districts)
                                         <option value="$!e.id" #if($!requestVo.district == $!e.id) selected #end>$!e.id : $!e.name</option>
                                     #end

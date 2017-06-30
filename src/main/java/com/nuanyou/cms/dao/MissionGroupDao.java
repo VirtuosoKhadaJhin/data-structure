@@ -12,7 +12,7 @@ import java.util.List;
  * Created by sharp on 2017/6/28 - 15:26
  */
 public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaSpecificationExecutor {
-    
+
     /**
      * 查找所有可见的group
      *
@@ -20,6 +20,7 @@ public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaS
      */
     @Query(value = "SELECT t from MissionGroup t where delflag=0")
     List<MissionGroup> findAllGroup();
+
     /**
      * 通过组长查找组
      *
@@ -27,11 +28,15 @@ public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaS
      * @return
      */
     List<MissionGroup> findByLeaderId(Long leaderid);
-    
+
     /**
      * 通过组id查找组
+     *
      * @param id
      * @return
      */
     List<MissionGroup> findById(Long id);
+
+    @Query("update MissionGroup set isPublic=?2 where id=?1")
+    void updatePublicByGroupId(Long groupId, boolean isPublic);
 }
