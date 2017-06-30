@@ -97,4 +97,12 @@ public interface BdUserManagerService {
      * @param aLong
      */
     void del(Long aLong);
+
+    /**
+     * 根据email查询BDUser
+     *
+     * @param email
+     * @return
+     */
+    BdUser findBdUserByDemail(String email);
 }

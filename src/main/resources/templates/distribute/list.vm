@@ -116,7 +116,8 @@
                                 </div>
                             #end
                             <div class="bd-task-time">
-                                <input type="text" class="span8 timeFormatNoDay" value="$!requestVo.finishdt" placeholder="完成时间">
+                                <label>指派时间：</label>
+                                <input type="text" name="input-distrDt" class="span8 timeFormatNoDay datetime-distrDt" value="">
                             </div>
                         #end
                     </div>

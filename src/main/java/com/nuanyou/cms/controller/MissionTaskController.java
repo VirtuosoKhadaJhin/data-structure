@@ -50,6 +50,9 @@ public class MissionTaskController {
     @Autowired
     private MissionTaskService missionTaskService;
 
+    @Autowired
+    private BdUserManagerService bdUserService;
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -108,7 +111,9 @@ public class MissionTaskController {
         }
         requestVo.setStatus(null);
         List<Merchant> merchants = merchantService.findMerchant(requestVo.getCountry(), requestVo.getCity());
-        MissionGroup missionGroup = missionGroupService.findGroupByUserId(UserHolder.getUser().getUserid());
+        String email = UserHolder.getUser().getEmail();
+        BdUser bdUser = bdUserService.findBdUserByDemail(email);
+        MissionGroup missionGroup = missionGroupService.findGroupByUserId(bdUser.getId());
         List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(missionGroup.getId());
         List<DistrictVo> districts = districtService.findByCity(missionGroup.getCity().getId());
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);

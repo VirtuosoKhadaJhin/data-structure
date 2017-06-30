@@ -4,11 +4,7 @@ import com.nuanyou.cms.dao.BdCountryDao;
 import com.nuanyou.cms.dao.BdRelUserRoleDao;
 import com.nuanyou.cms.dao.BdRoleDao;
 import com.nuanyou.cms.dao.BdUserDao;
-import com.nuanyou.cms.entity.BdCountry;
-import com.nuanyou.cms.entity.BdRelUserRole;
-import com.nuanyou.cms.entity.BdRole;
-import com.nuanyou.cms.entity.BdUser;
-import com.nuanyou.cms.entity.Country;
+import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.model.BdUserManagerRequestVo;
 import com.nuanyou.cms.model.BdUserParamVo;
 import com.nuanyou.cms.model.BdUserVo;
@@ -16,22 +12,17 @@ import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.BdUserManagerService;
 import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.util.MD5Utils;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * bd宝用户管理
@@ -216,8 +207,12 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
         //保存信息
         bdUserDao.save(user);
     }
-    
-    
+
+    @Override
+    public BdUser findBdUserByDemail(String email) {
+        return bdUserDao.findOne(Example.of(new BdUser(email)));
+    }
+
     @Override
     public void updateUserRole(BdRelUserRole userRole) {
         List<BdRelUserRole> userRoles = bdRelUserRoleDao.findAll();

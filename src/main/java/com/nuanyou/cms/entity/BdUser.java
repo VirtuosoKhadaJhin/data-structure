@@ -4,15 +4,8 @@ import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.commons.LastModified;
 
+import javax.persistence.*;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
  * bd宝用户
@@ -34,7 +27,14 @@ public class BdUser {
     private Byte deleted;
     private Date createTime;
     private Date updateTime;
-    
+
+    public BdUser() {
+    }
+
+    public BdUser(String dmail) {
+        this.dmail = dmail;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
