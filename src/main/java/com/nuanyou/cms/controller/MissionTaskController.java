@@ -109,7 +109,7 @@ public class MissionTaskController {
         //TODO 获取当前用户所在的组
         List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(10L);
         List<DistrictVo> districts = districtService.findByCity(requestVo.getCity());
-        requestVo.setStatus(MissionTaskStatus.UN_FINISH);
+        requestVo.setStatus(null);
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
         model.addAttribute("cities", cities);
