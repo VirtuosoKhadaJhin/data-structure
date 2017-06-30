@@ -119,7 +119,7 @@
         <select class="span11 select-country" id="country" name="country">
             <option value="">全部</option>
             #foreach($e in $!countries)
-                <option value="$!e.id" #if($!requestVo.country==$!e.id)selected #end>$!e.name</option>
+                <option value="$!e.id" #if($!requestVo.country.id==$!e.id)selected #end>$!e.name</option>
             #end
         </select>
     </div>
@@ -129,7 +129,7 @@
         <select class="span11" id="city" name="city">
             <option class="city-unit" value>全部</option>
             #foreach($e in $!cities)
-                <option class="option-city" country-id="$!e.country.id" value="$!e.id" #if($!requestVo.city == $!e.id) selected #end>$!e.name</option>
+                <option class="option-city" country-id="$!e.country.id" value="$!e.id" #if($!requestVo.city.id == $!e.id) selected #end>$!e.name</option>
             #end
         </select>
     </div>
@@ -146,11 +146,6 @@
     <div class="search-select">
         <label>战队名称：</label>
         <input type="text" name="name" class="span11" value="$!requestVo.name" placeholder="战队名称">
-    </div>
-
-    <div class="search-select">
-        <label>战队描述：</label>
-        <input type="text" name="desc" class="span11" value="$!requestVo.desc" placeholder="战队描述">
     </div>
 
     <button type="submit" class="btn btn-primary">查询</button>

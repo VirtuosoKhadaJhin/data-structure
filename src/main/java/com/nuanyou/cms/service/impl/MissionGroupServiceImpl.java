@@ -10,6 +10,7 @@ import com.nuanyou.cms.model.MissionGroupVo;
 import com.nuanyou.cms.service.MissionGroupService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,10 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,11 +45,34 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     private BdUserDao bdUserDao;
 
     @Override
-    public Page<MissionGroupVo> findAllGroups(MissionGroupVo requestVo) {
+    public Page<MissionGroupVo> findAllGroups(final MissionGroupVo requestVo) {
         //分页请求
         final Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageNum());
 
-        List<MissionGroup> groups = groupDao.findAllGroup();
+        List<MissionGroup> groups = groupDao.findAll(new Specification() {
+
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                predicate.add(cb.equal(root.get("delFlag"), 0));
+
+                if (StringUtils.isNotEmpty(requestVo.getName())) {
+                    predicate.add(cb.like(root.get("name"), "%" + requestVo.getName() + "%"));
+                }
+                if (requestVo.getIsPublic() != null) {
+                    predicate.add(cb.equal(root.get("isPublic"), requestVo.getIsPublic()));
+                }
+                if (requestVo.getCountry() != null) {
+                    predicate.add(cb.equal(root.get("country").get("id"), requestVo.getCountry().getId()));
+                }
+                if (requestVo.getCity() != null) {
+                    predicate.add(cb.equal(root.get("city").get("id"), requestVo.getCity().getId()));
+                }
+
+                Predicate[] arrays = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(arrays)).getRestriction();
+            }
+        });
 
         List<MissionGroupVo> allCate = convertToBdUserManagerVo(groups);
 
@@ -145,7 +166,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     public List<Long> findBdUserByGroupId(Long groupId) {
         List<MissionGroupBd> missionGroupBds = groupBdDao.findByGroupId(groupId);
         List<Long> bdUserIds = Lists.newArrayList();
-        for(MissionGroupBd groupBd : missionGroupBds){
+        for (MissionGroupBd groupBd : missionGroupBds) {
             bdUserIds.add(groupBd.getBdId());
         }
         return bdUserIds;

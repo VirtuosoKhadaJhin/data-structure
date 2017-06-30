@@ -24,7 +24,7 @@ public interface MissionGroupService {
      * @param requestVo
      * @return
      */
-    Page<MissionGroupVo> findAllGroups(MissionGroupVo requestVo);
+    Page<MissionGroupVo> findAllGroups(final MissionGroupVo requestVo);
     
     List<Country> findAllCountries();
     

@@ -166,9 +166,23 @@ public class MissionGroupController {
     @RequestMapping("findBdUserByCountryId")
     @ResponseBody
     public APIResult<List<BdUser>> findBdUserByCountryId(@RequestBody MissionGroupVo requestVo) {
-        APIResult<List<BdUser>> result = new APIResult<>();
+        APIResult<List<BdUser>> result = new APIResult<List<BdUser>>();
         List<BdUser> bdUsers = missionGroupService.findBdUserSByCountryId(requestVo.getCountryId());
         result.setData(bdUsers);
+        return result;
+    }
+
+    /**
+     * 查询组已有的BD
+     *
+     * @return
+     */
+    @RequestMapping("findBdUserByGroupId")
+    @ResponseBody
+    public APIResult<List<Long>> findBdUserByGroupId(@RequestBody MissionGroupVo requestVo) {
+        APIResult<List<Long>> result = new APIResult<List<Long>>();
+        List<Long> list = missionGroupService.findBdUserByGroupId(requestVo.getGroupId());
+        result.setData(list);
         return result;
     }
 

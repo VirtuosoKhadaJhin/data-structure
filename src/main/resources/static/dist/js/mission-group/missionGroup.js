@@ -8,6 +8,12 @@ $('.del-btn').on("click", function () {
     $(".deleteModal").modal("show");
 });
 
+// 搜索框重置
+$(".search-reset").click(function () {
+    $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
+    $(".search-form").find(".select2").val('').trigger('change');
+});
+
 // 二次删除确认窗
 $('.sure-del').on("click", function () {
     $(".deleteModal").modal("hide");
@@ -85,6 +91,7 @@ function addBdUserModal(countryId, groupId) {
         contentType: 'application/json',
         success: function (result) {
             if (result.code == 0) {
+                findBdUserByGroupId(groupId);
                 var bdUsers = result.data;
                 var htmlData = "";
                 for (var i = 0; i < bdUsers.length; i++) {
@@ -97,13 +104,41 @@ function addBdUserModal(countryId, groupId) {
     });
 }
 
+function findBdUserByGroupId(groupId) {
+    console.log("groupId:" + groupId);
+    $.ajax({
+        url: 'findBdUserByGroupId',
+        data: JSON.stringify({groupId: Number(groupId)}),
+        type: 'post',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (result) {
+            if (result.code == 0) {
+                var groupBdUsers = result.data;
+                var checkBdUserChecks = $(".check-bdUser");
+                for (var i = 0; i < checkBdUserChecks.length; i++) {
+                    var checkBdUser = checkBdUserChecks[i];
+                    for (var j = 0; j < groupBdUsers.length; j++) {
+                        var groupBdUser = groupBdUsers[j];
+                        if (groupBdUser == $(checkBdUser).val()) {
+                            $(checkBdUser).prop("checked", true);
+                        }
+                    }
+                }
+
+
+            }
+        }
+    });
+}
+
 $(document).ready(function () {
-    changeCity();
+    changeCity(false);
 });
 $(".select-country").on("change", function () {
-    changeCity();
+    changeCity(true);
 });
-function changeCity() {
+function changeCity(isReset) {
     var countryId = $(".select-country").val();
     var cityOptions = $(".option-city");
     for (var i = 0; i < cityOptions.length; i++) {
@@ -114,5 +149,7 @@ function changeCity() {
             $(cityOption).show();
         }
     }
-    $("#city").val("");
+    if(isReset){
+        $("#city").val("");
+    }
 }

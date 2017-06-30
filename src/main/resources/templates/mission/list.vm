@@ -68,7 +68,7 @@
                                     <td>$!entity.groupId - $!entity.bdId</td>
                                     <td class="td-imgurl">
                                         <div class="imgurl-info">
-                                            #if($!entity.merchantTrack.imgUrls.size()==0)
+                                            #if($!entity.merchantTrack.imgUrls.size()==0 || "$!entity.merchantTrack.imgUrls"=="")
                                                 暂无签到图片
                                             #else
                                                 #foreach($imgUrl in $!entity.merchantTrack.imgUrls)
@@ -155,12 +155,10 @@
                                 </select>
                             </div>
 
-                            #if($!requestVo.status.key != 2)
-                                <div class="search-select task-status-time">
-                                    <label>审核时间：</label>
-                                    <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
-                                </div>
-                            #end
+                            <div class="search-select task-status-time" id="sh-date">
+                                <label>审核时间：</label>
+                                <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
+                            </div>
 
                             <div class="search-select">
                                 <label>完成时间：</label>

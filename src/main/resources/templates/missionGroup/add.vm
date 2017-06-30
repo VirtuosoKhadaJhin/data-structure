@@ -70,16 +70,17 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div>
-                                        <label class="control-label" style="width: 140px;">是否显示</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <select id="isPublic" name="isPublic" class="span7" style="width: 80%">
-                                                <option value="0"  #if($!entity.display==0)  selected #end>显示</option>
-                                                <option value="1"  #if($!entity.display==1)  selected #end>隐藏
-                                                </option>
-                                            </select>
-                                        </div>
+
+                                #*<div>
+                                    <label class="control-label" style="width: 140px;">是否显示</label>
+                                    <div class="controls" style="margin-left: 152px;">
+                                        <select id="isPublic" name="isPublic" class="span7" style="width: 80%">
+                                            <option value="0"  #if($!entity.display==0)  selected #end>显示</option>
+                                            <option value="1"  #if($!entity.display==1)  selected #end>隐藏
+                                            </option>
+                                        </select>
                                     </div>
+                                </div>*#
 
                                     <div>
                                         <label class="control-label" style="width: 140px;">描述：</label>
@@ -105,8 +106,10 @@
                                 </div>
 
                                 <div class="form-actions" style="clear:both;text-align: center">
+                                    ##  默认不可见
+                                    <input type="hidden" name="isPublic" value="0"/>
                                     <button type="submit" class="btn btn-info">确定</button>
-                                ##                                    <a class="btn btn-primary" onclick="backLangsDictionaryList()">返回</a>
+                                    <a class="btn btn-primary" href="list">返回</a>
                                 </div>
                         </form>
                     </div>

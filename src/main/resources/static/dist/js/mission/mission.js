@@ -32,12 +32,19 @@ $(function () {
         $(".modal .hide-mchId").val($(this).parents("tr").attr("data-mchId"));
     });
 
+    var status = $(".task-status").val();
+    if ("NON_APPROVAL" == status) {
+        $("#sh-date").show();
+    } else {
+        $("#sh-date").hide();
+    }
+
     // 改变备注的显示与隐藏
     $(".approval-status").on("change", function () {
         if ("NON_APPROVAL" == $(this).val()) {
-            $(".remark-info").show();
+            $("#sh-date").show();
         } else {
-            $(".remark-info").hide();
+            $("#sh-date").hide();
         }
     });
 

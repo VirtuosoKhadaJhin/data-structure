@@ -116,10 +116,10 @@
                                         <td style="min-width: 80px;">
                                             <div style="text-align: center">
                                                 <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item"
-                                                   href="edit?id=$!vo.id">编辑</a>
+                                                   href="/bdUser/edit?id=$!vo.id">编辑</a>
                                                 <a style="background red" key-code="$!vo.id"
                                                 ##                           class="btn btn-danger btn-primary btn-mini modify-item" href="del?id=$!vo.id">删除</a>
-                                                   class="btn btn-danger btn-primary btn-mini modify-item" href="del?id=$!vo.id">删除</a>
+                                                   class="btn btn-danger btn-primary btn-mini modify-bduser-item">删除</a>
                                             </div>
                                         </td>
 
