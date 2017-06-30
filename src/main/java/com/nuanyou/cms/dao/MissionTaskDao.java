@@ -22,6 +22,6 @@ public interface MissionTaskDao extends JpaRepository<MissionTask, Long>, JpaSpe
 
     @Transactional
     @Modifying
-    @Query("update MissionTask t set bdId=?1, status=?2, updateDt=?4 where id in ?3")
+    @Query("update MissionTask t set bdId=?1, status=?2, updateDt=?3 where id in ?4")
     void distributeTask(Long bdId, int status, Date date, List<Long> taskIds);
 }

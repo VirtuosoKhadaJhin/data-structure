@@ -1,7 +1,10 @@
 package com.nuanyou.cms.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -23,9 +26,15 @@ public class MissionRequestVo {
 
     private Long district;
 
-    private Boolean isAudit = true;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date finishDt;
 
-    private Date todayDt;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date auditDt;
+
+    private Boolean isAudit = true;
 
     private int pageNum = 1;
 
@@ -79,28 +88,36 @@ public class MissionRequestVo {
         this.city = city;
     }
 
-    public Date getTodayDt() {
-        return todayDt;
-    }
-
-    public void setTodayDt(Date todayDt) {
-        this.todayDt = todayDt;
-    }
-
-    public Boolean getIsAudit() {
-        return isAudit;
-    }
-
-    public void setIsAudit(Boolean isAudit) {
-        this.isAudit = isAudit;
-    }
-
     public Long getDistrict() {
         return district;
     }
 
     public void setDistrict(Long district) {
         this.district = district;
+    }
+
+    public Date getFinishDt() {
+        return finishDt;
+    }
+
+    public void setFinishDt(Date finishDt) {
+        this.finishDt = finishDt;
+    }
+
+    public Date getAuditDt() {
+        return auditDt;
+    }
+
+    public void setAuditDt(Date auditDt) {
+        this.auditDt = auditDt;
+    }
+
+    public Boolean getAudit() {
+        return isAudit;
+    }
+
+    public void setAudit(Boolean audit) {
+        isAudit = audit;
     }
 
     public int getPageNum() {
@@ -117,5 +134,19 @@ public class MissionRequestVo {
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getFinishDtStr() {
+        if (finishDt == null) {
+            return null;
+        }
+        return new SimpleDateFormat("yyyy-MM-dd").format(finishDt);
+    }
+
+    public String getAuditDtStr(){
+        if (auditDt == null) {
+            return null;
+        }
+        return new SimpleDateFormat("yyyy-MM-dd").format(auditDt);
     }
 }

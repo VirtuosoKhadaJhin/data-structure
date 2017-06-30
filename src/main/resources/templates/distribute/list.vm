@@ -25,7 +25,15 @@
                         <div class="widget-title">
                             <span class="icon"><i class="icon-th"></i></span>
                             <h5>战地任务列表</h5>
-                            <button class="btn btn-small btn-info task-distribute">任务指派</button>
+                            <button class="btn btn-small btn-success task-distribute">任务指派</button>
+
+                            <div class="public-div">
+                                <span style="margin-right: 5px;font-size: 14px">未分配商户对所有队员可见：</span>
+                                <button class="btn btn btn-inverse btn-small ispublic" style="background-color: #363636">确定</button>
+                                <button class="btn btn-small nepublic">取消</button>
+
+                            </div>
+
                         </div>
 
                         <table class="table table-bordered data-table dataTable">
@@ -63,22 +71,22 @@
                                 <tr>
                                     <td>
                                         <div class="checkbox bd-checkbox">
-                                            <input id="checkbox0" class="styled td-checked" type="checkbox" task-id="1">
+                                            <input id="checkbox0" class="styled td-checked" type="checkbox" task-id="$!entity.id">
                                             <label for="checkbox0" class="bd-checkbox-label" style="margin-bottom: 15px;">
                                             </label>
                                         </div>
                                     </td>
                                     <td>
-                                        <span>$!entity.mchId</span>
+                                        <span>$!entity.merchant.id</span>
                                         <br/>
-                                        <a target="_blank" href="">$!entity.mchName</a>
+                                        <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a>
                                     </td>
-                                    <td>弘大商圈</td>
-                                    <td>$!entity.mchName.bdId</td>
+                                    <td>$!entity.merchant.district.name</td>
+                                    <td>$!entity.bdUser.chineseName</td>
                                     <td>$!entity.status.value</td>
                                     <td class="td-bz">$!entity.remark</td>
-                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishdt)</td>
-                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditdt)</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishDt)</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditDt)</td>
                                 </tr>
                                 #end
                             </tbody>
@@ -108,14 +116,28 @@
                                 </div>
                             #end
                             <div class="bd-task-time">
-                                <input type="text" style="margin-left: 20px;" class="span8 timeFormatNoDay" value="$!requestVo.finishdt" placeholder="完成时间">
+                                <input type="text" class="span8 timeFormatNoDay" value="$!requestVo.finishdt" placeholder="完成时间">
                             </div>
                         #end
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
                     <button class="btn btn-primary sure-distribute">确认</button>
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                </div>
+            </div>
+
+            <!-- 是否可见弹窗 -->
+            <div class="modal hide fade publicSwichModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="publicSwichLabel">可见选项</h3>
+                </div>
+                <div class="modal-body">
+                    <p class="public-swich-text"></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
                 </div>
             </div>
 
@@ -128,6 +150,7 @@
                 <div class="modal-body">
                     <p class="distributeResult-text"></p>
                 </div>
+                <input type="hidden" class="audit-result"/>
                 <div class="modal-footer">
                     <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
                 </div>
@@ -178,8 +201,13 @@
                             </div>
 
                             <div class="search-select">
+                                <label>审核时间：</label>
+                                <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
+                            </div>
+
+                            <div class="search-select">
                                 <label>完成时间：</label>
-                                <input type="text" class="span11 timeFormatNoDay" value="$!requestVo.finishdt" placeholder="完成时间">
+                                <input type="text" name="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="完成时间">
                             </div>
 
                             <div class="btn-group">

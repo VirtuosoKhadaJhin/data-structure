@@ -3,6 +3,7 @@ package com.nuanyou.cms.entity.mission;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.entity.BdUser;
+import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.MissionGroup;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,8 +23,9 @@ public class MissionTask {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "mchid")
-    private Long mchId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mchid")
+    private Merchant merchant;
 
     @Column(name = "mchname")
     private String mchName;
@@ -34,7 +36,7 @@ public class MissionTask {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bdid")
-    private BdUser bdId;
+    private BdUser bdUser;
 
     @Column(name = "status")
     private int status;
@@ -82,12 +84,12 @@ public class MissionTask {
         this.id = id;
     }
 
-    public Long getMchId() {
-        return mchId;
+    public Merchant getMerchant() {
+        return merchant;
     }
 
-    public void setMchId(Long mchId) {
-        this.mchId = mchId;
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
     }
 
     public String getMchName() {
@@ -106,12 +108,12 @@ public class MissionTask {
         this.group = group;
     }
 
-    public BdUser getBdId() {
-        return bdId;
+    public BdUser getBdUser() {
+        return bdUser;
     }
 
-    public void setBdId(BdUser bdId) {
-        this.bdId = bdId;
+    public void setBdUser(BdUser bdUser) {
+        this.bdUser = bdUser;
     }
 
     public int getStatus() {

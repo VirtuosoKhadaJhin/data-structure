@@ -2,6 +2,10 @@
     color: #08c;
 }
 
+.table tr td a:hover {
+    text-decoration: underline;
+}
+
 table .tr-class:hover {
     cursor: pointer;
 }

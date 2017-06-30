@@ -1,5 +1,8 @@
 package com.nuanyou.cms.util;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.joda.time.DateTime;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -91,5 +94,19 @@ public class DateUtils {
         c.set(Calendar.MINUTE,0);
         c.set(Calendar.SECOND,0);;
         return c.getTime();
+    }
+
+    /**
+     * 获取当天的起止时间
+     *
+     * @return
+     * @startDate 起始时间，例：2017-6-29 00:00:00
+     * @endDate 结束时间，例：2017-6-29 23:59:59
+     */
+    public static Pair<Date, Date> getDayStartEndTime(Date date) {
+        DateTime dateTime = new DateTime();
+        Date startDate = dateTime.withTimeAtStartOfDay().toDate();
+        Date endDate = dateTime.plusDays(1).withTimeAtStartOfDay().minusSeconds(1).toDate();
+        return Pair.of(startDate, endDate);
     }
 }
