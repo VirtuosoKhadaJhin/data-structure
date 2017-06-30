@@ -85,7 +85,7 @@
                                     </div>
                                     <div class="">
                                         <label class="control-label"
-                                               style="width: 140px;">合归邮箱：</label>
+                                               style="width: 140px;">合同归档邮箱：</label>
                                         <div class="controls" style="margin-left: 152px;">
                                             <input for="name" name="email" id="email" type="text"
                                                    class="span7"
