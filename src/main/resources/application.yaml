@@ -91,3 +91,6 @@ paymentRecord:
   service-address: http://test.payment.91nuanyou.com
   pattern-url: /paymentOrderRecord/*
   waiting-time: 5
+
+numberbind:
+    domain: https://9ny.me/api/

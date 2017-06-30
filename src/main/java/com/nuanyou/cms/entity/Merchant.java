@@ -82,7 +82,7 @@ public class Merchant {
 
 
     private Boolean locateExactly;
-
+    private List<String> collectionCodeList;
 
 
     @Id
@@ -532,5 +532,14 @@ public class Merchant {
 
     public void setLocateExactly(Boolean locateExactly) {
         this.locateExactly = locateExactly;
+    }
+
+    @Transient
+    public List<String> getCollectionCodeList() {
+        return collectionCodeList;
+    }
+
+    public void setCollectionCodeList(List<String> collectionCodeList) {
+        this.collectionCodeList = collectionCodeList;
     }
 }
