@@ -59,6 +59,7 @@
                                             </select>
                                         </div>
                                     </div>
+
                                     <div>
                                         <label class="control-label" style="width: 140px;">城市：</label>
                                         <div class="controls" style="margin-left: 152px;">
@@ -71,17 +72,6 @@
                                         </div>
                                     </div>
 
-                                #*<div>
-                                    <label class="control-label" style="width: 140px;">是否显示</label>
-                                    <div class="controls" style="margin-left: 152px;">
-                                        <select id="isPublic" name="isPublic" class="span7" style="width: 80%">
-                                            <option value="0"  #if($!entity.display==0)  selected #end>显示</option>
-                                            <option value="1"  #if($!entity.display==1)  selected #end>隐藏
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>*#
-
                                     <div>
                                         <label class="control-label" style="width: 140px;">描述：</label>
                                         <div class="controls" style="margin-left: 152px;">
@@ -90,10 +80,30 @@
                                                    value=""/>
                                         </div>
                                     </div>
+
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">队长：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select name="leader" id="leader" style="width:80%">
+                                                <option class="city-unit" value>请选择队长</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">副队长：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select name="viceleader" id="viceleader" style="width:80%">
+                                                <option class="city-unit" value>请选择副队长</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+
                                 </div>
 
                                 <div class="form-actions" style="clear:both;text-align: center">
-                                    ##  默认不可见
                                     <input type="hidden" name="isPublic" value="0"/>
                                     <button type="submit" class="btn btn-info">确定</button>
                                     <a class="btn btn-primary" href="list">返回</a>
@@ -108,9 +118,9 @@
     #include("common/js-support.vm")
 
 <script type="text/javascript">
+    // 邮箱校验
     function emailChekc() {
         var email = document.getElementsByName("email")[0].value;
-//        var reg = /^[A-z]+[A-z0-9_-]*\@[A-z0-9]+\.[A-z]+$/;
         var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/;
         var res = reg.test(email);
         if (res == false) {
@@ -121,9 +131,13 @@
     $(document).ready(function () {
         changeCity();
     });
+
+    // 联动城市
     $("#country").on("click", function () {
         changeCity();
     });
+
+    // 联动城市
     function changeCity() {
         var countryId = $("#country").val();
         var cityOptions = $(".option-city");
@@ -136,6 +150,11 @@
             }
         }
         $("#city").val("");
+    }
+
+    // 联动bdUser
+    function queryBdUsers() {
+
     }
 
 </script>

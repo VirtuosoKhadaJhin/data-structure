@@ -25,7 +25,6 @@ $('.second-sure-del').on("click", function () {
     var id = $(".hide-del-id").val();
 
     var data = {id: Number(id)};
-    console.log(JSON.stringify(data));
     $.ajax({
         url: 'del',
         data: JSON.stringify(data),
@@ -83,7 +82,6 @@ function addUsers() {
  * @param countryId
  */
 function distributeLeaderModal(groupId, countryId) {
-    console.log(groupId);
     $.ajax({
         url: 'queryGroupBdUsers',
         data: JSON.stringify({"groupId": groupId, "countryId": countryId}),
@@ -94,15 +92,16 @@ function distributeLeaderModal(groupId, countryId) {
             if (result.code == 0) {
                 var bdUsers = result.data;
                 var htmlData = "";
-                if (bdUsers.length == 0) {
+                if (bdUsers == null) {
                     htmlData = "<strong class='deleteResult' style='margin-left: 20px;font-size: 14px;'>请分配组员</strong>";
-                }
-                for (var i = 0; i < bdUsers.length; i++) {
-                    var bdUser = bdUsers[i];
-                    if (bdUser.isLeader) {
-                        htmlData += "<label><input class='check-bdUser-leader' style='margin: 10px;margin-top: 8px;' type='checkbox' data-key='" + bdUser.id + "' value='" + bdUser.id + "' checked='checked' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
-                    } else {
-                        htmlData += "<label><input class='check-bdUser-leader' style='margin: 10px;margin-top: 8px;' type='checkbox' data-key='" + bdUser.id + "' value='" + bdUser.id + "' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
+                } else {
+                    for (var i = 0; i < bdUsers.length; i++) {
+                        var bdUser = bdUsers[i];
+                        if (bdUser.isLeader) {
+                            htmlData += "<label><input class='check-bdUser-leader' style='margin: 10px;margin-top: 8px;' type='checkbox' data-key='" + bdUser.id + "' value='" + bdUser.id + "' checked='checked' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
+                        } else {
+                            htmlData += "<label><input class='check-bdUser-leader' style='margin: 10px;margin-top: 8px;' type='checkbox' data-key='" + bdUser.id + "' value='" + bdUser.id + "' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
+                        }
                     }
                 }
                 $("#listGroupLeaderAddBd").html(htmlData);
@@ -123,9 +122,6 @@ function distributeLeaderModal(groupId, countryId) {
 $(".distributeLeader").on("click", function () {
     var groupId = $(".distributeLeaderModal .hide-groupId").val();
     var leaderId = $(".distributeLeaderModal .hide-leaderId").val();
-
-    console.log("组id：" + groupId);
-    console.log("队长id：" + leaderId);
 
     $.ajax({
         url: 'distributeLeader',

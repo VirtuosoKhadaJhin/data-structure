@@ -204,6 +204,10 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         }
 
         // 一次性查询所有用户
+        if (CollectionUtils.isEmpty(bdUserIds)) {
+            return null;
+        }
+
         List<BdUser> bdUsers = bdUserDao.findBdUsersByIdsAndCountryId(bdUserIds, countryId);
 
         List<BdUserVo> bdUsersVo = convertToBdUserVo(bdUsers);
@@ -229,7 +233,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
 
     @Override
     public List<MissionGroup> findByCityId(final Long city) {
-        if(city== null){
+        if (city == null) {
             return groupDao.findAllGroup();
         }
         return groupDao.findGroupsByCityId(city);
