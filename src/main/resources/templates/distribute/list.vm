@@ -9,7 +9,7 @@
     <link href="/dist/css/mission/missionTask.css" rel="stylesheet"/>
     #include("common/js-support.vm")
     <script src="/dist/js/mission/missionTask.js"></script>
-    <script src="/dist/js/page-support.js"></script>
+
 </head>
 <body>
 <div id="content" class="content-container">
@@ -94,6 +94,10 @@
                             </tbody>
                         </table>
 
+                    </div>
+                    #set($i=$!page.number + 1)
+                    <div class="pagination" style="float:right">
+                        <ul total="$!page.totalPages" index="$!i"></ul>
                     </div>
                 </div>
             </div>
@@ -245,6 +249,7 @@
         </div>
     </div>
 </div>
+<script src="/dist/js/page-support.js"></script>
 <script>
     $('.timeFormatNoDay').datetimepicker({
         format: "Y-m-d",
