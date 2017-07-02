@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 菜单管理</title>
+
+    #include("common/css-support.vm")
+    <style>
+        .required-waring {
+            display: none;
+            text-align: left;
+            width: 140px;
+            padding-right: 8em;
+            color: red;
+            text-align: left;
+        }
+    </style>
+
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <div id="breadcrumb">
+                <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+                <a href="list" class="tip-bottom" data-original-title="">战队管理</a>
+                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">新增</a>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span6" style="width: 70%;min-width:994px;">
+                    <div class="widget-box" style="width: 78%">
+                        <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                            <h5>新增战队</h5>
+                        </div>
+                        <form class="form-horizontal" action="saveAdd" method="post" onsubmit="return emailChekc()">
+
+                            <div class="nopadding" style="width: 100%;">
+                                <div>
+
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">战队名称：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <input for="name" id="name"
+                                                   class="span7" name="name" type="text" style="width: 80%"
+                                                   value=""/>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">国家：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select name="countryId" id="country" style="width:80%">
+                                                #foreach($country in $!countries)
+                                                    <option value="$!country.id">$!country.name</option>
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">城市：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select name="cityId" id="city" style="width:80%">
+                                                <option class="city-unit" value>请选择城市</option>
+                                                #foreach($city in $!cities)
+                                                    <option value="$!city.id" class="option-city" country-id="$!city.country.id">$!city.name</option>
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                #*<div>
+                                    <label class="control-label" style="width: 140px;">是否显示</label>
+                                    <div class="controls" style="margin-left: 152px;">
+                                        <select id="isPublic" name="isPublic" class="span7" style="width: 80%">
+                                            <option value="0"  #if($!entity.display==0)  selected #end>显示</option>
+                                            <option value="1"  #if($!entity.display==1)  selected #end>隐藏
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>*#
+
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">描述：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <input for="name" id="desc"
+                                                   class="span7" name="desc" type="text" style="width: 80%"
+                                                   value=""/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions" style="clear:both;text-align: center">
+                                    ##  默认不可见
+                                    <input type="hidden" name="isPublic" value="0"/>
+                                    <button type="submit" class="btn btn-info">确定</button>
+                                    <a class="btn btn-primary" href="list">返回</a>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    #include("common/js-support.vm")
+
+<script type="text/javascript">
+    function emailChekc() {
+        var email = document.getElementsByName("email")[0].value;
+//        var reg = /^[A-z]+[A-z0-9_-]*\@[A-z0-9]+\.[A-z]+$/;
+        var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/;
+        var res = reg.test(email);
+        if (res == false) {
+            alert("邮箱规则错误，请输入正确的邮箱");
+        }
+        return res;
+    }
+    $(document).ready(function () {
+        changeCity();
+    });
+    $("#country").on("click", function () {
+        changeCity();
+    });
+    function changeCity() {
+        var countryId = $("#country").val();
+        var cityOptions = $(".option-city");
+        for (var i = 0; i < cityOptions.length; i++) {
+            var cityOption = cityOptions[i];
+            if (countryId != $(cityOption).attr("country-id")) {
+                $(cityOption).hide();
+            } else {
+                $(cityOption).show();
+            }
+        }
+        $("#city").val("");
+    }
+
+</script>
+
+</body>
+</html>

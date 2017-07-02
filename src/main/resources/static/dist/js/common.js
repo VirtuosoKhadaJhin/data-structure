@@ -13,6 +13,14 @@ window.onload = function () {
         yearEnd: 2050,
         todayButton: false
     });
+    //不显示时分秒
+    $('.dateTimeFormatDay').datetimepicker({
+        format: "Y-m-d",
+        timepicker: false,
+        yearStart: 2000,
+        yearEnd: 2050,
+        todayButton: true
+    });
     $('.timeFormat').datetimepicker({
         format: "H:i:s",
         timepicker: true,
@@ -84,7 +92,6 @@ window.onload = function () {
     });
 
 
-
     $(".itemValidate").validate({
         rules: {
             sort: {
@@ -140,23 +147,13 @@ window.onload = function () {
         errorElement: "span"
     });
 
-
-    $("body").delegate(".langsAutoCompleteDynamic", "keyup", function (e) {
-        var keyWord = $(this).val();
-        var currEle = e.currentTarget;
-        autocompleteKeyword(keyWord,currEle);
-    });
-
+    var listComplete = [];
     $(".langsAutoComplete").on("keyup", function (e) {
         var keyWord = $(this).val();
-        var currEle = e.currentTarget;
-        autocompleteKeyword(keyWord,currEle);
-    });
-
-    function autocompleteKeyword( keyWord,  currEle){
         if (!keyWord) {
             return;
         }
+        var obj = $(this);
         $.ajax({
             url: '/langsDictionary/suggest',
             data: {"key": keyWord},
@@ -165,47 +162,53 @@ window.onload = function () {
             async: false,
             success: function (result) {
                 if (result.code == 0) {
-                    var listComplete = [];
+                    var currEle = e.currentTarget;
                     var list = result.data;
-                    if(list.length==0){
+                    if (list.length == 0) {
                         $(currEle).next().val("");
-                        return ;
+                        return;
                     }
                     for (var i = 0; i < list.length; i++) {
                         var o = list[i];
                         var complate = {};
                         complate.labelDisplay = o.message;
-                        complate.label = o.message+"("+o.keyCode+")";
-                        complate.value =   o.keyCode;
+                        complate.label = o.message + "(" + o.keyCode + ")";
+                        complate.value = o.keyCode;
                         listComplete.push(complate);
                     }
-                    $(currEle).autocomplete({
-                        minLength: 0,
-                        source: listComplete,
-                        delay:500,
-                        focus: function (event, ui) {
-                            $(this).val(ui.item.labelDisplay);
-                            $(this).next().val(ui.item.value);
-                            return false;
-                        },
-                        select: function (event, ui) {
-                            $(this).val(ui.item.labelDisplay);
-                            $(this).next().val(ui.item.value);
-                            return false;
-                        }
-                    })
                 } else {
                     alert(result.msg);
                 }
             }
         });
+    }).autocomplete({
+        source: listComplete,
+        focus: function (event, ui) {
+            $(this).val(ui.item.label);
+            $(this).next().val(ui.item.value);
+            return false;
+        },
+        select: function (event, ui) {
+            $(this).val(ui.item.label);
+            $(this).next().val(ui.item.value);
+            return false;
+        }
+    })
+
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
     }
-
-
-
-
-
-
-
 
 }

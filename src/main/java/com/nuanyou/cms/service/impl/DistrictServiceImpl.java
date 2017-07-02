@@ -8,6 +8,7 @@ import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.model.DistrictVo;
 import com.nuanyou.cms.service.DistrictService;
 import com.nuanyou.cms.util.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -95,8 +96,16 @@ public class DistrictServiceImpl implements DistrictService {
     }
 
     @Override
-    public List<District> getIdNameList() {
+    public List<DistrictVo> findByCity(Long cityId) {
+        if (cityId == null) {
+            return this.convertToDistrictVos(districtDao.findAll());
+        }
+        List<District> districts = this.districtDao.findIdNameListByCityId(cityId);
+        return this.convertToDistrictVos(districts);
+    }
 
+    @Override
+    public List<District> getIdNameList() {
         return this.districtDao.getIdNameList();
     }
 
@@ -132,4 +141,15 @@ public class DistrictServiceImpl implements DistrictService {
         return districtVo;
     }
 
+    private List<DistrictVo> convertToDistrictVos(List<District> districts) {
+        if (CollectionUtils.isEmpty(districts)) {
+            return Lists.newArrayList();
+        }
+        List<DistrictVo> vos = Lists.newArrayList();
+        for (District district : districts) {
+            DistrictVo districtVo = BeanUtils.copyBean(district, new DistrictVo());
+            vos.add(districtVo);
+        }
+        return vos;
+    }
 }

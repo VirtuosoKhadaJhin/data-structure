@@ -1,100 +1,222 @@
-#parse("common/list_start.vm")
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+    #include("common/js-support.vm")
+    <link href="/dist/css/mission/mission.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="content" class="content-container">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10">
+                <div class="widget-box">
+                    <div class="widget-content nopadding">
 
-<link href="/dist/css/mission/mission.css" rel="stylesheet"/>
+                        <div id="breadcrumb"><a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
+                            商户模块</a>
+                            <a href="/mission_task/list" class="tip-bottom" data-original-title="">商户信息审核</a>
+                        </div>
+                        <div class="widget-title">
+                            <span class="icon"><i class="icon-th"></i></span>
+                            <h5>商户审核列表</h5>
+                        </div>
 
-<div id="breadcrumb"><a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
-    主页</a>
-    <a href="/merchantCat/list" class="tip-bottom" data-original-title="">战队任务审批</a>
-</div>
-<div class="widget-title">
-    <span class="icon"><i class="icon-th"></i></span>
-    <h5>审批列表</h5>
-    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
-</div>
-
-<table class="table table-bordered data-table dataTable">
-    <thead class="thead-class">
-    <tr class="thread-tr">
-        <th class="th-number">序号</th>
-        <th class="th-number">商户ID</th>
-        <th class="th-number">商户名称</th>
-        <th class="th-img">图片</th>
-        <th class="th-bz">备注</th>
-        <th class="th-op">操作</th>
-    </tr>
-    </thead>
-    <tbody class="tbody-list">
-    <tr>
-        <td>1</td>
-        <td>商户ID</td>
-        <td>商户名称</td>
-        <td>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                <div class="hovereffect">
-                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg"/>
-                    <div class="overlay">
-                        <h2>查看大图</h2>
-                        <a class="info" href="#">查看大图</a>
+                        <table class="table table-bordered data-table dataTable">
+                            <thead class="thead-class">
+                            <tr class="thread-tr">
+                                <th class="th-op">操作</th>
+                                <th class="th-op">商户名称</th>
+                                <th class="th-op">城市</th>
+                                <th class="th-op">组名-BD名</th>
+                                <th class="th-img">签到图</th>
+                                <th class="th-op">商户通版本号</th>
+                                <th class="th-op">测试订单</th>
+                                <th class="th-op">状态</th>
+                                <th class="th-op">备注</th>
+                                <th class="th-op">审核时间</th>
+                                <th class="th-op">完成时间</th>
+                            </tr>
+                            </thead>
+                            <tbody class="tbody-list">
+                                #if ($null.isNull($page.content) || $page.content.size()==0)
+                                <tr>
+                                    <td colspan="11" style="text-align:center;">
+                                        <div class="no-result-div"
+                                             style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                                            <p>没有符合条件的商户审核信息！</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                #end
+                                #foreach($entity in $!page.content)
+                                <tr data-mchId="$!entity.merchant.id">
+                                    <td>
+                                        <div class="td-op" data-mchId="$!entity.mchId">
+                                            <button type="button" class="btn btn-success btn-small td-button approval">审批</button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span>$!entity.merchant.id</span>
+                                        <br/>
+                                        <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a>
+                                    </td>
+                                    <td>$!entity.merchant.district.city.name</td>
+                                    <td>$!entity.group.name - $!entity.bdUser.chineseName</td>
+                                    <td class="td-imgurl">
+                                        <div class="imgurl-info">
+                                            #if($!entity.merchantTrack.imgUrls.size()==0 || "$!entity.merchantTrack.imgUrls"=="")
+                                                暂无签到图片
+                                            #else
+                                                #foreach($imgUrl in $!entity.merchantTrack.imgUrls)
+                                                    <div class="hovereffect">
+                                                        <a target="_blank" href="$!imgUrl">
+                                                            <img class="img-polaroid td-img" src="$!imgUrl">
+                                                        </a>
+                                                    </div>
+                                                #end
+                                            #end
+                                        </div>
+                                    </td>
+                                    <td>$!entity.version</td>
+                                    <td class="td-bz"><a target="_blank" href="/order/edit?type=3&id=$!entity.orderno">$!entity.orderno</a></td>
+                                    <td>$!entity.status.value</td>
+                                    <td class="td-bz">$!entity.remark</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditDt)</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishDt)</td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="hovereffect">
-                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg"/>
-                    <div class="overlay">
-                        <h2>查看大图</h2>
-                        <a class="info" href="#">查看大图</a>
-                    </div>
+                #set($i=$!page.number + 1)
+                <div class="pagination" style="float:right">
+                    <ul total="$!page.totalPages" index="$!i"></ul>
                 </div>
-                <div class="hovereffect">
-                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg"/>
-                    <div class="overlay">
-                        <h2>查看大图</h2>
-                        <a class="info" href="#">查看大图</a>
+            </div>
+            <div class="span2">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"><i class="icon-list"></i></span>
+                        <h5>筛选列表</h5>
                     </div>
-                </div>
-                <div class="hovereffect">
-                    <img class="img-polaroid td-img" src="https://www.lgstatic.com/thumbnail_300x300/i/image/M00/03/4A/Cgp3O1azGGOAY3vPAABL-_SjeDU018.jpg"/>
-                    <div class="overlay">
-                        <h2>查看大图</h2>
-                        <a class="info" href="#">查看大图</a>
+                    <div class="widget-content">
+                        <form class="form-horizontal search-form" method="get">
+                            <div class="search-select">
+                                <label>国家</label>
+                                <select class="span11 select2 select-country" id="country" name="country">
+                                    <option value="">全部</option>
+                                    #foreach($e in $!countries)
+                                        <option value="$!e.id" #if($!requestVo.country==$!e.id)selected #end>$!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>城市</label>
+                                <select class="span11 select2" name="city">
+                                    <option value>全部</option>
+                                    #foreach($e in $!cities)
+                                        <option value="$!e.id" #if($!requestVo.city == $!e.id) selected #end>$!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>商户名称</label>
+                                <select class="span11 select2" name="mchId">
+                                    <option value>全部</option>
+                                    #foreach($e in $!merchants)
+                                        <option value="$!e.id" #if($!requestVo.mchId == $!e.id) selected #end>$!e.id : $!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>战队名称</label>
+                                <select class="span11 select2" name="zu">
+                                    <option value="">全部</option>
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>BD名称</label>
+                                <select class="span11 select2" name="bdId">
+                                    <option value="">全部</option>
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>任务状态</label>
+                                <select class="span11 select2 task-status" name="status">
+                                    #foreach($e in $!taskStatus)
+                                        #if($!e.key !=0 && $!e.key != 1)
+                                            <option value="$!e" #if($!requestVo.status.key == $!e.key) selected #end>$!e.value</option>
+                                        #end
+                                    #end
+                                </select>
+                            </div>
+
+                            <div class="search-select task-status-time" id="sh-date">
+                                <label>审核时间：</label>
+                                <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
+                            </div>
+
+                            <div class="search-select">
+                                <label>完成时间：</label>
+                                <input type="text" name="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="完成时间">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">查询</button>
+                            <button class="btn btn-warning search-reset">重置</button>
+                        </form>
+
                     </div>
                 </div>
             </div>
-        </td>
-        <td>备注</td>
-        <td>
-            <div class="td-op">
-                <button type="button" class="btn btn-success btn-mini">通过</button>
-                <button type="button" class="btn btn-danger btn-mini">驳回</button>
-                <button type="button" class="btn btn-warning btn-mini">删除</button>
-            </div>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-</div>
-</div>
-</div>
-<div class="span2">
-    <div class="widget-box">
-        <div class="widget-title"><span class="icon"><i class="icon-list"></i></span>
-            <h5>筛选列表</h5>
         </div>
-        <div class="widget-content">
-            #include("common/js-support.vm")
-            <script src="/dist/js/page-support.js"></script>
+    </div>
+</div>
 
-            <form class="form-horizontal search-form" method="get">
-                <div class="control-group" style="margin-bottom: 10px;width: 100%;">
-                    <label>任务ID </label>
-                    <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
-                </div>
-                <div class="control-group" style="margin-bottom: 10px;width: 100%;">
-                    <label> 任务名称</label>
-                    <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
-                </div>
-                <button type="submit" class="btn btn-primary">查询</button>
-                <button class="btn btn-warning search-reset">重置</button>
-            </form>
+<!-- 审批弹窗 -->
+<div class="modal hide fade approvalModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">任务审批</h3>
+    </div>
+    <div class="modal-body" style="margin-left: 10%;">
+        <div class="audit-info">
+            <label class="span5 label-approval">审批结果：</label>
+            <select class="approval-status">
+                <option value="APPROVED">审核通过</option>
+                <option value="NON_APPROVAL">审核不通过</option>
+            </select>
+        </div>
+        <div class="remark-info" style="display: none;">
+            <label class="span5 label-approval">驳回理由：</label>
+            <textarea class="remark-text" placeholder="请填写备注信息"></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input type="hidden" class="hide-mchId"/>
+        <button class="btn btn-primary sure-approval">确认</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
 
-            #parse("common/list_end.vm")
+<!-- 审批结果弹窗 -->
+<div class="modal hide fade approvalResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">审批通知</h3>
+    </div>
+    <div class="modal-body">
+        <p class="approvalResult-text"></p>
+    </div>
+    <div class="modal-footer">
+        <input type="hidden" class="audit-result"/>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+<script type="text/javascript" src="/dist/js/page-support.js"></script>
+<script type="text/javascript" src="/dist/js/mission/mission.js"></script>
+</body>
+</html>

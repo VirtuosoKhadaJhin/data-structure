@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+    <link href="/dist/font-awesome/css/font-awesome-checkbox.css" rel="stylesheet"/>
+    <link href="/dist/css/mission/missionTask.css" rel="stylesheet"/>
+    #include("common/js-support.vm")
+    <script src="/dist/js/mission/missionTask.js"></script>
+    <script src="/dist/js/page-support.js"></script>
+</head>
+<body>
+<div id="content" class="content-container">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10">
+                <div class="widget-box">
+                    <div class="widget-content nopadding">
+                        <div id="breadcrumb"><a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
+                            商户模块</a>
+                            <a href="/mission_task/list" class="tip-bottom" data-original-title="">商户战地任务</a>
+                        </div>
+                        <div class="widget-title">
+                            <span class="icon"><i class="icon-th"></i></span>
+                            <h5>战地任务列表</h5>
+                            <button class="btn btn-small btn-success task-distribute">任务指派</button>
+
+                            <div class="public-div" data-group="$!group.id" data-public="$!group.isPublic">
+                                <input type="hidden" class="public-default-val" value="$!group.id">
+                                <input type="hidden" class="public-default-public" value="$!group.isPublic">
+                                <span style="margin-right: 5px;font-size: 14px">未分配商户对所有队员可见：</span>
+                                <input class="radio-public" type="radio" value="1" name="isPublic" #if($!group.isPublic==1) checked #end style="margin-top: -2px"/>可见
+                                <input class="radio-public" type="radio" value="0" name="isPublic" #if($!group.isPublic==0) checked #end style="margin-top: -2px;margin-left: 10px;"/>不可见
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered data-table dataTable">
+                            <thead class="thead-class">
+                            <tr class="thread-tr">
+                                <th class="th-op">
+                                    <div class="checkbox bd-checkbox">
+                                        <input id="checkbox-all" class="th-checked" type="checkbox">
+                                        <label for="checkbox-all" class="label-check">
+                                            <strong>全选</strong>
+                                        </label>
+                                    </div>
+                                </th>
+                                <th class="th-op">商户信息</th>
+                                <th class="th-op">商圈</th>
+                                <th class="th-op">BD名称</th>
+                                <th class="th-op">状态</th>
+                                <th class="th-op">备注</th>
+                                <th class="th-op">完成时间</th>
+                                <th class="th-op">审核时间</th>
+                            </tr>
+                            </thead>
+                            <tbody class="tbody-list">
+                                #if ($null.isNull($page.content) || $page.content.size()==0)
+                                <tr>
+                                    <td colspan="11" style="text-align:center;">
+                                        <div class="no-result-div"
+                                             style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                                            <p>没有符合条件的战地任务信息！</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                #end
+                                #foreach($entity in $!page.content)
+                                <tr>
+                                    <td>
+                                        #if($!entity.status.key!=3)
+                                            <div class="checkbox bd-checkbox">
+                                                <input id="checkbox$!entity.id" class="styled td-checked" type="checkbox" task-id="$!entity.id">
+                                                <label for="checkbox$!entity.id" class="bd-checkbox-label" style="margin-bottom: 15px;">
+                                                </label>
+                                            </div>
+                                        #end
+                                    </td>
+                                    <td>
+                                        <span>$!entity.merchant.id</span>
+                                        <br/>
+                                        <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a>
+                                    </td>
+                                    <td>$!entity.merchant.district.name</td>
+                                    <td>$!entity.bdUser.chineseName</td>
+                                    <td>$!entity.status.value</td>
+                                    <td class="td-bz">$!entity.remark</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishDt)</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditDt)</td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <!-- 指派弹窗 -->
+            <div class="modal hide fade taskDistributeModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel">任务指派</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="search-select bd-checkd-prev">
+                        #if ($null.isNull($bdUsers) || $bdUsers.size()==0)
+                            <strong style="margin-left: 45%;">暂无BD</strong>
+                        #end
+                        #if ($null.isNotNull($bdUsers) || $bdUsers.size()>0)
+                            #foreach($e in $!bdUsers)
+                                <div class="checkbox bd-checkbox">
+                                    <input id="checkbox1$e.id" bd-id="$e.id" class="styled bd-checkd" type="checkbox">
+                                    <label for="checkbox1$e.id" class="bd-checkbox-label">
+                                        $!e.chineseName / $!e.dmail
+                                    </label>
+                                </div>
+                            #end
+
+                        #end
+                    </div>
+                    <div class="search-select">
+                        <label style="display: inline;margin-left: 6%">指派时间：</label>
+                        <input type="text" name="input-distrDt" style="width: 30%" class="span8 timeFormatNoDay datetime-distrDt" value="">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary sure-distribute">确认</button>
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                </div>
+            </div>
+
+            <!-- 是否可见 提示框 -->
+            <div class="modal hide fade publicSwichModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="publicSwichLabel">可见选项</h3>
+                </div>
+                <div class="modal-body">
+                    <p class="public-switch-text"></p>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="hide-isPublic" class="hide-public"/>
+                    <input type="hidden" id="hide-groupId" class="hide-groupId"/>
+                    <button class="btn btn-primary sure-public-switch">确认</button>
+                    <button class="btn btn-colse" data-dismiss="modal" aria-hidden="true">关闭</button>
+                </div>
+            </div>
+
+            <!-- 可见 结果提示框 -->
+            <div class="modal hide fade publicSwichResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="publicSwichLabel">可见选项操作结果</h3>
+                </div>
+                <div class="modal-body">
+                    <p class="public-switch-result-text"></p>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" class="isPublic-result"/>
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                </div>
+            </div>
+
+            <!-- 指派结果弹窗 -->
+            <div class="modal hide fade taskDistributeResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel">指派通知</h3>
+                </div>
+                <div class="modal-body">
+                    <p class="distributeResult-text"></p>
+                </div>
+                <input type="hidden" class="audit-result"/>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                </div>
+            </div>
+
+            <div class="span2">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"><i class="icon-list"></i></span>
+                        <h5>筛选列表</h5>
+                    </div>
+                    <div class="widget-content">
+                        <form class="form-horizontal search-form" method="get">
+                            <div class="search-select">
+                                <label>商圈</label>
+                                <select class="span11 select2" name="district">
+                                    <option value>全部</option>
+                                    #foreach($e in $!districts)
+                                        <option value="$!e.id" #if($!requestVo.district == $!e.id) selected #end>$!e.id : $!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>商户名称</label>
+                                <select class="span11 select2" name="mchId">
+                                    <option value>全部</option>
+                                    #foreach($e in $!merchants)
+                                        <option value="$!e.id" #if($!requestVo.mchId == $!e.id) selected #end>$!e.id : $!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>BD名称</label>
+                                <select class="span11 select2" name="bdId">
+                                    <option value>全部</option>
+                                    #foreach($e in $!bdUsers)
+                                        <option value="$!e.id" #if($!requestVo.bdId == $!e.id) selected #end>$!e.id : $!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>任务状态</label>
+                                <select class="span11 select2" name="status">
+                                    <option value>全部</option>
+                                    #foreach($e in $!taskStatus)
+                                        <option value="$!e" #if($!e.key == $!requestVo.status.key) selected #end>$!e.value</option>
+                                    #end
+                                </select>
+                            </div>
+
+                            <div class="search-select">
+                                <label>审核时间：</label>
+                                <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
+                            </div>
+
+                            <div class="search-select">
+                                <label>完成时间：</label>
+                                <input type="text" name="finishDt" id="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="完成时间">
+                            </div>
+
+                            <div class="btn-group">
+                                <input type="hidden" name="isAudit" value="false"/>
+                                <button type="submit" class="btn btn-primary">查询</button>
+                                <button class="btn btn-warning search-reset" style="margin-left: 3px;">重置</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('.timeFormatNoDay').datetimepicker({
+        format: "Y-m-d",
+        timepicker: false,
+        yearStart: 2000,
+        yearEnd: 2050,
+        todayButton: true
+    });
+</script>
+</body>
+</html>

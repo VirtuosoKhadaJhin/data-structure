@@ -15,6 +15,8 @@ public interface DistrictService {
 
     Page<DistrictVo> findByCondition(final District district, Pageable pageable, final Locale locale);
 
+    List<DistrictVo> findByCity(Long cityId);
+
     List<District> getIdNameList();
 
     District saveNotNull(District entity);
