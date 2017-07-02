@@ -156,9 +156,11 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 continue;
             }
             MissionTaskVo missionTaskVo = maps.get(mchId);
-            if (userId.equals(missionTaskVo.getBdUser().getId())) {//相同BD的时候才需要添加(存在多个BD录入商户信息)
-                missionTaskVo.setMerchantTrack(next);
-                iterator.remove();
+            if (missionTaskVo.getStatus() != MissionTaskStatus.UN_DISTRIBUTE) {
+                if (userId.equals(missionTaskVo.getBdUser().getId())) {//相同BD的时候才需要添加(存在多个BD录入商户信息)
+                    missionTaskVo.setMerchantTrack(next);
+                    iterator.remove();
+                }
             }
         }
         return Lists.newArrayList(maps.values());
