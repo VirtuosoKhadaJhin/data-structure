@@ -45,7 +45,7 @@ public class MissionTaskVo {
 
     private Boolean delFlag = false;
 
-    private BdMerchantTrack merchantTrack;
+    private BdMerchantTrack merchantTrack = new BdMerchantTrack();
 
     private Long groupId;
 

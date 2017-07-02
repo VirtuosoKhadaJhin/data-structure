@@ -1,9 +1,11 @@
 package com.nuanyou.cms.service.impl;
 
 import com.google.common.collect.Lists;
+import com.nuanyou.cms.dao.CmsUserDao;
 import com.nuanyou.cms.dao.EntityNyLangsCategoryDao;
 import com.nuanyou.cms.dao.EntityNyLangsDictionaryDao;
 import com.nuanyou.cms.dao.EntityNyLangsMessageTipDao;
+import com.nuanyou.cms.entity.CmsUser;
 import com.nuanyou.cms.entity.EntityNyLangsCategory;
 import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.entity.EntityNyLangsMessageTip;
@@ -46,6 +48,9 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
     @Autowired
     private EntityNyLangsMessageTipDao messageTipDao;
+
+    @Autowired
+    private CmsUserDao cmsUserDao;
 
     private static final Integer LOCAL_KEY = 5;
 
@@ -91,12 +96,8 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
             requestVo.setKeyCode(requestVo.getNewKeyCode());
         }
         EntityNyLangsCategory entityNyLangsCategory = categoryDao.findOne(requestVo.getCategoryId());
-        Long userId = null;
-        try {
-            userId = UserHolder.getUser().getUserid();
-        } catch (Exception e) {
-            LOGGER.error("获取系统用户出错！", e);
-        }
+        String dmail = UserHolder.getUser().getEmail();
+        CmsUser cmsUser = cmsUserDao.findByEmail(dmail);
         Date nowDate = new Date();
         // 迭代每一个语言的数据
         EntityNyLangsDictionary entityNyLangsDictionary;
@@ -107,7 +108,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                 LangsCountry langsCountry = LangsCountry.toEnum(langsCountryMessageVo.getLangsKey());
                 String[] langsCountrys = langsCountry.getValue().split("-");
                 entityNyLangsDictionary = new EntityNyLangsDictionary();
-                entityNyLangsDictionary.setUserId(userId);
+                entityNyLangsDictionary.setUserId(cmsUser.getId());
                 if (null != langsCountryMessageVo.getId()) {
                     entityNyLangsDictionary.setId(langsCountryMessageVo.getId());
                 }
@@ -154,6 +155,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         // 如果输入空, 则不保存, 相当于删除了这个本地语言行
         if (StringUtils.isNotEmpty(dictionaryVo.getLocalMess())) {
             User user = UserHolder.getUser();
+            CmsUser cmsUser = cmsUserDao.findByEmail(user.getEmail());
             Date nowDate = new Date();
             if (null != dictionaryVo.getId()) {
                 entityNyLangsDictionarey.setId(dictionaryVo.getId());
@@ -164,7 +166,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
             entityNyLangsDictionarey.setUpdateDt(nowDate);
             entityNyLangsDictionarey.setLanguage(langsCountrys[0]);
             entityNyLangsDictionarey.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
-            entityNyLangsDictionarey.setUserId(user.getUserid());
+            entityNyLangsDictionarey.setUserId(cmsUser.getId());
             dictionaryDao.save(entityNyLangsDictionarey);
         } else {
             if (null != dictionaryVo.getId()) {
@@ -226,7 +228,6 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     public Page<LangsDictionaryVo> findAllLocalDictionary(final LangsDictionaryRequestVo requestVo) {
         return findAllDictioryByRequestVo(requestVo, true);
     }
-
 
     @Override
     public LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale) {
@@ -302,12 +303,9 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         if (entityNyLangsCategory == null) {
             return null;
         }
-        Long userid = null;
-        try {
-            userid = UserHolder.getUser().getUserid();
-        } catch (Exception e) {
-            LOGGER.error("获取用户信息失败！", e);
-        }
+
+        String email = UserHolder.getUser().getEmail();
+        CmsUser cmsUser = cmsUserDao.findByEmail(email);
         Date nowDate = new Date();
         for (LangsCountryMessageVo langsCountryMessageVo : dictionaryVo.getLangsMessageList()) {
             String message = langsCountryMessageVo.getMessage();
@@ -324,7 +322,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
                 nyLangsDictionary.setLanguage(langsCountrys[0]);
                 nyLangsDictionary.setCountry(langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]);
 
-                nyLangsDictionary.setUserId(userid);
+                nyLangsDictionary.setUserId(cmsUser.getId());
                 nyLangsDictionary.setCreateDt(nowDate);
                 nyLangsDictionary.setUpdateDt(nowDate);
                 entities.add(nyLangsDictionary);
@@ -347,13 +345,13 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         String[] splitValues = LangsCountry.toEnum(vo.getLangsKey()).getValue().split("-");
 
         User user = UserHolder.getUser();
-
+        CmsUser cmsUser = cmsUserDao.findByEmail(user.getEmail());
         entity.setLanguage(splitValues[0]);
         entity.setCountry(splitValues.length > 1 ? splitValues[1] : splitValues[0]);
         entity.setKeyCode(vo.getKeyCode());
         entity.setMessage(vo.getMessage());
         entity.setCreateDt(new Date());
-        entity.setUserId(user.getUserid());
+        entity.setUserId(cmsUser.getId());
         entity.setDelFlag(false);
         entity.setCategory(entityResult.get(0).getCategory());
         EntityNyLangsDictionary nyLangsDictionary = dictionaryDao.save(entity);
@@ -384,7 +382,6 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         Pageable pageable = new PageRequest(pageIndex - 1, pageNum);  // 计算分页
         Page<LangsDictionaryVo> pageVOs = new PageImpl<LangsDictionaryVo>(subList, pageable, langsDictionaryVos.size());
         return pageVOs;
-
 
     }
 
@@ -487,7 +484,6 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
             next.getLangsMessageList().addAll(newMessageVos);
         }
     }
-
 
     private List<Long> getCategoryIdsByBaseName(final String baseNameStr) {
         List<EntityNyLangsCategory> langsCategories = Lists.newArrayList();
