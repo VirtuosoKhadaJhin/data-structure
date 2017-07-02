@@ -60,7 +60,7 @@
                                         #else
                                             <option value>无</option>
                                             #foreach($e in $!parentCats)
-                                                <option value="$!e.id" #if($!e.name == $!entity.name)selected#end>$!e.name</option>
+                                                <option value="$!e.id" #if($!e.name == $!entity.pcat.name)selected#end>$!e.name</option>
                                             #end
                                         #end
                                     </select>
@@ -68,7 +68,7 @@
                                 <label class="col-sm-2 control-label">简称：</label>
                                 <div class="controls">
                                     <input name="shortname" for="shortname" type="text" class="form-control langsAutoComplete" placeholder="简称"
-                                           langsKeyName="name" value="$!entity.shortname">
+                                           langsKeyName="name" value="$!entity.shortname#if("$!entity.shnKeyCode" != "")($!entity.shnKeyCode) #end" >
 
                                     <input name="shnKeyCode" type="hidden" value="$!entity.shnKeyCode">
 
@@ -191,7 +191,6 @@
 <!--***************************************通用新增语言*************************************************************-->
 #include("common/js-support.vm")
 #include("common/image-support.vm")
-<script type="text/javascript" src="/dist/js/suggest/suggest-search.js"/>
 <script type="text/javascript">
     $(document).ready(function () {
         var currLangKeyInput;

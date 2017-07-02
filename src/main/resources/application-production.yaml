@@ -76,11 +76,5 @@ sso:
   stateExpiredInMilliSeconds: 120000
 
 contractService: http://test.contract.91nuanyou.com
-accountService: http://testaccount.99mice.com
-merchantSettlement:
-  default:
-    daytype: 1
-    startprice: 1
-contractConfig:
-  poundageNames: poundage_huigou,poundage_radio,poundage
-  paymentDaysNames: settle_day,account_period_huigou
+accountService: http://account30.91nuanyou.com
+

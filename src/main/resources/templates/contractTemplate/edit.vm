@@ -135,7 +135,7 @@
                                                            readonly>
                                                 </td>
                                                 <td>
-                                                    <input name="nameLabel" style="width: 150px" class="langsAutoComplete" langsKeyName="name">
+                                                    <input name="nameLabel" style="width: 150px" class="langsAutoCompleteDynamic" langsKeyName="name">
                                                     <input name="name" type="hidden">
                                                     <a class="btn btn-info btn-mini addLang" langsKeyName="name" langsValueName="nameLabel">
                                                         <i class="icon-plus"></i>
@@ -166,7 +166,7 @@
                                                 </td>
                                                 <td>
 
-                                                    <input name="remarkLabel" style="width: 150px" class="langsAutoComplete" langsKeyName="remark">
+                                                    <input name="remarkLabel" style="width: 150px" class="langsAutoCompleteDynamic" langsKeyName="remark">
                                                     <input name="remark" type="hidden">
                                                     <a class="btn btn-info btn-mini addLang" langsKeyName="remark" langsValueName="remarkLabel">
                                                         <i class="icon-plus"></i>
@@ -391,8 +391,8 @@
 </body>
     #include("common/js-support.vm")
     #include("common/image-support.vm")
-<script type="text/javascript" src="/dist/js/cascade-select.js"/>
-<script type="text/javascript" src="/dist/js/suggest/suggest-search.js"/>
+##<script type="text/javascript" src="/dist/js/cascade-select.js"/>
+##<script type="text/javascript" src="/dist/js/suggest/suggest-search.js"/>
 ##<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
     keyCodeRealTime();
@@ -619,7 +619,7 @@
             var trHTML = "<tr class='editRow eachRow'>" + inputRowExample + "</tr>";
             table.append(trHTML);
             var last = lastInputRow = $('#mytable .editRow').eq(0);
-            $(".langsAutoComplete").autocomplete();
+            $(".langsAutoCompleteDynamic").autocomplete();
         });
 
 

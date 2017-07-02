@@ -40,7 +40,7 @@ import java.util.*;
  * 验证ticket的Filter
  */
 @Component
-public  class TicketValidationFilter extends AbstractFilter {
+public class TicketValidationFilter extends AbstractFilter {
 
     private static final Logger log = LoggerFactory.getLogger(TicketValidationFilter.class.getSimpleName());
     private SsoValidatorService ssoValidatorService;
@@ -61,20 +61,20 @@ public  class TicketValidationFilter extends AbstractFilter {
         log.trace("Setting redirectAfterValidation parameter: " + this.redirectAfterValidation);
         setUseSession(parseBoolean(getPropertyFromInitParams(filterConfig, "useSession", "true")));
         log.trace("Setting useSession parameter: " + this.useSession);
-        setSsoValidatorService(getTicketValidator1(filterConfig));
+        setSsoValidatorService(getTicketValidator(filterConfig));
         CommonUtils.assertNotNull(this.ssoValidatorService, "ssoValidatorService cannot be null.");
     }
 
 
+    private static final String[] RESERVED_INIT_PARAMS = new String[]{"validateCodeUrl", "serverName", "service", "artifactParameterName", "serviceParameterName", "encodeServiceUrl", "millisBetweenCleanUps", "hostnameVerifier", "encoding", "config"};
 
-    private static final String[] RESERVED_INIT_PARAMS = new String[] {"validateCodeUrl", "serverName", "service", "artifactParameterName", "serviceParameterName", "encodeServiceUrl", "millisBetweenCleanUps", "hostnameVerifier", "encoding", "config"};
-    protected final SsoValidatorService getTicketValidator1(final FilterConfig filterConfig) {
-         final String validateCodeUrl = getPropertyFromInitParams(filterConfig, "validateCodeUrl", null);
+    protected final SsoValidatorService getTicketValidator(final FilterConfig filterConfig) {
+        final String validateCodeUrl = getPropertyFromInitParams(filterConfig, "validateCodeUrl", null);
         final SsoValidatorServiceImpl validator = new SsoValidatorServiceImpl(validateCodeUrl);
         validator.setEncoding(getPropertyFromInitParams(filterConfig, "encoding", null));
-        final Map<String,String> additionalParameters = new HashMap<String,String>();
+        final Map<String, String> additionalParameters = new HashMap<String, String>();
         final List<String> params = Arrays.asList(RESERVED_INIT_PARAMS);
-        for (final Enumeration<?> e = filterConfig.getInitParameterNames(); e.hasMoreElements();) {
+        for (final Enumeration<?> e = filterConfig.getInitParameterNames(); e.hasMoreElements(); ) {
             final String s = (String) e.nextElement();
             if (!params.contains(s)) {
                 additionalParameters.put(s, filterConfig.getInitParameter(s));
@@ -85,10 +85,9 @@ public  class TicketValidationFilter extends AbstractFilter {
     }
 
 
-
-
     /**
      * 所有验证都通过且得到用户后的操作,比如写入日志
+     *
      * @param request
      * @param response
      * @param user
@@ -96,8 +95,6 @@ public  class TicketValidationFilter extends AbstractFilter {
     protected void onSuccessfulValidation(final HttpServletRequest request, final HttpServletResponse response, final User user) {
 
     }
-
-
 
 
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
@@ -180,7 +177,6 @@ public  class TicketValidationFilter extends AbstractFilter {
         }
         filterChain.doFilter(request, response);
     }
-
 
 
     public final void setRedirectAfterValidation(final boolean redirectAfterValidation) {

@@ -207,6 +207,21 @@
                                         /> $!e.name
                                     #end
                                 </div>
+
+                                <label class="control-label">收款码</label>
+                                #if (!$!entity.id)
+                                <div id = 'cc' class="controls">
+                                    <input style="margin-bottom:10px" type="text" class="span8" placeholder="" name="collectionCodeList" value="">
+                                    <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-plus"></i> </a>
+                                </div>
+                                    #else
+                                        #foreach($e in $!entity.collectionCodeList)
+                                        <div class="controls">
+                                            <input type="text" class="span8" placeholder="" name="collectionCodeList" value="$e">
+                                        </div>
+                                        #end
+                                #end
+
                                 <label class="control-label">概述</label>
                                 <div class="controls">
                                     <input type="text" class="span10" placeholder="概述" name="outline" value="$!entity.outline">
@@ -260,6 +275,14 @@
             $("#btn-edit").hide();
             #end
 
+        $('.btn-info').bind('click',function () {
+
+            if ( $("input[name='collectionCodeList']").length>2 ){
+                alert ('最多只能添加三个');
+                return;
+            }
+            $('#cc').append('<input style="margin-bottom:10px" type="text" class="span8" placeholder="" name="collectionCodeList" value="">');
+        });
         $("input[name='hasratio']").bind("click", function () {
 //            if($(this).attr('checked') == 'checked') return ;
 //            $(this).attr("checked","checked");

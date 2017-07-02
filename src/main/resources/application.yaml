@@ -78,16 +78,13 @@ sso:
 
 
 contractService: http://127.0.0.1:8200
-accountService: http://testaccount.99mice.com
-merchantSettlement:
-  default:
-    daytype: 1
-    startprice: 1
-contractConfig:
-  poundageNames: poundage_huigou,poundage_radio,poundage
-  paymentDaysNames: settle_day,account_period_huigou
+accountService: http://127.0.0.1:8086
+
 
 paymentRecord:
   service-address: http://test.payment.91nuanyou.com
   pattern-url: /paymentOrderRecord/*
   waiting-time: 5
+
+numberbind:
+    domain: https://9ny.me/api/

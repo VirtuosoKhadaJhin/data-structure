@@ -8,6 +8,7 @@ import com.nuanyou.cms.entity.enums.ChannelType;
 import com.nuanyou.cms.entity.enums.CodeType;
 import com.nuanyou.cms.model.MerchantVO;
 import com.nuanyou.cms.service.ItemDetailimgService;
+import com.nuanyou.cms.service.MerchantCollectionCodeService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.MerchantStaffService;
 import com.nuanyou.cms.util.BeanUtils;
@@ -23,6 +24,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,6 +61,8 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Value("${nuanyou-host}")
     private String nuanyouHost;
+    @Autowired
+    private MerchantCollectionCodeService collectionCodeService;
 
 
     private static String key = "getMerchantList";
@@ -68,6 +73,9 @@ public class MerchantServiceImpl implements MerchantService {
     public List<Merchant> getIdNameList() {
         return getIdNameList(null);
     }
+
+    private static final String sg_url = "https://sg.h5.m.91nuanyou.com/view/order/youfu.html";
+    private static final String kr_url = "https://kr.h5.m.91nuanyou.com/view/order/youfu.html";
 
     @Override
     public List<Merchant> getIdNameList(Boolean display) {
@@ -144,6 +152,16 @@ public class MerchantServiceImpl implements MerchantService {
     public MerchantVO saveNotNull(MerchantVO vo) {
         Merchant entity;
 
+        for (String code : vo.getCollectionCodeList()) {
+            EntityBdMerchantCollectionCode collectionCode = collectionCodeService.findCollectionCode(code);
+            if (collectionCode == null) {
+                throw new APIException(ResultCodes.CollectionCodeError);
+            }
+            if (collectionCode.getMchId() != null && collectionCode.getMchId() != 0 && (vo.getId()== null || collectionCode.getMchId().longValue() != vo.getId().longValue())) {
+                throw new APIException(ResultCodes.CollectionCodeExist, MessageFormat.format(ResultCodes.CollectionCodeExist.getMessage(),code,collectionCode.getMchId()));
+            }
+        }
+
         if (vo.getId() == null) {
             entity = BeanUtils.copyBean(vo, new Merchant());
             entity.setLocateExactly(true);
@@ -168,7 +186,57 @@ public class MerchantServiceImpl implements MerchantService {
             }
             entity = merchantDao.save(entity);
         }
+        dealCollectionCodes (vo.getCollectionCodeList(),entity);
+
         return BeanUtils.copyBean(entity, new MerchantVO());
+    }
+
+    @Transactional
+    private void dealCollectionCodes (List<String> codelist,Merchant entity) {
+        List<EntityBdMerchantCollectionCode> collectionCodes = collectionCodeService.findEntityBdMerchantCollectionCodesByMchId(entity.getId());
+        List<String> existCodeList = new ArrayList<>();
+        List<String> tmp = new ArrayList<>();
+        for (EntityBdMerchantCollectionCode collectionCode : collectionCodes) {
+            existCodeList.add(collectionCode.getCollectionCode());
+            tmp.add(collectionCode.getCollectionCode());
+        }
+        tmp.removeAll(codelist);
+        //unbind code
+        for (String tmpCode : tmp) {
+            for (EntityBdMerchantCollectionCode collectionCode : collectionCodes) {
+                if (tmpCode.equals(collectionCode.getCollectionCode())){
+                    collectionCode.setMchId(null);
+                    collectionCode.setUpdateTime(new Date());
+                    collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
+                    try {
+                        boolean unbind_result = collectionCodeService.unbindNumberLink(Long.valueOf(tmpCode));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+            }
+        }
+        codelist.removeAll(existCodeList);
+        //bind code
+        for (String code : codelist) {
+            EntityBdMerchantCollectionCode collectionCode = collectionCodeService.findCollectionCode(code);
+            collectionCode.setUpdateTime(new Date());
+            collectionCode.setMchId(entity.getId());
+            collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
+            try {
+                String countryCode = entity.getDistrict().getCountry().getCode();
+                String target_url = "";
+                if ("TH".equals(countryCode)) {
+                    target_url = sg_url + "?mchid="+ entity.getId() + "&source=qplcid_"+ entity.getId();
+                } else {
+                    target_url = kr_url + "?mchid="+ entity.getId() + "&source=qplcid_"+ entity.getId();
+                }
+                boolean bind_result = collectionCodeService.bindNumberLink(Long.valueOf(code),target_url);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
