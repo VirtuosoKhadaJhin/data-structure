@@ -115,6 +115,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     @Override
     public Boolean delGroupById(Long id) {
         groupDao.deleteGroup(id);
+        groupBdDao.deleteByGroupId(id);
         return true;
     }
 

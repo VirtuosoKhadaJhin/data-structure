@@ -1,0 +1,58 @@
+.required-waring {
+    display: none;
+    text-align: left;
+    width: 140px;
+    padding-right: 8em;
+    color: red;
+    text-align: left;
+}
+
+.tdInput {
+    width: 75%;
+}
+
+.text-gray {
+    background-color: grey;
+}
+
+#select2-categoryId-xe-container {
+    min-width: 180px;
+}
+
+.td-update-time {
+    min-width: 120px;
+}
+
+.td-sort {
+    min-width: 60px;
+}
+
+.no-result-div {
+    text-align: center;
+    vertical-align: middle;
+    height: 50px;
+    line-height: 50px;
+}
+
+.td-label {
+    text-align: center;
+}
+
+.td-op {
+    min-width: 80px;
+    text-align: center;
+}
+
+.td-op-div {
+    text-align: center;
+}
+
+.search-select {
+    margin-bottom: 10px;
+    width: 100%;
+    max-height: 500px;
+}
+
+.search-reset {
+    margin-left: 2px;
+}

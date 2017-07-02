@@ -100,8 +100,9 @@ $(function () {
             var data = {
                 bdId: bdId,
                 taskIds: taskIds,
-                distrDt: distrDt
+                distrDt: distrDt + " 00-00-00"
             };
+            console.log(distrDt);
             $.ajax({
                 url: 'distributeTask',
                 data: JSON.stringify(data),
@@ -158,7 +159,7 @@ $(function () {
         console.log(isPublic);
         console.log(groupId);
 
-        var data = {groupId: Number(groupId), isPublic: isPublic};
+        var data = {groupId: groupId, isPublic: isPublic};
         $.ajax({
             url: 'updateGroupPublic',
             data: JSON.stringify(data),
