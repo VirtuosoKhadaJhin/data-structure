@@ -80,18 +80,6 @@
                                             </select>
                                         </div>
                                     </div>
-                                #* 默认不可见，不需要界面显示*#
-                                #*<div>
-                                    <label class="control-label" style="width: 140px;">是否显示</label>
-                                    <div class="controls" style="margin-left: 152px;">
-                                        <select id="isPublic" name="isPublic" class="span7" style="width: 80%">
-                                            <option value="0"  #if($!group.isPublic==0)  selected #end>显示</option>
-                                            <option value="1"  #if($!group.isPublic==1)  selected #end>隐藏
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>*#
-
                                     <div class="">
                                         <label class="control-label"
                                                style="width: 140px;">描述：</label>
@@ -101,10 +89,7 @@
                                                    style="width: 80%" value="$!group.desc">
                                         </div>
                                     </div>
-
                                 </div>
-
-
                                 <div class="form-actions" style="clear:both;text-align: center">
                                 ##  默认不可见
                                     <input type="hidden" name="isPublic" value="0"/>

@@ -123,9 +123,7 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
         vo.setChineseName(user.getChineseName());
     
         //设置国家
-        Country country = countryService.findOne(user.getCountryId());
-        vo.setCountry(country);
-    
+        vo.setCountry(user.getCountry());
         vo.setEmail(user.getEmail());
         vo.setDmail(user.getDmail());
         vo.setDeleted(user.getDeleted());
@@ -156,7 +154,6 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
         //保存用户信息
         user.setName(paramVo.getName());
         user.setChineseName(paramVo.getChineseName());
-        user.setCountryId(paramVo.getCountryId());
         user.setEmail(paramVo.getEmail());
         user.setDmail(paramVo.getDmail());
         
@@ -187,7 +184,6 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
         //设置数据
         user.setName(paramVo.getName());
         user.setChineseName(paramVo.getChineseName());
-        user.setCountryId(paramVo.getCountryId());
         user.setEmail(paramVo.getEmail());
         user.setDmail(paramVo.getDmail());
     
@@ -221,10 +217,8 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
         for(MissionGroupBd groupBd : missionGroupBds){
             bdUserIds.add(groupBd.getBdId());
         }
-
         // 一次性查询所有用户
         List<BdUser> bdUsers = bdUserDao.findAll(bdUserIds);
-
         return bdUsers;
     }
 
@@ -257,11 +251,7 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
             vo.setId(user.getId());
             vo.setName(user.getName());
             vo.setChineseName(user.getChineseName());
-    
-            //设置国家
-            Country country = countryService.findOne(user.getCountryId());
-            vo.setCountry(country);
-    
+            vo.setCountry(user.getCountry());
             vo.setEmail(user.getEmail());
             vo.setDmail(user.getDmail());
             vo.setDeleted(user.getDeleted());
@@ -274,7 +264,6 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
                     vo.setRole(userRole.getRole());
                 }
             }
-    
             list.add(vo);
         }
     
@@ -289,7 +278,6 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
             } else {
                 stringBuffer.append("，" + role.getRole().getDesc());
             }
-    
         }
         return stringBuffer.toString();
     }

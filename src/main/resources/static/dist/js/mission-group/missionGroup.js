@@ -85,7 +85,7 @@ function addUsers() {
 function distributeLeaderModal(groupId) {
     console.log(groupId);
     $.ajax({
-        url: 'members',
+        url: 'queryGroupBdUsers',
         data: JSON.stringify({"groupId": groupId}),
         type: 'post',
         dataType: 'json',

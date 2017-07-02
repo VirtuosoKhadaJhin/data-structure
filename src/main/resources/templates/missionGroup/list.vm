@@ -50,8 +50,6 @@
                 <td class="td-sort td-isPublic">
                     <label class="label-isPublic">#if($!vo.isPublic==0)
                         显示 #end #if($!vo.isPublic==1) 隐藏 #end </label>
-                ##                    $!vo.isPublic
-                ##                    #if($!vo.role.id==$!role.id) selected  #end
                 </td>
                 <td class="td-sort td-createDt">
                     <label class="label-createDt">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createDt)</label>
@@ -75,9 +73,9 @@
                         <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item"
                            href="edit?id=$!vo.id">编辑</a>
                         <a key-code="$!vo.id" class="btn btn-success btn-mini modify-item"
-                           onclick="addBdUserModal($!vo.country.id,$!vo.id)">添加组员</a>
+                           onclick="addBdUserModal($!vo.country.id,$!vo.id)">添加队员</a>
                         <a key-code="$!vo.id" class="btn btn-info btn-mini modify-item"
-                           onclick="distributeLeaderModal($!vo.id)">指定组长</a>
+                           onclick="distributeLeaderModal($!vo.id)">指派队长</a>
                         <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn">删除</button>
                     </div>
                 </td>

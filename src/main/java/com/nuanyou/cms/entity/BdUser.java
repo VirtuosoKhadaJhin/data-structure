@@ -21,7 +21,7 @@ public class BdUser {
     private String name;
     private String chineseName;
     private String pwd;
-    private Long countryId;
+    private Country country;
     private String email;
     private String dmail;
     private Byte deleted;
@@ -72,16 +72,7 @@ public class BdUser {
     public void setPwd(String pwd) {
         this.pwd = pwd;
     }
-    
-    @Column(name = "countryid")
-    public Long getCountryId() {
-        return countryId;
-    }
-    
-    public void setCountryId(Long countryId) {
-        this.countryId = countryId;
-    }
-    
+
     @Column(name = "email")
     public String getEmail() {
         return email;
@@ -127,5 +118,15 @@ public class BdUser {
     
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "countryid")
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 }

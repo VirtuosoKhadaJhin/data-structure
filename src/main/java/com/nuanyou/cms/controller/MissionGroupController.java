@@ -61,7 +61,9 @@ public class MissionGroupController {
      */
     @RequestMapping("member")
     public String member(Long groupId, Model model) {
+        MissionGroup group = missionGroupService.findGroupById(groupId);
         List<BdUser> list = userManagerService.findByGroupId(groupId);
+        model.addAttribute("group", group);
         model.addAttribute("list", list);
         return "missionGroup/member";
     }
@@ -72,9 +74,9 @@ public class MissionGroupController {
      * @param requestVo
      * @return
      */
-    @RequestMapping("members")
+    @RequestMapping("queryGroupBdUsers")
     @ResponseBody
-    public APIResult<List<BdUserVo>> members(@RequestBody MissionGroupVo requestVo) {
+    public APIResult<List<BdUserVo>> queryGroupBdUsers(@RequestBody MissionGroupVo requestVo) {
         APIResult<List<BdUserVo>> result = new APIResult<List<BdUserVo>>();
         List<BdUserVo> res = missionGroupService.members(requestVo.getGroupId());
         result.setData(res);
@@ -219,27 +221,4 @@ public class MissionGroupController {
         missionGroupService.saveGroupBds(vo.getGroupId(), vo.getUserIds());
         return result;
     }
-
-    //    /**
-    //     * 保存Bd
-    //     *
-    //     * @return
-    //     */
-    //    @RequestMapping("saveGroupBds")
-    //    @ResponseBody
-    //    public APIResult<Boolean> saveGroupBds(@RequestBody MissionGroupVo vo) {
-    //        //[{"groupId":1,"bdId":5},{"groupId":1,"bdId":5}]
-    //        APIResult<Boolean> result = new APIResult<>();
-    //        Boolean saveResult = missionGroupService.saveGroupBds(vos);
-    //        result.setData(saveResult);
-    //        return result;
-    //    }
-
-
-    //    @RequestMapping("saveGroupBds")
-    //    @ResponseBody
-    //    public APIResult saveGroupBds(@RequestBody List<GroupBdParamVo> vos) {
-    //        missionGroupService.saveGroupBds(vos);
-    //        return new APIResult();
-    //    }
 }
