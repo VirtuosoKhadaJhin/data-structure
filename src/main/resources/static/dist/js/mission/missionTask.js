@@ -79,6 +79,7 @@ $(function () {
     // 确认指派任务
     $(".sure-distribute").on("click", function () {
         var taskIds = [];
+        var distrDt = $(".datetime-distrDt").val();
         var tasks = $(".tbody-list :checkbox");
         for (var i = 0; i < tasks.length; i++) {
             var task = tasks[i];
@@ -86,9 +87,6 @@ $(function () {
                 taskIds.push($(task).attr("task-id"));
             }
         }
-
-        console.log(bdId);
-        console.log(taskIds);
 
         $(".taskDistributeModel").modal('hide');
         $(".distributeResult-text").text("任务指派成功！");
@@ -102,6 +100,7 @@ $(function () {
             var data = {
                 bdId: bdId,
                 taskIds: taskIds,
+                distrDt: distrDt
             };
             $.ajax({
                 url: 'distributeTask',
@@ -125,7 +124,10 @@ $(function () {
 
     $(".taskDistributeResultModel").on("hide.bs.modal", function () {
         var result = $(".audit-result").val();
-        if (result == 0) {
+        // console.log(result);
+        // alert(result);
+        // ==0和==""共同效果
+        if (result == 0 && result != "") {
             window.location.reload();
         }
     });
@@ -179,7 +181,7 @@ $(function () {
 
     $(".publicSwichResultModel").on("hide.bs.modal", function () {
         var result = $(".isPublic-result").val();
-        if (result == 0) {
+        if (result == 0 && result != "") {
             window.location.reload();
         }
     });

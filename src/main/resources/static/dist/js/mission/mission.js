@@ -54,9 +54,13 @@ $(function () {
 
     $(".approvalResultModel").on("hide.bs.modal", function () {
         var result = $(".audit-result").val();
-        if (result == 0) {
+        if (result == 0 && result != "") {
             window.location.reload();
         }
+    });
+
+    $(".approvalModel").on("hide.bs.modal", function () {
+        $(".remark-info").hide();
     });
 
     // 确认审批

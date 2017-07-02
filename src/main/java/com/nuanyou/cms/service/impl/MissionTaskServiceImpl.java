@@ -3,8 +3,10 @@ package com.nuanyou.cms.service.impl;
 import com.google.common.collect.Lists;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
+import com.nuanyou.cms.dao.CmsUserDao;
 import com.nuanyou.cms.dao.MissionMerchatTrackDao;
 import com.nuanyou.cms.dao.MissionTaskDao;
+import com.nuanyou.cms.entity.CmsUser;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import com.nuanyou.cms.entity.mission.BdMerchantTrack;
 import com.nuanyou.cms.entity.mission.MissionTask;
@@ -40,6 +42,9 @@ public class MissionTaskServiceImpl implements MissionTaskService {
 
     @Autowired
     private MissionMerchatTrackDao trackDao;
+
+    @Autowired
+    private CmsUserDao userDao;
 
     @Override
     public Page<MissionTaskVo> findAllMissionTask(final MissionRequestVo requestVo) {
@@ -102,8 +107,9 @@ public class MissionTaskServiceImpl implements MissionTaskService {
         if (vo.getStatus() == null || vo.getMchId() == null) {
             throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
         }
-        Long userid = UserHolder.getUser().getUserid();
-        missionTaskDao.updateTaskStatus(vo.getMchId(), vo.getStatus().getKey(), vo.getRemark(), userid, new Date());
+        String dmail = UserHolder.getUser().getEmail();
+        CmsUser cmsUser = userDao.findByEmail(dmail);
+        missionTaskDao.updateTaskStatus(vo.getMchId(), vo.getStatus().getKey(), vo.getRemark(), cmsUser.getId(), new Date());
     }
 
     @Override
@@ -156,9 +162,11 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 continue;
             }
             MissionTaskVo missionTaskVo = maps.get(mchId);
-            if (userId.equals(missionTaskVo.getBdUser().getId())) {//相同BD的时候才需要添加(存在多个BD录入商户信息)
-                missionTaskVo.setMerchantTrack(next);
-                iterator.remove();
+            if (missionTaskVo.getStatus() != MissionTaskStatus.UN_DISTRIBUTE) {
+                if (userId.equals(missionTaskVo.getBdUser().getId())) {//相同BD的时候才需要添加(存在多个BD录入商户信息)
+                    missionTaskVo.setMerchantTrack(next);
+                    iterator.remove();
+                }
             }
         }
         return Lists.newArrayList(maps.values());

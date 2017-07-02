@@ -251,7 +251,8 @@
         timepicker: false,
         yearStart: 2000,
         yearEnd: 2050,
-        todayButton: true
+        todayButton: true,
+        minDate: new Date()
     });
 </script>
 </body>
