@@ -65,7 +65,7 @@
                                         <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a>
                                     </td>
                                     <td>首尔</td>
-                                    <td>$!entity.groupId - $!entity.bdId</td>
+                                    <td>$!entity.group.name - $!entity.bdUser.chineseName</td>
                                     <td class="td-imgurl">
                                         <div class="imgurl-info">
                                             #if($!entity.merchantTrack.imgUrls.size()==0 || "$!entity.merchantTrack.imgUrls"=="")
