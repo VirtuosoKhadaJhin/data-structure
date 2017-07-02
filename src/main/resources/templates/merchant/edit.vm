@@ -215,11 +215,20 @@
                                     <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-plus"></i> </a>
                                 </div>
                                     #else
+                                    <div id = 'cc' class="controls">
                                         #foreach($e in $!entity.collectionCodeList)
-                                        <div class="controls">
-                                            <input type="text" class="span8" placeholder="" name="collectionCodeList" value="$e">
-                                        </div>
+                                            #if($velocityCount == 1)
+                                                <input style="margin-bottom:10px"  type="text" class="span8" placeholder="" name="collectionCodeList" value="$e">
+                                                <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-plus"></i> </a>
+                                            #else
+                                                <input style="margin-bottom:10px"  type="text" class="span8" placeholder="" name="collectionCodeList" value="$e">
+                                                <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-minus"></i> </a>
+                                            #end
+
                                         #end
+
+                                    </div>
+
                                 #end
 
                                 <label class="control-label">概述</label>
@@ -275,14 +284,34 @@
             $("#btn-edit").hide();
             #end
 
-        $('.btn-info').bind('click',function () {
+        var r = /^\d{1,9}$/;　　//正整数
+        $("#btn-save").bind('click',function () {
+            if ( $("input[name='collectionCodeList']").length>0 ){
+                for (var i = 0;i<$("input[name='collectionCodeList']").length;i++ ) {
+                    if (r.test($("input[name='collectionCodeList']")[i].value)) {
+                        alert ('收款码输入错误，请重新填写');
+                        return false;
+                    }
+                }
+            }
+        });
+
+        $('.icon-plus').bind('click',function () {
 
             if ( $("input[name='collectionCodeList']").length>2 ){
                 alert ('最多只能添加三个');
                 return;
             }
-            $('#cc').append('<input style="margin-bottom:10px" type="text" class="span8" placeholder="" name="collectionCodeList" value="">');
+            $('#cc').append('<input style="margin-bottom:10px" type="text" class="span8" placeholder="" name="collectionCodeList" value=""> <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-minus" onclick="minus(this);"></i> </a>');
         });
+        $('.icon-minus').bind('click',function () {
+            $(this).parent().prev().remove();
+            $(this).parent().remove();
+        });
+        var minus = function (e) {
+            $(e).parent().prev().remove();
+            $(e).parent().remove();
+        }
         $("input[name='hasratio']").bind("click", function () {
 //            if($(this).attr('checked') == 'checked') return ;
 //            $(this).attr("checked","checked");
