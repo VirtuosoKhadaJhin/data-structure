@@ -37,6 +37,9 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
     private MissionGroupBdDao groupBdDao;
 
     @Autowired
+    private MissionGroupDao groupDao;
+
+    @Autowired
     private BdRoleDao bdRoleDao;
 
     @Autowired
@@ -219,6 +222,36 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
         }
         // 一次性查询所有用户
         List<BdUser> bdUsers = bdUserDao.findAll(bdUserIds);
+        return bdUsers;
+    }
+
+    @Override
+    public List<BdUser> findByGroupId(Long country, Long city, Long groupId) {
+        if (groupId != null) {
+            return this.findByGroupId(groupId);
+        }
+        if (city != null) {
+            List<MissionGroup> groups = groupDao.findGroupsByCityId(city);
+            return findBdUsersByGroupIds(groups);
+        }
+        if(country != null){
+            List<MissionGroup> groups = groupDao.findGroupsByCountryId(country);
+            return findBdUsersByGroupIds(groups);
+        }
+        return null;
+    }
+
+    private List<BdUser> findBdUsersByGroupIds(List<MissionGroup> groups) {
+        List<Long> groupIds = Lists.newArrayList();
+        for (MissionGroup group : groups) {
+            groupIds.add(group.getId());
+        }
+        List<MissionGroupBd> userBds = groupBdDao.findByGroupIds(groupIds);
+        List<Long> userIds = Lists.newArrayList();
+        for (MissionGroupBd userBd : userBds) {
+            userIds.add(userBd.getBdId());
+        }
+        List<BdUser> bdUsers = bdUserDao.findByIdIn(userIds);
         return bdUsers;
     }
 

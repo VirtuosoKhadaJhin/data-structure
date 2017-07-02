@@ -20,6 +20,8 @@ public class MissionRequestVo {
 
     private String remark;
 
+    private Long groupId;
+
     private Long country = 1L;
 
     private Long city;
@@ -146,6 +148,14 @@ public class MissionRequestVo {
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
     public String getFinishDtStr() {

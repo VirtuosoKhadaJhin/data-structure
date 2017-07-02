@@ -208,7 +208,7 @@
                                 <select class="span11 select2" name="bdId">
                                     <option value>全部</option>
                                     #foreach($e in $!bdUsers)
-                                        <option value="$!e.id" #if($!requestVo.bdId == $!e.id) selected #end>$!e.id : $!e.name</option>
+                                        <option value="$!e.id" #if($!requestVo.bdId == $!e.id) selected #end>$!e.id : $!e.chineseName</option>
                                     #end
                                 </select>
                             </div>

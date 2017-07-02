@@ -136,14 +136,20 @@
                             </div>
                             <div class="search-select">
                                 <label>战队名称</label>
-                                <select class="span11 select2" name="zu">
+                                <select class="span11 select2" name="groupId">
                                     <option value="">全部</option>
+                                    #foreach($e in $!groups)
+                                        <option value="$!e.id" #if($!requestVo.groupId == $!e.id) selected #end>$!e.id : $!e.name</option>
+                                    #end
                                 </select>
                             </div>
                             <div class="search-select">
                                 <label>BD名称</label>
                                 <select class="span11 select2" name="bdId">
                                     <option value="">全部</option>
+                                    #foreach($e in $!bdUsers)
+                                        <option value="$!e.id" #if($!requestVo.bdId == $!e.id) selected #end>$!e.id : $!e.chineseName</option>
+                                    #end
                                 </select>
                             </div>
                             <div class="search-select">
