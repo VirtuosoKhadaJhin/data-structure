@@ -70,6 +70,8 @@ public class MerchantVO {
 
     private Boolean locateExactly;
 
+    private List<String> collectionCodeList;
+
 
     public BigDecimal getRatio() {
         return ratio;
@@ -465,5 +467,13 @@ public class MerchantVO {
 
     public void setLocateExactly(Boolean locateExactly) {
         this.locateExactly = locateExactly;
+    }
+
+    public List<String> getCollectionCodeList() {
+        return collectionCodeList;
+    }
+
+    public void setCollectionCodeList(List<String> collectionCodeList) {
+        this.collectionCodeList = collectionCodeList;
     }
 }

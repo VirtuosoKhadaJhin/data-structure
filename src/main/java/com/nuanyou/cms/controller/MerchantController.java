@@ -1,5 +1,6 @@
 package com.nuanyou.cms.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
@@ -8,8 +9,10 @@ import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.*;
 import com.nuanyou.cms.model.MerchantVO;
 import com.nuanyou.cms.model.PageUtil;
+import com.nuanyou.cms.service.MerchantCollectionCodeService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.util.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
 
@@ -49,6 +54,9 @@ public class MerchantController {
     @Autowired
     private MerchantStatsDao merchantStatsDao;
 
+    @Autowired
+    MerchantCollectionCodeService collectionCodeService;
+
     private static final Map<String, Long> countryMap = new HashMap<>();
 
     static {
@@ -65,6 +73,12 @@ public class MerchantController {
     public String edit(@RequestParam(required = false) Long id, Long countryId, Model model) {
         if (id != null) {
             Merchant entity = merchantDao.findOne(id);
+            List<EntityBdMerchantCollectionCode> codeList = collectionCodeService.findEntityBdMerchantCollectionCodesByMchId(id);
+            List<String> list = new ArrayList<>();
+            for (EntityBdMerchantCollectionCode code : codeList) {
+                list.add(code.getCollectionCode());
+            }
+            entity.setCollectionCodeList(list);
             model.addAttribute("entity", entity);
         }
         setEnums(model, countryId);
@@ -99,11 +113,40 @@ public class MerchantController {
 
     @RequestMapping(path = "update", method = RequestMethod.POST)
     public String update(MerchantVO vo, Long countryId, Model model) {
+        validateCollectionCodes (vo.getCollectionCodeList());
+        List<String> tmp = new ArrayList<>();
+        if (vo.getCollectionCodeList()!=null && vo.getCollectionCodeList().size()>0) {
+            for (String code : vo.getCollectionCodeList())
+                tmp.add(code);
+        }
         MerchantVO entity = merchantService.saveNotNull(vo);
+        entity.setCollectionCodeList(tmp);
         model.addAttribute("entity", entity);
         setEnums(model, countryId);
         model.addAttribute("disabled", true);
         return "merchant/edit";
+    }
+
+    public void validateCollectionCodes ( List<String> codelist) {
+        if (codelist == null || codelist.size() == 0) {
+            throw new APIException(ResultCodes.CollectionCodeError);
+        }
+        if (codelist != null && codelist.size()>3) {
+            throw new APIException(ResultCodes.CollectionCodeGreaterThan3);
+        }
+        String regex = "^\\d{1,9}$";
+        Pattern pattern = Pattern.compile(regex);
+
+        for (String code : codelist) {
+            Matcher matcher = pattern.matcher(code);
+            if (!matcher.matches()) {
+                throw new APIException(ResultCodes.CollectionCodeError);
+            }
+        }
+        Set<String> set = new HashSet<>(codelist);
+        if (set.size() != codelist.size() ){
+            throw new APIException(ResultCodes.CollectionCodeRepeat);
+        }
     }
 
     @RequestMapping(path = "{countryCode}/update", method = RequestMethod.POST)
