@@ -80,7 +80,6 @@ $(function () {
     $(".sure-distribute").on("click", function () {
         var taskIds = [];
         var distrDt = $(".datetime-distrDt").val();
-        alert(distrDt);
         var tasks = $(".tbody-list :checkbox");
         for (var i = 0; i < tasks.length; i++) {
             var task = tasks[i];
