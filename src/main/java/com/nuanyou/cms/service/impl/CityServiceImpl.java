@@ -1,7 +1,5 @@
 package com.nuanyou.cms.service.impl;
 
-import com.nuanyou.cms.commons.APIException;
-import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.CityDao;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.service.CityService;
@@ -59,7 +57,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public List<City> findCityByCountryId(Long countryId) {
         if (countryId == null) {
-            throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
+          return cityDao.findAll();
         }
        return cityDao.findIdNameList(countryId);
     }

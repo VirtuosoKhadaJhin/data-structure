@@ -98,7 +98,7 @@ public class DistrictServiceImpl implements DistrictService {
     @Override
     public List<DistrictVo> findByCity(Long cityId) {
         if (cityId == null) {
-            return Lists.newArrayList();
+            return this.convertToDistrictVos(districtDao.findAll());
         }
         List<District> districts = this.districtDao.findIdNameListByCityId(cityId);
         return this.convertToDistrictVos(districts);
