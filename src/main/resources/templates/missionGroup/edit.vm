@@ -89,6 +89,34 @@
                                                    style="width: 80%" value="$!group.desc">
                                         </div>
                                     </div>
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">描述：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <input for="name" id="desc"
+                                                   class="span7" name="desc" type="text" style="width: 80%"
+                                                   value=""/>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">队长：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select name="leader" id="leader" style="width:80%">
+                                                <option class="elader" value>请选择队长</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="control-label" style="width: 140px;">副队长：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select name="viceleader" id="viceleader" style="width:80%">
+                                                <option class="viceleader" value>请选择副队长</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-actions" style="clear:both;text-align: center">
                                 ##  默认不可见
@@ -106,19 +134,6 @@
     </div>
     #include("common/js-support.vm")
 
-    <script type="text/javascript">
-        //邮箱验证
-        function emailChekc() {
-            var email = document.getElementsByName("email")[0].value;
-//            var reg = /^([a-z0-9A-Z]+[-|\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\.)+[a-zA-Z]{2,}$/;
-            var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/;
-            var res = reg.test(email);
-            if (res == false) {
-                alert("邮箱规则错误，请输入正确的邮箱");
-            }
-
-            return res;
-        }
-    </script>
+    <script src="/dist/js/mission-group/missionGroupAdd.js"></script>
 </body>
 </html>

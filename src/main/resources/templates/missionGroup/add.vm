@@ -85,7 +85,7 @@
                                         <label class="control-label" style="width: 140px;">队长：</label>
                                         <div class="controls" style="margin-left: 152px;">
                                             <select name="leader" id="leader" style="width:80%">
-                                                <option class="city-unit" value>请选择队长</option>
+                                                <option class="elader" value>请选择队长</option>
 
                                             </select>
                                         </div>
@@ -95,7 +95,7 @@
                                         <label class="control-label" style="width: 140px;">副队长：</label>
                                         <div class="controls" style="margin-left: 152px;">
                                             <select name="viceleader" id="viceleader" style="width:80%">
-                                                <option class="city-unit" value>请选择副队长</option>
+                                                <option class="viceleader" value>请选择副队长</option>
 
                                             </select>
                                         </div>
@@ -105,7 +105,7 @@
 
                                 <div class="form-actions" style="clear:both;text-align: center">
                                     <input type="hidden" name="isPublic" value="0"/>
-                                    <button type="submit" class="btn btn-info">确定</button>
+                                    <button type="submit" class="btn btn-info save-group">确定</button>
                                     <a class="btn btn-primary" href="list">返回</a>
                                 </div>
                         </form>
@@ -117,47 +117,7 @@
 </div>
     #include("common/js-support.vm")
 
-<script type="text/javascript">
-    // 邮箱校验
-    function emailChekc() {
-        var email = document.getElementsByName("email")[0].value;
-        var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/;
-        var res = reg.test(email);
-        if (res == false) {
-            alert("邮箱规则错误，请输入正确的邮箱");
-        }
-        return res;
-    }
-    $(document).ready(function () {
-        changeCity();
-    });
-
-    // 联动城市
-    $("#country").on("click", function () {
-        changeCity();
-    });
-
-    // 联动城市
-    function changeCity() {
-        var countryId = $("#country").val();
-        var cityOptions = $(".option-city");
-        for (var i = 0; i < cityOptions.length; i++) {
-            var cityOption = cityOptions[i];
-            if (countryId != $(cityOption).attr("country-id")) {
-                $(cityOption).hide();
-            } else {
-                $(cityOption).show();
-            }
-        }
-        $("#city").val("");
-    }
-
-    // 联动bdUser
-    function queryBdUsers() {
-
-    }
-
-</script>
+<script src="/dist/js/mission-group/missionGroupAdd.js"></script>
 
 </body>
 </html>
