@@ -55,9 +55,11 @@
                                 #foreach($entity in $!page.content)
                                 <tr data-mchId="$!entity.merchant.id">
                                     <td>
-                                        <div class="td-op" data-mchId="$!entity.mchId">
-                                            <button type="button" class="btn btn-success btn-small td-button approval">审批</button>
-                                        </div>
+                                        #if($!entity.status.key != 3)
+                                            <div class="td-op" data-mchId="$!entity.mchId">
+                                                <button type="button" class="btn btn-success btn-small td-button approval">审批</button>
+                                            </div>
+                                        #end
                                     </td>
                                     <td>
                                         <span>$!entity.merchant.id</span>
