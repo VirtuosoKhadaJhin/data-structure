@@ -87,9 +87,6 @@ $(function () {
             }
         }
 
-        console.log(bdId);
-        console.log(taskIds);
-
         $(".taskDistributeModel").modal('hide');
         $(".distributeResult-text").text("任务指派成功！");
 
@@ -125,7 +122,10 @@ $(function () {
 
     $(".taskDistributeResultModel").on("hide.bs.modal", function () {
         var result = $(".audit-result").val();
-        if (result == 0) {
+        // console.log(result);
+        // alert(result);
+        // ==0和==""共同效果
+        if (result == 0 && result != "") {
             window.location.reload();
         }
     });
@@ -179,7 +179,7 @@ $(function () {
 
     $(".publicSwichResultModel").on("hide.bs.modal", function () {
         var result = $(".isPublic-result").val();
-        if (result == 0) {
+        if (result == 0 && result != "") {
             window.location.reload();
         }
     });
