@@ -70,11 +70,13 @@
                                 #foreach($entity in $!page.content)
                                 <tr>
                                     <td>
-                                        <div class="checkbox bd-checkbox">
-                                            <input id="checkbox$!entity.id" class="styled td-checked" type="checkbox" task-id="$!entity.id">
-                                            <label for="checkbox$!entity.id" class="bd-checkbox-label" style="margin-bottom: 15px;">
-                                            </label>
-                                        </div>
+                                        #if($!entity.status.key!=3)
+                                            <div class="checkbox bd-checkbox">
+                                                <input id="checkbox$!entity.id" class="styled td-checked" type="checkbox" task-id="$!entity.id">
+                                                <label for="checkbox$!entity.id" class="bd-checkbox-label" style="margin-bottom: 15px;">
+                                                </label>
+                                            </div>
+                                        #end
                                     </td>
                                     <td>
                                         <span>$!entity.merchant.id</span>

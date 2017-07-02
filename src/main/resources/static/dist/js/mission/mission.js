@@ -4,7 +4,6 @@
 $(function () {
     // 改变任务状态
     $(".task-status").on("change", function () {
-        console.log($(this).val());
         if ($(this).val() != "FINISHED") {
             $(".task-status-time").show();
         } else {
@@ -65,16 +64,19 @@ $(function () {
         var remark = $(".remark-text").val();
 
         var status = $(".approval-status").val();
+        var data, mchId = $(".modal .hide-mchId").val();
         if (status == "APPROVED") {
-            remark = "";
+            data = {
+                mchId: mchId,
+                status: status
+            };
+        } else {
+            data = {
+                mchId: mchId,
+                status: status,
+                remark: remark,
+            };
         }
-        var mchId = $(".modal .hide-mchId").val();
-        var data = {
-            mchId: mchId,
-            status: status,
-            remark: remark,
-        };
-        console.log(data);
         $.ajax({
             url: 'approval',
             data: JSON.stringify(data),
