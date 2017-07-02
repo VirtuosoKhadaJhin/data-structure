@@ -20,96 +20,105 @@ public class BdUserVo {
     private Byte deleted;
     private Date createTime;
     private Date updateTime;
+    private Boolean isLeader = false;
     private BdRole role; //角色
     
     
     public BdUserVo() {
     }
-    
+
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getPwd() {
         return pwd;
     }
-    
+
     public void setPwd(String pwd) {
         this.pwd = pwd;
     }
-    
+
     public Country getCountry() {
         return country;
     }
-    
+
     public void setCountry(Country country) {
         this.country = country;
     }
-    
+
     public String getEmail() {
         return email;
     }
-    
+
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     public String getChineseName() {
         return chineseName;
     }
-    
+
     public void setChineseName(String chineseName) {
         this.chineseName = chineseName;
     }
-    
+
     public String getDmail() {
         return dmail;
     }
-    
+
     public void setDmail(String dmail) {
         this.dmail = dmail;
     }
-    
+
     public Byte getDeleted() {
         return deleted;
     }
-    
+
     public void setDeleted(Byte deleted) {
         this.deleted = deleted;
     }
-    
+
     public Date getCreateTime() {
         return createTime;
     }
-    
+
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
-    
+
     public Date getUpdateTime() {
         return updateTime;
     }
-    
+
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
-    
+
+    public Boolean getIsLeader() {
+        return isLeader;
+    }
+
+    public void setIsLeader(Boolean leader) {
+        isLeader = leader;
+    }
+
     public BdRole getRole() {
         return role;
     }
-    
+
     public void setRole(BdRole role) {
         this.role = role;
     }

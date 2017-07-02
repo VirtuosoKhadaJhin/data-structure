@@ -49,7 +49,7 @@ public class MissionTaskServiceImpl implements MissionTaskService {
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 if (requestVo.getMchId() != null) {
-                    predicate.add(cb.equal(root.get("mchId"), requestVo.getMchId()));
+                    predicate.add(cb.equal(root.get("mchid"), requestVo.getMchId()));
                 }
                 if (requestVo.getStatus() == null) {
                     if (requestVo.getAudit()) {//审核列表

@@ -6,12 +6,12 @@ import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.MissionGroup;
+import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.model.MissionGroupParamVo;
 import com.nuanyou.cms.model.MissionGroupRequestVo;
 import com.nuanyou.cms.model.MissionGroupVo;
 import com.nuanyou.cms.service.BdUserManagerService;
 import com.nuanyou.cms.service.MissionGroupService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -64,6 +64,36 @@ public class MissionGroupController {
         List<BdUser> list = userManagerService.findByGroupId(groupId);
         model.addAttribute("list", list);
         return "missionGroup/member";
+    }
+
+    /**
+     * 查询已有的组员(标志出队长)
+     *
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping("members")
+    @ResponseBody
+    public APIResult<List<BdUserVo>> members(@RequestBody MissionGroupVo requestVo) {
+        APIResult<List<BdUserVo>> result = new APIResult<List<BdUserVo>>();
+        List<BdUserVo> res = missionGroupService.members(requestVo.getGroupId());
+        result.setData(res);
+        return result;
+    }
+
+    /**
+     * 分配组长
+     *
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping("distributeLeader")
+    @ResponseBody
+    public APIResult<Boolean> distributeLeader(@RequestBody MissionGroupVo requestVo) {
+        APIResult<Boolean> result = new APIResult<Boolean>();
+        Boolean res = missionGroupService.distributeLeader(requestVo.getGroupId(), requestVo.getLeaderId());
+        result.setData(res);
+        return result;
     }
 
     /**
@@ -158,7 +188,7 @@ public class MissionGroupController {
     @ResponseBody
     public APIResult<List<BdUser>> findBdUserByCountryId(@RequestBody MissionGroupVo requestVo) {
         APIResult<List<BdUser>> result = new APIResult<List<BdUser>>();
-        List<BdUser> bdUsers = missionGroupService.findBdUsersByCountryId(requestVo.getCountryId());
+        List<BdUser> bdUsers = missionGroupService.findBdUsersByCountryId(requestVo.getCountryId(), requestVo.getGroupId());
         result.setData(bdUsers);
         return result;
     }

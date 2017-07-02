@@ -65,7 +65,7 @@ $(function () {
                 taskIds.push($(task).attr("task-id"));
             }
         }
-        console.log("taskIds:" + taskIds.length);
+        console.log("taskIds:" + taskIds);
         if (taskIds.length == 0) {
             $(".distributeResult-text").html("<strong style='color: red'>请选择任务！</strong>");
             $(".taskDistributeResultModel").modal('show');
@@ -134,7 +134,6 @@ $(function () {
     $(".radio-public").on("click", function () {
         var isPublic = $(this).val();
         var groupId = $(".public-default-val").val();
-        console.log(groupId);
         $(".publicSwichModel .hide-public").val(isPublic);
         $(".publicSwichModel .hide-groupId").val(groupId);
         var msgStr = "可见";
@@ -147,10 +146,17 @@ $(function () {
 
     $(".sure-public-switch").on("click", function () {
         var isPublic = $("#hide-isPublic").val();
-        var groupId = $("#hide-groupId").val();
+        var groupId = $(".publicSwichModel .hide-groupId").val();
 
+        if (isPublic == 0) {
+            isPublic = false;
+        } else {
+            isPublic = true;
+        }
         console.log(isPublic);
-        var data = {isPublic: isPublic, groupId: groupId};
+        console.log(groupId);
+
+        var data = {groupId: Number(groupId), isPublic: isPublic};
         $.ajax({
             url: 'updateGroupPublic',
             data: JSON.stringify(data),

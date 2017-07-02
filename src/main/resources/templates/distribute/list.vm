@@ -71,8 +71,8 @@
                                 <tr>
                                     <td>
                                         <div class="checkbox bd-checkbox">
-                                            <input id="checkbox0" class="styled td-checked" type="checkbox" task-id="$!entity.id">
-                                            <label for="checkbox0" class="bd-checkbox-label" style="margin-bottom: 15px;">
+                                            <input id="checkbox$!entity.id" class="styled td-checked" type="checkbox" task-id="$!entity.id">
+                                            <label for="checkbox$!entity.id" class="bd-checkbox-label" style="margin-bottom: 15px;">
                                             </label>
                                         </div>
                                     </td>

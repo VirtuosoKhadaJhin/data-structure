@@ -23,12 +23,13 @@ public class MissionGroupVo {
     private Date updateDt;
     private Byte delFlag;
     private BdUser leader;
-    
+
     Integer index = 1;
     Integer pageNum = 8;
     
     private Long countryId;
     private Long groupId;
+    private Long leaderId;
     private List<Long> bDUserIds = Lists.newArrayList();
 
     public Long getId() {
@@ -141,6 +142,14 @@ public class MissionGroupVo {
 
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
+    }
+
+    public Long getLeaderId() {
+        return leaderId;
+    }
+
+    public void setLeaderId(Long leaderId) {
+        this.leaderId = leaderId;
     }
 
     public List<Long> getbDUserIds() {

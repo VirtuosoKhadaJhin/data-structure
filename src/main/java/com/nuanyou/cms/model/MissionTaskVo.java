@@ -47,6 +47,10 @@ public class MissionTaskVo {
 
     private BdMerchantTrack merchantTrack;
 
+    private Long groupId;
+
+    private Boolean isPublic;
+
     public Long getId() {
         return id;
     }
@@ -181,5 +185,21 @@ public class MissionTaskVo {
 
     public void setMerchantTrack(BdMerchantTrack merchantTrack) {
         this.merchantTrack = merchantTrack;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public Boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Boolean aPublic) {
+        isPublic = aPublic;
     }
 }

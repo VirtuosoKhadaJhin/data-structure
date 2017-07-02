@@ -130,14 +130,13 @@ public class MissionTaskController {
     /**
      * 更新组是否可见
      *
-     * @param groupId
-     * @param isPublic
+     * @param requestVo
      * @return
      */
     @RequestMapping("updateGroupPublic")
     @ResponseBody
-    public APIResult updateGroupPublic(Long groupId, boolean isPublic) {
-        missionGroupService.updateGroupPublic(groupId, isPublic);
+    public APIResult updateGroupPublic(@RequestBody MissionTaskVo requestVo) {
+        missionGroupService.updateGroupPublic(requestVo.getGroupId(), requestVo.getIsPublic());
         return new APIResult(ResultCodes.Success);
     }
 

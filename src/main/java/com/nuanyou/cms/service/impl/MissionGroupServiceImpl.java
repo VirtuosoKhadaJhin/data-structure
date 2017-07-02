@@ -5,6 +5,7 @@ import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
+import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.model.MissionGroupParamVo;
 import com.nuanyou.cms.model.MissionGroupVo;
 import com.nuanyou.cms.service.MissionGroupService;
@@ -118,8 +119,25 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     }
 
     @Override
-    public List<BdUser> findBdUsersByCountryId(Long countryId) {
+    public List<BdUser> findBdUsersByCountryId(Long countryId, Long groupId) {
         List<BdUser> bdUsers = bdUserDao.findBdUsersByCountryId(countryId);
+
+        // 查询联合表, 不需要已经有组的组员了!
+        List<MissionGroupBd> missionGroupBds = groupBdDao.findByGroupId(groupId);
+
+        List<Long> userHaveGroups = Lists.newArrayList();
+        for (MissionGroupBd missionGroupBd : missionGroupBds) {
+            userHaveGroups.add(missionGroupBd.getBdId());
+        }
+
+        Iterator<BdUser> iterator = bdUsers.iterator();
+        while (iterator.hasNext()) {
+            BdUser next = iterator.next();
+            if (userHaveGroups.contains(next.getId())) {
+                iterator.remove();
+            }
+        }
+
         return bdUsers;
     }
 
@@ -142,7 +160,8 @@ public class MissionGroupServiceImpl implements MissionGroupService {
 
     @Override
     public void updateGroupPublic(Long groupId, boolean isPublic) {
-        groupDao.updatePublicByGroupId(groupId, (byte) (isPublic ? 1 : 0));
+        byte b = (byte) (isPublic ? 1 : 0);
+        groupDao.updatePublicByGroupId(groupId, b);
     }
 
     @Override
@@ -167,6 +186,45 @@ public class MissionGroupServiceImpl implements MissionGroupService {
             bdUserIds.add(groupBd.getBdId());
         }
         return bdUserIds;
+    }
+
+    @Override
+    public List<BdUserVo> members(Long id) {
+        //根据组ID查询出组
+        MissionGroup group = groupDao.findOne(id);
+
+        // 队长
+        BdUser leader = group.getLeaderId();
+
+        // 根据组ID查询出所有组员
+        List<MissionGroupBd> missionGroupBds = groupBdDao.findByGroupId(id);
+        List<Long> bdUserIds = Lists.newArrayList();
+        for (MissionGroupBd groupBd : missionGroupBds) {
+            bdUserIds.add(groupBd.getBdId());
+        }
+
+        // 一次性查询所有用户
+        List<BdUser> bdUsers = bdUserDao.findAll(bdUserIds);
+
+        List<BdUserVo> bdUsersVo = convertToBdUserVo(bdUsers);
+
+        if (null != leader) {
+            for (BdUserVo vo : bdUsersVo) {
+                if (vo.getId().equals(leader.getId())) {
+                    vo.setIsLeader(true);
+                }
+            }
+        }
+
+        return bdUsersVo;
+    }
+
+    @Override
+    public Boolean distributeLeader(Long groupId, Long leaderId) {
+        // 查询出被设置为leader的用户
+        BdUser bdUser = bdUserDao.findOne(leaderId);
+        groupDao.updateLeaderByGroupId(bdUser, groupId);
+        return true;
     }
 
     @Override
@@ -278,4 +336,17 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         }
         return vos;
     }
+
+    private List<BdUserVo> convertToBdUserVo(List<BdUser> bdUsers) {
+        if (CollectionUtils.isEmpty(bdUsers)) {
+            return Lists.newArrayList();
+        }
+        List<BdUserVo> vos = Lists.newArrayList();
+        for (BdUser bdUser : bdUsers) {
+            BdUserVo bdUserVoVo = BeanUtils.copyBean(bdUser, new BdUserVo());
+            vos.add(bdUserVoVo);
+        }
+        return vos;
+    }
+
 }

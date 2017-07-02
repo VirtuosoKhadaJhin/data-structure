@@ -1,5 +1,6 @@
 package com.nuanyou.cms.dao;
 
+import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.MissionGroup;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -46,5 +47,10 @@ public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaS
     @Transactional
     @Query("UPDATE MissionGroup set delFlag=1 where id=?1")
     void deleteGroup(Long groupId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE MissionGroup set leaderId=?1 where id=?2")
+    void updateLeaderByGroupId(BdUser leader, Long groupId);
 
 }

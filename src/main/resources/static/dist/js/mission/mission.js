@@ -42,9 +42,9 @@ $(function () {
     // 改变备注的显示与隐藏
     $(".approval-status").on("change", function () {
         if ("NON_APPROVAL" == $(this).val()) {
-            $("#sh-date").show();
+            $(".remark-info").show();
         } else {
-            $("#sh-date").hide();
+            $(".remark-info").hide();
         }
     });
 
