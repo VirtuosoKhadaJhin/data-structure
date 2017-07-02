@@ -284,7 +284,7 @@
             $("#btn-edit").hide();
             #end
 
-        var r = /^\d{1,9}$/;　　//正整数
+        var r = '/^\d{1,9}$/';　　//正整数
         $("#btn-save").bind('click',function () {
             if ( $("input[name='collectionCodeList']").length>0 ){
                 for (var i = 0;i<$("input[name='collectionCodeList']").length;i++ ) {
