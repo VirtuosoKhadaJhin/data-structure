@@ -62,6 +62,12 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 if (requestVo.getDistrict() != null) {
                     predicate.add(cb.equal(root.get("merchant").get("district").get("id"), requestVo.getDistrict()));
                 }
+                if (requestVo.getCountry() != null) {
+                    predicate.add(cb.equal(root.get("merchant").get("district").get("country").get("id"), requestVo.getCountry()));
+                }
+                if (requestVo.getCity() != null) {
+                    predicate.add(cb.equal(root.get("merchant").get("district").get("city").get("id"), requestVo.getCity()));
+                }
                 if (requestVo.getFinishDt() != null) {
                     Pair<Date, Date> dayStartEndTime = DateUtils.getDayStartEndTime(requestVo.getFinishDt());
                     predicate.add(cb.greaterThanOrEqualTo(root.get("finishDt").as(Date.class), dayStartEndTime.getLeft()));
