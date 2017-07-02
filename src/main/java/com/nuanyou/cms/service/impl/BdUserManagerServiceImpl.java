@@ -10,6 +10,7 @@ import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.BdUserManagerService;
 import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.util.MD5Utils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -246,6 +247,9 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
         List<Long> groupIds = Lists.newArrayList();
         for (MissionGroup group : groups) {
             groupIds.add(group.getId());
+        }
+        if(CollectionUtils.isEmpty(groupIds)){
+            return Lists.newArrayList();
         }
         List<MissionGroupBd> userBds = groupBdDao.findByGroupIds(groupIds);
         List<Long> userIds = Lists.newArrayList();
