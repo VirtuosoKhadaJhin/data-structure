@@ -227,15 +227,16 @@ public class BdUserManagerServiceImpl implements BdUserManagerService {
 
     @Override
     public List<BdUser> findByGroupId(Long country, Long city, Long groupId) {
-        if (groupId != null) {
-            return this.findByGroupId(groupId);
-        }
-        if (city != null) {
-            List<MissionGroup> groups = groupDao.findGroupsByCityId(city);
+        if (groupId == null && city == null && country == null) {
+            List<MissionGroup> groups = groupDao.findAllGroup();
             return findBdUsersByGroupIds(groups);
-        }
-        if(country != null){
+        } else if (groupId == null && city == null && country != null) {
             List<MissionGroup> groups = groupDao.findGroupsByCountryId(country);
+            return findBdUsersByGroupIds(groups);
+        } else if (groupId != null && city == null && country == null) {
+            return this.findByGroupId(groupId);
+        } else if (city != null && groupId == null && country == null) {
+            List<MissionGroup> groups = groupDao.findGroupsByCityId(city);
             return findBdUsersByGroupIds(groups);
         }
         return null;

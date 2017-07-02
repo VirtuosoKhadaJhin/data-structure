@@ -111,13 +111,16 @@ public class MissionTaskController {
         if (requestVo.getAudit() == true) {
             requestVo.setAudit(false);
         }
-        requestVo.setStatus(null);
-        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCity());
         String email = UserHolder.getUser().getEmail();
         BdUser bdUser = bdUserService.findBdUserByDemail(email);
         MissionGroup missionGroup = missionGroupService.findGroupByUserId(bdUser.getId());
+
+        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCity());
         List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(missionGroup.getId());
         List<DistrictVo> districts = districtService.findByCity(missionGroup.getCity().getId());
+
+        requestVo.setStatus(null);
+        requestVo.setGroupId(missionGroup.getId());
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
         model.addAttribute("districts", districts);
