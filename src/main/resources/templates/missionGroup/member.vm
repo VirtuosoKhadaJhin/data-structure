@@ -87,7 +87,7 @@
                                             <label style="text-align: center;">$!vo.chineseName</label>
                                         </td>
                                         <td class="td-sort">
-                                            <label style="text-align: center;">$!vo.country.name</label>
+                                            <label style="text-align: center;">$!group.country.name</label>
                                         </td>
                                         <td class="td-sort">
                                             <label style="text-align: center;">$!vo.email</label>
