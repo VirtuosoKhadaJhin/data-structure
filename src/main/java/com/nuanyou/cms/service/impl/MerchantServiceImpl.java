@@ -202,17 +202,11 @@ public class MerchantServiceImpl implements MerchantService {
     }
 
     @Override
-    public List<Merchant> findMerchant(final Long country, final Long city) {
-        if (country == null && city == null) {
-            throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
-        }
+    public List<Merchant> findMerchant(final Long city) {
         Specification specification = new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
-                if (country != null) {
-                    predicate.add(cb.equal(root.get("district").get("country").get("id"), country));
-                }
                 if (city != null) {
                     predicate.add(cb.equal(root.get("district").get("city").get("id"), city));
                 }

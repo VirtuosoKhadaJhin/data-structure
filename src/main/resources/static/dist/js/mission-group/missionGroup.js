@@ -79,14 +79,14 @@ function addUsers() {
 
 /**
  * 指定组长弹窗
- *
  * @param groupId
+ * @param countryId
  */
-function distributeLeaderModal(groupId) {
+function distributeLeaderModal(groupId, countryId) {
     console.log(groupId);
     $.ajax({
         url: 'queryGroupBdUsers',
-        data: JSON.stringify({"groupId": groupId}),
+        data: JSON.stringify({"groupId": groupId, "countryId": countryId}),
         type: 'post',
         dataType: 'json',
         contentType: 'application/json',
@@ -101,7 +101,7 @@ function distributeLeaderModal(groupId) {
                     var bdUser = bdUsers[i];
                     if (bdUser.isLeader) {
                         htmlData += "<label><input class='check-bdUser-leader' style='margin: 10px;margin-top: 8px;' type='checkbox' data-key='" + bdUser.id + "' value='" + bdUser.id + "' checked='checked' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
-                    }else{
+                    } else {
                         htmlData += "<label><input class='check-bdUser-leader' style='margin: 10px;margin-top: 8px;' type='checkbox' data-key='" + bdUser.id + "' value='" + bdUser.id + "' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
                     }
                 }
@@ -138,7 +138,7 @@ $(".distributeLeader").on("click", function () {
                 $(".distributeLeaderResult").text("指定成功");
                 $(".distributeLeaderModal").modal("hide");
                 $(".distributeLeaderResultModal").modal("show");
-            }else{
+            } else {
                 $(".distributeLeaderResult").text("指定失败");
                 $(".distributeLeaderModal").modal("hide");
                 $(".distributeLeaderResultModal").modal("show");

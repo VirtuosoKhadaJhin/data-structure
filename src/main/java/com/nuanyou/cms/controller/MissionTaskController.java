@@ -71,8 +71,8 @@ public class MissionTaskController {
     public String list(MissionRequestVo requestVo, Model model) {
         List<Country> countries = countryService.getIdNameList();
         List<City> cities = cityService.findCityByCountryId(requestVo.getCountry());
-        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCountry(), requestVo.getCity());
-        List<MissionGroup> groups = missionGroupService.findByCountryAndCityId(requestVo.getCountry(), requestVo.getCity());
+        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCity());
+        List<MissionGroup> groups = missionGroupService.findByCountryAndCityId(requestVo.getCity());
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
         model.addAttribute("requestVo", requestVo);
@@ -110,7 +110,7 @@ public class MissionTaskController {
             requestVo.setAudit(false);
         }
         requestVo.setStatus(null);
-        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCountry(), requestVo.getCity());
+        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCity());
         String email = UserHolder.getUser().getEmail();
         BdUser bdUser = bdUserService.findBdUserByDemail(email);
         MissionGroup missionGroup = missionGroupService.findGroupByUserId(bdUser.getId());

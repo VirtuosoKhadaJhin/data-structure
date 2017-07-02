@@ -25,7 +25,7 @@ public class MissionGroupVo {
     private BdUser leader;
 
     Integer index = 1;
-    Integer pageNum = 8;
+    Integer pageNum = 20;
     
     private Long countryId;
     private Long groupId;

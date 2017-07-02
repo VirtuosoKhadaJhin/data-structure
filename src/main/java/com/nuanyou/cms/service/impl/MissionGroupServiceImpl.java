@@ -123,7 +123,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         List<BdUser> bdUsers = bdUserDao.findBdUsersByCountryId(countryId);
 
         // 查询联合表, 不需要已经有组的组员了!
-        List<MissionGroupBd> missionGroupBds = groupBdDao.findByGroupId(groupId);
+        List<MissionGroupBd> missionGroupBds = groupBdDao.findByNonGroupId(groupId);
 
         List<Long> userHaveGroups = Lists.newArrayList();
         for (MissionGroupBd missionGroupBd : missionGroupBds) {
@@ -137,7 +137,6 @@ public class MissionGroupServiceImpl implements MissionGroupService {
                 iterator.remove();
             }
         }
-
         return bdUsers;
     }
 
@@ -189,7 +188,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     }
 
     @Override
-    public List<BdUserVo> members(Long id) {
+    public List<BdUserVo> members(Long id, Long countryId) {
         //根据组ID查询出组
         MissionGroup group = groupDao.findOne(id);
 
@@ -204,7 +203,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         }
 
         // 一次性查询所有用户
-        List<BdUser> bdUsers = bdUserDao.findAll(bdUserIds);
+        List<BdUser> bdUsers = bdUserDao.findBdUsersByIdsAndCountryId(bdUserIds, countryId);
 
         List<BdUserVo> bdUsersVo = convertToBdUserVo(bdUsers);
 
@@ -228,17 +227,11 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     }
 
     @Override
-    public List<MissionGroup> findByCountryAndCityId(final Long country, final Long city) {
-        if (country == null && city == null) {
-            throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
-        }
+    public List<MissionGroup> findByCountryAndCityId(final Long city) {
         Specification specification = new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
-                if (country != null) {
-                    predicate.add(cb.equal(root.get("country").get("id"), country));
-                }
                 if (city != null) {
                     predicate.add(cb.equal(root.get("id"), city));
                 }

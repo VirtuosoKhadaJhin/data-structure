@@ -39,13 +39,12 @@ public interface MissionGroupService {
     void saveGroup(MissionGroupParamVo vo);
 
     /**
-     * 按照国家id或者城市id查询战队
+     * 按照城市id查询战队
      *
-     * @param countryId
      * @param cityId
      * @return
      */
-    List<MissionGroup> findByCountryAndCityId(Long countryId, Long cityId);
+    List<MissionGroup> findByCountryAndCityId(Long cityId);
 
     /**
      * 通过groupId查找该组的所有bduser
@@ -132,15 +131,16 @@ public interface MissionGroupService {
     List<Long> findBdUserByGroupId(Long groupId);
 
     /**
-     * 查询已有的组员(标志出队长)
+     * 查询已有的组员(指派队长)
      *
      * @param id
+     * @param countryId
      * @return
      */
-    List<BdUserVo> members(Long id);
+    List<BdUserVo> members(Long id, Long countryId);
 
     /**
-     * 分配队长
+     * 指派队长
      *
      * @param groupId
      * @param leaderId

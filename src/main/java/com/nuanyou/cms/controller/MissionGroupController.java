@@ -69,7 +69,7 @@ public class MissionGroupController {
     }
 
     /**
-     * 查询已有的组员(标志出队长)
+     * 查询已有的组员(指派队长)
      *
      * @param requestVo
      * @return
@@ -78,13 +78,13 @@ public class MissionGroupController {
     @ResponseBody
     public APIResult<List<BdUserVo>> queryGroupBdUsers(@RequestBody MissionGroupVo requestVo) {
         APIResult<List<BdUserVo>> result = new APIResult<List<BdUserVo>>();
-        List<BdUserVo> res = missionGroupService.members(requestVo.getGroupId());
+        List<BdUserVo> res = missionGroupService.members(requestVo.getGroupId(),requestVo.getCountryId());
         result.setData(res);
         return result;
     }
 
     /**
-     * 分配组长
+     * 指派队长
      *
      * @param requestVo
      * @return
