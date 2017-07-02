@@ -44,7 +44,7 @@ public interface MissionGroupService {
      * @param cityId
      * @return
      */
-    List<MissionGroup> findByCountryAndCityId(Long cityId);
+    List<MissionGroup> findByCityId(Long cityId);
 
     /**
      * 通过groupId查找该组的所有bduser

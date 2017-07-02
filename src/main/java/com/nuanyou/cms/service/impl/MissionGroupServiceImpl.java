@@ -227,19 +227,11 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     }
 
     @Override
-    public List<MissionGroup> findByCountryAndCityId(final Long city) {
-        Specification specification = new Specification() {
-            @Override
-            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                List<Predicate> predicate = new ArrayList<Predicate>();
-                if (city != null) {
-                    predicate.add(cb.equal(root.get("id"), city));
-                }
-                Predicate[] arrays = new Predicate[predicate.size()];
-                return query.where(predicate.toArray(arrays)).getRestriction();
-            }
-        };
-        return cityDao.findAll(specification);
+    public List<MissionGroup> findByCityId(final Long city) {
+        if(city== null){
+            return groupDao.findAllGroup();
+        }
+        return groupDao.findGroupsByCityId(city);
     }
 
     // TODO: 2017/6/29 可能有误，单个还是多个
