@@ -55,9 +55,11 @@
                                 #foreach($entity in $!page.content)
                                 <tr data-mchId="$!entity.merchant.id">
                                     <td>
-                                        <div class="td-op" data-mchId="$!entity.mchId">
-                                            <button type="button" class="btn btn-success btn-small td-button approval">审批</button>
-                                        </div>
+                                        #if($!entity.status.key != 3)
+                                            <div class="td-op" data-mchId="$!entity.mchId">
+                                                <button type="button" class="btn btn-success btn-small td-button approval">审批</button>
+                                            </div>
+                                        #end
                                     </td>
                                     <td>
                                         <span>$!entity.merchant.id</span>
@@ -134,14 +136,20 @@
                             </div>
                             <div class="search-select">
                                 <label>战队名称</label>
-                                <select class="span11 select2" name="zu">
+                                <select class="span11 select2" name="groupId">
                                     <option value="">全部</option>
+                                    #foreach($e in $!groups)
+                                        <option value="$!e.id" #if($!requestVo.groupId == $!e.id) selected #end>$!e.id : $!e.name</option>
+                                    #end
                                 </select>
                             </div>
                             <div class="search-select">
                                 <label>BD名称</label>
                                 <select class="span11 select2" name="bdId">
                                     <option value="">全部</option>
+                                    #foreach($e in $!bdUsers)
+                                        <option value="$!e.id" #if($!requestVo.bdId == $!e.id) selected #end>$!e.id : $!e.chineseName</option>
+                                    #end
                                 </select>
                             </div>
                             <div class="search-select">

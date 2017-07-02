@@ -72,13 +72,15 @@ public class MissionTaskController {
         List<Country> countries = countryService.getIdNameList();
         List<City> cities = cityService.findCityByCountryId(requestVo.getCountry());
         List<Merchant> merchants = merchantService.findMerchant(requestVo.getCity());
-        List<MissionGroup> groups = missionGroupService.findByCountryAndCityId(requestVo.getCity());
+        List<MissionGroup> groups = missionGroupService.findByCityId(requestVo.getCity());
+        List<BdUser> bdUsers = bdUserService.findByGroupId(requestVo.getCountry(), requestVo.getCity(), requestVo.getGroupId());
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
         model.addAttribute("requestVo", requestVo);
         model.addAttribute("countries", countries);
         model.addAttribute("cities", cities);
         model.addAttribute("groups", groups);
+        model.addAttribute("bdUsers", bdUsers);
         model.addAttribute("merchants", merchants);
         model.addAttribute("taskStatus", MissionTaskStatus.values());
         return "mission/list";
@@ -109,13 +111,16 @@ public class MissionTaskController {
         if (requestVo.getAudit() == true) {
             requestVo.setAudit(false);
         }
-        requestVo.setStatus(null);
-        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCity());
         String email = UserHolder.getUser().getEmail();
         BdUser bdUser = bdUserService.findBdUserByDemail(email);
         MissionGroup missionGroup = missionGroupService.findGroupByUserId(bdUser.getId());
+
+        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCity());
         List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(missionGroup.getId());
         List<DistrictVo> districts = districtService.findByCity(missionGroup.getCity().getId());
+
+        requestVo.setStatus(null);
+        requestVo.setGroupId(missionGroup.getId());
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
         model.addAttribute("districts", districts);
