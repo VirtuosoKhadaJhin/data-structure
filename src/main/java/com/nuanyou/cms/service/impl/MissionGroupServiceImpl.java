@@ -228,6 +228,9 @@ public class MissionGroupServiceImpl implements MissionGroupService {
 
     @Override
     public List<MissionGroup> findByCityId(final Long city) {
+        if(city== null){
+            return groupDao.findAllGroup();
+        }
         return groupDao.findGroupsByCityId(city);
     }
 
