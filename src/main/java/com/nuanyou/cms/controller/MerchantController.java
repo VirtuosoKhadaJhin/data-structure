@@ -128,9 +128,9 @@ public class MerchantController {
     }
 
     public void validateCollectionCodes ( List<String> codelist) {
-        if (codelist == null || codelist.size() == 0) {
-            throw new APIException(ResultCodes.CollectionCodeError);
-        }
+//        if (codelist == null || codelist.size() == 0) {
+//            throw new APIException(ResultCodes.CollectionCodeError);
+//        }
         if (codelist != null && codelist.size()>3) {
             throw new APIException(ResultCodes.CollectionCodeGreaterThan3);
         }
