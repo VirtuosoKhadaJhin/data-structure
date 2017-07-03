@@ -51,7 +51,7 @@ $(".edit-group").on("click", function () {
         $(".editGroupModal").text("主副队长不能为同一人！");
         $(".editGroupResultModal").modal("show");
     } else {
-        var data = {
+        var paramVo = {
             name: name,
             countryId: countryId,
             cityId: cityId,
@@ -59,7 +59,8 @@ $(".edit-group").on("click", function () {
             viceleaderId: viceleaderId,
             desc: desc,
         };
-        console.log(JSON.stringify(data));
+        var data = {id: $(".groupId").val(), paramVo: paramVo};
+        console.log(data);
         $.ajax({
             url: 'editGroup',
             data: JSON.stringify(data),
