@@ -38,8 +38,6 @@ public class ApplicationFilterConfiguration {
     @Value("${sso.stateExpiredInMilliSeconds}")
     private Long stateExpiredInMilliSeconds;
 
-    @Value("${sso.needAutoLogOut}")
-    private String needAutoLogOut;
 
 
 
@@ -84,7 +82,7 @@ public class ApplicationFilterConfiguration {
         registration.addInitParameter("serverName", serverName);
         registration.addInitParameter("serviceParameterName", "ret");
         registration.addInitParameter("artifactParameterName", "code");
-        registration.addInitParameter("needAutoLogOut",new Boolean(needAutoLogOut).toString());
+        registration.addInitParameter("needAutoLogOut",new Boolean(true).toString());
         registration.addUrlPatterns(urlPatterns);
         registration.setName("ticketValidationFilter");
         registration.setOrder(3);
