@@ -157,4 +157,17 @@ public class MissionTaskController {
         missionTaskService.distributeTask(vo);
         return new APIResult(ResultCodes.Success);
     }
+
+    /**
+     * 获取国家下的城市
+     *
+     * @param country
+     * @return
+     */
+    @RequestMapping("findCityByCountry")
+    @ResponseBody
+    public APIResult findCityByCountry(Long country) {
+        List<City> cities = cityService.findCityByCountryId(country);
+        return new APIResult(cities);
+    }
 }
