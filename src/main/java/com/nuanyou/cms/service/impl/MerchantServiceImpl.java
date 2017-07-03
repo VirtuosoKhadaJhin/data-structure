@@ -152,12 +152,14 @@ public class MerchantServiceImpl implements MerchantService {
         Merchant entity;
 
         for (String code : vo.getCollectionCodeList()) {
-            EntityBdMerchantCollectionCode collectionCode = collectionCodeService.findCollectionCode(code);
-            if (collectionCode == null) {
-                throw new APIException(ResultCodes.CollectionCodeError);
-            }
-            if (collectionCode.getMchId() != null && collectionCode.getMchId() != 0 && (vo.getId()== null || collectionCode.getMchId().longValue() != vo.getId().longValue())) {
-                throw new APIException(ResultCodes.CollectionCodeExist, MessageFormat.format(ResultCodes.CollectionCodeExist.getMessage(),code,collectionCode.getMchId()));
+            if (StringUtils.isNotEmpty(code)) {
+                EntityBdMerchantCollectionCode collectionCode = collectionCodeService.findCollectionCode(code);
+                if (collectionCode == null) {
+                    throw new APIException(ResultCodes.CollectionCodeError);
+                }
+                if (collectionCode.getMchId() != null && collectionCode.getMchId() != 0 && (vo.getId()== null || collectionCode.getMchId().longValue() != vo.getId().longValue())) {
+                    throw new APIException(ResultCodes.CollectionCodeExist, MessageFormat.format(ResultCodes.CollectionCodeExist.getMessage(),code,collectionCode.getMchId()));
+                }
             }
         }
 

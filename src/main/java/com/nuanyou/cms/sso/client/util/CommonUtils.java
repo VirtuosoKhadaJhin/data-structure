@@ -75,22 +75,14 @@ public final class CommonUtils {
 
     public static String constructRedirectUrl(final String loginUrl, final String serviceParameterName, final String serviceUrl, final String state, Boolean relogin) {
         String reloginParam = relogin.toString();
-//        if (new Boolean(urlRelogin)) {
-//            reloginParam = new Boolean(urlRelogin).toString();
-//        } else {
-//            reloginParam = relogin.toString();
-//        }
-
-        //final String modifiedServiceUrl=omitRelginURL(serviceUrl);
-
         try {
             String url = loginUrl +
                     (loginUrl.indexOf("?") != -1 ? "&" : "?")
                     + serviceParameterName + "="
                     + URLEncoder.encode(serviceUrl, "UTF-8")
-                    + (state != null ? "&state=#state" : "")
-                    + (relogin != null ? "&relogin=#relogin" : "");
-            return url.replace("#state", state).replace("#relogin", reloginParam);
+                    + (state != null ? "&state=#state".replace("#state", state) : "")
+                    + (relogin != null ? "&relogin=#relogin".replace("#relogin", reloginParam) : "");
+            return url.toString();
         } catch (final UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -114,11 +106,9 @@ public final class CommonUtils {
         buffer.append(serverName);
         buffer.append(request.getRequestURI());
         String queryString = request.getQueryString();
-        StringBuilder newQueryString = new StringBuilder();
-        String returnValue = "";
         omitArtifitParam(artifactParameterName, buffer, queryString);
         buffer = omitReloginParam(buffer);
-        returnValue = response.encodeURL(buffer.toString());
+        String returnValue = response.encodeURL(buffer.toString());
         LOG.debug("serviceUrl generated: " + returnValue);
         return returnValue;
     }
