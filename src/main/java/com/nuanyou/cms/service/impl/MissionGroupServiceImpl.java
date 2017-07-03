@@ -85,22 +85,38 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         MissionGroup group = new MissionGroup(vo.getName(), countryDao.findOne(vo.getCountryId()), cityDao.findOne(vo.getCityId()));
         group.setIsPublic(Byte.parseByte(vo.getIsPublic()));
         group.setDesc(vo.getDesc());
+        group.setIsPublic((byte) 0);
         group.setLeader(bdUserDao.findUserById(vo.getLeaderId()));
         group.setViceLeader(bdUserDao.findUserById(vo.getViceLeaderId()));
-        groupDao.save(group);
+        MissionGroup missionGroup = groupDao.save(group);
+
+        List<MissionGroupBd> groupBds = Lists.newArrayList();
+        groupBds.add(new MissionGroupBd(vo.getLeaderId(), missionGroup.getId()));
+        groupBds.add(new MissionGroupBd(vo.getViceLeaderId(), missionGroup.getId()));
+        groupBdDao.save(groupBds);
     }
 
     @Override
     public void updateGroup(String id, MissionGroupParamVo vo) {
         MissionGroup group = groupDao.findOne(Long.valueOf(id));
+        Long oldLeader = group.getLeader().getId();
+        Long oldViceLeader = group.getViceLeader().getId();
         group.setName(vo.getName());
         group.setCountry(countryDao.findOne(vo.getCountryId()));
         group.setCity(cityDao.findOne(vo.getCityId()));
-        group.setIsPublic(Byte.valueOf(vo.getIsPublic()));
+        group.setIsPublic((byte) 0);
         group.setLeader(bdUserDao.findUserById(vo.getLeaderId()));
         group.setViceLeader(bdUserDao.findUserById(vo.getViceLeaderId()));
         group.setDesc(vo.getDesc());
         groupDao.save(group);
+        if (!oldLeader.equals(vo.getLeaderId())) {
+            groupBdDao.deleteOldLeader(oldLeader);
+            groupBdDao.save(new MissionGroupBd(vo.getLeaderId(), group.getId()));
+        }
+        if (!oldViceLeader.equals(vo.getViceLeaderId())) {
+            groupBdDao.deleteOldLeader(oldViceLeader);
+            groupBdDao.save(new MissionGroupBd(vo.getViceLeaderId(), group.getId()));
+        }
     }
 
     @Override
@@ -209,7 +225,6 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         groupDao.updateLeaderByGroupId(bdUser, groupId);
         return true;
     }
-
 
     @Override
     public List<MissionGroup> checkGroupUnique(Long groupId, String name) {

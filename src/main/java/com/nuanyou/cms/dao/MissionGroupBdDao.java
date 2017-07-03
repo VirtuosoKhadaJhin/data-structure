@@ -29,4 +29,9 @@ public interface MissionGroupBdDao extends JpaRepository<MissionGroupBd, Long>, 
     @Modifying
     @Query("delete from MissionGroupBd t where t.groupId = ?1")
     void deleteByGroupId(Long id);
+
+    @Transactional
+    @Modifying
+    @Query("delete from MissionGroupBd t where t.bdId = ?1")
+    void deleteOldLeader(Long oldLeader);
 }
