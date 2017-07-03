@@ -89,13 +89,13 @@ public interface MissionGroupService {
     Boolean delGroupById(Long id);
 
     /**
-     * 查询可分配组的bdUser
+     * 查询可分配组的bdUser（没有组的BdUser）
      *
      * @param countryId
      * @param groupId
      * @return
      */
-    List<BdUser> findBdUsersByCountryId(Long countryId, Long groupId);
+    List<BdUser> findNonGroupByCountryId(Long countryId, Long groupId);
 
     /**
      * 给战队添加成员

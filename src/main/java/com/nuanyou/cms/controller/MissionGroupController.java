@@ -107,6 +107,8 @@ public class MissionGroupController {
     public String add(Model model) {
         List<Country> countries = missionGroupService.findAllCountries();
         List<City> cities = missionGroupService.findAllCities();
+        List<BdUser> allBdUsers = userService.findAllBdUsers();
+        model.addAttribute("allBdUsers", allBdUsers);
         model.addAttribute("countries", countries);
         model.addAttribute("cities", cities);
         return "missionGroup/add";
@@ -124,8 +126,10 @@ public class MissionGroupController {
         MissionGroup group = missionGroupService.findGroupById(id);
         List<Country> countries = missionGroupService.findAllCountries();
         List<City> cities = missionGroupService.findAllCities();
-        model.addAttribute("group", group);
+        List<BdUser> nonGroupUsers = missionGroupService.findNonGroupByCountryId(group.getCountry().getId(), id);
+        model.addAttribute("nonGroupUsers", nonGroupUsers);
         model.addAttribute("countries", countries);
+        model.addAttribute("group", group);
         model.addAttribute("cities", cities);
         return "missionGroup/edit";
     }
@@ -175,15 +179,15 @@ public class MissionGroupController {
     }
 
     /**
-     * 查询Bd
+     * 查询没有组的BdUser
      *
      * @return
      */
-    @RequestMapping("findBdUserByCountryId")
+    @RequestMapping("findNonGroupByCountryId")
     @ResponseBody
-    public APIResult<List<BdUser>> findBdUserByCountryId(@RequestBody MissionGroupVo requestVo) {
+    public APIResult<List<BdUser>> findNonGroupByCountryId(@RequestBody MissionGroupVo requestVo) {
         APIResult<List<BdUser>> result = new APIResult<List<BdUser>>();
-        List<BdUser> bdUsers = missionGroupService.findBdUsersByCountryId(requestVo.getCountryId(), requestVo.getGroupId());
+        List<BdUser> bdUsers = missionGroupService.findNonGroupByCountryId(requestVo.getCountryId(), requestVo.getGroupId());
         result.setData(bdUsers);
         return result;
     }
