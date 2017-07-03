@@ -40,6 +40,6 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public List<Country> findAllCountries() {
-        return countryDao.findAll();
+        return countryDao.findAllCountries();
     }
 }

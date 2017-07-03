@@ -21,7 +21,7 @@ public class Country {
     private String icon;
     private Integer sort;
     private String code;
-    private Boolean display;
+    private Boolean display = true;
     private String timezone;
     private Date createTime;
     private BigDecimal radio;

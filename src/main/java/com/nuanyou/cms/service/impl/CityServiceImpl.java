@@ -39,7 +39,7 @@ public class CityServiceImpl implements CityService {
         if (entity.getDisplay() != null) {
             e = e.withMatcher("display", g.exact());
         } else {
-            entity.setDisplay(null);
+            entity.setDisplay(true);//查询可显示的city
         }
         return cityDao.findAll(Example.of(entity, e), pageable);
     }
@@ -57,14 +57,14 @@ public class CityServiceImpl implements CityService {
     @Override
     public List<City> findCityByCountryId(Long countryId) {
         if (countryId == null) {
-            return cityDao.findAll();
+            return cityDao.findAllCities();
         }
         return cityDao.findIdNameList(countryId);
     }
 
     @Override
     public List<City> findAllCities() {
-        return cityDao.findAll();
+        return cityDao.findAllCities();
     }
 
 }
