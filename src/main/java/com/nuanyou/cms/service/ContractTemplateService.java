@@ -15,8 +15,6 @@ import java.util.List;
 public interface ContractTemplateService {
     Page<ContractTemplate> findContractTemplateList(Long countryId, Integer integer, Integer type, Integer index, Integer limit);
 
-    APIResult saveTemplate1(Long[] selectedParamIds, TemplateParameterRequests templateParameterRequests, Integer templateType, String title, Long countryId, Long id);
-
     APIResult saveTemplate(String shortCode, List<Long> paramIds, List<TemplateParameterRequest> requests, Integer templateType, String title, Long countryId, Long id);
 
     List<ContractParameter> getAllParams();
