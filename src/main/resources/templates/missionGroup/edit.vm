@@ -87,6 +87,7 @@
                                 </div>
                                 <div class="form-actions" style="text-align: center">
                                     <input type="hidden" name="isPublic" value="0"/>
+                                    <input type="hidden" name="groupId" value="$!group.id"/>
                                     <input type="hidden" value="$!group.id" class="groupId"/>
                                     <a class="btn btn-success edit-group">
                                         <i class="icon-edit"> 确定</i>

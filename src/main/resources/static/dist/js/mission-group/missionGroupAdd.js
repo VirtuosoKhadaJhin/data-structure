@@ -6,10 +6,33 @@ $(document).ready(function () {
 });
 
 // 战队名称不重复
-$(".name").on("keyup", function () {
+var checkGroupUnique = true;
+$(".name").on("blur", function () {
     var name = $(".name").val();
 
-
+    var data = {
+        name: name,
+        id: ""
+    };
+    $.ajax({
+        url: 'checkGroupUnique',
+        data: JSON.stringify(data),
+        type: 'post',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (result) {
+            if (result.code == 0) {
+                if (result.data == false) {
+                    checkGroupUnique = false;
+                    $(".save-group").attr("disabled", true);
+                }else{
+                    checkGroupUnique = true;
+                    $(".save-group").attr("disabled", false);
+                }
+                console.log(result.data);
+            }
+        }
+    });
 });
 
 // 联动城市
@@ -42,7 +65,10 @@ $(".save-group").on("click", function () {
     var viceLeaderId = $(".viceleader").val();
     var desc = $(".desc").val();
 
-    if (name == null || name == "") {
+    if (checkGroupUnique == false) {
+        $(".saveGroupResult").text("战队名称重复！");
+        $(".saveGroupResultModal").modal("show");
+    } else if (name == null || name == "") {
         $(".saveGroupResult").text("战队名称不能为空！");
         $(".saveGroupResultModal").modal("show");
     } else if (countryId == null || countryId == "") {

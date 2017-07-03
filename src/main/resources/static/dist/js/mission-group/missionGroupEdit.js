@@ -8,6 +8,35 @@ $(".select-country").on("change", function () {
     queryBdUsers();
 });
 
+var checkGroupUnique = true;
+$(".name").on("blur", function () {
+    var name = $(".name").val();
+
+    var data = {
+        name: name,
+        id: $(".groupId").val()
+    };
+    $.ajax({
+        url: 'checkGroupUnique',
+        data: JSON.stringify(data),
+        type: 'post',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (result) {
+            if (result.code == 0) {
+                if (result.data == false) {
+                    checkGroupUnique = false;
+                    $(".edit-group").attr("disabled", true);
+                } else {
+                    checkGroupUnique = true;
+                    $(".edit-group").attr("disabled", false);
+                }
+                console.log(result.data);
+            }
+        }
+    });
+});
+
 // 联动城市
 function changeCity() {
     var countryId = $(".select-country").val();
@@ -32,10 +61,14 @@ $(".edit-group").on("click", function () {
     var viceLeaderId = $(".viceleader").val();
     var desc = $(".desc").val();
 
-    if (name == null || name == "") {
+    if (checkGroupUnique == false) {
+        $(".editGroupModal").text("战队名称重复！");
+        $(".editGroupResultModal").modal("show");
+    } else if (name == null || name == "") {
         $(".editGroupModal").text("战队名称不能为空！");
         $(".editGroupResultModal").modal("show");
-    } else if (countryId == null || countryId == "") {
+    }
+    else if (countryId == null || countryId == "") {
         $(".editGroupModal").text("国家不能为空！");
         $(".editGroupResultModal").modal("show");
     } else if (cityId == null || cityId == "") {
