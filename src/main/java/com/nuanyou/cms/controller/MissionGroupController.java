@@ -228,14 +228,13 @@ public class MissionGroupController {
     /**
      * 校验名称
      *
-     * @param groupId
-     * @param name
+     * @param vo
      * @return
      */
     @RequestMapping("checkGroupUnique")
     @ResponseBody
-    public APIResult<Boolean> checkGroupUnique(@RequestBody Long groupId, String name) {
-        List<MissionGroup> groups = missionGroupService.checkGroupUnique(groupId, name);
+    public APIResult<Boolean> checkGroupUnique(@RequestBody MissionGroupParamVo vo) {
+        List<MissionGroup> groups = missionGroupService.checkGroupUnique(vo.getId(), vo.getName());
         if (CollectionUtils.isEmpty(groups)) {
             return new APIResult(true);
         }
