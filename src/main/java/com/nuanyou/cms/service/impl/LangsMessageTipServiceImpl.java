@@ -1,8 +1,9 @@
 package com.nuanyou.cms.service.impl;
 
 import com.nuanyou.cms.component.FileClient;
-import com.nuanyou.cms.dao.EntityNyLangsDictionaryDao;
+import com.nuanyou.cms.dao.CmsUserDao;
 import com.nuanyou.cms.dao.EntityNyLangsMessageTipDao;
+import com.nuanyou.cms.entity.CmsUser;
 import com.nuanyou.cms.entity.EntityNyLangsMessageTip;
 import com.nuanyou.cms.model.LangsMessageTipVo;
 import com.nuanyou.cms.service.LangsMessageTipService;
@@ -31,10 +32,10 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
     private FileClient fileClient;
 
     @Autowired
-    private EntityNyLangsDictionaryDao dictionaryDao;
+    private EntityNyLangsMessageTipDao messageTipDao;
 
     @Autowired
-    private EntityNyLangsMessageTipDao messageTipDao;
+    private CmsUserDao cmsUserDao;
 
     @Override
     public EntityNyLangsMessageTip add(LangsMessageTipVo requestVo) {
@@ -46,12 +47,8 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
             }
         }
 
-        Long userId = null;
-        try {
-            userId = UserHolder.getUser().getUserid();
-        } catch (Exception e) {
-            LOGGER.error("获取系统用户出错！", e);
-        }
+        String email = UserHolder.getUser().getEmail();
+        CmsUser cmsUser = cmsUserDao.findByEmail(email);
 
         EntityNyLangsMessageTip entityNyLangsMessageTip = new EntityNyLangsMessageTip(requestVo.getNewKeyCode(), requestVo.getRemark(), imgUrl);
         entityNyLangsMessageTip.setKeyCode(requestVo.getKeyCode());
@@ -59,7 +56,7 @@ public class LangsMessageTipServiceImpl implements LangsMessageTipService {
             entityNyLangsMessageTip.setId(entityResult.getId());
         }
         entityNyLangsMessageTip.setCreateDt(new Date());
-        entityNyLangsMessageTip.setUserId(userId);
+        entityNyLangsMessageTip.setUserId(cmsUser.getId());
         return messageTipDao.save(entityNyLangsMessageTip);
     }
 

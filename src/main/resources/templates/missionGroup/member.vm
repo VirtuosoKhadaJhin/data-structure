@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 $!{group.name}-战队成员列表</title>
+    #include("common/css-support.vm")
+    #include("common/js-support.vm")
+</head>
+<body>
+<div id="content" class="content-container">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10" style="width: 100%">
+                <div class="widget-box">
+                    <div class="widget-content nopadding">
+                        <div id="breadcrumb">
+                            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
+                                主页</a>
+                            <a href="list" class="tip-bottom" data-original-title="">战队管理</a>
+                            <a href="#" class="tip-bottom" data-original-title="">战队成员列表</a>
+                        </div>
+                        <div class="widget-title">
+                            <span class="icon"><i class="icon-th"></i></span>
+                            <h5>$!{group.name}-战队成员列表</h5>
+                        </div>
+                        <style>
+                            .span10 {
+                                width: 100%;
+                            }
+
+                            .tdInput {
+                                width: 75%;
+                            }
+
+                            .text-gray {
+                                background-color: grey;
+                            }
+
+                            #select2-categoryId-xe-container {
+                                min-width: 180px;
+                            }
+
+                            .td-update-time {
+                                min-width: 120px;
+                            }
+
+                            .td-sort {
+                                min-width: 60px;
+                            }
+                        </style>
+                        <div style="width: 100%">
+                            <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+                                <thead role="row">
+                                <tr>
+                                    <th>序号</th>
+                                    <th>用户名</th>
+                                    <th>中文名</th>
+                                    <th>所属国家</th>
+                                    <th>合同归档邮箱</th>
+                                    <th>钉钉邮箱</th>
+                                    <th>创建时间</th>
+                                    <th>更新时间</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    #if ($null.isNull($list) || $list.size()==0)
+                                    <tr>
+                                        <td colspan="9" style="text-align:center;">
+                                            <div class="no-result-div"
+                                                 style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                                                <p>暂无组成员</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    #end
+
+                                    #foreach($vo in $!list)
+                                    <tr class="odd gradeX">
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!velocityCount</label>
+                                        </td>
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!vo.name</label>
+                                        </td>
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!vo.chineseName</label>
+                                        </td>
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!group.country.name</label>
+                                        </td>
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!vo.email</label>
+                                        </td>
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!vo.dmail</label>
+                                        </td>
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createTime)</label>
+                                        </td>
+                                        <td class="td-sort">
+                                            <label style="text-align: center;">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateTime)</label>
+                                        </td>
+                                    </tr>
+                                        #set($sort = $sort + 1)
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+

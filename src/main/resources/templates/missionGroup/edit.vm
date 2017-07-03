@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 菜单管理</title>
+
+    #include("common/css-support.vm")
+
+    <style>
+
+
+    </style>
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <div id="breadcrumb">
+                <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i
+                        class="icon-home"></i> 主页</a>
+                <a href="list" class="tip-bottom" data-original-title="">战队管理</a>
+                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span6">
+                    <div class="widget-box">
+                        <div class="widget-title"><span class="icon"> <i
+                                class="icon-align-justify"></i> </span>
+                            <h5>编辑&查看</h5>
+                        </div>
+                        <form class="form-horizontal" action="saveEdit" method="post"
+                              onsubmit="return emailChekc()">
+
+                            <div class="nopadding" style="width: 100%;">
+                                <div>
+                                #*<div class="control-group">*#
+
+                                    <div class="">
+                                        <label class="control-label"
+                                               style="width: 140px;">id：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <input for="name" name="id" id="id" type="text"
+                                                   class="span7"
+                                                   readonly="readonly" style="width: 80%"
+                                                   value="$!group.id">
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <label class="control-label"
+                                               style="width: 140px;">战队名称：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <input for="name" name="name" id="name" type="text"
+                                                   class="span7"
+                                                   style="width: 80%" value="$!group.name">
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <label class="control-label"
+                                               style="width: 140px;">国家：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select name="countryId" style="width:80%">
+                                                #foreach($country in $!countries)
+                                                    <option value="$!country.id" #if($!group.country.id==$!country.id) selected  #end>$!country.name</option>
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <label class="control-label"
+                                               style="width: 140px;">城市：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <select name="cityId" style="width:80%">
+                                                #foreach($city in $!cities)
+                                                    <option value="$!city.id" #if($!group.city.id==$!city.id) selected  #end>$!city.name</option>
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <label class="control-label"
+                                               style="width: 140px;">描述：</label>
+                                        <div class="controls" style="margin-left: 152px;">
+                                            <input for="name" name="desc" id="desc" type="text"
+                                                   class="span7"
+                                                   style="width: 80%" value="$!group.desc">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-actions" style="clear:both;text-align: center">
+                                ##  默认不可见
+                                    <input type="hidden" name="isPublic" value="0"/>
+                                    <button type="submit" class="btn btn-info">确定</button>
+                                    <a class="btn btn-primary" href="list">返回</a>
+                                </div>
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    #include("common/js-support.vm")
+
+    <script type="text/javascript">
+        //邮箱验证
+        function emailChekc() {
+            var email = document.getElementsByName("email")[0].value;
+//            var reg = /^([a-z0-9A-Z]+[-|\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\.)+[a-zA-Z]{2,}$/;
+            var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/;
+            var res = reg.test(email);
+            if (res == false) {
+                alert("邮箱规则错误，请输入正确的邮箱");
+            }
+
+            return res;
+        }
+    </script>
+</body>
+</html>
