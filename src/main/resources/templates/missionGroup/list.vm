@@ -84,10 +84,14 @@
                                             <label class="label-updateDt">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateDt)</label>
                                         </td>
                                         <td class="td-leader">
-                                            <label class="label-desc">$!vo.leader.chineseName</label>
+                                            #if("$!vo.leader" != "")
+                                                <label class="label-desc">$!vo.leader.chineseName</label>
+                                            #end
                                         </td>
                                         <td class="td-vice-leader">
-                                            <label class="label-desc">$!vo.viceLeader.chineseName</label>
+                                            #if("$!vo.viceLeader" != "")
+                                                <label class="label-desc">$!vo.viceLeader.chineseName</label>
+                                            #end
                                         </td>
                                         <td class="td-group-bd-count">
                                             #if($!vo.bDUserIds.size() == 0)
