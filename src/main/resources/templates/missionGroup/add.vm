@@ -4,19 +4,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>暖游 后台管理系统 菜单管理</title>
-
     #include("common/css-support.vm")
-    <style>
-        .required-waring {
-            display: none;
-            text-align: left;
-            width: 140px;
-            padding-right: 8em;
-            color: red;
-            text-align: left;
-        }
-    </style>
-
+    <link href="/dist/css/mission-group/missionGroupAdd.css" rel="stylesheet"/>
 </head>
 <body>
 <div id="content">
@@ -31,28 +20,26 @@
 
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span6" style="width: 70%;min-width:994px;">
-                    <div class="widget-box" style="width: 78%">
+                <div class="span6">
+                    <div class="widget-box">
                         <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                             <h5>新增战队</h5>
                         </div>
                         <form class="form-horizontal" action="saveAdd" method="post" onsubmit="return emailChekc()">
 
-                            <div class="nopadding" style="width: 100%;">
+                            <div class="nopadding">
                                 <div>
 
                                     <div>
-                                        <label class="control-label" style="width: 140px;">战队名称：</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" id="name"
-                                                   class="span7" name="name" type="text" style="width: 80%"
-                                                   value=""/>
+                                        <label class="control-label my-label">战队名称：</label>
+                                        <div class="controls my-controls">
+                                            <input for="name" id="name" class="span6" name="name" type="text" placeholder="战队名称"/>
                                         </div>
                                     </div>
                                     <div>
-                                        <label class="control-label" style="width: 140px;">国家：</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <select name="countryId" id="country" style="width:80%">
+                                        <label class="control-label my-label">国家：</label>
+                                        <div class="controls my-controls">
+                                            <select class="span6" name="countryId " id="country">
                                                 #foreach($country in $!countries)
                                                     <option value="$!country.id">$!country.name</option>
                                                 #end
@@ -61,9 +48,9 @@
                                     </div>
 
                                     <div>
-                                        <label class="control-label" style="width: 140px;">城市：</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <select name="cityId" id="city" style="width:80%">
+                                        <label class="control-label my-label">城市：</label>
+                                        <div class="controls my-controls">
+                                            <select class="span6" name="cityId" id="city">
                                                 <option class="city-unit" value>请选择城市</option>
                                                 #foreach($city in $!cities)
                                                     <option value="$!city.id" class="option-city" country-id="$!city.country.id">$!city.name</option>
@@ -73,18 +60,9 @@
                                     </div>
 
                                     <div>
-                                        <label class="control-label" style="width: 140px;">描述：</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" id="desc"
-                                                   class="span7" name="desc" type="text" style="width: 80%"
-                                                   value=""/>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label class="control-label" style="width: 140px;">队长：</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <select name="leader" id="leader" style="width:80%">
+                                        <label class="control-label my-label">队长：</label>
+                                        <div class="controls my-controls">
+                                            <select class="span6" name="leader" id="leader">
                                                 <option class="elader" value>请选择队长</option>
 
                                             </select>
@@ -92,18 +70,25 @@
                                     </div>
 
                                     <div>
-                                        <label class="control-label" style="width: 140px;">副队长：</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <select name="viceleader" id="viceleader" style="width:80%">
+                                        <label class="control-label my-label">副队长：</label>
+                                        <div class="controls my-controls">
+                                            <select class="span6" name="viceleader" id="viceleader">
                                                 <option class="viceleader" value>请选择副队长</option>
 
                                             </select>
                                         </div>
                                     </div>
 
+                                    <div>
+                                        <label class="control-label my-label">描述：</label>
+                                        <div class="controls my-controls">
+                                            <textarea id="desc" class="span6" rows="5" name="desc" placeholder="描述"></textarea>
+                                        </div>
+                                    </div>
+
                                 </div>
 
-                                <div class="form-actions" style="clear:both;text-align: center">
+                                <div class="form-actions" style="text-align: center">
                                     <input type="hidden" name="isPublic" value="0"/>
                                     <button type="submit" class="btn btn-info save-group">确定</button>
                                     <a class="btn btn-primary" href="list">返回</a>
@@ -116,8 +101,6 @@
     </div>
 </div>
     #include("common/js-support.vm")
-
 <script src="/dist/js/mission-group/missionGroupAdd.js"></script>
-
 </body>
 </html>

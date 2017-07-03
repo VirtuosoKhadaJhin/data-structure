@@ -11,6 +11,7 @@ import com.nuanyou.cms.model.MissionGroupVo;
 import com.nuanyou.cms.service.MissionGroupService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -80,18 +81,6 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     }
 
     @Override
-    public List<Country> findAllCountries() {
-        List<Country> countries = countryDao.findAll();
-        return countries;
-    }
-
-    @Override
-    public List<City> findAllCities() {
-        List<City> cities = cityDao.findAll();
-        return cities;
-    }
-
-    @Override
     public void saveGroup(MissionGroupParamVo vo) {
         MissionGroup group = new MissionGroup(vo.getName(), countryDao.findOne(vo.getCountryId()), cityDao.findOne(vo.getCityId()));
         group.setIsPublic(Byte.parseByte(vo.getIsPublic()));
@@ -104,13 +93,13 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     @Override
     public void updateGroup(String id, MissionGroupParamVo vo) {
         MissionGroup group = groupDao.findOne(Long.valueOf(id));
-
         group.setName(vo.getName());
         group.setCountry(countryDao.findOne(vo.getCountryId()));
         group.setCity(cityDao.findOne(vo.getCityId()));
         group.setIsPublic(Byte.valueOf(vo.getIsPublic()));
+        group.setLeader(bdUserDao.findUserById(vo.getLeaderId()));
+        group.setViceLeader(bdUserDao.findUserById(vo.getViceLeaderId()));
         group.setDesc(vo.getDesc());
-
         groupDao.save(group);
     }
 
@@ -146,23 +135,6 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     }
 
     @Override
-    public Boolean addGroupBdUser(Long[] bDUserIds, Long groupId) {
-        for (Long userId : bDUserIds) {
-            //新建groupBd
-            MissionGroupBd groupBd = new MissionGroupBd();
-
-            //设置数据
-            groupBd.setGroupId(groupId);
-            groupBd.setBdId(userId);
-
-            //保存
-            groupBdDao.save(groupBd);
-        }
-
-        return true;
-    }
-
-    @Override
     public void updateGroupPublic(Long groupId, boolean isPublic) {
         byte b = (byte) (isPublic ? 1 : 0);
         groupDao.updatePublicByGroupId(groupId, b);
@@ -170,7 +142,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
 
     @Override
     public void saveGroupBds(Long groupId, List<Long> bdIds) {
-        if (groupId == null || CollectionUtils.isEmpty(bdIds)) {
+        if (groupId == null) {
             throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
         }
         List<MissionGroupBd> groupBds = Lists.newArrayList();
@@ -179,7 +151,10 @@ public class MissionGroupServiceImpl implements MissionGroupService {
             groupBd = new MissionGroupBd(groupId, bdId);
             groupBds.add(groupBd);
         }
-        groupBdDao.save(groupBds);
+        groupBdDao.deleteByGroupId(groupId);
+        if (CollectionUtils.isNotEmpty(groupBds)) {
+            groupBdDao.save(groupBds);
+        }
     }
 
     @Override
@@ -196,10 +171,8 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     public List<BdUserVo> members(Long id, Long countryId) {
         //根据组ID查询出组
         MissionGroup group = groupDao.findOne(id);
-
         // 队长
         BdUser leader = group.getLeader();
-
         // 根据组ID查询出所有组员
         List<MissionGroupBd> missionGroupBds = groupBdDao.findByGroupId(id);
         List<Long> bdUserIds = Lists.newArrayList();
@@ -264,24 +237,6 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     }
 
     @Override
-    public Boolean updateIsPublicByGroupId(Long id) {
-        //获取数据
-        MissionGroup group = groupDao.findOne(id);
-
-        //设置数据
-        if (group.getIsPublic() == 0) {
-            group.setIsPublic(Byte.valueOf("1"));
-        } else {
-            group.setIsPublic(Byte.valueOf("0"));
-        }
-
-        //保存数据
-        groupDao.save(group);
-
-        return true;
-    }
-
-    @Override
     public MissionGroup findGroupById(Long id) {
         MissionGroup group = groupDao.findOne(id);
         return group;
@@ -289,7 +244,9 @@ public class MissionGroupServiceImpl implements MissionGroupService {
 
     private List<MissionGroupVo> getMissionGroupVos(List<MissionGroup> groups) {
         List<MissionGroupVo> groupVos = convertToBdUserManagerVo(groups);
-
+        if (CollectionUtils.isEmpty(groupVos)) {
+            return groupVos;
+        }
         final Map<Long, MissionGroupVo> maps = new LinkedHashMap<Long, MissionGroupVo>();
         for (MissionGroupVo groupVo : groupVos) {
             maps.put(groupVo.getId(), groupVo);
@@ -298,7 +255,9 @@ public class MissionGroupServiceImpl implements MissionGroupService {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
-                predicate.add(root.get("groupId").in(maps.keySet()));
+                if (MapUtils.isNotEmpty(maps)) {
+                    predicate.add(root.get("groupId").in(maps.keySet()));
+                }
                 Predicate[] arrays = new Predicate[predicate.size()];
                 ArrayList<Order> orderBys = Lists.newArrayList(cb.desc(root.get("groupId")));
                 return query.where(predicate.toArray(arrays)).orderBy(orderBys).getRestriction();

@@ -118,10 +118,10 @@
                             </div>
                             <div class="search-select">
                                 <label>城市</label>
-                                <select class="span11 select2" name="city">
+                                <select class="span11 select2 select-city" name="city">
                                     <option value>全部</option>
                                     #foreach($e in $!cities)
-                                        <option value="$!e.id" #if($!requestVo.city == $!e.id) selected #end>$!e.name</option>
+                                        <option style="display: none" country-id="$!e.country.id" value="$!e.id" #if($!requestVo.city == $!e.id) selected #end>$!e.name</option>
                                     #end
                                 </select>
                             </div>

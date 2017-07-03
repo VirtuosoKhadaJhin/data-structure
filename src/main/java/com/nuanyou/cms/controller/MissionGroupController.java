@@ -11,6 +11,8 @@ import com.nuanyou.cms.model.MissionGroupParamVo;
 import com.nuanyou.cms.model.MissionGroupRequestVo;
 import com.nuanyou.cms.model.MissionGroupVo;
 import com.nuanyou.cms.service.BdUserService;
+import com.nuanyou.cms.service.CityService;
+import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.MissionGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,14 +38,20 @@ public class MissionGroupController {
     @Autowired
     private BdUserService userService;
 
+    @Autowired
+    private CountryService countryService;
+
+    @Autowired
+    private CityService cityService;
+
     /**
      * 获取列表
      */
     @RequestMapping("list")
     public String list(MissionGroupVo requestVo, Model model) {
         Page<MissionGroupVo> vos = missionGroupService.findAllGroups(requestVo);
-        List<Country> countries = missionGroupService.findAllCountries();
-        List<City> cities = missionGroupService.findAllCities();
+        List<Country> countries = countryService.findAllCountries();
+        List<City> cities = cityService.findAllCities();
         model.addAttribute("countries", countries);
         model.addAttribute("cities", cities);
         model.addAttribute("page", vos);//page统一命名，分页
@@ -105,8 +113,8 @@ public class MissionGroupController {
      */
     @RequestMapping("add")
     public String add(Model model) {
-        List<Country> countries = missionGroupService.findAllCountries();
-        List<City> cities = missionGroupService.findAllCities();
+        List<Country> countries = countryService.findAllCountries();
+        List<City> cities = cityService.findAllCities();
         List<BdUser> allBdUsers = userService.findAllBdUsers();
         model.addAttribute("allBdUsers", allBdUsers);
         model.addAttribute("countries", countries);
@@ -124,8 +132,8 @@ public class MissionGroupController {
     @RequestMapping("edit")
     public String edit(Model model, Long id) {
         MissionGroup group = missionGroupService.findGroupById(id);
-        List<Country> countries = missionGroupService.findAllCountries();
-        List<City> cities = missionGroupService.findAllCities();
+        List<Country> countries = countryService.findAllCountries();
+        List<City> cities = cityService.findAllCities();
         List<BdUser> nonGroupUsers = missionGroupService.findNonGroupByCountryId(group.getCountry().getId(), id);
         model.addAttribute("nonGroupUsers", nonGroupUsers);
         model.addAttribute("countries", countries);

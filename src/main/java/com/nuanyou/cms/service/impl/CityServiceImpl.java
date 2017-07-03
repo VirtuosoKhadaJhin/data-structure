@@ -57,9 +57,14 @@ public class CityServiceImpl implements CityService {
     @Override
     public List<City> findCityByCountryId(Long countryId) {
         if (countryId == null) {
-          return cityDao.findAll();
+            return cityDao.findAll();
         }
-       return cityDao.findIdNameList(countryId);
+        return cityDao.findIdNameList(countryId);
+    }
+
+    @Override
+    public List<City> findAllCities() {
+        return cityDao.findAll();
     }
 
 }

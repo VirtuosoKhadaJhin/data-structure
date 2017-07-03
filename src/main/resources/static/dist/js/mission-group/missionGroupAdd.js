@@ -35,7 +35,6 @@ function changeCity() {
     $("#city").val("");
 }
 
-
 // 保存队长
 $(".save-group").on("click", function () {
     $.ajax({
