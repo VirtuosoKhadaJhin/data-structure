@@ -24,10 +24,10 @@ $(".name").on("blur", function () {
             if (result.code == 0) {
                 if (result.data == false) {
                     checkGroupUnique = false;
-                    $(".save-group").attr("disabled", true);
-                }else{
+                    $(".saveGroupResult").text("战队名称重复！");
+                    $(".saveGroupResultModal").modal("show");
+                } else {
                     checkGroupUnique = true;
-                    $(".save-group").attr("disabled", false);
                 }
                 console.log(result.data);
             }

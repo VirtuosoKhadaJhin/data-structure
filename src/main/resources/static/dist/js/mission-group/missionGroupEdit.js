@@ -26,10 +26,10 @@ $(".name").on("blur", function () {
             if (result.code == 0) {
                 if (result.data == false) {
                     checkGroupUnique = false;
-                    $(".edit-group").attr("disabled", true);
+                    $(".editGroupModal").text("战队名称重复！");
+                    $(".editGroupResultModal").modal("show");
                 } else {
                     checkGroupUnique = true;
-                    $(".edit-group").attr("disabled", false);
                 }
                 console.log(result.data);
             }
@@ -67,8 +67,7 @@ $(".edit-group").on("click", function () {
     } else if (name == null || name == "") {
         $(".editGroupModal").text("战队名称不能为空！");
         $(".editGroupResultModal").modal("show");
-    }
-    else if (countryId == null || countryId == "") {
+    } else if (countryId == null || countryId == "") {
         $(".editGroupModal").text("国家不能为空！");
         $(".editGroupResultModal").modal("show");
     } else if (cityId == null || cityId == "") {
