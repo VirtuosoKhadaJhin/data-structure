@@ -113,14 +113,20 @@ public class MerchantController {
 
     @RequestMapping(path = "update", method = RequestMethod.POST)
     public String update(MerchantVO vo, Long countryId, Model model) {
-        validateCollectionCodes (vo.getCollectionCodeList());
         List<String> tmp = new ArrayList<>();
+        List<String> returnCodes = new ArrayList<>();
         if (vo.getCollectionCodeList()!=null && vo.getCollectionCodeList().size()>0) {
             for (String code : vo.getCollectionCodeList())
-                tmp.add(code);
+                if (StringUtils.isNotEmpty(code)) {
+                    tmp.add(code);
+                    returnCodes.add(code);
+                }
         }
+        vo.setCollectionCodeList(tmp);
+        validateCollectionCodes (vo.getCollectionCodeList());
+
         MerchantVO entity = merchantService.saveNotNull(vo);
-        entity.setCollectionCodeList(tmp);
+        entity.setCollectionCodeList(returnCodes);
         model.addAttribute("entity", entity);
         setEnums(model, countryId);
         model.addAttribute("disabled", true);
@@ -131,16 +137,18 @@ public class MerchantController {
 //        if (codelist == null || codelist.size() == 0) {
 //            throw new APIException(ResultCodes.CollectionCodeError);
 //        }
-        if (codelist != null && codelist.size()>3) {
-            throw new APIException(ResultCodes.CollectionCodeGreaterThan3);
-        }
+//        if (codelist != null && codelist.size()>3) {
+//            throw new APIException(ResultCodes.CollectionCodeGreaterThan3);
+//        }
         String regex = "^\\d{1,9}$";
         Pattern pattern = Pattern.compile(regex);
 
         for (String code : codelist) {
-            Matcher matcher = pattern.matcher(code);
-            if (!matcher.matches()) {
-                throw new APIException(ResultCodes.CollectionCodeError);
+            if (StringUtils.isNotEmpty(code)) {
+                Matcher matcher = pattern.matcher(code);
+                if (!matcher.matches()) {
+                    throw new APIException(ResultCodes.CollectionCodeError);
+                }
             }
         }
         Set<String> set = new HashSet<>(codelist);

@@ -216,7 +216,7 @@
                                 </div>
                                     #else
                                     <div id = 'cc' class="controls">
-                                        #if (!$!entity.collectionCodeList)
+                                        #if ($!entity.collectionCodeList && $!entity.collectionCodeList.size()>0)
 
                                         #foreach($e in $!entity.collectionCodeList)
                                             #if($velocityCount == 1)
@@ -303,13 +303,15 @@
             bindCodePlus ();
             #end
 
-        var r = '/^\d{1,9}$/';　　//正整数
+        var r = /^\d{1,9}$/;　　//正整数
         $("#btn-save").bind('click',function () {
             if ( $("input[name='collectionCodeList']").length>0 ){
                 for (var i = 0;i<$("input[name='collectionCodeList']").length;i++ ) {
-                    if (r.test($("input[name='collectionCodeList']")[i].value)) {
-                        alert ('收款码输入错误，请重新填写');
-                        return false;
+                    if ($("input[name='collectionCodeList']")[i].value) {//code允许为空，非空才校验
+                        if (!r.test($("input[name='collectionCodeList']")[i].value)) {
+                            alert ('收款码输入错误，请重新填写');
+                            return false;
+                        }
                     }
                 }
             }
