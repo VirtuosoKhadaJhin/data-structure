@@ -170,4 +170,17 @@ public class MissionTaskController {
         List<City> cities = cityService.findCityByCountryId(country);
         return new APIResult(cities);
     }
+
+    /**
+     * 根据城市获取商家
+     *
+     * @param city
+     * @return
+     */
+    @RequestMapping("findMerchantByCity")
+    @ResponseBody
+    public APIResult findMerchantByCity(Long city) {
+        List<Merchant> merchants = merchantService.findMerchant(city);
+        return new APIResult(merchants);
+    }
 }
