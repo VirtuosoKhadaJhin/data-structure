@@ -5,6 +5,13 @@ $(document).ready(function () {
     changeCity();
 });
 
+// 战队名称不重复
+$(".name").on("keyup", function () {
+    var name = $(".name").val();
+
+
+});
+
 // 联动城市
 $(".select-country").on("change", function () {
     changeCity();

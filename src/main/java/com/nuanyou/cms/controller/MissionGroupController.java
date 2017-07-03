@@ -234,7 +234,7 @@ public class MissionGroupController {
      */
     @RequestMapping("checkGroupUnique")
     @ResponseBody
-    public APIResult<Boolean> checkGroupUnique(Long groupId, String name) {
+    public APIResult<Boolean> checkGroupUnique(@RequestBody Long groupId, String name) {
         List<MissionGroup> groups = missionGroupService.checkGroupUnique(groupId, name);
         if (CollectionUtils.isEmpty(groups)) {
             return new APIResult(true);
