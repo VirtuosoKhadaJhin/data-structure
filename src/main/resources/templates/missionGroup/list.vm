@@ -41,46 +41,63 @@
                                     <th>对队员显示</th>
                                     <th>创建时间</th>
                                     <th>更新时间</th>
-                                    <th>描述</th>
+                                    <th>队长</th>
+                                    <th>副队长</th>
                                     <th>战队人员数</th>
+                                    <th>描述</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="tbody-list">
+                                    #if ($null.isNull($page.content) || $page.content.size()==0)
+                                    <tr>
+                                        <td colspan="12" style="text-align:center;">
+                                            <div class="no-result-div"
+                                                 style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                                                <p>没有符合条件的战队信息！</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    #end
                                     #foreach($vo in $!page.content)
                                     <tr class="odd gradeX" data-groupId="$!vo.id">
-                                        <td class="td-sort td-id">
+                                        <td class="td-id">
                                             <label class="label-id">$!{velocityCount}</label>
                                         </td>
-                                        <td class="td-sort td-group">
+                                        <td class="td-group">
                                             <label class="lebel-group">$!vo.name</label>
                                         </td>
-                                        <td class="td-sort td-country">
+                                        <td class="td-country">
                                             <label class="label-country">$!vo.country.name</label>
                                         </td>
-                                        <td class="td-sort td-city">
+                                        <td class="td-city">
                                             <label class="label-city">$!vo.city.name</label>
                                         </td>
-                                        <td class="td-sort td-isPublic">
+                                        <td class="td-isPublic">
                                             <label class="label-isPublic">#if($!vo.isPublic==0)
                                                 显示 #end #if($!vo.isPublic==1) 隐藏 #end </label>
                                         </td>
-                                        <td class="td-sort td-createDt">
+                                        <td class="td-createDt">
                                             <label class="label-createDt">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createDt)</label>
                                         </td>
-                                        <td class="td-sort td-updateDt">
+                                        <td class="td-updateDt">
                                             <label class="label-updateDt">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateDt)</label>
                                         </td>
-                                        <td class="td-sort td-desc">
-                                            <label class="label-desc">$!vo.desc</label>
+                                        <td class="td-leader">
+                                            <label class="label-desc">$!vo.leader.chineseName</label>
                                         </td>
-
-                                        <td class="td-sort td-group-bd-count">
+                                        <td class="td-vice-leader">
+                                            <label class="label-desc">$!vo.viceLeader.chineseName</label>
+                                        </td>
+                                        <td class="td-group-bd-count">
                                             #if($!vo.bDUserIds.size() == 0)
                                                 <label class="lebel-bd-count">暂无队员</label>
                                             #else
                                                 <label class="lebel-bd-count"><a target="_blank" href="member?groupId=$!vo.id">$!vo.bDUserIds.size()</a></label>
                                             #end
+                                        </td>
+                                        <td class="td-desc">
+                                            <label class="label-desc">$!vo.desc</label>
                                         </td>
                                         <td style="min-width: 120px;">
                                             <div style="text-align: center">
