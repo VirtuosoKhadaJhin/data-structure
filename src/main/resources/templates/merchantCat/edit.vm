@@ -39,7 +39,7 @@
                                 </div>
                                 <label class="col-sm-2 control-label">名称：</label>
                                 <div class="controls">
-                                    <input name="name" for="name" type="text" placeholder="名称" class="langsAutoComplete"
+                                    <input name="name" for="name" type="text" placeholder="名称" class="langsAutoComplete cat-name"
                                            langsKeyName="name" value="$!entity.name #if("$!entity.keyCode" != "")($!entity.keyCode) #end">
                                     <input name="keycode" class="checked-keycode" type="hidden" value="$!entity.keyCode">
 
@@ -115,7 +115,7 @@
                             </div>
                             <div class="form-actions" style="text-align: center">
                                 #if($!type==2 || $!type==1)
-                                    <button type="submit" class="btn btn-success">保存</button>
+                                    <button type="submit" class="btn btn-success" onclick="return checkName()">保存</button>
                                 #elseif($!type==3)
                                     <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
                                 #end
@@ -192,6 +192,14 @@
 #include("common/js-support.vm")
 #include("common/image-support.vm")
 <script type="text/javascript">
+    function checkName(){
+        var name = $(".cat-name").val();
+        if(name == null || name == ""){
+            alert("分类名称不能为空");
+            return false;
+        }
+        return true;
+    }
     $(document).ready(function () {
         var currLangKeyInput;
         var currLangShnKeyInput;

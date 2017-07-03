@@ -277,7 +277,14 @@ public class MerchantCatServiceImpl implements MerchantCatService {
             merchantCatDao.save(merchantCat);
         } else {
             MerchantCat oldEntity = merchantCatDao.findOne(merchantCatVo.getId());
+            String name = oldEntity.getName();
+            String shortName = oldEntity.getShortname();
+
             BeanUtils.copyBeanNotNull(merchantCat, oldEntity);
+
+            oldEntity.setName(name);
+            oldEntity.setShortname(shortName);
+
             oldEntity.setUpdatetime(new Date());
             if (merchantCatVo.getPcat() == null) {
                 oldEntity.setPcat(null);
