@@ -83,7 +83,6 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     @Override
     public void saveGroup(MissionGroupParamVo vo) {
         MissionGroup group = new MissionGroup(vo.getName(), countryDao.findOne(vo.getCountryId()), cityDao.findOne(vo.getCityId()));
-        group.setIsPublic(Byte.parseByte(vo.getIsPublic()));
         group.setDesc(vo.getDesc());
         group.setIsPublic((byte) 0);
         group.setLeader(bdUserDao.findUserById(vo.getLeaderId()));
