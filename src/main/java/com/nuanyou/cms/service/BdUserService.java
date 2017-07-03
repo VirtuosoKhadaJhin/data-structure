@@ -4,7 +4,7 @@ import com.nuanyou.cms.entity.BdCountry;
 import com.nuanyou.cms.entity.BdRelUserRole;
 import com.nuanyou.cms.entity.BdRole;
 import com.nuanyou.cms.entity.BdUser;
-import com.nuanyou.cms.model.BdUserManagerRequestVo;
+import com.nuanyou.cms.model.BdUserRequestVo;
 import com.nuanyou.cms.model.BdUserParamVo;
 import com.nuanyou.cms.model.BdUserVo;
 
@@ -23,7 +23,7 @@ public interface BdUserService {
      *
      * @return bd宝用户列表
      */
-    Page<BdUserVo> findAllBdUserVos(final BdUserManagerRequestVo requestVo);
+    Page<BdUserVo> findAllBdUserVos(final BdUserRequestVo requestVo);
 
     /**
      * 查询所有的用户角色

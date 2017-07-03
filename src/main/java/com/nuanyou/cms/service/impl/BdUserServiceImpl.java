@@ -3,7 +3,7 @@ package com.nuanyou.cms.service.impl;
 import com.google.common.collect.Lists;
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
-import com.nuanyou.cms.model.BdUserManagerRequestVo;
+import com.nuanyou.cms.model.BdUserRequestVo;
 import com.nuanyou.cms.model.BdUserParamVo;
 import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.model.PageUtil;
@@ -11,15 +11,13 @@ import com.nuanyou.cms.service.BdUserService;
 import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.util.MD5Utils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,11 +50,8 @@ public class BdUserServiceImpl implements BdUserService {
     @Autowired
     private BdCountryDao bdCountryDao;
 
-
     @Override
-    public Page<BdUserVo> findAllBdUserVos(final BdUserManagerRequestVo requestVo) {
-        // TODO: 2017/6/22 Spring data， Spring data jpa需要学习
-
+    public Page<BdUserVo> findAllBdUserVos(final BdUserRequestVo requestVo) {
         //分页请求
         Pageable pageable = new PageRequest(requestVo.getIndex() - 1, PageUtil.pageSize);
 
@@ -67,22 +62,27 @@ public class BdUserServiceImpl implements BdUserService {
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 predicate.add(cb.equal(root.get("deleted"), 0));
-
+                if (requestVo.getConturyid() != null) {
+                    predicate.add(cb.equal(root.get("countryId"), requestVo.getConturyid()));
+                }
+                if (StringUtils.isNotEmpty(requestVo.getName())) {
+                    predicate.add(cb.equal(root.get("name"), requestVo.getName()));
+                }
+                if (StringUtils.isNotEmpty(requestVo.getChineseName())) {
+                    predicate.add(cb.equal(root.get("chineseName"), requestVo.getChineseName()));
+                }
+                if (StringUtils.isNotEmpty(requestVo.getDmail())) {
+                    predicate.add(cb.equal(root.get("dmail"), requestVo.getDmail()));
+                }
                 Predicate[] arrays = new Predicate[predicate.size()];
+                ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("updateTime")));
                 return query.where(predicate.toArray(arrays)).getRestriction();
             }
         }, pageable);
 
-//        List<BdRole> bdRoles = bdRoleDao.findAll();
-
-        //应该使用联合查询，
         List<BdRelUserRole> bdRelUserRoles = bdRelUserRoleDao.findAll();
-
-        //        List<BdUserVo> allCate = this.convertToBdUserManagerVo(bdUsers, bdRoles, bdRelUserRoles);
         List<BdUserVo> allCate = this.convertToBdUserManagerVo(bdUsers.getContent(), bdRelUserRoles);
-
         Page<BdUserVo> pageVOs = new PageImpl<>(allCate, pageable, bdUsers.getTotalElements());
-
         return pageVOs;
     }
 
@@ -98,13 +98,11 @@ public class BdUserServiceImpl implements BdUserService {
         return countries;
     }
 
-
     @Override
     public BdUser saveUser(BdUser user) {
         BdUser newUser = bdUserDao.save(user);
         return newUser;
     }
-
 
     @Override
     public void updateUser(BdUser user) {
@@ -140,7 +138,6 @@ public class BdUserServiceImpl implements BdUserService {
                 vo.setRole(userRole.getRole());
             }
         }
-
         return vo;
     }
 
@@ -180,22 +177,15 @@ public class BdUserServiceImpl implements BdUserService {
 
     @Override
     public void saveEditUserAndRole(BdUserParamVo paramVo) {
-        //获取数据
         BdUser user = this.findBdUserById(paramVo.getId());
         BdRelUserRole userRole = new BdRelUserRole();
         BdRole role = this.findRoleById(paramVo.getRoleId());
-
-        //设置数据
         user.setName(paramVo.getName());
         user.setChineseName(paramVo.getChineseName());
         user.setEmail(paramVo.getEmail());
         user.setDmail(paramVo.getDmail());
-
-        //保存用户角色信息
         userRole.setUser(user);
         userRole.setRole(role);
-
-        //保存数据
         this.updateUser(user);
         this.updateUserRole(userRole);
     }
@@ -204,8 +194,6 @@ public class BdUserServiceImpl implements BdUserService {
     public void del(Long id) {
         BdUser user = bdUserDao.findOne(id);
         user.setDeleted(Byte.valueOf("1"));
-
-        //保存信息
         bdUserDao.save(user);
     }
 
@@ -248,7 +236,7 @@ public class BdUserServiceImpl implements BdUserService {
         for (MissionGroup group : groups) {
             groupIds.add(group.getId());
         }
-        if(CollectionUtils.isEmpty(groupIds)){
+        if (CollectionUtils.isEmpty(groupIds)) {
             return Lists.newArrayList();
         }
         List<MissionGroupBd> userBds = groupBdDao.findByGroupIds(groupIds);
@@ -273,7 +261,6 @@ public class BdUserServiceImpl implements BdUserService {
             }
         }
     }
-
 
     /**
      * 用户可能没有角色，因此要以用户为主体，
