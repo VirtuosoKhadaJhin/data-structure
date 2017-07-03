@@ -45,7 +45,6 @@
                                             </select>
                                         </div>
                                     </div>
-
                                     <div>
                                         <label class="control-label my-label">城市：</label>
                                         <div class="controls my-controls">
@@ -57,7 +56,6 @@
                                             </select>
                                         </div>
                                     </div>
-
                                     <div>
                                         <label class="control-label my-label">队长：</label>
                                         <div class="controls my-controls">
@@ -69,7 +67,6 @@
                                             </select>
                                         </div>
                                     </div>
-
                                     <div>
                                         <label class="control-label my-label">副队长：</label>
                                         <div class="controls my-controls">
@@ -81,20 +78,21 @@
                                             </select>
                                         </div>
                                     </div>
-
                                     <div>
                                         <label class="control-label my-label">描述：</label>
                                         <div class="controls my-controls">
                                             <textarea class="span10 desc" rows="5" placeholder="描述"></textarea>
                                         </div>
                                     </div>
-
                                 </div>
-
                                 <div class="form-actions" style="text-align: center">
                                     <input type="hidden" name="isPublic" value="0"/>
-                                    <a class="btn btn-success save-group">确定</a>
-                                    <a class="btn btn-primary my-button" href="list">返回</a>
+                                    <a class="btn btn-success save-group">
+                                        <i class="icon-edit"> 确定</i>
+                                    </a>
+                                    <a class="btn btn-primary my-button" href="list">
+                                        <i class="icon-repeat"> 返回</i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
