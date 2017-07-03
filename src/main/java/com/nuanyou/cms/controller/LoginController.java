@@ -15,6 +15,6 @@ public class LoginController {
         if (request.getSession()!=null) {
             request.getSession().invalidate();
         }
-        return "forward:/index?relogin=true";
+        return "redirect:/index?relogin=true";
     }
 }

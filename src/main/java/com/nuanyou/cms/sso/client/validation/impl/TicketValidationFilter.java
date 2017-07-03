@@ -23,9 +23,12 @@ package com.nuanyou.cms.sso.client.validation.impl;
 import com.nuanyou.cms.sso.client.util.AbstractFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.sso.client.validation.SsoValidatorService;
+import com.nuanyou.cms.sso.client.validation.TicketStateService;
 import com.nuanyou.cms.sso.client.validation.User;
+import com.nuanyou.cms.sso.client.validation.vo.StateTicket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -44,6 +47,8 @@ public class TicketValidationFilter extends AbstractFilter {
 
     private static final Logger log = LoggerFactory.getLogger(TicketValidationFilter.class.getSimpleName());
     private SsoValidatorService ssoValidatorService;
+    @Autowired
+    private TicketStateService ticketStateService;
 //    private boolean needAutoLogOut = false;
 
 
@@ -93,32 +98,25 @@ public class TicketValidationFilter extends AbstractFilter {
         String artifactParameterName = getArtifactParameterName();
         final String ticket = CommonUtils.safeGetParameter(request, artifactParameterName);
         final String state = CommonUtils.safeGetParameter(request, "state");
-        /*
         if (CommonUtils.isNotBlank(state)) {
             log.info("Second Step:state found and validate state");
-            final StateTicket stateTicket = (StateTicket) this.abstractTicketRegistry.getTicket(state, StateTicket.class);
+            final StateTicket stateTicket = ticketStateService.getTicket(state);
             if(stateTicket==null){
                 throw new ServletException("stateTicket不存在");
             }
             try {
                 synchronized (stateTicket) {
                    if (stateTicket.isExpired()) {
-                        log.info("stateTicket [" + state + "] has expired.");
-                        throw new InvalidTicketException();
+                       throw new ServletException("stateTicket已经过期");
                     }
                }
             } catch (Exception e) {
-                if (this.exceptionOnValidationFailure) {
-                    throw new ServletException(e);
-                }
+                throw new ServletException(e);
             } finally {
-                this.abstractTicketRegistry.deleteTicket(state);
+                this.ticketStateService.deleteTicket(state);
             }
 
-        }else{
-            log.info("Second Step:ticket not found");
         }
-        */
         if (CommonUtils.isNotBlank(ticket)) {
             log.info("Second Step:Attempting to validate ticket: " + ticket);
             try {
