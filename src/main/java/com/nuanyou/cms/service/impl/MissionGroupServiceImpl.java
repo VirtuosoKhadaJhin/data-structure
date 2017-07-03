@@ -116,21 +116,23 @@ public class MissionGroupServiceImpl implements MissionGroupService {
 
         // 查询联合表, 不需要已经有组的组员了!
         if (groupId == null) {
+            List<MissionGroupBd> missionGroupBds = groupBdDao.findAll();
+            swichUserNoGroup(missionGroupBds, bdUsers);
             return bdUsers;
         }
         //查询不是当前组的队员
         List<MissionGroupBd> missionGroupBds = groupBdDao.findByNonGroupId(groupId);
-        List<Long> userHaveGroups = Lists.newArrayList();
-        for (MissionGroupBd missionGroupBd : missionGroupBds) {
-            userHaveGroups.add(missionGroupBd.getBdId());
-        }
-        Iterator<BdUser> iterator = bdUsers.iterator();
-        while (iterator.hasNext()) {
-            BdUser next = iterator.next();
-            if (userHaveGroups.contains(next.getId())) {
-                iterator.remove();
-            }
-        }
+        swichUserNoGroup(missionGroupBds, bdUsers);
+        return bdUsers;
+    }
+
+    @Override
+    public List<BdUser> findAllBdUserNonGroup() {
+        List<BdUser> bdUsers = bdUserDao.findAll();
+
+        // 查询联合表, 不需要已经有组的组员了!
+        List<MissionGroupBd> missionGroupBds = groupBdDao.findAll();
+        swichUserNoGroup(missionGroupBds, bdUsers);
         return bdUsers;
     }
 
@@ -298,6 +300,20 @@ public class MissionGroupServiceImpl implements MissionGroupService {
             vos.add(bdUserVoVo);
         }
         return vos;
+    }
+
+    private void swichUserNoGroup(List<MissionGroupBd> missionGroupBds, List<BdUser> bdUsers) {
+        List<Long> userHaveGroups = Lists.newArrayList();
+        for (MissionGroupBd missionGroupBd : missionGroupBds) {
+            userHaveGroups.add(missionGroupBd.getBdId());
+        }
+        Iterator<BdUser> iterator = bdUsers.iterator();
+        while (iterator.hasNext()) {
+            BdUser next = iterator.next();
+            if (userHaveGroups.contains(next.getId())) {
+                iterator.remove();
+            }
+        }
     }
 
 }

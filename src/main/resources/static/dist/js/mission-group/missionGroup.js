@@ -83,7 +83,7 @@ function addUsers() {
 // 添加BD弹窗
 function addBdUserModal(countryId, groupId) {
     $.ajax({
-        url: 'findBdUserByCountryId',
+        url: 'findNonGroupByCountryId',
         data: JSON.stringify({"groupId": groupId, "countryId": countryId}),
         type: 'post',
         dataType: 'json',

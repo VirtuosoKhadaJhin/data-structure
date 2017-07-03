@@ -89,6 +89,12 @@ public interface MissionGroupService {
     List<BdUser> findNonGroupByCountryId(Long countryId, Long groupId);
 
     /**
+     * 查询所有国家id可分配组的bdUser（没有组的BdUser）
+     * @return
+     */
+    List<BdUser> findAllBdUserNonGroup();
+
+    /**
      * 更新组是否可见
      *
      * @param groupId

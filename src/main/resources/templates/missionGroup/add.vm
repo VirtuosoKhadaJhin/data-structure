@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>暖游 后台管理系统 菜单管理</title>
     #include("common/css-support.vm")
-    <link href="/dist/css/mission-group/missionGroupAdd.css" rel="stylesheet"/>
+    <link href="/dist/css/mission-group/missionAdd.css" rel="stylesheet"/>
 </head>
 <body>
 <div id="content">
@@ -25,21 +25,20 @@
                         <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                             <h5>新增战队</h5>
                         </div>
-                        <form class="form-horizontal" action="saveAdd" method="post" onsubmit="return emailChekc()">
-
+                        <div class="form-horizontal">
                             <div class="nopadding">
                                 <div>
-
                                     <div>
                                         <label class="control-label my-label">战队名称：</label>
                                         <div class="controls my-controls">
-                                            <input for="name" id="name" class="span6" name="name" type="text" placeholder="战队名称"/>
+                                            <input class="span10 name" type="text" placeholder="战队名称"/>
                                         </div>
                                     </div>
                                     <div>
                                         <label class="control-label my-label">国家：</label>
                                         <div class="controls my-controls">
-                                            <select class="span6" name="countryId " id="country">
+                                            <select class="span10 select-country">
+                                                <option class="country-unit" value>请选择国家</option>
                                                 #foreach($country in $!countries)
                                                     <option value="$!country.id">$!country.name</option>
                                                 #end
@@ -50,7 +49,7 @@
                                     <div>
                                         <label class="control-label my-label">城市：</label>
                                         <div class="controls my-controls">
-                                            <select class="span6" name="cityId" id="city">
+                                            <select class="span10 select-city">
                                                 <option class="city-unit" value>请选择城市</option>
                                                 #foreach($city in $!cities)
                                                     <option value="$!city.id" class="option-city" country-id="$!city.country.id">$!city.name</option>
@@ -62,9 +61,11 @@
                                     <div>
                                         <label class="control-label my-label">队长：</label>
                                         <div class="controls my-controls">
-                                            <select class="span6" name="leader" id="leader">
-                                                <option class="elader" value>请选择队长</option>
-
+                                            <select class="span10 leader">
+                                                <option value>请选择队长</option>
+                                                #foreach($bdUser in $!allBdUsers)
+                                                    <option value="$!bdUser.id">$!bdUser.chineseName</option>
+                                                #end
                                             </select>
                                         </div>
                                     </div>
@@ -72,9 +73,11 @@
                                     <div>
                                         <label class="control-label my-label">副队长：</label>
                                         <div class="controls my-controls">
-                                            <select class="span6" name="viceleader" id="viceleader">
-                                                <option class="viceleader" value>请选择副队长</option>
-
+                                            <select class="span10 viceleader">
+                                                <option value>请选择副队长</option>
+                                                #foreach($bdUser in $!allBdUsers)
+                                                    <option value="$!bdUser.id">$!bdUser.chineseName</option>
+                                                #end
                                             </select>
                                         </div>
                                     </div>
@@ -82,7 +85,7 @@
                                     <div>
                                         <label class="control-label my-label">描述：</label>
                                         <div class="controls my-controls">
-                                            <textarea id="desc" class="span6" rows="5" name="desc" placeholder="描述"></textarea>
+                                            <textarea class="span10 desc" rows="5" placeholder="描述"></textarea>
                                         </div>
                                     </div>
 
@@ -90,17 +93,30 @@
 
                                 <div class="form-actions" style="text-align: center">
                                     <input type="hidden" name="isPublic" value="0"/>
-                                    <button type="submit" class="btn btn-info save-group">确定</button>
-                                    <a class="btn btn-primary" href="list">返回</a>
+                                    <a class="btn btn-success save-group">确定</a>
+                                    <a class="btn btn-primary my-button" href="list">返回</a>
                                 </div>
-                        </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    <!-- 新增战队结果 -->
+    <div class="modal hide fade saveGroupResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 id="myModalLabel">新增战队结果</h4>
+        </div>
+        <div class="modal-body">
+            <strong class="saveGroupResult" style="margin-left: 20px;font-size: 14px;"></strong>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
+    </div>
     #include("common/js-support.vm")
-<script src="/dist/js/mission-group/missionGroupAdd.js"></script>
+    <script src="/dist/js/mission-group/missionGroupAdd.js"></script>
 </body>
 </html>

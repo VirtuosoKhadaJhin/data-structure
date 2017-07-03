@@ -115,7 +115,7 @@ public class MissionGroupController {
     public String add(Model model) {
         List<Country> countries = countryService.findAllCountries();
         List<City> cities = cityService.findAllCities();
-        List<BdUser> allBdUsers = userService.findAllBdUsers();
+        List<BdUser> allBdUsers = missionGroupService.findAllBdUserNonGroup();
         model.addAttribute("allBdUsers", allBdUsers);
         model.addAttribute("countries", countries);
         model.addAttribute("cities", cities);
@@ -160,13 +160,12 @@ public class MissionGroupController {
     /**
      * 新增组信息
      *
-     * @param model
      * @param paramVo
      * @return
      */
     @RequestMapping("saveGroup")
     @ResponseBody
-    public APIResult saveGroupInfo(Model model, MissionGroupParamVo paramVo) {
+    public APIResult saveGroupInfo(@RequestBody  MissionGroupParamVo paramVo) {
         missionGroupService.saveGroup(paramVo);
         return new APIResult(ResultCodes.Success);
     }
@@ -174,14 +173,13 @@ public class MissionGroupController {
     /**
      * 编辑组信息
      *
-     * @param model
      * @param id
      * @param paramVo
      * @return
      */
     @RequestMapping("editGroup")
     @ResponseBody
-    public APIResult editGroup(Model model, String id, MissionGroupParamVo paramVo) {
+    public APIResult editGroup(String id, MissionGroupParamVo paramVo) {
         missionGroupService.updateGroup(id, paramVo);
         return new APIResult(ResultCodes.Success);
     }
