@@ -4,6 +4,7 @@ package com.nuanyou.cms.model;
  * Created by sharp on 2017/6/28 - 21:25
  */
 public class MissionGroupParamVo {
+    private Long id;
     private String name;
     private Long countryId;
     private Long cityId;
@@ -12,6 +13,14 @@ public class MissionGroupParamVo {
 
     private Long leaderId;
     private Long viceLeaderId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

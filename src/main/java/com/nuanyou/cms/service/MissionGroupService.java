@@ -69,7 +69,7 @@ public interface MissionGroupService {
      * @param id
      * @param paramVo
      */
-    void updateGroup(String id, MissionGroupParamVo paramVo);
+    void updateGroup(Long id, MissionGroupParamVo paramVo);
 
     /**
      * 通过id删除组

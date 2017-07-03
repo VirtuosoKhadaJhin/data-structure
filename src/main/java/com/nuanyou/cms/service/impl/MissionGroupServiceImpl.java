@@ -96,25 +96,41 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     }
 
     @Override
-    public void updateGroup(String id, MissionGroupParamVo vo) {
-        MissionGroup group = groupDao.findOne(Long.valueOf(id));
-        Long oldLeader = group.getLeader().getId();
-        Long oldViceLeader = group.getViceLeader().getId();
+    public void updateGroup(Long id, MissionGroupParamVo vo) {
+        MissionGroup group = groupDao.findOne(id);
+        Long oldLeader = null;
+        Long oldViceLeader = null;
+        if (group.getLeader() != null) {
+            oldLeader = group.getLeader().getId();
+        }
+        if (group.getViceLeader() != null) {
+            oldViceLeader = group.getViceLeader().getId();
+        }
         group.setName(vo.getName());
         group.setCountry(countryDao.findOne(vo.getCountryId()));
         group.setCity(cityDao.findOne(vo.getCityId()));
         group.setIsPublic((byte) 0);
-        group.setLeader(bdUserDao.findUserById(vo.getLeaderId()));
+        group.setLeader(bdUserDao.findOne(vo.getLeaderId()));
         group.setViceLeader(bdUserDao.findUserById(vo.getViceLeaderId()));
         group.setDesc(vo.getDesc());
         groupDao.save(group);
-        if (!oldLeader.equals(vo.getLeaderId())) {
+        if (oldLeader != null && !oldLeader.equals(vo.getLeaderId())) {
             groupBdDao.deleteOldLeader(oldLeader);
-            groupBdDao.save(new MissionGroupBd(vo.getLeaderId(), group.getId()));
+            groupBdDao.save(new MissionGroupBd(group.getId(), vo.getLeaderId()));
+        } else if (oldLeader == null) {
+            List<MissionGroupBd> byGroupIdAndBdId = groupBdDao.findByGroupIdAndBdId(id, oldLeader);
+            if (CollectionUtils.isEmpty(byGroupIdAndBdId)) {
+                groupBdDao.save(new MissionGroupBd(group.getId(), vo.getLeaderId()));
+            }
         }
-        if (!oldViceLeader.equals(vo.getViceLeaderId())) {
+        if (oldViceLeader != null && !oldViceLeader.equals(vo.getViceLeaderId())) {
             groupBdDao.deleteOldLeader(oldViceLeader);
-            groupBdDao.save(new MissionGroupBd(vo.getViceLeaderId(), group.getId()));
+            groupBdDao.save(new MissionGroupBd(group.getId(), vo.getViceLeaderId()));
+        } else if (oldViceLeader == null) {
+            List<MissionGroupBd> byGroupIdAndBdId = groupBdDao.findByGroupIdAndBdId(id, oldViceLeader);
+            if (CollectionUtils.isEmpty(byGroupIdAndBdId)) {
+                groupBdDao.save(new MissionGroupBd(group.getId(), vo.getViceLeaderId()));
+            }
         }
     }
 

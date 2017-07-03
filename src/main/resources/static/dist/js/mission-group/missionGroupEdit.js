@@ -29,7 +29,7 @@ $(".edit-group").on("click", function () {
     var countryId = $(".select-country").val();
     var cityId = $(".select-city").val();
     var leaderId = $(".leader").val();
-    var viceleaderId = $(".viceleader").val();
+    var viceLeaderId = $(".viceleader").val();
     var desc = $(".desc").val();
 
     if (name == null || name == "") {
@@ -44,23 +44,22 @@ $(".edit-group").on("click", function () {
     } else if (leaderId == null || leaderId == "") {
         $(".editGroupModal").text("队长不能为空！");
         $(".editGroupResultModal").modal("show");
-    } else if (viceleaderId == null || viceleaderId == "") {
+    } else if (viceLeaderId == null || viceLeaderId == "") {
         $(".editGroupModal").text("副队长不能为空！");
         $(".editGroupResultModal").modal("show");
-    } else if (viceleaderId == leaderId) {
+    } else if (viceLeaderId == leaderId) {
         $(".editGroupModal").text("主副队长不能为同一人！");
         $(".editGroupResultModal").modal("show");
     } else {
-        var paramVo = {
+        var data = {
+            id: $(".groupId").val(),
             name: name,
             countryId: countryId,
             cityId: cityId,
             leaderId: leaderId,
-            viceleaderId: viceleaderId,
+            viceLeaderId: viceLeaderId,
             desc: desc,
         };
-        var data = {id: $(".groupId").val(), paramVo: paramVo};
-        console.log(data);
         $.ajax({
             url: 'editGroup',
             data: JSON.stringify(data),
@@ -68,13 +67,22 @@ $(".edit-group").on("click", function () {
             dataType: 'json',
             contentType: 'application/json',
             success: function (result) {
+                $(".editGroupResultModal .edit-result").val(result.code);
                 if (result.code == 0) {
-
+                    $(".editGroupModal").text("编辑成功！");
+                    $(".editGroupResultModal").modal("show");
                 }
             }
         });
     }
+});
 
+// 添加bduser结果
+$(".editGroupResultModal").on("hide.bs.modal", function () {
+    var result = $(".editGroupResultModal .edit-result").val();
+    if (result == 0 && result != "") {
+        window.location = list;
+    }
 });
 
 // 联动bdUser

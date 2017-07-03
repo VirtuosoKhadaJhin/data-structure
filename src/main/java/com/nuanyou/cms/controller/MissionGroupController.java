@@ -174,14 +174,13 @@ public class MissionGroupController {
     /**
      * 编辑组信息
      *
-     * @param id
      * @param paramVo
      * @return
      */
     @RequestMapping("editGroup")
     @ResponseBody
-    public APIResult editGroup(String id, MissionGroupParamVo paramVo) {
-        missionGroupService.updateGroup(id, paramVo);
+    public APIResult editGroup(@RequestBody MissionGroupParamVo paramVo) {
+        missionGroupService.updateGroup(paramVo.getId(), paramVo);
         return new APIResult(ResultCodes.Success);
     }
 

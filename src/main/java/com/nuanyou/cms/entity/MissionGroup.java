@@ -140,7 +140,7 @@ public class MissionGroup {
     }
 
     public void setLeader(BdUser leader) {
-        this.leader = this.leader;
+        this.leader = leader;
     }
 
     @OneToOne(fetch = FetchType.LAZY)
