@@ -17,7 +17,7 @@ import java.util.List;
  * <p>
  * Created by sharp on 2017/6/22 - 15:03
  */
-public interface BdUserManagerService {
+public interface BdUserService {
     /**
      * //     * 查询所有bd宝用户列表
      *

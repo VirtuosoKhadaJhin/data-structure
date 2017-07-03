@@ -96,6 +96,8 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         MissionGroup group = new MissionGroup(vo.getName(), countryDao.findOne(vo.getCountryId()), cityDao.findOne(vo.getCityId()));
         group.setIsPublic(Byte.parseByte(vo.getIsPublic()));
         group.setDesc(vo.getDesc());
+        group.setLeader(bdUserDao.findUserById(vo.getLeaderId()));
+        group.setViceLeader(bdUserDao.findUserById(vo.getViceLeaderId()));
         groupDao.save(group);
     }
 
@@ -194,7 +196,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         MissionGroup group = groupDao.findOne(id);
 
         // 队长
-        BdUser leader = group.getLeaderId();
+        BdUser leader = group.getLeader();
 
         // 根据组ID查询出所有组员
         List<MissionGroupBd> missionGroupBds = groupBdDao.findByGroupId(id);
@@ -239,7 +241,6 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         return groupDao.findGroupsByCityId(city);
     }
 
-    // TODO: 2017/6/29 可能有误，单个还是多个
     @Override
     public MissionGroup findGroupByUserId(Long userId) {
         List<MissionGroupBd> groupBds = groupBdDao.findByBdId(userId);
@@ -249,7 +250,6 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         return group;
     }
 
-    // TODO: 2017/6/29 可能有误，单个还是多个
     @Override
     public List<BdUser> findBdUsersByGroupId(Long groupId) {
         List<MissionGroupBd> groupBds = groupBdDao.findByGroupId(groupId);

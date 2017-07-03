@@ -5,7 +5,7 @@ import com.nuanyou.cms.entity.BdRole;
 import com.nuanyou.cms.model.BdUserManagerRequestVo;
 import com.nuanyou.cms.model.BdUserParamVo;
 import com.nuanyou.cms.model.BdUserVo;
-import com.nuanyou.cms.service.BdUserManagerService;
+import com.nuanyou.cms.service.BdUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping("bdUser")
 public class BdUserManagerController {
     @Autowired
-    private BdUserManagerService userManagerService;
+    private BdUserService userManagerService;
     /**
      * 获取列表
      *
@@ -37,7 +37,7 @@ public class BdUserManagerController {
         model.addAttribute("requestVo", requestVo);//刷新界面
         return "bdUser/list";
     }
-    
+
     /**
      * 编辑
      *
@@ -48,14 +48,14 @@ public class BdUserManagerController {
         BdUserVo vo = userManagerService.findUserById(id);
         List<BdRole> roles = userManagerService.findAllRoles();
         List<BdCountry> countries = userManagerService.findAllCountry();
-    
+
         model.addAttribute("countries", countries);
         model.addAttribute("roles", roles);
         model.addAttribute("vo", vo);
-        
+
         return "bdUser/edit";
     }
-    
+
     @RequestMapping("add")
     public String add(Model model) {
         List<BdRole> roles = userManagerService.findAllRoles();
@@ -64,13 +64,13 @@ public class BdUserManagerController {
         model.addAttribute("countries", countries);
         return "bdUser/add";
     }
-    
+
     @RequestMapping("del")
     public String del(Long id) {
         userManagerService.del(id);
         return "redirect:/bdUser/list";
     }
-    
+
     /**
      * 保存添加内容
      *
@@ -78,19 +78,19 @@ public class BdUserManagerController {
      */
     @RequestMapping("saveAdd")
     public String saveAdd(BdUserParamVo paramVo) {
-    
+
         userManagerService.saveAddUserAndRole(paramVo);
-        
+
         return "redirect:/bdUser/list";
     }
-    
-    
+
+
     @RequestMapping("saveEdit")
     public String saveEdit(BdUserParamVo paramVo) {
-        
+
         userManagerService.saveEditUserAndRole(paramVo);
-        
+
         return "redirect:/bdUser/list";
     }
-    
+
 }

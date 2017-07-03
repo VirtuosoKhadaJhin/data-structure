@@ -51,7 +51,7 @@ public class MissionTaskController {
     private MissionTaskService missionTaskService;
 
     @Autowired
-    private BdUserManagerService bdUserService;
+    private BdUserService bdUserService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {

@@ -7,7 +7,7 @@ import com.nuanyou.cms.model.BdUserManagerRequestVo;
 import com.nuanyou.cms.model.BdUserParamVo;
 import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.model.PageUtil;
-import com.nuanyou.cms.service.BdUserManagerService;
+import com.nuanyou.cms.service.BdUserService;
 import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.util.MD5Utils;
 import org.apache.commons.collections.CollectionUtils;
@@ -29,7 +29,7 @@ import java.util.List;
  * Created by sharp on 2017/6/22 - 15:04
  */
 @Service
-public class BdUserManagerServiceImpl implements BdUserManagerService {
+public class BdUserServiceImpl implements BdUserService {
 
     @Autowired
     private BdUserDao bdUserDao;

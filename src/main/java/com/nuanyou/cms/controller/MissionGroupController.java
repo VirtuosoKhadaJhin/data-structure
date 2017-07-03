@@ -10,7 +10,7 @@ import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.model.MissionGroupParamVo;
 import com.nuanyou.cms.model.MissionGroupRequestVo;
 import com.nuanyou.cms.model.MissionGroupVo;
-import com.nuanyou.cms.service.BdUserManagerService;
+import com.nuanyou.cms.service.BdUserService;
 import com.nuanyou.cms.service.MissionGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,7 +34,7 @@ public class MissionGroupController {
     private MissionGroupService missionGroupService;
 
     @Autowired
-    private BdUserManagerService userManagerService;
+    private BdUserService userService;
 
     /**
      * 获取列表
@@ -48,7 +48,6 @@ public class MissionGroupController {
         model.addAttribute("cities", cities);
         model.addAttribute("page", vos);//page统一命名，分页
         model.addAttribute("requestVo", requestVo);//刷新界面
-
         return "missionGroup/list";
     }
 
@@ -62,7 +61,7 @@ public class MissionGroupController {
     @RequestMapping("member")
     public String member(Long groupId, Model model) {
         MissionGroup group = missionGroupService.findGroupById(groupId);
-        List<BdUser> list = userManagerService.findByGroupId(groupId);
+        List<BdUser> list = userService.findByGroupId(groupId);
         model.addAttribute("group", group);
         model.addAttribute("list", list);
         return "missionGroup/member";
@@ -78,7 +77,7 @@ public class MissionGroupController {
     @ResponseBody
     public APIResult<List<BdUserVo>> queryGroupBdUsers(@RequestBody MissionGroupVo requestVo) {
         APIResult<List<BdUserVo>> result = new APIResult<List<BdUserVo>>();
-        List<BdUserVo> res = missionGroupService.members(requestVo.getGroupId(),requestVo.getCountryId());
+        List<BdUserVo> res = missionGroupService.members(requestVo.getGroupId(), requestVo.getCountryId());
         result.setData(res);
         return result;
     }
@@ -99,7 +98,10 @@ public class MissionGroupController {
     }
 
     /**
-     * 添加
+     * 跳转添加页面
+     *
+     * @param model
+     * @return
      */
     @RequestMapping("add")
     public String add(Model model) {
@@ -107,20 +109,24 @@ public class MissionGroupController {
         List<City> cities = missionGroupService.findAllCities();
         model.addAttribute("countries", countries);
         model.addAttribute("cities", cities);
-
         return "missionGroup/add";
     }
 
+    /**
+     * 跳转到编辑页面
+     *
+     * @param model
+     * @param id
+     * @return
+     */
     @RequestMapping("edit")
     public String edit(Model model, Long id) {
         MissionGroup group = missionGroupService.findGroupById(id);
         List<Country> countries = missionGroupService.findAllCountries();
         List<City> cities = missionGroupService.findAllCities();
-
         model.addAttribute("group", group);
         model.addAttribute("countries", countries);
         model.addAttribute("cities", cities);
-
         return "missionGroup/edit";
     }
 
@@ -139,46 +145,33 @@ public class MissionGroupController {
         return result;
     }
 
-
     /**
-     * 添加bdUser
-     */
-    @RequestMapping("addBdUser")
-    public String addBdUser(Model model, String groupId) {
-        //所有的bduser
-        List<BdUser> bdUsers = userManagerService.findAllBdUsers();
-
-        //该组的bduser
-        List<BdUser> bdUsersByGroupId = missionGroupService.findBdUsersByGroupId(Long.valueOf(groupId));
-
-        model.addAttribute("bdUsers", bdUsers);
-
-        return "missionGroup/addBdUser";
-    }
-
-    /**
-     * 保存添加内容
+     * 新增组信息
      *
+     * @param model
+     * @param paramVo
      * @return
      */
-    @RequestMapping("saveAdd")
-    public String saveAdd(Model model, MissionGroupParamVo paramVo) {
+    @RequestMapping("saveGroup")
+    @ResponseBody
+    public APIResult saveGroupInfo(Model model, MissionGroupParamVo paramVo) {
         missionGroupService.saveGroup(paramVo);
-
-        return "redirect:/missionGroup/list";
+        return new APIResult(ResultCodes.Success);
     }
 
-
     /**
-     * 保存编辑
+     * 编辑组信息
      *
+     * @param model
+     * @param id
+     * @param paramVo
      * @return
      */
-    @RequestMapping("saveEdit")
-    public String saveEdit(Model model, String id, MissionGroupParamVo paramVo) {
-
+    @RequestMapping("editGroup")
+    @ResponseBody
+    public APIResult editGroup(Model model, String id, MissionGroupParamVo paramVo) {
         missionGroupService.updateGroup(id, paramVo);
-        return "redirect:/missionGroup/list";
+        return new APIResult(ResultCodes.Success);
     }
 
     /**
