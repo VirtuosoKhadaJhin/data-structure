@@ -87,11 +87,13 @@
                                 </div>
                                 <div class="form-actions" style="text-align: center">
                                     <input type="hidden" name="isPublic" value="0"/>
-                                    <input type="hidden" value="$!group.id" class="groupId" />
+                                    <input type="hidden" value="$!group.id" class="groupId"/>
                                     <a class="btn btn-success edit-group">
                                         <i class="icon-edit"> 确定</i>
                                     </a>
-                                    <a class="btn btn-primary my-button" href="list">返回</a>
+                                    <a class="btn btn-primary my-button" href="list">
+                                        <i class="icon-repeat"> 返回</i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -110,6 +112,7 @@
             <strong class="editGroupModal" style="margin-left: 20px;font-size: 14px;"></strong>
         </div>
         <div class="modal-footer">
+            <input type="hidden" class="edit-result" value="" />
             <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
         </div>
     </div>

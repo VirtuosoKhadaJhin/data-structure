@@ -90,8 +90,8 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         MissionGroup missionGroup = groupDao.save(group);
 
         List<MissionGroupBd> groupBds = Lists.newArrayList();
-        groupBds.add(new MissionGroupBd(vo.getLeaderId(), missionGroup.getId()));
-        groupBds.add(new MissionGroupBd(vo.getViceLeaderId(), missionGroup.getId()));
+        groupBds.add(new MissionGroupBd(missionGroup.getId(), vo.getLeaderId()));
+        groupBds.add(new MissionGroupBd(missionGroup.getId(), vo.getViceLeaderId()));
         groupBdDao.save(groupBds);
     }
 

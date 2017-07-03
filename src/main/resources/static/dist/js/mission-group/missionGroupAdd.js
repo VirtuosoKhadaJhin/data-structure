@@ -32,7 +32,7 @@ $(".save-group").on("click", function () {
     var countryId = $(".select-country").val();
     var cityId = $(".select-city").val();
     var leaderId = $(".leader").val();
-    var viceleaderId = $(".viceleader").val();
+    var viceLeaderId = $(".viceleader").val();
     var desc = $(".desc").val();
 
     if (name == null || name == "") {
@@ -47,10 +47,10 @@ $(".save-group").on("click", function () {
     } else if (leaderId == null || leaderId == "") {
         $(".saveGroupResult").text("队长不能为空！");
         $(".saveGroupResultModal").modal("show");
-    } else if (viceleaderId == null || viceleaderId == "") {
+    } else if (viceLeaderId == null || viceLeaderId == "") {
         $(".saveGroupResult").text("副队长不能为空！");
         $(".saveGroupResultModal").modal("show");
-    } else if (viceleaderId == leaderId) {
+    } else if (viceLeaderId == leaderId) {
         $(".saveGroupResult").text("主副队长不能为同一人！");
         $(".saveGroupResultModal").modal("show");
     } else {
@@ -59,9 +59,10 @@ $(".save-group").on("click", function () {
             countryId: countryId,
             cityId: cityId,
             leaderId: leaderId,
-            viceleaderId: viceleaderId,
+            viceLeaderId: viceLeaderId,
             desc: desc,
         };
+        $(".save-group").prop("disabled", true);
         $.ajax({
             url: 'saveGroup',
             data: JSON.stringify(data),
@@ -69,13 +70,22 @@ $(".save-group").on("click", function () {
             dataType: 'json',
             contentType: 'application/json',
             success: function (result) {
+                $(".saveGroupResultModal .add-result").val(result.code);
                 if (result.code == 0) {
-
+                    $(".saveGroupResult").text("编辑成功！");
+                    $(".saveGroupResultModal").modal("show");
                 }
             }
         });
     }
+});
 
+// 添加bduser结果
+$(".saveGroupResultModal").on("hide.bs.modal", function () {
+    var result = $(".saveGroupResultModal .add-result").val();
+    if (result == 0 && result != "") {
+        window.location = "list";
+    }
 });
 
 // 联动bdUser

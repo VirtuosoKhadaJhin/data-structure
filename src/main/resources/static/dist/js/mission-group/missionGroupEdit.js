@@ -81,7 +81,7 @@ $(".edit-group").on("click", function () {
 $(".editGroupResultModal").on("hide.bs.modal", function () {
     var result = $(".editGroupResultModal .edit-result").val();
     if (result == 0 && result != "") {
-        window.location = list;
+        window.location = "list";
     }
 });
 

@@ -111,6 +111,7 @@
             <strong class="saveGroupResult" style="margin-left: 20px;font-size: 14px;"></strong>
         </div>
         <div class="modal-footer">
+            <input type="hidden" class="add-result" value="" />
             <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
         </div>
     </div>
