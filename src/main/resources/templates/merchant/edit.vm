@@ -216,6 +216,8 @@
                                 </div>
                                     #else
                                     <div id = 'cc' class="controls">
+                                        #if (!$!entity.collectionCodeList)
+
                                         #foreach($e in $!entity.collectionCodeList)
                                             #if($velocityCount == 1)
                                                 <input style="margin-bottom:10px"  type="text" class="span8" placeholder="" name="collectionCodeList" value="$e">
@@ -225,6 +227,10 @@
                                                 <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-minus"></i> </a>
                                             #end
 
+                                        #end
+                                        #else
+                                            <input style="margin-bottom:10px"  type="text" class="span8" placeholder="" name="collectionCodeList" value="">
+                                            <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-plus"></i> </a>
                                         #end
 
                                     </div>
@@ -272,6 +278,17 @@
     </div>
 
     <script>
+        var bindCodePlus = function () {
+            $('.icon-plus').bind('click',function () {
+
+                if ( $("input[name='collectionCodeList']").length>2 ){
+                    alert ('最多只能添加三个');
+                    return;
+                }
+                $('#cc').append('<input style="margin-bottom:10px" type="text" class="span8" placeholder="" name="collectionCodeList" value=""> <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-minus" onclick="minus(this);"></i> </a>');
+            });
+        };
+
             #if($!disabled)
             $("#btn-save").hide();
             $(":input").attr("disabled", true);
@@ -279,9 +296,11 @@
                 $(":input").attr("disabled", false);
                 $("#btn-save").show();
                 $("#btn-edit").hide();
+                bindCodePlus ();
             });
             #else
             $("#btn-edit").hide();
+            bindCodePlus ();
             #end
 
         var r = '/^\d{1,9}$/';　　//正整数
@@ -296,14 +315,6 @@
             }
         });
 
-        $('.icon-plus').bind('click',function () {
-
-            if ( $("input[name='collectionCodeList']").length>2 ){
-                alert ('最多只能添加三个');
-                return;
-            }
-            $('#cc').append('<input style="margin-bottom:10px" type="text" class="span8" placeholder="" name="collectionCodeList" value=""> <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-minus" onclick="minus(this);"></i> </a>');
-        });
         $('.icon-minus').bind('click',function () {
             $(this).parent().prev().remove();
             $(this).parent().remove();
