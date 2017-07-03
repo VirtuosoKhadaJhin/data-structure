@@ -7,8 +7,10 @@ import com.nuanyou.cms.sso.client.validation.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,13 +24,15 @@ public class SsoValidatorServiceImpl implements SsoValidatorService {
 
     private final String validateCodeUrl;
 
+    private  Boolean needAutoLogOut;
 
     private Map<String,String> customParameters;
 
     private String encoding;
 
-    protected SsoValidatorServiceImpl(final String validateCodeUrl) {
+    protected SsoValidatorServiceImpl(final String validateCodeUrl, Boolean needAutoLogOut) {
         this.validateCodeUrl = validateCodeUrl;
+        this.needAutoLogOut=needAutoLogOut;
         CommonUtils.assertNotNull(this.validateCodeUrl, "validateCodeUrl cannot be null.");
     }
 
@@ -54,23 +58,21 @@ public class SsoValidatorServiceImpl implements SsoValidatorService {
         this.encoding = encoding;
     }
 
-    public User validate(final String ticket) throws TicketValidationException {
+
+
+    public User validate(final String ticket, String serverName) throws TicketValidationException {
         //发送Http请求
-        final String validationUrl2 =this.constructValidationUrl(ticket,validateCodeUrl);
+        final String validationUrl =this.constructValidationUrl(ticket,validateCodeUrl,needAutoLogOut,serverName);
         if (log.isDebugEnabled()) {
-            log.debug("Constructing validation url: " + validationUrl2);
+            log.debug("Constructing validation url: " + validationUrl);
         }
         try {
             log.debug("Retrieving response from server.");
-            final String serverResponse= CommonUtils.getResponseFromServer(new URL(validationUrl2), null);
+            final String serverResponse= CommonUtils.getResponseFromServer(new URL(validationUrl), null);
             if (serverResponse == null) {
                 throw new TicketValidationException("The SSO server returned no response.");
             }
-
-            if (log.isDebugEnabled()) {
-                log.debug("Server response: " + serverResponse);
-            }
-
+            log.debug("Server response: " + serverResponse);
             return this.parseResponseFromServer(serverResponse);
         } catch (final MalformedURLException e) {
             throw new TicketValidationException(e);
@@ -99,16 +101,20 @@ public class SsoValidatorServiceImpl implements SsoValidatorService {
 
     }
 
+    private String logoutParameterName = "logoutRequest";
 
     /**
      *
      * 组装准备发送验证ticket请求的URL
      */
     @Override
-    public final String constructValidationUrl(final String ticket,final String validateCodeUrl) {
+    public final String constructValidationUrl(final String ticket, final String validateCodeUrl, boolean needAutoLogOut, String serverName) {
         final Map<String,String> urlParameters = new HashMap<String,String>();
 
         urlParameters.put("code", ticket);
+        if(needAutoLogOut){
+            urlParameters.put("callback",encodeUrl(serverName+"?logoutRequest"+ticket) );
+        }
         //urlParameters.put("ret", encodeUrl(serviceUrl));
 
 
@@ -134,4 +140,16 @@ public class SsoValidatorServiceImpl implements SsoValidatorService {
 
     }
 
+
+    protected final String encodeUrl(final String url) {
+        if (url == null) {
+            return null;
+        }
+
+        try {
+            return URLEncoder.encode(url, "UTF-8");
+        } catch (final UnsupportedEncodingException e) {
+            return url;
+        }
+    }
 }

@@ -96,8 +96,7 @@
                                             <font style="color: red;margin: 0px;padding: 5px;">*</font>：
                                         </label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <select class="span7 select2 " name="categoryId"
-                                                    onchange="keyCodeRealTime()" style="width: 80%">
+                                            <select class="span7 select2 " name="categoryId" style="width: 80%" disabled="disabled" readonly="readonly">
                                                 #foreach($e in $!langsCategories)
                                                     #if($!langsDictionary.categoryId == $!e.id)
                                                         <option value="$!e.id" selected>$!e.name</option>
@@ -185,7 +184,6 @@
     #include("common/js-support.vm")
 
     <script type="text/javascript">
-        keyCodeRealTime();
         var oldKeyCode = $(".hide-keycode").val();
 
         $(document).ready(function () {
@@ -233,71 +231,6 @@
         }
 
         /**
-         * 验证keyCode是否重复
-         */
-        function verifykeyCode() {
-            var saveBtn_distabled = $(".btn-ok").attr("disabled");
-            if (saveBtn_distabled || saveBtn_distabled == "disabled") {
-                return false;
-            }
-
-            $.ajax({
-                url: 'verifykeyCode',
-                data: JSON.stringify({"keyCode": $("input[name='keyCode']").val()}),
-                type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                success: function (result) {
-                    console.log(result.data);
-                    if (result.code == 0) {
-                        if (!result.data) {
-                            // 如果和当前的URL中的keyCode相同,则不提示keyCode重复
-                            // 反之不能覆盖其他同名的keyCode
-                            if (oldKeyCode != $("#keyCode").val()) {
-                                $("#keyCodeStatus").show();
-                                $("#editBtn").attr("onclick", "");
-                                $("#keyCode").css("border", "1px solid red");
-                                $("#editBtn").attr("style", "background-color: gray;");
-                            }
-                        } else {
-                            $("#keyCodeStatus").hide();
-                            $("#editBtn").attr("style", "");
-                            $("#keyCode").css("border", "");
-                            $("#editBtn").attr("onclick", "modifyLangsDictionary()");
-                        }
-                    }
-                }
-            });
-        }
-
-        /**
-         * 实时更新keyCode展示
-         */
-        function keyCodeRealTime() {
-            // 拼接KeyCode
-            var requiredUS = $("input[name='1']").val();
-            // 如果是英文,则要增加改变事件,用来改变keyCode
-            $("input[name='1']").attr("onkeyup", "keyCodeRealTime()");
-            // 选择的分类
-            var categoryId = $("select[name='categoryId']").val();
-            if (categoryId != null && categoryId != "") {
-                var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
-                $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
-            }
-            if (categoryId == null || categoryId == "") {
-                $("input[name='keyCode']").val(requiredUS);
-            }
-            // keyCode初始化值
-            if (requiredUS != null && requiredUS != "") {
-                if (categoryId != null && categoryId != "") {
-                    var categoryName = $("select[name='categoryId']").find("option[value='" + categoryId + "']").text();
-                    $("input[name='keyCode']").val(categoryName + "_" + requiredUS);
-                }
-            }
-            verifykeyCode();
-        }
-
-        /**
          * 检验必填项
          */
         function checkRequiredParams() {
@@ -334,7 +267,6 @@
             if (saveBtn_distabled || saveBtn_distabled == "disabled") {
                 return false;
             }
-            keyCodeRealTime();
             var checkResult = checkRequiredParams();
             if (!checkResult) {
                 return false;

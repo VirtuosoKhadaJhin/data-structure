@@ -2,9 +2,9 @@ package com.nuanyou.cms.sso.client.authentication;
 
 import com.nuanyou.cms.sso.client.util.AbstractFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
-import com.nuanyou.cms.sso.client.util.RandomUtils;
+import com.nuanyou.cms.sso.client.validation.TicketStateService;
 import com.nuanyou.cms.sso.client.validation.User;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -23,6 +23,8 @@ public class AuthenticationFilter extends AbstractFilter {
     private Pattern urlExcludePattern;
     private String state;
     private Boolean relogin;
+    @Autowired
+    private TicketStateService ticketStateService;
 
 
 
@@ -75,18 +77,18 @@ public class AuthenticationFilter extends AbstractFilter {
             log.debug("Second Step:not ticket");
         }
         log.debug("First Step:Constructed service url: " + serviceUrl);
-        String state = RandomUtils.randomNumber(8);
-//        while (ticketRegistry.getTicket(state)!=null){
-//            state= RandomUtils.randomNumber(8);
+//        StateTicket stateTicket=new StateTicket( RandomUtils.randomNumber(8),new Date());
+//        while (ticketStateService.getTicket(state)!=null){
+//            stateTicket=new StateTicket( RandomUtils.randomNumber(8),new Date());
 //        }
-        setState(state);
-        //StateTicket stateTicket=grantStateTicket.grantStateTicket(this.state,expirationPolicy,modifiedServiceUrl);
-        //this.ticketRegistry.addTicket(stateTicket);
+//        ticketStateService.addTicket(stateTicket);
         String urlRelogin= CommonUtils.safeGetParameter(request, "relogin");
-        if(StringUtils.isNotBlank(urlRelogin)){
+        if(CommonUtils.isNotBlank(urlRelogin)){
             this.relogin=new Boolean(urlRelogin);
         }
-        final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.loginUrl, getServiceParameterName(), serviceUrl, this.state, this.relogin);
+//        String state=stateTicket.getCode();
+        String state=null;
+        final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.loginUrl, getServiceParameterName(), serviceUrl, state, this.relogin);
         log.debug("First Step:redirecting to \"" + urlToRedirectTo + "\"");
         response.sendRedirect(urlToRedirectTo);
     }

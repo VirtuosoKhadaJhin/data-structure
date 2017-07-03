@@ -69,63 +69,16 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
         return data;
     }
 
-    @Override
-    public APIResult saveTemplate1(Long[] selectedParamIds, TemplateParameterRequests templateParameterRequests, Integer templateType, String title, Long countryId, Long id) {
-        //fetch param ids
-        List<TemplateParameterRequest> list = toListTemplateParameter(templateParameterRequests);
-        BatchTemplateParameterRequest batch = new BatchTemplateParameterRequest();
-        batch.setParameterRequests(list);
-        APIResult<List<Long>> idList = this.contractService.saveTemplateParamters(batch);
-        if (idList.getCode() != 0) {
-            throw new APIException(idList.getCode(), idList.getMsg());
-        }
-        List<Long> idsSum = idList.getData();//ids from added param ids
-        if (selectedParamIds != null && selectedParamIds.length > 0) {
-            idsSum.addAll(Arrays.asList(selectedParamIds));//ids from selectedParam ids
-        }
 
-        List<Long> originalParamIds = templateParameterRequests.getParamId();
-        if (originalParamIds != null && !originalParamIds.isEmpty()) {
-            idsSum.addAll(originalParamIds);//ids from original param ids
-        }
-        idsSum = removeSame(idsSum);
-
-
-        Long newVersionId = null;
-        if (id == null) {
-            //save template
-            TemplateRequest templateRequest = new TemplateRequest();
-            templateRequest.setParamterids(idsSum);
-            templateRequest.setType(templateType);
-            templateRequest.setCountryId(countryId);
-            templateRequest.setTitle(title);
-            APIResult<ContractTemplate> res = this.contractService.saveTemplate(templateRequest);
-            if (res.getCode() != 0) {
-                throw new APIException(res.getCode(), res.getMsg());
-            }
-            newVersionId = res.getData().getId();
-        } else {
-            //update template
-            TemplateUpdateRequest request = new TemplateUpdateRequest();
-            request.setTitle(title);
-            request.setParamterids(idsSum);
-            APIResult<ContractTemplate> res = this.contractService.updateTemplate(id, request);
-            if (res.getCode() != 0) {
-                throw new APIException(res.getCode(), res.getMsg());
-            }
-            newVersionId = res.getData().getId();
-        }
-        return new APIResult(newVersionId);
-    }
 
 
     @Override
     public APIResult saveTemplate(String shortCode, List<Long> paramIds, List<TemplateParameterRequest> requests, Integer templateType, String title, Long countryId, Long id) {
-        //验证表单信息
+        // 1 验证表单信息
         validateRequest(paramIds,requests);
-        //验证模板基本信息
+        //2 验证模板基本信息
         validateBasic(shortCode,templateType, title, countryId);
-        //fetch param ids
+        //3 保存参数且返回增加的param ids
         BatchTemplateParameterRequest batch = new BatchTemplateParameterRequest();
         batch.setParameterRequests(requests);
         APIResult<List<Long>> idList = this.contractService.saveTemplateParamters(batch);
@@ -140,7 +93,7 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
         idsSum = removeSame(idsSum);
         Long newVersionId = null;
         if (id == null) {
-            //save template
+            //4 save template
             TemplateRequest templateRequest = new TemplateRequest();
             templateRequest.setParamterids(idsSum);
             templateRequest.setType(templateType);
@@ -153,7 +106,7 @@ public class ContractTemplateServiceImpl implements ContractTemplateService {
             }
             newVersionId = res.getData().getId();
         } else {
-            //update template
+            //5 update template
             TemplateUpdateRequest request = new TemplateUpdateRequest();
             request.setTitle(title);
             request.setParamterids(idsSum);
