@@ -30,4 +30,12 @@ public interface MerchantService {
      * @return
      */
     List<Merchant> findMerchant(Long city);
+
+    /**
+     * 获取商圈下的商户
+     *
+     * @param district
+     * @return
+     */
+    List<Merchant> findMerchantByDistrict(Long district);
 }
