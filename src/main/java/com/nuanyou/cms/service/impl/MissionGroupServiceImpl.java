@@ -210,6 +210,16 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         return true;
     }
 
+
+    @Override
+    public List<MissionGroup> checkGroupUnique(Long groupId, String name) {
+        if (groupId == null) {
+            return groupDao.findByName(name);
+        } else {
+            return groupDao.findByNameNonGroup(groupId, name);
+        }
+    }
+
     @Override
     public List<MissionGroup> findByCityId(final Long city) {
         if (city == null) {

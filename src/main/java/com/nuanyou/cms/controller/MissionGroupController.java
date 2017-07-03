@@ -14,6 +14,7 @@ import com.nuanyou.cms.service.BdUserService;
 import com.nuanyou.cms.service.CityService;
 import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.MissionGroupService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -165,7 +166,7 @@ public class MissionGroupController {
      */
     @RequestMapping("saveGroup")
     @ResponseBody
-    public APIResult saveGroupInfo(@RequestBody  MissionGroupParamVo paramVo) {
+    public APIResult saveGroupInfo(@RequestBody MissionGroupParamVo paramVo) {
         missionGroupService.saveGroup(paramVo);
         return new APIResult(ResultCodes.Success);
     }
@@ -223,5 +224,22 @@ public class MissionGroupController {
         APIResult<Boolean> result = new APIResult<>(ResultCodes.Success);
         missionGroupService.saveGroupBds(vo.getGroupId(), vo.getUserIds());
         return result;
+    }
+
+    /**
+     * 校验名称
+     *
+     * @param groupId
+     * @param name
+     * @return
+     */
+    @RequestMapping("checkGroupUnique")
+    @ResponseBody
+    public APIResult<Boolean> checkGroupUnique(Long groupId, String name) {
+        List<MissionGroup> groups = missionGroupService.checkGroupUnique(groupId, name);
+        if (CollectionUtils.isEmpty(groups)) {
+            return new APIResult(true);
+        }
+        return new APIResult(false);
     }
 }

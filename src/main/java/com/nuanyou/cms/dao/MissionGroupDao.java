@@ -58,4 +58,9 @@ public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaS
 
     @Query("SELECT t from MissionGroup t where t.country.id=?1 and t.delFlag=0")
     List<MissionGroup> findGroupsByCountryId(Long country);
+
+    List<MissionGroup> findByName(String name);
+
+    @Query(value = "select t from MissionGroup t where t.name=?2 and t.id != ?1")
+    List<MissionGroup> findByNameNonGroup(Long groupId, String name);
 }

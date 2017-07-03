@@ -135,4 +135,13 @@ public interface MissionGroupService {
      * @return
      */
     Boolean distributeLeader(Long groupId, Long leaderId);
+
+    /**
+     * 校验战队名称是否唯一
+     *
+     * @param groupId
+     * @param name
+     * @return
+     */
+    List<MissionGroup> checkGroupUnique(Long groupId, String name);
 }
