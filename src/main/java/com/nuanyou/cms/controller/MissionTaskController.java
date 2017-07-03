@@ -183,4 +183,17 @@ public class MissionTaskController {
         List<Merchant> merchants = merchantService.findMerchant(city);
         return new APIResult(merchants);
     }
+
+    /**
+     * 根据商圈获取商家
+     *
+     * @param district
+     * @return
+     */
+    @RequestMapping("findMerchantByDistrict")
+    @ResponseBody
+    public APIResult findMerchantByDistrict(Long district) {
+        List<Merchant> merchants = merchantService.findMerchantByDistrict(district);
+        return new APIResult(merchants);
+    }
 }
