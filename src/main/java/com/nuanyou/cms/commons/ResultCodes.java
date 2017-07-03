@@ -55,6 +55,11 @@ public enum ResultCodes {
     OrderNotFound(2005, "未发现订单"),
     OrderOther(2006, "其他订单错误"),
 
+    CollectionCodeError(3001, "收款码编号不正确"),
+    CollectionCodeExist(3002, "收款码{0}已被{1}占用"),
+    CollectionCodeRepeat(3003, "收款码重复"),
+    CollectionCodeGreaterThan3(3004, "收款码超过3个"),
+
 
     ContractNotAssignedForMerchant(603,"合同未关联商户"),
     PoundageOrPayDaysIsNull(601,"手续费账期起结金额账期类型不能为空"),
