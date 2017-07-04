@@ -39,32 +39,28 @@
                         <form class="form-horizontal" action="saveAdd" method="post" onsubmit="return emailChekc()">
 
                             <div class="nopadding" style="width: 100%;">
-                                <div >
+                                <div>
 
                                     <div>
                                         <label class="control-label" style="width: 140px;">用户名：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" id="name"
-                                                   class="span7" name="name" type="text" style="width: 80%"
-                                                   value=""/>
+                                            <input for="name" id="name" class="span7" name="name" type="text" style="width: 80%" placeholder="用户名"/>
                                         </div>
                                     </div>
 
                                     <div>
                                         <label class="control-label" style="width: 140px;">中文名：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" id="chineseName"
-                                                   class="span7" name="chineseName" type="text" style="width: 80%"
-                                                   value=""/>
+                                            <input for="name" id="chineseName" class="span7" name="chineseName" type="text" style="width: 80%" placeholder="中文名"/>
                                         </div>
                                     </div>
 
                                     <div>
                                         <label class="control-label" style="width: 140px;">所属国家：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <select name="countryId"  style="width:80%">
+                                            <select name="countryId" style="width:80%">
                                                 #foreach($country in $!countries)
-                                                    <option value="$!country.id" >$country.name</option>
+                                                    <option value="$!country.id">$country.name</option>
                                                 #end
                                             </select>
                                         </div>
@@ -74,9 +70,7 @@
                                         <label class="control-label" style="width: 140px;">
                                             <font style="color: red;margin: 0px;padding: 5px;"></font>合同归档邮箱：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" id="email"
-                                                   class="span7" name="email" type="text" style="width: 80%"
-                                                   value="" >
+                                            <input for="name" id="email" class="span7" name="email" type="text" style="width: 80%" placeholder="合同归档邮箱">
                                         </div>
                                     </div>
 
@@ -84,18 +78,16 @@
                                         <label class="control-label" style="width: 140px;">
                                             <font style="color: red;margin: 0px;padding: 5px;"></font>钉钉邮箱：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" id="dmail"
-                                                   class="span7" name="dmail" type="text" style="width: 80%"
-                                                   value="" >
+                                            <input for="name" id="dmail" class="span7" name="dmail" type="text" style="width: 80%" placeholder="钉钉邮箱">
                                         </div>
                                     </div>
 
                                     <div>
                                         <label class="control-label" style="width: 140px;">角色：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <select name="roleId"  style="width:80%">
+                                            <select name="roleId" style="width:80%">
                                                 #foreach($role in $!roles)
-                                                    <option value="$!role.id" >$role.desc</option>
+                                                    <option value="$!role.id">$role.desc</option>
                                                 #end
                                             </select>
                                         </div>
@@ -105,8 +97,12 @@
                                 </div>
 
                                 <div class="form-actions" style="clear:both;text-align: center">
-                                    <button type="submit" class="btn btn-success">确定</button>
-                                    <a class="btn btn-primary" href="list">返回</a>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="icon-edit"> 确定</i>
+                                    </button>
+                                    <a class="btn btn-primary" href="list">
+                                        <i class="icon-repeat"> 返回</i>
+                                    </a>
                                 </div>
                         </form>
                     </div>
@@ -122,18 +118,18 @@
         var email = document.getElementsByName("email")[0].value;
         var dmail = document.getElementsByName("dmail")[0].value;
 
-        var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/ ;
+        var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/;
 
         if (email == "") {
             var res1 = true;
         } else {
-            var res1=reg.test(email);
+            var res1 = reg.test(email);
         }
 
         if (dmail == "") {
             var res2 = true;
         } else {
-            var res2=reg.test(dmail);
+            var res2 = reg.test(dmail);
         }
 
         if (res1 == false) {
