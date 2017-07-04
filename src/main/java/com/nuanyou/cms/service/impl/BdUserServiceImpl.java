@@ -211,6 +211,7 @@ public class BdUserServiceImpl implements BdUserService {
 
     @Override
     public List<BdUser> findByCountryAndGroup(final Long country, final Long groupId) {
+        List<BdUser> result = Lists.newArrayList();
         List<BdUser> countryUsers = bdUserDao.findAll(new Specification() {
 
             @Override
@@ -225,9 +226,54 @@ public class BdUserServiceImpl implements BdUserService {
                 return query.where(predicate.toArray(arrays)).getRestriction();
             }
         });
-        if (groupId == null) {
+        if (country != null && groupId == null) {
             return countryUsers;
+        } else if (country == null && groupId != null) {
+            return this.findBdUsersByGroup(groupId);
+        } else if (country != null && groupId != null) {
+            Map<Long, BdUser> bdUserMaps = new LinkedHashMap<Long, BdUser>(countryUsers.size());
+            for (BdUser bdUser : countryUsers) {
+                bdUserMaps.put(bdUser.getId(), bdUser);
+            }
+            List<BdUser> groupUsers = findBdUsersByGroup(groupId);
+            //合并groupUsers和countryUsers同时存在的
+            Iterator<BdUser> iterator = groupUsers.iterator();
+            while (iterator.hasNext()) {
+                BdUser bdUser = iterator.next();
+                if (bdUserMaps.containsKey(bdUser.getId())) {
+                    result.add(bdUser);
+                }
+            }
         }
+        return result;
+    }
+
+    @Override
+    public void updateUserRole(BdRelUserRole userRole) {
+        List<BdRelUserRole> userRoles = bdRelUserRoleDao.findAll();
+        for (BdRelUserRole relUserRole : userRoles) {
+            //找到数据库对应的条目，修改，更新
+            if (relUserRole.getUser().getId().equals(userRole.getUser().getId())) {
+                //修改
+                relUserRole.setRole(userRole.getRole());
+                //更新
+                bdRelUserRoleDao.save(relUserRole);
+            }
+        }
+    }
+
+    @Override
+    public BdUser findBdUserById(long id) {
+        return this.bdUserDao.findOne(id);
+    }
+
+    @Override
+    public List<BdUser> findAllBdUsers() {
+        List<BdUser> bdUsers = bdUserDao.findallBdUser();
+        return bdUsers;
+    }
+
+    private List<BdUser> findBdUsersByGroup(Long groupId) {
         List<MissionGroupBd> userBds = groupBdDao.findByGroupId(groupId);
         Collection<Long> userIds = (List<Long>) CollectionUtils.collect(userBds, new Transformer() {
             @Override
@@ -235,23 +281,7 @@ public class BdUserServiceImpl implements BdUserService {
                 return ((MissionGroupBd) input).getBdId();
             }
         });
-        List<BdUser> groupUsers = bdUserDao.findByIdIn(Lists.newArrayList(userIds));
-
-        Map<Long, BdUser> bdUserMaps = new LinkedHashMap<Long, BdUser>(countryUsers.size());
-        for (BdUser bdUser : countryUsers) {
-            bdUserMaps.put(bdUser.getId(), bdUser);
-        }
-
-        //合并groupUsers和countryUsers同时存在的
-        List<BdUser> result = Lists.newArrayList();
-        Iterator<BdUser> iterator = groupUsers.iterator();
-        while (iterator.hasNext()) {
-            BdUser bdUser = iterator.next();
-            if (bdUserMaps.containsKey(bdUser.getId())) {
-                result.add(bdUser);
-            }
-        }
-        return result;
+        return bdUserDao.findByIdIn(Lists.newArrayList(userIds));
     }
 
     private List<BdUser> findBdUsersByGroupIds(List<MissionGroup> groups) {
@@ -269,20 +299,6 @@ public class BdUserServiceImpl implements BdUserService {
         }
         List<BdUser> bdUsers = bdUserDao.findByIdIn(userIds);
         return bdUsers;
-    }
-
-    @Override
-    public void updateUserRole(BdRelUserRole userRole) {
-        List<BdRelUserRole> userRoles = bdRelUserRoleDao.findAll();
-        for (BdRelUserRole relUserRole : userRoles) {
-            //找到数据库对应的条目，修改，更新
-            if (relUserRole.getUser().getId().equals(userRole.getUser().getId())) {
-                //修改
-                relUserRole.setRole(userRole.getRole());
-                //更新
-                bdRelUserRoleDao.save(relUserRole);
-            }
-        }
     }
 
     /**
@@ -330,16 +346,4 @@ public class BdUserServiceImpl implements BdUserService {
         }
         return stringBuffer.toString();
     }
-
-    @Override
-    public BdUser findBdUserById(long id) {
-        return this.bdUserDao.findOne(id);
-    }
-
-    @Override
-    public List<BdUser> findAllBdUsers() {
-        List<BdUser> bdUsers = bdUserDao.findallBdUser();
-        return bdUsers;
-    }
-
 }
