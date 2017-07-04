@@ -76,11 +76,11 @@ public class TicketValidationFilter extends AbstractFilter {
             log.info("Second Step:state found and validate state");
             final StateTicket stateTicket = ticketStateService.getTicket(state);
             if(stateTicket==null){
-                throw new ServletException("stateTicket不存在");
+                throw new ServletException("This stateTicket has been deleted,stateTicket="+state);
             }
             try {
                    if (stateTicket.isExpired()) {
-                       throw new ServletException("stateTicket已经过期");
+                       throw new ServletException("This stateTicket has expired,stateTicket="+state);
                     }
             } catch (Exception e) {
                 throw new ServletException(e);

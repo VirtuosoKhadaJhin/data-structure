@@ -90,15 +90,16 @@ public class AuthenticationFilter extends AbstractFilter {
         String state=stateTicket.getCode();
         //String state=null;
 
+        Boolean reLogin=this.relogin;
         String urlRelogin= CommonUtils.safeGetParameter(request, "relogin");//注销
         if(CommonUtils.isNotBlank(urlRelogin)){
-            this.relogin=new Boolean(urlRelogin);
+            reLogin=new Boolean(urlRelogin);
         }
         final String urlToRedirectTo = CommonUtils.constructRedirectUrl(
                 this.loginUrl,
                 getServiceParameterName(),
                 serviceUrl, state,
-                this.relogin);
+                reLogin);
         log.debug("First Step:redirecting to \"" + urlToRedirectTo + "\"");
         response.sendRedirect(urlToRedirectTo);
     }
