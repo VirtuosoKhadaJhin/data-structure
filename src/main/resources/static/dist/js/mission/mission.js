@@ -2,22 +2,13 @@
  * Created by mylon on 2017/6/28.
  */
 $(function () {
-    // 国家二级联动城市
-    $(".select-country").on("change", function () {
-        /*var countryId = $(this).val();
-         var showCity = $(".select-city").find("country-id:" + countryId + "")
-         console.log(showCity);
-         $(showCity).trigger("change");*/
-
-        location.href = "list?country=" + $(this).val();
-
-    });
 
     // 改变任务状态
     $(".task-status").on("change", function () {
         if ($(this).val() != "FINISHED") {
             $(".task-status-time").show();
         } else {
+            $("#date-sh-date").prop("value", "");
             $(".task-status-time").hide();
         }
     });
@@ -41,6 +32,7 @@ $(function () {
     if ("NON_APPROVAL" == status || "APPROVED" == status) {
         $("#sh-date").show();
     } else {
+        $("#date-sh-date").prop("value", "");
         $("#sh-date").hide();
     }
 
