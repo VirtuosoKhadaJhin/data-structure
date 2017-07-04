@@ -178,8 +178,12 @@
                                 <input type="text" name="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="完成时间">
                             </div>
 
-                            <button type="submit" class="btn btn-primary">查询</button>
-                            <button class="btn btn-warning search-reset">重置</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="icon-search"> 查询</i>
+                            </button>
+                            <button class="btn btn-warning search-reset">
+                                <i class="icon-refresh"> 重置</i>
+                            </button>
                         </form>
 
                     </div>

@@ -25,7 +25,9 @@
                         <div class="widget-title">
                             <span class="icon"><i class="icon-th"></i></span>
                             <h5>战地任务列表</h5>
-                            <button class="btn btn-small btn-success task-distribute">任务指派</button>
+                            <button class="btn btn-small btn-success task-distribute">
+                                <i class="icon-bullhorn"> 任务指派</i>
+                            </button>
 
                             <div class="public-div" data-group="$!group.id" data-public="$!group.isPublic">
                                 <input type="hidden" class="public-default-val" value="$!group.id">
@@ -238,8 +240,12 @@
 
                             <div class="btn-group">
                                 <input type="hidden" name="isAudit" value="false"/>
-                                <button type="submit" class="btn btn-primary">查询</button>
-                                <button class="btn btn-warning search-reset" style="margin-left: 3px;">重置</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="icon-search"> 查询</i>
+                                </button>
+                                <button class="btn btn-warning search-reset" style="margin-left: 3px;">
+                                    <i class="icon-refresh"> 重置</i>
+                                </button>
                             </div>
                         </form>
 
