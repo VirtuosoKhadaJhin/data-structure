@@ -30,13 +30,15 @@
                             <tr class="thread-tr">
                                 <th class="th-op">操作</th>
                                 <th class="th-op">商户名称</th>
+                                <th class="th-op">合作状态</th>
                                 <th class="th-op">城市</th>
                                 <th class="th-op">组名-BD名</th>
                                 <th class="th-img">签到图</th>
                                 <th class="th-op">商户通版本号</th>
                                 <th class="th-op">测试订单</th>
                                 <th class="th-op">状态</th>
-                                <th class="th-op">备注</th>
+                                <th class="th-op">拜访记录</th>
+                                <th class="th-op">审核备注</th>
                                 <th class="th-op">审核时间</th>
                                 <th class="th-op">完成时间</th>
                             </tr>
@@ -66,6 +68,7 @@
                                         <br/>
                                         <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a>
                                     </td>
+                                    <td class="merchant"></td>
                                     <td>$!entity.merchant.district.city.name</td>
                                     <td>$!entity.group.name - $!entity.bdUser.chineseName</td>
                                     <td class="td-imgurl">
@@ -86,6 +89,7 @@
                                     <td>$!entity.version</td>
                                     <td class="td-bz"><a target="_blank" href="/order/edit?type=3&id=$!entity.orderno">$!entity.orderno</a></td>
                                     <td>$!entity.status.value</td>
+                                    <td class="td-bz">$!entity.merchantTrack.content</td>
                                     <td class="td-bz">$!entity.remark</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditDt)</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishDt)</td>

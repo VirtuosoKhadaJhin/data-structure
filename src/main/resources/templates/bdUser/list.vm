@@ -7,8 +7,8 @@
     #include("common/css-support.vm")
     #include("common/js-support.vm")
     <script src="/dist/js/page-support.js"></script>
-    <script src="/dist/js/bd-user/bdUser.js"></script>
     <link href="/dist/css/bd-user/bdUser.css" rel="stylesheet"/>
+    <script src="/dist/js/bd-user/bdUser.js"></script>
 </head>
 <body>
 <div id="content" class="content-container">
@@ -29,7 +29,7 @@
                             <a class="btn btn-mini btn-info buttons" href="add">新增</a>
                         </div>
                         <div>
-                            <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+                            <table class="table table-bordered data-table dataTable">
                                 <thead role="row">
                                 <tr>
                                     <th>序号</th>
@@ -85,9 +85,8 @@
                                         </td>
                                         <td class="td-op">
                                             <div class="td-op-div">
-                                                <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item"
-                                                   href="edit?id=$!vo.id">编辑</a>
-                                                <a class="btn btn-danger btn-mini" href="del?id=$!vo.id">删除</a>
+                                                <a class="btn btn-primary btn-mini" href="edit?id=$!vo.id">编辑</a>
+                                                <button del-id="$!vo.id" class="btn btn-danger btn-mini" id="del-bd">删除</button>
                                             </div>
                                         </td>
                                     </tr>
@@ -141,6 +140,49 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<!-- 删除确认弹窗 -->
+<div class="modal hide fade deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="myModalLabel">删除提示</h4>
+    </div>
+    <div class="modal-body">
+        <strong style="margin-left: 20px;font-size: 14px;">确认删除该BD吗？</strong>
+    </div>
+    <div class="modal-footer">
+        <input type="hidden" class="hide-del-id"/>
+        <button class="btn btn-primary sure-del">确认</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+<!-- 删除确认二次确认弹窗 -->
+<div class="modal hide fade secondDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="myModalLabel">删除提示</h4>
+    </div>
+    <div class="modal-body">
+        <strong style="margin-left: 20px;font-size: 14px;">真的确认删除该BD吗？</strong>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary second-sure-del">确认</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+
+<!-- 删除结果 -->
+<div class="modal hide fade deleteResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="myModalLabel">删除提示</h4>
+    </div>
+    <div class="modal-body">
+        <strong class="deleteResult" style="margin-left: 20px;font-size: 14px;"></strong>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
     </div>
 </div>
 </body>
