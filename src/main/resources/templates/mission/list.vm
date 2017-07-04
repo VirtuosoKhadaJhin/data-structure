@@ -89,8 +89,8 @@
                                     <td>$!entity.version</td>
                                     <td class="td-bz"><a target="_blank" href="/order/edit?type=3&id=$!entity.orderno">$!entity.orderno</a></td>
                                     <td>$!entity.status.value</td>
-                                    <td class="td-bz">$!entity.merchantTrack.content</td>
-                                    <td class="td-bz">$!entity.remark</td>
+                                    <td class="td-bz" title="$!entity.merchantTrack.content">$!entity.merchantTrack.content</td>
+                                    <td class="td-bz" title="$!entity.remark">$!entity.remark</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditDt)</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishDt)</td>
                                 </tr>
