@@ -28,6 +28,13 @@ table .tr-class:hover {
     text-align: center;
 }
 
+.td-bz {
+    max-width: 130px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 .td-button {
     float: left;
     width: 49%;
@@ -157,6 +164,7 @@ table .tr-class:hover {
     color: white;
 
 }
-.ispublic{
+
+.ispublic {
     margin-top: -2px;
 }
