@@ -73,15 +73,13 @@ public class MissionTaskController {
             requestVo.setStatus(MissionTaskStatus.FINISHED);
         }
         List<Country> countries = countryService.getIdNameList();
-        List<City> cities = cityService.findCityByCountryId(requestVo.getCountry());
-        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCity());
-        List<MissionGroup> groups = missionGroupService.findByCityId(requestVo.getCity());
+        List<Merchant> merchants = merchantService.findMerchantByCountry(requestVo.getCountry());
+        List<MissionGroup> groups = missionGroupService.findByCountry(requestVo.getCountry());
         List<BdUser> bdUsers = bdUserService.findByGroupId(requestVo.getCountry(), requestVo.getCity(), requestVo.getGroupId());
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
         model.addAttribute("requestVo", requestVo);
         model.addAttribute("countries", countries);
-        model.addAttribute("cities", cities);
         model.addAttribute("groups", groups);
         model.addAttribute("bdUsers", bdUsers);
         model.addAttribute("merchants", merchants);
@@ -115,7 +113,7 @@ public class MissionTaskController {
         String email = UserHolder.getUser().getEmail();
         BdUser bdUser = bdUserService.findBdUserByDemail(email);
         MissionGroup missionGroup = missionGroupService.findGroupByUserId(bdUser.getId());
-        List<Merchant> merchants = merchantService.findMerchant(missionGroup.getCity() == null ? null : missionGroup.getCity().getId());
+        List<Merchant> merchants = merchantService.findMerchantByCountry(missionGroup.getCity() == null ? null : missionGroup.getCity().getId());
         List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(missionGroup.getId());
         List<DistrictVo> districts = districtService.findByCity(missionGroup.getCity() == null ? null : missionGroup.getCity().getId());
         requestVo.setGroupId(missionGroup.getId());
@@ -178,7 +176,7 @@ public class MissionTaskController {
     @RequestMapping("findMerchantByCity")
     @ResponseBody
     public APIResult findMerchantByCity(Long city) {
-        List<Merchant> merchants = merchantService.findMerchant(city);
+        List<Merchant> merchants = merchantService.findMerchantByCountry(city);
         return new APIResult(merchants);
     }
 

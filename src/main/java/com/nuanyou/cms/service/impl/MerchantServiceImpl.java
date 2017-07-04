@@ -269,13 +269,13 @@ public class MerchantServiceImpl implements MerchantService {
     }
 
     @Override
-    public List<Merchant> findMerchant(final Long city) {
+    public List<Merchant> findMerchantByCountry(final Long country) {
         Specification specification = new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
-                if (city != null) {
-                    predicate.add(cb.equal(root.get("district").get("city").get("id"), city));
+                if (country != null) {
+                    predicate.add(cb.equal(root.get("district").get("country").get("id"), country));
                 }
                 predicate.add(cb.equal(root.get("display"), true));
                 Predicate[] arrays = new Predicate[predicate.size()];
