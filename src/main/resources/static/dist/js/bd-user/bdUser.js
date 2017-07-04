@@ -23,11 +23,10 @@ $('.sure-del').on("click", function () {
 // 删除
 $('.second-sure-del').on("click", function () {
     var id = $(".hide-del-id").val();
-    console.log(id);
-    var data = {id: id};
+    var data = {id: Number(id)};
     $.ajax({
         url: 'del',
-        data: data,
+        data: JSON.stringify(data),
         type: 'post',
         dataType: 'json',
         contentType: 'application/json',
@@ -41,4 +40,9 @@ $('.second-sure-del').on("click", function () {
             $(".deleteResultModal").modal("show");
         }
     });
+});
+
+// 删除完成刷新页面
+$(".deleteResultModal").on("hide.bs.modal", function () {
+    window.location.reload();
 });

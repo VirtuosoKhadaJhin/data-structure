@@ -73,8 +73,8 @@ public class BdUserController {
 
     @RequestMapping("del")
     @ResponseBody
-    public APIResult del(@RequestBody  Long id) {
-        bdUserService.del(id);
+    public APIResult del(@RequestBody BdUserRequestVo requestVo) {
+        bdUserService.del(requestVo.getId());
         return new APIResult(ResultCodes.Success);
     }
 

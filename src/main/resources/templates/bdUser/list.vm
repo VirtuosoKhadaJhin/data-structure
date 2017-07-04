@@ -25,7 +25,9 @@
                         <div class="widget-title">
                             <span class="icon"><i class="icon-th"></i></span>
                             <h5>BD用户列表</h5>
-                            <a class="btn btn-mini btn-info buttons" href="add">新增</a>
+                            <a class="btn btn-mini btn-info buttons" href="add">
+                                <i class="icon-plus"> 新增</i>
+                            </a>
                         </div>
                         <div>
                             <table class="table table-bordered data-table dataTable">
@@ -130,8 +132,12 @@
                             </div>
                             <div class="btn-group">
                                 <input type="hidden" name="isAudit" value="false"/>
-                                <button type="submit" class="btn btn-primary">查询</button>
-                                <button class="btn btn-warning search-reset">重置</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="icon-search"> 查询</i>
+                                </button>
+                                <button class="btn btn-warning search-reset" style="margin-left: 5px;">
+                                    <i class="icon-refresh"> 重置</i>
+                                </button>
                             </div>
                         </form>
 
