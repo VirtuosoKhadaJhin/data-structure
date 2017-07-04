@@ -38,7 +38,7 @@ $(function () {
     });
 
     var status = $(".task-status").val();
-    if ("NON_APPROVAL" == status) {
+    if ("NON_APPROVAL" == status || "APPROVED" == status) {
         $("#sh-date").show();
     } else {
         $("#sh-date").hide();
