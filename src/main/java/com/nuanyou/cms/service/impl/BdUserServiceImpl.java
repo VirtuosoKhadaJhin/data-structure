@@ -226,7 +226,7 @@ public class BdUserServiceImpl implements BdUserService {
                 return query.where(predicate.toArray(arrays)).getRestriction();
             }
         });
-        if (country != null && groupId == null) {
+        if ((country != null && groupId == null) || (country == null || groupId == null)) {
             return countryUsers;
         } else if (country == null && groupId != null) {
             return this.findBdUsersByGroup(groupId);
