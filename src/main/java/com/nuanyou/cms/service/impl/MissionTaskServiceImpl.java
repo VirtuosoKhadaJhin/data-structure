@@ -48,6 +48,7 @@ public class MissionTaskServiceImpl implements MissionTaskService {
 
     @Override
     public Page<MissionTaskVo> findAllMissionTask(final MissionRequestVo requestVo) {
+        Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageSize());
         Specification spec = new Specification() {
 
             @Override
@@ -91,14 +92,13 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 }
                 predicate.add(cb.equal(root.get("delFlag").as(Boolean.class), false));
                 Predicate[] arrays = new Predicate[predicate.size()];
-                return query.where(predicate.toArray(arrays)).getRestriction();
+                ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("status")));
+                return query.where(predicate.toArray(arrays)).orderBy(orderBys).getRestriction();
             }
         };
-        long totalNum = missionTaskDao.count(spec);
-        List<MissionTask> missionTasks = missionTaskDao.findAll(spec);
-        List<MissionTaskVo> taskVos = this.setMerchantTrackValue(missionTasks);
-        Pageable pageable = new PageRequest(requestVo.getPageNum() - 1, requestVo.getPageSize());
-        Page<MissionTaskVo> page = new PageImpl<MissionTaskVo>(taskVos, pageable, totalNum);
+        Page<MissionTask> missionTasks = missionTaskDao.findAll(spec, pageable);
+        List<MissionTaskVo> taskVos = this.setMerchantTrackValue(missionTasks.getContent());
+        Page<MissionTaskVo> page = new PageImpl<MissionTaskVo>(taskVos, pageable, missionTasks.getTotalElements());
         return page;
     }
 
