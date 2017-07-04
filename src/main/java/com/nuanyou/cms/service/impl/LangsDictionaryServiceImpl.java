@@ -13,7 +13,7 @@ import com.nuanyou.cms.model.*;
 import com.nuanyou.cms.model.enums.LangsCountry;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
-import com.nuanyou.cms.sso.client.validation.User;
+import com.nuanyou.cms.sso.client.validation.vo.User;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
