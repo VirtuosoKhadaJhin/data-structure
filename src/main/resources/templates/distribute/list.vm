@@ -102,7 +102,7 @@
                 </div>
             </div>
             <!-- 指派弹窗 -->
-            <div class="modal hide fade taskDistributeModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal hide fade taskDistributeModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h3 id="myModalLabel">任务指派</h3>
@@ -136,7 +136,7 @@
             </div>
 
             <!-- 是否可见 提示框 -->
-            <div class="modal hide fade publicSwichModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal hide fade publicSwichModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h3 id="publicSwichLabel">可见选项</h3>
@@ -153,7 +153,7 @@
             </div>
 
             <!-- 可见 结果提示框 -->
-            <div class="modal hide fade publicSwichResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal hide fade publicSwichResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h3 id="publicSwichLabel">可见选项操作结果</h3>
@@ -168,7 +168,7 @@
             </div>
 
             <!-- 指派结果弹窗 -->
-            <div class="modal hide fade taskDistributeResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal hide fade taskDistributeResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h3 id="myModalLabel">指派通知</h3>

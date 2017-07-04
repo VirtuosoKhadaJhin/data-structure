@@ -49,7 +49,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         //分页请求
         final Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageNum());
 
-        List<MissionGroup> groups = groupDao.findAll(new Specification() {
+        Page<MissionGroup> groups = groupDao.findAll(new Specification() {
 
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
@@ -72,10 +72,10 @@ public class MissionGroupServiceImpl implements MissionGroupService {
                 Predicate[] arrays = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(arrays)).getRestriction();
             }
-        });
+        },pageable);
 
-        List<MissionGroupVo> groupVos = this.getMissionGroupVos(groups);
-        Page<MissionGroupVo> pageVOs = new PageImpl<>(groupVos, pageable, groups.size());
+        List<MissionGroupVo> groupVos = this.getMissionGroupVos(groups.getContent());
+        Page<MissionGroupVo> pageVOs = new PageImpl<>(groupVos, pageable, groups.getTotalElements());
         return pageVOs;
     }
 

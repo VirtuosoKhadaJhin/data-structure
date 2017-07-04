@@ -42,7 +42,7 @@ public class MissionRequestVo {
 
     private Boolean isAudit = true;
 
-    private int pageNum = 1;
+    private int index = 1;
 
     private int pageSize = 20;
 
@@ -134,12 +134,12 @@ public class MissionRequestVo {
         isAudit = audit;
     }
 
-    public int getPageNum() {
-        return pageNum;
+    public int getIndex() {
+        return index;
     }
 
-    public void setPageNum(int pageNum) {
-        this.pageNum = pageNum;
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public int getPageSize() {
