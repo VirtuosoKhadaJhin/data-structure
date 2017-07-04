@@ -69,6 +69,9 @@ public class MissionTaskController {
      */
     @RequestMapping("list")
     public String list(MissionRequestVo requestVo, Model model) {
+        if (requestVo.getStatus() == null) {
+            requestVo.setStatus(MissionTaskStatus.FINISHED);
+        }
         List<Country> countries = countryService.getIdNameList();
         List<City> cities = cityService.findCityByCountryId(requestVo.getCountry());
         List<Merchant> merchants = merchantService.findMerchant(requestVo.getCity());
@@ -108,17 +111,13 @@ public class MissionTaskController {
      */
     @RequestMapping("distribute")
     public String distributeTask(MissionRequestVo requestVo, Model model) {
-        if (requestVo.getAudit() == true) {
-            requestVo.setAudit(false);
-        }
+        requestVo.setAudit(false);
         String email = UserHolder.getUser().getEmail();
         BdUser bdUser = bdUserService.findBdUserByDemail(email);
         MissionGroup missionGroup = missionGroupService.findGroupByUserId(bdUser.getId());
         List<Merchant> merchants = merchantService.findMerchant(requestVo.getCity());
         List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(missionGroup.getId());
         List<DistrictVo> districts = districtService.findByCity(missionGroup.getCity() == null ? null : missionGroup.getCity().getId());
-
-        requestVo.setStatus(null);
         requestVo.setGroupId(missionGroup.getId());
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);

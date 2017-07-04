@@ -16,7 +16,7 @@ public class MissionRequestVo {
 
     private Long bdId;
 
-    private MissionTaskStatus status = MissionTaskStatus.FINISHED;
+    private MissionTaskStatus status;
 
     private String remark;
 
