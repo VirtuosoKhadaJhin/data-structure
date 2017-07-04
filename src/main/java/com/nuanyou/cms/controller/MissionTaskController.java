@@ -115,7 +115,7 @@ public class MissionTaskController {
         String email = UserHolder.getUser().getEmail();
         BdUser bdUser = bdUserService.findBdUserByDemail(email);
         MissionGroup missionGroup = missionGroupService.findGroupByUserId(bdUser.getId());
-        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCity());
+        List<Merchant> merchants = merchantService.findMerchant(missionGroup.getCity() == null ? null : missionGroup.getCity().getId());
         List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(missionGroup.getId());
         List<DistrictVo> districts = districtService.findByCity(missionGroup.getCity() == null ? null : missionGroup.getCity().getId());
         requestVo.setGroupId(missionGroup.getId());
