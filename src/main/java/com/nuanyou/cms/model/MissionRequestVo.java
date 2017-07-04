@@ -16,13 +16,13 @@ public class MissionRequestVo {
 
     private Long bdId;
 
-    private MissionTaskStatus status = MissionTaskStatus.FINISHED;
+    private MissionTaskStatus status;
 
     private String remark;
 
     private Long groupId;
 
-    private Long country = 1L;
+    private Long country;
 
     private Long city;
 

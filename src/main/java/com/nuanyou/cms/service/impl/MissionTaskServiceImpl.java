@@ -92,7 +92,7 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 }
                 predicate.add(cb.equal(root.get("delFlag").as(Boolean.class), false));
                 Predicate[] arrays = new Predicate[predicate.size()];
-                ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("status")));
+                ArrayList<Order> orderBys = Lists.newArrayList(cb.desc(root.get("updateDt")));
                 return query.where(predicate.toArray(arrays)).orderBy(orderBys).getRestriction();
             }
         };

@@ -9,9 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-/**
- * Created by sharp on 2017/6/22 - 18:29
- */
 public interface BdUserDao extends JpaRepository<BdUser, Long>, JpaSpecificationExecutor {
     BdUser findUserById(Long id);
 

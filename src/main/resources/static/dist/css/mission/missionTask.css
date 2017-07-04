@@ -12,6 +12,10 @@ table .tr-class:hover {
     text-align: center;
 }
 
+.table td:hover {
+    cursor: pointer;
+}
+
 .search-reset {
     margin-left: 2px;
 }
@@ -26,6 +30,13 @@ table .tr-class:hover {
 
 .td-op {
     text-align: center;
+}
+
+.td-bz {
+    max-width: 130px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .td-button {
@@ -157,6 +168,7 @@ table .tr-class:hover {
     color: white;
 
 }
-.ispublic{
+
+.ispublic {
     margin-top: -2px;
 }

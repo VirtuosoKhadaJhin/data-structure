@@ -25,7 +25,14 @@ table .tr-class:hover {
 }
 
 .td-bz {
-    word-break: break-all
+    max-width: 130px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.table td:hover {
+    cursor: pointer;
 }
 
 .td-op {

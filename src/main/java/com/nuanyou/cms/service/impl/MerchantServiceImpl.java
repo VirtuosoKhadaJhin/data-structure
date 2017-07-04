@@ -63,7 +63,6 @@ public class MerchantServiceImpl implements MerchantService {
     @Autowired
     private MerchantCollectionCodeService collectionCodeService;
 
-
     private static String key = "getMerchantList";
     @Autowired
     private MyCacheManager<List<Merchant>> cacheManager;
@@ -90,7 +89,6 @@ public class MerchantServiceImpl implements MerchantService {
             cacheManager.addOrUpdateCache(key,merchants);
             return merchants;
         }*/
-
 
     }
 
@@ -157,8 +155,8 @@ public class MerchantServiceImpl implements MerchantService {
                 if (collectionCode == null) {
                     throw new APIException(ResultCodes.CollectionCodeError);
                 }
-                if (collectionCode.getMchId() != null && collectionCode.getMchId() != 0 && (vo.getId()== null || collectionCode.getMchId().longValue() != vo.getId().longValue())) {
-                    throw new APIException(ResultCodes.CollectionCodeExist, MessageFormat.format(ResultCodes.CollectionCodeExist.getMessage(),code,collectionCode.getMchId()));
+                if (collectionCode.getMchId() != null && collectionCode.getMchId() != 0 && (vo.getId() == null || collectionCode.getMchId().longValue() != vo.getId().longValue())) {
+                    throw new APIException(ResultCodes.CollectionCodeExist, MessageFormat.format(ResultCodes.CollectionCodeExist.getMessage(), code, collectionCode.getMchId()));
                 }
             }
         }
@@ -178,7 +176,7 @@ public class MerchantServiceImpl implements MerchantService {
             BeanUtils.copyBean(vo, entity);
             Double latitude_after = entity.getLatitude();
             Double longitude_after = entity.getLongitude();
-            if(!latitude_before.equals(latitude_after) || !longitude_before.equals(longitude_after)){
+            if (!latitude_before.equals(latitude_after) || !longitude_before.equals(longitude_after)) {
                 entity.setLocateExactly(true);
             }
 
@@ -187,13 +185,13 @@ public class MerchantServiceImpl implements MerchantService {
             }
             entity = merchantDao.save(entity);
         }
-        dealCollectionCodes (vo.getCollectionCodeList(),entity);
+        dealCollectionCodes(vo.getCollectionCodeList(), entity);
 
         return BeanUtils.copyBean(entity, new MerchantVO());
     }
 
     @Transactional
-    private void dealCollectionCodes (List<String> codelist,Merchant entity) {
+    private void dealCollectionCodes(List<String> codelist, Merchant entity) {
         List<EntityBdMerchantCollectionCode> collectionCodes = collectionCodeService.findEntityBdMerchantCollectionCodesByMchId(entity.getId());
         List<String> existCodeList = new ArrayList<>();
         List<String> tmp = new ArrayList<>();
@@ -205,7 +203,7 @@ public class MerchantServiceImpl implements MerchantService {
         //unbind code
         for (String tmpCode : tmp) {
             for (EntityBdMerchantCollectionCode collectionCode : collectionCodes) {
-                if (tmpCode.equals(collectionCode.getCollectionCode())){
+                if (tmpCode.equals(collectionCode.getCollectionCode())) {
                     collectionCode.setMchId(null);
                     collectionCode.setUpdateTime(new Date());
                     collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
@@ -229,11 +227,11 @@ public class MerchantServiceImpl implements MerchantService {
                 String countryCode = entity.getDistrict().getCountry().getCode();
                 String target_url = "";
                 if ("TH".equals(countryCode)) {
-                    target_url = sg_url + "?mchid="+ entity.getId() + "&source=qplcid_"+ entity.getId();
+                    target_url = sg_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
                 } else {
-                    target_url = kr_url + "?mchid="+ entity.getId() + "&source=qplcid_"+ entity.getId();
+                    target_url = kr_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
                 }
-                boolean bind_result = collectionCodeService.bindNumberLink(Long.valueOf(code),target_url);
+                boolean bind_result = collectionCodeService.bindNumberLink(Long.valueOf(code), target_url);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -271,14 +269,15 @@ public class MerchantServiceImpl implements MerchantService {
     }
 
     @Override
-    public List<Merchant> findMerchant(final Long city) {
+    public List<Merchant> findMerchantByCountry(final Long country) {
         Specification specification = new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
-                if (city != null) {
-                    predicate.add(cb.equal(root.get("district").get("city").get("id"), city));
+                if (country != null) {
+                    predicate.add(cb.equal(root.get("district").get("country").get("id"), country));
                 }
+                predicate.add(cb.equal(root.get("display"), true));
                 Predicate[] arrays = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(arrays)).getRestriction();
             }
@@ -295,6 +294,7 @@ public class MerchantServiceImpl implements MerchantService {
                 if (district != null) {
                     predicate.add(cb.equal(root.get("district").get("id"), district));
                 }
+                predicate.add(cb.equal(root.get("display"), true));
                 Predicate[] arrays = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(arrays)).getRestriction();
             }

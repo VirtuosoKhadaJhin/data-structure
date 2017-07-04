@@ -65,7 +65,6 @@ $(function () {
                 taskIds.push($(task).attr("task-id"));
             }
         }
-        console.log("taskIds:" + taskIds);
         if (taskIds.length == 0) {
             $(".distributeResult-text").html("<strong style='color: red'>请选择任务！</strong>");
             $(".taskDistributeResultModel").modal('show');
@@ -96,11 +95,12 @@ $(function () {
             $(".distributeResult-text").html("<strong style='color: red'>请选择任务！</strong>");
         } else if (typeof(bdId) == "undefined") {
             $(".distributeResult-text").html("<strong style='color: red'>请选择BD！</strong>");
+            $(".taskDistributeResultModel").modal('show');
         } else {
             var data = {
                 bdId: bdId,
                 taskIds: taskIds,
-                distrDt: distrDt + " 00-00-00"
+                distrDt: distrDt
             };
             console.log(distrDt);
             $.ajax({
