@@ -9,8 +9,7 @@ $(".search-reset").click(function () {
 });
 
 // 删除确认弹窗
-$("#del-bd").on("click", function () {
-    console.log(1);
+$(".del-btn").on("click", function () {
     $(".hide-del-id").val($(this).attr("del-id"));
     $(".deleteModal").modal("show");
 });
@@ -24,11 +23,11 @@ $('.sure-del').on("click", function () {
 // 删除
 $('.second-sure-del').on("click", function () {
     var id = $(".hide-del-id").val();
-
-    var data = {id: Number(id)};
+    console.log(id);
+    var data = {id: id};
     $.ajax({
         url: 'del',
-        data: JSON.stringify(data),
+        data: data,
         type: 'post',
         dataType: 'json',
         contentType: 'application/json',
