@@ -80,6 +80,7 @@ public class Merchant {
     private BigDecimal ratio;
 
 
+    private MerchantCooperationStatus cooperationStatus;
 
     private Boolean locateExactly;
     private List<String> collectionCodeList;
@@ -541,5 +542,15 @@ public class Merchant {
 
     public void setCollectionCodeList(List<String> collectionCodeList) {
         this.collectionCodeList = collectionCodeList;
+    }
+
+    @Column(name = "cooperationstatus")
+    @Enumerated(EnumType.ORDINAL)
+    public MerchantCooperationStatus getCooperationStatus() {
+        return cooperationStatus;
+    }
+
+    public void setCooperationStatus(MerchantCooperationStatus cooperationStatus) {
+        this.cooperationStatus = cooperationStatus;
     }
 }
