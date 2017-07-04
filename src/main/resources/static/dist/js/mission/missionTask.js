@@ -100,7 +100,7 @@ $(function () {
             var data = {
                 bdId: bdId,
                 taskIds: taskIds,
-                distrDt: distrDt + " 00-00-00"
+                distrDt: distrDt
             };
             console.log(distrDt);
             $.ajax({
