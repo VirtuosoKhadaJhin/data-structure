@@ -25,6 +25,6 @@ public class StateTicket {
 
     public boolean isExpired() {
         return (this == null)||
-                (System.currentTimeMillis() - this.createTime.getTime() >= 5*60*1000);
+                (System.currentTimeMillis() - this.createTime.getTime() >= 10*60*1000);
     }
 }

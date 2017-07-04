@@ -17,8 +17,9 @@ public class TicketValidateCleanerImpl {
     @Autowired
     private TicketStateService ticketStateService;
     
-    @Scheduled(fixedRate =30*60*1000 )
+    @Scheduled(fixedRate =12*60*60*1000 )
     public void cleaner(){
+        System.out.println("clean state tickets which is not availavle!");
         Collection<StateTicket> tickets = ticketStateService.getTickets();
         for (StateTicket ticket : tickets) {
             if(ticket.isExpired()){
