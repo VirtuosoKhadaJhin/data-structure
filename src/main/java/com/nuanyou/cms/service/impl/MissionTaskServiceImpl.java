@@ -92,7 +92,8 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 }
                 predicate.add(cb.equal(root.get("delFlag").as(Boolean.class), false));
                 Predicate[] arrays = new Predicate[predicate.size()];
-                return query.where(predicate.toArray(arrays)).getRestriction();
+                ArrayList<Order> orderBys = Lists.newArrayList(cb.desc(root.get("status")));
+                return query.where(predicate.toArray(arrays)).orderBy(orderBys).getRestriction();
             }
         };
         Page<MissionTask> missionTasks = missionTaskDao.findAll(spec, pageable);
