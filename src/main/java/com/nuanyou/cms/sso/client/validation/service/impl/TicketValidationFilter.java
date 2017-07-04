@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Enumeration;
 
+import static com.nuanyou.cms.sso.client.util.ParameterConfig.SSO_USER;
+
 /**
  * 验证ticket的Filter
  */
@@ -30,28 +32,34 @@ import java.util.Enumeration;
 public class TicketValidationFilter extends AbstractFilter {
 
     private static final Logger log = LoggerFactory.getLogger(TicketValidationFilter.class.getSimpleName());
+
+    private  String validateCodeUrl;
+
+    private  Boolean needAutoLogOut=true;
+
+    @Autowired
     private SsoValidatorService ssoValidatorService;
+
     @Autowired
     private TicketStateService ticketStateService;
 
+    public void setValidateCodeUrl(String validateCodeUrl) {
+        this.validateCodeUrl = validateCodeUrl;
+    }
+
+    public void setNeedAutoLogOut(Boolean needAutoLogOut) {
+        this.needAutoLogOut = needAutoLogOut;
+    }
 
     public void init(final FilterConfig filterConfig) throws ServletException {
+        setValidateCodeUrl(getPropertyFromInitParams(filterConfig, "validateCodeUrl", null));
         super.init(filterConfig);
-        setSsoValidatorService(getTicketValidator(filterConfig));
-        CommonUtils.assertNotNull(this.ssoValidatorService, "ssoValidatorService cannot be null.");
     }
 
 
     private static final String[] RESERVED_INIT_PARAMS = new String[]{"validateCodeUrl", "serverName", "service", "artifactParameterName", "serviceParameterName", "encodeServiceUrl", "millisBetweenCleanUps", "hostnameVerifier", "encoding", "config"};
 
-    protected final SsoValidatorService getTicketValidator(final FilterConfig filterConfig) {
-        final String validateCodeUrl = getPropertyFromInitParams(filterConfig, "validateCodeUrl", null);
-        final String needAutoLogOutStr = getPropertyFromInitParams(filterConfig, "needAutoLogOut", null);
-        Boolean needAutoLogOut=new Boolean(needAutoLogOutStr);
-        final SsoValidatorServiceImpl validator = new SsoValidatorServiceImpl(validateCodeUrl,needAutoLogOut);
-        validator.setEncoding(getPropertyFromInitParams(filterConfig, "encoding", null));
-        return validator;
-    }
+
 
 
     /**
@@ -69,7 +77,7 @@ public class TicketValidationFilter extends AbstractFilter {
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        String artifactParameterName = getArtifactParameterName();
+        String artifactParameterName = getTicketParameterName();
         final String ticket = CommonUtils.safeGetParameter(request, artifactParameterName);
         final String state = CommonUtils.safeGetParameter(request, "state");
         if (CommonUtils.isNotBlank(state)) {
@@ -92,7 +100,7 @@ public class TicketValidationFilter extends AbstractFilter {
         if (CommonUtils.isNotBlank(ticket)) {
             log.info("Second Step:Attempting to validate ticket: " + ticket);
             try {
-                final User user = this.ssoValidatorService.validate(ticket, this.getServerName());
+                final User user = this.ssoValidatorService.validate(ticket, this.getServerName(),validateCodeUrl,needAutoLogOut);
                 log.info("Second Step:Successfully authenticated user: " + user);
                 request.setAttribute(SSO_USER, user);
                 log.debug("\n" + "**************************************after validate tgt and st ********************************************");

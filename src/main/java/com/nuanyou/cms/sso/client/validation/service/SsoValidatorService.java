@@ -23,5 +23,5 @@ public interface SsoValidatorService {
 
     public  String constructValidationUrl(final String ticket, final String validateCodeUrl, boolean needAutoLogOut, String serverName);
 
-    User validate(String ticket, String serverName) throws TicketValidationException;
+    User validate(String ticket, String serverName,String validateCodeUrl, Boolean needAutoLogOut) throws TicketValidationException;
 }

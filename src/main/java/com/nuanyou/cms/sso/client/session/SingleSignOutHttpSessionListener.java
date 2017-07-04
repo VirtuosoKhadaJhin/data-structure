@@ -4,6 +4,7 @@ package com.nuanyou.cms.sso.client.session;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSession;
@@ -16,7 +17,10 @@ import javax.servlet.http.HttpSessionListener;
 @WebListener
 public final class SingleSignOutHttpSessionListener implements HttpSessionListener {
 
+
+
 	protected final Log log = LogFactory.getLog(getClass());
+    @Autowired
 	private SessionMappingStorage sessionMappingStorage;
 	
     public void sessionCreated(final HttpSessionEvent event) {
@@ -25,14 +29,9 @@ public final class SingleSignOutHttpSessionListener implements HttpSessionListen
 
     public void sessionDestroyed(final HttpSessionEvent event) {
         System.out.println("HTTP session is destroyed and remove it from the map of managed sessions");
-    	if (sessionMappingStorage == null) {
-    	    sessionMappingStorage = getSessionMappingStorage();
-    	}
         final HttpSession session = event.getSession();
         sessionMappingStorage.removeBySessionById(session.getId());
     }
 
-    protected static SessionMappingStorage getSessionMappingStorage() {
-    	return SingleSignOutFilter.getSingleSignOutHandler().getSessionMappingStorage();
-    }
+
 }

@@ -15,17 +15,16 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class AbstractFilter extends AbstractConfigurationFilter {
 
-    /*放在内存的用户实例标志*/
-    public static final String SSO_USER = "sso_user";
 
     /** 记录日志. */
     protected static final Logger log = LoggerFactory.getLogger(AbstractFilter.class.getSimpleName());
 
     /** 定义这个参数目的是为了寻找生成的code */
-    private String artifactParameterName = "code";
+    private String ticketParameterName = ParameterConfig.ticketParameterName;
 
     /** 寻找service */
-    private String serviceParameterName = "ret";
+    private String serviceParameterName = ParameterConfig.serviceParameterName;
+
 
     /*服务器地址,格式是http/https：hostname:port ,标准的端口号可以不写*/
     private String serverName;
@@ -41,10 +40,6 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
      */
     public  void init(final FilterConfig filterConfig) throws ServletException {
         setServerName(getPropertyFromInitParams(filterConfig, "serverName", null));
-        setArtifactParameterName(getPropertyFromInitParams(filterConfig, "artifactParameterName", "code"));
-        setServiceParameterName(getPropertyFromInitParams(filterConfig, "serviceParameterName", "ret"));
-        CommonUtils.assertNotNull(this.artifactParameterName, "artifactParameterName cannot be null.");
-        CommonUtils.assertNotNull(this.serviceParameterName, "serviceParameterName cannot be null.");
         CommonUtils.assertTrue(CommonUtils.isNotEmpty(this.serverName), "serverName must be set.");
     }
 
@@ -57,7 +52,7 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
     }
 
     protected final String constructServiceUrl(final HttpServletRequest request, final HttpServletResponse response) {
-        return CommonUtils.constructServiceUrl(request, response, this.serverName, this.artifactParameterName);
+        return CommonUtils.constructServiceUrl(request, response, this.serverName, this.ticketParameterName);
     }
 
     /**
@@ -74,8 +69,8 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
     }
 
 
-    public final void setArtifactParameterName(final String artifactParameterName) {
-        this.artifactParameterName = artifactParameterName;
+    public final void setTicketParameterName(final String ticketParameterName) {
+        this.ticketParameterName = ticketParameterName;
     }
 
     public final void setServiceParameterName(final String serviceParameterName) {
@@ -83,8 +78,8 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
     }
 
 
-    public final String getArtifactParameterName() {
-        return this.artifactParameterName;
+    public final String getTicketParameterName() {
+        return this.ticketParameterName;
     }
 
     public final String getServiceParameterName() {

@@ -1,8 +1,11 @@
 package com.nuanyou.cms.sso.client.session;
 
 import com.nuanyou.cms.sso.client.util.CommonUtils;
+import com.nuanyou.cms.sso.client.util.ParameterConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -13,35 +16,18 @@ import javax.servlet.http.HttpSession;
  * @author Felix
  *
  */
+@Service
 public final class SingleSignOutHandler {
 
     private final Log log = LogFactory.getLog(getClass());
-    private SessionMappingStorage sessionMappingStorage = new HashMapBackedSessionMappingStorage();
-    private String artifactParameterName = "ticket";
-    private String logoutParameterName = "logoutRequest";
+    @Autowired
+    private SessionMappingStorage sessionMappingStorage;
+    private final String ticketParameterName = ParameterConfig.ticketParameterName;
+    private final String logoutParameterName = ParameterConfig.logoutParameterName;
 
-
-    public void setSessionMappingStorage(final SessionMappingStorage storage) {
-        this.sessionMappingStorage = storage;
-    }
-
-    public SessionMappingStorage getSessionMappingStorage() {
-        return this.sessionMappingStorage;
-    }
-
-    public void setArtifactParameterName(final String name) {
-        this.artifactParameterName = name;
-    }
-
-    public void setLogoutParameterName(final String name) {
-        this.logoutParameterName = name;
-    }
 
 
     public void init() {
-        CommonUtils.assertNotNull(this.artifactParameterName, "artifactParameterName cannot be null.");
-        CommonUtils.assertNotNull(this.logoutParameterName, "logoutParameterName cannot be null.");
-        CommonUtils.assertNotNull(this.sessionMappingStorage, "sessionMappingStorage cannote be null.");
     }
 
 
@@ -51,7 +37,7 @@ public final class SingleSignOutHandler {
      * @return
      */
     public boolean isTokenRequest(final HttpServletRequest request) {
-        return CommonUtils.isNotBlank(CommonUtils.safeGetParameter(request, this.artifactParameterName));
+        return CommonUtils.isNotBlank(request.getParameter(this.ticketParameterName));
     }
 
     /**
@@ -59,8 +45,8 @@ public final class SingleSignOutHandler {
      *
      */
     public boolean isLogoutRequest(final HttpServletRequest request) {
-        return "GET".equals(request.getMethod()) && !isMultipartRequest(request) &&
-                CommonUtils.isNotBlank(CommonUtils.safeGetParameter(request, this.logoutParameterName));
+        return "GET".equals(request.getMethod())  &&
+                CommonUtils.isNotBlank(request.getParameter(this.logoutParameterName));
     }
 
     /**
@@ -68,7 +54,7 @@ public final class SingleSignOutHandler {
      */
     public void recordSession(final HttpServletRequest request) {
         final HttpSession session = request.getSession(true);
-        final String token = CommonUtils.safeGetParameter(request, this.artifactParameterName);
+        final String token = CommonUtils.safeGetParameter(request, this.ticketParameterName);
         log.debug("Recording session for token " + token);    //根据sessionid 移除 对应的ST 和 session
         this.sessionMappingStorage.removeBySessionById(session.getId());
         sessionMappingStorage.addSessionById(token, session);
@@ -95,9 +81,8 @@ public final class SingleSignOutHandler {
         }
     }
 
-    private boolean isMultipartRequest(final HttpServletRequest request) {
-        return request.getContentType() != null && request.getContentType().toLowerCase().startsWith("multipart");
-    }
+
+
 
 
 }

@@ -2,6 +2,7 @@ package com.nuanyou.cms.sso.client.session;
 
 import com.nuanyou.cms.sso.client.util.AbstractConfigurationFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -17,14 +18,12 @@ import java.util.regex.Pattern;
 @Component
 public final class SingleSignOutFilter extends AbstractConfigurationFilter {
 
-    private static final SingleSignOutHandler handler = new SingleSignOutHandler();
+    @Autowired
+    private  SingleSignOutHandler handler;
     private Pattern urlExcludePattern;
 
     public void init(final FilterConfig filterConfig) throws ServletException {
-        //初始化时得到ticket的name
         System.out.println("initFilter" + this.getClass().getName());
-        handler.setArtifactParameterName(getPropertyFromInitParams(filterConfig, "artifactParameterName", "code"));
-        //handler.setLogoutParameterName(getPropertyFromInitParams(filterConfig, "logoutParameterName", "logoutRequest"));
         handler.init();
     }
 
@@ -52,9 +51,6 @@ public final class SingleSignOutFilter extends AbstractConfigurationFilter {
     public void destroy() {
     }
 
-    protected static SingleSignOutHandler getSingleSignOutHandler() {
-        return handler;
-    }
 
     public final void setUrlExcludePattern(Pattern urlExcludePattern) {
         this.urlExcludePattern = urlExcludePattern;

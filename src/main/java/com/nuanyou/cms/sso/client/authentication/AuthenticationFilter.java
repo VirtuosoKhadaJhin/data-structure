@@ -2,6 +2,7 @@ package com.nuanyou.cms.sso.client.authentication;
 
 import com.nuanyou.cms.sso.client.util.AbstractFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
+import com.nuanyou.cms.sso.client.util.ParameterConfig;
 import com.nuanyou.cms.sso.client.util.RandomUtils;
 import com.nuanyou.cms.sso.client.validation.service.TicketStateService;
 import com.nuanyou.cms.sso.client.validation.vo.StateTicket;
@@ -59,7 +60,7 @@ public class AuthenticationFilter extends AbstractFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        final User user = session != null ? (User) session.getAttribute(SSO_USER) : null;
+        final User user = session != null ? (User) session.getAttribute(ParameterConfig.SSO_USER) : null;
         if (user != null) {
             log.debug("user" + user.toString());
         } else {
@@ -70,8 +71,7 @@ public class AuthenticationFilter extends AbstractFilter {
             return;
         }
         final String serviceUrl = constructServiceUrl(request, response);
-        final String ticket = CommonUtils.safeGetParameter(request, getArtifactParameterName());
-
+        final String ticket =request.getParameter(getTicketParameterName());
         if (CommonUtils.isNotBlank(ticket)) {//有ticket说明客户端已经拿到了ticket 直接去验证
             log.debug("Second Step:ticket found and begin to validate code");
             filterChain.doFilter(request, response);
