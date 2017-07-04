@@ -24,7 +24,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -279,6 +278,22 @@ public class MerchantServiceImpl implements MerchantService {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 if (city != null) {
                     predicate.add(cb.equal(root.get("district").get("city").get("id"), city));
+                }
+                Predicate[] arrays = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(arrays)).getRestriction();
+            }
+        };
+        return merchantDao.findAll(specification);
+    }
+
+    @Override
+    public List<Merchant> findMerchantByDistrict(final Long district) {
+        Specification specification = new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (district != null) {
+                    predicate.add(cb.equal(root.get("district").get("id"), district));
                 }
                 Predicate[] arrays = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(arrays)).getRestriction();

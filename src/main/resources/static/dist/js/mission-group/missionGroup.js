@@ -25,7 +25,6 @@ $('.second-sure-del').on("click", function () {
     var id = $(".hide-del-id").val();
 
     var data = {id: Number(id)};
-    console.log(JSON.stringify(data));
     $.ajax({
         url: 'del',
         data: JSON.stringify(data),
@@ -49,12 +48,13 @@ $('.deleteResultModal').on('hide.bs.modal', function () {
     window.location.reload();
 });
 
+// 新增模块
 function addUsers() {
     var userIds = new Array();
     $(".check-bdUser:checked").each(function (target) {
         userIds.push($(this).val());
     });
-    var groupId = $(".taskDistributeModel .hide-groupId").val();
+    var groupId = $(".addGroupBdModel .hide-groupId").val();
     var requestParam = {
         groupId: groupId,
         userIds: userIds,
@@ -66,26 +66,24 @@ function addUsers() {
         dataType: 'json',
         contentType: 'application/json',
         success: function (result) {
+            $(".addGroupBdResultModel .add-result").val(result.code);
             if (result.code == 0) {
-                alert("操作成功！")
-                $(".taskDistributeModel").modal("hide");
+                $(".addGroupBdModel").modal("hide");
+                $(".addGroupBdResult").text("操作成功！");
+                $(".addGroupBdResultModel").modal("show");
             } else {
-                alert("操作失败，请稍后重试！");
+                $(".addGroupBdModel").modal("hide");
+                $(".addGroupBdResult").text("操作失败！");
+                $(".addGroupBdResultModel").modal("show");
             }
-
         }
     });
 }
 
-/**
- * 指定组长弹窗
- * @param groupId
- * @param countryId
- */
-function distributeLeaderModal(groupId, countryId) {
-    console.log(groupId);
+// 添加BD弹窗
+function addBdUserModal(countryId, groupId) {
     $.ajax({
-        url: 'queryGroupBdUsers',
+        url: 'findNonGroupByCountryId',
         data: JSON.stringify({"groupId": groupId, "countryId": countryId}),
         type: 'post',
         dataType: 'json',
@@ -94,38 +92,30 @@ function distributeLeaderModal(groupId, countryId) {
             if (result.code == 0) {
                 var bdUsers = result.data;
                 var htmlData = "";
-                if (bdUsers.length == 0) {
-                    htmlData = "<strong class='deleteResult' style='margin-left: 20px;font-size: 14px;'>请分配组员</strong>";
-                }
                 for (var i = 0; i < bdUsers.length; i++) {
                     var bdUser = bdUsers[i];
-                    if (bdUser.isLeader) {
-                        htmlData += "<label><input class='check-bdUser-leader' style='margin: 10px;margin-top: 8px;' type='checkbox' data-key='" + bdUser.id + "' value='" + bdUser.id + "' checked='checked' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
-                    } else {
-                        htmlData += "<label><input class='check-bdUser-leader' style='margin: 10px;margin-top: 8px;' type='checkbox' data-key='" + bdUser.id + "' value='" + bdUser.id + "' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
-                    }
+                    htmlData += "<label><input class='check-bdUser' style='margin: 10px;margin-top: 8px;' type='checkbox' data-key='" + bdUser.id + "' value='" + bdUser.id + "' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
                 }
-                $("#listGroupLeaderAddBd").html(htmlData);
-                $(".distributeLeaderModal").modal("show");
-                $(".distributeLeaderModal .hide-groupId").val(groupId);
+                $("#listAddBd").html(htmlData);
+                $(".addGroupBdModel").modal("show");
+                $(".addGroupBdModel .hide-groupId").val(groupId);
             }
-            // Leader单选
-            $(".check-bdUser-leader").on("click", function () {
-                $(".distributeLeaderModal :checkbox").removeAttr("checked");
-                $(this).prop("checked", true);
-                $(".distributeLeaderModal .hide-leaderId").val($(this).attr("data-key"));
-            });
         }
     });
 }
+
+// 添加bduser结果
+$(".addGroupBdResultModel").on("hide.bs.modal", function () {
+    var result = $(".addGroupBdResultModel .add-result").val();
+    if (result == 0 && result != "") {
+        window.location.reload();
+    }
+});
 
 // 指定bdUser为组长
 $(".distributeLeader").on("click", function () {
     var groupId = $(".distributeLeaderModal .hide-groupId").val();
     var leaderId = $(".distributeLeaderModal .hide-leaderId").val();
-
-    console.log("组id：" + groupId);
-    console.log("队长id：" + leaderId);
 
     $.ajax({
         url: 'distributeLeader',
@@ -145,12 +135,16 @@ $(".distributeLeader").on("click", function () {
             }
         }
     });
-
 });
 
-function addBdUserModal(countryId, groupId) {
+/**
+ * 指定组长弹窗
+ * @param groupId
+ * @param countryId
+ */
+function distributeLeaderModal(groupId, countryId) {
     $.ajax({
-        url: 'findBdUserByCountryId',
+        url: 'queryGroupBdUsers',
         data: JSON.stringify({"groupId": groupId, "countryId": countryId}),
         type: 'post',
         dataType: 'json',
@@ -159,21 +153,35 @@ function addBdUserModal(countryId, groupId) {
             if (result.code == 0) {
                 var bdUsers = result.data;
                 var htmlData = "";
-                for (var i = 0; i < bdUsers.length; i++) {
-                    var bdUser = bdUsers[i];
-                    htmlData += "<label><input class='check-bdUser' style='margin: 10px;margin-top: 8px;' type='checkbox' data-key='" + bdUser.id + "' value='" + bdUser.id + "' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
+                if (bdUsers == null) {
+                    htmlData = "<strong class='deleteResult' style='margin-left: 20px;font-size: 14px;'>请分配组员</strong>";
+                } else {
+                    for (var i = 0; i < bdUsers.length; i++) {
+                        var bdUser = bdUsers[i];
+                        if (bdUser.isLeader) {
+                            htmlData += "<label><input class='check-bdUser-leader' style='margin: 10px;margin-top: 8px;' type='checkbox' data-key='" + bdUser.id + "' value='" + bdUser.id + "' checked='checked' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
+                        } else {
+                            htmlData += "<label><input class='check-bdUser-leader' style='margin: 10px;margin-top: 8px;' type='checkbox' data-key='" + bdUser.id + "' value='" + bdUser.id + "' />" + bdUser.name + " / " + (bdUser.dmail == null ? "" : bdUser.dmail) + " </label>";
+                        }
+                    }
                 }
-                $("#listAddBd").html(htmlData);
-                $(".taskDistributeModel").modal("show");
-                $(".taskDistributeModel .hide-groupId").val(groupId);
+                $("#listGroupLeaderAddBd").html(htmlData);
+                $(".distributeLeaderModal").modal("show");
+                $(".distributeLeaderModal .hide-groupId").val(groupId);
             }
+            // Leader单选
+            $(".check-bdUser-leader").on("click", function () {
+                $(".distributeLeaderModal :checkbox").removeAttr("checked");
+                $(this).prop("checked", true);
+                $(".distributeLeaderModal .hide-leaderId").val($(this).attr("data-key"));
+            });
         }
     });
 }
 
 $(document).ready(function () {
-    $(".taskDistributeModel").on("shown.bs.modal", function () {
-        var groupId = $(".taskDistributeModel .hide-groupId").val();
+    $(".addGroupBdModel").on("shown.bs.modal", function () {
+        var groupId = $(".addGroupBdModel .hide-groupId").val();
         $.ajax({
             url: 'findBdUserByGroupId',
             data: JSON.stringify({groupId: Number(groupId)}),
@@ -182,8 +190,9 @@ $(document).ready(function () {
             contentType: 'application/json',
             success: function (result) {
                 if (result.code == 0) {
+                    console.log($(".addGroupBdModel .check-bdUser").length);
                     for (var itemNum in result.data) {
-                        $(".taskDistributeModel .check-bdUser[data-key=" + result.data[itemNum] + "]").prop("checked", true);
+                        $(".addGroupBdModel .check-bdUser[data-key=" + result.data[itemNum] + "]").prop("checked", true);
                     }
                 }
             }

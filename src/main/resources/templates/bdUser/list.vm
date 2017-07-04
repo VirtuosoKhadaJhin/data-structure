@@ -1,136 +1,150 @@
-#parse("common/list_start.vm")
-<div id="breadcrumb">
-    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
-        主页</a>
-    <a href="list" class="tip-bottom" data-original-title="">BD用户管理</a>
-    <a href="#" class="tip-bottom" data-original-title="">列表</a>
-</div>
-<div class="widget-title">
-    <span class="icon"><i class="icon-th"></i></span>
-    <h5>BD用户列表</h5>
-    <a class="btn btn-mini btn-info buttons" href="add">新增</a>
-#*<a class="btn btn-mini btn-info buttons" onclick="langsCommonDialog()">通用新增</a>*#
-</div>
-<style>
-    .tdInput {
-        width: 75%;
-    }
-
-    .text-gray {
-        background-color: grey;
-    }
-
-    #select2-categoryId-xe-container {
-        min-width: 180px;
-    }
-
-    .td-update-time {
-        min-width: 120px;
-    }
-
-    .td-sort {
-        min-width: 60px;
-    }
-</style>
-<div style="width: 100%">
-    <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
-        <thead role="row">
-        <tr>
-            <th>ID</th>
-            <th>用户名</th>
-            <th>中文名</th>
-            <th>所属国家</th>
-            <th>合同归档邮箱</th>
-            <th>钉钉邮箱</th>
-            <th>角色</th>
-            <th>创建时间</th>
-            <th>更新时间</th>
-            <th>操作</th>
-
-        </tr>
-        </thead>
-        <tbody>
-            #if ($null.isNull($page.content) || $page.content.size()==0)
-            <tr>
-                <td colspan="11" style="text-align:center;">
-                    <div class="no-result-div"
-                         style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
-                        <p>！</p>
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+    #include("common/js-support.vm")
+    <script src="/dist/js/page-support.js"></script>
+    <script src="/dist/js/bd-user/bdUser.js"></script>
+    <link href="/dist/css/bd-user/bdUser.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="content" class="content-container">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10">
+                <div class="widget-box">
+                    <div class="widget-content nopadding">
+                        <div id="breadcrumb">
+                            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
+                                主页</a>
+                            <a href="list" class="tip-bottom" data-original-title="">BD用户管理</a>
+                            <a href="#" class="tip-bottom" data-original-title="">列表</a>
+                        </div>
+                        <div class="widget-title">
+                            <span class="icon"><i class="icon-th"></i></span>
+                            <h5>BD用户列表</h5>
+                            <a class="btn btn-mini btn-info buttons" href="add">新增</a>
+                        </div>
+                        <div>
+                            <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+                                <thead role="row">
+                                <tr>
+                                    <th>序号</th>
+                                    <th>用户名</th>
+                                    <th>中文名</th>
+                                    <th>所属国家</th>
+                                    <th>合同归档邮箱</th>
+                                    <th>钉钉邮箱</th>
+                                    <th>角色</th>
+                                    <th>创建时间</th>
+                                    <th>更新时间</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    #if ($null.isNull($page.content) || $page.content.size()==0)
+                                    <tr>
+                                        <td colspan="10">
+                                            <div class="no-result-div">
+                                                <p>暂无BD用户</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    #end
+                                    #foreach($vo in $!page.content)
+                                    <tr class="odd gradeX">
+                                        <td class="td-id">
+                                            <label class="td-label">$!{velocityCount}</label>
+                                        </td>
+                                        <td class="td-name">
+                                            <label class="td-label">$!vo.name</label>
+                                        </td>
+                                        <td class="td-chineseName">
+                                            <label class="td-label">$!vo.chineseName</label>
+                                        </td>
+                                        <td class="td-country-name">
+                                            <label class="td-label">$!vo.country.name</label>
+                                        </td>
+                                        <td class="td-email">
+                                            <label class="td-label">$!vo.email</label>
+                                        </td>
+                                        <td class="td-dmail">
+                                            <label class="td-label">$!vo.dmail</label>
+                                        </td>
+                                        <td class="td-role-desc">
+                                            <label class="td-label">$!vo.role.desc</label>
+                                        </td>
+                                        <td class="td-createTime">
+                                            <label class="td-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createTime)</label>
+                                        </td>
+                                        <td class="td-sort">
+                                            <label class="td-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateTime)</label>
+                                        </td>
+                                        <td class="td-op">
+                                            <div class="td-op-div">
+                                                <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item"
+                                                   href="edit?id=$!vo.id">编辑</a>
+                                                <a class="btn btn-danger btn-mini" href="del?id=$!vo.id">删除</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </td>
-            </tr>
-            #end
-
-            #foreach($vo in $!page.content)
-            <tr class="odd gradeX">
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.id</label>
-                </td>
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.name</label>
-                </td>
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.chineseName</label>
-                </td>
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.country.name</label>
-                </td>
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.email</label>
-                </td>
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.dmail</label>
-                </td>
-                <td class="td-sort">
-                    <label style="text-align: center;">$!vo.role.desc</label>
-                </td>
-                <td class="td-sort">
-                ##                    <label style="text-align: center;">$!vo.createTime</label>
-                    <label style="text-align: center;">$!dateFormatter.format(
-                        "yyyy-MM-dd HH:mm:ss",$!vo.createTime)</label>
-                </td>
-                <td class="td-sort">
-                ##                    <label style="text-align: center;">$!vo.updateTime</label>
-                    <label style="text-align: center;">$!dateFormatter.format(
-                        "yyyy-MM-dd HH:mm:ss",$!vo.updateTime)</label>
-                </td>
-
-                <td style="min-width: 80px;">
-                    <div style="text-align: center">
-                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item"
-                           href="edit?id=$!vo.id">编辑</a>
-                        <a style="background red" key-code="$!vo.id"
-##                           class="btn btn-danger btn-primary btn-mini modify-item" href="del?id=$!vo.id">删除</a>
-                           class="btn btn-danger btn-primary btn-mini modify-item" href="del?id=$!vo.id">删除</a>
+                </div>
+                #set($i=$!page.number + 1)
+                <div class="pagination" style="float:right">
+                    <ul total="$!page.totalPages" index="$!i"></ul>
+                </div>
+            </div>
+            <div class="span2">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"><i class="icon-list"></i></span>
+                        <h5>筛选列表</h5>
                     </div>
-                </td>
+                    <div class="widget-content">
+                        <form class="form-horizontal search-form" method="get">
+                            <div class="search-select">
+                                <label>所属国家：</label>
+                                <select class="span11" name="country">
+                                    <option value>全部</option>
+                                    #foreach($e in $!countrys)
+                                        <option value="$!e" #if($!e.key == $!requestVo.country.id) selected #end>$!e.value</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>用户名：</label>
+                                <input type="text" class="span11" name="name" value="$!requestVo.name" placeholder="用户名">
+                            </div>
+                            <div class="search-select">
+                                <label>中文名：</label>
+                                <input type="text" class="span11" name="chineseName" value="$!requestVo.chineseName" placeholder="中文名">
+                            </div>
+                            <div class="search-select">
+                                <label>钉钉邮箱：</label>
+                                <input type="text" class="span11" name="dmail" value="$!requestVo.dmail" placeholder="钉钉邮箱">
+                            </div>
+                            <div class="btn-group">
+                                <input type="hidden" name="isAudit" value="false"/>
+                                <button type="submit" class="btn btn-primary">查询</button>
+                                <button class="btn btn-warning search-reset">重置</button>
+                            </div>
+                        </form>
 
-            </tr>
-                #set($sort = $sort + 1)
-            #end
-        </tbody>
-    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-
-#parse("common/list_mid.vm")
-##<form class="form-horizontal search-form" method="get" action="list">
-##    <div class="control-group" style="clear: both;margin-top: 10px;">
-##        <button type="submit" class="btn btn-primary">查询</button>
-##        <button class="btn btn-warning search-reset">重置</button>
-##    </div>
-##</form>
-
-#parse("common/list_end.vm")
-
-##重置
-<script>
-    $(".search-reset").click(function () {
-        $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
-        $(".search-form").find(".select2").val('').trigger('change');
-    });
-
-</script>
+</body>
+</html>
 
 
 

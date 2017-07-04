@@ -2,6 +2,15 @@
  * Created by mylon on 2017/6/28.
  */
 $(function () {
+    // 国家二级联动城市
+    $(".select-country").on("change", function () {
+        var countryId = $(this).val();
+        var showCity = $(".select-city").find("country-id:" + countryId + "")
+        console.log(showCity);
+        $(showCity).trigger("change");
+
+    });
+
     // 改变任务状态
     $(".task-status").on("change", function () {
         if ($(this).val() != "FINISHED") {
@@ -16,11 +25,6 @@ $(function () {
         $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
         $(".search-form").find(".select2").val('').trigger('change');
         // $(".select-country").val("1");
-    });
-
-    // 改变国家
-    $(".select-country").on("change", function () {
-        location.href = "list?country=" + $(this).val();
     });
 
     // 审批弹窗

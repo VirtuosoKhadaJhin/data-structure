@@ -1,13 +1,10 @@
 package com.nuanyou.cms.service;
 
 import com.nuanyou.cms.entity.BdUser;
-import com.nuanyou.cms.entity.City;
-import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.MissionGroup;
 import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.model.MissionGroupParamVo;
 import com.nuanyou.cms.model.MissionGroupVo;
-
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -26,10 +23,6 @@ public interface MissionGroupService {
      * @return
      */
     Page<MissionGroupVo> findAllGroups(final MissionGroupVo requestVo);
-
-    List<Country> findAllCountries();
-
-    List<City> findAllCities();
 
     /**
      * 保存战队信息
@@ -63,14 +56,6 @@ public interface MissionGroupService {
     MissionGroup findGroupByUserId(Long userId);
 
     /**
-     * 根据groupId更新任务对bduser可见
-     *
-     * @param id
-     * @return
-     */
-    Boolean updateIsPublicByGroupId(Long id);
-
-    /**
      * 通过id找到组
      *
      * @param id
@@ -78,7 +63,13 @@ public interface MissionGroupService {
      */
     MissionGroup findGroupById(Long id);
 
-    void updateGroup(String id, MissionGroupParamVo paramVo);
+    /**
+     * 更新组
+     *
+     * @param id
+     * @param paramVo
+     */
+    void updateGroup(Long id, MissionGroupParamVo paramVo);
 
     /**
      * 通过id删除组
@@ -89,22 +80,19 @@ public interface MissionGroupService {
     Boolean delGroupById(Long id);
 
     /**
-     * 查询可分配组的bdUser
+     * 查询可分配组的bdUser（没有组的BdUser）
      *
      * @param countryId
      * @param groupId
      * @return
      */
-    List<BdUser> findBdUsersByCountryId(Long countryId, Long groupId);
+    List<BdUser> findNonGroupByCountryId(Long countryId, Long groupId);
 
     /**
-     * 给战队添加成员
-     *
-     * @param bDUserIds
-     * @param groupId
+     * 查询所有国家id可分配组的bdUser（没有组的BdUser）
      * @return
      */
-    Boolean addGroupBdUser(Long[] bDUserIds, Long groupId);
+    List<BdUser> findAllBdUserNonGroup();
 
     /**
      * 更新组是否可见
@@ -147,4 +135,13 @@ public interface MissionGroupService {
      * @return
      */
     Boolean distributeLeader(Long groupId, Long leaderId);
+
+    /**
+     * 校验战队名称是否唯一
+     *
+     * @param groupId
+     * @param name
+     * @return
+     */
+    List<MissionGroup> checkGroupUnique(Long groupId, String name);
 }

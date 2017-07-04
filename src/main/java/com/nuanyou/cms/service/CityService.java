@@ -16,4 +16,6 @@ public interface CityService {
     City saveNotNull(City entity);
 
     List<City> findCityByCountryId(Long countryId);
+
+    List<City> findAllCities();
 }

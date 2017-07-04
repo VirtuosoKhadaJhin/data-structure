@@ -4,23 +4,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>暖游 后台管理系统 菜单管理</title>
-
     #include("common/css-support.vm")
-
-    <style>
-
-
-    </style>
+    <link href="/dist/css/mission-group/missionAdd.css" rel="stylesheet"/>
 </head>
 <body>
 <div id="content">
     <div id="content-header">
         <div id="breadcrumb">
             <div id="breadcrumb">
-                <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i
-                        class="icon-home"></i> 主页</a>
+                <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
                 <a href="list" class="tip-bottom" data-original-title="">战队管理</a>
-                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
+                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">新增</a>
             </div>
         </div>
 
@@ -28,97 +22,102 @@
             <div class="row-fluid">
                 <div class="span6">
                     <div class="widget-box">
-                        <div class="widget-title"><span class="icon"> <i
-                                class="icon-align-justify"></i> </span>
-                            <h5>编辑&查看</h5>
+                        <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                            <h5>编辑战队</h5>
                         </div>
-                        <form class="form-horizontal" action="saveEdit" method="post"
-                              onsubmit="return emailChekc()">
-
-                            <div class="nopadding" style="width: 100%;">
+                        <div class="form-horizontal">
+                            <div class="nopadding">
                                 <div>
-                                #*<div class="control-group">*#
-
-                                    <div class="">
-                                        <label class="control-label"
-                                               style="width: 140px;">id：</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" name="id" id="id" type="text"
-                                                   class="span7"
-                                                   readonly="readonly" style="width: 80%"
-                                                   value="$!group.id">
+                                    <div>
+                                        <label class="control-label my-label">战队名称：</label>
+                                        <div class="controls my-controls">
+                                            <input class="span10 name" type="text" value="$!group.name" placeholder="战队名称"/>
                                         </div>
                                     </div>
-                                    <div class="">
-                                        <label class="control-label"
-                                               style="width: 140px;">战队名称：</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" name="name" id="name" type="text"
-                                                   class="span7"
-                                                   style="width: 80%" value="$!group.name">
-                                        </div>
-                                    </div>
-                                    <div class="">
-                                        <label class="control-label"
-                                               style="width: 140px;">国家：</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <select name="countryId" style="width:80%">
+                                    <div>
+                                        <label class="control-label my-label">国家：</label>
+                                        <div class="controls my-controls">
+                                            <select class="span10 select-country">
+                                                <option class="country-unit" value>请选择国家</option>
                                                 #foreach($country in $!countries)
-                                                    <option value="$!country.id" #if($!group.country.id==$!country.id) selected  #end>$!country.name</option>
+                                                    <option value="$!country.id" #if($!group.country.id == $!country.id) selected #end>$!country.name</option>
                                                 #end
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="">
-                                        <label class="control-label"
-                                               style="width: 140px;">城市：</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <select name="cityId" style="width:80%">
+                                    <div>
+                                        <label class="control-label my-label">城市：</label>
+                                        <div class="controls my-controls">
+                                            <select class="span10 select-city">
+                                                <option class="city-unit" value>请选择城市</option>
                                                 #foreach($city in $!cities)
-                                                    <option value="$!city.id" #if($!group.city.id==$!city.id) selected  #end>$!city.name</option>
+                                                    <option value="$!city.id" class="option-city" country-id="$!city.country.id" #if($!group.city.id == $!city.id) selected #end>$!city.name</option>
                                                 #end
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="">
-                                        <label class="control-label"
-                                               style="width: 140px;">描述：</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" name="desc" id="desc" type="text"
-                                                   class="span7"
-                                                   style="width: 80%" value="$!group.desc">
+                                    <div>
+                                        <label class="control-label my-label">队长：</label>
+                                        <div class="controls my-controls">
+                                            <select class="span10 leader">
+                                                <option value>请选择队长</option>
+                                                #foreach($bdUser in $!nonGroupUsers)
+                                                    <option value="$!bdUser.id" #if($!group.leader.id == $!bdUser.id) selected #end>$!bdUser.chineseName</option>
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="control-label my-label">副队长：</label>
+                                        <div class="controls my-controls">
+                                            <select class="span10 viceleader">
+                                                <option value>请选择副队长</option>
+                                                #foreach($bdUser in $!nonGroupUsers)
+                                                    <option value="$!bdUser.id" #if($!group.viceLeader.id == $!bdUser.id) selected #end>$!bdUser.chineseName</option>
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="control-label my-label">描述：</label>
+                                        <div class="controls my-controls">
+                                            <textarea class="span10 desc" rows="5" placeholder="描述">$!group.desc</textarea>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-actions" style="clear:both;text-align: center">
-                                ##  默认不可见
+                                <div class="form-actions" style="text-align: center">
                                     <input type="hidden" name="isPublic" value="0"/>
-                                    <button type="submit" class="btn btn-info">确定</button>
-                                    <a class="btn btn-primary" href="list">返回</a>
+                                    <input type="hidden" name="groupId" value="$!group.id"/>
+                                    <input type="hidden" value="$!group.id" class="groupId"/>
+                                    <a class="btn btn-success edit-group">
+                                        <i class="icon-edit"> 确定</i>
+                                    </a>
+                                    <a class="btn btn-primary my-button" href="list">
+                                        <i class="icon-repeat"> 返回</i>
+                                    </a>
                                 </div>
-                        </form>
-
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
+    <!-- 修改战队结果 -->
+    <div class="modal hide fade editGroupResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 id="myModalLabel">修改战队结果</h4>
+        </div>
+        <div class="modal-body">
+            <strong class="editGroupModal" style="margin-left: 20px;font-size: 14px;"></strong>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" class="edit-result" value="" />
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
+    </div>
     #include("common/js-support.vm")
-
-    <script type="text/javascript">
-        //邮箱验证
-        function emailChekc() {
-            var email = document.getElementsByName("email")[0].value;
-//            var reg = /^([a-z0-9A-Z]+[-|\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\.)+[a-zA-Z]{2,}$/;
-            var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/;
-            var res = reg.test(email);
-            if (res == false) {
-                alert("邮箱规则错误，请输入正确的邮箱");
-            }
-
-            return res;
-        }
-    </script>
+    <script src="/dist/js/mission-group/missionGroupEdit.js"></script>
 </body>
 </html>

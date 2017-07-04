@@ -23,6 +23,7 @@ public class MissionGroupVo {
     private Date updateDt;
     private Byte delFlag;
     private BdUser leader;
+    private BdUser viceLeader;
 
     Integer index = 1;
     Integer pageNum = 20;
@@ -110,6 +111,14 @@ public class MissionGroupVo {
 
     public void setLeader(BdUser leader) {
         this.leader = leader;
+    }
+
+    public BdUser getViceLeader() {
+        return viceLeader;
+    }
+
+    public void setViceLeader(BdUser viceLeader) {
+        this.viceLeader = viceLeader;
     }
 
     public Integer getIndex() {

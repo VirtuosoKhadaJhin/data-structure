@@ -128,8 +128,7 @@
 </form>
 
 <!-- 添加成员弹窗 -->
-<div class="modal hide fade taskDistributeModel" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal hide fade taskDistributeModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="myModalLabel">添加成员</h3>
@@ -147,7 +146,7 @@
 </div>
 
 <!-- 删除确认弹窗 -->
-<div class="modal hide fade deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal hide fade deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h4 id="myModalLabel">删除提示</h4>
@@ -163,7 +162,7 @@
 </div>
 
 <!-- 删除确认二次确认弹窗 -->
-<div class="modal hide fade secondDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal hide fade secondDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h4 id="myModalLabel">删除提示</h4>
@@ -178,7 +177,7 @@
 </div>
 
 <!-- 删除结果 -->
-<div class="modal hide fade deleteResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal hide fade deleteResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h4 id="myModalLabel">删除提示</h4>
@@ -192,8 +191,7 @@
 </div>
 
 <!-- 指定组长 -->
-<div class="modal hide fade distributeLeaderModal" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal hide fade distributeLeaderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="myModalLabel">指定组长</h3>
@@ -207,12 +205,12 @@
         <input type="hidden" class="hide-groupId"/>
         <input type="hidden" class="hide-leaderId"/>
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-        <button class="btn btn-primary distributeLeader" >确认</button>
+        <button class="btn btn-primary distributeLeader">确认</button>
     </div>
 </div>
 
 <!-- 指定组长结果 -->
-<div class="modal hide fade distributeLeaderResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal hide fade distributeLeaderResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h4 id="myModalLabel">指定组长</h4>

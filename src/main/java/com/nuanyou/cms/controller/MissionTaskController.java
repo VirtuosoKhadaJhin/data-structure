@@ -51,7 +51,7 @@ public class MissionTaskController {
     private MissionTaskService missionTaskService;
 
     @Autowired
-    private BdUserManagerService bdUserService;
+    private BdUserService bdUserService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -156,5 +156,44 @@ public class MissionTaskController {
     public APIResult distributeTask(@RequestBody MissionDistributeParamVo vo) {
         missionTaskService.distributeTask(vo);
         return new APIResult(ResultCodes.Success);
+    }
+
+    /**
+     * 获取国家下的城市
+     *
+     * @param country
+     * @return
+     */
+    @RequestMapping("findCityByCountry")
+    @ResponseBody
+    public APIResult findCityByCountry(Long country) {
+        List<City> cities = cityService.findCityByCountryId(country);
+        return new APIResult(cities);
+    }
+
+    /**
+     * 根据城市获取商家
+     *
+     * @param city
+     * @return
+     */
+    @RequestMapping("findMerchantByCity")
+    @ResponseBody
+    public APIResult findMerchantByCity(Long city) {
+        List<Merchant> merchants = merchantService.findMerchant(city);
+        return new APIResult(merchants);
+    }
+
+    /**
+     * 根据商圈获取商家
+     *
+     * @param district
+     * @return
+     */
+    @RequestMapping("findMerchantByDistrict")
+    @ResponseBody
+    public APIResult findMerchantByDistrict(Long district) {
+        List<Merchant> merchants = merchantService.findMerchantByDistrict(district);
+        return new APIResult(merchants);
     }
 }

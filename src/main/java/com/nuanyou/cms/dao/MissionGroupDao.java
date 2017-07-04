@@ -21,7 +21,7 @@ public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaS
      *
      * @return
      */
-    @Query(value = "SELECT t from MissionGroup t where delflag=0")
+    @Query(value = "SELECT t from MissionGroup t where t.delFlag=0")
     List<MissionGroup> findAllGroup();
     /**
      * 通过组长查找组
@@ -53,9 +53,14 @@ public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaS
     @Query("UPDATE MissionGroup set leaderId=?1 where id=?2")
     void updateLeaderByGroupId(BdUser leader, Long groupId);
 
-    @Query("SELECT t from MissionGroup t where city.id=?1 and delflag=0")
+    @Query("SELECT t from MissionGroup t where t.city.id=?1 and t.delFlag=0")
     List<MissionGroup> findGroupsByCityId(Long city);
 
-    @Query("SELECT t from MissionGroup t where country.id=?1 and delflag=0")
+    @Query("SELECT t from MissionGroup t where t.country.id=?1 and t.delFlag=0")
     List<MissionGroup> findGroupsByCountryId(Long country);
+
+    List<MissionGroup> findByName(String name);
+
+    @Query(value = "select t from MissionGroup t where t.name=?2 and t.id != ?1")
+    List<MissionGroup> findByNameNonGroup(Long groupId, String name);
 }
