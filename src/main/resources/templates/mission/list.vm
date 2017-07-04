@@ -166,12 +166,10 @@
                                 </select>
                             </div>
 
-                            #if($!requestVo.status.key == 3 || $!requestVo.status.key == 4)
-                                <div class="search-select task-status-time" id="sh-date">
-                                    <label>审核时间：</label>
-                                    <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
-                                </div>
-                            #end
+                            <div class="search-select task-status-time" id="sh-date">
+                                <label>审核时间：</label>
+                                <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
+                            </div>
 
                             <div class="search-select">
                                 <label>完成时间：</label>
