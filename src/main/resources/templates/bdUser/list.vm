@@ -86,8 +86,12 @@
                                         </td>
                                         <td class="td-op">
                                             <div style="text-align: center">
-                                                <a class="btn btn-primary btn-mini" href="edit?id=$!vo.id">编辑</a>
-                                                <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn">删除</button>
+                                                <a class="btn btn-primary btn-mini" href="edit?id=$!vo.id">
+                                                    <i class="icon-edit"> 编辑</i>
+                                                </a>
+                                                <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn">
+                                                    <i class="icon-ban-circle"> 删除</i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -108,13 +112,13 @@
                         <h5>筛选列表</h5>
                     </div>
                     <div class="widget-content">
-                        <form class="form-horizontal search-form" method="get">
+                        <form class="form-horizontal search-form" action="list" method="get">
                             <div class="search-select">
                                 <label>所属国家：</label>
-                                <select class="span11" name="country">
+                                <select class="span11" name="conturyid">
                                     <option value>全部</option>
-                                    #foreach($e in $!countrys)
-                                        <option value="$!e" #if($!e.key == $!requestVo.country.id) selected #end>$!e.value</option>
+                                    #foreach($e in $!allCountries)
+                                        <option value="$!e.id" #if($!e.id == $!requestVo.conturyid) selected #end>$!e.name</option>
                                     #end
                                 </select>
                             </div>
