@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.nuanyou.cms.sso.client.validation.impl;
+package com.nuanyou.cms.sso.client.validation.exception;
 
 /**
  * ticket验证失效

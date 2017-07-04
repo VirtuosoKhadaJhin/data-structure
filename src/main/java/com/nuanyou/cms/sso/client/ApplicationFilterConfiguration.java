@@ -3,7 +3,7 @@ package com.nuanyou.cms.sso.client;
 import com.nuanyou.cms.sso.client.authentication.AuthenticationFilter;
 import com.nuanyou.cms.sso.client.session.SingleSignOutFilter;
 import com.nuanyou.cms.sso.client.util.UserThreadLocalFilter;
-import com.nuanyou.cms.sso.client.validation.impl.TicketValidationFilter;
+import com.nuanyou.cms.sso.client.validation.service.impl.TicketValidationFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

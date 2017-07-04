@@ -1,6 +1,7 @@
-package com.nuanyou.cms.sso.client.validation;
+package com.nuanyou.cms.sso.client.validation.service;
 
-import com.nuanyou.cms.sso.client.validation.impl.TicketValidationException;
+import com.nuanyou.cms.sso.client.validation.exception.TicketValidationException;
+import com.nuanyou.cms.sso.client.validation.vo.User;
 
 import java.net.URL;
 

@@ -1,12 +1,13 @@
 
-package com.nuanyou.cms.sso.client.validation.impl;
+package com.nuanyou.cms.sso.client.validation.service.impl;
 
 
 import com.nuanyou.cms.sso.client.util.AbstractFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
-import com.nuanyou.cms.sso.client.validation.SsoValidatorService;
-import com.nuanyou.cms.sso.client.validation.TicketStateService;
-import com.nuanyou.cms.sso.client.validation.User;
+import com.nuanyou.cms.sso.client.validation.service.SsoValidatorService;
+import com.nuanyou.cms.sso.client.validation.service.TicketStateService;
+import com.nuanyou.cms.sso.client.validation.vo.User;
+import com.nuanyou.cms.sso.client.validation.exception.TicketValidationException;
 import com.nuanyou.cms.sso.client.validation.vo.StateTicket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

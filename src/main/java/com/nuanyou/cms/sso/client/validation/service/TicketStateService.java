@@ -1,4 +1,4 @@
-package com.nuanyou.cms.sso.client.validation;
+package com.nuanyou.cms.sso.client.validation.service;
 
 
 import com.nuanyou.cms.sso.client.validation.vo.StateTicket;
@@ -10,7 +10,6 @@ import java.util.Collection;
  */
 public interface TicketStateService {
     public void addTicket(StateTicket ticket);
-    public StateTicket getTicket(String code, Class<? extends StateTicket> clazz);
     public StateTicket getTicket(String code);
     public boolean deleteTicket(String code);
     public Collection<StateTicket> getTickets();

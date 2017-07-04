@@ -2,8 +2,8 @@ package com.nuanyou.cms.sso.client.authentication;
 
 import com.nuanyou.cms.sso.client.util.AbstractFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
-import com.nuanyou.cms.sso.client.validation.TicketStateService;
-import com.nuanyou.cms.sso.client.validation.User;
+import com.nuanyou.cms.sso.client.validation.service.TicketStateService;
+import com.nuanyou.cms.sso.client.validation.vo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

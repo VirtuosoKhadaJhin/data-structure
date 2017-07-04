@@ -1,6 +1,6 @@
-package com.nuanyou.cms.sso.client.validation.impl;
+package com.nuanyou.cms.sso.client.validation.service.impl;
 
-import com.nuanyou.cms.sso.client.validation.TicketStateService;
+import com.nuanyou.cms.sso.client.validation.service.TicketStateService;
 import com.nuanyou.cms.sso.client.validation.vo.StateTicket;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -30,10 +30,6 @@ public  class StateTicketServiceImpl implements TicketStateService{
 
     }
 
-    @Override
-    public StateTicket getTicket(String code, Class<? extends StateTicket> clazz) {
-        return null;
-    }
 
     @Override
     public StateTicket getTicket(String code) {
