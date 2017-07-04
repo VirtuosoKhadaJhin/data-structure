@@ -105,8 +105,8 @@ public class DateUtils {
      */
     public static Pair<Date, Date> getDayStartEndTime(Date date) {
         DateTime dateTime = new DateTime();
-        Date startDate = dateTime.withTimeAtStartOfDay().toDate();
-        Date endDate = dateTime.plusDays(1).withTimeAtStartOfDay().minusSeconds(1).toDate();
+        Date startDate = dateTime.minusDays(1).withTimeAtStartOfDay().toDate();
+        Date endDate = dateTime.withTimeAtStartOfDay().minusSeconds(1).toDate();
         return Pair.of(startDate, endDate);
     }
 }
