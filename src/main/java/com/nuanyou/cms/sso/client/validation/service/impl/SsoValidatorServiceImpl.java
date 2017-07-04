@@ -27,7 +27,6 @@ public class SsoValidatorServiceImpl implements SsoValidatorService {
 
     private  Boolean needAutoLogOut;
 
-    private Map<String,String> customParameters;
 
     private String encoding;
 
@@ -43,13 +42,6 @@ public class SsoValidatorServiceImpl implements SsoValidatorService {
         return validateCodeUrl;
     }
 
-    public Map<String, String> getCustomParameters() {
-        return customParameters;
-    }
-
-    public void setCustomParameters(Map<String, String> customParameters) {
-        this.customParameters = customParameters;
-    }
 
     public String getEncoding() {
         return encoding;
@@ -111,24 +103,16 @@ public class SsoValidatorServiceImpl implements SsoValidatorService {
     @Override
     public final String constructValidationUrl(final String ticket, final String validateCodeUrl, boolean needAutoLogOut, String serverName) {
         final Map<String,String> urlParameters = new HashMap<String,String>();
-
         urlParameters.put("code", ticket);
         if(needAutoLogOut){
-            urlParameters.put("callback",encodeUrl(serverName+"?logoutRequest"+ticket) );
+            urlParameters.put("callback",encodeUrl(serverName+"?logoutRequest="+ticket) );
         }
-        //urlParameters.put("ret", encodeUrl(serviceUrl));
-
-
         final StringBuilder buffer = new StringBuilder();
-
-        int i = 0;
-
         buffer.append(validateCodeUrl);
-
+        int i = 0;
         for (Map.Entry<String,String> entry : urlParameters.entrySet()) {
             final String key = entry.getKey();
             final String value = entry.getValue();
-
             if (value != null) {
                 buffer.append(i++ == 0 ? "?" : "&");
                 buffer.append(key);

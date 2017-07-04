@@ -4,11 +4,11 @@ package com.nuanyou.cms.sso.client.validation.service.impl;
 
 import com.nuanyou.cms.sso.client.util.AbstractFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
+import com.nuanyou.cms.sso.client.validation.exception.TicketValidationException;
 import com.nuanyou.cms.sso.client.validation.service.SsoValidatorService;
 import com.nuanyou.cms.sso.client.validation.service.TicketStateService;
-import com.nuanyou.cms.sso.client.validation.vo.User;
-import com.nuanyou.cms.sso.client.validation.exception.TicketValidationException;
 import com.nuanyou.cms.sso.client.validation.vo.StateTicket;
+import com.nuanyou.cms.sso.client.validation.vo.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.Enumeration;
 
 /**
  * 验证ticket的Filter
@@ -32,7 +33,6 @@ public class TicketValidationFilter extends AbstractFilter {
     private SsoValidatorService ssoValidatorService;
     @Autowired
     private TicketStateService ticketStateService;
-//    private boolean needAutoLogOut = false;
 
 
     public void init(final FilterConfig filterConfig) throws ServletException {
@@ -50,15 +50,6 @@ public class TicketValidationFilter extends AbstractFilter {
         Boolean needAutoLogOut=new Boolean(needAutoLogOutStr);
         final SsoValidatorServiceImpl validator = new SsoValidatorServiceImpl(validateCodeUrl,needAutoLogOut);
         validator.setEncoding(getPropertyFromInitParams(filterConfig, "encoding", null));
-        final Map<String, String> additionalParameters = new HashMap<String, String>();
-        final List<String> params = Arrays.asList(RESERVED_INIT_PARAMS);
-        for (final Enumeration<?> e = filterConfig.getInitParameterNames(); e.hasMoreElements(); ) {
-            final String s = (String) e.nextElement();
-            if (!params.contains(s)) {
-                additionalParameters.put(s, filterConfig.getInitParameter(s));
-            }
-        }
-        validator.setCustomParameters(additionalParameters);
         return validator;
     }
 
@@ -88,11 +79,9 @@ public class TicketValidationFilter extends AbstractFilter {
                 throw new ServletException("stateTicket不存在");
             }
             try {
-                synchronized (stateTicket) {
                    if (stateTicket.isExpired()) {
                        throw new ServletException("stateTicket已经过期");
                     }
-               }
             } catch (Exception e) {
                 throw new ServletException(e);
             } finally {

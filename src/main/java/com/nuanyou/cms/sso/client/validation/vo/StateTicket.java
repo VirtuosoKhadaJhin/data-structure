@@ -9,7 +9,6 @@ public class StateTicket {
 
     private String code;
     private Date createTime;
-    private Boolean expired;
 
     public String getCode() {
         return code;
@@ -25,6 +24,7 @@ public class StateTicket {
     }
 
     public boolean isExpired() {
-        return false;
+        return (this == null)||
+                (System.currentTimeMillis() - this.createTime.getTime() >= 20*1000);
     }
 }

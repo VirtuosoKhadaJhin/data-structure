@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,21 +25,16 @@ public  class StateTicketServiceImpl implements TicketStateService{
     @Override
     public void addTicket(StateTicket ticket) {
         Assert.notNull(ticket, "ticket cannot be null");
-        synchronized (cache){
             cache.put(ticket.getCode(),ticket);
-        }
-
     }
 
 
     @Override
     public StateTicket getTicket(String code) {
-
         if (code == null) {
             return null;
         }
         StateTicket state = this.cache.get(code);
-
         return state;
     }
 
@@ -47,11 +43,12 @@ public  class StateTicketServiceImpl implements TicketStateService{
         if (code == null) {
             return false;
         }
-        return (this.cache.remove(code) != null);
+            return (this.cache.remove(code) != null);
+
     }
 
     @Override
     public Collection<StateTicket> getTickets() {
-        return null;
+        return Collections.unmodifiableCollection(this.cache.values());
     }
 }

@@ -6,12 +6,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableTransactionManagement
 @EnableAspectJAutoProxy
 @SpringBootApplication
 @EnableFeignClients
+@EnableScheduling
 public class NuanyouMerchantApplication {
 
     private static final Logger log = LoggerFactory.getLogger(NuanyouMerchantApplication.class.getSimpleName());
