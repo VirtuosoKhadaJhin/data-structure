@@ -12,6 +12,10 @@ table .tr-class:hover {
     text-align: center;
 }
 
+.table td:hover {
+    cursor: pointer;
+}
+
 .search-reset {
     margin-left: 2px;
 }

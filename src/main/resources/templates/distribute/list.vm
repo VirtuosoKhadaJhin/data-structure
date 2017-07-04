@@ -88,7 +88,7 @@
                                     <td>$!entity.merchant.district.name</td>
                                     <td>$!entity.bdUser.chineseName</td>
                                     <td>$!entity.status.value</td>
-                                    <td class="td-bz">$!entity.remark</td>
+                                    <td class="td-bz" title="$!entity.remark">$!entity.remark</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishDt)</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditDt)</td>
                                 </tr>
