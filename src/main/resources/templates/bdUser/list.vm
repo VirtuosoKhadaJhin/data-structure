@@ -8,7 +8,6 @@
     #include("common/js-support.vm")
     <script src="/dist/js/page-support.js"></script>
     <link href="/dist/css/bd-user/bdUser.css" rel="stylesheet"/>
-    <script src="/dist/js/bd-user/bdUser.js"></script>
 </head>
 <body>
 <div id="content" class="content-container">
@@ -84,9 +83,9 @@
                                             <label class="td-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateTime)</label>
                                         </td>
                                         <td class="td-op">
-                                            <div class="td-op-div">
+                                            <div style="text-align: center">
                                                 <a class="btn btn-primary btn-mini" href="edit?id=$!vo.id">编辑</a>
-                                                <button del-id="$!vo.id" class="btn btn-danger btn-mini" id="del-bd">删除</button>
+                                                <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn">删除</button>
                                             </div>
                                         </td>
                                     </tr>
@@ -185,6 +184,7 @@
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
     </div>
 </div>
+<script src="/dist/js/bd-user/bdUser.js"></script>
 </body>
 </html>
 
