@@ -75,7 +75,7 @@ public class MissionTaskController {
         List<Country> countries = countryService.getIdNameList();
         List<Merchant> merchants = merchantService.findMerchantByCountry(requestVo.getCountry());
         List<MissionGroup> groups = missionGroupService.findByCountry(requestVo.getCountry());
-        List<BdUser> bdUsers = bdUserService.findByGroupId(requestVo.getCountry(), requestVo.getCity(), requestVo.getGroupId());
+        List<BdUser> bdUsers = bdUserService.findByCountryAndGroup(requestVo.getCountry(), requestVo.getGroupId());
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
         model.addAttribute("requestVo", requestVo);

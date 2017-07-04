@@ -24,9 +24,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.*;
 import java.util.*;
 
-/**
- * Created by sharp on 2017/6/28 - 15:56
- */
 @Service
 public class MissionGroupServiceImpl implements MissionGroupService {
 
