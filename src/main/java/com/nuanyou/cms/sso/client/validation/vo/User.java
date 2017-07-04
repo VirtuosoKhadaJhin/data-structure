@@ -1,4 +1,4 @@
-package com.nuanyou.cms.sso.client.validation;
+package com.nuanyou.cms.sso.client.validation.vo;
 
 /**
  * Created by Felix on 2017/3/21.

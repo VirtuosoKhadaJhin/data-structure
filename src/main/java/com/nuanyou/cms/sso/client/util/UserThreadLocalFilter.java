@@ -2,7 +2,7 @@
 
 package com.nuanyou.cms.sso.client.util;
 
-import com.nuanyou.cms.sso.client.validation.User;
+import com.nuanyou.cms.sso.client.validation.vo.User;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;

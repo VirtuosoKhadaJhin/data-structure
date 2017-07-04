@@ -2,7 +2,7 @@ package com.nuanyou.cms.util;
 
 import com.nuanyou.cms.config.SystemContext;
 import com.nuanyou.cms.sso.client.util.UserHolder;
-import com.nuanyou.cms.sso.client.validation.User;
+import com.nuanyou.cms.sso.client.validation.vo.User;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;

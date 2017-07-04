@@ -75,7 +75,6 @@ sso:
   serverName: http://127.0.0.1:8085
   validateCodeUrl: https://testuser.api.91nuanyou.com/corp/oauth/access_token
   stateExpiredInMilliSeconds: 120000
-  needAutoLogOut: true
 
 
 contractService: http://127.0.0.1:8200
