@@ -22,7 +22,7 @@ public class MissionRequestVo {
 
     private Long groupId;
 
-    private Long country = 1L;
+    private Long country;
 
     private Long city;
 
