@@ -91,7 +91,6 @@ $(function () {
         $(".distributeResult-text").text("任务指派成功！");
 
         // 如果没有选择任务
-        console.log(bdId);
         if (taskIds.length == 0) {
             $(".distributeResult-text").html("<strong style='color: red'>请选择任务！</strong>");
         } else if (typeof(bdId) == "undefined") {
