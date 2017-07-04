@@ -104,7 +104,7 @@ public class DateUtils {
      * @endDate 结束时间，例：2017-6-29 23:59:59
      */
     public static Pair<Date, Date> getDayStartEndTime(Date date) {
-        DateTime dateTime = new DateTime();
+        DateTime dateTime = new DateTime(date);
         Date startDate = dateTime.minusDays(1).withTimeAtStartOfDay().toDate();
         Date endDate = dateTime.withTimeAtStartOfDay().minusSeconds(1).toDate();
         return Pair.of(startDate, endDate);
