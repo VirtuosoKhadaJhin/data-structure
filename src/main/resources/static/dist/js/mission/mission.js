@@ -4,10 +4,12 @@
 $(function () {
     // 国家二级联动城市
     $(".select-country").on("change", function () {
-        var countryId = $(this).val();
-        var showCity = $(".select-city").find("country-id:" + countryId + "")
-        console.log(showCity);
-        $(showCity).trigger("change");
+        /*var countryId = $(this).val();
+         var showCity = $(".select-city").find("country-id:" + countryId + "")
+         console.log(showCity);
+         $(showCity).trigger("change");*/
+
+        location.href = "list?country=" + $(this).val();
 
     });
 
