@@ -11,9 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Created by sharp on 2017/6/28 - 15:26
- */
 public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaSpecificationExecutor {
 
     /**

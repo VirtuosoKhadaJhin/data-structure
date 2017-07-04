@@ -24,9 +24,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.*;
 import java.util.*;
 
-/**
- * Created by sharp on 2017/6/28 - 15:56
- */
 @Service
 public class MissionGroupServiceImpl implements MissionGroupService {
 
@@ -239,11 +236,11 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     }
 
     @Override
-    public List<MissionGroup> findByCityId(final Long city) {
-        if (city == null) {
+    public List<MissionGroup> findByCountry(final Long country) {
+        if (country == null) {
             return groupDao.findAllGroup();
         }
-        return groupDao.findGroupsByCityId(city);
+        return groupDao.findGroupsByCountryId(country);
     }
 
     @Override

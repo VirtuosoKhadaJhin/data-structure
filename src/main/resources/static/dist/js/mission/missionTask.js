@@ -90,6 +90,7 @@ $(function () {
             $(".distributeResult-text").html("<strong style='color: red'>请选择任务！</strong>");
         } else if (typeof(bdId) == "undefined") {
             $(".distributeResult-text").html("<strong style='color: red'>请选择BD！</strong>");
+            $(".taskDistributeResultModel").modal('show');
         } else {
             var data = {
                 bdId: bdId,

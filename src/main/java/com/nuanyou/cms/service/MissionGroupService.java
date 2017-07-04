@@ -32,12 +32,12 @@ public interface MissionGroupService {
     void saveGroup(MissionGroupParamVo vo);
 
     /**
-     * 按照城市id查询战队
+     * 按照国家查询战队
      *
-     * @param cityId
+     * @param country
      * @return
      */
-    List<MissionGroup> findByCityId(Long cityId);
+    List<MissionGroup> findByCountry(Long country);
 
     /**
      * 通过groupId查找该组的所有bduser

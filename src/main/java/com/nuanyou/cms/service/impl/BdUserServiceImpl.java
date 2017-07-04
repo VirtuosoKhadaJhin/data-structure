@@ -11,6 +11,7 @@ import com.nuanyou.cms.service.BdUserService;
 import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.util.MD5Utils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -18,14 +19,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-/**
- * bd宝用户管理
- * <p>
- * Created by sharp on 2017/6/22 - 15:04
- */
 @Service
 public class BdUserServiceImpl implements BdUserService {
 
@@ -215,20 +210,78 @@ public class BdUserServiceImpl implements BdUserService {
     }
 
     @Override
-    public List<BdUser> findByGroupId(Long country, Long city, Long groupId) {
-        if (groupId == null && city == null && country == null) {
-            List<MissionGroup> groups = groupDao.findAllGroup();
-            return findBdUsersByGroupIds(groups);
-        } else if (groupId == null && city == null && country != null) {
-            List<MissionGroup> groups = groupDao.findGroupsByCountryId(country);
-            return findBdUsersByGroupIds(groups);
-        } else if (groupId != null && city == null && country == null) {
-            return this.findByGroupId(groupId);
-        } else if (city != null && groupId == null && country == null) {
-            List<MissionGroup> groups = groupDao.findGroupsByCityId(city);
-            return findBdUsersByGroupIds(groups);
+    public List<BdUser> findByCountryAndGroup(final Long country, final Long groupId) {
+        List<BdUser> result = Lists.newArrayList();
+        List<BdUser> countryUsers = bdUserDao.findAll(new Specification() {
+
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                predicate.add(cb.equal(root.get("deleted"), 0));
+                if (country != null) {
+                    predicate.add(cb.equal(root.get("countryId"), country));
+                }
+                Predicate[] arrays = new Predicate[predicate.size()];
+                ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("updateTime")));
+                return query.where(predicate.toArray(arrays)).getRestriction();
+            }
+        });
+        if ((country != null && groupId == null) || (country == null || groupId == null)) {
+            return countryUsers;
+        } else if (country == null && groupId != null) {
+            return this.findBdUsersByGroup(groupId);
+        } else if (country != null && groupId != null) {
+            Map<Long, BdUser> bdUserMaps = new LinkedHashMap<Long, BdUser>(countryUsers.size());
+            for (BdUser bdUser : countryUsers) {
+                bdUserMaps.put(bdUser.getId(), bdUser);
+            }
+            List<BdUser> groupUsers = findBdUsersByGroup(groupId);
+            //合并groupUsers和countryUsers同时存在的
+            Iterator<BdUser> iterator = groupUsers.iterator();
+            while (iterator.hasNext()) {
+                BdUser bdUser = iterator.next();
+                if (bdUserMaps.containsKey(bdUser.getId())) {
+                    result.add(bdUser);
+                }
+            }
         }
-        return null;
+        return result;
+    }
+
+    @Override
+    public void updateUserRole(BdRelUserRole userRole) {
+        List<BdRelUserRole> userRoles = bdRelUserRoleDao.findAll();
+        for (BdRelUserRole relUserRole : userRoles) {
+            //找到数据库对应的条目，修改，更新
+            if (relUserRole.getUser().getId().equals(userRole.getUser().getId())) {
+                //修改
+                relUserRole.setRole(userRole.getRole());
+                //更新
+                bdRelUserRoleDao.save(relUserRole);
+            }
+        }
+    }
+
+    @Override
+    public BdUser findBdUserById(long id) {
+        return this.bdUserDao.findOne(id);
+    }
+
+    @Override
+    public List<BdUser> findAllBdUsers() {
+        List<BdUser> bdUsers = bdUserDao.findallBdUser();
+        return bdUsers;
+    }
+
+    private List<BdUser> findBdUsersByGroup(Long groupId) {
+        List<MissionGroupBd> userBds = groupBdDao.findByGroupId(groupId);
+        Collection<Long> userIds = (List<Long>) CollectionUtils.collect(userBds, new Transformer() {
+            @Override
+            public Long transform(Object input) {
+                return ((MissionGroupBd) input).getBdId();
+            }
+        });
+        return bdUserDao.findByIdIn(Lists.newArrayList(userIds));
     }
 
     private List<BdUser> findBdUsersByGroupIds(List<MissionGroup> groups) {
@@ -246,20 +299,6 @@ public class BdUserServiceImpl implements BdUserService {
         }
         List<BdUser> bdUsers = bdUserDao.findByIdIn(userIds);
         return bdUsers;
-    }
-
-    @Override
-    public void updateUserRole(BdRelUserRole userRole) {
-        List<BdRelUserRole> userRoles = bdRelUserRoleDao.findAll();
-        for (BdRelUserRole relUserRole : userRoles) {
-            //找到数据库对应的条目，修改，更新
-            if (relUserRole.getUser().getId().equals(userRole.getUser().getId())) {
-                //修改
-                relUserRole.setRole(userRole.getRole());
-                //更新
-                bdRelUserRoleDao.save(relUserRole);
-            }
-        }
     }
 
     /**
@@ -307,16 +346,4 @@ public class BdUserServiceImpl implements BdUserService {
         }
         return stringBuffer.toString();
     }
-
-    @Override
-    public BdUser findBdUserById(long id) {
-        return this.bdUserDao.findOne(id);
-    }
-
-    @Override
-    public List<BdUser> findAllBdUsers() {
-        List<BdUser> bdUsers = bdUserDao.findallBdUser();
-        return bdUsers;
-    }
-
 }

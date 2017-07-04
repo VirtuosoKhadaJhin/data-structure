@@ -39,14 +39,12 @@ public interface BdUserService {
      */
     List<BdCountry> findAllCountry();
 
-
     /**
      * 保存bd宝用户信息
      *
      * @param user bd宝用户信息
      */
     BdUser saveUser(BdUser user);
-
 
     /**
      * 更新用户信息
@@ -106,7 +104,6 @@ public interface BdUserService {
      */
     BdUser findBdUserByDemail(String email);
 
-
     // List<BdUser> findBdUsersByCountryId(Long );
 
     /**
@@ -121,9 +118,8 @@ public interface BdUserService {
      * 获取bduser列表
      *
      * @param country
-     * @param city
      * @param groupId
      * @return
      */
-    List<BdUser> findByGroupId(Long country, Long city, Long groupId);
+    List<BdUser> findByCountryAndGroup(Long country, Long groupId);
 }

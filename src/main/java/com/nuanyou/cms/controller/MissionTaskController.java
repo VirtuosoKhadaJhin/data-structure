@@ -69,16 +69,17 @@ public class MissionTaskController {
      */
     @RequestMapping("list")
     public String list(MissionRequestVo requestVo, Model model) {
+        if (requestVo.getStatus() == null) {
+            requestVo.setStatus(MissionTaskStatus.FINISHED);
+        }
         List<Country> countries = countryService.getIdNameList();
-        List<City> cities = cityService.findCityByCountryId(requestVo.getCountry());
-        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCity());
-        List<MissionGroup> groups = missionGroupService.findByCityId(requestVo.getCity());
-        List<BdUser> bdUsers = bdUserService.findByGroupId(requestVo.getCountry(), requestVo.getCity(), requestVo.getGroupId());
+        List<Merchant> merchants = merchantService.findMerchantByCountry(requestVo.getCountry());
+        List<MissionGroup> groups = missionGroupService.findByCountry(requestVo.getCountry());
+        List<BdUser> bdUsers = bdUserService.findByCountryAndGroup(requestVo.getCountry(), requestVo.getGroupId());
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
         model.addAttribute("requestVo", requestVo);
         model.addAttribute("countries", countries);
-        model.addAttribute("cities", cities);
         model.addAttribute("groups", groups);
         model.addAttribute("bdUsers", bdUsers);
         model.addAttribute("merchants", merchants);
@@ -108,18 +109,13 @@ public class MissionTaskController {
      */
     @RequestMapping("distribute")
     public String distributeTask(MissionRequestVo requestVo, Model model) {
-        if (requestVo.getAudit() == true) {
-            requestVo.setAudit(false);
-        }
+        requestVo.setAudit(false);
         String email = UserHolder.getUser().getEmail();
         BdUser bdUser = bdUserService.findBdUserByDemail(email);
         MissionGroup missionGroup = missionGroupService.findGroupByUserId(bdUser.getId());
-
-        List<Merchant> merchants = merchantService.findMerchant(requestVo.getCity());
+        List<Merchant> merchants = merchantService.findMerchantByCountry(missionGroup.getCity() == null ? null : missionGroup.getCity().getId());
         List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(missionGroup.getId());
-        List<DistrictVo> districts = districtService.findByCity(missionGroup.getCity().getId());
-
-        requestVo.setStatus(null);
+        List<DistrictVo> districts = districtService.findByCity(missionGroup.getCity() == null ? null : missionGroup.getCity().getId());
         requestVo.setGroupId(missionGroup.getId());
         Page<MissionTaskVo> page = missionTaskService.findAllMissionTask(requestVo);
         model.addAttribute("page", page);
@@ -180,7 +176,7 @@ public class MissionTaskController {
     @RequestMapping("findMerchantByCity")
     @ResponseBody
     public APIResult findMerchantByCity(Long city) {
-        List<Merchant> merchants = merchantService.findMerchant(city);
+        List<Merchant> merchants = merchantService.findMerchantByCountry(city);
         return new APIResult(merchants);
     }
 
