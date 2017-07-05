@@ -159,6 +159,8 @@ public class BdUserServiceImpl implements BdUserService {
 
         //设置默认显示
         user.setDeleted(Byte.valueOf("0"));
+        user.setCreateTime(new Date());
+        user.setUpdateTime(new Date());
 
         //保存用户角色信息
         userRole.setUser(user);
@@ -179,6 +181,7 @@ public class BdUserServiceImpl implements BdUserService {
         user.setChineseName(paramVo.getChineseName());
         user.setEmail(paramVo.getEmail());
         user.setDmail(paramVo.getDmail());
+        user.setUpdateTime(new Date());
         userRole.setUser(user);
         userRole.setRole(role);
         this.updateUser(user);
@@ -246,6 +249,12 @@ public class BdUserServiceImpl implements BdUserService {
             }
         }
         return result;
+    }
+
+    @Override
+    public Boolean checkNameRepeat(String name) {
+        List<BdUser> bdUsers = bdUserDao.checkNameRepeat(name);
+        return bdUsers.size() > 0;
     }
 
     @Override
