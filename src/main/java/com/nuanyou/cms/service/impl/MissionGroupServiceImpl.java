@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
-import com.nuanyou.cms.entity.*;
+import com.nuanyou.cms.entity.BdUser;
+import com.nuanyou.cms.entity.MissionGroup;
+import com.nuanyou.cms.entity.MissionGroupBd;
 import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.model.MissionGroupParamVo;
 import com.nuanyou.cms.model.MissionGroupVo;
@@ -70,7 +72,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
                 Predicate[] arrays = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(arrays)).getRestriction();
             }
-        },pageable);
+        }, pageable);
 
         List<MissionGroupVo> groupVos = this.getMissionGroupVos(groups.getContent());
         Page<MissionGroupVo> pageVOs = new PageImpl<>(groupVos, pageable, groups.getTotalElements());
@@ -246,9 +248,11 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     @Override
     public MissionGroup findGroupByUserId(Long userId) {
         List<MissionGroupBd> groupBds = groupBdDao.findByBdId(userId);
+        if (CollectionUtils.isEmpty(groupBds)) {
+            throw new APIException(ResultCodes.NotFoundGroup, ResultCodes.NotFoundGroup.message);
+        }
         Long groupId = groupBds.get(0).getGroupId();
         MissionGroup group = groupDao.findOne(groupId);
-
         return group;
     }
 

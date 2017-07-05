@@ -1,231 +1,296 @@
-#parse("common/list_start.vm")
-<link href="/dist/font-awesome/css/font-awesome-checkbox.css" rel="stylesheet"/>
-<link href="/dist/css/mission/missionTask.css" rel="stylesheet"/>
-<link href="/dist/css/mission-group/missionGroup.css" rel="stylesheet"/>
-<div id="breadcrumb">
-    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
-        主页</a>
-    <a href="list" class="tip-bottom" data-original-title="">战队管理</a>
-    <a href="#" class="tip-bottom" data-original-title="">列表</a>
-</div>
-<div class="widget-title">
-    <span class="icon"><i class="icon-th"></i></span>
-    <h5>战队管理列表</h5>
-    <a class="btn btn-mini btn-info buttons" href="add">新增</a>
-#*<a class="btn btn-mini btn-info buttons" onclick="langsCommonDialog()">通用新增</a>*#
-</div>
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+</head>
+<body>
+<div id="content" class="content-container">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10">
+                <div class="widget-box">
+                    <div class="widget-content nopadding">
+                        <link href="/dist/font-awesome/css/font-awesome-checkbox.css" rel="stylesheet"/>
+                        <link href="/dist/css/mission/missionTask.css" rel="stylesheet"/>
+                        <link href="/dist/css/mission-group/missionGroup.css" rel="stylesheet"/>
+                        <div id="breadcrumb">
+                            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
+                                主页</a>
+                            <a href="list" class="tip-bottom" data-original-title="">战队管理</a>
+                            <a href="#" class="tip-bottom" data-original-title="">列表</a>
+                        </div>
+                        <div class="widget-title">
+                            <span class="icon"><i class="icon-th"></i></span>
+                            <h5>战队管理列表</h5>
+                            <a class="btn btn-mini btn-info buttons" href="add">
+                                <i class="icon-plus"> 新增</i>
+                            </a>
+                        </div>
 
-<div style="width: 100%">
-    <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
-        <thead role="row">
-        <tr>
-            <th>序号</th>
-            <th>战队名称</th>
-            <th>国家</th>
-            <th>城市</th>
-            <th>对队员显示</th>
-            <th>创建时间</th>
-            <th>更新时间</th>
-            <th>描述</th>
-            <th>战队人员数</th>
-            <th>操作</th>
-        </tr>
-        </thead>
-        <tbody>
-            #foreach($vo in $!page.content)
-            <tr class="odd gradeX" data-groupId="$!vo.id">
-                <td class="td-sort td-id">
-                ##                    $!vo.group.id 和entity里的字段对应
-                    <label class="label-id">$!{velocityCount}</label>
-                </td>
-                <td class="td-sort td-group">
-                    <label class="lebel-group">$!vo.name</label>
-                </td>
-                <td class="td-sort td-country">
-                    <label class="label-country">$!vo.country.name</label>
-                </td>
-                <td class="td-sort td-city">
-                    <label class="label-city">$!vo.city.name</label>
-                </td>
-                <td class="td-sort td-isPublic">
-                    <label class="label-isPublic">#if($!vo.isPublic==0)
-                        显示 #end #if($!vo.isPublic==1) 隐藏 #end </label>
-                </td>
-                <td class="td-sort td-createDt">
-                    <label class="label-createDt">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createDt)</label>
-                </td>
-                <td class="td-sort td-updateDt">
-                    <label class="label-updateDt">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateDt)</label>
-                </td>
-                <td class="td-sort td-desc">
-                    <label class="label-desc">$!vo.desc</label>
-                </td>
+                        <div style="width: 100%">
+                            <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+                                <thead role="row">
+                                <tr>
+                                    <th>序号</th>
+                                    <th>战队名称</th>
+                                    <th>国家</th>
+                                    <th>城市</th>
+                                    <th>对队员显示</th>
+                                    <th>创建时间</th>
+                                    <th>更新时间</th>
+                                    <th>队长</th>
+                                    <th>副队长</th>
+                                    <th>战队人员数</th>
+                                    <th>描述</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody class="tbody-list">
+                                    #if ($null.isNull($page.content) || $page.content.size()==0)
+                                    <tr>
+                                        <td colspan="12" style="text-align:center;">
+                                            <div class="no-result-div"
+                                                 style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                                                <p>没有符合条件的战队信息！</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    #end
+                                    #foreach($vo in $!page.content)
+                                    <tr class="odd gradeX" data-groupId="$!vo.id">
+                                        <td class="td-id">
+                                            <label class="label-id">$!{velocityCount}</label>
+                                        </td>
+                                        <td class="td-group">
+                                            <label class="lebel-group">$!vo.name</label>
+                                        </td>
+                                        <td class="td-country">
+                                            <label class="label-country">$!vo.country.name</label>
+                                        </td>
+                                        <td class="td-city">
+                                            <label class="label-city">$!vo.city.name</label>
+                                        </td>
+                                        <td class="td-isPublic">
+                                            <label class="label-isPublic">#if($!vo.isPublic==0)
+                                                显示 #end #if($!vo.isPublic==1) 隐藏 #end </label>
+                                        </td>
+                                        <td class="td-createDt">
+                                            <label class="label-createDt">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createDt)</label>
+                                        </td>
+                                        <td class="td-updateDt">
+                                            <label class="label-updateDt">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateDt)</label>
+                                        </td>
+                                        <td class="td-leader">
+                                            #if("$!vo.leader" != "")
+                                                <label class="label-desc">$!vo.leader.chineseName</label>
+                                            #end
+                                        </td>
+                                        <td class="td-vice-leader">
+                                            #if("$!vo.viceLeader" != "")
+                                                <label class="label-desc">$!vo.viceLeader.chineseName</label>
+                                            #end
+                                        </td>
+                                        <td class="td-group-bd-count">
+                                            #if($!vo.bDUserIds.size() == 0)
+                                                <label class="lebel-bd-count">暂无队员</label>
+                                            #else
+                                                <label class="lebel-bd-count"><a target="_blank" href="member?groupId=$!vo.id">$!vo.bDUserIds.size()</a></label>
+                                            #end
+                                        </td>
+                                        <td class="td-desc">
+                                            <label class="label-desc">$!vo.desc</label>
+                                        </td>
+                                        <td style="min-width: 120px;">
+                                            <div style="text-align: center">
+                                                <a class="btn btn-primary btn-mini modify-item" href="edit?id=$!vo.id">
+                                                    <i class="icon-edit"> 编辑</i>
+                                                </a>
+                                                <button class="btn btn-success btn-mini modify-item" onclick="addBdUserModal($!vo.country.id,$!vo.id)">
+                                                    <i class="icon-user"> 添加队员</i>
+                                                </button>
+                                            #*<a key-code="$!vo.id" class="btn btn-info btn-mini modify-item" onclick="distributeLeaderModal($!vo.id,$!vo.country.id)">指派队长</a>*#
+                                                <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn">
+                                                    <i class="icon-ban-circle"> 删除</i>
+                                                </button>
+                                            </div>
+                                        </td>
 
-                <td class="td-sort td-group-bd-count">
-                    #if($!vo.bDUserIds.size() == 0)
-                        <label class="lebel-bd-count">暂无队员</label>
-                    #else
-                        <label class="lebel-bd-count"><a target="_blank" href="member?groupId=$!vo.id">$!vo.bDUserIds.size()</a></label>
-                    #end
-                </td>
-                <td style="min-width: 120px;">
-                    <div style="text-align: center">
-                        <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item"
-                           href="edit?id=$!vo.id">编辑</a>
-                        <a key-code="$!vo.id" class="btn btn-success btn-mini modify-item" onclick="addBdUserModal($!vo.country.id,$!vo.id)">添加队员</a>
-                        <a key-code="$!vo.id" class="btn btn-info btn-mini modify-item"
-                           onclick="distributeLeaderModal($!vo.id,$!vo.country.id)">指派队长</a>
-                        <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn">删除</button>
+                                    </tr>
+                                        #set($sort = $sort + 1)
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
+
+                        #parse("common/list_mid.vm")
+
+                        <form class="form-horizontal search-form" method="get" action="list">
+
+                            <div class="search-select">
+                                <label>国家</label>
+                                <select class="span11 select-country" id="country" name="country">
+                                    <option value="">全部</option>
+                                    #foreach($e in $!countries)
+                                        <option value="$!e.id" #if($!requestVo.country.id==$!e.id)selected #end>$!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+
+                            <div class="search-select">
+                                <label>城市</label>
+                                <select class="span11" id="city" name="city">
+                                    <option class="city-unit" value>全部</option>
+                                    #foreach($e in $!cities)
+                                        <option class="option-city" country-id="$!e.country.id" value="$!e.id" #if($!requestVo.city.id == $!e.id) selected #end>$!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+
+                            <div class="search-select">
+                                <label>对队员显示：</label>
+                                <select class="span11" name="isPublic">
+                                    <option value>全部</option>
+                                    <option value="0" #if($!requestVo.isPublic == 0) selected #end>显示</option>
+                                    <option value="1" #if($!requestVo.isPublic == 1) selected #end>隐藏</option>
+                                </select>
+                            </div>
+
+                            <div class="search-select">
+                                <label>战队名称：</label>
+                                <input type="text" name="name" class="span11" value="$!requestVo.name" placeholder="战队名称">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="icon-search"> 查询</i>
+                            </button>
+                            <button class="btn btn-warning search-reset">
+                                <i class="icon-repeat"> 重置</i>
+                            </button>
+                        </form>
+
+                        <!-- 添加成员弹窗 -->
+                        <div class="modal hide fade addGroupBdModel" tabindex="-1" role="dialog"
+                             aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3 id="myModalLabel">添加成员</h3>
+                            </div>
+                            <div class="modal-body">
+                                <div class="search-select bd-users">
+                                    <div id="listAddBd"></div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" class="hide-groupId"/>
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                                <button class="btn btn-primary " onclick="addUsers()">确认</button>
+                            </div>
+                        </div>
+
+                        <!-- 添加成员结果 -->
+                        <div class="modal hide fade addGroupBdResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 id="myModalLabel">添加结果</h4>
+                            </div>
+                            <div class="modal-body">
+                                <strong class="addGroupBdResult" style="margin-left: 20px;font-size: 14px;"></strong>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" class="add-result"/>
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                            </div>
+                        </div>
+
+                        <!-- 删除确认弹窗 -->
+                        <div class="modal hide fade deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 id="myModalLabel">删除提示</h4>
+                            </div>
+                            <div class="modal-body">
+                                <strong style="margin-left: 20px;font-size: 14px;">确认删除吗？</strong>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" class="hide-del-id"/>
+                                <button class="btn btn-primary sure-del">确认</button>
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                            </div>
+                        </div>
+
+                        <!-- 删除确认二次确认弹窗 -->
+                        <div class="modal hide fade secondDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 id="myModalLabel">删除提示</h4>
+                            </div>
+                            <div class="modal-body">
+                                <strong style="margin-left: 20px;font-size: 14px;">真的确认删除吗？</strong>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary second-sure-del">确认</button>
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                            </div>
+                        </div>
+
+                        <!-- 删除结果 -->
+                        <div class="modal hide fade deleteResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 id="myModalLabel">删除提示</h4>
+                            </div>
+                            <div class="modal-body">
+                                <strong class="deleteResult" style="margin-left: 20px;font-size: 14px;"></strong>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                            </div>
+                        </div>
+
+                        <!-- 指定组长 -->
+                        <div class="modal hide fade distributeLeaderModal" tabindex="-1" role="dialog"
+                             aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3 id="myModalLabel">指定组长</h3>
+                            </div>
+                            <div class="modal-body">
+                                <div class="search-select bd-users">
+                                    <div id="listGroupLeaderAddBd"></div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" class="hide-groupId"/>
+                                <input type="hidden" class="hide-leaderId"/>
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                                <button class="btn btn-primary distributeLeader">确认</button>
+                            </div>
+                        </div>
+
+                        <!-- 指定组长结果 -->
+                        <div class="modal hide fade distributeLeaderResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 id="myModalLabel">指定组长</h4>
+                            </div>
+                            <div class="modal-body">
+                                <strong class="distributeLeaderResult" style="margin-left: 20px;font-size: 14px;"></strong>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                            </div>
+                        </div>
                     </div>
-                </td>
-
-            </tr>
-                #set($sort = $sort + 1)
-            #end
-        </tbody>
-    </table>
-</div>
-
-#parse("common/list_mid.vm")
-<form class="form-horizontal search-form" method="get" action="list">
-
-    <div class="search-select">
-        <label>国家</label>
-        <select class="span11 select-country" id="country" name="country">
-            <option value="">全部</option>
-            #foreach($e in $!countries)
-                <option value="$!e.id" #if($!requestVo.country.id==$!e.id)selected #end>$!e.name</option>
-            #end
-        </select>
-    </div>
-
-    <div class="search-select">
-        <label>城市</label>
-        <select class="span11" id="city" name="city">
-            <option class="city-unit" value>全部</option>
-            #foreach($e in $!cities)
-                <option class="option-city" country-id="$!e.country.id" value="$!e.id" #if($!requestVo.city.id == $!e.id) selected #end>$!e.name</option>
-            #end
-        </select>
-    </div>
-
-    <div class="search-select">
-        <label>对队员显示：</label>
-        <select class="span11" name="isPublic">
-            <option value>全部</option>
-            <option value="0" #if($!requestVo.isPublic == 0) selected #end>显示</option>
-            <option value="1" #if($!requestVo.isPublic == 1) selected #end>隐藏</option>
-        </select>
-    </div>
-
-    <div class="search-select">
-        <label>战队名称：</label>
-        <input type="text" name="name" class="span11" value="$!requestVo.name" placeholder="战队名称">
-    </div>
-
-    <button type="submit" class="btn btn-primary">查询</button>
-    <button class="btn btn-warning search-reset">重置</button>
-</form>
-
-<!-- 添加成员弹窗 -->
-<div class="modal hide fade taskDistributeModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">添加成员</h3>
-    </div>
-    <div class="modal-body">
-        <div class="search-select bd-users">
-            <div id="listAddBd"></div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="modal-footer">
-        <input type="hidden" class="hide-groupId"/>
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-        <button class="btn btn-primary " onclick="addUsers()">确认</button>
-    </div>
 </div>
-
-<!-- 删除确认弹窗 -->
-<div class="modal hide fade deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 id="myModalLabel">删除提示</h4>
-    </div>
-    <div class="modal-body">
-        <strong style="margin-left: 20px;font-size: 14px;">确认删除吗？</strong>
-    </div>
-    <div class="modal-footer">
-        <input type="hidden" class="hide-del-id"/>
-        <button class="btn btn-primary sure-del">确认</button>
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-    </div>
-</div>
-
-<!-- 删除确认二次确认弹窗 -->
-<div class="modal hide fade secondDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 id="myModalLabel">删除提示</h4>
-    </div>
-    <div class="modal-body">
-        <strong style="margin-left: 20px;font-size: 14px;">真的确认删除吗？</strong>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary second-sure-del">确认</button>
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-    </div>
-</div>
-
-<!-- 删除结果 -->
-<div class="modal hide fade deleteResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 id="myModalLabel">删除提示</h4>
-    </div>
-    <div class="modal-body">
-        <strong class="deleteResult" style="margin-left: 20px;font-size: 14px;"></strong>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-    </div>
-</div>
-
-<!-- 指定组长 -->
-<div class="modal hide fade distributeLeaderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">指定组长</h3>
-    </div>
-    <div class="modal-body">
-        <div class="search-select bd-users">
-            <div id="listGroupLeaderAddBd"></div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <input type="hidden" class="hide-groupId"/>
-        <input type="hidden" class="hide-leaderId"/>
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-        <button class="btn btn-primary distributeLeader">确认</button>
-    </div>
-</div>
-
-<!-- 指定组长结果 -->
-<div class="modal hide fade distributeLeaderResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 id="myModalLabel">指定组长</h4>
-    </div>
-    <div class="modal-body">
-        <strong class="distributeLeaderResult" style="margin-left: 20px;font-size: 14px;"></strong>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-    </div>
-</div>
-
 <script type="text/javascript" src="/dist/js/mission-group/missionGroup.js"></script>
-
-#parse("common/list_end.vm")
-
+</body>
+</html>
 
 

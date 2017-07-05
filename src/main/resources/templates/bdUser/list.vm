@@ -7,7 +7,6 @@
     #include("common/css-support.vm")
     #include("common/js-support.vm")
     <script src="/dist/js/page-support.js"></script>
-    <script src="/dist/js/bd-user/bdUser.js"></script>
     <link href="/dist/css/bd-user/bdUser.css" rel="stylesheet"/>
 </head>
 <body>
@@ -26,10 +25,12 @@
                         <div class="widget-title">
                             <span class="icon"><i class="icon-th"></i></span>
                             <h5>BD用户列表</h5>
-                            <a class="btn btn-mini btn-info buttons" href="add">新增</a>
+                            <a class="btn btn-mini btn-info buttons" href="add">
+                                <i class="icon-plus"> 新增</i>
+                            </a>
                         </div>
                         <div>
-                            <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
+                            <table class="table table-bordered data-table dataTable">
                                 <thead role="row">
                                 <tr>
                                     <th>序号</th>
@@ -84,10 +85,13 @@
                                             <label class="td-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateTime)</label>
                                         </td>
                                         <td class="td-op">
-                                            <div class="td-op-div">
-                                                <a key-code="$!vo.id" class="btn btn-primary btn-mini modify-item"
-                                                   href="edit?id=$!vo.id">编辑</a>
-                                                <a class="btn btn-danger btn-mini" href="del?id=$!vo.id">删除</a>
+                                            <div style="text-align: center">
+                                                <a class="btn btn-primary btn-mini" href="edit?id=$!vo.id">
+                                                    <i class="icon-edit"> 编辑</i>
+                                                </a>
+                                                <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn">
+                                                    <i class="icon-ban-circle"> 删除</i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -108,13 +112,13 @@
                         <h5>筛选列表</h5>
                     </div>
                     <div class="widget-content">
-                        <form class="form-horizontal search-form" method="get">
+                        <form class="form-horizontal search-form" action="list" method="get">
                             <div class="search-select">
                                 <label>所属国家：</label>
-                                <select class="span11" name="country">
+                                <select class="span11" name="conturyid">
                                     <option value>全部</option>
-                                    #foreach($e in $!countrys)
-                                        <option value="$!e" #if($!e.key == $!requestVo.country.id) selected #end>$!e.value</option>
+                                    #foreach($e in $!allCountries)
+                                        <option value="$!e.id" #if($!e.id == $!requestVo.conturyid) selected #end>$!e.name</option>
                                     #end
                                 </select>
                             </div>
@@ -132,8 +136,12 @@
                             </div>
                             <div class="btn-group">
                                 <input type="hidden" name="isAudit" value="false"/>
-                                <button type="submit" class="btn btn-primary">查询</button>
-                                <button class="btn btn-warning search-reset">重置</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="icon-search"> 查询</i>
+                                </button>
+                                <button class="btn btn-warning search-reset" style="margin-left: 5px;">
+                                    <i class="icon-refresh"> 重置</i>
+                                </button>
                             </div>
                         </form>
 
@@ -143,6 +151,50 @@
         </div>
     </div>
 </div>
+<!-- 删除确认弹窗 -->
+<div class="modal hide fade deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="myModalLabel">删除提示</h4>
+    </div>
+    <div class="modal-body">
+        <strong style="margin-left: 20px;font-size: 14px;">确认删除该BD吗？</strong>
+    </div>
+    <div class="modal-footer">
+        <input type="hidden" class="hide-del-id"/>
+        <button class="btn btn-primary sure-del">确认</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+<!-- 删除确认二次确认弹窗 -->
+<div class="modal hide fade secondDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="myModalLabel">删除提示</h4>
+    </div>
+    <div class="modal-body">
+        <strong style="margin-left: 20px;font-size: 14px;">真的确认删除该BD吗？</strong>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary second-sure-del">确认</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+
+<!-- 删除结果 -->
+<div class="modal hide fade deleteResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="myModalLabel">删除提示</h4>
+    </div>
+    <div class="modal-body">
+        <strong class="deleteResult" style="margin-left: 20px;font-size: 14px;"></strong>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+<script src="/dist/js/bd-user/bdUser.js"></script>
 </body>
 </html>
 

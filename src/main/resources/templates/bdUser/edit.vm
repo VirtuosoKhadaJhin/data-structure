@@ -36,9 +36,7 @@
                               onsubmit="return emailChekc()">
 
                             <div class="nopadding" style="width: 100%;">
-                                <div >
-                                #*<div class="control-group">*#
-
+                                <div>
                                     <div class="">
                                         <label class="control-label"
                                                style="width: 140px;">id：</label>
@@ -72,11 +70,6 @@
                                                style="width: 140px;">所属国家：</label>
                                         <div class="controls" style="margin-left: 152px;">
                                             <select name="countryId" style="width:80%">
-##                                                <option selected="selected"
-##                                                        value="$!vo.country.id">$!vo.country.name</option>
-##                                                #foreach($country in $!countries)
-##                                                    <option value="$!country.id">$!country.name</option>
-##                                                #end
                                                 #foreach($country in $!countries)
                                                     <option value="$!country.id" #if($!vo.country.id==$!country.id) selected  #end>$!country.name</option>
                                                 #end
@@ -109,22 +102,21 @@
                                                 #foreach($role in $!roles)
                                                     <option value="$!role.id" #if($!vo.role.id==$!role.id) selected  #end>$!role.desc</option>
                                                 #end
-##                                                <option selected="selected"
-##                                                        value="$!vo.role.id">$!vo.role.desc</option>
-##                                                #foreach($role in $!roles)
-##                                                    <option value="$!role.id">$!role.desc</option>
-##                                                #end
                                             </select>
                                         </div>
                                     </div>
 
                                 </div>
 
-
                                 <div class="form-actions" style="clear:both;text-align: center">
-                                    <button type="submit" class="btn btn-info">确定</button>
-                                ##                                    <a class="btn btn-primary" onclick="back()">返回</a>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="icon-edit"> 确定</i>
+                                    </button>
+                                    <a class="btn btn-primary" href="list">
+                                        <i class="icon-repeat"> 返回</i>
+                                    </a>
                                 </div>
+
                         </form>
 
                     </div>
@@ -141,18 +133,18 @@
             var dmail = document.getElementsByName("dmail")[0].value;
 
 //        var reg = /^[A-z]+[A-z0-9_-]*\@[A-z0-9]+\.[A-z]+$/;
-            var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/ ;
+            var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/;
 
             if (email == "") {
                 var res1 = true;
             } else {
-                var res1=reg.test(email);
+                var res1 = reg.test(email);
             }
 
             if (dmail == "") {
                 var res2 = true;
             } else {
-                var res2=reg.test(dmail);
+                var res2 = reg.test(dmail);
             }
 
 

@@ -26,11 +26,6 @@ $(function () {
         $(".search-form").find(".select2").val('').trigger('change');
     });
 
-    // 改变国家
-    $(".select-country").on("change", function () {
-        location.href = "list?country=" + $(this).val();
-    });
-
     // 全选，全不选
     $(".th-checked").on("click", function () {
         if ($(this).prop("checked")) {
@@ -102,7 +97,6 @@ $(function () {
                 taskIds: taskIds,
                 distrDt: distrDt
             };
-            console.log(distrDt);
             $.ajax({
                 url: 'distributeTask',
                 data: JSON.stringify(data),
@@ -125,9 +119,6 @@ $(function () {
 
     $(".taskDistributeResultModel").on("hide.bs.modal", function () {
         var result = $(".audit-result").val();
-        // console.log(result);
-        // alert(result);
-        // ==0和==""共同效果
         if (result == 0 && result != "") {
             window.location.reload();
         }
@@ -156,8 +147,6 @@ $(function () {
         } else {
             isPublic = true;
         }
-        console.log(isPublic);
-        console.log(groupId);
 
         var data = {groupId: groupId, isPublic: isPublic};
         $.ajax({

@@ -61,10 +61,10 @@ public class BdUserServiceImpl implements BdUserService {
                     predicate.add(cb.equal(root.get("countryId"), requestVo.getConturyid()));
                 }
                 if (StringUtils.isNotEmpty(requestVo.getName())) {
-                    predicate.add(cb.equal(root.get("name"), requestVo.getName()));
+                    predicate.add(cb.like(root.get("name"), "%" + requestVo.getName() + "%"));
                 }
                 if (StringUtils.isNotEmpty(requestVo.getChineseName())) {
-                    predicate.add(cb.equal(root.get("chineseName"), requestVo.getChineseName()));
+                    predicate.add(cb.like(root.get("chineseName"), "%" + requestVo.getChineseName() + "%"));
                 }
                 if (StringUtils.isNotEmpty(requestVo.getDmail())) {
                     predicate.add(cb.equal(root.get("dmail"), requestVo.getDmail()));
