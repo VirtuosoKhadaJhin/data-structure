@@ -32,4 +32,10 @@ public interface BdUserDao extends JpaRepository<BdUser, Long>, JpaSpecification
 
     @Query(value = "select  t from BdUser t where id in (:bdUserIds)and countryid=:countryId")
     List<BdUser> findBdUsersByIdsAndCountryId(@Param("bdUserIds") List<Long> bdUserIds, @Param("countryId") Long countryId);
+
+    @Query(value = "SELECT t from BdUser t where name=:name")
+    List<BdUser> checkNameRepeat(@Param("name") String name);
+
+    @Query(value = "select t from BdUser t where t.name=?2 and t.id != ?1")
+    List<BdUser> findByNameNonBdUser(Long id, String name);
 }

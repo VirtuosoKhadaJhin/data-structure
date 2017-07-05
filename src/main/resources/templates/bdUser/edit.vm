@@ -3,14 +3,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>暖游 后台管理系统 菜单管理</title>
-
+    <title>暖游 后台管理系统 菜单管理 #if(!$vo.id) 新增BD用户 #else 编辑BD用户 #end</title>
     #include("common/css-support.vm")
-
-    <style>
-
-
-    </style>
 </head>
 <body>
 <div id="content">
@@ -19,8 +13,8 @@
             <div id="breadcrumb">
                 <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i
                         class="icon-home"></i> 主页</a>
-                <a href="list" class="tip-bottom" data-original-title="">bd宝用户管理</a>
-                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
+                <a href="list" class="tip-bottom" data-original-title="">bd用户管理</a>
+                <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">#if(!$vo.id) 新增BD用户 #else 编辑BD用户 #end</a>
             </div>
         </div>
 
@@ -30,134 +24,100 @@
                     <div class="widget-box">
                         <div class="widget-title"><span class="icon"> <i
                                 class="icon-align-justify"></i> </span>
-                            <h5>编辑&查看</h5>
+                            <h5>#if(!$vo.id) 新增BD用户  #else 编辑BD用户 #end</h5>
                         </div>
-                        <form class="form-horizontal" action="saveEdit" method="post"
-                              onsubmit="return emailChekc()">
-
+                        <form class="form-horizontal" onsubmit="return false;">
                             <div class="nopadding" style="width: 100%;">
                                 <div>
+                                    #if($vo.id)
+                                        <div class="">
+                                            <label class="control-label" style="width: 140px;">id：</label>
+                                            <div class="controls" style="margin-left: 152px;">
+                                                <input for="name" name="id" id="id" type="text" class="span7" readonly="readonly" style="width: 80%" value="$!vo.id">
+                                            </div>
+                                        </div>
+                                    #end
                                     <div class="">
-                                        <label class="control-label"
-                                               style="width: 140px;">id：</label>
+                                        <label class="control-label" style="width: 140px;">用户名：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" name="id" id="id" type="text"
-                                                   class="span7"
-                                                   readonly="readonly" style="width: 80%"
-                                                   value="$!vo.id">
+                                            <input for="name" name="name" id="name" type="text" class="span7 bd-name" style="width: 80%" value="$!vo.name">
                                         </div>
                                     </div>
                                     <div class="">
-                                        <label class="control-label"
-                                               style="width: 140px;">用户名：</label>
+                                        <label class="control-label" style="width: 140px;">中文名：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" name="name" id="name" type="text" readonly="readonly"
-                                                   class="span7"
-                                                   style="width: 80%" value="$!vo.name">
+                                            <input for="name" name="chineseName" id="chineseName" type="text" class="span7 bd-chinese-name" style="width: 80%" value="$!vo.chineseName">
                                         </div>
                                     </div>
                                     <div class="">
-                                        <label class="control-label"
-                                               style="width: 140px;">中文名：</label>
+                                        <label class="control-label" style="width: 140px;">所属国家：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" name="chineseName" id="chineseName" type="text"
-                                                   class="span7"
-                                                   style="width: 80%" value="$!vo.chineseName">
-                                        </div>
-                                    </div>
-                                    <div class="">
-                                        <label class="control-label"
-                                               style="width: 140px;">所属国家：</label>
-                                        <div class="controls" style="margin-left: 152px;">
-                                            <select name="countryId" style="width:80%">
+                                            <select name="countryId" class="bd-country-id" style="width:80%">
                                                 #foreach($country in $!countries)
                                                     <option value="$!country.id" #if($!vo.country.id==$!country.id) selected  #end>$!country.name</option>
                                                 #end
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="">
-                                        <label class="control-label"
-                                               style="width: 140px;">合同归档邮箱：</label>
+                                    <div class="div-bd-email">
+                                        <label class="control-label" style="width: 140px;">合同归档邮箱：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" name="email" id="email" type="text"
-                                                   class="span7"
-                                                   style="width: 80%" value="$!vo.email">
+                                            <input for="name" name="email" id="email" type="text" class="span7 bd-email mouseout-check" style="width: 80%" value="$!vo.email">
                                         </div>
                                     </div>
-                                    <div class="">
-                                        <label class="control-label"
-                                               style="width: 140px;">钉钉邮箱：</label>
+                                    <div class="div-bd-dmail">
+                                        <label class="control-label" style="width: 140px;">钉钉邮箱：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <input for="name" name="dmail" id="dmail" type="text"
-                                                   class="span7"
-                                                   style="width: 80%" value="$!vo.dmail">
+                                            <input for="name" name="dmail" id="dmail" type="text" class="span7 bd-dmail mouseout-check" style="width: 80%" value="$!vo.dmail">
                                         </div>
                                     </div>
-                                    <div class="">
-                                        <label class="control-label"
-                                               style="width: 140px;">角色：</label>
+                                    <div class="div-bd-role">
+                                        <label class="control-label" style="width: 140px;">角色：</label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <select name="roleId" style="width:80%">
+                                            <select name="roleId" class="bd-role" style="width:80%">
                                                 #foreach($role in $!roles)
                                                     <option value="$!role.id" #if($!vo.role.id==$!role.id) selected  #end>$!role.desc</option>
                                                 #end
                                             </select>
                                         </div>
                                     </div>
-
                                 </div>
 
                                 <div class="form-actions" style="clear:both;text-align: center">
-                                    <button type="submit" class="btn btn-success">
+                                    <input type="hidden" class="save-bd-result"/>
+                                    <input type="hidden" name="id" class="hide-user-id" value="$!vo.id"/>
+                                    <a class="btn btn-success btn-ok">
                                         <i class="icon-edit"> 确定</i>
-                                    </button>
+                                    </a>
                                     <a class="btn btn-primary" href="list">
                                         <i class="icon-repeat"> 返回</i>
                                     </a>
                                 </div>
-
+                            </div>
                         </form>
-
                     </div>
                 </div>
 
             </div>
         </div>
     </div>
+
+    <!-- 编辑用户结果 -->
+    <div class="modal hide fade updateBdUserResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 id="myModalLabel">编辑/保存结果</h4>
+        </div>
+        <div class="modal-body">
+            <strong class="updateBdUserResult" style="margin-left: 20px;font-size: 14px;"></strong>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" class="add-result" value=""/>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
+    </div>
+
     #include("common/js-support.vm")
-
-    <script type="text/javascript">
-        function emailChekc() {
-            var email = document.getElementsByName("email")[0].value;
-            var dmail = document.getElementsByName("dmail")[0].value;
-
-//        var reg = /^[A-z]+[A-z0-9_-]*\@[A-z0-9]+\.[A-z]+$/;
-            var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+\.([a-zA-Z0-9_-])+/;
-
-            if (email == "") {
-                var res1 = true;
-            } else {
-                var res1 = reg.test(email);
-            }
-
-            if (dmail == "") {
-                var res2 = true;
-            } else {
-                var res2 = reg.test(dmail);
-            }
-
-
-            if (res1 == false) {
-                alert("合归邮箱规则错误，请输入正确的邮箱");
-            }
-
-            if (res2 == false) {
-                alert("合归邮箱规则错误，请输入正确的邮箱");
-            }
-
-            return res1 && res2;
-        }
-    </script>
+    <script src="/dist/js/bd-user/bdUser.js"></script>
 </body>
 </html>
