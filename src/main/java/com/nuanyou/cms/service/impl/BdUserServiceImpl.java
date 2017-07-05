@@ -195,7 +195,7 @@ public class BdUserServiceImpl implements BdUserService {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 predicate.add(cb.equal(root.get("deleted"), 0));
                 if (country != null) {
-                    predicate.add(cb.equal(root.get("countryId"), country));
+                    predicate.add(cb.equal(root.get("country").get("id"), country));
                 }
                 Predicate[] arrays = new Predicate[predicate.size()];
                 ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("updateTime")));
