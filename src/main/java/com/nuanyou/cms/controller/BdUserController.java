@@ -4,6 +4,7 @@ import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.entity.BdCountry;
 import com.nuanyou.cms.entity.BdRole;
+import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.BdUserRequestVo;
 import com.nuanyou.cms.model.BdUserParamVo;
@@ -32,8 +33,10 @@ public class BdUserController {
     private CountryService countryService;
 
     /**
-     * 获取列表
+     * 获取BD用户列表
      *
+     * @param requestVo
+     * @param model
      * @return
      */
     @RequestMapping("list")
@@ -47,8 +50,26 @@ public class BdUserController {
     }
 
     /**
-     * 编辑
+     * 添加 BD用户
      *
+     * @param model
+     * @return
+     */
+    @RequestMapping("add")
+    public String add(Model model) {
+        List<BdRole> roles = bdUserService.findAllRoles();
+        List<BdCountry> countries = bdUserService.findAllCountry();
+        model.addAttribute("roles", roles);
+        model.addAttribute("countries", countries);
+        model.addAttribute("vo", new BdUser());
+        return "bdUser/edit";
+    }
+
+    /**
+     * 添加 BD用户
+     *
+     * @param id
+     * @param model
      * @return
      */
     @RequestMapping("edit")
@@ -56,21 +77,33 @@ public class BdUserController {
         BdUserVo vo = bdUserService.findUserById(id);
         List<BdRole> roles = bdUserService.findAllRoles();
         List<BdCountry> countries = bdUserService.findAllCountry();
-        model.addAttribute("countries", countries);
         model.addAttribute("roles", roles);
+        model.addAttribute("countries", countries);
         model.addAttribute("vo", vo);
         return "bdUser/edit";
     }
 
-    @RequestMapping("add")
-    public String add(Model model) {
-        List<BdRole> roles = bdUserService.findAllRoles();
-        List<BdCountry> countries = bdUserService.findAllCountry();
-        model.addAttribute("roles", roles);
-        model.addAttribute("countries", countries);
-        return "bdUser/add";
+    /**
+     * 用户名查重
+     *
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping("checkUserUnique")
+    @ResponseBody
+    public APIResult checkUserUnique(@RequestBody BdUserRequestVo requestVo) {
+        Boolean isRepat = bdUserService.checkBdUserUnique(requestVo.getId(), requestVo.getName());
+        APIResult<Boolean> result = new APIResult<Boolean>();
+        result.setData(isRepat);
+        return result;
     }
 
+    /**
+     * 逻辑删除BD用户
+     *
+     * @param requestVo
+     * @return
+     */
     @RequestMapping("del")
     @ResponseBody
     public APIResult del(@RequestBody BdUserRequestVo requestVo) {
@@ -78,22 +111,14 @@ public class BdUserController {
         return new APIResult(ResultCodes.Success);
     }
 
-    /**
-     * 保存添加内容
-     *
-     * @return
-     */
-    @RequestMapping("saveAdd")
+    @RequestMapping("saveBdUser")
     @ResponseBody
-    public APIResult saveAdd(BdUserParamVo paramVo) {
-        bdUserService.saveAddUserAndRole(paramVo);
-        return new APIResult(ResultCodes.Success);
-    }
-
-    @RequestMapping("saveEdit")
-    @ResponseBody
-    public APIResult saveEdit(BdUserParamVo paramVo) {
-        bdUserService.saveEditUserAndRole(paramVo);
+    public APIResult saveBdUser(@RequestBody BdUserParamVo paramVo) {
+        if (paramVo.getId() == null) {
+            bdUserService.saveAddUserAndRole(paramVo);
+        } else {
+            bdUserService.saveEditUserAndRole(paramVo);
+        }
         return new APIResult(ResultCodes.Success);
     }
 }
