@@ -32,16 +32,16 @@
                             <table class="table table-bordered data-table dataTable">
                                 <thead role="row">
                                 <tr>
-                                    <th>序号</th>
-                                    <th>用户名</th>
-                                    <th>中文名</th>
-                                    <th>所属国家</th>
-                                    <th>合同归档邮箱</th>
-                                    <th>钉钉邮箱</th>
-                                    <th>角色</th>
-                                    <th>创建时间</th>
-                                    <th>更新时间</th>
-                                    <th>操作</th>
+                                    <th class="th-serial" nowrap="nowrap">序号</th>
+                                    <th class="th-name" nowrap="nowrap">用户名</th>
+                                    <th class="th-chineseName" nowrap="nowrap">中文名</th>
+                                    <th class="th-country" nowrap="nowrap">所属国家</th>
+                                    <th class="th-email" nowrap="nowrap">合同归档邮箱</th>
+                                    <th class="th-dmail" nowrap="nowrap">钉钉邮箱</th>
+                                    <th class="th-role" nowrap="nowrap">角色</th>
+                                    <th class="th-createTime" nowrap="nowrap">创建时间</th>
+                                    <th class="th-updateTime" nowrap="nowrap">更新时间</th>
+                                    <th class="th-op" nowrap="nowrap">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -84,7 +84,7 @@
                                             <label class="td-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateTime)</label>
                                         </td>
                                         <td class="td-op">
-                                            <div style="text-align: center">
+                                            <div class="td-div-op">
                                                 <a class="btn btn-primary btn-mini" href="edit?id=$!vo.id" title="编辑">
                                                     <i class="icon-edit"> 编辑</i>
                                                 </a>

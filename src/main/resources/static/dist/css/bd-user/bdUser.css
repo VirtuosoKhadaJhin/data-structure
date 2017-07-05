@@ -56,3 +56,49 @@
 .search-reset {
     margin-left: 2px;
 }
+
+.td-div-op {
+    text-align: center;
+}
+
+.th-serial {
+    width: 5%;
+}
+
+.th-name {
+    width: 8%;
+}
+
+.th-chineseName {
+    width: 8%;
+}
+
+.th-country {
+    width: 8%;
+}
+
+.th-email {
+    width: 15%;
+}
+
+.th-dmail {
+    width: 15%;
+}
+
+.th-role {
+    width: 5%;
+}
+
+.th-createTime {
+    width: 8%;
+}
+
+.th-updateTime {
+    width: 8%;
+}
+
+.th-op {
+    width: 10%;
+}
+
+
