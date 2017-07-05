@@ -38,12 +38,6 @@ public class ApplicationFilterConfiguration {
     @Value("${sso.stateExpiredInMilliSeconds}")
     private Long stateExpiredInMilliSeconds;
 
-
-
-
-
-
-
     @Bean
     public FilterRegistrationBean singleSignOut(SignInOrSignOutFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
@@ -54,7 +48,6 @@ public class ApplicationFilterConfiguration {
         registration.setOrder(1);
         return registration;
     }
-
 
     @Bean
     public FilterRegistrationBean authentication(AuthenticationFilter filter) {
@@ -70,7 +63,6 @@ public class ApplicationFilterConfiguration {
         return registration;
     }
 
-
     @Bean
     public FilterRegistrationBean ticketValidation(TicketValidationFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
@@ -84,9 +76,6 @@ public class ApplicationFilterConfiguration {
         return registration;
     }
 
-
-
-
     @Bean
     public FilterRegistrationBean userThreadLocal(UserThreadLocalFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
@@ -96,10 +85,6 @@ public class ApplicationFilterConfiguration {
         registration.setOrder(5);
         return registration;
     }
-
-
-
-
 
 }
 
