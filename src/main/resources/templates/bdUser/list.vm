@@ -6,7 +6,6 @@
     <title>暖游 后台管理系统</title>
     #include("common/css-support.vm")
     #include("common/js-support.vm")
-    <script src="/dist/js/page-support.js"></script>
     <link href="/dist/css/bd-user/bdUser.css" rel="stylesheet"/>
 </head>
 <body>
@@ -57,39 +56,39 @@
                                     #end
                                     #foreach($vo in $!page.content)
                                     <tr class="odd gradeX">
-                                        <td class="td-id">
+                                        <td class="td-id" title="$!{velocityCount}">
                                             <label class="td-label">$!{velocityCount}</label>
                                         </td>
-                                        <td class="td-name">
+                                        <td class="td-name" title="$!vo.name">
                                             <label class="td-label">$!vo.name</label>
                                         </td>
-                                        <td class="td-chineseName">
+                                        <td class="td-chineseName" title="$!vo.chineseName">
                                             <label class="td-label">$!vo.chineseName</label>
                                         </td>
-                                        <td class="td-country-name">
+                                        <td class="td-country-name" title="$!vo.country.name">
                                             <label class="td-label">$!vo.country.name</label>
                                         </td>
-                                        <td class="td-email">
+                                        <td class="td-email" title="$!vo.email">
                                             <label class="td-label">$!vo.email</label>
                                         </td>
-                                        <td class="td-dmail">
+                                        <td class="td-dmail" title="$!vo.dmail">
                                             <label class="td-label">$!vo.dmail</label>
                                         </td>
-                                        <td class="td-role-desc">
+                                        <td class="td-role-desc" title="$!vo.role.desc">
                                             <label class="td-label">$!vo.role.desc</label>
                                         </td>
-                                        <td class="td-createTime">
+                                        <td class="td-createTime" title="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createTime)">
                                             <label class="td-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createTime)</label>
                                         </td>
-                                        <td class="td-sort">
+                                        <td class="td-sort" title="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateTime)">
                                             <label class="td-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateTime)</label>
                                         </td>
                                         <td class="td-op">
                                             <div style="text-align: center">
-                                                <a class="btn btn-primary btn-mini" href="edit?id=$!vo.id">
+                                                <a class="btn btn-primary btn-mini" href="edit?id=$!vo.id" title="编辑">
                                                     <i class="icon-edit"> 编辑</i>
                                                 </a>
-                                                <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn">
+                                                <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn" title="删除">
                                                     <i class="icon-ban-circle"> 删除</i>
                                                 </button>
                                             </div>
@@ -194,6 +193,7 @@
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
     </div>
 </div>
+<script src="/dist/js/page-support.js"></script>
 <script src="/dist/js/bd-user/bdUser.js"></script>
 </body>
 </html>

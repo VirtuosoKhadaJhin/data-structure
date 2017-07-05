@@ -60,7 +60,7 @@
                                     </tr>
                                     #end
                                     #foreach($vo in $!page.content)
-                                    <tr class="odd gradeX" data-groupId="$!vo.id">
+                                    <tr class="odd gradeX" data-groupId="$!vo.id" data-leader="$!vo.leader.id" data-viceLeader="$!vo.viceLeader.id" data-country="$!vo.country.id">
                                         <td class="td-id">
                                             <label class="label-id">$!{velocityCount}</label>
                                         </td>
@@ -108,10 +108,9 @@
                                                 <a class="btn btn-primary btn-mini modify-item" href="edit?id=$!vo.id">
                                                     <i class="icon-edit"> 编辑</i>
                                                 </a>
-                                                <button class="btn btn-success btn-mini modify-item" onclick="addBdUserModal($!vo.country.id,$!vo.id)">
+                                                <button class="btn btn-success btn-mini modify-item btn-add-group-user">
                                                     <i class="icon-user"> 添加队员</i>
                                                 </button>
-                                            #*<a key-code="$!vo.id" class="btn btn-info btn-mini modify-item" onclick="distributeLeaderModal($!vo.id,$!vo.country.id)">指派队长</a>*#
                                                 <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn">
                                                     <i class="icon-ban-circle"> 删除</i>
                                                 </button>
@@ -172,8 +171,7 @@
                         </form>
 
                         <!-- 添加成员弹窗 -->
-                        <div class="modal hide fade addGroupBdModel" tabindex="-1" role="dialog"
-                             aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal hide fade addGroupBdModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 550px;z-index: 999999999;">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                 <h3 id="myModalLabel">添加成员</h3>
@@ -185,13 +183,16 @@
                             </div>
                             <div class="modal-footer">
                                 <input type="hidden" class="hide-groupId"/>
+                                <input type="hidden" class="hide-countryId"/>
+                                <input type="hidden" class="hide-leaderId"/>
+                                <input type="hidden" class="hide-viceLeaderId"/>
                                 <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-                                <button class="btn btn-primary " onclick="addUsers()">确认</button>
+                                <button class="btn btn-primary add-bd-user">确认</button>
                             </div>
                         </div>
 
                         <!-- 添加成员结果 -->
-                        <div class="modal hide fade addGroupBdResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal hide fade addGroupBdResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                 <h4 id="myModalLabel">添加结果</h4>
@@ -206,7 +207,7 @@
                         </div>
 
                         <!-- 删除确认弹窗 -->
-                        <div class="modal hide fade deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal hide fade deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                 <h4 id="myModalLabel">删除提示</h4>
@@ -222,7 +223,7 @@
                         </div>
 
                         <!-- 删除确认二次确认弹窗 -->
-                        <div class="modal hide fade secondDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal hide fade secondDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                 <h4 id="myModalLabel">删除提示</h4>
@@ -237,47 +238,13 @@
                         </div>
 
                         <!-- 删除结果 -->
-                        <div class="modal hide fade deleteResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal hide fade deleteResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                 <h4 id="myModalLabel">删除提示</h4>
                             </div>
                             <div class="modal-body">
                                 <strong class="deleteResult" style="margin-left: 20px;font-size: 14px;"></strong>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-                            </div>
-                        </div>
-
-                        <!-- 指定组长 -->
-                        <div class="modal hide fade distributeLeaderModal" tabindex="-1" role="dialog"
-                             aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                <h3 id="myModalLabel">指定组长</h3>
-                            </div>
-                            <div class="modal-body">
-                                <div class="search-select bd-users">
-                                    <div id="listGroupLeaderAddBd"></div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <input type="hidden" class="hide-groupId"/>
-                                <input type="hidden" class="hide-leaderId"/>
-                                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-                                <button class="btn btn-primary distributeLeader">确认</button>
-                            </div>
-                        </div>
-
-                        <!-- 指定组长结果 -->
-                        <div class="modal hide fade distributeLeaderResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                <h4 id="myModalLabel">指定组长</h4>
-                            </div>
-                            <div class="modal-body">
-                                <strong class="distributeLeaderResult" style="margin-left: 20px;font-size: 14px;"></strong>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
