@@ -41,9 +41,14 @@ public enum ResultCodes {
 
     NotConformSize(506, "不符合指定尺寸"),
 
+    SourceRepeat(506, "渠道码重复"),
 
-    SourceRepeat(506,"渠道码重复"),
+    /**
+     * ------missionTask------
+     */
+    NotFoundGroup(1001, "当前用户不属于组"),
 
+    NotFoundCurrentBdUser(1002, "当前BD用户不存在"),
 
     /**
      * ----------order -----------
@@ -60,20 +65,14 @@ public enum ResultCodes {
     CollectionCodeRepeat(3003, "收款码重复"),
     CollectionCodeGreaterThan3(3004, "收款码超过3个"),
 
+    ContractNotAssignedForMerchant(603, "合同未关联商户"),
+    PoundageOrPayDaysIsNull(601, "手续费账期起结金额账期类型不能为空"),
 
-    ContractNotAssignedForMerchant(603,"合同未关联商户"),
-    PoundageOrPayDaysIsNull(601,"手续费账期起结金额账期类型不能为空"),
-
-    AddMerchantSettlementError(602,"访问Account增加一个商户清算时出现错误"),
-
-
-    ;
+    AddMerchantSettlementError(602, "访问Account增加一个商户清算时出现错误"),;
 
     /**
      * ----------order -----------
      */
-
-
 
     public final Integer code;
 

@@ -1,5 +1,6 @@
 package com.nuanyou.cms.controller;
 
+import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.entity.*;
@@ -112,8 +113,14 @@ public class MissionTaskController {
         requestVo.setAudit(false);
         String email = UserHolder.getUser().getEmail();
         BdUser bdUser = bdUserService.findBdUserByDemail(email);
+        if (bdUser == null) {
+            throw new APIException(ResultCodes.NotFoundCurrentBdUser, ResultCodes.NotFoundCurrentBdUser.message);
+        }
         MissionGroup missionGroup = missionGroupService.findGroupByUserId(bdUser.getId());
-        List<Merchant> merchants = merchantService.findMerchantByCountry(missionGroup.getCity() == null ? null : missionGroup.getCity().getId());
+        if (missionGroup == null) {
+            throw new APIException(ResultCodes.NotFoundGroup, ResultCodes.NotFoundGroup.message);
+        }
+        List<Merchant> merchants = merchantService.findMerchantByCountry(missionGroup.getCountry() == null ? null : missionGroup.getCountry().getId());
         List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(missionGroup.getId());
         List<DistrictVo> districts = districtService.findByCity(missionGroup.getCity() == null ? null : missionGroup.getCity().getId());
         requestVo.setGroupId(missionGroup.getId());
