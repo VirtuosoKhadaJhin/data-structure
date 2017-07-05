@@ -20,10 +20,8 @@ public class BdUserVo {
     private Byte deleted;
     private Date createTime;
     private Date updateTime;
-    private Boolean isLeader = false;
     private BdRole role; //角色
-    
-    
+
     public BdUserVo() {
     }
 
@@ -105,14 +103,6 @@ public class BdUserVo {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public Boolean getIsLeader() {
-        return isLeader;
-    }
-
-    public void setIsLeader(Boolean leader) {
-        isLeader = leader;
     }
 
     public BdRole getRole() {

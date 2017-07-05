@@ -70,7 +70,8 @@ public class MissionGroupServiceImpl implements MissionGroupService {
                 }
 
                 Predicate[] arrays = new Predicate[predicate.size()];
-                return query.where(predicate.toArray(arrays)).getRestriction();
+                ArrayList<Order> orderBys = Lists.newArrayList(cb.desc(root.get("updateDt")));
+                return query.where(predicate.toArray(arrays)).orderBy(orderBys).getRestriction();
             }
         }, pageable);
 
@@ -131,14 +132,12 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     @Override
     public List<BdUser> findNonGroupByCountryId(Long countryId, Long groupId) {
         List<BdUser> bdUsers = bdUserDao.findBdUsersByCountryId(countryId);
-
         // 查询联合表, 不需要已经有组的组员了!
         if (groupId == null) {
             List<MissionGroupBd> missionGroupBds = groupBdDao.findAll();
             swichUserNoGroup(missionGroupBds, bdUsers);
             return bdUsers;
         }
-        //查询不是当前组的队员
         List<MissionGroupBd> missionGroupBds = groupBdDao.findByNonGroupId(groupId);
         swichUserNoGroup(missionGroupBds, bdUsers);
         return bdUsers;
@@ -193,30 +192,17 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         MissionGroup group = groupDao.findOne(id);
         // 队长
         BdUser leader = group.getLeader();
-        // 根据组ID查询出所有组员
         List<MissionGroupBd> missionGroupBds = groupBdDao.findByGroupId(id);
         List<Long> bdUserIds = Lists.newArrayList();
         for (MissionGroupBd groupBd : missionGroupBds) {
             bdUserIds.add(groupBd.getBdId());
         }
-
-        // 一次性查询所有用户
         if (CollectionUtils.isEmpty(bdUserIds)) {
             return null;
         }
-
         List<BdUser> bdUsers = bdUserDao.findBdUsersByIdsAndCountryId(bdUserIds, countryId);
 
         List<BdUserVo> bdUsersVo = convertToBdUserVo(bdUsers);
-
-        if (null != leader) {
-            for (BdUserVo vo : bdUsersVo) {
-                if (vo.getId().equals(leader.getId())) {
-                    vo.setIsLeader(true);
-                }
-            }
-        }
-
         return bdUsersVo;
     }
 
