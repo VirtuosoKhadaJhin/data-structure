@@ -1,21 +1,18 @@
-package com.nuanyou.cms.entity;
+package com.nuanyou.cms.model.mission;
 
-import com.nuanyou.cms.commons.CreatedAt;
-import com.nuanyou.cms.commons.DateEntityListener;
-import com.nuanyou.cms.commons.LastModified;
+import com.google.common.collect.Lists;
+import com.nuanyou.cms.entity.BdUser;
+import com.nuanyou.cms.entity.City;
+import com.nuanyou.cms.entity.Country;
 
-import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
- * 战队
- * Created by sharp on 2017/6/28 - 15:01
+ * 在视图显示的实体
+ * Created by sharp on 2017/6/28 - 15:58
  */
-@Entity
-@EntityListeners(DateEntityListener.class) //自动更新时间
-@Table(name = "ny_mission_group", catalog = "nuanyou20") //catalog配置访问的数据库
-public class MissionGroup {
-
+public class MissionGroupVo {
     private Long id;
     private String name;
     private Country country;
@@ -24,31 +21,18 @@ public class MissionGroup {
     private String desc;
     private Date createDt;
     private Date updateDt;
-    private Byte delFlag = 0;
+    private Byte delFlag;
     private BdUser leader;
     private BdUser viceLeader;
 
-    public MissionGroup() {
-    }
+    Integer index = 1;
+    Integer pageNum = 20;
+    
+    private Long countryId;
+    private Long groupId;
+    private Long leaderId;
+    private List<Long> bDUserIds = Lists.newArrayList();
 
-    public MissionGroup(String name, Country country, City city) {
-        this.name = name;
-        this.country = country;
-        this.city = city;
-    }
-
-    public MissionGroup(String name, Country country, City city, Byte isPublic, String desc, BdUser leader) {
-        this.name = name;
-        this.country = country;
-        this.city = city;
-        this.isPublic = isPublic;
-        this.desc = desc;
-        this.leader = leader;
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     public Long getId() {
         return id;
     }
@@ -57,7 +41,6 @@ public class MissionGroup {
         this.id = id;
     }
 
-    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -66,8 +49,6 @@ public class MissionGroup {
         this.name = name;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "countryid")
     public Country getCountry() {
         return country;
     }
@@ -76,8 +57,6 @@ public class MissionGroup {
         this.country = country;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cityid")
     public City getCity() {
         return city;
     }
@@ -86,7 +65,6 @@ public class MissionGroup {
         this.city = city;
     }
 
-    @Column(name = "ispublic")
     public Byte getIsPublic() {
         return isPublic;
     }
@@ -95,7 +73,6 @@ public class MissionGroup {
         this.isPublic = isPublic;
     }
 
-    @Column(name = "`desc`")
     public String getDesc() {
         return desc;
     }
@@ -104,8 +81,6 @@ public class MissionGroup {
         this.desc = desc;
     }
 
-    @CreatedAt //自动添加创建时间
-    @Column(name = "createdt")
     public Date getCreateDt() {
         return createDt;
     }
@@ -114,8 +89,6 @@ public class MissionGroup {
         this.createDt = createDt;
     }
 
-    @LastModified //自动更新时间
-    @Column(name = "updatedt")
     public Date getUpdateDt() {
         return updateDt;
     }
@@ -124,7 +97,6 @@ public class MissionGroup {
         this.updateDt = updateDt;
     }
 
-    @Column(name = "delflag")
     public Byte getDelFlag() {
         return delFlag;
     }
@@ -133,8 +105,6 @@ public class MissionGroup {
         this.delFlag = delFlag;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "leaderid")
     public BdUser getLeader() {
         return leader;
     }
@@ -143,13 +113,59 @@ public class MissionGroup {
         this.leader = leader;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "viceleaderid")
     public BdUser getViceLeader() {
         return viceLeader;
     }
 
     public void setViceLeader(BdUser viceLeader) {
         this.viceLeader = viceLeader;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
+    public Integer getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public Long getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(Long countryId) {
+        this.countryId = countryId;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public Long getLeaderId() {
+        return leaderId;
+    }
+
+    public void setLeaderId(Long leaderId) {
+        this.leaderId = leaderId;
+    }
+
+    public List<Long> getbDUserIds() {
+        return bDUserIds;
+    }
+
+    public void setbDUserIds(List<Long> bDUserIds) {
+        this.bDUserIds = bDUserIds;
     }
 }

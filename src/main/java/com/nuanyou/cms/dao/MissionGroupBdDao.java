@@ -1,6 +1,6 @@
 package com.nuanyou.cms.dao;
 
-import com.nuanyou.cms.entity.MissionGroupBd;
+import com.nuanyou.cms.entity.mission.MissionGroupBd;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;

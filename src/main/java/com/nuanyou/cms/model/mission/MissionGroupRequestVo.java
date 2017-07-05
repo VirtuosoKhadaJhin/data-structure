@@ -1,4 +1,4 @@
-package com.nuanyou.cms.model;
+package com.nuanyou.cms.model.mission;
 
 import java.util.List;
 

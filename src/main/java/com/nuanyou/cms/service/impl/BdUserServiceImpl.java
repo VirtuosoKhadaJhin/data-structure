@@ -3,6 +3,8 @@ package com.nuanyou.cms.service.impl;
 import com.google.common.collect.Lists;
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
+import com.nuanyou.cms.entity.mission.MissionGroup;
+import com.nuanyou.cms.entity.mission.MissionGroupBd;
 import com.nuanyou.cms.model.BdUserParamVo;
 import com.nuanyou.cms.model.BdUserRequestVo;
 import com.nuanyou.cms.model.BdUserVo;
@@ -56,7 +58,7 @@ public class BdUserServiceImpl implements BdUserService {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 predicate.add(cb.equal(root.get("deleted"), 0));
                 if (requestVo.getConturyid() != null) {
-                    predicate.add(cb.equal(root.get("countryId"), requestVo.getConturyid()));
+                    predicate.add(cb.equal(root.get("country").get("id"), requestVo.getConturyid()));
                 }
                 if (StringUtils.isNotEmpty(requestVo.getName())) {
                     predicate.add(cb.like(root.get("name"), "%" + requestVo.getName() + "%"));
