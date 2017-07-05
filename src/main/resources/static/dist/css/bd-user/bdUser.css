@@ -82,4 +82,7 @@
     max-width: 15%;
 }
 
+.table th, .table td {
+    line-height: 40px;
+}
 
