@@ -1,4 +1,4 @@
-package com.nuanyou.cms.sso.client.session;
+package com.nuanyou.cms.sso.client.session.service;
 
 import javax.servlet.http.HttpSession;
 
@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
  * 
  * @author Felix
  */
-public interface SessionMappingStorage {
+public interface SessionMappingStorageService {
 
 	HttpSession removeSessionByMappingId(String mappingId);
 

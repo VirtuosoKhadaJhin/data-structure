@@ -10,18 +10,12 @@ import java.net.URL;
  */
 public interface SsoValidatorService {
 
+    String retrieveResponseFromServer(URL validationUrl);
 
-    /**
-     * sso服务器验证ticket后得到response
-     * @param validationUrl
-     * @param ticket
-     * @return
-     */
-    public abstract String retrieveResponseFromServer(URL validationUrl, String ticket);
+    User parseResponseFromServer(final String response) throws TicketValidationException;
 
-    public abstract User parseResponseFromServer(final String response) throws TicketValidationException;
+    String constructValidationUrl(final String ticket, final String validateCodeUrl, boolean needAutoLogOut, String serverName);
 
-    public  String constructValidationUrl(final String ticket, final String validateCodeUrl, boolean needAutoLogOut, String serverName);
+    User validate(String ticket, String serverName, String validateCodeUrl, Boolean needAutoLogOut) throws TicketValidationException;
 
-    User validate(String ticket, String serverName) throws TicketValidationException;
 }
