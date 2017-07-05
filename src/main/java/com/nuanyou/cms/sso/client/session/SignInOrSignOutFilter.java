@@ -1,5 +1,6 @@
 package com.nuanyou.cms.sso.client.session;
 
+import com.nuanyou.cms.sso.client.session.service.SignInOrSignOutHandler;
 import com.nuanyou.cms.sso.client.util.AbstractConfigurationFilter;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,34 +17,32 @@ import java.util.regex.Pattern;
  * @author Felix
  */
 @Component
-public final class SingleSignOutFilter extends AbstractConfigurationFilter {
+public final class SignInOrSignOutFilter extends AbstractConfigurationFilter {
 
     @Autowired
-    private  SingleSignOutHandler handler;
+    private SignInOrSignOutHandler handler;
+
     private Pattern urlExcludePattern;
 
     public void init(final FilterConfig filterConfig) throws ServletException {
         System.out.println("initFilter" + this.getClass().getName());
-        handler.init();
     }
-
 
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
-//		log.info("SingleSignOutFilter"+request.getRequestURL()+"?"+request.getQueryString());
         if (CommonUtils.isRequestExcluded(request, urlExcludePattern)) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
         if (handler.isTokenRequest(request)) {
-            log.debug("这是一个有ticket的链接!");
+            log.debug("This is a link with token!");
             handler.recordSession(request);
         } else if (handler.isLogoutRequest(request)) {
-            log.debug("这是一个注销的链接!");
+            log.debug("This is a link with logout!");
             handler.destroySession(request);
             return;
         } else {
-            log.debug("这是一个其他的链接!");
+            log.debug("This is a link with no any signs,maybe it has a new Link or a link with user");
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
@@ -56,7 +55,7 @@ public final class SingleSignOutFilter extends AbstractConfigurationFilter {
         this.urlExcludePattern = urlExcludePattern;
     }
 
-    public SingleSignOutFilter() {
+    public SignInOrSignOutFilter() {
         System.out.println("instantiate the SingleSignOutFilter");
     }
 }

@@ -18,19 +18,25 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.regex.Pattern;
 
+import static com.nuanyou.cms.sso.client.util.ParameterConfig.ReLoginParameterName;
+import static com.nuanyou.cms.sso.client.util.ParameterConfig.ServiceParameterName;
+import static com.nuanyou.cms.sso.client.util.ParameterConfig.TicketParameterName;
+
 
 @Component
 public class AuthenticationFilter extends AbstractFilter {
 
 
     private String loginUrl;
+
     private Pattern urlExcludePattern;
+
     private String state;
+
     private Boolean relogin;
+
     @Autowired
     private TicketStateService ticketStateService;
-
-
 
     public final void init(final FilterConfig filterConfig) throws ServletException {
         super.init(filterConfig);//验证service和ticket
@@ -38,7 +44,6 @@ public class AuthenticationFilter extends AbstractFilter {
         System.out.println("initFilter" + this.getClass().getName());
         CommonUtils.assertNotNull(this.loginUrl, "loginUrl cannot be null.");
     }
-
 
     /**
      *  1 排除拦截
@@ -71,7 +76,7 @@ public class AuthenticationFilter extends AbstractFilter {
             return;
         }
         final String serviceUrl = constructServiceUrl(request, response);
-        final String ticket =request.getParameter(getTicketParameterName());
+        final String ticket =request.getParameter(TicketParameterName);
         if (CommonUtils.isNotBlank(ticket)) {//有ticket说明客户端已经拿到了ticket 直接去验证
             log.debug("Second Step:ticket found and begin to validate code");
             filterChain.doFilter(request, response);
@@ -89,36 +94,31 @@ public class AuthenticationFilter extends AbstractFilter {
         ticketStateService.addTicket(stateTicket);
         String state=stateTicket.getCode();
         //String state=null;
-
         Boolean reLogin=this.relogin;
-        String urlRelogin= CommonUtils.safeGetParameter(request, "relogin");//注销
+        String urlRelogin= CommonUtils.safeGetParameter(request, ReLoginParameterName);//注销
         if(CommonUtils.isNotBlank(urlRelogin)){
             reLogin=new Boolean(urlRelogin);
         }
         final String urlToRedirectTo = CommonUtils.constructRedirectUrl(
                 this.loginUrl,
-                getServiceParameterName(),
+                ServiceParameterName,
                 serviceUrl, state,
                 reLogin);
         log.debug("First Step:redirecting to \"" + urlToRedirectTo + "\"");
         response.sendRedirect(urlToRedirectTo);
     }
 
-
     public final void setLoginUrl(final String loginUrl) {
         this.loginUrl = loginUrl;
     }
-
 
     public final void setUrlExcludePattern(Pattern urlExcludePattern) {
         this.urlExcludePattern = urlExcludePattern;
     }
 
-
     public void setState(String state) {
         this.state = state;
     }
-
 
     public void setRelogin(Boolean relogin) {
         this.relogin = relogin;
@@ -135,6 +135,7 @@ public class AuthenticationFilter extends AbstractFilter {
             && compile.matcher(url).matches();
         System.out.println(excluded);
     }
+
 
 
 }

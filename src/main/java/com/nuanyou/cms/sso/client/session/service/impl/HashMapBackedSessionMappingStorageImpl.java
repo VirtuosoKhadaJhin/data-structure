@@ -1,5 +1,6 @@
-package com.nuanyou.cms.sso.client.session;
+package com.nuanyou.cms.sso.client.session.service.impl;
 
+import com.nuanyou.cms.sso.client.session.service.SessionMappingStorageService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -12,10 +13,12 @@ import java.util.*;
  * 维护session和ticket之间的关系
  */
 @Service
-public final class HashMapBackedSessionMappingStorage implements SessionMappingStorage {
+public final class HashMapBackedSessionMappingStorageImpl implements SessionMappingStorageService {
 
     private final Log log = LogFactory.getLog(getClass());
+
     private final Map<String, HttpSession> MANAGED_SESSIONS = new HashMap<String, HttpSession>();
+
     private final Map<String, String> ID_TO_SESSION_KEY_MAPPING = new HashMap<String, String>();
 
     public synchronized void addSessionById(String mappingId, HttpSession session) {
@@ -28,7 +31,6 @@ public final class HashMapBackedSessionMappingStorage implements SessionMappingS
         MANAGED_SESSIONS.remove(key);
         ID_TO_SESSION_KEY_MAPPING.remove(sessionId);
     }
-
 
     public synchronized HttpSession removeSessionByMappingId(String mappingId) {
         if (log.isDebugEnabled()) {

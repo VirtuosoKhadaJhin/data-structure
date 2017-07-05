@@ -9,10 +9,13 @@ import java.util.Collection;
  * Created by Felix on 2017/7/3.
  */
 public interface TicketStateService {
-    public void addTicket(StateTicket ticket);
-    public StateTicket getTicket(String code);
-    public boolean deleteTicket(String code);
-    public Collection<StateTicket> getTickets();
 
+    void addTicket(StateTicket ticket);
+
+    StateTicket getTicket(String code);
+
+    boolean deleteTicket(String code);
+
+    Collection<StateTicket> getTickets();
 
 }

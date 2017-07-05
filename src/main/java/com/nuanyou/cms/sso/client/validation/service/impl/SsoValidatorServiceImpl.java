@@ -33,7 +33,7 @@ public class SsoValidatorServiceImpl implements SsoValidatorService {
         }
         try {
             log.debug("Retrieving response from server.");
-            final String serverResponse= CommonUtils.getResponseFromServer(new URL(validationUrl), null);
+            final String serverResponse= CommonUtils.getResponseFromServer(new URL(validationUrl));
             if (serverResponse == null) {
                 throw new TicketValidationException("The SSO server returned no response.");
             }
@@ -54,8 +54,8 @@ public class SsoValidatorServiceImpl implements SsoValidatorService {
     }
 
     @Override
-    public String retrieveResponseFromServer(URL validationUrl, String ticket) {
-        return CommonUtils.getResponseFromServer(validationUrl, null);
+    public String retrieveResponseFromServer(URL validationUrl) {
+        return CommonUtils.getResponseFromServer(validationUrl);
     }
 
     @Override
@@ -103,7 +103,6 @@ public class SsoValidatorServiceImpl implements SsoValidatorService {
         return buffer.toString();
 
     }
-
 
     protected final String encodeUrl(final String url) {
         if (url == null) {

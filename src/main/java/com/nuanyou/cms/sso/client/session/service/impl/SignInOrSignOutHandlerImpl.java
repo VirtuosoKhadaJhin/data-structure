@@ -1,7 +1,8 @@
-package com.nuanyou.cms.sso.client.session;
+package com.nuanyou.cms.sso.client.session.service.impl;
 
+import com.nuanyou.cms.sso.client.session.service.SessionMappingStorageService;
+import com.nuanyou.cms.sso.client.session.service.SignInOrSignOutHandler;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
-import com.nuanyou.cms.sso.client.util.ParameterConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,9 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import static com.nuanyou.cms.sso.client.util.ParameterConfig.LogoutParameterName;
+import static com.nuanyou.cms.sso.client.util.ParameterConfig.TicketParameterName;
+
 /**
  * 登入登出的操作
  *
@@ -17,19 +21,16 @@ import javax.servlet.http.HttpSession;
  *
  */
 @Service
-public final class SingleSignOutHandler {
+public final class SignInOrSignOutHandlerImpl implements SignInOrSignOutHandler {
 
     private final Log log = LogFactory.getLog(getClass());
-    @Autowired
-    private SessionMappingStorage sessionMappingStorage;
-    private final String ticketParameterName = ParameterConfig.ticketParameterName;
-    private final String logoutParameterName = ParameterConfig.logoutParameterName;
 
+    @Autowired
+    private SessionMappingStorageService sessionMappingStorage;
 
 
     public void init() {
     }
-
 
     /**
      * request是否含有登录验证ticket
@@ -37,7 +38,7 @@ public final class SingleSignOutHandler {
      * @return
      */
     public boolean isTokenRequest(final HttpServletRequest request) {
-        return CommonUtils.isNotBlank(request.getParameter(this.ticketParameterName));
+        return CommonUtils.isNotBlank(request.getParameter(TicketParameterName));
     }
 
     /**
@@ -46,7 +47,7 @@ public final class SingleSignOutHandler {
      */
     public boolean isLogoutRequest(final HttpServletRequest request) {
         return "GET".equals(request.getMethod())  &&
-                CommonUtils.isNotBlank(request.getParameter(this.logoutParameterName));
+                CommonUtils.isNotBlank(request.getParameter(LogoutParameterName));
     }
 
     /**
@@ -54,19 +55,15 @@ public final class SingleSignOutHandler {
      */
     public void recordSession(final HttpServletRequest request) {
         final HttpSession session = request.getSession(true);
-        final String token = CommonUtils.safeGetParameter(request, this.ticketParameterName);
+        final String token = CommonUtils.safeGetParameter(request, TicketParameterName);
         log.debug("Recording session for token " + token);    //根据sessionid 移除 对应的ST 和 session
         this.sessionMappingStorage.removeBySessionById(session.getId());
         sessionMappingStorage.addSessionById(token, session);
     }
 
     public void destroySession(final HttpServletRequest request) {
-        final String logoutMessage = CommonUtils.safeGetParameter(request, this.logoutParameterName);
-        if (log.isTraceEnabled()) {
-            log.trace("Logout request:\n" + logoutMessage);
-        }
-        log.debug("logoutMessage:  " + logoutMessage);
-        final String token = logoutMessage;
+        final String token = CommonUtils.safeGetParameter(request, LogoutParameterName);
+        log.debug("logoutMessage:  " + token);
         if (CommonUtils.isNotBlank(token)) {
             final HttpSession session = this.sessionMappingStorage.removeSessionByMappingId(token);
             if (session != null) {
@@ -80,9 +77,5 @@ public final class SingleSignOutHandler {
             }
         }
     }
-
-
-
-
 
 }

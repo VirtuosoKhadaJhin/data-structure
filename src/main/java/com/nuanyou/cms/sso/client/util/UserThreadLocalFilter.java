@@ -24,7 +24,6 @@ public final class UserThreadLocalFilter implements Filter {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpSession session = request.getSession(false);
         final User user = (User) (session == null ? request.getAttribute(SSO_USER) : session.getAttribute(SSO_USER));
-
         try {
             UserHolder.setUser(user);
             filterChain.doFilter(servletRequest, servletResponse);
@@ -36,4 +35,5 @@ public final class UserThreadLocalFilter implements Filter {
     public void destroy() {
         // nothing to do
     }
+
 }

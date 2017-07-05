@@ -154,7 +154,7 @@ public final class CommonUtils {
     }
 
 
-    public static String getResponseFromServer(final URL constructedUrl, final String encoding) {
+    public static String getResponseFromServer(final URL constructedUrl) {
         return getResponseFromServer(constructedUrl, HttpsURLConnection.getDefaultHostnameVerifier(), "UTF-8");
     }
 
@@ -205,25 +205,5 @@ public final class CommonUtils {
                         .substring(httpRequest.getContextPath().length())).matches();
         return excluded;
     }
-
-
-//    public static void main(String[] args) {
-//        String urlExcludePattern="^/test|^/dist/.*|^/favicon.*";
-//        String url="/dist/list";
-//        Pattern compile = Pattern.compile(urlExcludePattern);
-//        Boolean excluded=compile != null
-//            && compile.matcher(url).matches();
-//        System.out.println(excluded);
-//    }
-
-//    public static void main11(String[] args) {
-//        String bb="abd";
-//        String a="ggg?sdf=a1&relogin=true";
-//        String b=".*relogin=(true|false)+&.*";
-//        System.out.println(a.matches(b));
-//        System.out.println(a.replaceAll("\\?relogin=(true|false)","*"));
-//        String v="http://127.0.0.1:8085/index?relogin=true";
-//        System.out.println(v.replaceAll("\\?relogin=true",""));
-//    }
 
 }

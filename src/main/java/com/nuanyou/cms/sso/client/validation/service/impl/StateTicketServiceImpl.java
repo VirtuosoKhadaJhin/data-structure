@@ -16,18 +16,13 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public  class StateTicketServiceImpl implements TicketStateService{
 
-
     private final Map<String, StateTicket> cache=new ConcurrentHashMap<String, StateTicket>();;
-
-
-
 
     @Override
     public void addTicket(StateTicket ticket) {
         Assert.notNull(ticket, "ticket cannot be null");
             cache.put(ticket.getCode(),ticket);
     }
-
 
     @Override
     public StateTicket getTicket(String code) {
@@ -51,4 +46,5 @@ public  class StateTicketServiceImpl implements TicketStateService{
     public Collection<StateTicket> getTickets() {
         return Collections.unmodifiableCollection(this.cache.values());
     }
+
 }
