@@ -70,8 +70,8 @@ public class BdUserServiceImpl implements BdUserService {
                     predicate.add(cb.equal(root.get("dmail"), requestVo.getDmail()));
                 }
                 Predicate[] arrays = new Predicate[predicate.size()];
-                ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("updateTime")));
-                return query.where(predicate.toArray(arrays)).getRestriction();
+                ArrayList<Order> orderBys = Lists.newArrayList(cb.desc(root.get("updateTime")));
+                return query.where(predicate.toArray(arrays)).orderBy(orderBys).getRestriction();
             }
         }, pageable);
 
@@ -152,6 +152,7 @@ public class BdUserServiceImpl implements BdUserService {
         user.setChineseName(paramVo.getChineseName());
         user.setEmail(paramVo.getEmail());
         user.setDmail(paramVo.getDmail());
+        user.setCountryId(paramVo.getCountryId());
 
         //设置默认密码
         String pwd = MD5Utils.encrypt("123456");
@@ -179,6 +180,7 @@ public class BdUserServiceImpl implements BdUserService {
         BdRole role = this.findRoleById(paramVo.getRoleId());
         user.setName(paramVo.getName());
         user.setChineseName(paramVo.getChineseName());
+        user.setCountryId(paramVo.getCountryId());
         user.setEmail(paramVo.getEmail());
         user.setDmail(paramVo.getDmail());
         user.setUpdateTime(new Date());
@@ -252,9 +254,11 @@ public class BdUserServiceImpl implements BdUserService {
     }
 
     @Override
-    public Boolean checkNameRepeat(String name) {
-        List<BdUser> bdUsers = bdUserDao.checkNameRepeat(name);
-        return bdUsers.size() > 0;
+    public Boolean checkBdUserUnique(Long id, String name) {
+        if (id == null) {
+            return bdUserDao.checkNameRepeat(name).size() > 0;
+        }
+        return bdUserDao.findByNameNonBdUser(id, name).size() > 0;
     }
 
     @Override

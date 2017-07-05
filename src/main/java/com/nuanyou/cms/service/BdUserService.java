@@ -123,5 +123,12 @@ public interface BdUserService {
      */
     List<BdUser> findByCountryAndGroup(Long country, Long groupId);
 
-    Boolean checkNameRepeat(String name);
+    /**
+     * 校验BD用户是否唯一
+     *
+     * @param id
+     * @param name
+     * @return
+     */
+    Boolean checkBdUserUnique(Long id, String name);
 }
