@@ -201,6 +201,11 @@ $(document).ready(function () {
                 $(cityOption).show();
             }
         }
+        if (countryId != "") {
+            $(".select-city").removeAttr("disabled");
+        } else {
+            $(".select-city").attr("disabled", "disabled");
+        }
         if (isReset) {
             $("#city").val("");
         }

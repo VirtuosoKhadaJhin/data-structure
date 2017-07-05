@@ -67,7 +67,7 @@ public class BdUser {
         this.pwd = pwd;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "countryid")
     public Country getCountry() {
         return country;

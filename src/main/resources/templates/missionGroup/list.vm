@@ -140,7 +140,7 @@
 
                             <div class="search-select">
                                 <label>城市</label>
-                                <select class="span11" id="city" name="city">
+                                <select class="span11 select-city" id="city" name="city" disabled>
                                     <option class="city-unit" value>全部</option>
                                     #foreach($e in $!cities)
                                         <option class="option-city" country-id="$!e.country.id" value="$!e.id" #if($!requestVo.city.id == $!e.id) selected #end>$!e.name</option>
