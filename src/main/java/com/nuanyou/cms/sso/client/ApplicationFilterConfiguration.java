@@ -1,7 +1,7 @@
 package com.nuanyou.cms.sso.client;
 
 import com.nuanyou.cms.sso.client.authentication.AuthenticationFilter;
-import com.nuanyou.cms.sso.client.session.SingleSignOutFilter;
+import com.nuanyou.cms.sso.client.session.SignInOrSignOutFilter;
 import com.nuanyou.cms.sso.client.util.UserThreadLocalFilter;
 import com.nuanyou.cms.sso.client.validation.service.impl.TicketValidationFilter;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,24 +38,16 @@ public class ApplicationFilterConfiguration {
     @Value("${sso.stateExpiredInMilliSeconds}")
     private Long stateExpiredInMilliSeconds;
 
-
-
-
-
-
-
     @Bean
-    public FilterRegistrationBean singleSignOut(SingleSignOutFilter filter) {
+    public FilterRegistrationBean singleSignOut(SignInOrSignOutFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         filter.setUrlExcludePattern(Pattern.compile(urlExcludePattern));
         registration.setFilter(filter);
         registration.addUrlPatterns(urlPatterns);
-        registration.addInitParameter("artifactParameterName", "code");
         registration.setName("SingleSignOutFilter");
         registration.setOrder(1);
         return registration;
     }
-
 
     @Bean
     public FilterRegistrationBean authentication(AuthenticationFilter filter) {
@@ -65,14 +57,11 @@ public class ApplicationFilterConfiguration {
         registration.setFilter(filter);
         registration.addInitParameter("loginUrl",loginUrl);
         registration.addInitParameter("serverName", serverName);
-        registration.addInitParameter("serviceParameterName", "ret");
-        registration.addInitParameter("artifactParameterName", "code");
         registration.addUrlPatterns(urlPatterns);
         registration.setName("AuthenticationFilter");
         registration.setOrder(2);
         return registration;
     }
-
 
     @Bean
     public FilterRegistrationBean ticketValidation(TicketValidationFilter filter) {
@@ -80,17 +69,12 @@ public class ApplicationFilterConfiguration {
         registration.setFilter(filter);
         registration.addInitParameter("validateCodeUrl", validateCodeUrl);
         registration.addInitParameter("serverName", serverName);
-        registration.addInitParameter("serviceParameterName", "ret");
-        registration.addInitParameter("artifactParameterName", "code");
         registration.addInitParameter("needAutoLogOut",new Boolean(true).toString());
         registration.addUrlPatterns(urlPatterns);
         registration.setName("ticketValidationFilter");
         registration.setOrder(3);
         return registration;
     }
-
-
-
 
     @Bean
     public FilterRegistrationBean userThreadLocal(UserThreadLocalFilter filter) {
@@ -101,10 +85,6 @@ public class ApplicationFilterConfiguration {
         registration.setOrder(5);
         return registration;
     }
-
-
-
-
 
 }
 

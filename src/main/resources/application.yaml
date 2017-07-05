@@ -69,7 +69,7 @@ AWS:
 
 sso:
   urlPatterns: /*
-  urlExcludePattern: ^/test|^/dist/.*|^/favicon.*|/
+  urlExcludePattern: ^/test|^/dist/.*|^/favicon.*|/|^/logout
   loginUrl: https://testuser.api.91nuanyou.com/oauth/corp
   reLogin: false
   serverName: http://127.0.0.1:8085

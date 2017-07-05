@@ -10,54 +10,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static com.nuanyou.cms.sso.client.util.ParameterConfig.TicketParameterName;
+
 /**
  *  抽象的公共Filter(目的是为了初始化一些公共属性)
  */
 public abstract class AbstractFilter extends AbstractConfigurationFilter {
 
-    /*放在内存的用户实例标志*/
-    public static final String SSO_USER = "sso_user";
-
-    /** 记录日志. */
     protected static final Logger log = LoggerFactory.getLogger(AbstractFilter.class.getSimpleName());
-
-    /** 定义这个参数目的是为了寻找生成的code */
-    private String artifactParameterName = "code";
-
-    /** 寻找service */
-    private String serviceParameterName = "ret";
 
     /*服务器地址,格式是http/https：hostname:port ,标准的端口号可以不写*/
     private String serverName;
 
-
-
-
-
-    /**
-     * 初始化serverName,ticketName：code,serviceCallbackName：ret
-     * @param filterConfig
-     * @throws ServletException
-     */
-    public  void init(final FilterConfig filterConfig) throws ServletException {
-        setServerName(getPropertyFromInitParams(filterConfig, "serverName", null));
-        setArtifactParameterName(getPropertyFromInitParams(filterConfig, "artifactParameterName", "code"));
-        setServiceParameterName(getPropertyFromInitParams(filterConfig, "serviceParameterName", "ret"));
-        CommonUtils.assertNotNull(this.artifactParameterName, "artifactParameterName cannot be null.");
-        CommonUtils.assertNotNull(this.serviceParameterName, "serviceParameterName cannot be null.");
-        CommonUtils.assertTrue(CommonUtils.isNotEmpty(this.serverName), "serverName must be set.");
-    }
-
-
-
-
-
-    public void destroy() {
-        // nothing to do
-    }
-
     protected final String constructServiceUrl(final HttpServletRequest request, final HttpServletResponse response) {
-        return CommonUtils.constructServiceUrl(request, response, this.serverName, this.artifactParameterName);
+        return CommonUtils.constructServiceUrl(request, response, this.serverName, TicketParameterName);
     }
 
     /**
@@ -73,25 +39,24 @@ public abstract class AbstractFilter extends AbstractConfigurationFilter {
         }
     }
 
-
-    public final void setArtifactParameterName(final String artifactParameterName) {
-        this.artifactParameterName = artifactParameterName;
+    /**
+     * 初始化serverName,ticketName：code,serviceCallbackName：ret
+     * @param filterConfig
+     * @throws ServletException
+     */
+    public  void init(final FilterConfig filterConfig) throws ServletException {
+        setServerName(getPropertyFromInitParams(filterConfig, "serverName", null));
+        CommonUtils.assertTrue(CommonUtils.isNotEmpty(this.serverName), "serverName must be set.");
     }
 
-    public final void setServiceParameterName(final String serviceParameterName) {
-        this.serviceParameterName = serviceParameterName;
-    }
 
 
-    public final String getArtifactParameterName() {
-        return this.artifactParameterName;
-    }
-
-    public final String getServiceParameterName() {
-        return this.serviceParameterName;
+    public void destroy() {
+        // nothing to do
     }
 
     public final String getServerName() {
         return serverName;
     }
+    
 }

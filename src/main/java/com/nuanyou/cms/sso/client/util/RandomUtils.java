@@ -6,7 +6,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RandomUtils {
 
     public static final String NUMERIC = "0123456789";
+
     public static final String ALPHABETIC = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
     public static final String ALPHANUMERIC = "_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     /**
@@ -23,10 +25,8 @@ public class RandomUtils {
         return random(NUMERIC, length);
     }
 
-
     public static String random(String source, int length) {
         Random random = ThreadLocalRandom.current();
-
         StringBuilder sb = new StringBuilder(length);
         sb.append(source.charAt(random.nextInt(source.length())));
         for (int i = 1; i < length; i++)
