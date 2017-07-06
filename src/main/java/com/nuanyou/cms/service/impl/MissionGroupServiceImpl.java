@@ -365,12 +365,16 @@ public class MissionGroupServiceImpl implements MissionGroupService {
             groupBdDao.save(missionGroupBds);
             return;
         }
-        if (oldLeader != vo.getLeaderId()) {
-            groupBdDao.deleteByBdUserId(oldLeader);
+        if (oldLeader != vo.getLeaderId() || (oldLeader == null && vo.getLeaderId() != null)) {
+            if (oldLeader != null) {
+                groupBdDao.deleteByBdUserId(oldLeader);
+            }
             groupBdDao.save(leaderGroupBd);
         }
-        if (oldViceLeader != vo.getViceLeaderId()) {
-            groupBdDao.deleteByBdUserId(oldViceLeader);
+        if (oldViceLeader != vo.getViceLeaderId() || (oldViceLeader == null && vo.getViceLeaderId() != null)) {
+            if (oldViceLeader != null) {
+                groupBdDao.deleteByBdUserId(oldViceLeader);
+            }
             groupBdDao.save(viceLeaderGroupBd);
         }
     }

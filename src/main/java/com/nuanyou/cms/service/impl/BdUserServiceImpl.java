@@ -345,16 +345,4 @@ public class BdUserServiceImpl implements BdUserService {
         }
         return userVos;
     }
-
-    private String generateRoleNameByRoles(List<BdRelUserRole> roles) {
-        StringBuffer stringBuffer = new StringBuffer();
-        for (BdRelUserRole role : roles) {
-            if (stringBuffer.toString().equals("")) {
-                stringBuffer.append(role.getRole().getDesc());
-            } else {
-                stringBuffer.append("，" + role.getRole().getDesc());
-            }
-        }
-        return stringBuffer.toString();
-    }
 }
