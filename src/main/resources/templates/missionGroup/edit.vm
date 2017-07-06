@@ -89,6 +89,7 @@
                                     <input type="hidden" name="isPublic" value="0"/>
                                     <input type="hidden" name="groupId" value="$!group.id"/>
                                     <input type="hidden" value="$!group.id" class="groupId"/>
+                                    <input type="hidden" value="$!group.country.id" class="groupCountryId"/>
                                     <a class="btn btn-success edit-group">
                                         <i class="icon-edit"> 确定</i>
                                     </a>
@@ -107,14 +108,45 @@
     <div class="modal hide fade editGroupResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 id="myModalLabel">修改战队结果</h4>
+            <h4 id="myModalLabel">提示</h4>
         </div>
         <div class="modal-body">
             <strong class="editGroupModal" style="margin-left: 20px;font-size: 14px;"></strong>
         </div>
         <div class="modal-footer">
-            <input type="hidden" class="edit-result" value="" />
+            <input type="hidden" class="edit-result" value=""/>
+            <button style="display: none" class="btn btn-primary sure-edit-change-country">确认</button>
             <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
+    </div>
+    <!-- 城市变更提示 -->
+    <div class="modal hide fade editGroupCountryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 id="myModalLabel">提示</h4>
+        </div>
+        <div class="modal-body">
+            <strong class="editGroupCountry" style="margin-left: 20px;font-size: 14px;"></strong>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" class="edit-result" value=""/>
+            <button class="btn btn-primary sure-change-country">确认</button>
+            <button class="btn cancel-change-country" data-dismiss="modal" aria-hidden="true">取消</button>
+        </div>
+    </div>
+    <!-- 城市变更提示 -->
+    <div class="modal hide fade secondEditGroupCountryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 id="myModalLabel">提示</h4>
+        </div>
+        <div class="modal-body">
+            <strong class="editGroupCountry" style="margin-left: 20px;font-size: 14px;">更换国家会默认解除当前组成员及队长职位，确认要继续吗？</strong>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" class="edit-result" value=""/>
+            <button class="btn btn-primary second-sure-change-country">确认</button>
+            <button class="btn cancel-change-country" data-dismiss="modal" aria-hidden="true">取消</button>
         </div>
     </div>
     #include("common/js-support.vm")

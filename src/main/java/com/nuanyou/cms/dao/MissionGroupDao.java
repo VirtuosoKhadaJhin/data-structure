@@ -13,27 +13,17 @@ import java.util.List;
 
 public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaSpecificationExecutor {
 
-    /**
-     * 查找所有可见的group
-     *
-     * @return
-     */
     @Query(value = "SELECT t from MissionGroup t where t.delFlag=0")
     List<MissionGroup> findAllGroup();
-    /**
-     * 通过组长查找组
-     *
-     * @param leaderid
-     * @return
-     */
-    List<MissionGroup> findByLeaderId(Long leaderid);
 
-    /**
-     * 通过组id查找组
-     * @param id
-     * @return
-     */
-    List<MissionGroup> findById(Long id);
+    @Query(value = "SELECT t from MissionGroup t where t.leader.id=?1 and t.delFlag=0")
+    MissionGroup findByLeaderId(Long leaderid);
+
+    @Query(value = "SELECT t from MissionGroup t where t.viceLeader.id=?1 and t.delFlag=0")
+    MissionGroup findByViceLeaderId(Long viceLeaderId);
+
+    @Query(value = "SELECT t from MissionGroup t where t.id=?1 and t.delFlag=0")
+    MissionGroup findByGroupId(Long id);
 
     @Modifying
     @Transactional
@@ -42,7 +32,7 @@ public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaS
 
     @Modifying
     @Transactional
-    @Query("UPDATE MissionGroup set delFlag=1 where id=?1")
+    @Query("UPDATE MissionGroup set delFlag=1, leader=null, viceLeader=null where id=?1")
     void deleteGroup(Long groupId);
 
     @Modifying
@@ -56,6 +46,7 @@ public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaS
     @Query("SELECT t from MissionGroup t where t.country.id=?1 and t.delFlag=0")
     List<MissionGroup> findGroupsByCountryId(Long country);
 
+    @Query("SELECT t from MissionGroup t where t.name=?1 and t.delFlag=0")
     List<MissionGroup> findByName(String name);
 
     @Query(value = "select t from MissionGroup t where t.name=?2 and t.id != ?1 and t.delFlag=0")

@@ -66,10 +66,9 @@ public interface MissionGroupService {
     /**
      * 更新组
      *
-     * @param id
      * @param paramVo
      */
-    void updateGroup(Long id, MissionGroupParamVo paramVo);
+    void updateGroupInfo(MissionGroupParamVo paramVo);
 
     /**
      * 通过id删除组
@@ -90,6 +89,7 @@ public interface MissionGroupService {
 
     /**
      * 查询所有国家id可分配组的bdUser（没有组的BdUser）
+     *
      * @return
      */
     List<BdUser> findAllBdUserNonGroup();

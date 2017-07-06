@@ -17,7 +17,7 @@ table .tr-class:hover {
 }
 
 .th-img {
-    width: 34%;
+    width: 20%;
 }
 
 .th-op {
@@ -50,6 +50,7 @@ table .tr-class:hover {
 .td-img {
     width: 60%;
     height: auto;
+    word-break: break-all;
 }
 
 .search-select {
@@ -80,29 +81,13 @@ table .tr-class:hover {
 }
 
 .hovereffect {
-    width: 15%;
-    height: 15%;
-    text-align: center;
     overflow: hidden;
     position: relative;
     text-align: center;
-    cursor: default;
+    cursor: pointer;
     float: left;
+    display: inline-block;
     margin-left: 1%;
-}
-
-.hovereffect .overlay {
-    width: 80%;
-    height: 100%;
-    position: absolute;
-    overflow: hidden;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    -webkit-transition: all .4s ease-in-out;
-    transition: all .4s ease-in-out;
-    margin-left: 10%;
 }
 
 .hovereffect img {

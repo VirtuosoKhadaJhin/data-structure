@@ -11,16 +11,20 @@ import java.util.List;
 
 public interface MissionGroupBdDao extends JpaRepository<MissionGroupBd, Long>, JpaSpecificationExecutor {
 
+    MissionGroupBd findByBdId(Long bdid);
 
     List<MissionGroupBd> findByGroupId(Long groupid);
-
-    List<MissionGroupBd> findByBdId(Long bdid);
 
     @Query("select t from MissionGroupBd t where t.groupId!=?1")
     List<MissionGroupBd> findByNonGroupId(Long groupId);
 
     @Query("select t from MissionGroupBd t where t.groupId in (?1)")
     List<MissionGroupBd> findByGroupIds(List<Long> groupIds);
+
+    @Transactional
+    @Modifying
+    @Query("delete from MissionGroupBd t where t.bdId = ?1")
+    void deleteByBdUserId(Long id);
 
     @Transactional
     @Modifying

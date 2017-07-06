@@ -10,7 +10,6 @@ import com.nuanyou.cms.model.BdUserRequestVo;
 import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.BdUserService;
-import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.MD5Utils;
 import org.apache.commons.collections.CollectionUtils;
@@ -34,13 +33,13 @@ public class BdUserServiceImpl implements BdUserService {
     private MissionGroupBdDao groupBdDao;
 
     @Autowired
+    private MissionGroupDao groupDao;
+
+    @Autowired
     private BdRoleDao bdRoleDao;
 
     @Autowired
     private BdRelUserRoleDao bdRelUserRoleDao;
-
-    @Autowired
-    private CountryService countryService;
 
     @Autowired
     private BdCountryDao bdCountryDao;
@@ -146,7 +145,9 @@ public class BdUserServiceImpl implements BdUserService {
 
     @Override
     public void saveEditUserAndRole(BdUserParamVo paramVo) {
-        BdUser user = this.findBdUserById(paramVo.getId());
+        Long bdUserId = paramVo.getId();
+        BdUser user = this.findBdUserById(bdUserId);
+        Long oldCountryId = user.getCountry().getId();
         BdRelUserRole userRole = new BdRelUserRole();
         BdRole role = this.findRoleById(paramVo.getRoleId());
         user.setName(paramVo.getName());
@@ -159,13 +160,25 @@ public class BdUserServiceImpl implements BdUserService {
         userRole.setRole(role);
         this.updateUser(user);
         this.updateUserRole(userRole);
+
+        //如果BD用户国家改变，删除组中关系
+        this.unbindGroupBdRelation(paramVo, oldCountryId);
     }
 
     @Override
     public void del(Long id) {
-        BdUser user = bdUserDao.findOne(id);
-        user.setDeleted(Byte.valueOf("1"));
-        bdUserDao.save(user);
+        bdUserDao.updateDeleteUser(id);
+        groupBdDao.deleteByBdUserId(id);
+        MissionGroup leaderGroup = groupDao.findByLeaderId(id);
+        if (leaderGroup != null) {
+            leaderGroup.setLeader(null);
+            groupDao.save(leaderGroup);
+        }
+        MissionGroup viceLeaderGroup = groupDao.findByViceLeaderId(id);
+        if (viceLeaderGroup != null) {
+            viceLeaderGroup.setViceLeader(null);
+            groupDao.save(viceLeaderGroup);
+        }
     }
 
     @Override
@@ -253,11 +266,11 @@ public class BdUserServiceImpl implements BdUserService {
 
     @Override
     public List<BdUser> findAllBdUsers() {
-        List<BdUser> bdUsers = bdUserDao.findallBdUser();
-        return bdUsers;
+        return bdUserDao.findallBdUser();
     }
 
-    private List<BdUser> findBdUsersByGroup(Long groupId) {
+    @Override
+    public List<BdUser> findBdUsersByGroup(Long groupId) {
         List<MissionGroupBd> userBds = groupBdDao.findByGroupId(groupId);
         Collection<Long> userIds = (List<Long>) CollectionUtils.collect(userBds, new Transformer() {
             @Override
@@ -268,21 +281,37 @@ public class BdUserServiceImpl implements BdUserService {
         return bdUserDao.findByIdIn(Lists.newArrayList(userIds));
     }
 
-    private List<BdUser> findBdUsersByGroupIds(List<MissionGroup> groups) {
-        List<Long> groupIds = Lists.newArrayList();
-        for (MissionGroup group : groups) {
-            groupIds.add(group.getId());
+    /**
+     * 用户所属国家改变，解绑组关系
+     *
+     * @param paramVo
+     * @param oldCountryId
+     */
+    private void unbindGroupBdRelation(BdUserParamVo paramVo, Long oldCountryId) {
+        if (oldCountryId.equals(paramVo.getCountryId())) {//国家未改变
+            return;
         }
-        if (CollectionUtils.isEmpty(groupIds)) {
-            return Lists.newArrayList();
+        Long bdUserId = paramVo.getId();
+        MissionGroupBd missionGroupBd = groupBdDao.findByBdId(bdUserId);
+        if (missionGroupBd == null) {//用户不属于任何组
+            return;
         }
-        List<MissionGroupBd> userBds = groupBdDao.findByGroupIds(groupIds);
-        List<Long> userIds = Lists.newArrayList();
-        for (MissionGroupBd userBd : userBds) {
-            userIds.add(userBd.getBdId());
+        groupBdDao.deleteByBdUserId(bdUserId);
+        MissionGroup groupInfo = groupDao.findByGroupId(missionGroupBd.getGroupId());
+        if (groupInfo == null) {//组信息不存在或者已删除
+            return;
         }
-        List<BdUser> bdUsers = bdUserDao.findByIdIn(userIds);
-        return bdUsers;
+        MissionGroup leaderGroup = groupDao.findByLeaderId(bdUserId);
+        MissionGroup viceLeaderGroup = groupDao.findByViceLeaderId(bdUserId);
+        if (leaderGroup == null && viceLeaderGroup == null) {
+            return;//bdUserId不是队长或者副队长
+        }
+        if (leaderGroup != null) {
+            groupInfo.setLeader(null);
+        } else if (viceLeaderGroup != null) {
+            groupInfo.setViceLeader(null);
+        }
+        groupDao.save(groupInfo);
     }
 
     /**
@@ -315,17 +344,5 @@ public class BdUserServiceImpl implements BdUserService {
             userVos.add(bdUserVo);
         }
         return userVos;
-    }
-
-    private String generateRoleNameByRoles(List<BdRelUserRole> roles) {
-        StringBuffer stringBuffer = new StringBuffer();
-        for (BdRelUserRole role : roles) {
-            if (stringBuffer.toString().equals("")) {
-                stringBuffer.append(role.getRole().getDesc());
-            } else {
-                stringBuffer.append("，" + role.getRole().getDesc());
-            }
-        }
-        return stringBuffer.toString();
     }
 }

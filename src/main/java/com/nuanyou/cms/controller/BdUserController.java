@@ -6,12 +6,14 @@ import com.nuanyou.cms.entity.BdCountry;
 import com.nuanyou.cms.entity.BdRole;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.Country;
+import com.nuanyou.cms.entity.mission.MissionGroup;
 import com.nuanyou.cms.model.BdUserRequestVo;
 import com.nuanyou.cms.model.BdUserParamVo;
 import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.service.BdUserService;
 
 import com.nuanyou.cms.service.CountryService;
+import com.nuanyou.cms.service.MissionGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,9 @@ public class BdUserController {
 
     @Autowired
     private BdUserService bdUserService;
+
+    @Autowired
+    private MissionGroupService groupService;
 
     @Autowired
     private CountryService countryService;
@@ -111,6 +116,12 @@ public class BdUserController {
         return new APIResult(ResultCodes.Success);
     }
 
+    /**
+     * 保存用户
+     *
+     * @param paramVo
+     * @return
+     */
     @RequestMapping("saveBdUser")
     @ResponseBody
     public APIResult saveBdUser(@RequestBody BdUserParamVo paramVo) {
@@ -120,5 +131,21 @@ public class BdUserController {
             bdUserService.saveEditUserAndRole(paramVo);
         }
         return new APIResult(ResultCodes.Success);
+    }
+
+    /**
+     * 校验用户是否在组中
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("checkUserBelongGroup")
+    @ResponseBody
+    public APIResult checkUserBelongGroup(Long userId) {
+        MissionGroup missionGroup = groupService.findGroupByUserId(userId);
+        if (missionGroup == null) {//不在组中
+            return new APIResult(false);
+        }
+        return new APIResult(true);
     }
 }

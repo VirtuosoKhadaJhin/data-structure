@@ -157,7 +157,7 @@
         <h4 id="myModalLabel">删除提示</h4>
     </div>
     <div class="modal-body">
-        <strong style="margin-left: 20px;font-size: 14px;">确认删除该BD吗？</strong>
+        <strong style="margin-left: 20px;font-size: 14px;" class="firstDelTip"></strong>
     </div>
     <div class="modal-footer">
         <input type="hidden" class="hide-del-id"/>
@@ -172,7 +172,7 @@
         <h4 id="myModalLabel">删除提示</h4>
     </div>
     <div class="modal-body">
-        <strong style="margin-left: 20px;font-size: 14px;">真的确认删除该BD吗？</strong>
+        <strong style="margin-left: 20px;font-size: 14px;" class="secondDelTip"></strong>
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary second-sure-del">确认</button>

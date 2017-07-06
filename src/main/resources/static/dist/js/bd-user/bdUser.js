@@ -5,6 +5,8 @@ $(document).ready(function () {
 
     var validUserName = true;
 
+    var isBelongToGroup = false;
+
     var emailReg = /^\w[-_\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/;
 
     // 新增/编辑 用户
@@ -58,13 +60,14 @@ $(document).ready(function () {
         });
     });
 
+    // 编辑完用户跳转到列表页面
     $('.updateBdUserResultModal').on('hide.bs.modal', function () {
         if ($(".save-bd-result").val() == 0 && $(".save-bd-result").val() != "") {
             window.location = "list";
         }
     });
 
-
+    // 用户名查重
     $(".bd-name").on("change", function () {
         var name = $(".bd-name").val();
         var data = {id: $(".hide-user-id").val(), name: name};
@@ -86,6 +89,7 @@ $(document).ready(function () {
         });
     });
 
+    // 邮箱实时校验
     $(".mouseout-check").on("blur", function () {
         if (!emailReg.test($(this).val())) {
             var labelText = $(this).parent().prev().text();
@@ -103,13 +107,39 @@ $(document).ready(function () {
 
     // 删除确认弹窗
     $(".del-btn").on("click", function () {
-        $(".hide-del-id").val($(this).attr("del-id"));
-        $(".deleteModal").modal("show");
+        var del_id = $(this).attr("del-id");
+        $(".hide-del-id").val(del_id);
+        isBelongToGroup = false;
+
+        // 检查是否已经存在于某一个组之中
+        var data = {userId: del_id};
+        $.ajax({
+            url: 'checkUserBelongGroup',
+            data: data,
+            type: 'post',
+            dataType: 'json',
+            success: function (result) {
+                if (result.code == 0) {
+                    $(".firstDelTip").text("确认删除该BD用户吗？");
+                    if (result.data) {
+                        isBelongToGroup = true;
+                        $(".firstDelTip").text("该BD用户已关联战队，确认删除该BD用户吗？");
+                    }
+                } else {
+                    $(".firstDelTip").text(result.msg);
+                }
+                $(".deleteModal").modal("show");
+            }
+        });
     });
 
     // 二次删除确认窗
     $('.sure-del').on("click", function () {
         $(".deleteModal").modal("hide");
+        $(".secondDelTip").text("确认删除该BD用户吗？");
+        if (isBelongToGroup) {
+            $(".secondDelTip").text("确认删除该BD用户吗？此操作将会删除该BD用户和战队的所有关联关系！");
+        }
         $(".secondDeleteModal").modal("show");
     });
 

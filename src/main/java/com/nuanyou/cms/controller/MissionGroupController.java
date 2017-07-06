@@ -145,7 +145,7 @@ public class MissionGroupController {
     @RequestMapping("editGroup")
     @ResponseBody
     public APIResult editGroup(@RequestBody MissionGroupParamVo paramVo) {
-        missionGroupService.updateGroup(paramVo.getId(), paramVo);
+        missionGroupService.updateGroupInfo(paramVo);
         return new APIResult(ResultCodes.Success);
     }
 

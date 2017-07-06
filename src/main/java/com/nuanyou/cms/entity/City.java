@@ -26,6 +26,10 @@ public class City {
     private Date createtime;
     private Integer radio;
 
+    public City(Long id) {
+        this.id = id;
+    }
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +41,6 @@ public class City {
         this.id = id;
     }
 
-
     @Column(name = "name", nullable = true, length = 255)
     public String getName() {
         return name;
@@ -46,7 +49,6 @@ public class City {
     public void setName(String name) {
         this.name = name;
     }
-
 
     @Column(name = "ename", nullable = true, length = 255)
     public String getEname() {
@@ -57,7 +59,6 @@ public class City {
         this.ename = ename;
     }
 
-
     @Column(name = "icon", nullable = true, length = 255)
     public String getIcon() {
         return icon;
@@ -66,7 +67,6 @@ public class City {
     public void setIcon(String icon) {
         this.icon = icon;
     }
-
 
     @Column(name = "sort", nullable = true)
     public Integer getSort() {
@@ -77,7 +77,6 @@ public class City {
         this.sort = sort;
     }
 
-
     @Column(name = "code", nullable = true, length = 255)
     public String getCode() {
         return code;
@@ -86,7 +85,6 @@ public class City {
     public void setCode(String code) {
         this.code = code;
     }
-
 
     public Boolean getDisplay() {
         return display;
@@ -105,7 +103,6 @@ public class City {
     public void setCountry(Country country) {
         this.country = country;
     }
-
 
     @LastModified
     @Column(name = "updatetime", nullable = true)
@@ -127,7 +124,6 @@ public class City {
         this.createtime = createtime;
     }
 
-
     @Column(name = "radio", nullable = true, precision = 0)
     public Integer getRadio() {
         return radio;
@@ -136,7 +132,6 @@ public class City {
     public void setRadio(Integer radio) {
         this.radio = radio;
     }
-
 
     public City(Long id, String name) {
         this.id = id;
