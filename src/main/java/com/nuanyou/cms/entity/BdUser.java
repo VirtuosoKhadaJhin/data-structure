@@ -7,21 +7,15 @@ import com.nuanyou.cms.commons.LastModified;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * bd宝用户
- * <p>
- * Created by sharp on 2017/6/22 - 15:12
- */
 @Entity
-@Table(name = "bd_user", catalog = "nuanyou20") //catalog配置访问的数据库
+@Table(name = "bd_user") //catalog配置访问的数据库
 @EntityListeners(DateEntityListener.class)
 public class BdUser {
-
     private Long id;
     private String name;
     private String chineseName;
     private String pwd;
-    private Long countryId;
+    private Country country;
     private String email;
     private String dmail;
     private Byte deleted;
@@ -73,13 +67,14 @@ public class BdUser {
         this.pwd = pwd;
     }
 
-    @Column(name = "countryid")
-    public Long getCountryId() {
-        return countryId;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "countryid")
+    public Country getCountry() {
+        return country;
     }
 
-    public void setCountryId(Long countryId) {
-        this.countryId = countryId;
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     @Column(name = "email")

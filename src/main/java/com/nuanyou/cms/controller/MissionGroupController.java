@@ -5,11 +5,10 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.Country;
-import com.nuanyou.cms.entity.MissionGroup;
-import com.nuanyou.cms.model.BdUserVo;
-import com.nuanyou.cms.model.MissionGroupParamVo;
-import com.nuanyou.cms.model.MissionGroupRequestVo;
-import com.nuanyou.cms.model.MissionGroupVo;
+import com.nuanyou.cms.entity.mission.MissionGroup;
+import com.nuanyou.cms.model.mission.MissionGroupParamVo;
+import com.nuanyou.cms.model.mission.MissionGroupRequestVo;
+import com.nuanyou.cms.model.mission.MissionGroupVo;
 import com.nuanyou.cms.service.BdUserService;
 import com.nuanyou.cms.service.CityService;
 import com.nuanyou.cms.service.CountryService;
@@ -25,10 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-/**
- * 战队， 组， 地推管理
- * Created by sharp on 2017/6/28 - 15:31
- */
 @Controller
 @RequestMapping("missionGroup")
 public class MissionGroupController {
@@ -74,36 +69,6 @@ public class MissionGroupController {
         model.addAttribute("group", group);
         model.addAttribute("list", list);
         return "missionGroup/member";
-    }
-
-    /**
-     * 查询已有的组员(指派队长)
-     *
-     * @param requestVo
-     * @return
-     */
-    @RequestMapping("queryGroupBdUsers")
-    @ResponseBody
-    public APIResult<List<BdUserVo>> queryGroupBdUsers(@RequestBody MissionGroupVo requestVo) {
-        APIResult<List<BdUserVo>> result = new APIResult<List<BdUserVo>>();
-        List<BdUserVo> res = missionGroupService.members(requestVo.getGroupId(), requestVo.getCountryId());
-        result.setData(res);
-        return result;
-    }
-
-    /**
-     * 指派队长
-     *
-     * @param requestVo
-     * @return
-     */
-    @RequestMapping("distributeLeader")
-    @ResponseBody
-    public APIResult<Boolean> distributeLeader(@RequestBody MissionGroupVo requestVo) {
-        APIResult<Boolean> result = new APIResult<Boolean>();
-        Boolean res = missionGroupService.distributeLeader(requestVo.getGroupId(), requestVo.getLeaderId());
-        result.setData(res);
-        return result;
     }
 
     /**

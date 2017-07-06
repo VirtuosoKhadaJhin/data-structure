@@ -19,7 +19,7 @@ public interface BdUserDao extends JpaRepository<BdUser, Long>, JpaSpecification
      *
      * @return
      */
-    @Query(value = "SELECT t from BdUser t where deleted=0")
+    @Query(value = "SELECT t from BdUser t where t.deleted=0")
     List<BdUser> findallBdUser();
 
     /**
@@ -27,15 +27,15 @@ public interface BdUserDao extends JpaRepository<BdUser, Long>, JpaSpecification
      *
      * @return
      */
-    @Query(value = "SELECT t from BdUser t where countryid=:id")
+    @Query(value = "SELECT t from BdUser t where t.country.id=:id and t.deleted = 0")
     List<BdUser> findBdUsersByCountryId(@Param("id") Long id);
 
-    @Query(value = "select  t from BdUser t where id in (:bdUserIds)and countryid=:countryId")
+    @Query(value = "select  t from BdUser t where t.id in (:bdUserIds) and t.country.id=:countryId and t.deleted = 0")
     List<BdUser> findBdUsersByIdsAndCountryId(@Param("bdUserIds") List<Long> bdUserIds, @Param("countryId") Long countryId);
 
-    @Query(value = "SELECT t from BdUser t where name=:name")
+    @Query(value = "SELECT t from BdUser t where t.name=:name and t.deleted = 0")
     List<BdUser> checkNameRepeat(@Param("name") String name);
 
-    @Query(value = "select t from BdUser t where t.name=?2 and t.id != ?1")
+    @Query(value = "select t from BdUser t where t.name=?2 and t.id != ?1 and t.deleted = 0")
     List<BdUser> findByNameNonBdUser(Long id, String name);
 }

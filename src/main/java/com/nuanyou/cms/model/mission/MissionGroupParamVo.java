@@ -1,4 +1,4 @@
-package com.nuanyou.cms.model;
+package com.nuanyou.cms.model.mission;
 
 /**
  * Created by sharp on 2017/6/28 - 21:25

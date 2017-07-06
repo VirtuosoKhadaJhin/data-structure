@@ -1,4 +1,4 @@
-package com.nuanyou.cms.model;
+package com.nuanyou.cms.model.mission;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;

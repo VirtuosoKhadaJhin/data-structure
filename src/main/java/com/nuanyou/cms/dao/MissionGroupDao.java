@@ -1,7 +1,7 @@
 package com.nuanyou.cms.dao;
 
 import com.nuanyou.cms.entity.BdUser;
-import com.nuanyou.cms.entity.MissionGroup;
+import com.nuanyou.cms.entity.mission.MissionGroup;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -58,6 +58,6 @@ public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaS
 
     List<MissionGroup> findByName(String name);
 
-    @Query(value = "select t from MissionGroup t where t.name=?2 and t.id != ?1")
+    @Query(value = "select t from MissionGroup t where t.name=?2 and t.id != ?1 and t.delFlag=0")
     List<MissionGroup> findByNameNonGroup(Long groupId, String name);
 }

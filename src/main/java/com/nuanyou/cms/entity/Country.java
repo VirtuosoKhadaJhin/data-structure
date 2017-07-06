@@ -1,5 +1,6 @@
 package com.nuanyou.cms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
 
@@ -140,6 +141,7 @@ public class Country {
     }
 
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rateid")
     public Rate getRate() {

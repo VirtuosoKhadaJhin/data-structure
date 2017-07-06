@@ -1,8 +1,8 @@
-package com.nuanyou.cms.model;
+package com.nuanyou.cms.model.mission;
 
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.Merchant;
-import com.nuanyou.cms.entity.MissionGroup;
+import com.nuanyou.cms.entity.mission.MissionGroup;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import com.nuanyou.cms.entity.mission.BdMerchantTrack;
 

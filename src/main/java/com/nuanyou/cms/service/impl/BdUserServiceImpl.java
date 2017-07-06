@@ -3,12 +3,15 @@ package com.nuanyou.cms.service.impl;
 import com.google.common.collect.Lists;
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
-import com.nuanyou.cms.model.BdUserRequestVo;
+import com.nuanyou.cms.entity.mission.MissionGroup;
+import com.nuanyou.cms.entity.mission.MissionGroupBd;
 import com.nuanyou.cms.model.BdUserParamVo;
+import com.nuanyou.cms.model.BdUserRequestVo;
 import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.BdUserService;
 import com.nuanyou.cms.service.CountryService;
+import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.MD5Utils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
@@ -29,9 +32,6 @@ public class BdUserServiceImpl implements BdUserService {
 
     @Autowired
     private MissionGroupBdDao groupBdDao;
-
-    @Autowired
-    private MissionGroupDao groupDao;
 
     @Autowired
     private BdRoleDao bdRoleDao;
@@ -58,7 +58,7 @@ public class BdUserServiceImpl implements BdUserService {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 predicate.add(cb.equal(root.get("deleted"), 0));
                 if (requestVo.getConturyid() != null) {
-                    predicate.add(cb.equal(root.get("countryId"), requestVo.getConturyid()));
+                    predicate.add(cb.equal(root.get("country").get("id"), requestVo.getConturyid()));
                 }
                 if (StringUtils.isNotEmpty(requestVo.getName())) {
                     predicate.add(cb.like(root.get("name"), "%" + requestVo.getName() + "%"));
@@ -75,8 +75,7 @@ public class BdUserServiceImpl implements BdUserService {
             }
         }, pageable);
 
-        List<BdRelUserRole> bdRelUserRoles = bdRelUserRoleDao.findAll();
-        List<BdUserVo> allCate = this.convertToBdUserManagerVo(bdUsers.getContent(), bdRelUserRoles);
+        List<BdUserVo> allCate = this.convertToBdUserManagerVo(bdUsers.getContent());
         Page<BdUserVo> pageVOs = new PageImpl<>(allCate, pageable, bdUsers.getTotalElements());
         return pageVOs;
     }
@@ -111,29 +110,11 @@ public class BdUserServiceImpl implements BdUserService {
 
     @Override
     public BdUserVo findUserById(Long id) {
-        List<BdRelUserRole> userRoles = bdRelUserRoleDao.findAll();
-        BdUser user = bdUserDao.findUserById(id);
-
-        BdUserVo vo = new BdUserVo();
-        vo.setId(user.getId());
-        vo.setName(user.getName());
-        vo.setChineseName(user.getChineseName());
-
-        //设置国家
-        vo.setCountry(countryService.findOne(user.getCountryId()));
-        vo.setEmail(user.getEmail());
-        vo.setDmail(user.getDmail());
-        vo.setDeleted(user.getDeleted());
-        vo.setCreateTime(user.getCreateTime());
-        vo.setUpdateTime(user.getUpdateTime());
-
-        //判断用户是否有角色
-        for (BdRelUserRole userRole : userRoles) {
-            if (user.equals(userRole.getUser())) {
-                vo.setRole(userRole.getRole());
-            }
-        }
-        return vo;
+        BdRelUserRole relUserRole = bdRelUserRoleDao.findByUserId(id);
+        BdUser user = relUserRole.getUser();
+        BdUserVo bdUserVo = BeanUtils.copyBean(user, new BdUserVo());
+        bdUserVo.setRole(relUserRole.getRole());
+        return bdUserVo;
     }
 
     @Override
@@ -146,29 +127,19 @@ public class BdUserServiceImpl implements BdUserService {
     public void saveAddUserAndRole(BdUserParamVo paramVo) {
         BdUser user = new BdUser();
         BdRelUserRole userRole = new BdRelUserRole();
-
-        //保存用户信息
         user.setName(paramVo.getName());
         user.setChineseName(paramVo.getChineseName());
         user.setEmail(paramVo.getEmail());
         user.setDmail(paramVo.getDmail());
-        user.setCountryId(paramVo.getCountryId());
-
-        //设置默认密码
+        user.setCountry(new Country(paramVo.getCountryId()));
         String pwd = MD5Utils.encrypt("123456");
         user.setPwd(pwd);
-
-        //设置默认显示
         user.setDeleted(Byte.valueOf("0"));
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
-
-        //保存用户角色信息
         userRole.setUser(user);
         BdRole role = this.findRoleById(paramVo.getRoleId());
-
-        userRole.setRole(role);
-
+        userRole.setRole(new BdRole(paramVo.getRoleId()));
         this.saveUser(user);
         this.saveUserRole(userRole);
     }
@@ -180,7 +151,7 @@ public class BdUserServiceImpl implements BdUserService {
         BdRole role = this.findRoleById(paramVo.getRoleId());
         user.setName(paramVo.getName());
         user.setChineseName(paramVo.getChineseName());
-        user.setCountryId(paramVo.getCountryId());
+        user.setCountry(new Country(paramVo.getCountryId()));
         user.setEmail(paramVo.getEmail());
         user.setDmail(paramVo.getDmail());
         user.setUpdateTime(new Date());
@@ -224,7 +195,7 @@ public class BdUserServiceImpl implements BdUserService {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 predicate.add(cb.equal(root.get("deleted"), 0));
                 if (country != null) {
-                    predicate.add(cb.equal(root.get("countryId"), country));
+                    predicate.add(cb.equal(root.get("country").get("id"), country));
                 }
                 Predicate[] arrays = new Predicate[predicate.size()];
                 ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("updateTime")));
@@ -318,34 +289,32 @@ public class BdUserServiceImpl implements BdUserService {
      * 用户可能没有角色，因此要以用户为主体，
      *
      * @param users
-     * @param userRoles
      * @return
      */
-    private List<BdUserVo> convertToBdUserManagerVo(List<BdUser> users, List<BdRelUserRole> userRoles) {
-
-        ArrayList<BdUserVo> list = new ArrayList<>();
-        for (BdUser user : users) {
-            BdUserVo vo = new BdUserVo();
-            vo.setId(user.getId());
-            vo.setName(user.getName());
-            vo.setChineseName(user.getChineseName());
-            vo.setCountry(countryService.findOne(user.getCountryId()));
-            vo.setEmail(user.getEmail());
-            vo.setDmail(user.getDmail());
-            vo.setDeleted(user.getDeleted());
-            vo.setCreateTime(user.getCreateTime());
-            vo.setUpdateTime(user.getUpdateTime());
-
-            //判断用户是否有角色
-            for (BdRelUserRole userRole : userRoles) {
-                if (user.equals(userRole.getUser())) {
-                    vo.setRole(userRole.getRole());
-                }
-            }
-            list.add(vo);
+    private List<BdUserVo> convertToBdUserManagerVo(List<BdUser> users) {
+        if (CollectionUtils.isEmpty(users)) {
+            return Lists.newArrayList();
         }
-
-        return list;
+        final Collection userIds = CollectionUtils.collect(users, new Transformer() {
+            @Override
+            public Long transform(Object input) {
+                return ((BdUser) input).getId();
+            }
+        });
+        List<BdRelUserRole> bdUserRoles = bdRelUserRoleDao.findByUserIds(userIds);
+        Map<Long, BdRole> maps = new LinkedHashMap<Long, BdRole>(bdUserRoles.size());
+        for (BdRelUserRole bdUserRole : bdUserRoles) {
+            maps.put(bdUserRole.getUser().getId(), bdUserRole.getRole());
+        }
+        List<BdUserVo> userVos = Lists.newArrayList();
+        for (BdUser user : users) {
+            BdUserVo bdUserVo = BeanUtils.copyBean(user, new BdUserVo());
+            if (maps.containsKey(user.getId())) {
+                bdUserVo.setRole(maps.get(user.getId()));
+            }
+            userVos.add(bdUserVo);
+        }
+        return userVos;
     }
 
     private String generateRoleNameByRoles(List<BdRelUserRole> roles) {

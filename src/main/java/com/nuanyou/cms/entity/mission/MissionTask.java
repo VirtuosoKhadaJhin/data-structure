@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.Merchant;
-import com.nuanyou.cms.entity.MissionGroup;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;

@@ -1,4 +1,4 @@
-package com.nuanyou.cms.entity;
+package com.nuanyou.cms.entity.mission;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
