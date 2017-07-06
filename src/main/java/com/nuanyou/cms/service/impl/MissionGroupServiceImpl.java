@@ -99,6 +99,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     @Override
     public void updateGroupInfo(MissionGroupParamVo vo) {
         MissionGroup group = groupDao.findOne(vo.getId());
+        this.unbindGroupBdRelation(vo, group);
         group.setName(vo.getName());
         group.setCountry(new Country(vo.getCountryId()));
         group.setCity(new City(vo.getCityId()));
@@ -107,7 +108,6 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         group.setViceLeader(new BdUser(vo.getViceLeaderId()));
         group.setDesc(vo.getDesc());
         groupDao.save(group);
-        this.unbindGroupBdRelation(vo, group);
     }
 
     @Override
@@ -365,13 +365,13 @@ public class MissionGroupServiceImpl implements MissionGroupService {
             groupBdDao.save(missionGroupBds);
             return;
         }
-        if (oldLeader != vo.getLeaderId() || (oldLeader == null && vo.getLeaderId() != null)) {
+        if (oldLeader != vo.getLeaderId() || oldLeader == null) {
             if (oldLeader != null) {
                 groupBdDao.deleteByBdUserId(oldLeader);
             }
             groupBdDao.save(leaderGroupBd);
         }
-        if (oldViceLeader != vo.getViceLeaderId() || (oldViceLeader == null && vo.getViceLeaderId() != null)) {
+        if (oldViceLeader != vo.getViceLeaderId() || oldViceLeader == null) {
             if (oldViceLeader != null) {
                 groupBdDao.deleteByBdUserId(oldViceLeader);
             }
