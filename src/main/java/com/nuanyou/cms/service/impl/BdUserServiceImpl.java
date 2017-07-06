@@ -167,9 +167,8 @@ public class BdUserServiceImpl implements BdUserService {
 
     @Override
     public void del(Long id) {
-        BdUser user = bdUserDao.findOne(id);
-        user.setDeleted(Byte.valueOf("1"));
-        bdUserDao.save(user);
+        bdUserDao.updateDeleteUser(id);
+        groupBdDao.deleteByBdUserId(id);
     }
 
     @Override

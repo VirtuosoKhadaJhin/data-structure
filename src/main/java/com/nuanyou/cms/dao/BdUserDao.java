@@ -1,11 +1,12 @@
 package com.nuanyou.cms.dao;
 
 import com.nuanyou.cms.entity.BdUser;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -29,4 +30,9 @@ public interface BdUserDao extends JpaRepository<BdUser, Long>, JpaSpecification
 
     @Query(value = "select t from BdUser t where t.name=?2 and t.id != ?1 and t.deleted = 0")
     List<BdUser> findByNameNonBdUser(Long id, String name);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE BdUser set deleted=1 where id=?1")
+    void updateDeleteUser(Long id);
 }
