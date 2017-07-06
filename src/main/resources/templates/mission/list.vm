@@ -72,19 +72,19 @@
                                     <td>$!entity.merchant.district.city.name</td>
                                     <td>$!entity.group.name - $!entity.bdUser.chineseName</td>
                                     <td class="td-imgurl">
+                                        #if($!entity.merchantTrack.imgUrls.size()==0 || "$!entity.merchantTrack.imgUrls"=="")
+                                            <label class="no-img-result">暂无签到图片</label>
+                                        #else
                                         <div class="imgurl-info">
-                                            #if($!entity.merchantTrack.imgUrls.size()==0 || "$!entity.merchantTrack.imgUrls"=="")
-                                                暂无签到图片
-                                            #else
-                                                #foreach($imgUrl in $!entity.merchantTrack.imgUrls)
-                                                    <div class="hovereffect">
-                                                        <a target="_blank" href="$!imgUrl">
-                                                            <img class="img-polaroid td-img" src="$!imgUrl">
-                                                        </a>
-                                                    </div>
-                                                #end
+                                            #foreach($imgUrl in $!entity.merchantTrack.imgUrls)
+                                                <div class="hovereffect">
+                                                    <a target="_blank" href="$!imgUrl">
+                                                        <img class="img-polaroid td-img" src="$!imgUrl">
+                                                    </a>
+                                                </div>
                                             #end
-                                        </div>
+                                        #end
+                                    </div>
                                     </td>
                                     <td>$!entity.version</td>
                                     <td class="td-bz"><a target="_blank" href="/order/edit?type=3&id=$!entity.orderno">$!entity.orderno</a></td>
