@@ -13,27 +13,17 @@ import java.util.List;
 
 public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaSpecificationExecutor {
 
-    /**
-     * 查找所有可见的group
-     *
-     * @return
-     */
     @Query(value = "SELECT t from MissionGroup t where t.delFlag=0")
     List<MissionGroup> findAllGroup();
-    /**
-     * 通过组长查找组
-     *
-     * @param leaderid
-     * @return
-     */
+
+    @Query(value = "SELECT t from MissionGroup t where t.leader.id=?1 and t.delFlag=0")
     List<MissionGroup> findByLeaderId(Long leaderid);
 
-    /**
-     * 通过组id查找组
-     * @param id
-     * @return
-     */
-    List<MissionGroup> findById(Long id);
+    @Query(value = "SELECT t from MissionGroup t where t.viceLeader.id=?1 and t.delFlag=0")
+    List<MissionGroup> findByViceLeaderId(Long viceLeaderId);
+
+    @Query(value = "SELECT t from MissionGroup t where t.id=?1 and t.delFlag=0")
+    MissionGroup findByGroupId(Long id);
 
     @Modifying
     @Transactional

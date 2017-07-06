@@ -14,7 +14,7 @@ public interface MissionGroupBdDao extends JpaRepository<MissionGroupBd, Long>, 
 
     List<MissionGroupBd> findByGroupId(Long groupid);
 
-    List<MissionGroupBd> findByBdId(Long bdid);
+    MissionGroupBd findByBdId(Long bdid);
 
     @Query("select t from MissionGroupBd t where t.groupId!=?1")
     List<MissionGroupBd> findByNonGroupId(Long groupId);

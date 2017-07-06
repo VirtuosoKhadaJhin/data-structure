@@ -10,7 +10,6 @@ import com.nuanyou.cms.model.BdUserRequestVo;
 import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.BdUserService;
-import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.MD5Utils;
 import org.apache.commons.collections.CollectionUtils;
@@ -34,13 +33,13 @@ public class BdUserServiceImpl implements BdUserService {
     private MissionGroupBdDao groupBdDao;
 
     @Autowired
+    private MissionGroupDao groupDao;
+
+    @Autowired
     private BdRoleDao bdRoleDao;
 
     @Autowired
     private BdRelUserRoleDao bdRelUserRoleDao;
-
-    @Autowired
-    private CountryService countryService;
 
     @Autowired
     private BdCountryDao bdCountryDao;
@@ -146,7 +145,9 @@ public class BdUserServiceImpl implements BdUserService {
 
     @Override
     public void saveEditUserAndRole(BdUserParamVo paramVo) {
-        BdUser user = this.findBdUserById(paramVo.getId());
+        Long bdUserId = paramVo.getId();
+        BdUser user = this.findBdUserById(bdUserId);
+        Long oldCountryId = user.getCountry().getId();
         BdRelUserRole userRole = new BdRelUserRole();
         BdRole role = this.findRoleById(paramVo.getRoleId());
         user.setName(paramVo.getName());
@@ -159,6 +160,29 @@ public class BdUserServiceImpl implements BdUserService {
         userRole.setRole(role);
         this.updateUser(user);
         this.updateUserRole(userRole);
+
+        if (oldCountryId.equals(paramVo.getCountryId())) {
+            return;
+        }
+        MissionGroupBd missionGroupBd = groupBdDao.findByBdId(bdUserId);
+        if (missionGroupBd == null) {
+            return;
+        }
+        MissionGroup groupInfo = groupDao.findByGroupId(missionGroupBd.getGroupId());
+        if (groupInfo == null) {
+            return;
+        }
+        Long countryId = groupInfo.getCountry().getId();
+        if (countryId.equals(paramVo.getCountryId())) {//组和用户所属国家一样
+            return;
+        }
+
+        List<MissionGroup> leaderGroup = groupDao.findByLeaderId(bdUserId);
+        List<MissionGroup> viceLeaderGroup = groupDao.findByViceLeaderId(bdUserId);
+        if (CollectionUtils.isEmpty(leaderGroup) && CollectionUtils.isEmpty(viceLeaderGroup)) {
+            return;//bdUserId不是队长或者副队长
+        }
+
     }
 
     @Override

@@ -146,7 +146,6 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     @Override
     public List<BdUser> findAllBdUserNonGroup() {
         List<BdUser> bdUsers = bdUserDao.findAll();
-
         // 查询联合表, 不需要已经有组的组员了!
         List<MissionGroupBd> missionGroupBds = groupBdDao.findAll();
         swichUserNoGroup(missionGroupBds, bdUsers);
@@ -233,12 +232,11 @@ public class MissionGroupServiceImpl implements MissionGroupService {
 
     @Override
     public MissionGroup findGroupByUserId(Long userId) {
-        List<MissionGroupBd> groupBds = groupBdDao.findByBdId(userId);
-        if (CollectionUtils.isEmpty(groupBds)) {
-            throw new APIException(ResultCodes.NotFoundGroup, ResultCodes.NotFoundGroup.message);
+        MissionGroupBd groupBd = groupBdDao.findByBdId(userId);
+        if (groupBd == null) {
+            return null;
         }
-        Long groupId = groupBds.get(0).getGroupId();
-        MissionGroup group = groupDao.findOne(groupId);
+        MissionGroup group = groupDao.findByGroupId(groupBd.getGroupId());
         return group;
     }
 
