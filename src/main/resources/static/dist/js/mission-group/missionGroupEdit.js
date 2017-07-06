@@ -4,7 +4,7 @@
 $(document).ready(function () {
     var sureChangeCountry = false;
 
-    changeCity();
+    changeCity(false);
 
     // 联动城市
     $(".select-country").on("change", function () {
@@ -16,22 +16,14 @@ $(document).ready(function () {
             $(".editGroupCountry").text("更换国家会默认解除当前组成员及队长职位，确认要继续吗？");
             $(".editGroupCountryModal").modal("show");
         } else {
-            changeCity();
+            changeCity(true);
             queryBdUsers();
         }
     });
 
-    // 取消更换国家
-    $(".cancel-change-country").on("click", function () {
-        var groupCountryId = $(".groupCountryId").val();
-        $(".select-country").val(groupCountryId);
-    });
-
-    // 确认更换国家
-    $(".sure-change-country").on("click", function () {
-        changeCity();
-        queryBdUsers();
-        $(".editGroupCountryModal").modal("hide");
+    //关闭更换国家弹窗
+    $(".editGroupCountryModal").on("hidden.bs.modal", function () {
+        queryBdUsers(), changeCity(true);
     });
 
     var checkGroupUnique = true;
@@ -160,18 +152,29 @@ $(document).ready(function () {
     });
 
     // 联动城市
-    function changeCity() {
+    function changeCity(isChangeCountry) {
         var countryId = $(".select-country").val();
+        var cityId = $(".select-city").val();
         var cityOptions = $(".option-city");
         for (var i = 0; i < cityOptions.length; i++) {
             var cityOption = cityOptions[i];
+            if (countryId == "") {
+                $(cityOption).hide();
+            }
             if (countryId != $(cityOption).attr("country-id")) {
                 $(cityOption).hide();
             } else {
                 $(cityOption).show();
             }
         }
-        $(".select-city").val("");
+        if (isChangeCountry) {
+            if (countryId == $(".groupCountryId").val()) {
+                var cityId = $(".select-city").attr("data-city");
+                $(".select-city").val(cityId);
+            } else {
+                $(".select-city").val("");
+            }
+        }
     }
 
 
@@ -180,20 +183,24 @@ $(document).ready(function () {
         var countryId = $(".select-country").val();
         $.ajax({
             url: 'findNonGroupByCountryId',
-            data: JSON.stringify({countryId: countryId}),
+            data: JSON.stringify({countryId: countryId, groupId: $(".hide-groupId").val()}),
             type: 'post',
             dataType: 'json',
             contentType: 'application/json',
             success: function (result) {
                 if (result.code == 0) {
-                    $(".leader").empty();
+                    $(".leader").empty(), $(".viceleader").empty();
                     $(".leader").append("<option value>请选择队长</option>");
-                    $(".viceleader").empty();
                     $(".viceleader").append("<option value>请选择副队长</option>");
                     for (var itemNum in result.data) {
                         var bd = result.data[itemNum]
                         $(".leader").append("<option value='" + bd.id + "'>" + bd.chineseName + "</option>");
                         $(".viceleader").append("<option value='" + bd.id + "'>" + bd.chineseName + "</option>");
+                    }
+                    if (countryId == $(".groupCountryId").val()) {
+                        var leader = $(".leader").attr("data-leader");
+                        var viceLeader = $(".viceleader").attr("data-viceLeader");
+                        $(".leader").val(leader), $(".viceleader").val(viceLeader);
                     }
                 }
             }

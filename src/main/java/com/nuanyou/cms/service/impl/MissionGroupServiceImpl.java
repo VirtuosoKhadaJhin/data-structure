@@ -123,11 +123,11 @@ public class MissionGroupServiceImpl implements MissionGroupService {
         // 查询联合表, 不需要已经有组的组员了!
         if (groupId == null) {
             List<MissionGroupBd> missionGroupBds = groupBdDao.findAll();
-            switchUserNoGroup(missionGroupBds, bdUsers);
+            this.switchUserNoGroup(missionGroupBds, bdUsers);
             return bdUsers;
         }
         List<MissionGroupBd> missionGroupBds = groupBdDao.findByNonGroupId(groupId);
-        switchUserNoGroup(missionGroupBds, bdUsers);
+        this.switchUserNoGroup(missionGroupBds, bdUsers);
         return bdUsers;
     }
 
@@ -322,7 +322,7 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     }
 
     /**
-     * 选择不在组中的BD用户
+     * 选择不在组中的BD用户(包含当前组)
      *
      * @param missionGroupBds
      * @param bdUsers
