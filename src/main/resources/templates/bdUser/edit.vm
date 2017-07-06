@@ -103,7 +103,7 @@
     </div>
 
     <!-- 编辑用户结果 -->
-    <div class="modal hide fade updateBdUserResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal hide fade updateBdUserResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h4 id="myModalLabel">编辑/保存结果</h4>
