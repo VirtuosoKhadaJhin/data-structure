@@ -161,28 +161,8 @@ public class BdUserServiceImpl implements BdUserService {
         this.updateUser(user);
         this.updateUserRole(userRole);
 
-        if (oldCountryId.equals(paramVo.getCountryId())) {
-            return;
-        }
-        MissionGroupBd missionGroupBd = groupBdDao.findByBdId(bdUserId);
-        if (missionGroupBd == null) {
-            return;
-        }
-        MissionGroup groupInfo = groupDao.findByGroupId(missionGroupBd.getGroupId());
-        if (groupInfo == null) {
-            return;
-        }
-        Long countryId = groupInfo.getCountry().getId();
-        if (countryId.equals(paramVo.getCountryId())) {//组和用户所属国家一样
-            return;
-        }
-
-        List<MissionGroup> leaderGroup = groupDao.findByLeaderId(bdUserId);
-        List<MissionGroup> viceLeaderGroup = groupDao.findByViceLeaderId(bdUserId);
-        if (CollectionUtils.isEmpty(leaderGroup) && CollectionUtils.isEmpty(viceLeaderGroup)) {
-            return;//bdUserId不是队长或者副队长
-        }
-
+        //如果BD用户国家改变，删除组中关系
+        this.unbindGroupBdRelation(paramVo, oldCountryId);
     }
 
     @Override
@@ -277,11 +257,11 @@ public class BdUserServiceImpl implements BdUserService {
 
     @Override
     public List<BdUser> findAllBdUsers() {
-        List<BdUser> bdUsers = bdUserDao.findallBdUser();
-        return bdUsers;
+        return bdUserDao.findallBdUser();
     }
 
-    private List<BdUser> findBdUsersByGroup(Long groupId) {
+    @Override
+    public List<BdUser> findBdUsersByGroup(Long groupId) {
         List<MissionGroupBd> userBds = groupBdDao.findByGroupId(groupId);
         Collection<Long> userIds = (List<Long>) CollectionUtils.collect(userBds, new Transformer() {
             @Override
@@ -292,21 +272,37 @@ public class BdUserServiceImpl implements BdUserService {
         return bdUserDao.findByIdIn(Lists.newArrayList(userIds));
     }
 
-    private List<BdUser> findBdUsersByGroupIds(List<MissionGroup> groups) {
-        List<Long> groupIds = Lists.newArrayList();
-        for (MissionGroup group : groups) {
-            groupIds.add(group.getId());
+    /**
+     * 用户所属国家改变，解绑组关系
+     *
+     * @param paramVo
+     * @param oldCountryId
+     */
+    private void unbindGroupBdRelation(BdUserParamVo paramVo, Long oldCountryId) {
+        if (oldCountryId.equals(paramVo.getCountryId())) {//国家未改变
+            return;
         }
-        if (CollectionUtils.isEmpty(groupIds)) {
-            return Lists.newArrayList();
+        Long bdUserId = paramVo.getId();
+        MissionGroupBd missionGroupBd = groupBdDao.findByBdId(bdUserId);
+        if (missionGroupBd == null) {//用户不属于任何组
+            return;
         }
-        List<MissionGroupBd> userBds = groupBdDao.findByGroupIds(groupIds);
-        List<Long> userIds = Lists.newArrayList();
-        for (MissionGroupBd userBd : userBds) {
-            userIds.add(userBd.getBdId());
+        groupBdDao.deleteByBdUserId(bdUserId);
+        MissionGroup groupInfo = groupDao.findByGroupId(missionGroupBd.getGroupId());
+        if (groupInfo == null) {//组信息不存在或者已删除
+            return;
         }
-        List<BdUser> bdUsers = bdUserDao.findByIdIn(userIds);
-        return bdUsers;
+        MissionGroup leaderGroup = groupDao.findByLeaderId(bdUserId);
+        MissionGroup viceLeaderGroup = groupDao.findByViceLeaderId(bdUserId);
+        if (leaderGroup == null && viceLeaderGroup == null) {
+            return;//bdUserId不是队长或者副队长
+        }
+        if (leaderGroup != null) {
+            groupInfo.setLeader(null);
+        } else if (viceLeaderGroup != null) {
+            groupInfo.setViceLeader(null);
+        }
+        groupDao.save(groupInfo);
     }
 
     /**

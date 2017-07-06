@@ -17,10 +17,10 @@ public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaS
     List<MissionGroup> findAllGroup();
 
     @Query(value = "SELECT t from MissionGroup t where t.leader.id=?1 and t.delFlag=0")
-    List<MissionGroup> findByLeaderId(Long leaderid);
+    MissionGroup findByLeaderId(Long leaderid);
 
     @Query(value = "SELECT t from MissionGroup t where t.viceLeader.id=?1 and t.delFlag=0")
-    List<MissionGroup> findByViceLeaderId(Long viceLeaderId);
+    MissionGroup findByViceLeaderId(Long viceLeaderId);
 
     @Query(value = "SELECT t from MissionGroup t where t.id=?1 and t.delFlag=0")
     MissionGroup findByGroupId(Long id);
@@ -46,6 +46,7 @@ public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaS
     @Query("SELECT t from MissionGroup t where t.country.id=?1 and t.delFlag=0")
     List<MissionGroup> findGroupsByCountryId(Long country);
 
+    @Query("SELECT t from MissionGroup t where t.name=?1 and t.delFlag=0")
     List<MissionGroup> findByName(String name);
 
     @Query(value = "select t from MissionGroup t where t.name=?2 and t.id != ?1 and t.delFlag=0")

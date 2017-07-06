@@ -5,10 +5,6 @@ import com.nuanyou.cms.entity.Country;
 
 import java.util.Date;
 
-/**
- * // TODO: 2017/6/22 注释
- * Created by sharp on 2017/6/22 - 14:53
- */
 public class BdUserVo {
     private Long id;
     private String name;

@@ -12,16 +12,12 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-/**
- * bd宝用户管理
- * <p>
- * Created by sharp on 2017/6/22 - 15:03
- */
 public interface BdUserService {
     /**
-     * //     * 查询所有bd宝用户列表
+     * 根据条件搜索BD用户
      *
-     * @return bd宝用户列表
+     * @param requestVo
+     * @return
      */
     Page<BdUserVo> findAllBdUserVos(final BdUserRequestVo requestVo);
 
@@ -60,8 +56,12 @@ public interface BdUserService {
      */
     void saveUserRole(BdRelUserRole userRole);
 
-    BdUserVo findUserById(Long id);
-
+    /**
+     * 查询角色信息
+     *
+     * @param roleId
+     * @return
+     */
     BdRole findRoleById(Long roleId);
 
     /**
@@ -71,9 +71,36 @@ public interface BdUserService {
      */
     void updateUserRole(BdRelUserRole userRole);
 
+    /**
+     * 查询用户信息（带角色）
+     *
+     * @param id
+     * @return
+     */
+    BdUserVo findUserById(Long id);
+
+    /**
+     * 查询用户信息（不带角色）
+     *
+     * @param id
+     * @return
+     */
     BdUser findBdUserById(long id);
 
+    /**
+     * 查询所有BD用户
+     *
+     * @return
+     */
     List<BdUser> findAllBdUsers();
+
+    /**
+     * 查询组所有成员
+     *
+     * @param groupId
+     * @return
+     */
+    List<BdUser> findBdUsersByGroup(Long groupId);
 
     /**
      * 保存新增的bduser和角色信息
@@ -103,8 +130,6 @@ public interface BdUserService {
      * @return
      */
     BdUser findBdUserByDemail(String email);
-
-    // List<BdUser> findBdUsersByCountryId(Long );
 
     /**
      * 根据组Id查询组员列表

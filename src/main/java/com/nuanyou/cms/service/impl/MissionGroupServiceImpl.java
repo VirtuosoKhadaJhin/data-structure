@@ -14,6 +14,7 @@ import com.nuanyou.cms.service.MissionGroupService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -244,10 +245,12 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     public List<BdUser> findBdUsersByGroupId(Long groupId) {
         List<MissionGroupBd> groupBds = groupBdDao.findByGroupId(groupId);
 
-        List<Long> userIds = Lists.newArrayList();
-        for (MissionGroupBd groupBd : groupBds) {
-            userIds.add(groupBd.getBdId());
-        }
+        Collection<Long> userIds = CollectionUtils.collect(groupBds, new Transformer() {
+            @Override
+            public Long transform(Object input) {
+                return ((MissionGroupBd)input).getBdId();
+            }
+        });
         return bdUserDao.findByIdIn(userIds);
     }
 

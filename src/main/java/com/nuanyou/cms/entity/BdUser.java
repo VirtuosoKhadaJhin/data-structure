@@ -29,6 +29,10 @@ public class BdUser {
         this.dmail = dmail;
     }
 
+    public BdUser(Long id) {
+        this.id = id;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
