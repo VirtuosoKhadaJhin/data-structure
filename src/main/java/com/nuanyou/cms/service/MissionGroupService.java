@@ -66,10 +66,9 @@ public interface MissionGroupService {
     /**
      * 更新组
      *
-     * @param id
      * @param paramVo
      */
-    void updateGroup(Long id, MissionGroupParamVo paramVo);
+    void updateGroupInfo(MissionGroupParamVo paramVo);
 
     /**
      * 通过id删除组
