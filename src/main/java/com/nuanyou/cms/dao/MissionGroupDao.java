@@ -32,7 +32,7 @@ public interface MissionGroupDao extends JpaRepository<MissionGroup, Long>, JpaS
 
     @Modifying
     @Transactional
-    @Query("UPDATE MissionGroup set delFlag=1 where id=?1")
+    @Query("UPDATE MissionGroup set delFlag=1, leader=null, viceLeader=null where id=?1")
     void deleteGroup(Long groupId);
 
     @Modifying
