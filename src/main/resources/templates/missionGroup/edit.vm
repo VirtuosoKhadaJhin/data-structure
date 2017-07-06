@@ -48,7 +48,7 @@
                                     <div>
                                         <label class="control-label my-label">城市：</label>
                                         <div class="controls my-controls">
-                                            <select class="span10 select-city">
+                                            <select class="span10 select-city" data-city="$!group.city.id">
                                                 <option class="city-unit" value>请选择城市</option>
                                                 #foreach($city in $!cities)
                                                     <option value="$!city.id" class="option-city" country-id="$!city.country.id" #if($!group.city.id == $!city.id) selected #end>$!city.name</option>
@@ -59,7 +59,7 @@
                                     <div>
                                         <label class="control-label my-label">队长：</label>
                                         <div class="controls my-controls">
-                                            <select class="span10 leader">
+                                            <select class="span10 leader" data-leader="$!group.leader.id">
                                                 <option value>请选择队长</option>
                                                 #foreach($bdUser in $!nonGroupUsers)
                                                     <option value="$!bdUser.id" #if($!group.leader.id == $!bdUser.id) selected #end>$!bdUser.chineseName</option>
@@ -70,7 +70,7 @@
                                     <div>
                                         <label class="control-label my-label">副队长：</label>
                                         <div class="controls my-controls">
-                                            <select class="span10 viceleader">
+                                            <select class="span10 viceleader" data-viceLeader="$!group.viceLeader.id">
                                                 <option value>请选择副队长</option>
                                                 #foreach($bdUser in $!nonGroupUsers)
                                                     <option value="$!bdUser.id" #if($!group.viceLeader.id == $!bdUser.id) selected #end>$!bdUser.chineseName</option>
@@ -87,7 +87,7 @@
                                 </div>
                                 <div class="form-actions" style="text-align: center">
                                     <input type="hidden" name="isPublic" value="0"/>
-                                    <input type="hidden" name="groupId" value="$!group.id"/>
+                                    <input type="hidden" class="hide-groupId" name="groupId" value="$!group.id"/>
                                     <input type="hidden" value="$!group.id" class="groupId"/>
                                     <input type="hidden" value="$!group.country.id" class="groupCountryId"/>
                                     <a class="btn btn-success edit-group">
