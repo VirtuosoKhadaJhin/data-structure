@@ -21,6 +21,11 @@ $(document).ready(function () {
         }
     });
 
+    // 确认更换国家
+    $(".sure-change-country").on("click", function () {
+        $(".editGroupCountryModal").modal("hide");
+    });
+
     //关闭更换国家弹窗
     $(".editGroupCountryModal").on("hidden.bs.modal", function () {
         queryBdUsers(), changeCity(true);
