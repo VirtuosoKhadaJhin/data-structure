@@ -17,7 +17,7 @@ table .tr-class:hover {
 }
 
 .th-img {
-    width: 34%;
+    width: 20%;
 }
 
 .th-op {
@@ -80,7 +80,7 @@ table .tr-class:hover {
 }
 
 .hovereffect {
-    width: 15%;
+    width: 32%;
     height: 15%;
     text-align: center;
     overflow: hidden;

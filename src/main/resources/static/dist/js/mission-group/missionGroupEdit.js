@@ -2,10 +2,36 @@
  * Created by mylon on 2017/7/3.
  */
 $(document).ready(function () {
-// 联动城市
+    var sureChangeCountry = false;
+
+    changeCity();
+
+    // 联动城市
     $(".select-country").on("change", function () {
+        // 确认是否改变国家
+        var newCountryId = $(".select-country").val();
+        var groupCountryId = $(".groupCountryId").val();
+
+        if (newCountryId != groupCountryId) {
+            $(".editGroupCountry").text("更换国家会默认解除当前组成员及队长职位，确认要继续吗？");
+            $(".editGroupCountryModal").modal("show");
+        } else {
+            changeCity();
+            queryBdUsers();
+        }
+    });
+
+    // 取消更换国家
+    $(".cancel-change-country").on("click", function () {
+        var groupCountryId = $(".groupCountryId").val();
+        $(".select-country").val(groupCountryId);
+    });
+
+    // 确认更换国家
+    $(".sure-change-country").on("click", function () {
         changeCity();
         queryBdUsers();
+        $(".editGroupCountryModal").modal("hide");
     });
 
     var checkGroupUnique = true;
@@ -31,16 +57,35 @@ $(document).ready(function () {
                     } else {
                         checkGroupUnique = true;
                     }
-                    console.log(result.data);
                 }
             }
         });
+    });
+
+    // 编辑的时候再次确认是否更换国家
+    $(".second-sure-change-country").on("click", function () {
+        sureChangeCountry = true;
+        $(".secondEditGroupCountryModal").modal("hide");
+        $(".edit-group").click();
     });
 
     // 编辑队长
     $(".edit-group").on("click", function () {
         if ($(".edit-group").hasClass("disable")) {
             return false;
+        }
+
+        // 优先判断是否更换城市
+        var newCountryId = $(".select-country").val();
+        var groupCountryId = $(".groupCountryId").val();
+
+        if (newCountryId != groupCountryId) {
+            if (!sureChangeCountry) {
+                $(".secondEditGroupCountryModal").modal("show");
+                return false;
+            }
+        } else {
+            sureChangeCountry = true;
         }
 
         var name = $(".name").val();
