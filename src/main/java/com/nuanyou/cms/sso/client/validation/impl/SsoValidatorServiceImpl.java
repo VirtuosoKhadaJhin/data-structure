@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.sso.client.validation.SsoValidatorService;
 import com.nuanyou.cms.sso.client.validation.User;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -24,19 +25,17 @@ public class SsoValidatorServiceImpl implements SsoValidatorService {
 
     private final String validateCodeUrl;
 
-    private  Boolean needAutoLogOut;
+    private Boolean needAutoLogOut;
 
-    private Map<String,String> customParameters;
+    private Map<String, String> customParameters;
 
     private String encoding;
 
     protected SsoValidatorServiceImpl(final String validateCodeUrl, Boolean needAutoLogOut) {
         this.validateCodeUrl = validateCodeUrl;
-        this.needAutoLogOut=needAutoLogOut;
+        this.needAutoLogOut = needAutoLogOut;
         CommonUtils.assertNotNull(this.validateCodeUrl, "validateCodeUrl cannot be null.");
     }
-
-
 
     public String getValidateCodeUrl() {
         return validateCodeUrl;
@@ -58,17 +57,15 @@ public class SsoValidatorServiceImpl implements SsoValidatorService {
         this.encoding = encoding;
     }
 
-
-
     public User validate(final String ticket, String serverName) throws TicketValidationException {
         //发送Http请求
-        final String validationUrl =this.constructValidationUrl(ticket,validateCodeUrl,needAutoLogOut,serverName);
+        final String validationUrl = this.constructValidationUrl(ticket, validateCodeUrl, needAutoLogOut, serverName);
         if (log.isDebugEnabled()) {
             log.debug("Constructing validation url: " + validationUrl);
         }
         try {
             log.debug("Retrieving response from server.");
-            final String serverResponse= CommonUtils.getResponseFromServer(new URL(validationUrl), null);
+            final String serverResponse = CommonUtils.getResponseFromServer(new URL(validationUrl), null);
             if (serverResponse == null) {
                 throw new TicketValidationException("The SSO server returned no response.");
             }
@@ -86,45 +83,40 @@ public class SsoValidatorServiceImpl implements SsoValidatorService {
 
     @Override
     public final User parseResponseFromServer(final String response) throws TicketValidationException {
-        System.out.println("Successfully retrive user info: "+response);
-        Integer code= JSON.parseObject(response).getInteger("code");
-        User user=null;
-        if(code!=null&&code==0){
-            user= JSON.parseObject(JSON.parseObject(response).get("data").toString(),User.class);
-            if(user==null){
+        System.out.println("Successfully retrive user info: " + response);
+        Integer code = JSON.parseObject(response).getInteger("code");
+        User user = null;
+        if (code != null && code == 0) {
+            user = JSON.parseObject(JSON.parseObject(response).get("data").toString(), User.class);
+            if (user == null) {
                 throw new TicketValidationException("No user was found in the response from the SSO server.");
             }
-        }else{
+            if (StringUtils.isEmpty(user.getEmail())) {
+                throw new TicketValidationException("The invalid user in the response from the SSO server.");
+            }
+        } else {
             throw new TicketValidationException("No user was found in the response from the SSO server.");
         }
         return user;
-
     }
 
-    private String logoutParameterName = "logoutRequest";
-
     /**
-     *
      * 组装准备发送验证ticket请求的URL
      */
     @Override
     public final String constructValidationUrl(final String ticket, final String validateCodeUrl, boolean needAutoLogOut, String serverName) {
-        final Map<String,String> urlParameters = new HashMap<String,String>();
+        final Map<String, String> urlParameters = new HashMap<String, String>();
 
         urlParameters.put("code", ticket);
-        if(needAutoLogOut){
-            urlParameters.put("callback",encodeUrl(serverName+"?logoutRequest"+ticket) );
+        if (needAutoLogOut) {
+            urlParameters.put("callback", encodeUrl(serverName + "?logoutRequest" + ticket));
         }
         //urlParameters.put("ret", encodeUrl(serviceUrl));
-
-
         final StringBuilder buffer = new StringBuilder();
-
         int i = 0;
-
         buffer.append(validateCodeUrl);
 
-        for (Map.Entry<String,String> entry : urlParameters.entrySet()) {
+        for (Map.Entry<String, String> entry : urlParameters.entrySet()) {
             final String key = entry.getKey();
             final String value = entry.getValue();
 
@@ -135,17 +127,13 @@ public class SsoValidatorServiceImpl implements SsoValidatorService {
                 buffer.append(value);
             }
         }
-
         return buffer.toString();
-
     }
 
-
     protected final String encodeUrl(final String url) {
-        if (url == null) {
+        if (StringUtils.isEmpty(url)) {
             return null;
         }
-
         try {
             return URLEncoder.encode(url, "UTF-8");
         } catch (final UnsupportedEncodingException e) {
