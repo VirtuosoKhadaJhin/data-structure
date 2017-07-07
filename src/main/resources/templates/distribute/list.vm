@@ -72,7 +72,7 @@
                                 #foreach($entity in $!page.content)
                                 <tr>
                                     <td>
-                                        #if($!entity.status.key!=1 && $!entity.status.key!=2 && $!entity.status.key!=3)
+                                        #if($!entity.status.key!=2 && $!entity.status.key!=3)
                                             <div class="checkbox bd-checkbox">
                                                 <input id="checkbox$!entity.id" class="styled td-checked" type="checkbox" task-id="$!entity.id">
                                                 <label for="checkbox$!entity.id" class="bd-checkbox-label" style="margin-bottom: 15px;">
