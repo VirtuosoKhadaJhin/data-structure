@@ -90,7 +90,7 @@
                                     </td>
                                     <td class="merchant-district">$!entity.merchant.district.name</td>
                                     <td class="task-cnName">$!entity.bdUser.chineseName</td>
-                                    <td class="task-status" data-isExpired="$!entity.isExpiredDistributed" data-status="$!entity.status">
+                                    <td class="td-task-status" data-isExpired="$!entity.isExpiredDistributed" data-status="$!entity.status">
                                         #if ($!entity.isExpiredDistributed)
                                             <label class="expired-time" style="color: red">$!entity.status.value</label>
                                         #else
