@@ -28,10 +28,8 @@
                             <button class="btn btn-small btn-success task-distribute">
                                 <i class="icon-bullhorn"> 任务指派</i>
                             </button>
-
-                            <label class="has-choosed">已选择：<strong class="has-choosed-task">0</strong>条，</label>
-                            <label class="has-choosed">任务总数：<strong>$!page.totalElements</strong>条</label>
-
+                            <label class="has-choosed">已选择：<strong class="has-choosed-task" style="color: red;margin: 0 3px;">$!requestVo.taskIds.size()</strong>条，任务总数：<strong
+                                    style="color: red;margin: 0 3px;">$!page.totalElements</strong>条</label>
                             <div class="public-div" data-group="$!group.id" data-public="$!group.isPublic">
                                 <input type="hidden" class="public-default-val" value="$!group.id">
                                 <input type="hidden" class="public-default-public" value="$!group.isPublic">
@@ -73,6 +71,7 @@
                                     </td>
                                 </tr>
                                 #end
+                                #set($today = $!dateFormatter.format("dd", $!dateFormatter.systemTime))
                                 #foreach($entity in $!page.content)
                                 <tr>
                                     <td>
@@ -84,21 +83,23 @@
                                             </div>
                                         #end
                                     </td>
-                                    <td>
+                                    <td class="merchant-info">
                                         <span>$!entity.merchant.id</span>
                                         <br/>
                                         <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a>
                                     </td>
-                                    <td>$!entity.merchant.district.name</td>
-                                    <td>$!entity.bdUser.chineseName</td>
-                                    <td>$!entity.status.value</td>
+                                    <td class="merchant-district">$!entity.merchant.district.name</td>
+                                    <td class="task-cnName">$!entity.bdUser.chineseName</td>
+                                    <td class="task-status" data-isExpired="$!entity.isExpiredDistributed" data-status="$!entity.status">
+                                        #if ($!entity.isExpiredDistributed)
+                                            <label class="expired-time" style="color: red">$!entity.status.value</label>
+                                        #else
+                                            $!entity.status.value
+                                        #end
+                                    </td>
                                     <td class="td-bz" title="$!entity.remark">$!entity.remark</td>
                                     <td>
-                                        #if($!entity.isPostponement)
-                                            <font color="red">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.distrDt)</font>
-                                        #else
-                                            $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.distrDt)
-                                        #end
+                                        $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.distrDt)
                                     </td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishDt)</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditDt)</td>
@@ -176,6 +177,7 @@
 
                             <div class="btn-group">
                                 <input type="hidden" name="isAudit" value="false"/>
+                                <input type="hidden" name="taskIds" class="hide-checked-taskIds" value="$!requestVo.checkedTaskStr">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="icon-search"> 查询</i>
                                 </button>
@@ -273,7 +275,6 @@
                 <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
             </div>
         </div>
-
     </div>
 </div>
 <script src="/dist/js/page-support.js"></script>

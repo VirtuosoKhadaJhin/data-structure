@@ -3,48 +3,52 @@
  */
 $(function () {
 
-    //界面加载时，选中checked-box
-    var gloable_cookieValues = getCookieValue("checked-mission-tasks");
-    if (gloable_cookieValues.length != 0) {
-        for (var m in gloable_cookieValues) {
-            var cookie_taskId = gloable_cookieValues[m];
-            var checkboxInfo = $(".input-checkbox[task-id=" + cookie_taskId + "]");
-            if (checkboxInfo != undefined && checkboxInfo != null) {
-                checkboxInfo.prop("checked", false);
+    var oldCheckedTaskIds = $(".hide-checked-taskIds").val();
+    if (oldCheckedTaskIds != null && oldCheckedTaskIds.length > 0) {
+        var taskIDs = oldCheckedTaskIds.split(",");
+        for (var i in taskIDs) {
+            var taskID = taskIDs[i];
+            var _checkbox = $(".input-checkbox[task-id='" + taskID + "']");
+            if (_checkbox != undefined && _checkbox != null) {
+                _checkbox.prop("checked", true);
             }
         }
     }
+
+    // 任务去掉勾选，联动去掉全选
+    $(".td-checked").on("click", function () {
+        var hideValues = $(".hide-checked-taskIds").val();
+        var taskIds = hideValues.length == 0 ? $.makeArray(null) : (hideValues.indexOf(",") != -1 ? hideValues.split(",") : $.makeArray(hideValues));
+        var checkedTaskId = $(this).attr("task-id");
+        if ($(this)[0].checked) {
+            taskIds.push(checkedTaskId);
+            $(".hide-checked-taskIds").val(taskIds.toString());
+            $(".has-choosed-task").text(taskIds.length);
+
+            var checked_count = $(".tbody-list .input-checkbox:checked").length;
+            var allLength = $(".tbody-list .input-checkbox").length;
+            if (checked_count == allLength) {
+                $(".th-checked").prop("checked", true);
+            }
+        } else {
+            var newTaskIds = $.makeArray(null);
+            for (var i in taskIds) {
+                var taskId = taskIds[i];
+                if (taskId != checkedTaskId) {
+                    newTaskIds.push(taskId);
+                }
+            }
+            $(".hide-checked-taskIds").val(newTaskIds.toString());
+            $(".has-choosed-task").text(newTaskIds.length);
+            $(".th-checked").prop("checked", false);
+        }
+    });
+
 
     // 时间查询条件显示与隐藏
     $(".task-status").on("change", function () {
         taskStatus = $(".task-status").val();
         changeTimeInputs(taskStatus);
-    });
-
-    //checkbox选中/取消事件
-    $(".tbody-list .input-checkbox").on("change", function () {
-        var taskId = $(this).attr("task-id"), isChecked = $(this)[0].checked;
-        var cookieValues = getCookieValue("checked-mission-tasks");
-        if (cookieValues.length == 0 && isChecked) {
-            setSessionCookie("checked-mission-tasks", taskId, "1");
-            return false;
-        }
-        var taskIds = cookieValues.split(",");
-        if (isChecked) {
-            taskIds.push(taskId);
-            setSessionCookie("checked-mission-tasks", taskIds, "1");
-            $(".has-choosed-task").val(taskIds.length);
-        } else {
-            var newTaskIds = $.makeArray(null);
-            for (var i = 0; i <= taskIds.length; i++) {
-                var id = taskIds[i];
-                if (id != taskId) {
-                    newTaskIds.push(id);
-                }
-            }
-            setSessionCookie("checked-mission-tasks", newTaskIds, "1");
-            $(".has-choosed-task").val(newTaskIds.length);
-        }
     });
 
     // 可见
@@ -68,20 +72,7 @@ $(function () {
 
     // 全选，全不选
     $(".th-checked").on("click", function () {
-        $(".tbody-list :checkbox").click();
-    });
-
-    // 任务去掉勾选，联动去掉全选
-    $(".td-checked").on("click", function () {
-        if ($(this)[0].checked) {
-            var checked_count = $(".tbody-list .input-checkbox:checked").length;
-            var allLength = $(".tbody-list .input-checkbox").length;
-            if (checked_count == allLength) {
-                $(".th-checked").prop("checked", true);
-            }
-        } else {
-            $(".th-checked").prop("checked", false);
-        }
+        $(".tbody-list .input-checkbox").prop("checked", $(this)[0].checked);
     });
 
     // BD单选
@@ -94,16 +85,15 @@ $(function () {
     // 指派任务弹框
     $(".task-distribute").on("click", function () {
         $(".datetime-distrDt").val(new Date().Format("yyyy-MM-dd"));
-        if (taskIds.length == 0) {
+        var taskIds = $(".hide-checked-taskIds").val().split(",");
+        if (taskIds == null || taskIds.length == 0) {
             $(".distributeResult-text").html("<strong style='color: red'>请选择任务！</strong>");
             $(".taskDistributeResultModel").modal('show');
         } else {
             $(".taskDistributeModel").modal('show');
         }
-        $(".bd-checkd-prev :checkbox").removeAttr("checked");
-
-        var cookieValues = getCookieValue("checked-mission-tasks");
-        $(".task-distribute-count").val(cookieValues.length);
+        $(".task-distribute-count").val(taskIds.length);
+        $(".bd-checkd-prev:checked").removeAttr("checked");
     });
 
     // 确认指派任务
