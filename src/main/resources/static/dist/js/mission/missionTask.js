@@ -10,10 +10,29 @@ $(function () {
             var taskID = taskIDs[i];
             var _checkbox = $(".input-checkbox[task-id='" + taskID + "']");
             if (_checkbox != undefined && _checkbox != null) {
-                _checkbox.prop("checked", true);
+                $(_checkbox).prop("checked", true);
             }
         }
     }
+
+    $(".pagination li a").on("click", function () {
+        var a_href = $(this).attr("href");
+        if (a_href === undefined || a_href === "" || a_href == "javascript:void(0);") {
+            return false;
+        }
+        var hideValues = $(".hide-checked-taskIds").val();
+        if (hideValues == null || hideValues.length == 0) {
+            return false;
+        }
+        if (a_href.indexOf("taskIds") != -1) {
+            var currUrl = window.location.search, indexNum = getUrlParamValue(a_href, "index");
+            var newUrl = replaceUrlParamVal(currUrl, "index", escape(indexNum));
+            newUrl = replaceUrlParamVal(newUrl, "taskIds", escape(hideValues));
+            $(this).attr("href", newUrl);
+        } else {
+            $(this).attr("href", a_href + "&taskIds=" + escape(hideValues));
+        }
+    });
 
     // 任务去掉勾选，联动去掉全选
     $(".td-checked").on("click", function () {

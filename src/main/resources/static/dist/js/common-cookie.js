@@ -1,6 +1,13 @@
 /**
  * Created by Byron on 2017/7/10.
  */
+
+/**
+ * 添加cookie
+ * @param cookieKey
+ * @param cookieValue
+ * @param exdays
+ */
 function setSessionCookie(cookieKey, cookieValue, exdays) {
     var d = navigator.userAgent.indexOf("MSIE") > 0;
     if (d) {//IE内核
@@ -23,6 +30,12 @@ function setSessionCookie(cookieKey, cookieValue, exdays) {
         }
     }
 }
+
+/**
+ * 获取cookie值
+ * @param cookieKey
+ * @returns {string}
+ */
 function getCookieValue(cookieKey) {
     var cookieValue = document.cookie;
     var a = cookieValue.indexOf("" + cookieKey + "=");
@@ -40,4 +53,31 @@ function getCookieValue(cookieKey) {
         cookieValue = unescape(cookieValue.substring(a, cookieEndAt))
     }
     return cookieValue
+}
+
+/**
+ * 获取URL中参数值
+ * @param name
+ * @returns {null}
+ */
+function getUrlParamValue(url, key) {
+    var reg = new RegExp("(^|[&?])" + key + "=([^&]*)(&|$)");
+    var r = url.match(reg);
+    if (r != null) {
+        return unescape(r[2]);
+    }
+    return null;
+}
+
+/**
+ * 替换URL参数值
+ * @param url
+ * @param paramName
+ * @param replaceWith
+ * @returns {*|XML|string|void}
+ */
+function replaceUrlParamVal(url, paramName, replaceWith) {
+    var re = eval('/(' + paramName + '=)([^&]*)/gi');
+    var nUrl = url.replace(re, paramName + '=' + replaceWith);
+    return nUrl;
 }
