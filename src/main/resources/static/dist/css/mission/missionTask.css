@@ -54,6 +54,14 @@ table .tr-class:hover {
     height: auto;
 }
 
+.has-choosed {
+    float: left;
+    font-size: 12px;
+    padding: 12px;
+    line-height: 12px;
+    margin: 0;
+}
+
 .search-select {
     margin-bottom: 10px;
     width: 100%;

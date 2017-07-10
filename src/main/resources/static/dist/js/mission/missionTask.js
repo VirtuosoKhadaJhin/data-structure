@@ -2,9 +2,23 @@
  * Created by mylon on 2017/6/28.
  */
 $(function () {
-    var bdId;
-    var mchId;
-    var status;
+    var bdId, status;
+
+    // 绑定分页点击事件,保存选中任务
+    $(".pagination ul li a").on("click", function () {
+        var taskIds = getTaskIds();
+        return false;
+    });
+
+    // 时间查询条件显示与隐藏
+    var taskStatus = $(".task-status").val();
+    changeTimeInputs(taskStatus);
+
+    // 时间查询条件显示与隐藏
+    $(".task-status").on("change", function () {
+        taskStatus = $(".task-status").val();
+        changeTimeInputs(taskStatus);
+    });
 
     // 可见
     $(".ispublic").on("click", function () {
@@ -26,11 +40,16 @@ $(function () {
         $(".search-form").find(".select2").val('').trigger('change');
     });
 
+    // 监测checkBox改变
+    $(":checkbox").on("change", function () {
+        var tasks = getTaskIds();
+        $(".hasChoosedCount").text(tasks.length);
+    });
+
     // 全选，全不选
     $(".th-checked").on("click", function () {
         if ($(this).prop("checked")) {
             $(".tbody-list :checkbox").prop("checked", true);
-
         } else {
             $(".tbody-list :checkbox").prop("checked", false);
         }
@@ -72,15 +91,9 @@ $(function () {
 
     // 确认指派任务
     $(".sure-distribute").on("click", function () {
-        var taskIds = [];
+        var taskIds = getTaskIds();
         var distrDt = $(".datetime-distrDt").val();
-        var tasks = $(".tbody-list :checkbox");
-        for (var i = 0; i < tasks.length; i++) {
-            var task = tasks[i];
-            if ($(task).prop("checked") == true) {
-                taskIds.push($(task).attr("task-id"));
-            }
-        }
+
 
         $(".taskDistributeModel").modal('hide');
         $(".distributeResult-text").text("任务指派成功！");
@@ -124,7 +137,7 @@ $(function () {
         }
     });
 
-
+    // 设置可见不可见
     $(".radio-public").on("click", function () {
         var isPublic = $(this).val();
         var groupId = $(".public-default-val").val();
@@ -138,6 +151,7 @@ $(function () {
         $(".publicSwichModel").modal("show");
     });
 
+    // 设置可见不可见
     $(".sure-public-switch").on("click", function () {
         var isPublic = $("#hide-isPublic").val();
         var groupId = $(".publicSwichModel .hide-groupId").val();
@@ -186,5 +200,52 @@ $(function () {
         var oldPublic = $(".public-default-public").val();
         $(".radio-public[value=" + oldPublic + "]").prop("checked", true);
     });
+
+    // 获取taskIds 页面checkbox与cookie里面的值
+    function getTaskIds() {
+        var taskIds = [];
+        var tasks = $(".tbody-list :checkbox");
+        for (var i = 0; i < tasks.length; i++) {
+            var task = tasks[i];
+            if ($(task).prop("checked") == true) {
+                taskIds.push($(task).attr("task-id"));
+            }
+        }
+        return taskIds;
+    }
+
+    // 改变事件查询框的显示与隐藏
+    function changeTimeInputs(taskStatus) {
+        var distrDt = $(".task-distrdt");
+        var auditDt = $(".task-auditdt");
+        var finishDt = $(".task-finishdt");
+
+        if (taskStatus == "") {
+            $(distrDt).show();
+            $(auditDt).show();
+            $(finishDt).show();
+        } else if (taskStatus == "UN_DISTRIBUTE") {
+            $(distrDt).hide();
+            $(auditDt).hide();
+            $(finishDt).hide();
+        } else if (taskStatus == "UN_FINISH") {
+            $(distrDt).show();
+            $(auditDt).hide();
+            $(finishDt).hide();
+        } else if (taskStatus == "FINISHED") {
+            $(distrDt).show();
+            $(auditDt).hide();
+            $(finishDt).show();
+        } else if (taskStatus == "APPROVED") {
+            $(distrDt).show();
+            $(auditDt).show();
+            $(finishDt).show();
+        } else if (taskStatus == "NON_APPROVAL") {
+            $(distrDt).show();
+            $(auditDt).show();
+            $(finishDt).show();
+        }
+
+    }
 
 });
