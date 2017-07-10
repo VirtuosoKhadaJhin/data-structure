@@ -90,6 +90,11 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                     predicate.add(cb.greaterThanOrEqualTo(root.get("auditDt").as(Date.class), dayStartEndTime.getLeft()));
                     predicate.add(cb.lessThanOrEqualTo(root.get("auditDt").as(Date.class), dayStartEndTime.getRight()));
                 }
+                if(requestVo.getDistrDt() != null){
+                    Pair<Date, Date> dayStartEndTime = DateUtils.getDayStartEndTime(requestVo.getDistrDt());
+                    predicate.add(cb.greaterThanOrEqualTo(root.get("distrDt").as(Date.class), dayStartEndTime.getLeft()));
+                    predicate.add(cb.lessThanOrEqualTo(root.get("distrDt").as(Date.class), dayStartEndTime.getRight()));
+                }
                 predicate.add(cb.equal(root.get("delFlag").as(Boolean.class), false));
                 Predicate[] arrays = new Predicate[predicate.size()];
                 ArrayList<Order> orderBys = Lists.newArrayList(cb.desc(root.get("updateDt")));
