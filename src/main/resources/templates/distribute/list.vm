@@ -29,8 +29,8 @@
                                 <i class="icon-bullhorn"> 任务指派</i>
                             </button>
 
-                            <label class="has-choosed">已选择：<strong class="hasChoosedCount">0</strong></label>
-                            <label class="has-choosed">任务总数：<strong>$!page.totalElements</strong></label>
+                            <label class="has-choosed">已选择：<strong class="has-choosed-task">0</strong>条，</label>
+                            <label class="has-choosed">任务总数：<strong>$!page.totalElements</strong>条</label>
 
                             <div class="public-div" data-group="$!group.id" data-public="$!group.isPublic">
                                 <input type="hidden" class="public-default-val" value="$!group.id">
@@ -78,7 +78,7 @@
                                     <td>
                                         #if($!entity.status.key!=2 && $!entity.status.key!=3)
                                             <div class="checkbox bd-checkbox">
-                                                <input id="checkbox$!entity.id" class="styled td-checked" type="checkbox" task-id="$!entity.id">
+                                                <input id="checkbox$!entity.id" class="styled td-checked input-checkbox" type="checkbox" task-id="$!entity.id">
                                                 <label for="checkbox$!entity.id" class="bd-checkbox-label" style="margin-bottom: 15px;">
                                                 </label>
                                             </div>
@@ -159,17 +159,17 @@
                                 </select>
                             </div>
 
-                            <div class="search-select task-distrdt" style="display: none">
+                            <div class="search-select task-distrdt" style="display: #if($!requestVo.status.key==2) block #else none #end">
                                 <label>指派时间：</label>
-                                <input type="text" name="distrDt" class="span11 dateTimeFormatDay" value="$!requestVo.distrDtStr" text="$!requestVo.distrDtStr" placeholder="审核时间">
+                                <input type="text" name="distrDt" class="span11 dateTimeFormatDay" value="$!requestVo.distrDtStr" text="$!requestVo.distrDtStr" placeholder="指派时间">
                             </div>
 
-                            <div class="search-select task-auditdt" style="display: none">
+                            <div class="search-select task-auditdt" style="display: #if($!requestVo.status.key==4 || $!requestVo.status.key==5 || $!requestVo.status.key==3) block #else none #end">
                                 <label>审核时间：</label>
                                 <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
                             </div>
 
-                            <div class="search-select task-finishdt" style="display: none">
+                            <div class="search-select task-finishdt" style="#if($!requestVo.status.key==3) block #else none #end">
                                 <label>完成时间：</label>
                                 <input type="text" name="finishDt" id="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="完成时间">
                             </div>
@@ -194,7 +194,10 @@
         <div class="modal hide fade taskDistributeModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="myModalLabel">任务指派</h3>
+                <h3 id="myModalLabel">
+                    任务指派
+                    <span class="">已选择：<label class="task-distribute-count">0</label>条</span>
+                </h3>
             </div>
             <div class="modal-body">
                 <div class="search-select bd-checkd-prev">
