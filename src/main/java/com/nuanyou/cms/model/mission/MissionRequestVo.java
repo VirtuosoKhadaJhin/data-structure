@@ -158,6 +158,13 @@ public class MissionRequestVo {
         this.groupId = groupId;
     }
 
+    public String getDistrDtStr() {
+        if (distrDt == null) {
+            return null;
+        }
+        return new SimpleDateFormat("yyyy-MM-dd").format(distrDt);
+    }
+
     public String getFinishDtStr() {
         if (finishDt == null) {
             return null;
@@ -165,7 +172,7 @@ public class MissionRequestVo {
         return new SimpleDateFormat("yyyy-MM-dd").format(finishDt);
     }
 
-    public String getAuditDtStr(){
+    public String getAuditDtStr() {
         if (auditDt == null) {
             return null;
         }
