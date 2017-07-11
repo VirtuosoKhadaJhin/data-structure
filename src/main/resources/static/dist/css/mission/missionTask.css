@@ -55,10 +55,9 @@ table .tr-class:hover {
 }
 
 .has-choosed {
-    float: left;
     font-size: 12px;
     padding: 12px;
-    line-height: 12px;
+    line-height: 35px;
     margin: 0;
 }
 
@@ -171,7 +170,7 @@ table .tr-class:hover {
 }
 
 .public-div {
-    margin: 5px;
+    margin: 10px;
     float: right;
 }
 

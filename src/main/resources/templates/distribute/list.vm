@@ -24,22 +24,19 @@
                         <div class="widget-title">
                             <span class="icon"><i class="icon-th"></i></span>
                             <h5>战地任务列表</h5>
-                            <div style="float: left">
+                            <div style="float: left;margin: 2px;">
                                 <button class="btn btn-small btn-success task-distribute">
                                     <i class="icon-bullhorn"> 任务指派</i>
                                 </button>
-                                #*<button class="btn btn-small btn-info task-distribute-empty">
-                                    <i class="icon-repeat"> 撤销选中</i>
-                                </button>*#
+                                <span class="has-choosed">已选择：
+                                    <strong class="has-choosed-task" style="color: red;margin: 0 3px;">
+                                        <span class="badge badge-important">$!requestVo.taskIds.size()</span>
+                                    </strong>条，任务总数：
+                                    <strong style="color: red;margin: 0 3px;">
+                                        <span class="badge badge-info">$!page.totalElements</span>
+                                    </strong>条
+                                </span>
                             </div>
-                            <label class="has-choosed">已选择：
-                                <strong class="has-choosed-task" style="color: red;margin: 0 3px;">
-                                    <span class="badge badge-important">$!requestVo.taskIds.size()</span>
-                                </strong>条，任务总数：
-                                <strong style="color: red;margin: 0 3px;">
-                                    <span class="badge badge-info">$!page.totalElements</span>
-                                </strong>条
-                            </label>
                             <div class="public-div" data-group="$!group.id" data-public="$!group.isPublic">
                                 <input type="hidden" class="public-default-val" value="$!group.id">
                                 <input type="hidden" class="public-default-public" value="$!group.isPublic">
