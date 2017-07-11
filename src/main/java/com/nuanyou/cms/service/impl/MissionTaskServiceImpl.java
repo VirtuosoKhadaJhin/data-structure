@@ -62,13 +62,17 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 }
 
                 // 拆分页面商户ids
+                Integer maxSearchCount = 0;
                 if (StringUtils.isNotEmpty(requestVo.getMchIdsStr())) {
                     String mchIdsStr = requestVo.getMchIdsStr();
                     String[] mchSplitIds = mchIdsStr.split(",");
                     for (String mchId : mchSplitIds) {
-                        try{
-                            mchIds.add(Long.valueOf(mchId));
-                        }catch (Exception e){
+                        try {
+                            if (maxSearchCount <= 20) {
+                                mchIds.add(Long.valueOf(mchId));
+                            }
+                            maxSearchCount++;
+                        } catch (Exception e) {
 
                         }
                     }

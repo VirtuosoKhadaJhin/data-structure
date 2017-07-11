@@ -137,8 +137,7 @@ $(function () {
 
     // 时间查询条件显示与隐藏
     $(".task-status").on("change", function () {
-        taskStatus = $(".task-status").val();
-        changeTimeInputs(taskStatus);
+        changeTimeInputs($(".task-status").val());
     });
 
     // 可见
@@ -325,6 +324,7 @@ $(function () {
 
     // 改变事件查询框的显示与隐藏
     function changeTimeInputs(taskStatus) {
+        $(".task-distrdt input,.task-auditdt input,.task-finishdt input").val("");
         if (taskStatus == "") {
             $(".task-distrdt,.task-auditdt,.task-finishdt").show();
         } else if (taskStatus == "APPROVED" || taskStatus == "NON_APPROVAL") {
