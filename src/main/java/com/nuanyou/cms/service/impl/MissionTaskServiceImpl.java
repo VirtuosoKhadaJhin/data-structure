@@ -48,6 +48,7 @@ public class MissionTaskServiceImpl implements MissionTaskService {
 
     @Override
     public Page<MissionTaskVo> findAllMissionTask(final MissionRequestVo requestVo) {
+        requestVo.setPageSize(50);
         Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageSize());
         Specification spec = new Specification() {
 
