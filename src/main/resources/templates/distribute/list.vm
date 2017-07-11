@@ -301,6 +301,9 @@
         yearStart: 2000,
         yearEnd: 2050,
         todayButton: true,
+        scrollMonth: false,
+        scrollTime: false,
+        scrollInput: false,
         minDate: new Date()
     });
 </script>
