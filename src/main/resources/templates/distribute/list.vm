@@ -148,7 +148,7 @@
                             </div>
                             <div class="search-select">
                                 <label>批量商户ID</label>
-                                <textarea class="batch-mch-id" name="mchIdsStr" placeholder="批量商户ID,以逗号 ',' 分隔,最多支持20个" rows="6">$!requestVo.mchIdsStr</textarea>
+                                <textarea class="batch-mch-id" name="mchIdsStr" placeholder="批量商户ID,以逗号 ',' 分隔,最多支持20个" rows="7">$!requestVo.mchIdsStr</textarea>
                                 <div class="alert mch-id-tip">
                                     <i class="icon-bell"></i>
                                     <strong>提示 </strong>批量商户ID,以逗号 ',' 分隔,最多支持20个

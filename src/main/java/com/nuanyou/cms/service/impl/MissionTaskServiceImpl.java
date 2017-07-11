@@ -68,7 +68,7 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                     String[] mchSplitIds = mchIdsStr.split(",");
                     for (String mchId : mchSplitIds) {
                         try {
-                            if (maxSearchCount <= 20) {
+                            if (maxSearchCount < 20) {
                                 mchIds.add(Long.valueOf(mchId));
                             }
                             maxSearchCount++;
