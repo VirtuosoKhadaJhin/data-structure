@@ -30,17 +30,17 @@
                                 </button>
                                 <span class="has-choosed">已选择：
                                     <strong class="has-choosed-task" style="color: red;margin: 0 3px;">
-                                        <span class="badge badge-important">$!requestVo.taskIds.size()</span>
+                                        <span style="cursor:pointer" class="badge badge-important">$!requestVo.taskIds.size()</span>
                                     </strong>条，任务总数：
                                     <strong style="color: red;margin: 0 3px;">
-                                        <span class="badge badge-info">$!page.totalElements</span>
+                                        <span style="cursor:pointer" class="badge badge-info">$!page.totalElements</span>
                                     </strong>条
                                 </span>
                             </div>
                             <div class="public-div" data-group="$!group.id" data-public="$!group.isPublic">
                                 <input type="hidden" class="public-default-val" value="$!group.id">
                                 <input type="hidden" class="public-default-public" value="$!group.isPublic">
-                                <span style="margin-right: 5px;font-size: 14px">未分配商户对所有队员可见：</span>
+                                <span style="margin-right: 5px;font-size: 14px;cursor:pointer">未分配商户对所有队员可见：</span>
                                 <input class="radio-public" type="radio" value="1" name="isPublic" #if($!group.isPublic==1) checked #end style="margin-top: -2px"/>可见
                                 <input class="radio-public" type="radio" value="0" name="isPublic" #if($!group.isPublic==0) checked #end style="margin-top: -2px;margin-left: 10px;"/>不可见
                             </div>
@@ -105,7 +105,7 @@
                                         #end
                                     </td>
                                     <td class="td-bz" title="$!entity.remark">$!entity.remark</td>
-                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.distrDt)</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.distrDt)</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishDt)</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditDt)</td>
                                 </tr>
@@ -145,6 +145,14 @@
                                         <option value="$!e.id" #if($!requestVo.mchId == $!e.id) selected #end>$!e.id : $!e.name</option>
                                     #end
                                 </select>
+                            </div>
+                            <div class="search-select">
+                                <label>批量商户ID</label>
+                                <textarea class="batch-mch-id" name="mchIdsStr" placeholder="批量商户ID,以逗号 ',' 分隔,最多支持20个" rows="6">$!requestVo.mchIdsStr</textarea>
+                                <div class="alert mch-id-tip">
+                                    <i class="icon-bell"></i>
+                                    <strong>提示 </strong>批量商户ID,以逗号 ',' 分隔,最多支持20个
+                                </div>
                             </div>
                             <div class="search-select">
                                 <label>BD名称</label>

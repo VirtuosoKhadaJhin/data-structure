@@ -158,7 +158,6 @@ table .tr-class:hover {
     margin: 5px 10px 0 0;
 }
 
-
 .bd-checkbox {
     margin: 5px;
     margin-left: 20%;
@@ -183,4 +182,15 @@ table .tr-class:hover {
 
 .ispublic {
     margin-top: -2px;
+}
+
+.batch-mch-id {
+    resize: none;
+    width: 86%;
+}
+
+.mch-id-tip {
+    width: 71%;
+    margin-top: 5px;
+    display: none;
 }

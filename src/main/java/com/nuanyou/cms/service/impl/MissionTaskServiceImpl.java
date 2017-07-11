@@ -19,6 +19,7 @@ import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,9 +56,28 @@ public class MissionTaskServiceImpl implements MissionTaskService {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
+                List<Long> mchIds = Lists.newArrayList();
                 if (requestVo.getMchId() != null) {
-                    predicate.add(cb.equal(root.get("merchant").get("id"), requestVo.getMchId()));
+                    mchIds.add(requestVo.getMchId());
                 }
+
+                // 拆分页面商户ids
+                if (StringUtils.isNotEmpty(requestVo.getMchIdsStr())) {
+                    String mchIdsStr = requestVo.getMchIdsStr();
+                    String[] mchSplitIds = mchIdsStr.split(",");
+                    for (String mchId : mchSplitIds) {
+                        try{
+                            mchIds.add(Long.valueOf(mchId));
+                        }catch (Exception e){
+
+                        }
+                    }
+                }
+
+                if (requestVo.getMchId() != null || StringUtils.isNotEmpty(requestVo.getMchIdsStr())) {
+                    predicate.add(root.get("merchant").get("id").in(mchIds));
+                }
+
                 if (requestVo.getStatus() == null) {
                     if (requestVo.getAudit()) {//审核列表
                         ArrayList<MissionTaskStatus> auditStatus = Lists.newArrayList(MissionTaskStatus.FINISHED, MissionTaskStatus.APPROVED, MissionTaskStatus.NON_APPROVAL);
@@ -91,7 +111,7 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                     predicate.add(cb.greaterThanOrEqualTo(root.get("auditDt").as(Date.class), dayStartEndTime.getLeft()));
                     predicate.add(cb.lessThanOrEqualTo(root.get("auditDt").as(Date.class), dayStartEndTime.getRight()));
                 }
-                if(requestVo.getDistrDt() != null){
+                if (requestVo.getDistrDt() != null) {
                     Pair<Date, Date> dayStartEndTime = DateUtils.getDayStartEndTime(requestVo.getDistrDt());
                     predicate.add(cb.greaterThanOrEqualTo(root.get("distrDt").as(Date.class), dayStartEndTime.getLeft()));
                     predicate.add(cb.lessThanOrEqualTo(root.get("distrDt").as(Date.class), dayStartEndTime.getRight()));

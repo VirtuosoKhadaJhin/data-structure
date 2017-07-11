@@ -20,6 +20,15 @@ $(function () {
         }
     }
 
+    // 批量查询商户提示
+    $(".batch-mch-id").focus(function () {
+        $(".mch-id-tip").show("fast");
+    });
+
+    $(".batch-mch-id").blur(function () {
+        $(".mch-id-tip").hide("fast");
+    });
+
     // 分页查询时携带task参数
     $(".pagination li a").on("click", function () {
         var a_href = $(this).attr("href");

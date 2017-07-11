@@ -23,6 +23,8 @@ public class MissionRequestVo {
 
     private Long mchId;
 
+    private String mchIdsStr;
+
     private Long bdId;
 
     private MissionTaskStatus status;
@@ -64,6 +66,14 @@ public class MissionRequestVo {
 
     public void setMchId(Long mchId) {
         this.mchId = mchId;
+    }
+
+    public String getMchIdsStr() {
+        return mchIdsStr.replaceAll("，",",");
+    }
+
+    public void setMchIdsStr(String mchIdsStr) {
+        this.mchIdsStr = mchIdsStr;
     }
 
     public Long getBdId() {
