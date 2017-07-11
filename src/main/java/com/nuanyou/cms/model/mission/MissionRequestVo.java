@@ -69,7 +69,10 @@ public class MissionRequestVo {
     }
 
     public String getMchIdsStr() {
-        return mchIdsStr.replaceAll("，",",");
+        if (StringUtils.isNotEmpty(mchIdsStr)) {
+            mchIdsStr = mchIdsStr.replaceAll("，", ",");
+        }
+        return mchIdsStr;
     }
 
     public void setMchIdsStr(String mchIdsStr) {
