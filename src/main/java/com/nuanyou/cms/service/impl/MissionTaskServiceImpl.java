@@ -78,7 +78,7 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                     }
                 }
 
-                if (requestVo.getMchId() != null || StringUtils.isNotEmpty(requestVo.getMchIdsStr())) {
+                if (requestVo.getMchId() != null || (StringUtils.isNotEmpty(requestVo.getMchIdsStr()) && mchIds.size() > 0)) {
                     predicate.add(root.get("merchant").get("id").in(mchIds));
                 }
 
