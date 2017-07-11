@@ -25,6 +25,13 @@ $(function () {
         $(".mch-id-tip").show("fast");
     });
 
+    // 批量查询商户提示
+    $(".batch-mch-id").on("keyup", function () {
+        if ($(".batch-mch-id").val() == "" || $(".batch-mch-id").val() == null) {
+            $(".mch-id-tip").hide("fast");
+        }
+    });
+
     // 分页查询时携带task参数
     $(".pagination li a").on("click", function () {
         var a_href = $(this).attr("href");
