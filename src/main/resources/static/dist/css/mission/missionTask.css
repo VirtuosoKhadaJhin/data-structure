@@ -155,6 +155,11 @@ table .tr-class:hover {
     margin: 5px 10px 0 0;
 }
 
+.task-distribute-empty {
+    margin: 5px 10px 0 0;
+}
+
+
 .bd-checkbox {
     margin: 5px;
     margin-left: 20%;

@@ -2,6 +2,7 @@
  * Created by mylon on 2017/6/28.
  */
 $(function () {
+    // 进入页面勾选已经勾选的,并显示出已经勾选的任务数目
     var oldCheckedTaskIds = $(".hide-checked-taskIds").val();
     if (oldCheckedTaskIds != null && oldCheckedTaskIds.length > 0) {
         var taskIDs = oldCheckedTaskIds.split(",");
@@ -12,67 +13,117 @@ $(function () {
                 $(_checkbox).prop("checked", true);
             }
         }
+        var checked_count = $(".tbody-list .input-checkbox:checked").length;
+        var allLength = $(".tbody-list .input-checkbox").length;
+        if (checked_count == allLength) {
+            $(".th-checked").prop("checked", true);
+        }
     }
 
+    // 分页查询时携带task参数
     $(".pagination li a").on("click", function () {
         var a_href = $(this).attr("href");
         if (a_href === undefined || a_href === "" || a_href == "javascript:void(0);") {
             return false;
         }
         var hideValues = $(".hide-checked-taskIds").val();
-        if (hideValues == null || hideValues.length == 0) {
-            return false;
-        }
         if (a_href.indexOf("taskIds") != -1) {
             var currUrl = window.location.search, indexNum = getUrlParamValue(a_href, "index");
             var newUrl = replaceUrlParamVal(currUrl, "index", escape(indexNum));
             newUrl = replaceUrlParamVal(newUrl, "taskIds", escape(hideValues));
+            if (getUrlParamValue(newUrl, "index") == null) {
+                newUrl = newUrl + "&index=" + indexNum;
+            }
             $(this).attr("href", newUrl);
         } else {
             $(this).attr("href", a_href + "&taskIds=" + escape(hideValues));
         }
     });
 
-    // 任务去掉勾选，联动去掉全选
-    $(".th-checked").on("click", function () {
-        var hideValues = $(".hide-checked-taskIds").val();
-        var isNullHideValue = hideValues == null || hideValues.length == 0;
-        var taskIds = isNullHideValue ? $.makeArray(null) : (hideValues.indexOf(",") != -1 ? hideValues.split(",") : $.makeArray(hideValues));
-        var checkedTaskId = $(this).attr("task-id");
-        if ($(this)[0].checked) {
-            taskIds.push(checkedTaskId);
-            $(".hide-checked-taskIds").val(taskIds.toString());
-            $(".has-choosed-task").text(taskIds.length);
-            var checked_count = $(".tbody-list .input-checkbox:checked").length;
-            var allLength = $(".tbody-list .input-checkbox").length;
-            if (checked_count == allLength) {
-                $(".th-checked").prop("checked", true);
+    // th全选，全不选
+    $("th .th-checked").on("change", function () {
+        var newArray = $.makeArray(null);
+        var isChecked = $(this)[0].checked;
+        $(".tbody-list .input-checkbox").each(function () {
+            var taskID = $(this).attr("task-id");
+            var hasChecked = $(this)[0].checked;
+            if (isChecked && !hasChecked) {
+                $(this).prop("checked", true);
+                newArray.push(taskID);
             }
+            if (!isChecked && hasChecked) {
+                $(this).prop("checked", false);
+                newArray.push(taskID);
+            }
+        });
+        if (newArray.length == 0) {
             return false;
         }
-        var newTaskIds = $.makeArray(null);
-        for (var i in taskIds) {
-            var taskId = taskIds[i];
-            if (taskId != checkedTaskId) {
-                newTaskIds.push(taskId);
+        var hideValues = $(".hide-checked-taskIds").val();
+        if (isChecked) {//全选
+            // 防止重复
+            newArray = array_remove_repeat(hideValues.split(",").concat(newArray));
+            if (newArray[0] == "") {
+                newArray.splice(0, 1);
+            }
+            $("#checkbox-all").prop("checked", true);
+            $(".hide-checked-taskIds").val(newArray.toString());
+            $(".has-choosed-task").html("<span class='badge badge-important'>" + newArray.length + "</span>");
+            return false;
+        }
+        //全不选
+        var checkedValues = hideValues.split(","), checkedTask = $.makeArray(null);
+        for (var m in checkedValues) {
+            var hasSame = false;
+            for (var n in newArray) {
+                if (newArray[n] != checkedValues[m]) {
+                    continue;
+                }
+                hasSame = true;
+            }
+            if (!hasSame) {
+                checkedTask.push(checkedValues[m]);
             }
         }
-        $(".hide-checked-taskIds").val(newTaskIds.toString());
-        $(".has-choosed-task").text(newTaskIds.length);
-        $(".th-checked").prop("checked", false);
+        if (checkedTask.length == 0) {
+            $(".hide-checked-taskIds").val("");
+        } else {
+            $(".hide-checked-taskIds").val(checkedTask.toString());
+        }
+        $("#checkbox-all").prop("checked", false);
+        $(".has-choosed-task").html("<span class='badge badge-important'>" + checkedTask.length + "</span>");
     });
 
-    //td-checked
+    // 检查td的选中与取消选中
     $(".td-checked").on("click", function () {
+        var checkedValues = $(".hide-checked-taskIds").val().split(",");
         if ($(this)[0].checked) {
             var checked_count = $(".tbody-list .input-checkbox:checked").length;
             var allLength = $(".tbody-list .input-checkbox").length;
             if (checked_count == allLength) {
                 $(".th-checked").prop("checked", true);
             }
+            // add into hideValues
         } else {
             $(".th-checked").prop("checked", false);
+            // remove from hideValues
         }
+        var hasSame = false;
+        var taskId = $(this).attr("task-id");
+        for (var m in checkedValues) {
+            if (checkedValues[m] == taskId) {
+                hasSame = true;
+                checkedValues.splice(checkedValues.indexOf(taskId), 1);
+            }
+        }
+        if (!hasSame) {
+            checkedValues.push(taskId);
+        }
+        if (checkedValues[0] == "") {
+            checkedValues.splice(0, 1);
+        }
+        $(".has-choosed-task").html("<span class='badge badge-important'>" + checkedValues.length + "</span>");
+        $(".hide-checked-taskIds").val(checkedValues.toString());
     });
 
     // 时间查询条件显示与隐藏
@@ -100,79 +151,25 @@ $(function () {
         $(".search-form").find(".select2").val('').trigger('change');
     });
 
-    // 全选，全不选h
-    $("th .th-checked").on("click", function () {
-        var newArray = $.makeArray(null);
-        var isChecked = $(this)[0].checked;
-        $(".tbody-list .input-checkbox").each(function () {
-            var taskID = $(this).attr("task-id");
-            var hasChecked = $(this)[0].hasAttribute("checked");
-            if (isChecked && !hasChecked) {
-                $(this).prop("checked", true);
-                newArray.push(taskID);
-            }
-            if (!isChecked && hasChecked) {
-                $(this).prop("checked", false);
-                newArray.push(taskID);
-            }
-        });
-        if (newArray.length == 0) {
-            return false;
-        }
-        var hideValues = $(".hide-checked-taskIds").val();
-        if (isChecked) {//全选
-            if (hideValues != null && hideValues.length > 0) {
-                newArray = hideValues.split(",").concat(newArray);
-            }
-            $("#checkbox-all").prop("checked", true);
-            $(".hide-checked-taskIds").val(newArray.toString());
-            $(".has-choosed-task").text(newArray.length);
-            return false;
-        }
-        //全不选
-        var checkedValues = hideValues.split(","), checkedTask = $.makeArray(null);
-        for (var m in checkedValues) {
-            var hasSame = false;
-            for (var n in newArray) {
-                if (newArray[n] != checkedValues[m]) {
-                    return true;
-                }
-                hasSame = true;
-            }
-            if (!hasSame) {
-                checkedTask.push(checkedValues[m]);
-            }
-        }
-        if (checkedTask.length == 0) {
-            $(".hide-checked-taskIds").val("");
-        } else {
-            $(".hide-checked-taskIds").val(checkedTask.toString());
-        }
-        $("#checkbox-all").prop("checked", false);
-        $(".has-choosed-task").text(checkedTask.length);
-        // $(".tbody-list .input-checkbox").prop("checked", $(this)[0].checked);
-    });
-
     // BD单选
-    $(".bd-checkd").on("click", function () {
+    $(".bd-checkbox-input").on("click", function () {
         $(".bd-checkd-prev :checkbox").removeAttr("checked");
         $(this).prop("checked", true);
-        bdId = $(this).attr("bd-id");
     });
 
     // 指派任务弹框
     $(".task-distribute").on("click", function () {
         $(".datetime-distrDt").val(new Date().Format("yyyy-MM-dd"));
         var hideValues = $(".hide-checked-taskIds").val();
-        if (hideValues == null || hideValues.length == 0) {
+        var checkedValues = hideValues.split(",")
+        if (hideValues == null || hideValues == "") {
             $(".distributeResult-text").html("<strong style='color: red'>请选择任务！</strong>");
             $(".taskDistributeResultModel").modal('show');
         } else {
             $(".taskDistributeModel").modal('show');
         }
-        var taskIds = hideValues.split(",");
-        $(".task-distribute-count").val(taskIds.length);
-        $(".bd-checkd-prev:checked").removeAttr("checked");
+        $(".task-distribute-count").text(checkedValues.length);
+        $(".bd-checkbox-input").removeAttr("checked");
     });
 
     //弹窗初始化数据
@@ -187,8 +184,9 @@ $(function () {
 
     // 确认指派任务
     $(".sure-distribute").on("click", function () {
-        var taskIds = getCookieValue("checked-mission-tasks");
+        var taskIds = $(".hide-checked-taskIds").val().split(",");
         var distrDt = $(".datetime-distrDt").val();
+        var bdId = $("input[name='bdCheckboxInput']:checked").attr("bd-id");
 
         $(".taskDistributeModel").modal('hide');
         $(".distributeResult-text").text("任务指派成功！");
@@ -227,10 +225,13 @@ $(function () {
         });
     });
 
+    // 指派完成重新加载页面
     $(".taskDistributeResultModel").on("hide.bs.modal", function () {
         var result = $(".audit-result").val();
         if (result == 0 && result != "") {
-            window.location.reload();
+            var currUrl = window.location.search;
+            var newUrl = replaceUrlParamVal(currUrl, "taskIds", "");
+            window.location = newUrl;
         }
     });
 
@@ -280,6 +281,7 @@ $(function () {
         });
     });
 
+    // 指派成功刷新页面
     $(".publicSwichResultModel").on("hide.bs.modal", function () {
         var result = $(".isPublic-result").val();
         if (result == 0 && result != "") {
@@ -287,11 +289,13 @@ $(function () {
         }
     });
 
+    // 可见不可见
     $(".publicSwichModel .btn-colse").click(function () {
         var oldPublic = $(".public-default-public").val();
         $(".radio-public[value=" + oldPublic + "]").prop("checked", true);
     });
 
+    // 可见不可见
     $(".publicSwichModel").on("hide.bs.modal", function () {
         var oldPublic = $(".public-default-public").val();
         $(".radio-public[value=" + oldPublic + "]").prop("checked", true);
@@ -324,5 +328,25 @@ $(function () {
             $(".task-finishdt,.task-distrdt").show(), $(".task-auditdt").hide();
         }
     }
+
+    // 去处重复
+    function array_remove_repeat(a) {
+        var r = [];
+        for (var i = 0; i < a.length; i++) {
+            var flag = true;
+            var temp = a[i];
+            for (var j = 0; j < r.length; j++) {
+                if (temp === r[j]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                r.push(temp);
+            }
+        }
+        return r;
+    }
+
 })
 ;

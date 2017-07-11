@@ -24,11 +24,22 @@
                         <div class="widget-title">
                             <span class="icon"><i class="icon-th"></i></span>
                             <h5>战地任务列表</h5>
-                            <button class="btn btn-small btn-success task-distribute">
-                                <i class="icon-bullhorn"> 任务指派</i>
-                            </button>
-                            <label class="has-choosed">已选择：<strong class="has-choosed-task" style="color: red;margin: 0 3px;">$!requestVo.taskIds.size()</strong>条，任务总数：<strong
-                                    style="color: red;margin: 0 3px;">$!page.totalElements</strong>条</label>
+                            <div style="float: left">
+                                <button class="btn btn-small btn-success task-distribute">
+                                    <i class="icon-bullhorn"> 任务指派</i>
+                                </button>
+                                #*<button class="btn btn-small btn-info task-distribute-empty">
+                                    <i class="icon-repeat"> 撤销选中</i>
+                                </button>*#
+                            </div>
+                            <label class="has-choosed">已选择：
+                                <strong class="has-choosed-task" style="color: red;margin: 0 3px;">
+                                    <span class="badge badge-important">$!requestVo.taskIds.size()</span>
+                                </strong>条，任务总数：
+                                <strong style="color: red;margin: 0 3px;">
+                                    <span class="badge badge-info">$!page.totalElements</span>
+                                </strong>条
+                            </label>
                             <div class="public-div" data-group="$!group.id" data-public="$!group.isPublic">
                                 <input type="hidden" class="public-default-val" value="$!group.id">
                                 <input type="hidden" class="public-default-public" value="$!group.isPublic">
@@ -157,19 +168,19 @@
                                 </select>
                             </div>
 
-                                <div class="search-select task-distrdt" #if($!requestVo.status.key==2 || $!requestVo.status.key==3 || "$!requestVo.status" == "") style="display:block" #else
+                                <div class="search-select task-distrdt" #if($!requestVo.status.key==1 || $!requestVo.status.key==2 || "$!requestVo.status" == "") style="display:block" #else
                                      style="display: none" #end">
                             <label>指派时间：</label>
                             <input type="text" name="distrDt" class="span11 dateTimeFormatDay" value="$!requestVo.distrDtStr" text="$!requestVo.distrDtStr" placeholder="指派时间">
                     </div>
 
-                        <div class="search-select task-auditdt" #if($!requestVo.status.key==4 || $!requestVo.status.key==5 || "$!requestVo.status" == "") style="display:block" #else
+                        <div class="search-select task-auditdt" #if($!requestVo.status.key==3 || $!requestVo.status.key==4 || "$!requestVo.status" == "") style="display:block" #else
                              style="display: none" #end">
                     <label>审核时间：</label>
                     <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
                 </div>
 
-                    <div class="search-select task-finishdt" #if($!requestVo.status.key==3 || "$!requestVo.status"== "") style="display:block" #else style="display: none" #end">
+                    <div class="search-select task-finishdt" #if($!requestVo.status.key==2 || "$!requestVo.status"== "") style="display:block" #else style="display: none" #end">
                 <label>完成时间：</label>
                 <input type="text" name="finishDt" id="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="完成时间">
             </div>
@@ -209,7 +220,7 @@
             #if ($null.isNotNull($bdUsers) || $bdUsers.size()>0)
                 #foreach($e in $!bdUsers)
                     <div class="checkbox bd-checkbox">
-                        <input id="checkbox1$e.id" bd-id="$e.id" class="styled bd-checkd" type="checkbox">
+                        <input id="checkbox1$e.id" bd-id="$e.id" name="bdCheckboxInput" class="styled bd-checkbox-input" type="checkbox">
                         <label for="checkbox1$e.id" class="bd-checkbox-label">
                             $!e.chineseName / $!e.dmail
                         </label>
