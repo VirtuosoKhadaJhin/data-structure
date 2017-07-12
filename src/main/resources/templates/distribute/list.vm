@@ -287,7 +287,10 @@
         <h3 id="myModalLabel">批量商户ID格式不合法</h3>
     </div>
     <div class="modal-body">
-        <p class="mchid-reg-text">批量商户ID,以逗号 ',' 分隔,最多支持20个。</p>
+        <p class="mchid-reg-text">
+            批量商户ID,以逗号 ',' 分隔,最多支持20个。
+            <font>请检查是否有非数字字符、</font>
+        </p>
     </div>
     <input type="hidden" class="audit-result"/>
     <div class="modal-footer">
