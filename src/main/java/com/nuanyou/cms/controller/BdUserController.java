@@ -94,10 +94,25 @@ public class BdUserController {
      * @param requestVo
      * @return
      */
-    @RequestMapping("checkUserUnique")
+    @RequestMapping("checkUserNameUnique")
     @ResponseBody
-    public APIResult checkUserUnique(@RequestBody BdUserRequestVo requestVo) {
+    public APIResult checkUserNameUnique(@RequestBody BdUserRequestVo requestVo) {
         Boolean isRepat = bdUserService.checkBdUserUnique(requestVo.getId(), requestVo.getName());
+        APIResult<Boolean> result = new APIResult<Boolean>();
+        result.setData(isRepat);
+        return result;
+    }
+
+    /**
+     * 钉钉邮箱查重
+     *
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping("checkUserDmailUnique")
+    @ResponseBody
+    public APIResult checkUserDmailUnique(@RequestBody BdUserRequestVo requestVo) {
+        Boolean isRepat = bdUserService.checkDmailUnique(requestVo.getId(), requestVo.getDmail());
         APIResult<Boolean> result = new APIResult<Boolean>();
         result.setData(isRepat);
         return result;
