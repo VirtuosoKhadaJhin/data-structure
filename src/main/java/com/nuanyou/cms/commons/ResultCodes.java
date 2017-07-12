@@ -50,6 +50,8 @@ public enum ResultCodes {
 
     NotFoundCurrentBdUser(1002, "当前BD用户不存在"),
 
+    CurrentUserNotLeader(1003, "只有队长或副队长才能访问此功能"),
+
     /**
      * ----------order -----------
      */

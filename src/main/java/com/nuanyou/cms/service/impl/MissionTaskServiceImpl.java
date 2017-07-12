@@ -19,7 +19,6 @@ import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -49,39 +48,18 @@ public class MissionTaskServiceImpl implements MissionTaskService {
 
     @Override
     public Page<MissionTaskVo> findAllMissionTask(final MissionRequestVo requestVo) {
-        requestVo.setPageSize(50);
         Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageSize());
         Specification spec = new Specification() {
 
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
-                List<Long> mchIds = Lists.newArrayList();
                 if (requestVo.getMchId() != null) {
-                    mchIds.add(requestVo.getMchId());
+                    requestVo.getMchIds().add(requestVo.getMchId());
                 }
-
-                // 拆分页面商户ids
-                Integer maxSearchCount = 0;
-                if (StringUtils.isNotEmpty(requestVo.getMchIdsStr())) {
-                    String mchIdsStr = requestVo.getMchIdsStr();
-                    String[] mchSplitIds = mchIdsStr.split(",");
-                    for (String mchId : mchSplitIds) {
-                        try {
-                            if (maxSearchCount < 20) {
-                                mchIds.add(Long.valueOf(mchId));
-                            }
-                            maxSearchCount++;
-                        } catch (Exception e) {
-
-                        }
-                    }
+                if (CollectionUtils.isNotEmpty(requestVo.getMchIds())) {
+                    predicate.add(root.get("merchant").get("id").in(requestVo.getMchIds()));
                 }
-
-                if (requestVo.getMchId() != null || (StringUtils.isNotEmpty(requestVo.getMchIdsStr()) && mchIds.size() > 0)) {
-                    predicate.add(root.get("merchant").get("id").in(mchIds));
-                }
-
                 if (requestVo.getStatus() == null) {
                     if (requestVo.getAudit()) {//审核列表
                         ArrayList<MissionTaskStatus> auditStatus = Lists.newArrayList(MissionTaskStatus.FINISHED, MissionTaskStatus.APPROVED, MissionTaskStatus.NON_APPROVAL);

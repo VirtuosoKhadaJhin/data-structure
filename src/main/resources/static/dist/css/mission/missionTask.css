@@ -194,3 +194,11 @@ table .tr-class:hover {
     margin-top: 5px;
     display: none;
 }
+
+.bd-checkbox-label {
+    font-size: 16px;
+}
+
+.bd-checkbox-input {
+    margin-top: -5px;
+}
