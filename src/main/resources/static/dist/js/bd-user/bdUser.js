@@ -5,6 +5,8 @@ $(document).ready(function () {
 
     var validUserName = true;
 
+    var validUserDmail = true;
+
     var isBelongToGroup = false;
 
     var emailReg = /^\w[-_\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/;
@@ -68,11 +70,11 @@ $(document).ready(function () {
     });
 
     // 用户名查重
-    $(".bd-name").on("change", function () {
+    $(".bd-name").on("blur", function () {
         var name = $(".bd-name").val();
         var data = {id: $(".hide-user-id").val(), name: name};
         $.ajax({
-            url: 'checkUserUnique',
+            url: 'checkUserNameUnique',
             data: JSON.stringify(data),
             type: 'post',
             dataType: 'json',
@@ -80,10 +82,32 @@ $(document).ready(function () {
             success: function (result) {
                 if (result.data) {
                     validUserName = false;
-                    $(".updateBdUserResult").text("用户名重复！");
+                    $(".updateBdUserResult").text("用户名已被使用，请更换用户名！");
                     $(".updateBdUserResultModal").modal("show");
                 } else {
                     validUserName = true;
+                }
+            }
+        });
+    });
+
+    // 钉钉邮箱查重
+    $(".bd-dmail").on("blur", function () {
+        var dmail = $(".bd-dmail").val();
+        var data = {id: $(".hide-user-id").val(), dmail: dmail};
+        $.ajax({
+            url: 'checkUserDmailUnique',
+            data: JSON.stringify(data),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.data) {
+                    validUserDmail = false;
+                    $(".updateBdUserResult").text("钉钉邮箱已被使用，请更换邮箱！");
+                    $(".updateBdUserResultModal").modal("show");
+                } else {
+                    validUserDmail = true;
                 }
             }
         });
