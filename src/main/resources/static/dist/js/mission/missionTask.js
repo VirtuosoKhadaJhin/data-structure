@@ -26,11 +26,19 @@ $(function () {
         if (mchIdStr == null || mchIdStr.length == 0) {
             return true;
         }
-        var regExp = /^(\d+,?)+$/,regResult = regExp.test(mchIdStr)
+        mchIdStr = mchIdStr.replace(/(\r\n|\n|\r)/gm, ',').replace(",,", ",").replace(" ","");
+        if (mchIdStr.startWith(",")) {
+            mchIdStr.substring(1, mchIdStr.length);
+        }
+        if (mchIdStr.endsWith(",")) {
+            mchIdStr.substring(0, mchIdStr.length - 1);
+        }
+        var regExp = /^(\d+,?)+$/, regResult = regExp.test(mchIdStr)
         if (!regResult || mchIdStr.split(",").length > 20) {
             $(".mchid-reg-model").modal("show");
             return false;
         }
+        $(".real-batch-mch-id").val(mchIdStr);
         return true;
     });
 

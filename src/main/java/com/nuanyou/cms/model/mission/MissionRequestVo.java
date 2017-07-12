@@ -55,6 +55,8 @@ public class MissionRequestVo {
     //UI使用
     private List<Long> taskIds = Lists.newArrayList();
 
+    private String originalMchIds;
+
     public Long getMchId() {
         return mchId;
     }
@@ -183,6 +185,14 @@ public class MissionRequestVo {
         this.mchIds = mchIds;
     }
 
+    public String getOriginalMchIds() {
+        return originalMchIds;
+    }
+
+    public void setOriginalMchIds(String originalMchIds) {
+        this.originalMchIds = originalMchIds;
+    }
+
     public String getDistrDtStr() {
         if (distrDt == null) {
             return null;
@@ -209,12 +219,5 @@ public class MissionRequestVo {
             return "";
         }
         return StringUtils.join(taskIds, ",");
-    }
-
-    public String getBatchMerchantIdsStr() {
-        if (CollectionUtils.isEmpty(mchIds)) {
-            return "";
-        }
-        return StringUtils.join(mchIds, ",");
     }
 }

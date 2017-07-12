@@ -140,7 +140,8 @@
                             </div>
                             <div class="search-select">
                                 <label>批量商户ID</label>
-                                <textarea class="batch-mch-id" name="mchIds" placeholder="以英文逗号 ',' 分隔,最多支持20个" rows="3">$!requestVo.batchMerchantIdsStr</textarea>
+                                <textarea class="batch-mch-id" name="originalMchIds" placeholder="以英文逗号 ',' 分隔,最多支持20个" rows="3">$!requestVo.originalMchIds</textarea>
+                                <input class="real-batch-mch-id" name="mchIds" type="hidden">
                             </div>
                             <div class="search-select">
                                 <label>BD名称</label>
@@ -249,7 +250,7 @@
                 <div class="modal hide fade publicSwichModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="publicSwichLabel">可见选项</h3>
+                        <h3 id="publicSwichLabel">提示</h3>
                     </div>
                     <div class="modal-body">
                         <p class="public-switch-text"></p>
@@ -266,7 +267,7 @@
                 <div class="modal hide fade publicSwichResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="publicSwichLabel">可见选项操作结果</h3>
+                        <h3 id="publicSwichLabel">提示</h3>
                     </div>
                     <div class="modal-body">
                         <p class="public-switch-result-text"></p>
@@ -281,7 +282,7 @@
                 <div class="modal hide fade taskDistributeResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="myModalLabel">指派通知</h3>
+                        <h3 id="myModalLabel">提示</h3>
                     </div>
                     <div class="modal-body">
                         <p class="distributeResult-text"></p>
@@ -296,7 +297,7 @@
                 <div class="modal hide fade mchid-reg-model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="myModalLabel">批量商户ID格式不合法</h3>
+                        <h3 id="myModalLabel">提示</h3>
                     </div>
                     <div class="modal-body">
                         <p class="mchid-reg-text">
@@ -313,7 +314,7 @@
                 <div class="modal hide fade checkTaskWarningModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="myModalLabel">警告</h3>
+                        <h3 id="myModalLabel">提示</h3>
                     </div>
                     <div class="modal-body">
                         <p class="check-task-waring-text">选择任务不能超过<label style="color: red;font-weight: bold;display: inline-block">300</label>条！</p>
