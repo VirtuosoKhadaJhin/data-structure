@@ -20,16 +20,18 @@ $(function () {
         }
     }
 
-    // 批量查询商户提示
-    $(".batch-mch-id").focus(function () {
-        $(".mch-id-tip").show("fast");
-    });
-
-    // 批量查询商户提示
-    $(".batch-mch-id").on("keyup", function () {
-        if ($(".batch-mch-id").val() == "" || $(".batch-mch-id").val() == null) {
-            $(".mch-id-tip").hide("fast");
+    // 查询提交表单前检验批量商户id是否合法
+    $(".search-form .btn-ok").on("click", function () {
+        var mchIdStr = $(".batch-mch-id").val();
+        var regExp = /^(\d+,?)+$/;
+        var regResult = regExp.test(mchIdStr);
+        if (mchIdStr != "" && mchIdStr != null) {
+            if (!regResult) {
+                $(".mchid-reg-model").modal("show");
+                return false;
+            }
         }
+        return true;
     });
 
     // 分页查询时携带task参数
