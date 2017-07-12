@@ -14,7 +14,12 @@ $(document).ready(function () {
     // 新增/编辑 用户
     $(".btn-ok").click(function () {
         if (!validUserName) {
-            $(".updateBdUserResult").text("用户名重复！");
+            $(".updateBdUserResult").text("用户名已被使用，请更换用户名！");
+            $(".updateBdUserResultModal").modal("show");
+            return false;
+        }
+        if (!validUserDmail) {
+            $(".updateBdUserResult").text("钉钉邮箱已被使用，请更换邮箱！");
             $(".updateBdUserResultModal").modal("show");
             return false;
         }
