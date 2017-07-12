@@ -54,6 +54,13 @@ table .tr-class:hover {
     height: auto;
 }
 
+.has-choosed {
+    font-size: 12px;
+    padding: 12px;
+    line-height: 35px;
+    margin: 0;
+}
+
 .search-select {
     margin-bottom: 10px;
     width: 100%;
@@ -147,6 +154,10 @@ table .tr-class:hover {
     margin: 5px 10px 0 0;
 }
 
+.task-distribute-empty {
+    margin: 5px 10px 0 0;
+}
+
 .bd-checkbox {
     margin: 5px;
     margin-left: 20%;
@@ -158,7 +169,7 @@ table .tr-class:hover {
 }
 
 .public-div {
-    margin: 5px;
+    margin: 10px;
     float: right;
 }
 
@@ -171,4 +182,15 @@ table .tr-class:hover {
 
 .ispublic {
     margin-top: -2px;
+}
+
+.batch-mch-id {
+    resize: none;
+    width: 86%;
+}
+
+.mch-id-tip {
+    width: 71%;
+    margin-top: 5px;
+    display: none;
 }

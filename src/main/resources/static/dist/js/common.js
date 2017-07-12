@@ -19,7 +19,10 @@ window.onload = function () {
         timepicker: false,
         yearStart: 2000,
         yearEnd: 2050,
-        todayButton: true
+        todayButton: true,
+        scrollMonth: false,
+        scrollTime: false,
+        scrollInput: false,
     });
     $('.timeFormat').datetimepicker({
         format: "H:i:s",

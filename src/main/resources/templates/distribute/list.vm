@@ -9,7 +9,6 @@
     <link href="/dist/css/mission/missionTask.css" rel="stylesheet"/>
     #include("common/js-support.vm")
     <script src="/dist/js/mission/missionTask.js"></script>
-
 </head>
 <body>
 <div id="content" class="content-container">
@@ -25,14 +24,23 @@
                         <div class="widget-title">
                             <span class="icon"><i class="icon-th"></i></span>
                             <h5>战地任务列表</h5>
-                            <button class="btn btn-small btn-success task-distribute">
-                                <i class="icon-bullhorn"> 任务指派</i>
-                            </button>
-
+                            <div style="float: left;margin: 2px;">
+                                <button class="btn btn-small btn-success task-distribute">
+                                    <i class="icon-bullhorn"> 任务指派</i>
+                                </button>
+                                <span class="has-choosed">已选择：
+                                    <strong class="has-choosed-task" style="color: red;margin: 0 3px;">
+                                        <span style="cursor:pointer" class="badge badge-important">$!requestVo.taskIds.size()</span>
+                                    </strong>条，任务总数：
+                                    <strong style="color: red;margin: 0 3px;">
+                                        <span style="cursor:pointer" class="badge badge-info">$!page.totalElements</span>
+                                    </strong>条
+                                </span>
+                            </div>
                             <div class="public-div" data-group="$!group.id" data-public="$!group.isPublic">
                                 <input type="hidden" class="public-default-val" value="$!group.id">
                                 <input type="hidden" class="public-default-public" value="$!group.isPublic">
-                                <span style="margin-right: 5px;font-size: 14px">未分配商户对所有队员可见：</span>
+                                <span style="margin-right: 5px;font-size: 14px;cursor:pointer">未分配商户对所有队员可见：</span>
                                 <input class="radio-public" type="radio" value="1" name="isPublic" #if($!group.isPublic==1) checked #end style="margin-top: -2px"/>可见
                                 <input class="radio-public" type="radio" value="0" name="isPublic" #if($!group.isPublic==0) checked #end style="margin-top: -2px;margin-left: 10px;"/>不可见
                             </div>
@@ -53,7 +61,8 @@
                                 <th class="th-op">商圈</th>
                                 <th class="th-op">BD名称</th>
                                 <th class="th-op">状态</th>
-                                <th class="th-op">备注</th>
+                                <th class="th-op">驳回原因</th>
+                                <th class="th-op">指派时间</th>
                                 <th class="th-op">完成时间</th>
                                 <th class="th-op">审核时间</th>
                             </tr>
@@ -69,26 +78,34 @@
                                     </td>
                                 </tr>
                                 #end
+                                #set($today = $!dateFormatter.format("dd", $!dateFormatter.systemTime))
                                 #foreach($entity in $!page.content)
                                 <tr>
                                     <td>
                                         #if($!entity.status.key!=2 && $!entity.status.key!=3)
                                             <div class="checkbox bd-checkbox">
-                                                <input id="checkbox$!entity.id" class="styled td-checked" type="checkbox" task-id="$!entity.id">
+                                                <input id="checkbox$!entity.id" class="styled td-checked input-checkbox" type="checkbox" task-id="$!entity.id">
                                                 <label for="checkbox$!entity.id" class="bd-checkbox-label" style="margin-bottom: 15px;">
                                                 </label>
                                             </div>
                                         #end
                                     </td>
-                                    <td>
+                                    <td class="merchant-info">
                                         <span>$!entity.merchant.id</span>
                                         <br/>
                                         <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a>
                                     </td>
-                                    <td>$!entity.merchant.district.name</td>
-                                    <td>$!entity.bdUser.chineseName</td>
-                                    <td>$!entity.status.value</td>
+                                    <td class="merchant-district">$!entity.merchant.district.name</td>
+                                    <td class="task-cnName">$!entity.bdUser.chineseName</td>
+                                    <td class="td-task-status" data-isExpired="$!entity.isExpiredDistributed" data-status="$!entity.status">
+                                        #if ($!entity.isExpiredDistributed)
+                                            <label class="expired-time" style="color: red">$!entity.status.value</label>
+                                        #else
+                                            $!entity.status.value
+                                        #end
+                                    </td>
                                     <td class="td-bz" title="$!entity.remark">$!entity.remark</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.distrDt)</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishDt)</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditDt)</td>
                                 </tr>
@@ -101,86 +118,6 @@
                     <div class="pagination" style="float:right">
                         <ul total="$!page.totalPages" index="$!i"></ul>
                     </div>
-                </div>
-            </div>
-            <!-- 指派弹窗 -->
-            <div class="modal hide fade taskDistributeModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 id="myModalLabel">任务指派</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="search-select bd-checkd-prev">
-                        #if ($null.isNull($bdUsers) || $bdUsers.size()==0)
-                            <strong style="margin-left: 45%;">暂无BD</strong>
-                        #end
-                        #if ($null.isNotNull($bdUsers) || $bdUsers.size()>0)
-                            #foreach($e in $!bdUsers)
-                                <div class="checkbox bd-checkbox">
-                                    <input id="checkbox1$e.id" bd-id="$e.id" class="styled bd-checkd" type="checkbox">
-                                    <label for="checkbox1$e.id" class="bd-checkbox-label">
-                                        $!e.chineseName / $!e.dmail
-                                    </label>
-                                </div>
-                            #end
-
-                        #end
-                    </div>
-                    <div class="search-select">
-                        <label style="display: inline;margin-left: 6%">指派时间：</label>
-                        <input type="text" name="input-distrDt" style="width: 30%" class="span8 timeFormatNoDay datetime-distrDt" value="">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary sure-distribute">确认</button>
-                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-                </div>
-            </div>
-
-            <!-- 是否可见 提示框 -->
-            <div class="modal hide fade publicSwichModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 id="publicSwichLabel">可见选项</h3>
-                </div>
-                <div class="modal-body">
-                    <p class="public-switch-text"></p>
-                </div>
-                <div class="modal-footer">
-                    <input type="hidden" id="hide-isPublic" class="hide-public"/>
-                    <input type="hidden" id="hide-groupId" class="hide-groupId"/>
-                    <button class="btn btn-primary sure-public-switch">确认</button>
-                    <button class="btn btn-colse" data-dismiss="modal" aria-hidden="true">关闭</button>
-                </div>
-            </div>
-
-            <!-- 可见 结果提示框 -->
-            <div class="modal hide fade publicSwichResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 id="publicSwichLabel">可见选项操作结果</h3>
-                </div>
-                <div class="modal-body">
-                    <p class="public-switch-result-text"></p>
-                </div>
-                <div class="modal-footer">
-                    <input type="hidden" class="isPublic-result"/>
-                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-                </div>
-            </div>
-
-            <!-- 指派结果弹窗 -->
-            <div class="modal hide fade taskDistributeResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 id="myModalLabel">指派通知</h3>
-                </div>
-                <div class="modal-body">
-                    <p class="distributeResult-text"></p>
-                </div>
-                <input type="hidden" class="audit-result"/>
-                <div class="modal-footer">
-                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
                 </div>
             </div>
 
@@ -210,6 +147,14 @@
                                 </select>
                             </div>
                             <div class="search-select">
+                                <label>批量商户ID</label>
+                                <textarea class="batch-mch-id" name="mchIdsStr" placeholder="批量商户ID,以逗号 ',' 分隔,最多支持20个" rows="7">$!requestVo.mchIdsStr</textarea>
+                                <div class="alert mch-id-tip">
+                                    <i class="icon-bell"></i>
+                                    <strong>提示 </strong>批量商户ID,以逗号 ',' 分隔,最多支持20个
+                                </div>
+                            </div>
+                            <div class="search-select">
                                 <label>BD名称</label>
                                 <select class="span11 select2" name="bdId">
                                     <option value>全部</option>
@@ -220,7 +165,7 @@
                             </div>
                             <div class="search-select">
                                 <label>任务状态</label>
-                                <select class="span11 select2" name="status">
+                                <select class="span11 select2 task-status" name="status">
                                     <option value>全部</option>
                                     #foreach($e in $!taskStatus)
                                         <option value="$!e" #if($!e.key == $!requestVo.status.key) selected #end>$!e.value</option>
@@ -228,32 +173,125 @@
                                 </select>
                             </div>
 
-                            <div class="search-select">
-                                <label>审核时间：</label>
-                                <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
-                            </div>
-
-                            <div class="search-select">
-                                <label>完成时间：</label>
-                                <input type="text" name="finishDt" id="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="完成时间">
-                            </div>
-
-                            <div class="btn-group">
-                                <input type="hidden" name="isAudit" value="false"/>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="icon-search"> 查询</i>
-                                </button>
-                                <button class="btn btn-warning search-reset" style="margin-left: 3px;">
-                                    <i class="icon-refresh"> 重置</i>
-                                </button>
-                            </div>
-                        </form>
-
+                                <div class="search-select task-distrdt" #if($!requestVo.status.key==1 || $!requestVo.status.key==2 || "$!requestVo.status" == "") style="display:block" #else
+                                     style="display: none" #end">
+                            <label>指派时间：</label>
+                            <input type="text" name="distrDt" class="span11 dateTimeFormatDay" value="$!requestVo.distrDtStr" text="$!requestVo.distrDtStr" placeholder="指派时间">
                     </div>
+
+                        <div class="search-select task-auditdt" #if($!requestVo.status.key==3 || $!requestVo.status.key==4 || "$!requestVo.status" == "") style="display:block" #else
+                             style="display: none" #end">
+                    <label>审核时间：</label>
+                    <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
                 </div>
+
+                    <div class="search-select task-finishdt" #if($!requestVo.status.key==2 || "$!requestVo.status"== "") style="display:block" #else style="display: none" #end">
+                <label>完成时间：</label>
+                <input type="text" name="finishDt" id="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="完成时间">
             </div>
+
+            <div class="btn-group">
+                <input type="hidden" name="isAudit" value="false"/>
+                <input type="hidden" name="taskIds" class="hide-checked-taskIds" value="$!requestVo.checkedTaskStr">
+                <button type="submit" class="btn btn-primary">
+                    <i class="icon-search"> 查询</i>
+                </button>
+                <button class="btn btn-warning search-reset" style="margin-left: 3px;">
+                    <i class="icon-refresh"> 重置</i>
+                </button>
+            </div>
+            </form>
+
         </div>
     </div>
+</div>
+</div>
+
+<!-- 指派弹窗 -->
+<div class="modal hide fade taskDistributeModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">任务指派
+            <label class="has-choosed" style="display: inline;float: none;">已选择：
+                <strong class="task-distribute-count" style="color: red;margin: 0 3px;">$!requestVo.taskIds.size()</strong>条
+            </label>
+        </h3>
+    </div>
+    <div class="modal-body">
+        <div class="search-select bd-checkd-prev">
+            #if ($null.isNull($bdUsers) || $bdUsers.size()==0)
+                <strong style="margin-left: 45%;">暂无BD</strong>
+            #end
+            #if ($null.isNotNull($bdUsers) || $bdUsers.size()>0)
+                #foreach($e in $!bdUsers)
+                    <div class="checkbox bd-checkbox">
+                        <input id="checkbox1$e.id" bd-id="$e.id" name="bdCheckboxInput" class="styled bd-checkbox-input" type="checkbox">
+                        <label for="checkbox1$e.id" class="bd-checkbox-label">
+                            $!e.chineseName / $!e.dmail
+                        </label>
+                    </div>
+                #end
+
+            #end
+        </div>
+        <div class="search-select">
+            <label style="display: inline;margin-left: 6%">指派时间：</label>
+            <input type="text" name="input-distrDt" style="width: 30%" class="span8 timeFormatNoDay datetime-distrDt" value="">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary sure-distribute">确认</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+
+<!-- 是否可见 提示框 -->
+<div class="modal hide fade publicSwichModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="publicSwichLabel">可见选项</h3>
+    </div>
+    <div class="modal-body">
+        <p class="public-switch-text"></p>
+    </div>
+    <div class="modal-footer">
+        <input type="hidden" id="hide-isPublic" class="hide-public"/>
+        <input type="hidden" id="hide-groupId" class="hide-groupId"/>
+        <button class="btn btn-primary sure-public-switch">确认</button>
+        <button class="btn btn-colse" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+
+<!-- 可见 结果提示框 -->
+<div class="modal hide fade publicSwichResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="publicSwichLabel">可见选项操作结果</h3>
+    </div>
+    <div class="modal-body">
+        <p class="public-switch-result-text"></p>
+    </div>
+    <div class="modal-footer">
+        <input type="hidden" class="isPublic-result"/>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+
+<!-- 指派结果弹窗 -->
+<div class="modal hide fade taskDistributeResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">指派通知</h3>
+    </div>
+    <div class="modal-body">
+        <p class="distributeResult-text"></p>
+    </div>
+    <input type="hidden" class="audit-result"/>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+</div>
 </div>
 <script src="/dist/js/page-support.js"></script>
 <script>
@@ -263,6 +301,9 @@
         yearStart: 2000,
         yearEnd: 2050,
         todayButton: true,
+        scrollMonth: false,
+        scrollTime: false,
+        scrollInput: false,
         minDate: new Date()
     });
 </script>

@@ -10,3 +10,4 @@
 <script src="/dist/js/jquery-ui-1.12.1.js"></script>
 <script src="/dist/ztree/js/jquery.ztree.core.js"></script>
 <script src="/dist/ztree/js/jquery.ztree.excheck.js"></script>
+<script src="/dist/js/common-cookie.js"></script>

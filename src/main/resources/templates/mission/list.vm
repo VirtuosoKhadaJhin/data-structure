@@ -59,7 +59,9 @@
                                     <td>
                                         #if($!entity.status.key != 3)
                                             <div class="td-op" data-mchId="$!entity.mchId">
-                                                <button type="button" class="btn btn-success btn-small td-button approval">审批</button>
+                                                <button type="button" class="btn btn-success btn-small td-button approval">
+                                                    <i class="icon-file"> 审批</i>
+                                                </button>
                                             </div>
                                         #end
                                     </td>

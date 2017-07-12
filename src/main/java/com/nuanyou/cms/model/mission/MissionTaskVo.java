@@ -2,9 +2,11 @@ package com.nuanyou.cms.model.mission;
 
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.Merchant;
-import com.nuanyou.cms.entity.mission.MissionGroup;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import com.nuanyou.cms.entity.mission.BdMerchantTrack;
+import com.nuanyou.cms.entity.mission.MissionGroup;
+import com.nuanyou.cms.util.DateUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Date;
 
@@ -201,5 +203,15 @@ public class MissionTaskVo {
 
     public void setIsPublic(Boolean aPublic) {
         isPublic = aPublic;
+    }
+
+    public boolean getIsExpiredDistributed() {
+        if (this.status != MissionTaskStatus.UN_FINISH) {
+            return false;
+        }
+        Pair<Date, Date> startEndTime = DateUtils.getDayStartEndTime(new Date());
+        long time = startEndTime.getLeft().getTime();
+        long oldTime = this.distrDt.getTime();
+        return oldTime < time;
     }
 }
