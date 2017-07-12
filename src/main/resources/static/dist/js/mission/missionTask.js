@@ -163,8 +163,8 @@ $(function () {
     });
 
     // BD单选
-    $(".bd-checkbox-input").on("click", function () {
-        $(".bd-checkd-prev :checkbox").removeAttr("checked");
+    $(".taskDistributeModel .modal-body .bd-checkbox-input").on("click", function () {
+        $(".taskDistributeModel .modal-body .bd-checkbox-input").removeAttr("checked");
         $(this).prop("checked", true);
     });
 
@@ -180,7 +180,7 @@ $(function () {
             $(".taskDistributeModel").modal('show');
         }
         $(".task-distribute-count").text(checkedValues.length);
-        $(".bd-checkbox-input").removeAttr("checked");
+        $(".taskDistributeModel .modal-body .bd-checkbox-input").removeAttr("checked");
     });
 
     //弹窗初始化数据

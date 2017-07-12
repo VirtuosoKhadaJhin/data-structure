@@ -50,12 +50,8 @@
                             <thead class="thead-class">
                             <tr class="thread-tr">
                                 <th class="th-op">
-                                    <div class="checkbox bd-checkbox">
-                                        <input id="checkbox-all" class="th-checked" type="checkbox">
-                                        <label for="checkbox-all" class="label-check">
-                                            <strong>全选</strong>
-                                        </label>
-                                    </div>
+                                    <input style="margin-top: 0px;" id="checkbox-all" class="th-checked" type="checkbox">
+                                    <strong>全选</strong>
                                 </th>
                                 <th class="th-op">商户信息</th>
                                 <th class="th-op">商圈</th>
@@ -83,11 +79,7 @@
                                 <tr>
                                     <td>
                                         #if($!entity.status.key!=2 && $!entity.status.key!=3)
-                                            <div class="checkbox bd-checkbox">
-                                                <input id="checkbox$!entity.id" class="styled td-checked input-checkbox" type="checkbox" task-id="$!entity.id">
-                                                <label for="checkbox$!entity.id" class="bd-checkbox-label" style="margin-bottom: 15px;">
-                                                </label>
-                                            </div>
+                                            <input class="styled td-checked input-checkbox" type="checkbox" task-id="$!entity.id">
                                         #end
                                     </td>
                                     <td class="merchant-info">
@@ -224,11 +216,11 @@
             #end
             #if ($null.isNotNull($bdUsers) || $bdUsers.size()>0)
                 #foreach($e in $!bdUsers)
-                    <div class="checkbox bd-checkbox">
-                        <input id="checkbox1$e.id" bd-id="$e.id" name="bdCheckboxInput" class="styled bd-checkbox-input" type="checkbox">
-                        <label for="checkbox1$e.id" class="bd-checkbox-label">
+                    <div style="margin: 5px;margin-left: 20%;">
+                        <input style="margin-top: -5px;" bd-id="$e.id" name="bdCheckboxInput" class="bd-checkbox-input" type="checkbox">
+                        <span class="bd-checkbox-label">
                             $!e.chineseName / $!e.dmail
-                        </label>
+                        </span>
                     </div>
                 #end
 
