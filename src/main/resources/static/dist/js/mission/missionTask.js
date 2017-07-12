@@ -23,18 +23,13 @@ $(function () {
     // 查询提交表单前检验批量商户id是否合法
     $(".search-form .btn-ok").on("click", function () {
         var mchIdStr = $(".batch-mch-id").val();
-        var regExp = /^(\d+,?)+$/;
-        var regResult = regExp.test(mchIdStr);
-        if (mchIdStr != "" && mchIdStr != null) {
-            if (!regResult) {
-                return false;
-            } else {
-                var mchids = mchIdStr.split(",");
-                if (mchids.length > 20) {
-                    $(".mchid-reg-model").modal("show");
-                    return false;
-                }
-            }
+        if (mchIdStr == null || mchIdStr.length == 0) {
+            return true;
+        }
+        var regExp = /^(\d+,?)+$/,regResult = regExp.test(mchIdStr)
+        if (!regResult || mchIdStr.split(",").length > 20) {
+            $(".mchid-reg-model").modal("show");
+            return false;
         }
         return true;
     });
@@ -60,9 +55,21 @@ $(function () {
     });
 
     // th全选，全不选
-    $("th .th-checked").on("change", function () {
+    $("th .th-checked").on("click", function () {
         var newArray = $.makeArray(null);
         var isChecked = $(this)[0].checked;
+        var hideValues = $(".hide-checked-taskIds").val();
+        if (isChecked) {//预判是否超长选中
+            var length = $(".tbody-list .input-checkbox").not("input:checked").length;
+            if (hideValues != null && hideValues.length > 0) {
+                var hideTasks = hideValues.split(",");
+                if (hideTasks.length + length > 300) {
+                    $(".checkTaskWarningModel").modal("show");
+                    return false;
+                }
+            }
+        }
+
         $(".tbody-list .input-checkbox").each(function () {
             var taskID = $(this).attr("task-id");
             var hasChecked = $(this)[0].checked;
@@ -78,71 +85,84 @@ $(function () {
         if (newArray.length == 0) {
             return false;
         }
-        var hideValues = $(".hide-checked-taskIds").val();
+
         if (isChecked) {//全选
-            // 防止重复
-            newArray = array_remove_repeat(hideValues.split(",").concat(newArray));
-            if (newArray[0] == "") {
-                newArray.splice(0, 1);
+            if (hideValues == null || hideValues.length == 0) {
+                hideValues = newArray;
+            } else {
+                hideValues = hideValues.split(",").concat(newArray);
             }
-            $("#checkbox-all").prop("checked", true);
-            $(".hide-checked-taskIds").val(newArray.toString());
-            $(".has-choosed-task").html("<span class='badge badge-important'>" + newArray.length + "</span>");
-            return false;
-        }
-        //全不选
-        var checkedValues = hideValues.split(","), checkedTask = $.makeArray(null);
-        for (var m in checkedValues) {
-            var hasSame = false;
-            for (var n in newArray) {
-                if (newArray[n] != checkedValues[m]) {
+            $(".hide-checked-taskIds").val(hideValues.toString());
+            $(".badge-important").text(hideValues.length);
+            $(this).prop("checked", true);
+        } else {
+            //全不选
+            if (hideValues == null || hideValues.length == 0) {
+                return false;
+            }
+            var checkedValues = hideValues.split(","), newCheckedTask = $.makeArray(null);
+            for (var m in checkedValues) {
+                if (newArray.indexOf(checkedValues[m]) != -1) {
                     continue;
                 }
-                hasSame = true;
+                newCheckedTask.push(checkedValues[m]);
             }
-            if (!hasSame) {
-                checkedTask.push(checkedValues[m]);
+            if (newCheckedTask.length == 0) {
+                $(".hide-checked-taskIds").val("");
+            } else {
+                $(".hide-checked-taskIds").val(newCheckedTask.toString());
             }
+            $(".badge-important").text(newCheckedTask.length);
+            $(this).prop("checked", false);
         }
-        if (checkedTask.length == 0) {
-            $(".hide-checked-taskIds").val("");
-        } else {
-            $(".hide-checked-taskIds").val(checkedTask.toString());
-        }
-        $("#checkbox-all").prop("checked", false);
-        $(".has-choosed-task").html("<span class='badge badge-important'>" + checkedTask.length + "</span>");
     });
 
     // 检查td的选中与取消选中
     $(".td-checked").on("click", function () {
-        var checkedValues = $(".hide-checked-taskIds").val().split(",");
-        if ($(this)[0].checked) {
+        var isChecked = $(this)[0].checked;
+        var taskId = $(this).attr("task-id");
+        var hideCheckedValues = $(".hide-checked-taskIds").val();
+        if (isChecked) {//预判是否超长选中
+            if (hideCheckedValues != null && hideCheckedValues.length > 0) {
+                var hideTasks = hideCheckedValues.split(",");
+                if (hideTasks.length + 1 > 300) {
+                    $(".checkTaskWarningModel").modal("show");
+                    return false;
+                }
+            }
+        }
+
+        if (isChecked) {
             var checked_count = $(".tbody-list .input-checkbox:checked").length;
             var allLength = $(".tbody-list .input-checkbox").length;
             if (checked_count == allLength) {
                 $(".th-checked").prop("checked", true);
             }
-            // add into hideValues
         } else {
             $(".th-checked").prop("checked", false);
-            // remove from hideValues
         }
-        var hasSame = false;
-        var taskId = $(this).attr("task-id");
-        for (var m in checkedValues) {
-            if (checkedValues[m] == taskId) {
-                hasSame = true;
-                checkedValues.splice(checkedValues.indexOf(taskId), 1);
+
+        var hideCheckTaskIsNull = hideCheckedValues == null || hideCheckedValues.length == 0;
+        if (isChecked && hideCheckTaskIsNull) {
+            $(".hide-checked-taskIds").val(taskId);
+            $(".badge-important").text(1);
+        } else if (isChecked && !hideCheckTaskIsNull) {
+            var hideTaskIds = $(".hide-checked-taskIds").val().split(",");
+            hideTaskIds.push(taskId);
+            $(".hide-checked-taskIds").val(hideTaskIds.toString());
+            $(".badge-important").text(hideTaskIds.length);
+        } else if (!isChecked && !hideCheckTaskIsNull) {
+            var hideCheckedTask = $(".hide-checked-taskIds").val().split(",");
+            var newCheckTaskArray = $.makeArray(null);
+            for (var m in hideCheckedTask) {
+                if (hideCheckedTask[m] == taskId) {
+                    continue;
+                }
+                newCheckTaskArray.push(hideCheckedTask[m]);
             }
+            $(".hide-checked-taskIds").val(newCheckTaskArray.toString());
+            $(".badge-important").text(newCheckTaskArray.length);
         }
-        if (!hasSame) {
-            checkedValues.push(taskId);
-        }
-        if (checkedValues[0] == "") {
-            checkedValues.splice(0, 1);
-        }
-        $(".has-choosed-task").html("<span class='badge badge-important'>" + checkedValues.length + "</span>");
-        $(".hide-checked-taskIds").val(checkedValues.toString());
     });
 
     // 时间查询条件显示与隐藏
@@ -160,7 +180,6 @@ $(function () {
     $(".nepublic").on("click", function () {
         $(".publicSwichModel").modal('show');
         $(".public-swich-text").text("确定所有成员不可见吗？");
-
     });
 
     // 搜索框重置
@@ -347,25 +366,4 @@ $(function () {
             $(".task-finishdt,.task-distrdt").show(), $(".task-auditdt").hide();
         }
     }
-
-    // 去处重复
-    function array_remove_repeat(a) {
-        var r = [];
-        for (var i = 0; i < a.length; i++) {
-            var flag = true;
-            var temp = a[i];
-            for (var j = 0; j < r.length; j++) {
-                if (temp === r[j]) {
-                    flag = false;
-                    break;
-                }
-            }
-            if (flag) {
-                r.push(temp);
-            }
-        }
-        return r;
-    }
-
-})
-;
+});

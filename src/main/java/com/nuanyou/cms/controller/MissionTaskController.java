@@ -112,6 +112,7 @@ public class MissionTaskController {
     @RequestMapping("distribute")
     public String distributeTask(MissionRequestVo requestVo, Model model) {
         requestVo.setAudit(false);
+        requestVo.setPageSize(50);
         String email = UserHolder.getUser().getEmail();
         BdUser bdUser = bdUserService.findBdUserByDemail(email);
         if (bdUser == null) {

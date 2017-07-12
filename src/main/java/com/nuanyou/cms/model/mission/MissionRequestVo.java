@@ -205,9 +205,16 @@ public class MissionRequestVo {
     }
 
     public String getCheckedTaskStr() {
-        if (CollectionUtils.isEmpty(this.taskIds)) {
+        if (CollectionUtils.isEmpty(taskIds)) {
             return "";
         }
         return StringUtils.join(taskIds, ",");
+    }
+
+    public String getBatchMerchantIdsStr() {
+        if (CollectionUtils.isEmpty(mchIds)) {
+            return "";
+        }
+        return StringUtils.join(mchIds, ",");
     }
 }
