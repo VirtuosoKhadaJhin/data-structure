@@ -140,7 +140,7 @@
                             </div>
                             <div class="search-select">
                                 <label>批量商户ID</label>
-                                <textarea class="batch-mch-id" name="originalMchIds" placeholder="以英文逗号 ',' 分隔,最多支持20个" rows="3">$!requestVo.originalMchIds</textarea>
+                                <textarea class="batch-mch-id" name="originalMchIds" placeholder="以英文逗号','或换行分隔,最多支持20个" rows="3">$!requestVo.originalMchIds</textarea>
                                 <input class="real-batch-mch-id" name="mchIds" type="hidden">
                             </div>
                             <div class="search-select">
@@ -301,7 +301,7 @@
                     </div>
                     <div class="modal-body">
                         <p class="mchid-reg-text">
-                            以英文逗号 ',' 分隔,最多支持<label style="color: red;font-weight: bold;display: inline-block">20</label>个商户ID。
+                            以英文逗号','或换行分隔,最多支持<label style="color: red;font-weight: bold;display: inline-block">20</label>个商户ID。
                         </p>
                     </div>
                     <input type="hidden" class="audit-result"/>
