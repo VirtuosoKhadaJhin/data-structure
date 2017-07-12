@@ -366,16 +366,16 @@ public class MissionGroupServiceImpl implements MissionGroupService {
             return;
         }
         if (oldLeader != vo.getLeaderId() || oldLeader == null) {
-            if (oldLeader != null) {
-                groupBdDao.deleteByBdUserId(oldLeader);
+            MissionGroupBd groupBd = groupBdDao.findByBdId(vo.getLeaderId());
+            if (groupBd == null) {
+                groupBdDao.save(leaderGroupBd);
             }
-            groupBdDao.save(leaderGroupBd);
         }
         if (oldViceLeader != vo.getViceLeaderId() || oldViceLeader == null) {
-            if (oldViceLeader != null) {
-                groupBdDao.deleteByBdUserId(oldViceLeader);
+            MissionGroupBd groupBd = groupBdDao.findByBdId(vo.getViceLeaderId());
+            if (groupBd == null) {
+                groupBdDao.save(viceLeaderGroupBd);
             }
-            groupBdDao.save(viceLeaderGroupBd);
         }
     }
 

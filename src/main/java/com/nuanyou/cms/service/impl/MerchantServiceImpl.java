@@ -16,13 +16,8 @@ import com.nuanyou.cms.util.MyCacheManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -270,35 +265,17 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public List<Merchant> findMerchantByCountry(final Long country) {
-        Specification specification = new Specification() {
-            @Override
-            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                List<Predicate> predicate = new ArrayList<Predicate>();
-                if (country != null) {
-                    predicate.add(cb.equal(root.get("district").get("country").get("id"), country));
-                }
-                predicate.add(cb.equal(root.get("display"), true));
-                Predicate[] arrays = new Predicate[predicate.size()];
-                return query.where(predicate.toArray(arrays)).getRestriction();
-            }
-        };
-        return merchantDao.findAll(specification);
+        if (country == null) {
+            return merchantDao.getIdNameList();
+        }
+        return merchantDao.findIdNameByCountry(country);
     }
 
     @Override
     public List<Merchant> findMerchantByDistrict(final Long district) {
-        Specification specification = new Specification() {
-            @Override
-            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                List<Predicate> predicate = new ArrayList<Predicate>();
-                if (district != null) {
-                    predicate.add(cb.equal(root.get("district").get("id"), district));
-                }
-                predicate.add(cb.equal(root.get("display"), true));
-                Predicate[] arrays = new Predicate[predicate.size()];
-                return query.where(predicate.toArray(arrays)).getRestriction();
-            }
-        };
-        return merchantDao.findAll(specification);
+        if(district==null){
+            return merchantDao.getIdNameList();
+        }
+        return merchantDao.findIdNameByDistrict(district);
     }
 }

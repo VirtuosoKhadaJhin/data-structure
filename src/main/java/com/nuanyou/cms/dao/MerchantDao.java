@@ -25,6 +25,12 @@ public interface MerchantDao extends JpaRepository<Merchant, Long>, JpaSpecifica
     @Query(value = "select new Merchant(t.id,t.name) from Merchant t where mcat.id=:id")
     List<Merchant> findIdNameList(@Param("id") Long catid);
 
+    @Query(value = "select new Merchant(t.id,t.name) from Merchant t where t.district.country.id=:country")
+    List<Merchant> findIdNameByCountry(@Param("id") Long country);
+
+    @Query(value = "select new Merchant(t.id,t.name) from Merchant t where t.district.id=:district")
+    List<Merchant> findIdNameByDistrict(Long district);
+
     @Override
     Merchant save(Merchant entity);
 }

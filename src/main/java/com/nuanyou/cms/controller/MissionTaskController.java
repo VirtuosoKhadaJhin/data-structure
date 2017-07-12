@@ -121,6 +121,9 @@ public class MissionTaskController {
         if (missionGroup == null) {
             throw new APIException(ResultCodes.NotFoundGroup, ResultCodes.NotFoundGroup.message);
         }
+        if (!missionGroup.getLeader().getId().equals(bdUser.getId()) && !missionGroup.getViceLeader().getId().equals(bdUser.getId())) {
+            throw new APIException(ResultCodes.CurrentUserNotLeader, ResultCodes.CurrentUserNotLeader.message);
+        }
         List<Merchant> merchants = merchantService.findMerchantByCountry(missionGroup.getCountry() == null ? null : missionGroup.getCountry().getId());
         List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(missionGroup.getId());
         List<DistrictVo> districts = districtService.findByCity(missionGroup.getCity() == null ? null : missionGroup.getCity().getId());

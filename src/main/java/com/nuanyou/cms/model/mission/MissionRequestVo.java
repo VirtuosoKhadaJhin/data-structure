@@ -18,8 +18,6 @@ public class MissionRequestVo {
 
     private Long mchId;
 
-    private String mchIdsStr;
-
     private Long bdId;
 
     private MissionTaskStatus status;
@@ -48,6 +46,8 @@ public class MissionRequestVo {
 
     private Boolean isAudit = true;
 
+    private List<Long> mchIds = Lists.newArrayList();
+
     private int index = 1;
 
     private int pageSize = 20;
@@ -61,17 +61,6 @@ public class MissionRequestVo {
 
     public void setMchId(Long mchId) {
         this.mchId = mchId;
-    }
-
-    public String getMchIdsStr() {
-        if (StringUtils.isNotEmpty(mchIdsStr)) {
-            mchIdsStr = mchIdsStr.replaceAll("，", ",");
-        }
-        return mchIdsStr;
-    }
-
-    public void setMchIdsStr(String mchIdsStr) {
-        this.mchIdsStr = mchIdsStr;
     }
 
     public Long getBdId() {
@@ -184,6 +173,14 @@ public class MissionRequestVo {
 
     public void setTaskIds(List<Long> taskIds) {
         this.taskIds = taskIds;
+    }
+
+    public List<Long> getMchIds() {
+        return mchIds;
+    }
+
+    public void setMchIds(List<Long> mchIds) {
+        this.mchIds = mchIds;
     }
 
     public String getDistrDtStr() {
