@@ -154,7 +154,7 @@
 <div class="modal hide fade deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 id="myModalLabel">删除提示</h4>
+        <h4 id="myModalLabel">提示</h4>
     </div>
     <div class="modal-body">
         <strong style="margin-left: 20px;font-size: 14px;" class="firstDelTip"></strong>
@@ -169,7 +169,7 @@
 <div class="modal hide fade secondDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 id="myModalLabel">删除提示</h4>
+        <h4 id="myModalLabel">提示</h4>
     </div>
     <div class="modal-body">
         <strong style="margin-left: 20px;font-size: 14px;" class="secondDelTip"></strong>
@@ -184,7 +184,7 @@
 <div class="modal hide fade deleteResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 id="myModalLabel">删除提示</h4>
+        <h4 id="myModalLabel">提示</h4>
     </div>
     <div class="modal-body">
         <strong class="deleteResult" style="margin-left: 20px;font-size: 14px;"></strong>
