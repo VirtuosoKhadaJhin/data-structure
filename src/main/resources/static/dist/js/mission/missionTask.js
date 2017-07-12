@@ -27,8 +27,13 @@ $(function () {
         var regResult = regExp.test(mchIdStr);
         if (mchIdStr != "" && mchIdStr != null) {
             if (!regResult) {
-                $(".mchid-reg-model").modal("show");
                 return false;
+            } else {
+                var mchids = mchIdStr.split(",");
+                if (mchids.length > 20) {
+                    $(".mchid-reg-model").modal("show");
+                    return false;
+                }
             }
         }
         return true;
