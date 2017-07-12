@@ -140,11 +140,7 @@
                             </div>
                             <div class="search-select">
                                 <label>批量商户ID</label>
-                                <textarea class="batch-mch-id" name="mchIdsStr" placeholder="批量商户ID,以逗号 ',' 分隔,最多支持20个" rows="7">$!requestVo.mchIdsStr</textarea>
-                                <div class="alert mch-id-tip">
-                                    <i class="icon-bell"></i>
-                                    <strong>提示 </strong>批量商户ID,以逗号 ',' 分隔,最多支持20个
-                                </div>
+                                <textarea class="batch-mch-id" name="mchIdsStr" placeholder="批量商户ID,以逗号 ',' 分隔,最多支持20个" rows="3">$!requestVo.mchIdsStr</textarea>
                             </div>
                             <div class="search-select">
                                 <label>BD名称</label>
@@ -185,7 +181,7 @@
             <div class="btn-group">
                 <input type="hidden" name="isAudit" value="false"/>
                 <input type="hidden" name="taskIds" class="hide-checked-taskIds" value="$!requestVo.checkedTaskStr">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary btn-ok">
                     <i class="icon-search"> 查询</i>
                 </button>
                 <button class="btn btn-warning search-reset" style="margin-left: 3px;">
@@ -283,6 +279,22 @@
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
     </div>
 </div>
+
+<!-- 批量商户ID校验不合法提示框 -->
+<div class="modal hide fade mchid-reg-model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">批量商户ID格式不合法</h3>
+    </div>
+    <div class="modal-body">
+        <p class="mchid-reg-text">批量商户ID,以逗号 ',' 分隔,最多支持20个。</p>
+    </div>
+    <input type="hidden" class="audit-result"/>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+
 </div>
 </div>
 <script src="/dist/js/page-support.js"></script>
