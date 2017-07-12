@@ -26,14 +26,14 @@ $(function () {
         if (mchIdStr == null || mchIdStr.length == 0) {
             return true;
         }
-        mchIdStr = mchIdStr.replace(/(\r\n|\n|\r)/gm, ',').replace(",,", ",").replace(" ", "");
+        mchIdStr = mchIdStr.replaceAll(/(\r\n|\n|\r)/gm, ',').replaceAll(",,", ",").replaceAll(" ", "");
         if (mchIdStr.startsWith(",")) {
             mchIdStr = mchIdStr.substring(1, mchIdStr.length);
         }
         if (mchIdStr.endsWith(",")) {
             mchIdStr = mchIdStr.substring(0, mchIdStr.length - 1);
         }
-        var regExp = /^(\d+,?)+$/, regResult = regExp.test(mchIdStr);
+        var regResult = /^[\d,]+$/.test(mchIdStr);
         if (!regResult || mchIdStr.split(",").length > 20) {
             $(".mchid-reg-model").modal("show");
             return false;
