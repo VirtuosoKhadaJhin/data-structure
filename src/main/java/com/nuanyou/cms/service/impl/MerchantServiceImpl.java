@@ -11,6 +11,7 @@ import com.nuanyou.cms.service.ItemDetailimgService;
 import com.nuanyou.cms.service.MerchantCollectionCodeService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.MerchantStaffService;
+import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.MyCacheManager;
 import org.apache.commons.lang3.StringUtils;
@@ -66,6 +67,8 @@ public class MerchantServiceImpl implements MerchantService {
     private static String key = "getMerchantList";
     @Autowired
     private MyCacheManager<List<Merchant>> cacheManager;
+    @Autowired
+    private CmsUserDao cmsUserDao;
 
     @Override
     public List<Merchant> getIdNameList() {
@@ -226,15 +229,27 @@ public class MerchantServiceImpl implements MerchantService {
         }
         collectionCode.setUpdateTime(new Date());
         collectionCode.setMchId(entity.getId());
+        collectionCode.setMchName(entity.getName());
+        collectionCode.setCountryId(entity.getDistrict().getCountry().getId());
+        collectionCode.setCountryName(entity.getDistrict().getCountry().getName());
+
+        String countryCode = entity.getDistrict().getCountry().getCode();
+        String target_url = "";
+        if ("TH".equals(countryCode)) {
+            target_url = sg_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
+        } else {
+            target_url = kr_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
+        }
+        collectionCode.setUrl(target_url);
+
+        CmsUser cmsUser = cmsUserDao.findByEmail(UserHolder.getUser().getEmail());
+        if (cmsUser != null) {
+            collectionCode.setModifierId(cmsUser.getId());
+            collectionCode.setModifier(cmsUser.getUsername());
+        }
         collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
+
         try {
-            String countryCode = entity.getDistrict().getCountry().getCode();
-            String target_url = "";
-            if ("TH".equals(countryCode)) {
-                target_url = sg_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
-            } else {
-                target_url = kr_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
-            }
             boolean bind_result = collectionCodeService.bindNumberLink(Long.valueOf(collectionCode.getCollectionCode()), target_url);
             return bind_result;
         } catch (Exception e) {
@@ -247,6 +262,15 @@ public class MerchantServiceImpl implements MerchantService {
     @Transactional
     public Boolean unbindNumber (EntityBdMerchantCollectionCode collectionCode) {
         collectionCode.setMchId(null);
+        collectionCode.setMchName(null);
+        collectionCode.setCountryId(null);
+        collectionCode.setCountryName(null);
+        collectionCode.setUrl(null);
+        CmsUser cmsUser = cmsUserDao.findByEmail(UserHolder.getUser().getEmail());
+        if (cmsUser != null) {
+            collectionCode.setModifierId(cmsUser.getId());
+            collectionCode.setModifier(cmsUser.getUsername());
+        }
         collectionCode.setUpdateTime(new Date());
         collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
         try {

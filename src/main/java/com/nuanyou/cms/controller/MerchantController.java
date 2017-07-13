@@ -330,11 +330,9 @@ public class MerchantController {
                                       @RequestParam(required = false, defaultValue = "20") int limit,
                                       Model model) {
         BeanUtils.cleanEmpty(entity);
-        Sort.Order mchId_order = new Sort.Order(Sort.Direction.DESC,"mchId").with(Sort.NullHandling.NULLS_LAST);
-        Sort.Order code_order = new Sort.Order(Sort.Direction.ASC,"collectionCode");
-        Sort sort = new Sort(mchId_order,code_order);
+        Sort sort = new Sort(Sort.Direction.DESC,"updateTime");
         Pageable pageable = new PageRequest(index - 1, limit, sort);
-        Page<EntityBdMerchantCollectionCode>  page = collectionCodeService.query(entity.getMchId(),entity.getCollectionCode(),pageable);
+        Page<EntityBdMerchantCollectionCode>  page = collectionCodeService.query(entity,pageable);
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
         return "merchant/code_list";

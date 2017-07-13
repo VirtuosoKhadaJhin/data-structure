@@ -26,6 +26,6 @@ public interface MerchantCollectionCodeService {
 
     boolean unbindNumberLink(Long number) throws Exception;
 
-    Page<EntityBdMerchantCollectionCode> query (Long mchId, String collectionCode, Pageable pageable);
+    Page<EntityBdMerchantCollectionCode> query (EntityBdMerchantCollectionCode entity, Pageable pageable);
 
 }

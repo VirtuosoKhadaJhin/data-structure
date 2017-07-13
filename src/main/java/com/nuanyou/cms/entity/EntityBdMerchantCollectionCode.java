@@ -19,6 +19,16 @@ public class EntityBdMerchantCollectionCode {
     private Long id;
     @Column(name = "mchid")
     private Long mchId;
+    @Column(name = "mchname")
+    private String mchName;
+    @Column(name = "countryid")
+    private Long countryId;
+    @Column(name = "countryname")
+    private String countryName;
+    @Column(name = "modifierid")
+    private Long modifierId;
+    @Column(name = "modifier")
+    private String modifier;
     @Column(name = "collectioncode")
     private String collectionCode;
     @Column(name = "updatetime")
@@ -27,6 +37,19 @@ public class EntityBdMerchantCollectionCode {
     private Date createTime;
     @Column(name = "isdelete")
     private Boolean isDelete;
+    @Column(name = "url")
+    private String url;
+
+    @Transient
+    private Integer status;//绑定状态  1-已绑定  2-未绑定   空-全部
+    @Transient
+    private Date startDate;
+    @Transient
+    private Date endDate;
+    @Transient
+    private String codes;//收款码集合 以逗号拼接
+    @Transient
+    private String mchIds;//商户id集合 以逗号拼接
 
 
     public Long getId() {
@@ -75,5 +98,90 @@ public class EntityBdMerchantCollectionCode {
 
     public void setMchId(Long mchId) {
         this.mchId = mchId;
+    }
+
+    public String getMchName() {
+        return mchName;
+    }
+
+    public void setMchName(String mchName) {
+        this.mchName = mchName;
+    }
+
+    public Long getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(Long countryId) {
+        this.countryId = countryId;
+    }
+
+    public String getCountryName() {
+        return countryName;
+    }
+
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
+    }
+
+    public Long getModifierId() {
+        return modifierId;
+    }
+
+    public void setModifierId(Long modifierId) {
+        this.modifierId = modifierId;
+    }
+
+    public String getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
+    }
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getCodes() {
+        return codes;
+    }
+
+    public void setCodes(String codes) {
+        this.codes = codes;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getMchIds() {
+        return mchIds;
+    }
+
+    public void setMchIds(String mchIds) {
+        this.mchIds = mchIds;
     }
 }
