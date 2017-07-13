@@ -1,101 +1,216 @@
-#parse("common/list_start.vm")
-<div class="widget-title">
-    <span class="icon"><i class="icon-th"></i></span>
-    <h5>商家收款码列表</h5>
-</div>
-<table class="table table-bordered table-striped">
-    <thead>
-    <tr>
-        <th>商家ID</th>
-        <th>收款码</th>
-        <th>操作</th>
-    </tr>
-    </thead>
-    <tbody>
-        #foreach($entity in $!page.content)
-        <tr class="odd gradeX" data-id="$!entity.id">
-            <td><input type="text" data-id="$!entity.id" class="span5" placeholder="商家ID" name="mchId$!entity.id" value="$!entity.mchId" maxlength="200"></td>
-            <td>$!entity.collectionCode</td>
-            <td>
-                <button  class="btn btn-info btn-mini bind-number" modal-id="bind-modal" data-id="$!entity.id">绑定</button>
-                #if($!entity.mchId&&$!entity.collectionCode)
-                    <button  class="btn btn-info btn-mini unbind-number" modal-id="unbind-modal" data-id="$!entity.id">解绑</button>
-                #end
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 商家收款码管理</title>
+    #include("common/css-support.vm")
+    <link href="/dist/css/merchant-code/merchant-code.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="content" class="content-container">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10">
+                <div class="widget-box">
+                    <div class="widget-content nopadding">
+                        <div id="breadcrumb">
+                            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+                            <a href="javascript:;" class="tip-bottom" data-original-title="">内容模块</a>
+                            <a href="collectioncodes" class="tip-bottom" data-original-title="">收款码管理</a>
+                        </div>
+                        <div class="widget-title">
+                            <span class="icon"><i class="icon-th"></i></span>
+                            <h5>商家收款码列表</h5>
+                            <span class="icon-badge">
+                                <strong>未绑定： </strong>
+                                <label class="badge badge-warning">2</label>
+                            </span>
+                            <span class="icon-badge">
+                                <strong>收款码总数： </strong>
+                                <label class="badge badge-success">$!page.totalElements</label>
+                            </span>
+                        </div>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th class="th-collection-code">编码</th>
+                                <th class="th-status">绑定状态</th>
+                                <th class="th-update-time">更改时间</th>
+                                <th class="th-merchant">绑定商户</th>
+                                <th class="th-url">绑定链接</th>
+                                <th class="th-op">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody class="tbody-list">
+                                #foreach($entity in $!page.content)
+                                <tr data-id="$!entity.id" data-code="$!entity.collectionCode" data-mchId="$!entity.mchId">
+                                    <td class="td-collection-code">
+                                        <label class="td-collection-code-label">$!entity.collectionCode</label>
+                                    </td>
+                                    <td class="td-status td-status-mch$!entity.id">
+                                        <label class="td-status-label">已绑定</label>
+                                    </td>
+                                    <td class="td-update-time">
+                                        <label class="td-update-time-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.updateTime)</label>
+                                    </td>
+                                    <td class="td-merchant td-merchant-mch$!entity.id">
+                                        <span class="td-merchant-span" style="min-height: 20px">$!entity.mchId</span>
+                                        <a class="td-mch-url" target="_blank" href="/merchant/edit?id=$!entity.mchId">$!entity.mchName</a>
+                                    </td>
+                                    <td class="td-url">
+                                        <label class="td-url-label"><a class="td-code-url" target="_blank" href="$!entity.url">$!entity.url</a></label>
+                                    </td>
+                                    <td class="td-op td-op-mch$!entity.id">
+                                        <button class="btn btn-info btn-mini view-collection-code" modal-id="unbind-modal">
+                                            <i class="icon-qrcode"> 查看</i>
+                                        </button>
+                                        <button class="btn btn-success btn-mini bind-number" style="display: #if($!entity.mchId && $!entity.collectionCode) none #end" modal-id="bind-modal">
+                                            <i class="icon-tag"> 绑定</i>
+                                        </button>
+                                        <button class="btn btn-danger btn-mini unbind-number" style="display: #if($!entity.mchId && $!entity.collectionCode) #else none #end" modal-id="unbind-modal">
+                                            <i class="icon-ban-circle"> 解绑</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                        #parse("common/list_mid.vm")
+                        <form>
+                            <div class="control-group">
+                                <div class="search-batch-collection-codes">
+                                    <label>批量编码：</label>
+                                    <textarea class="batch-collection-codes" name="collectionCodes" placeholder="以英文逗号','或换行分隔,最多支持20个" rows="3">$!entity.collectionCodes</textarea>
+                                </div>
+                                <div class="search-country">
+                                    <label>国家：</label>
+                                    <select name="search-country-select">
+                                        <option>全部</option>
+                                    </select>
+                                </div>
+                                <div class="search-batch-merchant-ids">
+                                    <label>商户id：</label>
+                                    <textarea class="batch-merchant-ids" name="merchantIds" placeholder="以英文逗号','或换行分隔,最多支持20个" rows="3">$!entity.collectionCodes</textarea>
+                                </div>
+                                <div class="search-merchant-name">
+                                    <label>商户名称：</label>
+                                    <input type="text" name="mchName" class="span11 merchant-name" value="$!entity.mchName" placeholder="商户名称">
+                                </div>
+                                <div class="search-status">
+                                    <label>绑定状态：</label>
+                                    <select name="search-status-select">
+                                        <option>全部</option>
+                                    </select>
+                                </div>
+                                <div class="search-start-time">
+                                    <label>开始时间：</label>
+                                    <input type="text" name="startTime" class="span11 searchTimeFormatDay" value="$!entity.startTime" placeholder="开始时间">
+                                </div>
+                                <div class="search-end-time">
+                                    <label>结束时间：</label>
+                                    <input type="text" name="endTime" class="span11 searchTimeFormatDay" value="$!entity.endTime" placeholder="结束时间">
+                                </div>
+                                <div class="search-form-btn">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="icon-search"> 查询</i>
+                                    </button>
+                                    <button class="btn btn-warning search-reset" style="margin-left: 3px;">
+                                        <i class="icon-refresh"> 重置</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
 
-            </td>
-        </tr>
-        #end
-    </tbody>
-</table>
-#parse("common/list_mid.vm")
-<form>
-    <div class="control-group">
-        <label>商家ID：</label>
-        <input name="mchId" value="$!entity.mchId" type="text" placeholder="商家ID" class="span11">
-        <label>收款码：</label>
-        <input name="collectionCode" value="$!entity.collectionCode" type="text" placeholder="名称" class="span11">
-        <button type="submit" class="btn btn-primary">查询</button>
-        <a class="btn btn-warning export" href="javascript:void(0);">导出</a>
+                        <script type="text/javascript" src="http://cdn.bootcss.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+                        <script type="text/javascript" src="/dist/js/curd.js"></script>
+                        <script type="text/javascript" src="/dist/js/merchant-code/merchantCode.js"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</form>
+    <!-- 收款码模态框 -->
+    <div class="modal hide fade code-tip-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h5 class="modal-head-h">收款码
+                <span class="modal-collection-code"></span>
+            </h5>
+        </div>
+        <div class="modal-body">
+            <p class="modal-body-content-img">
+                <img class="modal-collection-code-img" width="200px" height="200px" src="http://s.cn.bing.net/th?id=OIP.V7rshrLMKUGXlzqcGODk1gEsEs&w=107&h=105&c=8&rs=1&qlt=90&pid=3.1&rm=2"/>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
+    </div>
 
-<script src="http://cdn.bootcss.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
-<script src="/dist/js/curd.js"></script>
-<script type="text/javascript">
-    $(function () {
-        $(".export").on("click", function () {
-            var form = $(document.forms[0]);
-            form.attr("action", "export");
-            form.attr("target", "_blank");
-            form.submit();
-            form.attr("action", "");
-            form.attr("target", "");
-        });
+    <!-- 解绑商户模态框 -->
+    <div class="modal hide fade unbind-merchant-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h5 class="modal-head-h">提示</h5>
+        </div>
+        <div class="modal-body">
+            <p class="modal-body-content">确认解绑收款码<label class="modal-collection-code"></label>,请点击确定按钮</p>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" class="unbind-code"/>
+            <input type="hidden" class="unbind-mch-id"/>
+            <input type="hidden" class="unbind-code-id"/>
+            <button class="btn btn-primary sure-unbind">确认</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
+    </div>
 
-        $('.bind-number').on ("click", function () {
-            var id = $(this).data(id);
-            var mchId  = $ ("input[name='mchId"+id.id+"']").val();
-            var number = $(this).parent ().parent().children()[2].innerHTML;
-//            var number = $(this).parent ().parent().children()[2].html();
-            $.ajax({
-                url: '/merchant/bind/number',
-                data: {mchId: mchId, collectionCode: number},
-                type: 'post',
-                success: function (result) {
-                    if (result.code == 0) {
-                        alert("绑定成功");
-                    } else {
-                        alert("绑定失败:" + result.msg);
-                    }
-                }
-            });
-        }) ;
+    <!-- 绑定商户模态框 -->
+    <div class="modal hide fade bind-merchant-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h5 class="modal-head-h">绑定商户
+                <span class="modal-collection-code"></span>
+            </h5>
+        </div>
+        <div class="modal-body">
+            <div class="bind-country">
+                <label>国家：</label>
+                <input type="text" class="span3" placeholder="国家" readonly>
+            </div>
+            <div class="bind-merchant-name">
+                <label>商户：</label>
+                <select class="span3 select2">
+                    <option>全部</option>
+                </select>
+            </div>
+            <div class="bind-url">
+                <label>绑定链接：</label>
+                <input type="text" class="span3" placeholder="绑定链接">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" class="bind-code-id"/>
+            <button class="btn btn-primary sure-bind">确认</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
+    </div>
 
-        $('.unbind-number').on ("click", function () {
-            var id = $(this).data(id);
-            var mchId  = $ ("input[name='mchId"+id.id+"']").val();
-            var number = $(this).parent ().parent().children()[2].innerHTML;
-//            var number = $(this).parent ().parent().children()[2].html();
-            $.ajax({
-                url: '/merchant/unbind/number',
-                data: {mchId: mchId, collectionCode: number},
-                type: 'post',
-                success: function (result) {
-                    if (result.code == 0) {
-                        $ ("input[name='mchId"+id.id+"']").val('');
-                        alert("解绑成功");
-                    } else {
-                        alert("解绑失败:" + result.msg);
-                    }
-                }
-            });
-        }) ;
+    <!-- 通用提示框 -->
+    <div class="modal hide fade normal-tip-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h5 class="modal-head-h">提示</h5>
+        </div>
+        <div class="modal-body">
+            <p class="modal-body-content"></p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
+    </div>
 
-    });
-    function callback() {
-        var elText = $("#payUrl").val();
-        $('#qrcode').empty();
-        $('#qrcode').qrcode({width: 200, height: 200, correctLevel: 0, text: elText});
-    }
-</script>
-#parse("common/list_end.vm")
+</div>
+</body>
+</html>
