@@ -230,8 +230,8 @@ public class MerchantServiceImpl implements MerchantService {
         collectionCode.setUpdateTime(new Date());
         collectionCode.setMchId(entity.getId());
         collectionCode.setMchName(entity.getName());
-        collectionCode.setCountryId(entity.getDistrict().getCountry().getId());
-        collectionCode.setCountryName(entity.getDistrict().getCountry().getName());
+//        collectionCode.setCountryId(entity.getDistrict().getCountry().getId());
+//        collectionCode.setCountryName(entity.getDistrict().getCountry().getName());
 
         String countryCode = entity.getDistrict().getCountry().getCode();
         String target_url = "";
@@ -263,8 +263,8 @@ public class MerchantServiceImpl implements MerchantService {
     public Boolean unbindNumber (EntityBdMerchantCollectionCode collectionCode) {
         collectionCode.setMchId(null);
         collectionCode.setMchName(null);
-        collectionCode.setCountryId(null);
-        collectionCode.setCountryName(null);
+//        collectionCode.setCountryId(null);
+//        collectionCode.setCountryName(null);
         collectionCode.setUrl(null);
         CmsUser cmsUser = cmsUserDao.findByEmail(UserHolder.getUser().getEmail());
         if (cmsUser != null) {
