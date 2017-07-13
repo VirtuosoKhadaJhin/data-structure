@@ -1,0 +1,101 @@
+#parse("common/list_start.vm")
+<div class="widget-title">
+    <span class="icon"><i class="icon-th"></i></span>
+    <h5>商家收款码列表</h5>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>商家ID</th>
+        <th>收款码</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        #foreach($entity in $!page.content)
+        <tr class="odd gradeX" data-id="$!entity.id">
+            <td><input type="text" data-id="$!entity.id" class="span5" placeholder="商家ID" name="mchId$!entity.id" value="$!entity.mchId" maxlength="200"></td>
+            <td>$!entity.collectionCode</td>
+            <td>
+                <button  class="btn btn-info btn-mini bind-number" modal-id="bind-modal" data-id="$!entity.id">绑定</button>
+                #if($!entity.mchId&&$!entity.collectionCode)
+                    <button  class="btn btn-info btn-mini unbind-number" modal-id="unbind-modal" data-id="$!entity.id">解绑</button>
+                #end
+
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#parse("common/list_mid.vm")
+<form>
+    <div class="control-group">
+        <label>商家ID：</label>
+        <input name="mchId" value="$!entity.mchId" type="text" placeholder="商家ID" class="span11">
+        <label>收款码：</label>
+        <input name="collectionCode" value="$!entity.collectionCode" type="text" placeholder="名称" class="span11">
+        <button type="submit" class="btn btn-primary">查询</button>
+        <a class="btn btn-warning export" href="javascript:void(0);">导出</a>
+    </div>
+</form>
+
+<script src="http://cdn.bootcss.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<script src="/dist/js/curd.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".export").on("click", function () {
+            var form = $(document.forms[0]);
+            form.attr("action", "export");
+            form.attr("target", "_blank");
+            form.submit();
+            form.attr("action", "");
+            form.attr("target", "");
+        });
+
+        $('.bind-number').on ("click", function () {
+            var id = $(this).data(id);
+            var mchId  = $ ("input[name='mchId"+id.id+"']").val();
+            var number = $(this).parent ().parent().children()[2].innerHTML;
+//            var number = $(this).parent ().parent().children()[2].html();
+            $.ajax({
+                url: '/merchant/bind/number',
+                data: {mchId: mchId, collectionCode: number},
+                type: 'post',
+                success: function (result) {
+                    if (result.code == 0) {
+                        alert("绑定成功");
+                    } else {
+                        alert("绑定失败:" + result.msg);
+                    }
+                }
+            });
+        }) ;
+
+        $('.unbind-number').on ("click", function () {
+            var id = $(this).data(id);
+            var mchId  = $ ("input[name='mchId"+id.id+"']").val();
+            var number = $(this).parent ().parent().children()[2].innerHTML;
+//            var number = $(this).parent ().parent().children()[2].html();
+            $.ajax({
+                url: '/merchant/unbind/number',
+                data: {mchId: mchId, collectionCode: number},
+                type: 'post',
+                success: function (result) {
+                    if (result.code == 0) {
+                        $ ("input[name='mchId"+id.id+"']").val('');
+                        alert("解绑成功");
+                    } else {
+                        alert("解绑失败:" + result.msg);
+                    }
+                }
+            });
+        }) ;
+
+    });
+    function callback() {
+        var elText = $("#payUrl").val();
+        $('#qrcode').empty();
+        $('#qrcode').qrcode({width: 200, height: 200, correctLevel: 0, text: elText});
+    }
+</script>
+#parse("common/list_end.vm")

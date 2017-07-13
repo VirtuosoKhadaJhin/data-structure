@@ -1,6 +1,7 @@
 package com.nuanyou.cms.service;
 
 import com.nuanyou.cms.entity.Channel;
+import com.nuanyou.cms.entity.EntityBdMerchantCollectionCode;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.model.MerchantVO;
 
@@ -38,4 +39,17 @@ public interface MerchantService {
      * @return
      */
     List<Merchant> findMerchantByDistrict(Long district);
+
+    /**
+     * @param collectionCode
+     * @param mchId
+     * @return
+     */
+    Boolean bindNumber (EntityBdMerchantCollectionCode collectionCode, Long mchId);
+
+    /**
+     * @param collectionCode
+     * @return
+     */
+    Boolean unbindNumber (EntityBdMerchantCollectionCode collectionCode);
 }

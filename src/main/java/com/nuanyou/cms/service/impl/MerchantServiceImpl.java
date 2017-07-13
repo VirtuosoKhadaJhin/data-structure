@@ -204,14 +204,7 @@ public class MerchantServiceImpl implements MerchantService {
         for (String tmpCode : tmp) {
             for (EntityBdMerchantCollectionCode collectionCode : collectionCodes) {
                 if (tmpCode.equals(collectionCode.getCollectionCode())) {
-                    collectionCode.setMchId(null);
-                    collectionCode.setUpdateTime(new Date());
-                    collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
-                    try {
-                        boolean unbind_result = collectionCodeService.unbindNumberLink(Long.valueOf(tmpCode));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    unbindNumber (collectionCode);
                     break;
                 }
             }
@@ -220,21 +213,48 @@ public class MerchantServiceImpl implements MerchantService {
         //bind code
         for (String code : codelist) {
             EntityBdMerchantCollectionCode collectionCode = collectionCodeService.findCollectionCode(code);
-            collectionCode.setUpdateTime(new Date());
-            collectionCode.setMchId(entity.getId());
-            collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
-            try {
-                String countryCode = entity.getDistrict().getCountry().getCode();
-                String target_url = "";
-                if ("TH".equals(countryCode)) {
-                    target_url = sg_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
-                } else {
-                    target_url = kr_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
-                }
-                boolean bind_result = collectionCodeService.bindNumberLink(Long.valueOf(code), target_url);
-            } catch (Exception e) {
-                e.printStackTrace();
+            bindNumber (  collectionCode, entity.getId());
+        }
+    }
+
+    @Override
+    @Transactional
+    public Boolean bindNumber ( EntityBdMerchantCollectionCode collectionCode,Long mchId){
+        Merchant entity = merchantDao.findOne(mchId);
+        if (entity == null) {
+            throw new APIException(ResultCodes.NotFoundMerchant);
+        }
+        collectionCode.setUpdateTime(new Date());
+        collectionCode.setMchId(entity.getId());
+        collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
+        try {
+            String countryCode = entity.getDistrict().getCountry().getCode();
+            String target_url = "";
+            if ("TH".equals(countryCode)) {
+                target_url = sg_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
+            } else {
+                target_url = kr_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
             }
+            boolean bind_result = collectionCodeService.bindNumberLink(Long.valueOf(collectionCode.getCollectionCode()), target_url);
+            return bind_result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    @Transactional
+    public Boolean unbindNumber (EntityBdMerchantCollectionCode collectionCode) {
+        collectionCode.setMchId(null);
+        collectionCode.setUpdateTime(new Date());
+        collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
+        try {
+            boolean unbind_result = collectionCodeService.unbindNumberLink(Long.valueOf(collectionCode.getCollectionCode()));
+            return unbind_result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

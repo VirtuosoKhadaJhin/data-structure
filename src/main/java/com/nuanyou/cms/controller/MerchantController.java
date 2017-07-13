@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -321,5 +322,56 @@ public class MerchantController {
     public APIResult list(Long id) {
         List<Merchant> list = merchantDao.findIdNameList(id);
         return new APIResult(list);
+    }
+
+    @RequestMapping("/collectioncodes")
+    public String getCollectionCodes (EntityBdMerchantCollectionCode entity,
+                                      @RequestParam(required = false, defaultValue = "1") int index,
+                                      @RequestParam(required = false, defaultValue = "20") int limit,
+                                      Model model) {
+        BeanUtils.cleanEmpty(entity);
+        Sort.Order mchId_order = new Sort.Order(Sort.Direction.DESC,"mchId").with(Sort.NullHandling.NULLS_LAST);
+        Sort.Order code_order = new Sort.Order(Sort.Direction.ASC,"collectionCode");
+        Sort sort = new Sort(mchId_order,code_order);
+        Pageable pageable = new PageRequest(index - 1, limit, sort);
+        Page<EntityBdMerchantCollectionCode>  page = collectionCodeService.query(entity.getMchId(),entity.getCollectionCode(),pageable);
+        model.addAttribute("page", page);
+        model.addAttribute("entity", entity);
+        return "merchant/code_list";
+    }
+
+    @RequestMapping(path = "/bind/number", method = RequestMethod.POST)
+    @ResponseBody
+    public APIResult bindNumber(EntityBdMerchantCollectionCode entity, Model model) {
+        String number = entity.getCollectionCode();
+        Long mchId = entity.getMchId();
+        if (mchId == null) {
+            throw new APIException(ResultCodes.MissingParameter);
+        }
+        EntityBdMerchantCollectionCode collectionCode = collectionCodeService.findCollectionCode(number);
+        if (collectionCode == null) {
+            throw new APIException(ResultCodes.CollectionCodeError);
+        }
+        if (collectionCode.getMchId() != null && collectionCode.getMchId() != 0 && collectionCode.getMchId().longValue() != mchId.longValue()) {
+            throw new APIException(ResultCodes.CollectionCodeExist, MessageFormat.format(ResultCodes.CollectionCodeExist.getMessage(), number, collectionCode.getMchId()));
+        }
+        merchantService.bindNumber(collectionCode,mchId);
+        model.addAttribute("entity", collectionCode);
+        model.addAttribute("disabled", true);
+        return new APIResult();
+    }
+
+    @RequestMapping(path = "/unbind/number", method = RequestMethod.POST)
+    @ResponseBody
+    public APIResult unbindNumber(EntityBdMerchantCollectionCode entity, Model model) {
+        String number = entity.getCollectionCode();
+        EntityBdMerchantCollectionCode collectionCode = collectionCodeService.findCollectionCode(number);
+        if (collectionCode == null) {
+            throw new APIException(ResultCodes.CollectionCodeError);
+        }
+        merchantService.unbindNumber(collectionCode);
+        model.addAttribute("entity", collectionCode);
+        model.addAttribute("disabled", true);
+        return new APIResult();
     }
 }
