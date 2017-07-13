@@ -77,21 +77,21 @@
                             </tbody>
                         </table>
                         #parse("common/list_mid.vm")
-                        <form>
+                        <form class="form-horizontal search-form" method="get">
                             <div class="control-group">
                                 <div class="search-batch-collection-codes">
                                     <label>批量编码：</label>
-                                    <textarea class="batch-collection-codes" name="collectionCodes" placeholder="以英文逗号','或换行分隔,最多支持20个" rows="3">$!entity.collectionCodes</textarea>
+                                    <textarea class="batch-collection-codes" name="codes" placeholder="以英文逗号','或换行分隔,最多支持20个" rows="3">$!entity.codes</textarea>
                                 </div>
                                 <div class="search-country">
                                     <label>国家：</label>
-                                    <select name="search-country-select">
-                                        <option>全部</option>
+                                    <select name="countryId">
+                                        <option value>全部</option>
                                     </select>
                                 </div>
                                 <div class="search-batch-merchant-ids">
                                     <label>商户id：</label>
-                                    <textarea class="batch-merchant-ids" name="merchantIds" placeholder="以英文逗号','或换行分隔,最多支持20个" rows="3">$!entity.collectionCodes</textarea>
+                                    <textarea class="batch-merchant-ids" name="mchIds" placeholder="以英文逗号','或换行分隔,最多支持20个" rows="3">$!entity.mchIds</textarea>
                                 </div>
                                 <div class="search-merchant-name">
                                     <label>商户名称：</label>
@@ -99,20 +99,22 @@
                                 </div>
                                 <div class="search-status">
                                     <label>绑定状态：</label>
-                                    <select name="search-status-select">
-                                        <option>全部</option>
+                                    <select name="status">
+                                        <option value>全部</option>
+                                        <option value="1">已绑定</option>
+                                        <option value="2">未绑定</option>
                                     </select>
                                 </div>
                                 <div class="search-start-time">
                                     <label>开始时间：</label>
-                                    <input type="text" name="startTime" class="span11 searchTimeFormatDay" value="$!entity.startTime" placeholder="开始时间">
+                                    <input type="text" name="startDate" class="span11 searchTimeFormatDay" value="$!dateFormatter.format("yyyy/MM/dd HH:mm:ss",$!entity.startDate)" placeholder="开始时间">
                                 </div>
                                 <div class="search-end-time">
                                     <label>结束时间：</label>
-                                    <input type="text" name="endTime" class="span11 searchTimeFormatDay" value="$!entity.endTime" placeholder="结束时间">
+                                    <input type="text" name="endDate" class="span11 searchTimeFormatDay" value="$!dateFormatter.format("yyyy/MM/dd HH:mm:ss",$!entity.endDate)" placeholder="结束时间">
                                 </div>
                                 <div class="search-form-btn">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button class="btn btn-primary btn-ok">
                                         <i class="icon-search"> 查询</i>
                                     </button>
                                     <button class="btn btn-warning search-reset" style="margin-left: 3px;">

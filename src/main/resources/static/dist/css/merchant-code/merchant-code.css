@@ -81,3 +81,7 @@
 .modal-body-content {
     font-size: 15px;
 }
+
+.search-batch-collection-codes, .search-country, .search-merchant-name, .search-status, .search-start-time, .search-end-time {
+    margin-bottom: 10px;
+}

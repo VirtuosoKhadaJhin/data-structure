@@ -51,6 +51,40 @@ $(function () {
         });
     });
 
+    // 查询提交表单前检验批量商户id是否合法
+    $(".search-form .btn-ok").on("click", function () {
+        var mchIdStr = $(".batch-merchant-ids").val(), codeStr = $(".batch-collection-codes").val();
+
+        if ((mchIdStr == null || mchIdStr.length == 0) && (codeStr == null || codeStr.length == 0)) {
+            return true;
+        }
+
+        var patten = new RegExp(/^[\d,]+$/);
+
+        if (mchIdStr != null && mchIdStr.length > 0) {
+            mchIdStr = mchIdStr.replaceAll(/(\r\n|\n|\r)/gm, ',').replaceAll(",,", ",").replaceAll(" ", "");
+            var regResult = patten.test(mchIdStr);
+            if (!regResult || mchIdStr.split(",").length > 20) {
+                showNormalTipModal("商户id须以英文逗号','或换行分隔,最多支持20个商户ID。");
+                return false;
+            }
+            $(".batch-merchant-ids").val(mchIdStr);
+        }
+
+        if (codeStr != null && codeStr.length > 0) {
+            codeStr = codeStr.replaceAll(/(\r\n|\n|\r)/gm, ',').replaceAll(",,", ",").replaceAll(" ", "");
+            var regResult = patten.test(codeStr);
+            if (!regResult || codeStr.split(",").length > 20) {
+                showNormalTipModal("编码须以英文逗号','或换行分隔,最多支持20个商户ID。");
+                return false;
+            }
+            $(".batch-collection-codes").val(codeStr);
+        }
+
+        return false;
+    });
+
+
     // 搜索框重置
     $(".search-reset").on("click", function () {
         $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
