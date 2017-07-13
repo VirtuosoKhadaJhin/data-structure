@@ -10,10 +10,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Byron on 2017/6/13.
@@ -32,12 +29,13 @@ public class PaymentInterceptor extends HandlerInterceptorAdapter {
      * String:订单ID
      * Date：发起请求的时间点
      */
-    private static final LinkedHashMap<String, Date> searchDateMap = new LinkedHashMap<String, Date>();
+    private static final Map<String, Date> searchDateMap = Collections.synchronizedMap(new LinkedHashMap<String, Date>());
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestUrl = request.getRequestURI();
         if (requestUrl.contains("list")) {
+            _LOGGER.info("");
             return true;
         }
         String orderId = request.getParameter("orderId");
