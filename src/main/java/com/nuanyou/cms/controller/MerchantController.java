@@ -342,7 +342,7 @@ public class MerchantController {
 
     @RequestMapping(path = "/bind/number", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult bindNumber(EntityBdMerchantCollectionCode entity, Model model) {
+    public APIResult<EntityBdMerchantCollectionCode> bindNumber(EntityBdMerchantCollectionCode entity, Model model) {
         String number = entity.getCollectionCode();
         Long mchId = entity.getMchId();
         if (mchId == null) {
@@ -355,24 +355,20 @@ public class MerchantController {
         if (collectionCode.getMchId() != null && collectionCode.getMchId() != 0 && collectionCode.getMchId().longValue() != mchId.longValue()) {
             throw new APIException(ResultCodes.CollectionCodeExist, MessageFormat.format(ResultCodes.CollectionCodeExist.getMessage(), number, collectionCode.getMchId()));
         }
-        merchantService.bindNumber(collectionCode,mchId);
-        model.addAttribute("entity", collectionCode);
-        model.addAttribute("disabled", true);
-        return new APIResult();
+        collectionCode = merchantService.bindNumber(collectionCode,mchId);
+        return new APIResult(collectionCode);
     }
 
     @RequestMapping(path = "/unbind/number", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult unbindNumber(EntityBdMerchantCollectionCode entity, Model model) {
+    public APIResult<EntityBdMerchantCollectionCode> unbindNumber(EntityBdMerchantCollectionCode entity, Model model) {
         String number = entity.getCollectionCode();
         EntityBdMerchantCollectionCode collectionCode = collectionCodeService.findCollectionCode(number);
         if (collectionCode == null) {
             throw new APIException(ResultCodes.CollectionCodeError);
         }
-        merchantService.unbindNumber(collectionCode);
-        model.addAttribute("entity", collectionCode);
-        model.addAttribute("disabled", true);
-        return new APIResult();
+        collectionCode = merchantService.unbindNumber(collectionCode);
+        return new APIResult(collectionCode);
     }
 
     @RequestMapping(path = "/{countryId}/merchantlist", method = RequestMethod.GET)

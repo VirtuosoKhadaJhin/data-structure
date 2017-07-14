@@ -47,13 +47,13 @@ public interface MerchantService {
      * @param mchId
      * @return
      */
-    Boolean bindNumber (EntityBdMerchantCollectionCode collectionCode, Long mchId);
+    EntityBdMerchantCollectionCode bindNumber (EntityBdMerchantCollectionCode collectionCode, Long mchId);
 
     /**
      * @param collectionCode
      * @return
      */
-    Boolean unbindNumber (EntityBdMerchantCollectionCode collectionCode);
+    EntityBdMerchantCollectionCode unbindNumber (EntityBdMerchantCollectionCode collectionCode);
 
     Page<Merchant> findMerchantByCountryFilter(final Long country, String mchName, Long mchId, Pageable pageable);
 }

@@ -224,13 +224,13 @@ public class MerchantServiceImpl implements MerchantService {
     }
 
     @Override
-    public Boolean bindNumber ( EntityBdMerchantCollectionCode collectionCode,Long mchId){
+    public EntityBdMerchantCollectionCode bindNumber ( EntityBdMerchantCollectionCode collectionCode,Long mchId){
         Merchant entity = merchantDao.findOne(mchId);
         return do_bindNumber(collectionCode,entity);
     }
 
     @Transactional
-    private Boolean do_bindNumber (EntityBdMerchantCollectionCode collectionCode , Merchant entity){
+    private EntityBdMerchantCollectionCode do_bindNumber (EntityBdMerchantCollectionCode collectionCode , Merchant entity){
         if (entity == null) {
             throw new APIException(ResultCodes.NotFoundMerchant);
         }
@@ -257,20 +257,19 @@ public class MerchantServiceImpl implements MerchantService {
 
         try {
             boolean bind_result = collectionCodeService.bindNumberLink(Long.valueOf(collectionCode.getCollectionCode()), target_url);
-            return bind_result;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
+        return collectionCode;
     }
 
     @Override
-    public Boolean unbindNumber (EntityBdMerchantCollectionCode collectionCode) {
+    public EntityBdMerchantCollectionCode unbindNumber (EntityBdMerchantCollectionCode collectionCode) {
         return do_unbindNumber (collectionCode);
     }
 
     @Transactional
-    public Boolean do_unbindNumber (EntityBdMerchantCollectionCode collectionCode) {
+    public EntityBdMerchantCollectionCode do_unbindNumber (EntityBdMerchantCollectionCode collectionCode) {
         collectionCode.setMchId(null);
         collectionCode.setMchName(null);
 //        collectionCode.setCountryId(null);
@@ -285,11 +284,10 @@ public class MerchantServiceImpl implements MerchantService {
         collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
         try {
             boolean unbind_result = collectionCodeService.unbindNumberLink(Long.valueOf(collectionCode.getCollectionCode()));
-            return unbind_result;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
+        return collectionCode;
     }
 
 
@@ -362,7 +360,7 @@ public class MerchantServiceImpl implements MerchantService {
         Specification specification = new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                // TODO: 2017/7/14 jpa 无效 
+                // TODO: 2017/7/14 jpa 无效
                 query.multiselect(root.get("id").alias("id"),root.get("name").alias("name"));
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 if (country != null) {
