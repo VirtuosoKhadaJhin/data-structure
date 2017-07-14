@@ -5,11 +5,6 @@ $(function () {
     $(".has-not-bind-count-label").text($(".has-not-bind-count").val());
     $(".all-code-count-label").text($(".all-code-count").val());
 
-    var sz = [1, 2, 3];
-    $.each(sz, function (key, val) {
-        console.log("key：" + key + ", val：" + val);
-    });
-
     // 查看二维码
     $(".view-collection-code").on("click", function () {
         showCollectionCode($(this).parents("tr").attr("data-code"))
@@ -176,37 +171,27 @@ $(function () {
 
     // url提交表单
     function submitForm() {
-        var codes = $(".batch-collection-codes").val(),
-            countryId = $(".search-country-select").val(),
-            mchIds = $(".batch-merchant-ids").val(),
-            mchName = $(".search-merchant-name-input").val(),
-            status = $(".search-status-select").val(),
-            startDate = $(".search-start-time-input").val(),
-            endDate = $(".search-end-time-input").val();
+        var urlParamObj = {
+            codes: $(".batch-collection-codes").val(),
+            countryId: $(".search-country-select").val(),
+            mchIds: $(".batch-merchant-ids").val(),
+            mchName: $(".search-merchant-name-input").val(),
+            status: $(".search-status-select").val(),
+            startDate: $(".search-start-time-input").val(),
+            endDate: $(".search-end-time-input").val()
+        };
 
         var searchUrl = "collectioncodes?";
 
-        if (codes != null && codes != "") {
-            searchUrl += "codes=" + codes;
-        }
-        if (countryId != null && countryId != "") {
-            searchUrl += "&countryId=" + countryId;
-        }
-        if (mchIds != null && mchIds != "") {
-            searchUrl += "&mchIds=" + mchIds;
-        }
-        if (mchName != null && mchName != "") {
-            searchUrl += "&mchName=" + mchName;
-        }
-        if (status != null && status != "") {
-            searchUrl += "&status=" + status;
-        }
-        if (startDate != null && startDate != "") {
-            searchUrl += "&startDate=" + startDate;
-        }
-        if (endDate != null && endDate != "") {
-            searchUrl += "&endDate=" + endDate;
-        }
+        $.each(urlParamObj, function (paramKey, paramVal) {
+            if (paramVal != null && paramVal != "") {
+                if (searchUrl == "collectioncodes?")
+                    searchUrl += paramKey + "=" + paramVal;
+                else
+                    searchUrl += "&" + paramKey + "=" + paramVal;
+            }
+        });
+
         location.href = searchUrl;
     }
 
