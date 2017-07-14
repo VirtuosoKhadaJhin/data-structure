@@ -46,7 +46,7 @@
                             <tbody class="tbody-list">
                                 #set($hasNotBindCount = 0)
                                 #foreach($entity in $!page.content)
-                                <tr data-id="$!entity.id" data-code="$!entity.collectionCode" data-mchId="$!entity.mchId" data-code-img="$!entity.url">
+                                <tr data-country-name="$!entity.countryName" data-country-id="$!entity.countryId" data-id="$!entity.id" data-code="$!entity.collectionCode" data-mchId="$!entity.mchId" data-code-img="$!entity.url">
                                     <td class="td-collection-code">
                                         <label class="td-collection-code-label">$!entity.collectionCode</label>
                                     </td>
@@ -119,12 +119,13 @@
                                 </div>
                                 <div class="search-start-time">
                                     <label>开始时间：</label>
-                                    <input type="text" name="startDate" class="span11 searchTimeFormatDay search-start-time-input" value="$!dateFormatter.format("yyyy/MM/dd",$!entity.startDate)"
+                                    <input type="text" name="startDate" class="span11 searchTimeFormatDay search-start-time-input"
+                                           value="$!dateFormatter.format("yyyy/MM/dd HH:mm:ss",$!entity.startDate)"
                                            placeholder="开始时间">
                                 </div>
                                 <div class="search-end-time">
                                     <label>结束时间：</label>
-                                    <input type="text" name="endDate" class="span11 searchTimeFormatDay search-end-time-input" value="$!dateFormatter.format("yyyy/MM/dd",$!entity.endDate)"
+                                    <input type="text" name="endDate" class="span11 searchTimeFormatDay search-end-time-input" value="$!dateFormatter.format("yyyy/MM/dd HH:mm:ss",$!entity.endDate)"
                                            placeholder="结束时间">
                                 </div>
                                 <div class="search-form-btn">
@@ -137,10 +138,6 @@
                                 </div>
                             </div>
                         </form>
-
-                        <script type="text/javascript" src="http://cdn.bootcss.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
-                        <script type="text/javascript" src="/dist/js/curd.js"></script>
-                        <script type="text/javascript" src="/dist/js/merchant-code/merchantCode.js"></script>
                     </div>
                 </div>
             </div>
@@ -200,14 +197,15 @@
                 <select class="span3 select2">
                     <option>全部</option>
                 </select>
+                <label class="bind-merchant-name-tip"><font color="red">*必填项</font></label>
             </div>
             <div class="bind-url">
                 <label>绑定链接：</label>
                 <input type="text" class="span3" placeholder="绑定链接">
+                <label class="bind-url-tip"><font color="red">*必填项</font></label>
             </div>
         </div>
         <div class="modal-footer">
-            <input type="hidden" class="bind-mch-id"/>
             <input type="hidden" class="bind-code-number"/>
             <input type="hidden" class="bind-code-result"/>
             <button class="btn btn-primary sure-bind">确认</button>
@@ -230,5 +228,10 @@
     </div>
 
 </div>
+
+<script type="text/javascript" src="http://cdn.bootcss.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<script type="text/javascript" src="/dist/js/curd.js"></script>
+<script type="text/javascript" src="/dist/js/merchant-code/merchantCode.js"></script>
+
 </body>
 </html>

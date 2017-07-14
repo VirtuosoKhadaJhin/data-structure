@@ -19,24 +19,42 @@ $(function () {
 
     // 绑定
     $('.bind-number').on("click", function () {
-        var collectionCode = $(this).parents("tr").attr("data-code");
-        $(".modal-collection-code").text("编码：" + collectionCode);
-        var code = $(this).parents("tr").attr("data-code");
-        $(".bind-merchant-modal .bind-code-number").val(code);
+        var countryName = $(this).parents("tr").attr("data-country-name"), countryId = $(this).parents("tr").attr("data-country-id");
+        $(".bind-merchant-modal .bind-country input").val(countryName).attr("data-country-id", countryId);
+        $(".bind-merchant-modal .bind-merchant-name select").html("");
+        $(".bind-merchant-modal .bind-merchant-name select").append("<option value>全部</option>");
+
+        $(".modal-collection-code").text("编码：" + $(this).parents("tr").attr("data-code"));
+        $(".bind-merchant-modal .bind-code-number").val($(this).parents("tr").attr("data-code"));
+        $(".bind-url-tip").removeClass("show-tip");
         $(".bind-merchant-modal").modal("show");
+    });
+
+    // 确认绑定
+    $(".bind-merchant-modal .sure-bind").on("click", function () {
+        var code = $(".bind-merchant-modal .bind-code-number").val(), url = $(".bind-merchant-modal .bind-url input").val(), mchId = $(".bind-merchant-name select").val();
+        if (mchId == undefined || mchId == "" || mchId == null) {
+            $(".bind-merchant-name-tip").addClass("show-tip");
+            return false;
+        }
+        if (url == undefined || url == "" || url == null) {
+            $(".bind-url-tip").addClass("show-tip");
+            return false;
+        }
+
     });
 
     // 解绑
     $('.unbind-number').on("click", function () {
         var code = $(this).parents("tr").attr("data-code"), mchId = $(this).parents("tr").attr("data-mchId"), codeId = $(this).parents("tr").attr("data-id");
-        showCollectionCode(code);
         $(".unbind-merchant-modal .unbind-code").val(code), $(".unbind-merchant-modal .unbind-code-id").val(codeId), $(".unbind-merchant-modal .unbind-mch-id").val(mchId);
+        showCollectionCode(code);
         $(".unbind-merchant-modal").modal("show");
 
     });
 
     // 确认解绑
-    $(".sure-unbind").on("click", function () {
+    $(".unbind-merchant-modal .sure-unbind").on("click", function () {
         var code = $(".unbind-merchant-modal .unbind-code").val(), mchId = $(".unbind-merchant-modal .unbind-mch-id").val(), codeId = $(".unbind-merchant-modal .unbind-code-id").val();
         $.ajax({
             url: '/merchant/unbind/number',
@@ -61,24 +79,40 @@ $(function () {
 
     // 查询提交表单前检验批量商户id是否合法
     $(".search-form .btn-ok").on("click", function () {
+        $.makeArray()
         var mchIdStr = $(".batch-merchant-ids").val(), codeStr = $(".batch-collection-codes").val();
 
         var patten = new RegExp(/^[\d,]+$/);
+        if (codeStr != undefined && codeStr != "" && codeStr.length > 0) {
+            codeStr = codeStr.replaceAll(/(\r\n|\n|\r)/gm, ',').replaceAll(",,", ",").replaceAll(" ", "");
+            if (codeStr.startsWith(",")) {
+                codeStr = codeStr.substring(1, codeStr.length);
+            }
+            if (codeStr.endsWith(",")) {
+                codeStr = codeStr.substring(0, codeStr.length - 1);
+            }
+            var regResult = patten.test(codeStr);
+
+            if (!regResult || codeStr.split(",").length > 20) {
+                showNormalTipModal("编码须以英文逗号','或换行分隔,最多支持20个编码。");
+                return false;
+            }
+            $(".batch-collection-codes").val(codeStr);
+        }
         if (mchIdStr != undefined && mchIdStr != "" && mchIdStr.length > 0) {
+            mchIdStr = mchIdStr.replaceAll(/(\r\n|\n|\r)/gm, ',').replaceAll(",,", ",").replaceAll(" ", "");
+            if (mchIdStr.startsWith(",")) {
+                mchIdStr = mchIdStr.substring(1, mchIdStr.length);
+            }
+            if (mchIdStr.endsWith(",")) {
+                mchIdStr = mchIdStr.substring(0, mchIdStr.length - 1);
+            }
             var regResult = patten.test(mchIdStr);
             if (!regResult || mchIdStr.split(",").length > 20) {
                 showNormalTipModal("商户id须以英文逗号','或换行分隔,最多支持20个商户ID。");
                 return false;
             }
             $(".batch-merchant-ids").val(mchIdStr);
-        }
-        if (codeStr != undefined && codeStr != "" && codeStr.length > 0) {
-            var regResult = patten.test(codeStr);
-            if (!regResult || codeStr.split(",").length > 20) {
-                showNormalTipModal("编码须以英文逗号','或换行分隔,最多支持20个商户ID。");
-                return false;
-            }
-            $(".batch-collection-codes").val(codeStr);
         }
 
         submitForm();
@@ -94,8 +128,8 @@ $(function () {
 
     // 时间标准
     $('.searchTimeFormatDay').datetimepicker({
-        format: "Y/m/d",
-        timepicker: false,
+        format: "Y/m/d H:i:s",
+        timepicker: true,
         yearStart: 2000,
         yearEnd: 2050,
         todayButton: true,
@@ -149,7 +183,11 @@ $(function () {
             searchUrl += "&endDate=" + endDate;
         }
         location.href = searchUrl;
+    }
 
+    String.prototype.replaceAll = function (FindText, RepText) {
+        regExp = new RegExp(FindText, "g");
+        return this.replace(regExp, RepText);
     }
 
 });
