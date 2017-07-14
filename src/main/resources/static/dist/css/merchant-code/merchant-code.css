@@ -98,7 +98,7 @@
     max-width: 90%;
 }
 
-.bind-url-tip, .bind-merchant-name-tip {
+.bind-merchant-name-tip {
     display: none;
     font-weight: bolder;
     vertical-align: baseline;

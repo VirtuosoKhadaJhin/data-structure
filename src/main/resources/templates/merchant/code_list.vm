@@ -202,11 +202,6 @@
                 </select>
                 <label class="bind-merchant-name-tip"><font color="red">*必填项</font></label>
             </div>
-            <div class="bind-url">
-                <label>绑定链接：</label>
-                <input type="url" class="span3" placeholder="绑定链接">
-                <label class="bind-url-tip"><font color="red">*必填项</font></label>
-            </div>
         </div>
         <div class="modal-footer">
             <input type="hidden" class="bind-code-number"/>

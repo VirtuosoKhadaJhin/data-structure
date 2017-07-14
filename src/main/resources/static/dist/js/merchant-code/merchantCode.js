@@ -23,7 +23,6 @@ $(function () {
     $('.bind-number').on("click", function () {
         var countryName = $(this).parents("tr").attr("data-country-name"), countryId = $(this).parents("tr").attr("data-country-id");
         $(".bind-merchant-modal .bind-country input").val(countryName).attr("data-country-id", countryId);
-        $(".bind-merchant-modal .bind-url input").val("");
         $(".bind-merchant-modal .sure-bind").prop("disabled", "disabled");
         $(".bind-merchant-modal .bind-merchant-name select").html("<option>加载中</option>");
         $(".bind-merchant-modal .bind-merchant-name select").prop("disabled", "disabled");
@@ -54,12 +53,9 @@ $(function () {
 
     // 确认绑定
     $(".bind-merchant-modal .sure-bind").on("click", function () {
-        var code = $(".bind-merchant-modal .bind-code-number").val(), url = $(".bind-merchant-modal .bind-url input").val(), mchId = $(".bind-merchant-name select").val();
+        var code = $(".bind-merchant-modal .bind-code-number").val(), mchId = $(".bind-merchant-name select").val();
         if (mchId == undefined || mchId == "" || mchId == null) {
             $(".bind-merchant-name-tip").addClass("show-tip");
-            return false;
-        } else if (url == undefined || url == "" || url == null) {
-            $(".bind-url-tip").addClass("show-tip");
             return false;
         }
         $.ajax({
