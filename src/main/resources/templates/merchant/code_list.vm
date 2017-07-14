@@ -66,7 +66,7 @@
                                         <label class="td-update-time-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.updateTime)</label>
                                     </td>
                                     <td class="td-merchant td-merchant-mch$!entity.id">
-                                        <span class="td-merchant-span" style="min-height: 20px">$!entity.mchId</span>
+                                        <label class="td-merchant-span" style="min-height: 20px">$!entity.mchId</label>
                                         <a class="td-mch-url" target="_blank" href="/merchant/edit?id=$!entity.mchId">$!entity.mchName</a>
                                     </td>
                                     <td class="td-url td-url-mch$!entity.id">
@@ -202,7 +202,7 @@
             </div>
             <div class="bind-url">
                 <label>绑定链接：</label>
-                <input type="text" class="span3" placeholder="绑定链接">
+                <input type="url" class="span3" placeholder="绑定链接">
                 <label class="bind-url-tip"><font color="red">*必填项</font></label>
             </div>
         </div>

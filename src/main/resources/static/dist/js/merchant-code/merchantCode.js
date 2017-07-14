@@ -21,6 +21,7 @@ $(function () {
     $('.bind-number').on("click", function () {
         var countryName = $(this).parents("tr").attr("data-country-name"), countryId = $(this).parents("tr").attr("data-country-id");
         $(".bind-merchant-modal .bind-country input").val(countryName).attr("data-country-id", countryId);
+        $(".bind-merchant-modal .bind-url input").val("")
         $(".bind-merchant-modal .bind-merchant-name select").html("");
         $(".bind-merchant-modal .bind-merchant-name select").append("<option value>全部</option>");
         $(".bind-merchant-modal .bind-merchant-name select").append("<option>暖游天下</option>");
@@ -41,9 +42,21 @@ $(function () {
             $(".bind-url-tip").addClass("show-tip");
             return false;
         }
-        $(".bind-code-result").val(0);
-        $(".bind-merchant-modal").modal("hide");
-        showBindResultModal("绑定成功!");
+        $.ajax({
+            url: '/merchant/bind/number',
+            data: {mchId: mchId, collectionCode: code},
+            type: 'post',
+            success: function (result) {
+                $(".bind-code-result").val(result.code);
+                $(".bind-merchant-modal").modal("hide");
+                if (result.code == 0) {
+                    showBindResultModal("绑定成功!");
+                } else {
+                    showBindResultModal("绑定失败!" + result.msg);
+                }
+            }
+        });
+
         return true;
     });
 
@@ -138,18 +151,6 @@ $(function () {
         submitForm();
     });
 
-    // 时间标准
-    $('.searchTimeFormatDay').datetimepicker({
-        format: "Y/m/d H:i:s",
-        timepicker: true,
-        yearStart: 2000,
-        yearEnd: 2050,
-        todayButton: true,
-        scrollMonth: false,
-        scrollTime: false,
-        scrollInput: false,
-    });
-
     // 显示操作编码
     function showCollectionCode(code) {
         $(".modal-collection-code").text("编码：" + code);
@@ -202,6 +203,18 @@ $(function () {
         }
         location.href = searchUrl;
     }
+
+    // 时间标准
+    $('.searchTimeFormatDay').datetimepicker({
+        format: "Y/m/d H:i:s",
+        timepicker: true,
+        yearStart: 2000,
+        yearEnd: 2050,
+        todayButton: true,
+        scrollMonth: false,
+        scrollTime: false,
+        scrollInput: false,
+    });
 
     String.prototype.replaceAll = function (FindText, RepText) {
         regExp = new RegExp(FindText, "g");
