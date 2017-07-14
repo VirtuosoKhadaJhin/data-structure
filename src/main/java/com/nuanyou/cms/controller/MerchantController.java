@@ -141,7 +141,7 @@ public class MerchantController {
 //        if (codelist != null && codelist.size()>3) {
 //            throw new APIException(ResultCodes.CollectionCodeGreaterThan3);
 //        }
-        String regex = "^\\d{1,9}$";
+        String regex = "^\\d{8,9}$";
         Pattern pattern = Pattern.compile(regex);
 
         for (String code : codelist) {
@@ -335,6 +335,8 @@ public class MerchantController {
         Page<EntityBdMerchantCollectionCode>  page = collectionCodeService.query(entity,pageable);
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
+        List<Country> countries = countryDao.getIdNameList();
+        model.addAttribute("countries", countries);
         return "merchant/code_list";
     }
 
@@ -371,5 +373,15 @@ public class MerchantController {
         model.addAttribute("entity", collectionCode);
         model.addAttribute("disabled", true);
         return new APIResult();
+    }
+
+    @RequestMapping(path = "/{countryId}/merchantlist", method = RequestMethod.GET)
+    @ResponseBody
+    public APIResult<Merchant> getMerchantsByCountry(@PathVariable Long countryId,
+                                                     @RequestParam(required = false) Long mchId,
+                                                     @RequestParam(required = false) String mchName) {
+        Pageable pageable = new PageRequest(0,500, Sort.Direction.DESC, "id");
+        Page<Merchant> merchants = merchantService.findMerchantByCountryFilter(countryId,mchName,mchId,pageable);
+        return new APIResult(merchants);
     }
 }

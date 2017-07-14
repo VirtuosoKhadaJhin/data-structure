@@ -72,6 +72,8 @@ public class MerchantVO {
 
     private List<String> collectionCodeList;
 
+    private Integer cooperationStatus;
+
 
     public BigDecimal getRatio() {
         return ratio;
@@ -475,5 +477,13 @@ public class MerchantVO {
 
     public void setCollectionCodeList(List<String> collectionCodeList) {
         this.collectionCodeList = collectionCodeList;
+    }
+
+    public Integer getCooperationStatus() {
+        return cooperationStatus;
+    }
+
+    public void setCooperationStatus(Integer cooperationStatus) {
+        this.cooperationStatus = cooperationStatus;
     }
 }

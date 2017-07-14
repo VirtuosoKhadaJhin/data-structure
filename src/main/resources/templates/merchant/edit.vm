@@ -75,10 +75,16 @@
                                     <input type="radio" name="display" value="true" #if($entity.display)checked#end/>是
                                     <input type="radio" name="display" value="false" #if(!$entity.display)checked#end/>否
                                 </div>
-                                <label class="control-label">合作情况</label>
+                                <label class="control-label">合作状态</label>
                                 <div class="controls">
-                                    <input type="radio" name="issign" value="true" #if($entity.issign)checked#end/>已签约
-                                    <input type="radio" name="issign" value="false" #if(!$entity.issign)checked#end/>未签约
+                                    <select name="cooperationStatus" class="span10">
+                                        <option value="0" #if(0 == $!entity.cooperationStatus) selected #end>未签约</option>
+                                        <option value="1" #if(1 == $!entity.cooperationStatus) selected #end>竞对共有</option>
+                                        <option value="2" #if(2 == $!entity.cooperationStatus) selected #end>独家经营</option>
+                                        <option value="3" #if(3 == $!entity.cooperationStatus) selected #end>取消合作</option>
+                                        <option value="4" #if(4 == $!entity.cooperationStatus) selected #end>关门</option>
+                                        <option value="5" #if(5 == $!entity.cooperationStatus) selected #end>迁址</option>
+                                    </select>
                                 </div>
                                 <label class="control-label">是否推荐</label>
                                 <div class="controls">
@@ -208,14 +214,19 @@
                                     #end
                                 </div>
 
-                                <label class="control-label">收款码</label>
+                                <label class="control-label">是否绑定收款码</label>
+                                <div class="controls">
+                                    <input type="radio" name="bindcode" value="true" />是
+                                    <input type="radio" name="bindcode" value="false" checked/>否
+                                </div>
+                                <label id = 'ccl' class="control-label hide">收款码</label>
                                 #if (!$!entity.id)
-                                <div id = 'cc' class="controls">
+                                <div id = 'cc' class="controls hide">
                                     <input style="margin-bottom:10px" type="text" class="span8" placeholder="" name="collectionCodeList" value="">
                                     <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-plus"></i> </a>
                                 </div>
                                     #else
-                                    <div id = 'cc' class="controls">
+                                    <div id = 'cc' class="controls hide">
                                         #if ($!entity.collectionCodeList && $!entity.collectionCodeList.size()>0)
 
                                         #foreach($e in $!entity.collectionCodeList)
@@ -278,6 +289,62 @@
     </div>
 
     <script>
+
+        var oldcode = $("select[name='cooperationStatus']").find("option:selected").val();
+        var newcode = oldcode;
+
+        var init_code = function (status) {
+            if (status == 0) {
+                $("input[name='bindcode']").prop("disabled", false);
+                $("input[name='bindcode']:last").prop("checked", true);
+                $("#ccl").addClass('hide');
+                $("#cc").addClass('hide');
+            }else if (status == 1){
+                $("input[name='bindcode']").prop("disabled", false);
+                $("input[name='bindcode']:first").prop("checked", true);
+                $("#ccl").removeClass('hide');
+                $("#cc").removeClass('hide');
+            }else if (status == 2){
+                $("input[name='bindcode']").prop("disabled", false);
+                $("input[name='bindcode']:first").prop("checked", true);
+                $("#ccl").removeClass('hide');
+                $("#cc").removeClass('hide');
+            }else if (status == 3){
+                $("input[name='bindcode']:last").prop("checked", true);
+                $("input[name='bindcode']").prop("disabled", true);
+                $("#ccl").addClass('hide');
+                $("#cc").addClass('hide');
+            }else if (status == 4){
+                $("input[name='bindcode']:last").prop("checked", true);
+                $("input[name='bindcode']").prop("disabled", true);
+                $("#ccl").addClass('hide');
+                $("#cc").addClass('hide');
+            }else if (status == 5){
+                $("input[name='bindcode']").prop("disabled", false);
+                $("input[name='bindcode']:last").prop("checked", true);
+                $("#ccl").addClass('hide');
+                $("#cc").addClass('hide');
+            }
+        };
+
+        init_code(oldcode);
+
+        $("select[name='cooperationStatus']").bind('change',function () {
+            var status = this.options[this.options.selectedIndex].value;
+            newcode = status;
+            init_code(status);
+        });
+
+        $("input[name='bindcode']").bind("click", function () {
+            if ($(this).val() == 'true') {
+                $("#ccl").removeClass('hide');
+                $("#cc").removeClass('hide');
+            } else {
+                $("#ccl").addClass('hide');
+                $("#cc").addClass('hide');
+            }
+        });
+
         var bindCodePlus = function () {
             $('.icon-plus').bind('click',function () {
 
@@ -303,18 +370,64 @@
             bindCodePlus ();
             #end
 
-        var r = /^\d{1,9}$/;　　//正整数
-        $("#btn-save").bind('click',function () {
-            if ( $("input[name='collectionCodeList']").length>0 ){
-                for (var i = 0;i<$("input[name='collectionCodeList']").length;i++ ) {
-                    if ($("input[name='collectionCodeList']")[i].value) {//code允许为空，非空才校验
-                        if (!r.test($("input[name='collectionCodeList']")[i].value)) {
-                            alert ('收款码输入错误，请重新填写');
+        var save_confirm = function () {
+            if (oldcode != newcode) {
+                if (newcode == 1||newcode == 2) {
+                    if (!confirm('是否确定更改此商家的合作状态?')) {
+                        return false;
+                    }
+                }
+                if (newcode == 3||newcode == 4) {
+                    if (!confirm('是否确定更改此商家的合作状态并且解绑其收款码?')) {
+                        return false;
+                    }
+                }
+                if (newcode == 5) {
+                    if ($("input[name='bindcode']:first").prop("checked")) {
+                        if (!confirm('是否确定更改此商家的合作状态?')) {
+                            return false;
+                        }
+                    }else {
+                        if (!confirm('是否确定更改此商家的合作状态并且解绑其收款码?')) {
                             return false;
                         }
                     }
                 }
+                if (newcode == 0) {
+                    if (!confirm('无法将商家的合作状态更改为未签约，请重新选择')) {
+                        return false;
+                    }
+                }
             }
+            return true;
+        };
+
+        var r = /^\d{1,9}$/;　　//正整数
+        $("#btn-save").bind('click',function () {
+
+            if (!save_confirm())
+                return false;
+            if ($("input[name='bindcode']:first").prop('checked')) {
+                if ( $("input[name='collectionCodeList']").length>0 ){
+                    for (var i = 0;i<$("input[name='collectionCodeList']").length;i++ ) {
+                        if ($("input[name='collectionCodeList']")[i].value) {//code允许为空，非空才校验
+                            if (!r.test($("input[name='collectionCodeList']")[i].value)) {
+                                alert ('收款码输入错误，请重新填写');
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }else {
+                if ( $("input[name='collectionCodeList']").length>0 ){
+                    for (var i = 0;i<$("input[name='collectionCodeList']").length;i++ ) {
+                        if ($("input[name='collectionCodeList']")[i].value) {//code允许为空，非空才校验
+                            $("input[name='collectionCodeList']")[i].value = '';
+                        }
+                    }
+                }
+            }
+
         });
 
         $('.icon-minus').bind('click',function () {

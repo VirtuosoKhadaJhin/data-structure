@@ -5,7 +5,7 @@ package com.nuanyou.cms.entity.enums;
  */
 public enum MerchantCooperationStatus {
 
-    NON(0, ""),
+    NON(0, "未签约"),
     COMPETITION_COMMON(1, "竞对共有"),
     EXCLUSIVE(2, "独家经营"),
     CANCEL(3, "取消合作"),

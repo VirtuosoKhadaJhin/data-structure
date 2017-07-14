@@ -6,6 +6,7 @@ import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.ChannelType;
 import com.nuanyou.cms.entity.enums.CodeType;
+import com.nuanyou.cms.entity.enums.MerchantCooperationStatus;
 import com.nuanyou.cms.model.MerchantVO;
 import com.nuanyou.cms.service.ItemDetailimgService;
 import com.nuanyou.cms.service.MerchantCollectionCodeService;
@@ -17,13 +18,12 @@ import com.nuanyou.cms.util.MyCacheManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -69,6 +69,7 @@ public class MerchantServiceImpl implements MerchantService {
     private MyCacheManager<List<Merchant>> cacheManager;
     @Autowired
     private CmsUserDao cmsUserDao;
+    private Specification specification;
 
     @Override
     public List<Merchant> getIdNameList() {
@@ -190,7 +191,9 @@ public class MerchantServiceImpl implements MerchantService {
         }
         dealCollectionCodes(vo.getCollectionCodeList(), entity);
 
-        return BeanUtils.copyBean(entity, new MerchantVO());
+        MerchantVO result = new MerchantVO();
+        BeanUtils.copyBean(entity, result);
+        return result;
     }
 
     @Transactional
@@ -207,7 +210,7 @@ public class MerchantServiceImpl implements MerchantService {
         for (String tmpCode : tmp) {
             for (EntityBdMerchantCollectionCode collectionCode : collectionCodes) {
                 if (tmpCode.equals(collectionCode.getCollectionCode())) {
-                    unbindNumber (collectionCode);
+                    do_unbindNumber (collectionCode);
                     break;
                 }
             }
@@ -216,14 +219,18 @@ public class MerchantServiceImpl implements MerchantService {
         //bind code
         for (String code : codelist) {
             EntityBdMerchantCollectionCode collectionCode = collectionCodeService.findCollectionCode(code);
-            bindNumber (  collectionCode, entity.getId());
+            do_bindNumber (  collectionCode, entity);
         }
     }
 
     @Override
-    @Transactional
     public Boolean bindNumber ( EntityBdMerchantCollectionCode collectionCode,Long mchId){
         Merchant entity = merchantDao.findOne(mchId);
+        return do_bindNumber(collectionCode,entity);
+    }
+
+    @Transactional
+    private Boolean do_bindNumber (EntityBdMerchantCollectionCode collectionCode , Merchant entity){
         if (entity == null) {
             throw new APIException(ResultCodes.NotFoundMerchant);
         }
@@ -233,9 +240,8 @@ public class MerchantServiceImpl implements MerchantService {
 //        collectionCode.setCountryId(entity.getDistrict().getCountry().getId());
 //        collectionCode.setCountryName(entity.getDistrict().getCountry().getName());
 
-        String countryCode = entity.getDistrict().getCountry().getCode();
-        String target_url = "";
-        if ("TH".equals(countryCode)) {
+        String target_url ;
+        if (collectionCode.getCountryId()!=null && collectionCode.getCountryId().longValue() == 3) {//TH
             target_url = sg_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
         } else {
             target_url = kr_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
@@ -259,8 +265,12 @@ public class MerchantServiceImpl implements MerchantService {
     }
 
     @Override
-    @Transactional
     public Boolean unbindNumber (EntityBdMerchantCollectionCode collectionCode) {
+        return do_unbindNumber (collectionCode);
+    }
+
+    @Transactional
+    public Boolean do_unbindNumber (EntityBdMerchantCollectionCode collectionCode) {
         collectionCode.setMchId(null);
         collectionCode.setMchName(null);
 //        collectionCode.setCountryId(null);
@@ -281,6 +291,7 @@ public class MerchantServiceImpl implements MerchantService {
             return false;
         }
     }
+
 
     /**
      * @param id merchantId
@@ -344,5 +355,31 @@ public class MerchantServiceImpl implements MerchantService {
             }
         };
         return merchantDao.findAll(specification);
+    }
+
+    @Override
+    public Page<Merchant> findMerchantByCountryFilter(final Long country, final String mchName, final Long mchId, Pageable pageable) {
+        Specification specification = new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                // TODO: 2017/7/14 jpa 无效 
+                query.multiselect(root.get("id").alias("id"),root.get("name").alias("name"));
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (country != null) {
+                    predicate.add(cb.equal(root.get("district").get("country").get("id"), country));
+                }
+                if (mchName != null) {
+                    predicate.add(cb.like(root.get("name"), "%"+mchName+"%"));
+                }
+                if (mchId != null) {
+                    predicate.add(cb.equal(root.get("id"), mchId));
+                }
+                predicate.add(cb.equal(root.get("display"), true));
+                Predicate[] arrays = new Predicate[predicate.size()];
+
+                return query.where(predicate.toArray(arrays)).getRestriction();
+            }
+        };
+        return merchantDao.findAll(specification,pageable);
     }
 }
