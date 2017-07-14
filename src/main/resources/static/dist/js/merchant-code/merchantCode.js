@@ -8,7 +8,9 @@ $(function () {
     $(".view-collection-code").on("click", function () {
         showCollectionCode($(this).parents("tr").attr("data-code"))
         var codeImg = $(this).parents("tr").attr("data-code-img");
-        if (codeImg == undefined || codeImg == "" || codeImg == null) {
+        var codeId = $(this).parents("tr").attr("data-id");
+        var codeImgExists = $(".td-url-mch" + codeId + " .td-code-url").attr("href");
+        if (codeImgExists == undefined || codeImgExists == "" || codeImgExists == null) {
             showNormalTipModal("暂无收款码");
             return false;
         }
@@ -78,7 +80,7 @@ $(function () {
         return true;
     });
 
-    // 指派成功刷新页面
+    // 绑定成功刷新页面
     $(".bind-merchant-result-modal").on("hide.bs.modal", function () {
         var result = $(".bind-code-result").val();
         if (result == 0 && result != "") {
