@@ -2,7 +2,6 @@
  * Created by mylon on 2017/7/13.
  */
 $(function () {
-    $(".has-not-bind-count-label").text($(".has-not-bind-count").val());
     $(".all-code-count-label").text($(".all-code-count").val());
 
     // 查看二维码
@@ -22,10 +21,28 @@ $(function () {
     $('.bind-number').on("click", function () {
         var countryName = $(this).parents("tr").attr("data-country-name"), countryId = $(this).parents("tr").attr("data-country-id");
         $(".bind-merchant-modal .bind-country input").val(countryName).attr("data-country-id", countryId);
-        $(".bind-merchant-modal .bind-url input").val("")
-        $(".bind-merchant-modal .bind-merchant-name select").html("");
-        $(".bind-merchant-modal .bind-merchant-name select").append("<option value>全部</option>");
-        $(".bind-merchant-modal .bind-merchant-name select").append("<option>暖游天下</option>");
+        $(".bind-merchant-modal .bind-url input").val("");
+        $(".bind-merchant-modal .sure-bind").prop("disabled", "disabled");
+        $(".bind-merchant-modal .bind-merchant-name select").html("<option>加载中</option>");
+        $(".bind-merchant-modal .bind-merchant-name select").prop("disabled", "disabled");
+        $.ajax({
+            url: '/merchant/' + countryId + '/merchantlist',
+            type: 'get',
+            success: function (result) {
+                $(".bind-merchant-modal .bind-merchant-name select").html("");
+                $(".bind-merchant-modal .sure-bind").prop("disabled", "");
+                $(".bind-merchant-modal .bind-merchant-name select").prop("disabled", "");
+                if (result.code == 0) {
+                    var merchants = result.data;
+                    $.each(merchants.content, function (mchKey, mchVal) {
+                        $(".bind-merchant-modal .bind-merchant-name select").append("<option value='" + mchVal.id + "'>" + mchVal.name + "</option>");
+                    });
+                } else {
+                    showBindResultModal("查询商户信息失败!" + result.msg);
+                    return false;
+                }
+            }
+        });
 
         $(".modal-collection-code").text("编码：" + $(this).parents("tr").attr("data-code"));
         $(".bind-merchant-modal .bind-code-number").val($(this).parents("tr").attr("data-code"));
@@ -90,11 +107,13 @@ $(function () {
                 $(".unbind-merchant-modal").modal("hide");
                 if (result.code == 0) {
                     showNormalTipModal("解绑成功");
-                    $(".td-merchant-mch" + codeId).html("");
                     $(".td-url-mch" + codeId).html("");
+                    $(".td-merchant-mch" + codeId).html("");
                     $(".td-op-mch" + codeId + " .bind-number").show();
                     $(".td-op-mch" + codeId + " .unbind-number").hide();
                     $(".td-status-mch" + codeId + " label").text("未绑定");
+                    $(".td-update-time" + codeId + " .td-update-modifier").text(result.data.modifier);
+                    $(".td-update-time" + codeId + " .td-update-time-label").text(result.data.updateTime);
                 } else {
                     showNormalTipModal("解绑失败," + result.msg);
                     $(".td-status-mch" + codeId + " label").text("已绑定");

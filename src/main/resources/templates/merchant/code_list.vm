@@ -23,12 +23,8 @@
                             <span class="icon"><i class="icon-th"></i></span>
                             <h5>商家收款码列表</h5>
                             <span class="icon-badge">
-                                <strong>未绑定： </strong>
-                                <label class="badge badge-warning has-not-bind-count-label"></label>
-                            </span>
-                            <span class="icon-badge">
                                 <strong>收款码总数： </strong>
-                                <label class="badge badge-success all-code-count-label"></label>
+                                <label class="badge all-code-count-label"></label>
                             </span>
                         </div>
                         <table class="table table-bordered table-striped">
@@ -62,7 +58,7 @@
                                             #set($hasNotBindCount = $hasNotBindCount + 1)
                                         #end
                                     </td>
-                                    <td class="td-update-time">
+                                    <td class="td-update-time td-update-time$!entity.id">
                                         <label class="td-update-modifier">$!entity.modifier </label>
                                         <label class="td-update-time-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.updateTime)</label>
                                     </td>
@@ -86,7 +82,6 @@
                                     </td>
                                 </tr>
                                 #end
-                            <input type="hidden" class="has-not-bind-count" value="$!hasNotBindCount">
                             <input type="hidden" class="all-code-count" value="$!page.totalElements">
                             </tbody>
                         </table>
@@ -101,6 +96,9 @@
                                     <label>国家：</label>
                                     <select name="countryId" class="search-country-select">
                                         <option value>全部</option>
+                                        #foreach($e in $!countries)
+                                            <option value="$!e.id" #if($!entity.countryId == $!e.id) selected #end> $!e.name</option>
+                                        #end
                                     </select>
                                 </div>
                                 <div class="search-batch-merchant-ids">
@@ -123,12 +121,12 @@
                                     <label>开始时间：</label>
                                     <input type="text" name="startDate" class="span11 searchTimeFormatDay search-start-time-input"
                                            value="$!dateFormatter.format("yyyy/MM/dd HH:mm:ss",$!entity.startDate)"
-                                           placeholder="开始时间">
+                                           placeholder="开始时间" autocomplete="off">
                                 </div>
                                 <div class="search-end-time">
                                     <label>结束时间：</label>
                                     <input type="text" name="endDate" class="span11 searchTimeFormatDay search-end-time-input" value="$!dateFormatter.format("yyyy/MM/dd HH:mm:ss",$!entity.endDate)"
-                                           placeholder="结束时间">
+                                           placeholder="结束时间" autocomplete="off">
                                 </div>
                                 <div class="search-form-btn">
                                     <a class="btn btn-primary btn-ok">
@@ -185,7 +183,7 @@
     </div>
 
     <!-- 绑定商户模态框 -->
-    <div class="modal hide fade bind-merchant-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal hide fade bind-merchant-modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h5 class="modal-head-h">绑定商户
@@ -199,8 +197,8 @@
             </div>
             <div class="bind-merchant-name">
                 <label>商户：</label>
-                <select class="span3 select2">
-                    <option>全部</option>
+                <select class="span3 select2" style="z-index: 9999999999">
+
                 </select>
                 <label class="bind-merchant-name-tip"><font color="red">*必填项</font></label>
             </div>
