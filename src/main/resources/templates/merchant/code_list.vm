@@ -24,41 +24,53 @@
                             <h5>商家收款码列表</h5>
                             <span class="icon-badge">
                                 <strong>未绑定： </strong>
-                                <label class="badge badge-warning">2</label>
+                                <label class="badge badge-warning has-not-bind-count-label"></label>
                             </span>
                             <span class="icon-badge">
                                 <strong>收款码总数： </strong>
-                                <label class="badge badge-success">$!page.totalElements</label>
+                                <label class="badge badge-success all-code-count-label"></label>
                             </span>
                         </div>
                         <table class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th class="th-collection-code">编码</th>
+                                <th class="th-country">国家</th>
                                 <th class="th-status">绑定状态</th>
-                                <th class="th-update-time">更改时间</th>
+                                <th class="th-update-time">最近更改</th>
                                 <th class="th-merchant">绑定商户</th>
                                 <th class="th-url">绑定链接</th>
                                 <th class="th-op">操作</th>
                             </tr>
                             </thead>
                             <tbody class="tbody-list">
+                                #set($hasNotBindCount = 0)
                                 #foreach($entity in $!page.content)
-                                <tr data-id="$!entity.id" data-code="$!entity.collectionCode" data-mchId="$!entity.mchId">
+                                <tr data-country-name="$!entity.countryName" data-country-id="$!entity.countryId" data-id="$!entity.id" data-code="$!entity.collectionCode" data-mchId="$!entity.mchId"
+                                    data-code-img="$!entity.url">
                                     <td class="td-collection-code">
                                         <label class="td-collection-code-label">$!entity.collectionCode</label>
                                     </td>
+                                    <td class="td-country">
+                                        <label class="td-country-label">$!entity.countryName</label>
+                                    </td>
                                     <td class="td-status td-status-mch$!entity.id">
-                                        <label class="td-status-label">已绑定</label>
+                                        #if($!entity.mchId)
+                                            <label class="td-status-label">已绑定</label>
+                                        #else
+                                            <label class="td-status-label">未绑定</label>
+                                            #set($hasNotBindCount = $hasNotBindCount + 1)
+                                        #end
                                     </td>
                                     <td class="td-update-time">
+                                        <label class="td-update-modifier">$!entity.modifier </label>
                                         <label class="td-update-time-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.updateTime)</label>
                                     </td>
                                     <td class="td-merchant td-merchant-mch$!entity.id">
-                                        <span class="td-merchant-span" style="min-height: 20px">$!entity.mchId</span>
+                                        <label class="td-merchant-span" style="min-height: 20px">$!entity.mchId</label>
                                         <a class="td-mch-url" target="_blank" href="/merchant/edit?id=$!entity.mchId">$!entity.mchName</a>
                                     </td>
-                                    <td class="td-url">
+                                    <td class="td-url td-url-mch$!entity.id">
                                         <label class="td-url-label"><a class="td-code-url" target="_blank" href="$!entity.url">$!entity.url</a></label>
                                     </td>
                                     <td class="td-op td-op-mch$!entity.id">
@@ -74,57 +86,60 @@
                                     </td>
                                 </tr>
                                 #end
+                            <input type="hidden" class="has-not-bind-count" value="$!hasNotBindCount">
+                            <input type="hidden" class="all-code-count" value="$!page.totalElements">
                             </tbody>
                         </table>
                         #parse("common/list_mid.vm")
-                        <form>
+                        <form class="form-horizontal search-form" method="get">
                             <div class="control-group">
                                 <div class="search-batch-collection-codes">
                                     <label>批量编码：</label>
-                                    <textarea class="batch-collection-codes" name="collectionCodes" placeholder="以英文逗号','或换行分隔,最多支持20个" rows="3">$!entity.collectionCodes</textarea>
+                                    <textarea class="batch-collection-codes" name="codes" placeholder="以英文逗号','或换行分隔,最多支持20个" rows="3">$!entity.codes</textarea>
                                 </div>
                                 <div class="search-country">
                                     <label>国家：</label>
-                                    <select name="search-country-select">
-                                        <option>全部</option>
+                                    <select name="countryId" class="search-country-select">
+                                        <option value>全部</option>
                                     </select>
                                 </div>
                                 <div class="search-batch-merchant-ids">
                                     <label>商户id：</label>
-                                    <textarea class="batch-merchant-ids" name="merchantIds" placeholder="以英文逗号','或换行分隔,最多支持20个" rows="3">$!entity.collectionCodes</textarea>
+                                    <textarea class="batch-merchant-ids" name="mchIds" placeholder="以英文逗号','或换行分隔,最多支持20个" rows="3">$!entity.mchIds</textarea>
                                 </div>
                                 <div class="search-merchant-name">
                                     <label>商户名称：</label>
-                                    <input type="text" name="mchName" class="span11 merchant-name" value="$!entity.mchName" placeholder="商户名称">
+                                    <input type="text" name="mchName" class="span11 search-merchant-name-input" value="$!entity.mchName" placeholder="商户名称">
                                 </div>
                                 <div class="search-status">
                                     <label>绑定状态：</label>
-                                    <select name="search-status-select">
-                                        <option>全部</option>
+                                    <select name="status" class="search-status-select">
+                                        <option value>全部</option>
+                                        <option value="1" #if($!entity.status == 1) selected #end>已绑定</option>
+                                        <option value="2" #if($!entity.status == 2) selected #end>未绑定</option>
                                     </select>
                                 </div>
                                 <div class="search-start-time">
                                     <label>开始时间：</label>
-                                    <input type="text" name="startTime" class="span11 searchTimeFormatDay" value="$!entity.startTime" placeholder="开始时间">
+                                    <input type="text" name="startDate" class="span11 searchTimeFormatDay search-start-time-input"
+                                           value="$!dateFormatter.format("yyyy/MM/dd HH:mm:ss",$!entity.startDate)"
+                                           placeholder="开始时间">
                                 </div>
                                 <div class="search-end-time">
                                     <label>结束时间：</label>
-                                    <input type="text" name="endTime" class="span11 searchTimeFormatDay" value="$!entity.endTime" placeholder="结束时间">
+                                    <input type="text" name="endDate" class="span11 searchTimeFormatDay search-end-time-input" value="$!dateFormatter.format("yyyy/MM/dd HH:mm:ss",$!entity.endDate)"
+                                           placeholder="结束时间">
                                 </div>
                                 <div class="search-form-btn">
-                                    <button type="submit" class="btn btn-primary">
+                                    <a class="btn btn-primary btn-ok">
                                         <i class="icon-search"> 查询</i>
-                                    </button>
-                                    <button class="btn btn-warning search-reset" style="margin-left: 3px;">
+                                    </a>
+                                    <a class="btn btn-warning search-reset" style="margin-left: 3px;">
                                         <i class="icon-refresh"> 重置</i>
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </form>
-
-                        <script type="text/javascript" src="http://cdn.bootcss.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
-                        <script type="text/javascript" src="/dist/js/curd.js"></script>
-                        <script type="text/javascript" src="/dist/js/merchant-code/merchantCode.js"></script>
                     </div>
                 </div>
             </div>
@@ -140,7 +155,10 @@
         </div>
         <div class="modal-body">
             <p class="modal-body-content-img">
-                <img class="modal-collection-code-img" width="200px" height="200px" src="http://s.cn.bing.net/th?id=OIP.V7rshrLMKUGXlzqcGODk1gEsEs&w=107&h=105&c=8&rs=1&qlt=90&pid=3.1&rm=2"/>
+            <div class="qrcode">
+                <canvas width="200" height="200">
+                </canvas>
+            </div>
             </p>
         </div>
         <div class="modal-footer">
@@ -184,14 +202,17 @@
                 <select class="span3 select2">
                     <option>全部</option>
                 </select>
+                <label class="bind-merchant-name-tip"><font color="red">*必填项</font></label>
             </div>
             <div class="bind-url">
                 <label>绑定链接：</label>
-                <input type="text" class="span3" placeholder="绑定链接">
+                <input type="url" class="span3" placeholder="绑定链接">
+                <label class="bind-url-tip"><font color="red">*必填项</font></label>
             </div>
         </div>
         <div class="modal-footer">
-            <input type="hidden" class="bind-code-id"/>
+            <input type="hidden" class="bind-code-number"/>
+            <input type="hidden" class="bind-code-result"/>
             <button class="btn btn-primary sure-bind">确认</button>
             <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
         </div>
@@ -211,6 +232,25 @@
         </div>
     </div>
 
+    <!-- 通用提示框2 -->
+    <div class="modal hide fade bind-merchant-result-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h5 class="modal-head-h">提示</h5>
+        </div>
+        <div class="modal-body">
+            <p class="modal-body-content"></p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
+    </div>
+
 </div>
+
+<script type="text/javascript" src="http://cdn.bootcss.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<script type="text/javascript" src="/dist/js/curd.js"></script>
+<script type="text/javascript" src="/dist/js/merchant-code/merchantCode.js"></script>
+
 </body>
 </html>
