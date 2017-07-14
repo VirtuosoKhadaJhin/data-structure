@@ -1,6 +1,8 @@
 package com.nuanyou.cms.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -32,8 +34,10 @@ public class EntityBdMerchantCollectionCode {
     @Column(name = "collectioncode")
     private String collectionCode;
     @Column(name = "updatetime")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
     @Column(name = "createtime")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
     @Column(name = "isdelete")
     private Boolean isDelete;
@@ -43,8 +47,10 @@ public class EntityBdMerchantCollectionCode {
     @Transient
     private Integer status;//绑定状态  1-已绑定  2-未绑定   空-全部
     @Transient
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
     @Transient
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
     @Transient
     private String codes;//收款码集合 以逗号拼接
