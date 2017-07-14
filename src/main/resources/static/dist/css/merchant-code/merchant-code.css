@@ -11,6 +11,10 @@
     cursor: pointer;
 }
 
+.search-batch-collection-codes, .search-batch-merchant-ids, .search-country, .search-merchant-name, .search-status, .search-start-time, .search-end-time {
+    margin-bottom: 10px;
+}
+
 .th-collection-code, .th-status, .th-merchant, .th-country {
     width: 12%;
 }
@@ -86,10 +90,6 @@
     font-size: 15px;
 }
 
-.search-batch-collection-codes, .search-batch-merchant-ids, .search-country, .search-merchant-name, .search-status, .search-start-time, .search-end-time {
-    margin-bottom: 10px;
-}
-
 .search-country-select, .search-status-select {
     max-width: 90%;
 }
@@ -102,5 +102,13 @@
 }
 
 .show-tip {
+    display: inline;
+}
+
+.td-update-modifier {
+    display: inline;
+}
+
+.td-update-time-label {
     display: inline;
 }

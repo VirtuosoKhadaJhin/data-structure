@@ -23,10 +23,11 @@ $(function () {
         $(".bind-merchant-modal .bind-country input").val(countryName).attr("data-country-id", countryId);
         $(".bind-merchant-modal .bind-merchant-name select").html("");
         $(".bind-merchant-modal .bind-merchant-name select").append("<option value>全部</option>");
+        $(".bind-merchant-modal .bind-merchant-name select").append("<option>暖游天下</option>");
 
         $(".modal-collection-code").text("编码：" + $(this).parents("tr").attr("data-code"));
         $(".bind-merchant-modal .bind-code-number").val($(this).parents("tr").attr("data-code"));
-        $(".bind-url-tip").removeClass("show-tip");
+        $(".bind-url-tip, .bind-merchant-name-tip").removeClass("show-tip");
         $(".bind-merchant-modal").modal("show");
     });
 
@@ -36,13 +37,24 @@ $(function () {
         if (mchId == undefined || mchId == "" || mchId == null) {
             $(".bind-merchant-name-tip").addClass("show-tip");
             return false;
-        }
-        if (url == undefined || url == "" || url == null) {
+        } else if (url == undefined || url == "" || url == null) {
             $(".bind-url-tip").addClass("show-tip");
             return false;
         }
-
+        $(".bind-code-result").val(0);
+        $(".bind-merchant-modal").modal("hide");
+        showBindResultModal("绑定成功!");
+        return true;
     });
+
+    // 指派成功刷新页面
+    $(".bind-merchant-result-modal").on("hide.bs.modal", function () {
+        var result = $(".bind-code-result").val();
+        if (result == 0 && result != "") {
+            window.location.reload();
+        }
+    });
+
 
     // 解绑
     $('.unbind-number').on("click", function () {
@@ -147,6 +159,12 @@ $(function () {
     function showNormalTipModal(tip) {
         $(".normal-tip-modal .modal-body-content").text(tip);
         $(".normal-tip-modal").modal("show");
+    }
+
+    // 显示绑定结果 刷新页面
+    function showBindResultModal(tip) {
+        $(".bind-merchant-result-modal .modal-body-content").text(tip);
+        $(".bind-merchant-result-modal").modal("show");
     }
 
     // url提交表单

@@ -62,7 +62,8 @@
                                         #end
                                     </td>
                                     <td class="td-update-time">
-                                        <label class="td-update-time-label">$!entity.modifier $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.updateTime)</label>
+                                        <label class="td-update-modifier">$!entity.modifier </label>
+                                        <label class="td-update-time-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.updateTime)</label>
                                     </td>
                                     <td class="td-merchant td-merchant-mch$!entity.id">
                                         <span class="td-merchant-span" style="min-height: 20px">$!entity.mchId</span>
@@ -215,6 +216,20 @@
 
     <!-- 通用提示框 -->
     <div class="modal hide fade normal-tip-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h5 class="modal-head-h">提示</h5>
+        </div>
+        <div class="modal-body">
+            <p class="modal-body-content"></p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
+    </div>
+
+    <!-- 通用提示框2 -->
+    <div class="modal hide fade bind-merchant-result-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h5 class="modal-head-h">提示</h5>
