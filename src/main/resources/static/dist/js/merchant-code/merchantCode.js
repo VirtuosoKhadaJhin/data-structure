@@ -218,7 +218,7 @@ $(function () {
 
     // 时间标准
     $('.searchTimeFormatDay').datetimepicker({
-        format: "Y/m/d H:i:s",
+        format: "Y-m-d H:i:s",
         timepicker: true,
         yearStart: 2000,
         yearEnd: 2050,

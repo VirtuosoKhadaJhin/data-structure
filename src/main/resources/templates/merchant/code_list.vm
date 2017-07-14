@@ -120,12 +120,12 @@
                                 <div class="search-start-time">
                                     <label>开始时间：</label>
                                     <input type="text" name="startDate" class="span11 searchTimeFormatDay search-start-time-input"
-                                           value="$!dateFormatter.format("yyyy/MM/dd HH:mm:ss",$!entity.startDate)"
+                                           value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.startDate)"
                                            placeholder="开始时间" autocomplete="off">
                                 </div>
                                 <div class="search-end-time">
                                     <label>结束时间：</label>
-                                    <input type="text" name="endDate" class="span11 searchTimeFormatDay search-end-time-input" value="$!dateFormatter.format("yyyy/MM/dd HH:mm:ss",$!entity.endDate)"
+                                    <input type="text" name="endDate" class="span11 searchTimeFormatDay search-end-time-input" value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.endDate)"
                                            placeholder="结束时间" autocomplete="off">
                                 </div>
                                 <div class="search-form-btn">
