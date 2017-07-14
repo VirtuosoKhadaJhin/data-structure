@@ -11,7 +11,7 @@
     cursor: pointer;
 }
 
-.table td{
+.table td {
     word-break: break-all;
 }
 
@@ -80,6 +80,10 @@
     cursor: pointer;
     font-size: 12px;
     font-weight: 600;
+}
+
+.qrcode {
+    text-align: center;
 }
 
 .bind-url {

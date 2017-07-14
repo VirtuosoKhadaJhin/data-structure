@@ -46,7 +46,8 @@
                             <tbody class="tbody-list">
                                 #set($hasNotBindCount = 0)
                                 #foreach($entity in $!page.content)
-                                <tr data-country-name="$!entity.countryName" data-country-id="$!entity.countryId" data-id="$!entity.id" data-code="$!entity.collectionCode" data-mchId="$!entity.mchId" data-code-img="$!entity.url">
+                                <tr data-country-name="$!entity.countryName" data-country-id="$!entity.countryId" data-id="$!entity.id" data-code="$!entity.collectionCode" data-mchId="$!entity.mchId"
+                                    data-code-img="$!entity.url">
                                     <td class="td-collection-code">
                                         <label class="td-collection-code-label">$!entity.collectionCode</label>
                                     </td>
@@ -154,7 +155,10 @@
         </div>
         <div class="modal-body">
             <p class="modal-body-content-img">
-                <img class="modal-collection-code-img" width="200px" height="200px" src=""/>
+            <div class="qrcode">
+                <canvas width="200" height="200">
+                </canvas>
+            </div>
             </p>
         </div>
         <div class="modal-footer">

@@ -5,6 +5,11 @@ $(function () {
     $(".has-not-bind-count-label").text($(".has-not-bind-count").val());
     $(".all-code-count-label").text($(".all-code-count").val());
 
+    var sz = [1, 2, 3];
+    $.each(sz, function (key, val) {
+        console.log("key：" + key + ", val：" + val);
+    });
+
     // 查看二维码
     $(".view-collection-code").on("click", function () {
         showCollectionCode($(this).parents("tr").attr("data-code"))
@@ -13,7 +18,8 @@ $(function () {
             showNormalTipModal("暂无收款码");
             return false;
         }
-        $(".code-tip-modal .modal-collection-code-img").attr("src", codeImg);
+        $('.qrcode').empty();
+        $('.qrcode').qrcode({width: 200, height: 200, correctLevel: 0, text: codeImg});
         $(".code-tip-modal").modal("show");
     });
 
