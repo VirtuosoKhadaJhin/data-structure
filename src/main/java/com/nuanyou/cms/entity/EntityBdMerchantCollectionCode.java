@@ -47,10 +47,10 @@ public class EntityBdMerchantCollectionCode {
     @Transient
     private Integer status;//绑定状态  1-已绑定  2-未绑定   空-全部
     @Transient
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startDate;
     @Transient
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endDate;
     @Transient
     private String codes;//收款码集合 以逗号拼接
