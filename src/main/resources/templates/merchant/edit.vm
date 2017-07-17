@@ -399,7 +399,7 @@
             return true;
         };
 
-        var r = /^\d{1,9}$/;　　//正整数
+        var r = /^\d{8,9}$/;　　//正整数
         $("#btn-save").bind('click',function () {
 
             if (!save_confirm())
