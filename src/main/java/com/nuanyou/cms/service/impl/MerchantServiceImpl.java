@@ -69,7 +69,8 @@ public class MerchantServiceImpl implements MerchantService {
     private MyCacheManager<List<Merchant>> cacheManager;
     @Autowired
     private CmsUserDao cmsUserDao;
-    private Specification specification;
+    @Autowired
+    private DistrictDao districtDao;
 
     @Override
     public List<Merchant> getIdNameList() {
@@ -241,7 +242,9 @@ public class MerchantServiceImpl implements MerchantService {
 //        collectionCode.setCountryName(entity.getDistrict().getCountry().getName());
 
         String target_url ;
-        if (collectionCode.getCountryId()!=null && collectionCode.getCountryId().longValue() == 3) {//TH
+        District district = districtDao.findOne(entity.getDistrict().getId());
+        String countryCode = district.getCountry().getCode();
+        if ("TH".equals(countryCode)) {
             target_url = sg_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
         } else {
             target_url = kr_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
