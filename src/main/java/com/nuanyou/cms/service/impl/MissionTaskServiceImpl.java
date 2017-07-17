@@ -55,7 +55,10 @@ public class MissionTaskServiceImpl implements MissionTaskService {
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 if (requestVo.getMchId() != null) {
-                    predicate.add(cb.equal(root.get("merchant").get("id"), requestVo.getMchId()));
+                    requestVo.getMchIds().add(requestVo.getMchId());
+                }
+                if (CollectionUtils.isNotEmpty(requestVo.getMchIds())) {
+                    predicate.add(root.get("merchant").get("id").in(requestVo.getMchIds()));
                 }
                 if (requestVo.getStatus() == null) {
                     if (requestVo.getAudit()) {//审核列表
@@ -89,6 +92,11 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                     Pair<Date, Date> dayStartEndTime = DateUtils.getDayStartEndTime(requestVo.getAuditDt());
                     predicate.add(cb.greaterThanOrEqualTo(root.get("auditDt").as(Date.class), dayStartEndTime.getLeft()));
                     predicate.add(cb.lessThanOrEqualTo(root.get("auditDt").as(Date.class), dayStartEndTime.getRight()));
+                }
+                if (requestVo.getDistrDt() != null) {
+                    Pair<Date, Date> dayStartEndTime = DateUtils.getDayStartEndTime(requestVo.getDistrDt());
+                    predicate.add(cb.greaterThanOrEqualTo(root.get("distrDt").as(Date.class), dayStartEndTime.getLeft()));
+                    predicate.add(cb.lessThanOrEqualTo(root.get("distrDt").as(Date.class), dayStartEndTime.getRight()));
                 }
                 predicate.add(cb.equal(root.get("delFlag").as(Boolean.class), false));
                 Predicate[] arrays = new Predicate[predicate.size()];

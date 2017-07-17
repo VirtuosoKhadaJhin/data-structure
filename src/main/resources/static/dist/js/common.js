@@ -19,7 +19,10 @@ window.onload = function () {
         timepicker: false,
         yearStart: 2000,
         yearEnd: 2050,
-        todayButton: true
+        todayButton: true,
+        scrollMonth: false,
+        scrollTime: false,
+        scrollInput: false,
     });
     $('.timeFormat').datetimepicker({
         format: "H:i:s",
@@ -211,4 +214,8 @@ window.onload = function () {
         return fmt;
     }
 
+    String.prototype.replaceAll = function (FindText, RepText) {
+        regExp = new RegExp(FindText, "g");
+        return this.replace(regExp, RepText);
+    }
 }

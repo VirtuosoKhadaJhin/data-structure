@@ -246,6 +246,14 @@ public class BdUserServiceImpl implements BdUserService {
     }
 
     @Override
+    public Boolean checkDmailUnique(Long id, String dmail) {
+        if (id == null) {
+            return bdUserDao.checkDmailRepeat(dmail).size() > 0;
+        }
+        return bdUserDao.findByDmailNonBdUser(id, dmail).size() > 0;
+    }
+
+    @Override
     public void updateUserRole(BdRelUserRole userRole) {
         List<BdRelUserRole> userRoles = bdRelUserRoleDao.findAll();
         for (BdRelUserRole relUserRole : userRoles) {

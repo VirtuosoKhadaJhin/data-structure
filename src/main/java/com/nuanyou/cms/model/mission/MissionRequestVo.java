@@ -1,11 +1,15 @@
 package com.nuanyou.cms.model.mission;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.common.collect.Lists;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Byron on 2017/6/27.
@@ -42,9 +46,16 @@ public class MissionRequestVo {
 
     private Boolean isAudit = true;
 
+    private List<Long> mchIds = Lists.newArrayList();
+
     private int index = 1;
 
     private int pageSize = 20;
+
+    //UI使用
+    private List<Long> taskIds = Lists.newArrayList();
+
+    private String originalMchIds;
 
     public Long getMchId() {
         return mchId;
@@ -158,6 +169,37 @@ public class MissionRequestVo {
         this.groupId = groupId;
     }
 
+    public List<Long> getTaskIds() {
+        return taskIds;
+    }
+
+    public void setTaskIds(List<Long> taskIds) {
+        this.taskIds = taskIds;
+    }
+
+    public List<Long> getMchIds() {
+        return mchIds;
+    }
+
+    public void setMchIds(List<Long> mchIds) {
+        this.mchIds = mchIds;
+    }
+
+    public String getOriginalMchIds() {
+        return originalMchIds;
+    }
+
+    public void setOriginalMchIds(String originalMchIds) {
+        this.originalMchIds = originalMchIds;
+    }
+
+    public String getDistrDtStr() {
+        if (distrDt == null) {
+            return null;
+        }
+        return new SimpleDateFormat("yyyy-MM-dd").format(distrDt);
+    }
+
     public String getFinishDtStr() {
         if (finishDt == null) {
             return null;
@@ -165,10 +207,17 @@ public class MissionRequestVo {
         return new SimpleDateFormat("yyyy-MM-dd").format(finishDt);
     }
 
-    public String getAuditDtStr(){
+    public String getAuditDtStr() {
         if (auditDt == null) {
             return null;
         }
         return new SimpleDateFormat("yyyy-MM-dd").format(auditDt);
+    }
+
+    public String getCheckedTaskStr() {
+        if (CollectionUtils.isEmpty(taskIds)) {
+            return "";
+        }
+        return StringUtils.join(taskIds, ",");
     }
 }

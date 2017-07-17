@@ -112,6 +112,7 @@ public class MissionTaskController {
     @RequestMapping("distribute")
     public String distributeTask(MissionRequestVo requestVo, Model model) {
         requestVo.setAudit(false);
+        requestVo.setPageSize(50);
         String email = UserHolder.getUser().getEmail();
         BdUser bdUser = bdUserService.findBdUserByDemail(email);
         if (bdUser == null) {
@@ -120,6 +121,9 @@ public class MissionTaskController {
         MissionGroup missionGroup = missionGroupService.findGroupByUserId(bdUser.getId());
         if (missionGroup == null) {
             throw new APIException(ResultCodes.NotFoundGroup, ResultCodes.NotFoundGroup.message);
+        }
+        if (!missionGroup.getLeader().getId().equals(bdUser.getId()) && !missionGroup.getViceLeader().getId().equals(bdUser.getId())) {
+            throw new APIException(ResultCodes.CurrentUserNotLeader, ResultCodes.CurrentUserNotLeader.message);
         }
         List<Merchant> merchants = merchantService.findMerchantByCountry(missionGroup.getCountry() == null ? null : missionGroup.getCountry().getId());
         List<BdUser> bdUsers = missionGroupService.findBdUsersByGroupId(missionGroup.getId());

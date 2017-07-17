@@ -6,6 +6,15 @@
     <title>暖游 后台管理系统 $!{group.name}-战队成员列表</title>
     #include("common/css-support.vm")
     #include("common/js-support.vm")
+    <style>
+        .span10 {
+            width: 100%;
+        }
+
+        .td-label {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <div id="content" class="content-container">
@@ -24,43 +33,19 @@
                             <span class="icon"><i class="icon-th"></i></span>
                             <h5>$!{group.name}-战队成员列表</h5>
                         </div>
-                        <style>
-                            .span10 {
-                                width: 100%;
-                            }
-
-                            .tdInput {
-                                width: 75%;
-                            }
-
-                            .text-gray {
-                                background-color: grey;
-                            }
-
-                            #select2-categoryId-xe-container {
-                                min-width: 180px;
-                            }
-
-                            .td-update-time {
-                                min-width: 120px;
-                            }
-
-                            .td-sort {
-                                min-width: 60px;
-                            }
-                        </style>
                         <div style="width: 100%">
                             <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
                                 <thead role="row">
                                 <tr>
-                                    <th>序号</th>
-                                    <th>用户名</th>
-                                    <th>中文名</th>
-                                    <th>所属国家</th>
-                                    <th>合同归档邮箱</th>
-                                    <th>钉钉邮箱</th>
-                                    <th>创建时间</th>
-                                    <th>更新时间</th>
+                                    <th class="th-sort">序号</th>
+                                    <th class="th-name">用户名</th>
+                                    <th class="th-chineseName">中文名</th>
+                                    <th class="th-level">级别</th>
+                                    <th class="th-country-name">所属国家</th>
+                                    <th class="th-email">合同归档邮箱</th>
+                                    <th class="th-dmail">钉钉邮箱</th>
+                                    <th class="th-create-time">创建时间</th>
+                                    <th class="th-update-time">更新时间</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -78,31 +63,39 @@
                                     #foreach($vo in $!list)
                                     <tr class="odd gradeX">
                                         <td class="td-sort">
-                                            <label style="text-align: center;">$!velocityCount</label>
+                                            <label class="td-label">$!velocityCount</label>
                                         </td>
-                                        <td class="td-sort">
-                                            <label style="text-align: center;">$!vo.name</label>
+                                        <td class="td-name">
+                                            <label class="td-label">$!vo.name</label>
                                         </td>
-                                        <td class="td-sort">
-                                            <label style="text-align: center;">$!vo.chineseName</label>
+                                        <td class="td-chineseName">
+                                            <label class="td-label">$!vo.chineseName</label>
                                         </td>
-                                        <td class="td-sort">
-                                            <label style="text-align: center;">$!group.country.name</label>
+                                        <td class="td-level">
+                                            #if($!group.leader.id == $!vo.id)
+                                                <label class="td-label group-leader" style="color: red">队长</label>
+                                            #elseif($!group.viceLeader.id == $!vo.id)
+                                                <label class="td-label group-viceleader" style="color: red">副队长</label>
+                                            #else
+                                                <label class="td-label">队员</label>
+                                            #end
                                         </td>
-                                        <td class="td-sort">
-                                            <label style="text-align: center;">$!vo.email</label>
+                                        <td class="td-country-name">
+                                            <label class="td-label">$!group.country.name</label>
                                         </td>
-                                        <td class="td-sort">
-                                            <label style="text-align: center;">$!vo.dmail</label>
+                                        <td class="td-email">
+                                            <label class="td-label">$!vo.email</label>
                                         </td>
-                                        <td class="td-sort">
-                                            <label style="text-align: center;">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createTime)</label>
+                                        <td class="td-dmail">
+                                            <label class="td-label">$!vo.dmail</label>
                                         </td>
-                                        <td class="td-sort">
-                                            <label style="text-align: center;">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateTime)</label>
+                                        <td class="td-create-time">
+                                            <label class="td-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createTime)</label>
+                                        </td>
+                                        <td class="td-update-time">
+                                            <label class="td-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateTime)</label>
                                         </td>
                                     </tr>
-                                        #set($sort = $sort + 1)
                                     #end
                                 </tbody>
                             </table>
