@@ -45,7 +45,6 @@ public class MerchantVO {
 
     private List<SupportType> supportType;
     private String tips;
-    private Boolean issign;
     private Boolean ispush;
     private Date firstshowTime;
     private Double score;
@@ -328,16 +327,6 @@ public class MerchantVO {
     public void setTips(String tips) {
         this.tips = tips;
     }
-
-
-    public Boolean getIssign() {
-        return issign;
-    }
-
-    public void setIssign(Boolean issign) {
-        this.issign = issign;
-    }
-
 
     public Boolean getIspush() {
         return ispush;
