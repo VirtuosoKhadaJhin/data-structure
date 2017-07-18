@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -360,27 +361,31 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public Page<Merchant> findMerchantByCountryFilter(final Long country, final String mchName, final Long mchId, Pageable pageable) {
-        Specification specification = new Specification() {
-            @Override
-            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                // TODO: 2017/7/14 jpa 无效
-                query.multiselect(root.get("id").alias("id"),root.get("name").alias("name"));
-                List<Predicate> predicate = new ArrayList<Predicate>();
-                if (country != null) {
-                    predicate.add(cb.equal(root.get("district").get("country").get("id"), country));
-                }
-                if (mchName != null) {
-                    predicate.add(cb.like(root.get("name"), "%"+mchName+"%"));
-                }
-                if (mchId != null) {
-                    predicate.add(cb.equal(root.get("id"), mchId));
-                }
-                predicate.add(cb.equal(root.get("display"), true));
-                Predicate[] arrays = new Predicate[predicate.size()];
+//        Specification specification = new Specification() {
+//            @Override
+//            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+//                // TODO: 2017/7/14 jpa 无效
+//                query.multiselect(root.get("id").alias("id"),root.get("name").alias("name"));
+//                List<Predicate> predicate = new ArrayList<Predicate>();
+//                if (country != null) {
+//                    predicate.add(cb.equal(root.get("district").get("country").get("id"), country));
+//                }
+//                if (mchName != null) {
+//                    predicate.add(cb.like(root.get("name"), "%"+mchName+"%"));
+//                }
+//                if (mchId != null) {
+//                    predicate.add(cb.equal(root.get("id"), mchId));
+//                }
+//                predicate.add(cb.equal(root.get("display"), true));
+//                Predicate[] arrays = new Predicate[predicate.size()];
+//
+//                return query.where(predicate.toArray(arrays)).getRestriction();
+//            }
+//        };
+//
+//        return merchantDao.findAll(specification,pageable);
 
-                return query.where(predicate.toArray(arrays)).getRestriction();
-            }
-        };
-        return merchantDao.findAll(specification,pageable);
+        List<Merchant> list = merchantDao.findIdNameByCountry(country);
+        return new PageImpl<Merchant>(list);
     }
 }

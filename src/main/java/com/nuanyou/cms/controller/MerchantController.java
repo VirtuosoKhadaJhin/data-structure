@@ -376,7 +376,7 @@ public class MerchantController {
     public APIResult<Merchant> getMerchantsByCountry(@PathVariable Long countryId,
                                                      @RequestParam(required = false) Long mchId,
                                                      @RequestParam(required = false) String mchName) {
-        Pageable pageable = new PageRequest(0,3000, Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(0,10000, Sort.Direction.DESC, "id");
         Page<Merchant> merchants = merchantService.findMerchantByCountryFilter(countryId,mchName,mchId,pageable);
         return new APIResult(merchants);
     }
