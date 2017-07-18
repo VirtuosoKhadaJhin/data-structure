@@ -78,9 +78,7 @@
                                 <label class="control-label">合作状态</label>
                                 <div class="controls">
                                     <select name="cooperationStatus" class="span10">
-                                        #if (!$!entity.id)
                                         <option value="0" #if(0 == $!entity.cooperationStatus) selected #end>未签约</option>
-                                        #end
                                         <option value="1" #if(1 == $!entity.cooperationStatus) selected #end>竞对共有</option>
                                         <option value="2" #if(2 == $!entity.cooperationStatus) selected #end>独家经营</option>
                                         <option value="3" #if(3 == $!entity.cooperationStatus) selected #end>取消合作</option>

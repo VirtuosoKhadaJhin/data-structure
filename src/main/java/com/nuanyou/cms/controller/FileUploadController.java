@@ -49,10 +49,15 @@ public class FileUploadController {
             is = file.getInputStream();
         }
 
-
-        String callBackImgUrl = fileClient.uploadFile(is, fileType);
+        String callBackImgUrl = "";
+        try {
+            callBackImgUrl  = fileClient.uploadFile(is, fileType);
+            response.getWriter().println("<script>parent.callbackImg('" + callbackId + "', '" + callBackImgUrl + "')</script>");
+        } catch (Exception e) {
+            response.getWriter().println("<script>parent.callbackImg('" + callbackId + "', '" + callBackImgUrl + "')</script>");
+        }
 //        String callBackImgUrl = writeDisk(is, imageSpec);
-        response.getWriter().println("<script>parent.callbackImg('" + callbackId + "', '" + callBackImgUrl + "')</script>");
+
     }
 
 
