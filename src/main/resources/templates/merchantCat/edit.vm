@@ -221,7 +221,7 @@
         return str.length + (cArr == null ? 0 : cArr.length);
     }
     function checkName() {
-        var shortNameText = $(this).val();
+        var shortNameText = $(".short-name").val();
         var shortNameKeyCode = "(" + $(".short-name-keycode").val() + ")";
         var shortNameLength = shortNameText.replace(shortNameKeyCode, "");
         if (getStrLength(shortNameLength) > 4) {

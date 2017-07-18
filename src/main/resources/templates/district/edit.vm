@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>暖游 后台管理系统 菜单管理</title>
     #include("common/css-support.vm")
+    <style>
+        .input-waring-tip {
+            line-height: 0px;
+            float: left;
+            margin-left: 200px;
+            cursor: pointer;
+            display: none;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 <div id="content">
@@ -40,9 +50,10 @@
                                 </div>
                                 <label class="control-label">简称</label>
                                 <div class="controls">
-                                    <input for="shortname" name="shortname" type="text" class="span7" placeholder="简称"
+                                    <input for="shortname" name="shortname" type="text" class="span7 short-name" placeholder="简称"
                                            value="$!entity.shortname">
                                 </div>
+                                <font color="red" class="short-name-tip input-waring-tip">*简称长度小于等于4个字符</font>
                                 <label class="control-label">本地名称</label>
                                 <div class="controls">
                                     <input name="kpname" for="kpname" type="text" class="span7 langsAutoComplete" value="$!entity.kpname"
@@ -95,7 +106,7 @@
                             </div>
                             <div class="form-actions">
                                 #if($!type==2 || $!type==1)
-                                    <button type="submit" class="btn btn-success">保存</button>
+                                    <button type="submit" class="btn btn-success" onclick="return checkShortName()">保存</button>
                                 #elseif($!type==3)
                                     <a href="edit?type=2&id=$!entity.id" class="btn btn-info">编辑</a>
                                 #end
@@ -111,9 +122,36 @@
 </body>
     #include("common/js-support.vm")
     #include("common/image-support.vm")
-<script src="/dist/js/cascade-select.js"/>
+<script src="/dist/js/cascade-select.js"></script>
 
-<script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".short-name").on("blur", function () {
+            var shortNameText = $(this).val();
+            var shortNameKeyCode = "(" + $(".short-name-keycode").val() + ")";
+            var shortNameLength = shortNameText.replace(shortNameKeyCode, "");
+            if (getStrLength(shortNameLength) > 4) {
+                $(".short-name-tip").show();
+                return false;
+            }
+            $(".short-name-tip").hide();
+            return true;
+        });
+    });
+    function checkShortName() {
+        var shortNameText = $(".short-name").val();
+        var shortNameKeyCode = "(" + $(".short-name-keycode").val() + ")";
+        var shortNameLength = shortNameText.replace(shortNameKeyCode, "");
+        if (getStrLength(shortNameLength) > 4) {
+            $(".short-name-tip").show();
+            return false;
+        }
+    }
+    // 获取字符长度,区分全角半角
+    function getStrLength(str) {
+        var cArr = str.match(/[^\x00-\xff]/ig);
+        return str.length + (cArr == null ? 0 : cArr.length);
+    }
     var type = $!type;
     //禁用所有表单
     if (type == 3) {
