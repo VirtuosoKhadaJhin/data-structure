@@ -348,6 +348,10 @@ public class MerchantController {
         if (mchId == null) {
             throw new APIException(ResultCodes.MissingParameter);
         }
+        List<EntityBdMerchantCollectionCode>  codeList = collectionCodeService.findEntityBdMerchantCollectionCodesByMchId(mchId);
+        if ( codeList != null && codeList.size() >= 3) {
+            throw new APIException(ResultCodes.CollectionCodeGreaterThan3);
+        }
         EntityBdMerchantCollectionCode collectionCode = collectionCodeService.findCollectionCode(number);
         if (collectionCode == null) {
             throw new APIException(ResultCodes.CollectionCodeError);
