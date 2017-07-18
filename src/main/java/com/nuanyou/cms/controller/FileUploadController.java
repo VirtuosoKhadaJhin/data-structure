@@ -54,7 +54,7 @@ public class FileUploadController {
             callBackImgUrl  = fileClient.uploadFile(is, fileType);
             response.getWriter().println("<script>parent.callbackImg('" + callbackId + "', '" + callBackImgUrl + "')</script>");
         } catch (Exception e) {
-            response.getWriter().println("<script>parent.callbackImg('" + callbackId + "', '" + callBackImgUrl + "')</script>");
+            response.getWriter().println("<script>parent.callbackImg('" + e.getMessage() + "', '" + callBackImgUrl + "')</script>");
         }
 //        String callBackImgUrl = writeDisk(is, imageSpec);
 
