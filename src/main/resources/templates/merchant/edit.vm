@@ -14,7 +14,7 @@
         <div id="breadcrumb">
             <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
             <a href="list" class="tip-bottom" data-original-title="">商户管理</a>
-            <a href="#" class="tip-bottom" data-original-title="">编辑</a>
+            <a href="#" class="tip-bottom" data-original-title="">#if (!$!entity.id)新增#else编辑#end</a>
         </div>
     </div>
     <div class="container-fluid">
@@ -22,7 +22,7 @@
             <div class="span10">
                 <div class="widget-box">
                     <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
-                        <h5>商户编辑</h5>
+                        <h5>#if (!$!entity.id)商户新增#else商户编辑#end</h5>
                     </div>
                     <div class="widget-content nopadding">
                         <form class="form-horizontal merchantValidate" action="update" method="post" id="commonForm">
