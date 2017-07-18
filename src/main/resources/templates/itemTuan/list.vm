@@ -6,7 +6,9 @@
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>商品列表</h5>
-    <a class="btn btn-mini btn-info buttons" href="add">新增</a>
+    <a class="btn btn-mini btn-info buttons" href="add">
+        <i class="icon-plus"> 新增</i>
+    </a>
 </div>
 <table class="table table-bordered table-striped">
     <thead>
@@ -17,7 +19,7 @@
         <th>商品名称</th>
         <th>是否推荐</th>
         <th>是否上架</th>
-        <th width="90px">操作</th>
+        <th width="120px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -30,15 +32,19 @@
             <td>#if($!item.isHot)推荐#else 普通#end</td>
             <td>#if($!item.display)上架#else 下架#end</td>
             <td>
-                <a class="btn btn-success btn-mini" data-id="$!item.id" href="detail?id=$!item.id">查看</a>
-                <a class="btn btn-info btn-mini" data-id="$!item.id" href="edit?id=$!item.id">编辑</a>
+                <a class="btn btn-success btn-mini" data-id="$!item.id" href="detail?id=$!item.id">
+                    <i class="icon-eye-open"> 查看</i>
+                </a>
+                <a class="btn btn-info btn-mini" data-id="$!item.id" href="edit?id=$!item.id">
+                    <i class="icon-edit"> 编辑</i>
+                </a>
             </td>
         </tr>
         #end
     </tbody>
 </table>
 #parse("common/list_mid.vm")
-<form method="get">
+<form class="search-form" method="get">
     <div class="control-group">
         <label>商户</label>
         <select class="span11 select2" name="merchant.id">
@@ -61,8 +67,21 @@
         <label>商品名称</label>
         <input type="text" class="span11" name="name" value="$!entity.name"/>
 
-        <button type="submit" class="btn btn-primary">查询</button>
+        <button type="submit" class="btn btn-primary">
+            <i class="icon-search"> 查询</i>
+        </button>
+        <button class="btn btn-warning search-reset" style="margin-left: 3px;">
+            <i class="icon-refresh"> 重置</i>
+        </button>
+
     </div>
 </form>
 #parse("common/list_end.vm")
 #include("common/js-support.vm")
+<script type="text/javascript">
+    // 搜索框重置
+    $(".search-reset").click(function () {
+        $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
+        $(".search-form").find(".select2").val('').trigger('change');
+    });
+</script>
