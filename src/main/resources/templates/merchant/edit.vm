@@ -14,7 +14,7 @@
         <div id="breadcrumb">
             <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
             <a href="list" class="tip-bottom" data-original-title="">商户管理</a>
-            <a href="#" class="tip-bottom" data-original-title="">编辑</a>
+            <a href="#" class="tip-bottom" data-original-title="">#if (!$!entity.id)新增#else编辑#end</a>
         </div>
     </div>
     <div class="container-fluid">
@@ -22,7 +22,7 @@
             <div class="span10">
                 <div class="widget-box">
                     <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
-                        <h5>商户编辑</h5>
+                        <h5>#if (!$!entity.id)商户新增#else商户编辑#end</h5>
                     </div>
                     <div class="widget-content nopadding">
                         <form class="form-horizontal merchantValidate" action="update" method="post" id="commonForm">
@@ -88,13 +88,47 @@
                                         <option value="5" #if(5 == $!entity.cooperationStatus) selected #end>迁址</option>
                                     </select>
                                 </div>
+
+                                <label class="control-label">是否绑定收款码</label>
+                                <div class="controls">
+                                    <input type="radio" name="bindcode" value="true" />是
+                                    <input type="radio" name="bindcode" value="false" checked/>否
+                                </div>
+                                <label id = 'ccl' class="control-label hide">收款码</label>
+                                #if (!$!entity.id)
+                                    <div id = 'cc' class="controls hide">
+                                        <input style="margin-bottom:10px" type="text" class="span8" placeholder="" name="collectionCodeList" value="">
+                                        <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-plus"></i> </a>
+                                    </div>
+                                #else
+                                    <div id = 'cc' class="controls hide">
+                                        #if ($!entity.collectionCodeList && $!entity.collectionCodeList.size()>0)
+
+                                            #foreach($e in $!entity.collectionCodeList)
+                                                #if($velocityCount == 1)
+                                                    <input style="margin-bottom:10px"  type="text" class="span8" placeholder="" name="collectionCodeList" value="$e">
+                                                    <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-plus"></i> </a>
+                                                #else
+                                                    <input style="margin-bottom:10px"  type="text" class="span8" placeholder="" name="collectionCodeList" value="$e">
+                                                    <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-minus"></i> </a>
+                                                #end
+
+                                            #end
+                                        #else
+                                            <input style="margin-bottom:10px"  type="text" class="span8" placeholder="" name="collectionCodeList" value="">
+                                            <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-plus"></i> </a>
+                                        #end
+
+                                    </div>
+                                #end
+
                                 <label class="control-label">是否推荐</label>
                                 <div class="controls">
                                     <input type="checkbox" name="recommend" value="true" #if($!entity.recommend)checked#end/> 是
                                 </div>
                                 <label class="control-label">商户评分</label>
                                 <div class="controls">
-                                    <input type="text" class="span10" placeholder="商户评分" name="score" value="$!entity.score">
+                                    <input type="number" class="span10" placeholder="商户评分" name="score" value="$!entity.score">
                                 </div>
 
 
@@ -216,40 +250,6 @@
                                     #end
                                 </div>
 
-                                <label class="control-label">是否绑定收款码</label>
-                                <div class="controls">
-                                    <input type="radio" name="bindcode" value="true" />是
-                                    <input type="radio" name="bindcode" value="false" checked/>否
-                                </div>
-                                <label id = 'ccl' class="control-label hide">收款码</label>
-                                #if (!$!entity.id)
-                                <div id = 'cc' class="controls hide">
-                                    <input style="margin-bottom:10px" type="text" class="span8" placeholder="" name="collectionCodeList" value="">
-                                    <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-plus"></i> </a>
-                                </div>
-                                    #else
-                                    <div id = 'cc' class="controls hide">
-                                        #if ($!entity.collectionCodeList && $!entity.collectionCodeList.size()>0)
-
-                                        #foreach($e in $!entity.collectionCodeList)
-                                            #if($velocityCount == 1)
-                                                <input style="margin-bottom:10px"  type="text" class="span8" placeholder="" name="collectionCodeList" value="$e">
-                                                <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-plus"></i> </a>
-                                            #else
-                                                <input style="margin-bottom:10px"  type="text" class="span8" placeholder="" name="collectionCodeList" value="$e">
-                                                <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-minus"></i> </a>
-                                            #end
-
-                                        #end
-                                        #else
-                                            <input style="margin-bottom:10px"  type="text" class="span8" placeholder="" name="collectionCodeList" value="">
-                                            <a class="btn btn-info btn-mini addLang" langskeyname="name" langsvaluename="nameLabel"> <i class="icon-plus"></i> </a>
-                                        #end
-
-                                    </div>
-
-                                #end
-
                                 <label class="control-label">概述</label>
                                 <div class="controls">
                                     <input type="text" class="span10" placeholder="概述" name="outline" value="$!entity.outline">
@@ -323,9 +323,9 @@
                 $("#cc").addClass('hide');
             }else if (status == 5){
                 $("input[name='bindcode']").prop("disabled", false);
-                $("input[name='bindcode']:last").prop("checked", true);
-                $("#ccl").addClass('hide');
-                $("#cc").addClass('hide');
+                $("input[name='bindcode']:first").prop("checked", true);
+                $("#ccl").removeClass('hide');
+                $("#cc").removeClass('hide');
             }
         };
 
