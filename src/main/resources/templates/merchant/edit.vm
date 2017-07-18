@@ -128,7 +128,7 @@
                                 </div>
                                 <label class="control-label">商户评分</label>
                                 <div class="controls">
-                                    <input type="text" class="span10" placeholder="商户评分" name="score" value="$!entity.score">
+                                    <input type="number" class="span10" placeholder="商户评分" name="score" value="$!entity.score">
                                 </div>
 
 
