@@ -36,7 +36,7 @@ $(function () {
                 if (result.code == 0) {
                     var merchants = result.data;
                     $.each(merchants.content, function (mchKey, mchVal) {
-                        $(".bind-merchant-modal .bind-merchant-name select").append("<option value='" + mchVal.id + "'>" + mchVal.name + "</option>");
+                        $(".bind-merchant-modal .bind-merchant-name select").append("<option value='" + mchVal.id + "'>" + mchVal.id + "：" + mchVal.name + "</option>");
                     });
                 } else {
                     showBindResultModal("查询商户信息失败!" + result.msg);
