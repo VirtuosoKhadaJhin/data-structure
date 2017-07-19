@@ -69,7 +69,7 @@
                                                 #foreach($imgUrl in $!entity.imgUrls)
                                                     <div class="hovereffect">
                                                         <a target="_blank" href="$!imgUrl">
-                                                            <img class="img-polaroid td-img" src="$!imgUrl">
+                                                            <img class="img-polaroid td-img" src="$!imgUrl" onerror="javascript:this.src='/dist/img/logo.png';">
                                                         </a>
                                                     </div>
                                                 #end
