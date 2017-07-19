@@ -63,3 +63,7 @@
     opacity: 1;
     filter: alpha(opacity=100);
 }
+
+.no-img-result{
+    margin-left: 1%;
+}

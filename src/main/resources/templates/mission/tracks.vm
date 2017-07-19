@@ -38,7 +38,7 @@
                                     <td colspan="1" style="text-align:center;">
                                         <div class="no-result-div"
                                              style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
-                                            <p>没有符合条件的签到图历史信息！</p>
+                                            <b>没有符合条件的签到图历史信息！</b>
                                         </div>
                                     </td>
                                 </tr>
@@ -46,10 +46,10 @@
                                 #foreach($entity in $!page.content)
                                 <tr class="tracks-tr">
                                     <td class="tracks-td">
-                                        <label class="tracks-label" style="margin-bottom: 7px;">上传时间：$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.createTime)</label>
-                                        <label class="tracks-label" style="margin-bottom: 7px;">上传人：$!entity.username</label>
+                                        <label class="tracks-label" style="margin-bottom: 7px;"><b>上传时间：</b> $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.createTime)</label>
+                                        <label class="tracks-label" style="margin-bottom: 7px;"><b>上传人：</b> $!entity.username</label>
                                         #if($!entity.imgUrls.size()==0 || "$!entity.imgUrls"=="")
-                                            <label class="no-img-result">暂无签到图片</label>
+                                            <label class="no-img-result"><p>暂无签到图片</p></label>
                                         #else
                                             <div class="imgurl-info">
                                                 #foreach($imgUrl in $!entity.imgUrls)
