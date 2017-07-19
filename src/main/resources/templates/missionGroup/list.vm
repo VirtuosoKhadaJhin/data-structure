@@ -105,15 +105,17 @@
                                         </td>
                                         <td style="min-width: 120px;">
                                             <div style="text-align: center">
-                                                <a class="btn btn-primary btn-mini modify-item" href="edit?id=$!vo.id">
-                                                    <i class="icon-edit"> 编辑</i>
-                                                </a>
-                                                <button class="btn btn-success btn-mini modify-item btn-add-group-user">
-                                                    <i class="icon-user"> 添加队员</i>
-                                                </button>
-                                                <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn">
-                                                    <i class="icon-ban-circle"> 删除</i>
-                                                </button>
+                                                <nobr>
+                                                    <a class="btn btn-primary btn-mini modify-item" href="edit?id=$!vo.id">
+                                                        <i class="icon-edit"> 编辑</i>
+                                                    </a>
+                                                    <button class="btn btn-success btn-mini modify-item btn-add-group-user">
+                                                        <i class="icon-user"> 添加队员</i>
+                                                    </button>
+                                                    <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn">
+                                                        <i class="icon-ban-circle"> 删除</i>
+                                                    </button>
+                                                </nobr>
                                             </div>
                                         </td>
 

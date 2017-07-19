@@ -85,12 +85,14 @@
                                     </td>
                                     <td class="td-op">
                                         <div class="td-div-op">
-                                            <a class="btn btn-primary btn-mini" href="edit?id=$!vo.id" title="编辑">
-                                                <i class="icon-edit"> 编辑</i>
-                                            </a>
-                                            <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn" title="删除">
-                                                <i class="icon-ban-circle"> 删除</i>
-                                            </button>
+                                            <nobr>
+                                                <a class="btn btn-primary btn-mini" href="edit?id=$!vo.id" title="编辑">
+                                                    <i class="icon-edit"> 编辑</i>
+                                                </a>
+                                                <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn" title="删除">
+                                                    <i class="icon-ban-circle"> 删除</i>
+                                                </button>
+                                            </nobr>
                                         </div>
                                     </td>
                                 </tr>
