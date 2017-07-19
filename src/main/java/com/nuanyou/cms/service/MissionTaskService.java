@@ -1,5 +1,6 @@
 package com.nuanyou.cms.service;
 
+import com.nuanyou.cms.model.mission.MissionBdMerchantTrack;
 import com.nuanyou.cms.model.mission.MissionDistributeParamVo;
 import com.nuanyou.cms.model.mission.MissionRequestVo;
 import com.nuanyou.cms.model.mission.MissionTaskVo;
@@ -31,5 +32,13 @@ public interface MissionTaskService {
      * @param vo
      */
     void distributeTask(MissionDistributeParamVo vo);
+
+    /**
+     * 签到图历史
+     *
+     * @param requestVo
+     * @return
+     */
+    Page<MissionBdMerchantTrack> findAllTrackByMchId(MissionBdMerchantTrack requestVo);
 
 }

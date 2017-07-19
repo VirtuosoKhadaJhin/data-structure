@@ -43,6 +43,9 @@ public class MissionTask {
     @Column(name = "version")
     private String version;
 
+    @Column(name = "mchversion")
+    private String mchVersion;
+
     @Column(name = "orderno")
     private String orderno;
 
@@ -134,6 +137,14 @@ public class MissionTask {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getMchVersion() {
+        return mchVersion;
+    }
+
+    public void setMchVersion(String mchVersion) {
+        this.mchVersion = mchVersion;
     }
 
     public String getOrderno() {

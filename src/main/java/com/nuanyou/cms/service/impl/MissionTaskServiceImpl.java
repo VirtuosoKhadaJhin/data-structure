@@ -3,13 +3,16 @@ package com.nuanyou.cms.service.impl;
 import com.google.common.collect.Lists;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
+import com.nuanyou.cms.dao.BdUserDao;
 import com.nuanyou.cms.dao.CmsUserDao;
 import com.nuanyou.cms.dao.MissionMerchatTrackDao;
 import com.nuanyou.cms.dao.MissionTaskDao;
+import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.CmsUser;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import com.nuanyou.cms.entity.mission.BdMerchantTrack;
 import com.nuanyou.cms.entity.mission.MissionTask;
+import com.nuanyou.cms.model.mission.MissionBdMerchantTrack;
 import com.nuanyou.cms.model.mission.MissionDistributeParamVo;
 import com.nuanyou.cms.model.mission.MissionRequestVo;
 import com.nuanyou.cms.model.mission.MissionTaskVo;
@@ -45,6 +48,9 @@ public class MissionTaskServiceImpl implements MissionTaskService {
 
     @Autowired
     private CmsUserDao userDao;
+
+    @Autowired
+    private BdUserDao bdUserDao;
 
     @Override
     public Page<MissionTaskVo> findAllMissionTask(final MissionRequestVo requestVo) {
@@ -128,6 +134,49 @@ public class MissionTaskServiceImpl implements MissionTaskService {
         missionTaskDao.distributeTask(vo.getBdId(), MissionTaskStatus.UN_FINISH.getKey(), vo.getDistrDt(), new Date(), vo.getTaskIds());
     }
 
+    @Override
+    public Page<MissionBdMerchantTrack> findAllTrackByMchId(final MissionBdMerchantTrack requestVo) {
+        Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageSize());
+        if(requestVo.getMchId() == null){
+            return new PageImpl(Lists.newArrayList(), pageable, 0);
+        }
+        Specification spec = new Specification() {
+
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (requestVo.getMchId() != null) {
+                    predicate.add(cb.equal(root.get("mchId"), requestVo.getMchId()));
+                }
+                Predicate[] arrays = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(arrays)).getRestriction();
+            }
+        };
+        Page<BdMerchantTrack> bdMerchantTracks = trackDao.findAll(spec, pageable);
+        List<BdMerchantTrack> content = bdMerchantTracks.getContent();
+        List<MissionBdMerchantTrack> tracks = this.convertToMissionTracks(content);
+        final Collection<Long> userIds = CollectionUtils.collect(content, new Transformer() {
+            @Override
+            public Long transform(Object input) {
+                return ((BdMerchantTrack) input).getUserId();
+            }
+        });
+
+        if(CollectionUtils.isNotEmpty(userIds)){
+            List<BdUser> trackUsers = bdUserDao.findByIds(userIds);
+            for(BdUser bdUser : trackUsers){
+                for(MissionBdMerchantTrack track : tracks){
+                    if(track.getUserId().equals(bdUser.getId())){
+                        track.setUsername(bdUser.getChineseName());
+                    }
+                }
+            }
+        }
+
+        Page<MissionBdMerchantTrack> merchantTracks = new PageImpl(tracks, pageable, bdMerchantTracks.getTotalElements());
+        return merchantTracks;
+    }
+
     /**
      * 设置merchant track
      *
@@ -192,4 +241,18 @@ public class MissionTaskServiceImpl implements MissionTaskService {
         }
         return taskVos;
     }
+
+    public List<MissionBdMerchantTrack> convertToMissionTracks(List<BdMerchantTrack> bdMerchantTracks){
+        if (CollectionUtils.isEmpty(bdMerchantTracks)) {
+            return Lists.newArrayList();
+        }
+        List<MissionBdMerchantTrack> tracks = Lists.newArrayList();
+        for (BdMerchantTrack track : bdMerchantTracks) {
+            MissionBdMerchantTrack vo = BeanUtils.copyBeanNotNull(track, new MissionBdMerchantTrack());
+            tracks.add(vo);
+        }
+        return tracks;
+
+    }
+
 }

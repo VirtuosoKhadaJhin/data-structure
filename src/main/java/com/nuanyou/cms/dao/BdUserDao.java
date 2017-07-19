@@ -38,6 +38,9 @@ public interface BdUserDao extends JpaRepository<BdUser, Long>, JpaSpecification
     @Query(value = "select t from BdUser t where t.dmail=?2 and t.id != ?1 and t.deleted = 0")
     List<BdUser> findByDmailNonBdUser(Long id, String dmail);
 
+    @Query(value = "SELECT new BdUser(t.id, t.chineseName) from BdUser t where t.deleted=0 and t.id in ?1 ")
+    List<BdUser> findByIds(Collection<Long> ids);
+
     @Modifying
     @Transactional
     @Query("UPDATE BdUser set deleted=1 where id=?1")
