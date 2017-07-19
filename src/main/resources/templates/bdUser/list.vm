@@ -15,6 +15,7 @@
             <div class="span10">
                 <div class="widget-box">
                     <div class="widget-content nopadding">
+
                         <div id="breadcrumb">
                             <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
                                 主页</a>
@@ -28,76 +29,74 @@
                                 <i class="icon-plus"> 新增</i>
                             </a>
                         </div>
-                        <div>
-                            <table class="table table-bordered data-table dataTable">
-                                <thead role="row">
+                        <table class="table table-bordered data-table dataTable">
+                            <thead class="thead-class">
+                            <tr class="thread-tr">
+                                <th class="th-serial">序号</th>
+                                <th class="th-name">用户名</th>
+                                <th class="th-chineseName">中文名</th>
+                                <th class="th-country">所属国家</th>
+                                <th class="th-email">合同归档邮箱</th>
+                                <th class="th-dmail">钉钉邮箱</th>
+                                <th class="th-role">角色</th>
+                                <th class="th-createTime">创建时间</th>
+                                <th class="th-updateTime" nowrap="nowrap">更新时间</th>
+                                <th class="th-op" nowrap="nowrap">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody class="tbody-list">
+                                #if ($null.isNull($page.content) || $page.content.size()==0)
                                 <tr>
-                                    <th class="th-serial" nowrap="nowrap">序号</th>
-                                    <th class="th-name" nowrap="nowrap">用户名</th>
-                                    <th class="th-chineseName" nowrap="nowrap">中文名</th>
-                                    <th class="th-country" nowrap="nowrap">所属国家</th>
-                                    <th class="th-email" nowrap="nowrap">合同归档邮箱</th>
-                                    <th class="th-dmail" nowrap="nowrap">钉钉邮箱</th>
-                                    <th class="th-role" nowrap="nowrap">角色</th>
-                                    <th class="th-createTime" nowrap="nowrap">创建时间</th>
-                                    <th class="th-updateTime" nowrap="nowrap">更新时间</th>
-                                    <th class="th-op" nowrap="nowrap">操作</th>
+                                    <td colspan="10">
+                                        <div class="no-result-div">
+                                            <p>暂无BD用户</p>
+                                        </div>
+                                    </td>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                    #if ($null.isNull($page.content) || $page.content.size()==0)
-                                    <tr>
-                                        <td colspan="10">
-                                            <div class="no-result-div">
-                                                <p>暂无BD用户</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    #end
-                                    #foreach($vo in $!page.content)
-                                    <tr class="odd gradeX">
-                                        <td class="td-id" title="$!{velocityCount}">
-                                            <label class="td-label">$!{velocityCount}</label>
-                                        </td>
-                                        <td class="td-name" title="$!vo.name">
-                                            <label class="td-label">$!vo.name</label>
-                                        </td>
-                                        <td class="td-chineseName" title="$!vo.chineseName">
-                                            <label class="td-label">$!vo.chineseName</label>
-                                        </td>
-                                        <td class="td-country-name" title="$!vo.country.name">
-                                            <label class="td-label">$!vo.country.name</label>
-                                        </td>
-                                        <td class="td-email" title="$!vo.email">
-                                            <label class="td-label">$!vo.email</label>
-                                        </td>
-                                        <td class="td-dmail" title="$!vo.dmail">
-                                            <label class="td-label">$!vo.dmail</label>
-                                        </td>
-                                        <td class="td-role-desc" title="$!vo.role.desc">
-                                            <label class="td-label">$!vo.role.desc</label>
-                                        </td>
-                                        <td class="td-createTime" title="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createTime)">
-                                            <label class="td-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createTime)</label>
-                                        </td>
-                                        <td class="td-sort" title="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateTime)">
-                                            <label class="td-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateTime)</label>
-                                        </td>
-                                        <td class="td-op">
-                                            <div class="td-div-op">
-                                                <a class="btn btn-primary btn-mini" href="edit?id=$!vo.id" title="编辑">
-                                                    <i class="icon-edit"> 编辑</i>
-                                                </a>
-                                                <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn" title="删除">
-                                                    <i class="icon-ban-circle"> 删除</i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    #end
-                                </tbody>
-                            </table>
-                        </div>
+                                #end
+                                #foreach($vo in $!page.content)
+                                <tr class="user-list">
+                                    <td class="td-id" title="$!{velocityCount}">
+                                        <label class="td-label">$!{velocityCount}</label>
+                                    </td>
+                                    <td class="td-name" title="$!vo.name">
+                                        <label class="td-label">$!vo.name</label>
+                                    </td>
+                                    <td class="td-chineseName" title="$!vo.chineseName">
+                                        <label class="td-label">$!vo.chineseName</label>
+                                    </td>
+                                    <td class="td-country-name" title="$!vo.country.name">
+                                        <label class="td-label">$!vo.country.name</label>
+                                    </td>
+                                    <td class="td-email" title="$!vo.email">
+                                        <label class="td-label">$!vo.email</label>
+                                    </td>
+                                    <td class="td-dmail" title="$!vo.dmail">
+                                        <label class="td-label">$!vo.dmail</label>
+                                    </td>
+                                    <td class="td-role-desc" title="$!vo.role.desc">
+                                        <label class="td-label">$!vo.role.desc</label>
+                                    </td>
+                                    <td class="td-createTime" title="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createTime)">
+                                        <label class="td-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.createTime)</label>
+                                    </td>
+                                    <td class="td-sort" title="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateTime)">
+                                        <label class="td-label">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!vo.updateTime)</label>
+                                    </td>
+                                    <td class="td-op">
+                                        <div class="td-div-op">
+                                            <a class="btn btn-primary btn-mini" href="edit?id=$!vo.id" title="编辑">
+                                                <i class="icon-edit"> 编辑</i>
+                                            </a>
+                                            <button del-id="$!vo.id" class="btn btn-danger btn-mini del-btn" title="删除">
+                                                <i class="icon-ban-circle"> 删除</i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 #set($i=$!page.number + 1)
@@ -149,50 +148,51 @@
             </div>
         </div>
     </div>
-</div>
-<!-- 删除确认弹窗 -->
-<div class="modal hide fade deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 id="myModalLabel">提示</h4>
+    <!-- 删除确认弹窗 -->
+    <div class="modal hide fade deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 id="myModalLabel">提示</h4>
+        </div>
+        <div class="modal-body">
+            <strong style="margin-left: 20px;font-size: 14px;" class="firstDelTip"></strong>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" class="hide-del-id"/>
+            <button class="btn btn-primary sure-del">确认</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
     </div>
-    <div class="modal-body">
-        <strong style="margin-left: 20px;font-size: 14px;" class="firstDelTip"></strong>
+    <!-- 删除确认二次确认弹窗 -->
+    <div class="modal hide fade secondDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 id="myModalLabel">提示</h4>
+        </div>
+        <div class="modal-body">
+            <strong style="margin-left: 20px;font-size: 14px;" class="secondDelTip"></strong>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary second-sure-del">确认</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
     </div>
-    <div class="modal-footer">
-        <input type="hidden" class="hide-del-id"/>
-        <button class="btn btn-primary sure-del">确认</button>
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-    </div>
-</div>
-<!-- 删除确认二次确认弹窗 -->
-<div class="modal hide fade secondDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 id="myModalLabel">提示</h4>
-    </div>
-    <div class="modal-body">
-        <strong style="margin-left: 20px;font-size: 14px;" class="secondDelTip"></strong>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary second-sure-del">确认</button>
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+
+    <!-- 删除结果 -->
+    <div class="modal hide fade deleteResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 id="myModalLabel">提示</h4>
+        </div>
+        <div class="modal-body">
+            <strong class="deleteResult" style="margin-left: 20px;font-size: 14px;"></strong>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
     </div>
 </div>
 
-<!-- 删除结果 -->
-<div class="modal hide fade deleteResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 id="myModalLabel">提示</h4>
-    </div>
-    <div class="modal-body">
-        <strong class="deleteResult" style="margin-left: 20px;font-size: 14px;"></strong>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-    </div>
-</div>
 <script src="/dist/js/page-support.js"></script>
 <script src="/dist/js/bd-user/bdUser.js"></script>
 </body>

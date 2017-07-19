@@ -146,3 +146,7 @@ table .tr-class:hover {
     right: 3px;
     bottom: 0;
 }
+
+.table th, .table td {
+    word-break: break-all;
+}
