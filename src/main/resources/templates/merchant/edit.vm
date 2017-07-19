@@ -181,7 +181,8 @@
                                 <div class="controls">
                                     <input type="text" class="span9" id="listImgUrl" placeholder="3.0列表图" name="listImgUrl" value="$!entity.listImgUrl">
                                     <button type="button" class="btn btn-success previewBtn" data-id="listImgUrl">预览</button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="listImgUrl" imageSpec="MerchantList">上传</button>
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="listImgUrl"
+                                            data-prex="jpg|png" data-size="50" imageSpec="MerchantList">上传</button>
                                     <p>尺寸: 320 * 240, 限制: 50k</p>
                                 </div>
 
