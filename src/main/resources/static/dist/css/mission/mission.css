@@ -53,8 +53,8 @@ table .tr-class:hover {
     word-break: break-all;
 }
 
-.td-imgurl{
-    position:relative;
+.td-imgurl {
+    position: relative;
 }
 
 .search-select {
@@ -85,13 +85,16 @@ table .tr-class:hover {
 }
 
 .hovereffect {
-    overflow: hidden;
     position: relative;
     text-align: center;
     cursor: pointer;
-    float: left;
     display: inline-block;
-    margin-left: 1%;
+    padding: 2px;
+}
+
+.imgurl-info {
+    width: 100%;
+    margin-bottom: 8px;
 }
 
 .hovereffect img {
