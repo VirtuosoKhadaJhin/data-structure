@@ -16,11 +16,11 @@
                 <div class="widget-box">
                     <div class="widget-content nopadding">
 
-                        <div id="breadcrumb"><a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
-                            商户模块</a>
-                            <a href="/mission_task/list" class="tip-bottom" data-original-title="">商户信息审核</a>
-                            <a href="javascript:;" class="tip-bottom" data-original-title="">签到图历史</a>
-                        </div>
+                        ##<div id="breadcrumb"><a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
+                        ##    商户模块</a>
+                        ##    <a href="/mission_task/list" class="tip-bottom" data-original-title="">商户信息审核</a>
+                        ##    <a href="javascript:;" class="tip-bottom" data-original-title="">签到图历史</a>
+                        ##</div>
                         <div class="widget-title">
                             <span class="icon"><i class="icon-th"></i></span>
                             <h5>签到图历史</h5>
@@ -46,8 +46,22 @@
                                 #foreach($entity in $!page.content)
                                 <tr class="tracks-tr">
                                     <td class="tracks-td">
-                                        <label class="tracks-label" style="margin-bottom: 7px;"><b>上传时间：</b> $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.createTime)</label>
-                                        <label class="tracks-label" style="margin-bottom: 7px;"><b>上传人：</b> $!entity.username</label>
+                                        <label class="tracks-label" style="margin-bottom: 7px;">
+                                            <b>上传时间：</b>
+                                            #if("$!entity.createTime" == "")
+                                                未知
+                                            #else
+                                                $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.createTime)
+                                            #end
+                                        </label>
+                                        <label class="tracks-label" style="margin-bottom: 7px;">
+                                            <b>上传人：</b>
+                                            #if("$!entity.username" == "")
+                                                未知
+                                            #else
+                                                $!entity.username
+                                            #end
+                                        </label>
                                         #if($!entity.imgUrls.size()==0 || "$!entity.imgUrls"=="")
                                             <label class="no-img-result"><p>暂无签到图片</p></label>
                                         #else

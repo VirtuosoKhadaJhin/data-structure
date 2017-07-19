@@ -30,7 +30,7 @@
                             <tr class="thread-tr">
                                 <th class="th-op" nowrap="nowrap">操作</th>
                                 <th class="th-op" nowrap="nowrap">商户名称</th>
-                                <th class="th-op" nowrap="nowrap">任务类型</th>
+                                #*<th class="th-op" nowrap="nowrap">任务类型</th>*#
                                 <th class="th-op" nowrap="nowrap">合作状态</th>
                                 <th class="th-op" nowrap="nowrap">城市</th>
                                 <th class="th-op" nowrap="nowrap">组名-BD名</th>
@@ -71,7 +71,7 @@
                                         <br/>
                                         <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a>
                                     </td>
-                                    <td class="task-type">任务类型</td>
+                                    #*<td class="task-type">拓新/维护</td>*#
                                     <td class="task-merchant-cooperationStatus">$!entity.merchant.cooperationStatus.name</td>
                                     <td>$!entity.merchant.district.city.name</td>
                                     <td>$!entity.group.name - $!entity.bdUser.chineseName</td>

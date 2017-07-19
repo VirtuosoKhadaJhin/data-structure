@@ -137,6 +137,9 @@ public class MissionTaskServiceImpl implements MissionTaskService {
     @Override
     public Page<MissionBdMerchantTrack> findAllTrackByMchId(final MissionBdMerchantTrack requestVo) {
         Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageSize());
+        if(requestVo.getMchId() == null){
+            return new PageImpl(Lists.newArrayList(), pageable, 0);
+        }
         Specification spec = new Specification() {
 
             @Override
