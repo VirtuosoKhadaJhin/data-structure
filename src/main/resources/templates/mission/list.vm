@@ -30,6 +30,7 @@
                             <tr class="thread-tr">
                                 <th class="th-op" nowrap="nowrap">操作</th>
                                 <th class="th-op" nowrap="nowrap">商户名称</th>
+                                <th class="th-op" nowrap="nowrap">任务类型</th>
                                 <th class="th-op" nowrap="nowrap">合作状态</th>
                                 <th class="th-op" nowrap="nowrap">城市</th>
                                 <th class="th-op" nowrap="nowrap">组名-BD名</th>
@@ -70,6 +71,7 @@
                                         <br/>
                                         <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a>
                                     </td>
+                                    <td class="task-type">任务类型</td>
                                     <td class="task-merchant-cooperationStatus">$!entity.merchant.cooperationStatus.name</td>
                                     <td>$!entity.merchant.district.city.name</td>
                                     <td>$!entity.group.name - $!entity.bdUser.chineseName</td>
@@ -77,16 +79,17 @@
                                         #if($!entity.merchantTrack.imgUrls.size()==0 || "$!entity.merchantTrack.imgUrls"=="")
                                             <label class="no-img-result">暂无签到图片</label>
                                         #else
-                                        <div class="imgurl-info">
-                                            #foreach($imgUrl in $!entity.merchantTrack.imgUrls)
-                                                <div class="hovereffect">
-                                                    <a target="_blank" href="$!imgUrl">
-                                                        <img class="img-polaroid td-img" src="$!imgUrl">
-                                                    </a>
-                                                </div>
-                                            #end
+                                            <div class="imgurl-info">
+                                                #foreach($imgUrl in $!entity.merchantTrack.imgUrls)
+                                                    <div class="hovereffect">
+                                                        <a target="_blank" href="$!imgUrl">
+                                                            <img class="img-polaroid td-img" src="$!imgUrl">
+                                                        </a>
+                                                    </div>
+                                                #end
+                                            </div>
                                         #end
-                                    </div>
+                                        <a class="imgurl-info-more" target="_blank" href="tracks?mchId=$!entity.merchant.id">查看更多--></a>
                                     </td>
                                     <td>$!entity.version</td>
                                     <td class="td-bz"><a target="_blank" href="/order/edit?type=3&id=$!entity.orderno">$!entity.orderno</a></td>

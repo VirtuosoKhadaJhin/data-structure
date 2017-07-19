@@ -53,6 +53,10 @@ table .tr-class:hover {
     word-break: break-all;
 }
 
+.td-imgurl{
+    position:relative;
+}
+
 .search-select {
     margin-bottom: 10px;
     width: 100%;
@@ -135,4 +139,10 @@ table .tr-class:hover {
 .hovereffect:hover a.info {
     -webkit-transition-delay: .2s;
     transition-delay: .2s;
+}
+
+.imgurl-info-more {
+    position: absolute;
+    right: 3px;
+    bottom: 0;
 }

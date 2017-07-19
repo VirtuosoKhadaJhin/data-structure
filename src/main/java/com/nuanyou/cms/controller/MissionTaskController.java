@@ -3,10 +3,14 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
-import com.nuanyou.cms.entity.*;
+import com.nuanyou.cms.entity.BdUser;
+import com.nuanyou.cms.entity.City;
+import com.nuanyou.cms.entity.Country;
+import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import com.nuanyou.cms.entity.mission.MissionGroup;
 import com.nuanyou.cms.model.DistrictVo;
+import com.nuanyou.cms.model.mission.MissionBdMerchantTrack;
 import com.nuanyou.cms.model.mission.MissionDistributeParamVo;
 import com.nuanyou.cms.model.mission.MissionRequestVo;
 import com.nuanyou.cms.model.mission.MissionTaskVo;
@@ -87,6 +91,22 @@ public class MissionTaskController {
         model.addAttribute("merchants", merchants);
         model.addAttribute("taskStatus", MissionTaskStatus.values());
         return "mission/list";
+    }
+
+    /**
+     * 查看签到图历史
+     *
+     * @param requestVo
+     * @param model
+     * @return
+     */
+    @RequestMapping("tracks")
+    public String list(MissionBdMerchantTrack requestVo, Model model) {
+        Page<MissionBdMerchantTrack> page = missionTaskService.findAllTrackByMchId(requestVo);
+
+        model.addAttribute("page", page);
+        model.addAttribute("requestVo", requestVo);
+        return "mission/tracks";
     }
 
     /**
