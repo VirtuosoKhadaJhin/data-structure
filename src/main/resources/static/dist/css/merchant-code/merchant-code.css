@@ -1,0 +1,118 @@
+/**
+ * Created by mylon on 2017/7/13.
+ */
+.table td {
+    padding: 8px;
+    line-height: 20px;
+    text-align: center;
+}
+
+.table td:hover {
+    cursor: pointer;
+}
+
+.table td {
+    word-break: break-all;
+}
+
+.search-batch-collection-codes, .search-batch-merchant-ids, .search-country, .search-merchant-name, .search-status, .search-start-time, .search-end-time {
+    margin-bottom: 10px;
+}
+
+.th-collection-code, .th-status, .th-merchant, .th-country {
+    width: 12%;
+}
+
+.th-update-time, .th-url {
+    width: 20%;
+}
+
+.th-op {
+    width: 15%;
+}
+
+.td-mch-url, .td-code-url {
+    color: #08c;
+}
+
+.td-merchant-span {
+    min-height: 20px;
+}
+
+.icon-badge {
+    padding: 9px 10px 4px 4px;
+    float: left;
+}
+
+.batch-collection-codes {
+    max-width: 86%;
+    max-height: 200px;
+}
+
+.batch-merchant-ids, .batch-collection-codes {
+    max-width: 86%;
+    max-height: 200px;
+}
+
+.search-form-btn {
+    margin-top: 10px;
+}
+
+.view-collection-code {
+    margin-right: 5px;
+}
+
+.modal-head-h {
+    font-size: 18px;
+}
+
+.modal-body-content-img {
+    text-align: center;
+}
+
+.modal-head-h {
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.modal-collection-code {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.qrcode {
+    text-align: center;
+}
+
+.bind-url {
+    margin-top: 10px;
+}
+
+.modal-body-content {
+    font-size: 15px;
+}
+
+.search-country-select, .search-status-select {
+    max-width: 90%;
+}
+
+.bind-merchant-name-tip {
+    display: none;
+    font-weight: bolder;
+    vertical-align: baseline;
+    margin-left: 3px;
+}
+
+.show-tip {
+    display: inline;
+}
+
+.td-update-modifier {
+    display: inline;
+}
+
+.td-update-time-label {
+    display: inline;
+}

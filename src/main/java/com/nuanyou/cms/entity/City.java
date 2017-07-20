@@ -1,5 +1,6 @@
 package com.nuanyou.cms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.nuanyou.cms.commons.CreatedAt;
 import com.nuanyou.cms.commons.DateEntityListener;
 import com.nuanyou.cms.commons.LastModified;
@@ -13,6 +14,7 @@ import java.util.Date;
 @Entity
 @EntityListeners(DateEntityListener.class)
 @Table(name = "ny_city")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
 public class City {
     private Long id;
     private String name;
