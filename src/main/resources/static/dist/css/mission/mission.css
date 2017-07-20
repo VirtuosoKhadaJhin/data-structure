@@ -82,6 +82,7 @@ table .tr-class:hover {
 
 .remark-text{
     resize: vertical;
+    max-height: 250px;
 }
 
 .audit-info, .remark-info {
