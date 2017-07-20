@@ -80,6 +80,10 @@ table .tr-class:hover {
     margin: 4px;
 }
 
+.remark-text{
+    resize: vertical;
+}
+
 .audit-info, .remark-info {
     margin: 20px;
 }

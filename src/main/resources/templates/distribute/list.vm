@@ -50,9 +50,10 @@
                             <thead class="thead-class">
                             <tr class="thread-tr">
                                 <th class="th-op">
-                                    <input style="margin-top: 0px;" id="checkbox-all" class="th-checked" type="checkbox">
+                                    <input style="margin-top: 0px;display: none" id="checkbox-all" class="th-checked" type="checkbox">
                                     <strong>全选</strong>
                                 </th>
+                                <th class="th-op">任务类型</th>
                                 <th class="th-op">商户信息</th>
                                 <th class="th-op">商圈</th>
                                 <th class="th-op">BD名称</th>
@@ -63,6 +64,7 @@
                                 <th class="th-op">审核时间</th>
                             </tr>
                             </thead>
+                            #set($checkboxCount = 0)
                             <tbody class="tbody-list">
                                 #if ($null.isNull($page.content) || $page.content.size()==0)
                                 <tr>
@@ -77,10 +79,14 @@
                                 #set($today = $!dateFormatter.format("dd", $!dateFormatter.systemTime))
                                 #foreach($entity in $!page.content)
                                 <tr>
-                                    <td>
+                                    <td #if($!entity.status.key!=2 && $!entity.status.key!=3)class="td-holl-check"#end>
                                         #if($!entity.status.key!=2 && $!entity.status.key!=3)
+                                            #set($checkboxCount = $checkboxCount + 1)
                                             <input class="styled td-checked input-checkbox" type="checkbox" task-id="$!entity.id">
                                         #end
+                                    </td>
+                                    <td class="td-task-status">
+                                        $!entity.version
                                     </td>
                                     <td class="merchant-info">
                                         <span>$!entity.merchant.id</span>
@@ -102,6 +108,7 @@
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditDt)</td>
                                 </tr>
                                 #end
+                                <input type="hidden" class="checkbox-count" value="$!checkboxCount">
                             </tbody>
                         </table>
 
@@ -136,6 +143,14 @@
                                     #foreach($e in $!merchants)
                                         <option value="$!e.id" #if($!requestVo.mchId == $!e.id) selected #end>$!e.id : $!e.name</option>
                                     #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>任务类型</label>
+                                <select class="span11" name="version">
+                                    <option value>全部</option>
+                                    <option value="拓新"#if($!requestVo.version == '拓新')selected#end>拓新</option>
+                                    <option value="维护"#if($!requestVo.version == '维护')selected#end>维护</option>
                                 </select>
                             </div>
                             <div class="search-select">

@@ -78,6 +78,9 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 if (requestVo.getDistrict() != null) {
                     predicate.add(cb.equal(root.get("merchant").get("district").get("id"), requestVo.getDistrict()));
                 }
+                if (StringUtils.isNotEmpty(requestVo.getVersion())) {
+                    predicate.add(cb.equal(root.get("version"), requestVo.getVersion()));
+                }
                 if (requestVo.getBdId() != null) {
                     predicate.add(cb.equal(root.get("bdUser").get("id"), requestVo.getBdId()));
                 }
