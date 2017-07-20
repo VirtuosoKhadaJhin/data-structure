@@ -1,7 +1,6 @@
 package com.nuanyou.cms.dao;
 
 import com.nuanyou.cms.entity.BdUser;
-import org.apache.tomcat.jni.Shm;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public interface BdUserDao extends JpaRepository<BdUser, Long>, JpaSpecificationExecutor {
@@ -39,10 +39,10 @@ public interface BdUserDao extends JpaRepository<BdUser, Long>, JpaSpecification
     List<BdUser> findByDmailNonBdUser(Long id, String dmail);
 
     @Query(value = "SELECT new BdUser(t.id, t.chineseName) from BdUser t where t.deleted=0 and t.id in ?1 ")
-    List<BdUser> findByIds(Collection<Long> ids);
+    List<BdUser> findByIds(List<Long> ids);
 
     @Modifying
     @Transactional
-    @Query("UPDATE BdUser set deleted=1 where id=?1")
-    void updateDeleteUser(Long id);
+    @Query("UPDATE BdUser t set t.deleted=1, t.updateTime = ?2 where t.id=?1")
+    void updateDeleteUser(Long id, Date updateTime);
 }

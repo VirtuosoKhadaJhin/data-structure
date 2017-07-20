@@ -167,7 +167,7 @@ public class BdUserServiceImpl implements BdUserService {
 
     @Override
     public void del(Long id) {
-        bdUserDao.updateDeleteUser(id);
+        bdUserDao.updateDeleteUser(id, new Date());
         groupBdDao.deleteByBdUserId(id);
         MissionGroup leaderGroup = groupDao.findByLeaderId(id);
         if (leaderGroup != null) {

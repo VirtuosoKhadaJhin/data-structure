@@ -19,7 +19,7 @@
                     <div class="widget-content nopadding">
                         <div id="breadcrumb"><a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
                             商户模块</a>
-                            <a href="/mission_task/list" class="tip-bottom" data-original-title="">商户战地任务</a>
+                            <a href="/mission_task/distribute" class="tip-bottom" data-original-title="">商户战地任务</a>
                         </div>
                         <div class="widget-title">
                             <span class="icon"><i class="icon-th"></i></span>

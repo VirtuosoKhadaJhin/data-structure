@@ -22,6 +22,7 @@ import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -137,7 +138,7 @@ public class MissionTaskServiceImpl implements MissionTaskService {
     @Override
     public Page<MissionBdMerchantTrack> findAllTrackByMchId(final MissionBdMerchantTrack requestVo) {
         Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageSize());
-        if(requestVo.getMchId() == null){
+        if (requestVo.getMchId() == null) {
             return new PageImpl(Lists.newArrayList(), pageable, 0);
         }
         Specification spec = new Specification() {
@@ -149,7 +150,8 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                     predicate.add(cb.equal(root.get("mchId"), requestVo.getMchId()));
                 }
                 Predicate[] arrays = new Predicate[predicate.size()];
-                return query.where(predicate.toArray(arrays)).getRestriction();
+                ArrayList<Order> orderBys = Lists.newArrayList(cb.desc(root.get("updateTime")));
+                return query.where(predicate.toArray(arrays)).orderBy(orderBys).getRestriction();
             }
         };
         Page<BdMerchantTrack> bdMerchantTracks = trackDao.findAll(spec, pageable);
@@ -162,13 +164,16 @@ public class MissionTaskServiceImpl implements MissionTaskService {
             }
         });
 
-        if(CollectionUtils.isNotEmpty(userIds)){
-            List<BdUser> trackUsers = bdUserDao.findByIds(userIds);
-            for(BdUser bdUser : trackUsers){
-                for(MissionBdMerchantTrack track : tracks){
-                    if(track.getUserId().equals(bdUser.getId())){
-                        track.setUsername(bdUser.getChineseName());
-                    }
+        if (CollectionUtils.isNotEmpty(userIds)) {
+            Map<Long, String> users = new HashMap();
+            List<BdUser> trackUsers = bdUserDao.findByIds(Lists.newArrayList(userIds));
+            for (BdUser bdUser : trackUsers) {
+                users.put(bdUser.getId(), bdUser.getChineseName());
+            }
+            for (MissionBdMerchantTrack track : tracks) {
+                String name = users.get(track.getUserId());
+                if(StringUtils.isNotEmpty(name)){
+                    track.setUsername(name);
                 }
             }
         }
@@ -242,7 +247,7 @@ public class MissionTaskServiceImpl implements MissionTaskService {
         return taskVos;
     }
 
-    public List<MissionBdMerchantTrack> convertToMissionTracks(List<BdMerchantTrack> bdMerchantTracks){
+    public List<MissionBdMerchantTrack> convertToMissionTracks(List<BdMerchantTrack> bdMerchantTracks) {
         if (CollectionUtils.isEmpty(bdMerchantTracks)) {
             return Lists.newArrayList();
         }
