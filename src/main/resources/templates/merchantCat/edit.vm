@@ -78,7 +78,7 @@
                                 <label class="col-sm-2 control-label">简称：</label>
                                 <div class="controls">
                                     <input name="shortname" for="shortname" type="text" class="form-control langsAutoComplete short-name" placeholder="简称"
-                                           langsKeyName="name" value="$!entity.shortname#if("$!entity.shnKeyCode" != "")($!entity.shnKeyCode) #end">
+                                           langsKeyName="name" value="$!entity.shortname#if("$!entity.shnKeyCode" != "")($!entity.shnKeyCode)#end">
 
                                     <input name="shnKeyCode" class="short-name-keycode" type="hidden" value="$!entity.shnKeyCode">
 
@@ -86,7 +86,7 @@
                                         <i class="icon-plus"></i>
                                     </a>
                                 </div>
-                                <font color="red" class="short-name-tip input-waring-tip">*简称长度小于等于4个字符</font>
+                                <font color="red" class="short-name-tip input-waring-tip">*简称长度小于等于4个字</font>
                                 <label class="col-sm-2 control-label">code编码：</label>
                                 <div class="controls">
                                     <select name="code">
@@ -204,9 +204,7 @@
     #include("common/image-support.vm")
 <script type="text/javascript">
     $(".short-name").on("blur", function () {
-        var shortNameText = $(this).val();
-        var shortNameKeyCode = "(" + $(".short-name-keycode").val() + ")";
-        var shortNameLength = shortNameText.replace(shortNameKeyCode, "");
+        var reg = /\(.*?\)/g, shortNameText = $(this).val(), shortNameLength = shortNameText.replace(reg, "");
         if (getStrLength(shortNameLength) > 4) {
             $(".short-name-tip").show();
             return false;
