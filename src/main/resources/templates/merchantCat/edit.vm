@@ -214,10 +214,8 @@
     });
 
     function checkName() {
-        var shortNameText = $(".short-name").val();
-        var shortNameKeyCode = "(" + $(".short-name-keycode").val() + ")";
-        var shortNameLength = shortNameText.replace(shortNameKeyCode, "");
-        if (getStrLength(shortNameLength) > 4) {
+        var reg = /\(.*?\)/g, shortNameText = $(".short-name").val(), shortNameLength = shortNameText.replace(reg, "");
+        if (shortNameLength.length > 4) {
             $(".short-name-tip").show();
             return false;
         }
