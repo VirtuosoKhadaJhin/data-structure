@@ -205,7 +205,7 @@
 <script type="text/javascript">
     $(".short-name").on("blur", function () {
         var reg = /\(.*?\)/g, shortNameText = $(this).val(), shortNameLength = shortNameText.replace(reg, "");
-        if (getStrLength(shortNameLength) > 4) {
+        if (shortNameLength.length > 4) {
             $(".short-name-tip").show();
             return false;
         }
@@ -213,11 +213,6 @@
         return true;
     });
 
-    // 获取字符长度,区分全角半角
-    function getStrLength(str) {
-        var cArr = str.match(/[^\x00-\xff]/ig);
-        return str.length + (cArr == null ? 0 : cArr.length);
-    }
     function checkName() {
         var shortNameText = $(".short-name").val();
         var shortNameKeyCode = "(" + $(".short-name-keycode").val() + ")";
