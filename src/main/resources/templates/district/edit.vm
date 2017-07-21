@@ -53,7 +53,7 @@
                                     <input for="shortname" name="shortname" type="text" class="span7 short-name" placeholder="简称"
                                            value="$!entity.shortname">
                                 </div>
-                                <font color="red" class="short-name-tip input-waring-tip">*简称长度小于等于4个字符</font>
+                                <font color="red" class="short-name-tip input-waring-tip">*简称长度小于等于4个字</font>
                                 <label class="control-label">本地名称</label>
                                 <div class="controls">
                                     <input name="kpname" for="kpname" type="text" class="span7 langsAutoComplete" value="$!entity.kpname"
@@ -128,9 +128,7 @@
     $(document).ready(function () {
         $(".short-name").on("blur", function () {
             var shortNameText = $(this).val();
-            var shortNameKeyCode = "(" + $(".short-name-keycode").val() + ")";
-            var shortNameLength = shortNameText.replace(shortNameKeyCode, "");
-            if (getStrLength(shortNameLength) > 4) {
+            if (shortNameText.length > 4) {
                 $(".short-name-tip").show();
                 return false;
             }
@@ -140,18 +138,12 @@
     });
     function checkShortName() {
         var shortNameText = $(".short-name").val();
-        var shortNameKeyCode = "(" + $(".short-name-keycode").val() + ")";
-        var shortNameLength = shortNameText.replace(shortNameKeyCode, "");
-        if (getStrLength(shortNameLength) > 4) {
+        if (shortNameText.length > 4) {
             $(".short-name-tip").show();
             return false;
         }
     }
-    // 获取字符长度,区分全角半角
-    function getStrLength(str) {
-        var cArr = str.match(/[^\x00-\xff]/ig);
-        return str.length + (cArr == null ? 0 : cArr.length);
-    }
+
     var type = $!type;
     //禁用所有表单
     if (type == 3) {
