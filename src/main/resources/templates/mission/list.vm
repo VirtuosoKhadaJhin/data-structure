@@ -28,19 +28,20 @@
                         <table class="table table-bordered data-table dataTable">
                             <thead class="thead-class">
                             <tr class="thread-tr">
-                                <th class="th-op" nowrap="nowrap">操作</th>
-                                <th class="th-op" nowrap="nowrap">商户名称</th>
-                                <th class="th-op" nowrap="nowrap">合作状态</th>
-                                <th class="th-op" nowrap="nowrap">城市</th>
-                                <th class="th-op" nowrap="nowrap">组名-BD名</th>
-                                <th class="th-img" nowrap="nowrap">签到图</th>
-                                <th class="th-op" nowrap="nowrap">商户通版本号</th>
-                                <th class="th-op" nowrap="nowrap">测试订单</th>
-                                <th class="th-op" nowrap="nowrap">状态</th>
-                                <th class="th-op" nowrap="nowrap">拜访记录</th>
-                                <th class="th-op" nowrap="nowrap">审核备注</th>
-                                <th class="th-op" nowrap="nowrap">审核时间</th>
-                                <th class="th-op" nowrap="nowrap">完成时间</th>
+                                <th class="th-op">操作</th>
+                                <th class="th-op">商户名称</th>
+                                <th class="th-op">任务类型</th>
+                                <th class="th-op">合作状态</th>
+                                <th class="th-op">城市</th>
+                                <th class="th-op">组名-BD名</th>
+                                <th class="th-img">签到图</th>
+                                <th class="th-op">商户通版本号</th>
+                                <th class="th-op">测试订单</th>
+                                <th class="th-op">状态</th>
+                                <th class="th-op">拜访记录</th>
+                                <th class="th-op">审核备注</th>
+                                <th class="th-op">审核时间</th>
+                                <th class="th-op">完成时间</th>
                             </tr>
                             </thead>
                             <tbody class="tbody-list">
@@ -59,9 +60,11 @@
                                     <td>
                                         #if($!entity.status.key != 3)
                                             <div class="td-op" data-mchId="$!entity.mchId">
-                                                <button type="button" class="btn btn-success btn-small td-button approval">
-                                                    <i class="icon-file"> 审批</i>
-                                                </button>
+                                                <nobr>
+                                                    <button type="button" class="btn btn-success btn-small td-button approval">
+                                                        <i class="icon-file"> 审批</i>
+                                                    </button>
+                                                </nobr>
                                             </div>
                                         #end
                                     </td>
@@ -70,6 +73,7 @@
                                         <br/>
                                         <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a>
                                     </td>
+                                    <td class="task-type">$!entity.version</td>
                                     <td class="task-merchant-cooperationStatus">$!entity.merchant.cooperationStatus.name</td>
                                     <td>$!entity.merchant.district.city.name</td>
                                     <td>$!entity.group.name - $!entity.bdUser.chineseName</td>
@@ -77,18 +81,19 @@
                                         #if($!entity.merchantTrack.imgUrls.size()==0 || "$!entity.merchantTrack.imgUrls"=="")
                                             <label class="no-img-result">暂无签到图片</label>
                                         #else
-                                        <div class="imgurl-info">
-                                            #foreach($imgUrl in $!entity.merchantTrack.imgUrls)
-                                                <div class="hovereffect">
-                                                    <a target="_blank" href="$!imgUrl">
-                                                        <img class="img-polaroid td-img" src="$!imgUrl">
-                                                    </a>
-                                                </div>
-                                            #end
+                                            <div class="imgurl-info">
+                                                #foreach($imgUrl in $!entity.merchantTrack.imgUrls)
+                                                    <div class="hovereffect">
+                                                        <a target="_blank" href="$!imgUrl">
+                                                            <img class="img-polaroid td-img" src="$!imgUrl">
+                                                        </a>
+                                                    </div>
+                                                #end
+                                            </div>
                                         #end
-                                    </div>
+                                        <a class="imgurl-info-more" target="_blank" href="tracks?mchId=$!entity.merchant.id">查看更多--></a>
                                     </td>
-                                    <td>$!entity.version</td>
+                                    <td>$!entity.mchVersion</td>
                                     <td class="td-bz"><a target="_blank" href="/order/edit?type=3&id=$!entity.orderno">$!entity.orderno</a></td>
                                     <td>$!entity.status.value</td>
                                     <td class="td-bz" title="$!entity.merchantTrack.note">$!entity.merchantTrack.note</td>

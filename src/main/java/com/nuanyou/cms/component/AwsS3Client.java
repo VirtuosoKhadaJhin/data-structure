@@ -1,5 +1,7 @@
 package com.nuanyou.cms.component;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -24,11 +26,19 @@ public class AwsS3Client extends FileClient {
 
     public AwsS3Client(@Value("${s3.bucketName}") String bucketName,
                        @Value("${s3.domain}") String domain,
-                       @Value("${s3.region}") String region) {
+                       @Value("${s3.region}") String region,
+                       @Value("${s3.accessKey}") String accessKey,
+                        @Value("${s3.secretKey}") String secretKey) {
         this.bucketName = bucketName;
         this.domain = domain;
         this.region = region;
-        this.client = new AmazonS3Client();
+        if ("dev.img.91nuanyou.com".equals(bucketName)) {
+            AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+            this.client = new AmazonS3Client(credentials);
+        } else {
+            this.client = new AmazonS3Client();
+        }
+
         client.setRegion(Region.getRegion(Regions.fromName(this.region)));
     }
 

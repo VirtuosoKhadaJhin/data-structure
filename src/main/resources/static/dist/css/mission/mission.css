@@ -53,6 +53,10 @@ table .tr-class:hover {
     word-break: break-all;
 }
 
+.td-imgurl {
+    position: relative;
+}
+
 .search-select {
     margin-bottom: 10px;
     width: 100%;
@@ -81,13 +85,16 @@ table .tr-class:hover {
 }
 
 .hovereffect {
-    overflow: hidden;
     position: relative;
     text-align: center;
     cursor: pointer;
-    float: left;
     display: inline-block;
-    margin-left: 1%;
+    padding: 2px;
+}
+
+.imgurl-info {
+    width: 100%;
+    margin-bottom: 8px;
 }
 
 .hovereffect img {
@@ -135,4 +142,14 @@ table .tr-class:hover {
 .hovereffect:hover a.info {
     -webkit-transition-delay: .2s;
     transition-delay: .2s;
+}
+
+.imgurl-info-more {
+    position: absolute;
+    right: 3px;
+    bottom: 0;
+}
+
+.table th, .table td {
+    word-break: break-all;
 }

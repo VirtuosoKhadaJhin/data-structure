@@ -45,9 +45,11 @@ oss:
   secretAccessKey: zgSa3pBpQEo4EPQt1sVBF4U66QJZ21
 
 s3:
-  bucketName: nuanyou-file-prod-ap-northeast-2
-  domain: https://kr.file.91nuanyou.com
-  region: ap-northeast-2
+  bucketName: dev.img.91nuanyou.com
+  domain: http://dev.img.91nuanyou.com
+  region: us-east-1
+  accessKey: AKIAJODFEQRC67I5MMTA
+  secretKey: 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
 
 nuanyou-host: http://testh5.91nuanyou.com
 withdrawurl: http://testuser.api.91nuanyou.com

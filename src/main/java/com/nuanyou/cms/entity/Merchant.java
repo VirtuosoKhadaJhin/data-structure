@@ -80,7 +80,7 @@ public class Merchant {
     private BigDecimal ratio;
 
 
-    private MerchantCooperationStatus cooperationStatus;
+    private Integer cooperationStatus;
 
     private Boolean locateExactly;
     private List<String> collectionCodeList;
@@ -545,12 +545,11 @@ public class Merchant {
     }
 
     @Column(name = "cooperationstatus")
-    @Enumerated(EnumType.ORDINAL)
-    public MerchantCooperationStatus getCooperationStatus() {
+    public Integer getCooperationStatus() {
         return cooperationStatus;
     }
 
-    public void setCooperationStatus(MerchantCooperationStatus cooperationStatus) {
+    public void setCooperationStatus(Integer cooperationStatus) {
         this.cooperationStatus = cooperationStatus;
     }
 }
