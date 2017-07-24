@@ -29,6 +29,11 @@ public class BdUser {
         this.dmail = dmail;
     }
 
+    public BdUser(Long id, String chineseName) {
+        this.id = id;
+        this.chineseName = chineseName;
+    }
+
     public BdUser(Long id) {
         this.id = id;
     }

@@ -29,6 +29,8 @@ public class MissionTaskVo {
 
     private String version;
 
+    private String mchVersion;
+
     private String orderno;
 
     private String remark;
@@ -107,6 +109,14 @@ public class MissionTaskVo {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getMchVersion() {
+        return mchVersion;
+    }
+
+    public void setMchVersion(String mchVersion) {
+        this.mchVersion = mchVersion;
     }
 
     public String getOrderno() {

@@ -17,9 +17,16 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -150,6 +157,46 @@ public class MerchantCollectionCodeServiceImpl implements MerchantCollectionCode
         String sign = MD5Utils.MD5(toSign);
         System.out.println(toSign + "->" + sign);
         return sign;
+    }
+
+    @Override
+    public Page<EntityBdMerchantCollectionCode> query (final EntityBdMerchantCollectionCode entity, Pageable pageable) {
+        Page<EntityBdMerchantCollectionCode> result = entityBdMerchantCollectionCodeDao.findAll(new Specification(){
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<>();
+                if (entity.getMchId() != null) {
+                    predicate.add(cb.equal(root.get("mchId"), entity.getMchId()));
+                }
+                if (entity.getCollectionCode() != null) {
+                    predicate.add(cb.equal(root.get("collectionCode"),entity.getCollectionCode()));
+                }
+                if (entity.getCountryId() != null)
+                    predicate.add(cb.equal(root.get("countryId"),entity.getCountryId()));
+                if (entity.getStartDate() != null)
+                    predicate.add(cb.greaterThan(root.get("updateTime"),entity.getStartDate()));
+                if (entity.getEndDate() != null)
+                    predicate.add(cb.lessThan(root.get("updateTime"),entity.getEndDate()));
+                if (entity.getStatus() != null)
+                    if (entity.getStatus() == 1)
+                        predicate.add(root.get("mchId").isNotNull());
+                    else if (entity.getStatus() == 2)
+                        predicate.add(root.get("mchId").isNull());
+                if (entity.getCodes() != null) {
+                    String[] arr = StringUtils.split(entity.getCodes(),",");
+                    predicate.add(root.get("collectionCode").in(arr));
+                }
+                if (entity.getMchIds() != null) {
+                    String[] arr = StringUtils.split(entity.getMchIds(),",");
+                    predicate.add(root.get("mchId").in(arr));
+                }
+                if (entity.getMchName() !=null)
+                    predicate.add(cb.like(root.get("mchName"),"%"+entity.getMchName()+"%"));
+
+                return query.where(predicate.toArray(new Predicate[predicate.size()])).getRestriction();
+            }
+        },pageable);
+        return result;
     }
 
 }

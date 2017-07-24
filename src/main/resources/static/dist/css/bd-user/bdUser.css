@@ -84,5 +84,6 @@
 
 .table th, .table td {
     line-height: 40px;
+    word-break: break-all;
 }
 

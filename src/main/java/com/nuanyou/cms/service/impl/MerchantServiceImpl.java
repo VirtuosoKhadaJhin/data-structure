@@ -6,18 +6,25 @@ import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.ChannelType;
 import com.nuanyou.cms.entity.enums.CodeType;
+import com.nuanyou.cms.entity.enums.MerchantCooperationStatus;
 import com.nuanyou.cms.model.MerchantVO;
 import com.nuanyou.cms.service.ItemDetailimgService;
 import com.nuanyou.cms.service.MerchantCollectionCodeService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.MerchantStaffService;
+import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.MyCacheManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -61,6 +68,10 @@ public class MerchantServiceImpl implements MerchantService {
     private static String key = "getMerchantList";
     @Autowired
     private MyCacheManager<List<Merchant>> cacheManager;
+    @Autowired
+    private CmsUserDao cmsUserDao;
+    @Autowired
+    private DistrictDao districtDao;
 
     @Override
     public List<Merchant> getIdNameList() {
@@ -182,7 +193,9 @@ public class MerchantServiceImpl implements MerchantService {
         }
         dealCollectionCodes(vo.getCollectionCodeList(), entity);
 
-        return BeanUtils.copyBean(entity, new MerchantVO());
+        MerchantVO result = new MerchantVO();
+        BeanUtils.copyBean(entity, result);
+        return result;
     }
 
     @Transactional
@@ -199,14 +212,7 @@ public class MerchantServiceImpl implements MerchantService {
         for (String tmpCode : tmp) {
             for (EntityBdMerchantCollectionCode collectionCode : collectionCodes) {
                 if (tmpCode.equals(collectionCode.getCollectionCode())) {
-                    collectionCode.setMchId(null);
-                    collectionCode.setUpdateTime(new Date());
-                    collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
-                    try {
-                        boolean unbind_result = collectionCodeService.unbindNumberLink(Long.valueOf(tmpCode));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    do_unbindNumber (collectionCode);
                     break;
                 }
             }
@@ -215,23 +221,79 @@ public class MerchantServiceImpl implements MerchantService {
         //bind code
         for (String code : codelist) {
             EntityBdMerchantCollectionCode collectionCode = collectionCodeService.findCollectionCode(code);
-            collectionCode.setUpdateTime(new Date());
-            collectionCode.setMchId(entity.getId());
-            collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
-            try {
-                String countryCode = entity.getDistrict().getCountry().getCode();
-                String target_url = "";
-                if ("TH".equals(countryCode)) {
-                    target_url = sg_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
-                } else {
-                    target_url = kr_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
-                }
-                boolean bind_result = collectionCodeService.bindNumberLink(Long.valueOf(code), target_url);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            do_bindNumber (  collectionCode, entity);
         }
     }
+
+    @Override
+    public EntityBdMerchantCollectionCode bindNumber ( EntityBdMerchantCollectionCode collectionCode,Long mchId){
+        Merchant entity = merchantDao.findOne(mchId);
+        return do_bindNumber(collectionCode,entity);
+    }
+
+    @Transactional
+    private EntityBdMerchantCollectionCode do_bindNumber (EntityBdMerchantCollectionCode collectionCode , Merchant entity){
+        if (entity == null) {
+            throw new APIException(ResultCodes.NotFoundMerchant);
+        }
+        collectionCode.setUpdateTime(new Date());
+        collectionCode.setMchId(entity.getId());
+        collectionCode.setMchName(entity.getName());
+//        collectionCode.setCountryId(entity.getDistrict().getCountry().getId());
+//        collectionCode.setCountryName(entity.getDistrict().getCountry().getName());
+
+        String target_url ;
+        District district = districtDao.findOne(entity.getDistrict().getId());
+        String countryCode = district.getCountry().getCode();
+        if ("TH".equals(countryCode)) {
+            target_url = sg_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
+        } else {
+            target_url = kr_url + "?mchid=" + entity.getId() + "&source=qplcid_" + entity.getId();
+        }
+        collectionCode.setUrl(target_url);
+
+        CmsUser cmsUser = cmsUserDao.findByEmail(UserHolder.getUser().getEmail());
+        if (cmsUser != null) {
+            collectionCode.setModifierId(cmsUser.getId());
+            collectionCode.setModifier(cmsUser.getUsername());
+        }
+        collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
+
+        try {
+            boolean bind_result = collectionCodeService.bindNumberLink(Long.valueOf(collectionCode.getCollectionCode()), target_url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return collectionCode;
+    }
+
+    @Override
+    public EntityBdMerchantCollectionCode unbindNumber (EntityBdMerchantCollectionCode collectionCode) {
+        return do_unbindNumber (collectionCode);
+    }
+
+    @Transactional
+    public EntityBdMerchantCollectionCode do_unbindNumber (EntityBdMerchantCollectionCode collectionCode) {
+        collectionCode.setMchId(null);
+        collectionCode.setMchName(null);
+//        collectionCode.setCountryId(null);
+//        collectionCode.setCountryName(null);
+        collectionCode.setUrl(null);
+        CmsUser cmsUser = cmsUserDao.findByEmail(UserHolder.getUser().getEmail());
+        if (cmsUser != null) {
+            collectionCode.setModifierId(cmsUser.getId());
+            collectionCode.setModifier(cmsUser.getUsername());
+        }
+        collectionCode.setUpdateTime(new Date());
+        collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
+        try {
+            boolean unbind_result = collectionCodeService.unbindNumberLink(Long.valueOf(collectionCode.getCollectionCode()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return collectionCode;
+    }
+
 
     /**
      * @param id merchantId
@@ -265,17 +327,65 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public List<Merchant> findMerchantByCountry(final Long country) {
-        if (country == null) {
-            return merchantDao.getIdNameList();
-        }
-        return merchantDao.findIdNameByCountry(country);
+        Specification specification = new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (country != null) {
+                    predicate.add(cb.equal(root.get("district").get("country").get("id"), country));
+                }
+                predicate.add(cb.equal(root.get("display"), true));
+                Predicate[] arrays = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(arrays)).getRestriction();
+            }
+        };
+        return merchantDao.findAll(specification);
     }
 
     @Override
     public List<Merchant> findMerchantByDistrict(final Long district) {
-        if(district==null){
-            return merchantDao.getIdNameList();
-        }
-        return merchantDao.findIdNameByDistrict(district);
+        Specification specification = new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (district != null) {
+                    predicate.add(cb.equal(root.get("district").get("id"), district));
+                }
+                predicate.add(cb.equal(root.get("display"), true));
+                Predicate[] arrays = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(arrays)).getRestriction();
+            }
+        };
+        return merchantDao.findAll(specification);
+    }
+
+    @Override
+    public Page<Merchant> findMerchantByCountryFilter(final Long country, final String mchName, final Long mchId, Pageable pageable) {
+//        Specification specification = new Specification() {
+//            @Override
+//            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+//                // TODO: 2017/7/14 jpa 无效
+//                query.multiselect(root.get("id").alias("id"),root.get("name").alias("name"));
+//                List<Predicate> predicate = new ArrayList<Predicate>();
+//                if (country != null) {
+//                    predicate.add(cb.equal(root.get("district").get("country").get("id"), country));
+//                }
+//                if (mchName != null) {
+//                    predicate.add(cb.like(root.get("name"), "%"+mchName+"%"));
+//                }
+//                if (mchId != null) {
+//                    predicate.add(cb.equal(root.get("id"), mchId));
+//                }
+//                predicate.add(cb.equal(root.get("display"), true));
+//                Predicate[] arrays = new Predicate[predicate.size()];
+//
+//                return query.where(predicate.toArray(arrays)).getRestriction();
+//            }
+//        };
+//
+//        return merchantDao.findAll(specification,pageable);
+
+        List<Merchant> list = merchantDao.findIdNameByCountry(country);
+        return new PageImpl<Merchant>(list);
     }
 }

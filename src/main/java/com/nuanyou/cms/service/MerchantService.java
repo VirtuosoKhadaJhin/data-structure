@@ -1,8 +1,11 @@
 package com.nuanyou.cms.service;
 
 import com.nuanyou.cms.entity.Channel;
+import com.nuanyou.cms.entity.EntityBdMerchantCollectionCode;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.model.MerchantVO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -38,4 +41,19 @@ public interface MerchantService {
      * @return
      */
     List<Merchant> findMerchantByDistrict(Long district);
+
+    /**
+     * @param collectionCode
+     * @param mchId
+     * @return
+     */
+    EntityBdMerchantCollectionCode bindNumber (EntityBdMerchantCollectionCode collectionCode, Long mchId);
+
+    /**
+     * @param collectionCode
+     * @return
+     */
+    EntityBdMerchantCollectionCode unbindNumber (EntityBdMerchantCollectionCode collectionCode);
+
+    Page<Merchant> findMerchantByCountryFilter(final Long country, String mchName, Long mchId, Pageable pageable);
 }

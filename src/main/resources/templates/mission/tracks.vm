@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 签到图历史</title>
+    #include("common/css-support.vm")
+    #include("common/js-support.vm")
+    <link href="/dist/css/mission/tracks.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="content" class="content-container">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span7">
+                <div class="widget-box">
+                    <div class="widget-content nopadding">
+
+                        ##<div id="breadcrumb"><a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
+                        ##    商户模块</a>
+                        ##    <a href="/mission_task/list" class="tip-bottom" data-original-title="">商户信息审核</a>
+                        ##    <a href="javascript:;" class="tip-bottom" data-original-title="">签到图历史</a>
+                        ##</div>
+                        <div class="widget-title">
+                            <span class="icon"><i class="icon-th"></i></span>
+                            <h5>签到图历史</h5>
+                        </div>
+
+                        <table class="table table-bordered data-table dataTable">
+                            <thead class="thead-class">
+                            <tr class="thread-tr">
+                                <th class="th-op" nowrap="nowrap">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody class="tbody-list">
+                                #if ($null.isNull($page.content) || $page.content.size()==0)
+                                <tr>
+                                    <td colspan="1" style="text-align:center;">
+                                        <div class="no-result-div"
+                                             style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                                            <b>没有符合条件的签到图历史信息！</b>
+                                        </div>
+                                    </td>
+                                </tr>
+                                #end
+                                #foreach($entity in $!page.content)
+                                <tr class="tracks-tr">
+                                    <td class="tracks-td">
+                                        <label class="tracks-label" style="margin-bottom: 7px;">
+                                            <b>上传时间：</b>
+                                            #if("$!entity.createTime" == "")
+                                                未知
+                                            #else
+                                                $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.createTime)
+                                            #end
+                                        </label>
+                                        <label class="tracks-label" style="margin-bottom: 7px;">
+                                            <b>上传人：</b>
+                                            #if("$!entity.username" == "")
+                                                未知
+                                            #else
+                                                $!entity.username
+                                            #end
+                                        </label>
+                                        #if($!entity.imgUrls.size()==0 || "$!entity.imgUrls"=="")
+                                            <label class="no-img-result"><p>暂无签到图片</p></label>
+                                        #else
+                                            <div class="imgurl-info">
+                                                #foreach($imgUrl in $!entity.imgUrls)
+                                                    <div class="hovereffect">
+                                                        <a target="_blank" href="$!imgUrl">
+                                                            <img class="img-polaroid td-img" src="$!imgUrl" onerror="javascript:this.src='/dist/img/logo.png';">
+                                                        </a>
+                                                    </div>
+                                                #end
+                                            </div>
+                                        #end
+                                    </td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                #set($i=$!page.number + 1)
+                <div class="pagination" style="float:right">
+                    <ul total="$!page.totalPages" index="$!i"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/dist/js/page-support.js"></script>
+</body>
+</html>

@@ -19,7 +19,6 @@ public class MerchantVO {
     private String name;
     private String kpname;
     private String intro;
-    private String intro2;
     private String outline;
     private String telphone;
     private Date businessStart;
@@ -39,20 +38,19 @@ public class MerchantVO {
     private List<PayType> payTypes;
 
     //2.0地址 600*200
-    private String indexImgUrl;
+//    private String indexImgUrl;
     //3.0地址 200*150
     private String listImgUrl;
 
     private List<SupportType> supportType;
     private String tips;
-    private Boolean issign;
-    private Boolean ispush;
-    private Date firstshowTime;
+//    private Boolean ispush;
+//    private Date firstshowTime;
     private Double score;
-    private Integer rank;
-    private Byte pushType;
-    private String code;
-    private List<AppointType> appointType;
+//    private Integer rank;
+//    private Byte pushType;
+//    private String code;
+//    private List<AppointType> appointType;
     private List<MerchantHeadimg> headimgs;
 
     private Long landmarkId;
@@ -60,7 +58,7 @@ public class MerchantVO {
     private MerchantCat mcat;
     private MerchantCat subcat;
 
-    private Long catId;
+//    private Long catId;
 
     private BigDecimal postage;
 
@@ -71,6 +69,8 @@ public class MerchantVO {
     private Boolean locateExactly;
 
     private List<String> collectionCodeList;
+
+    private Integer cooperationStatus;
 
 
     public BigDecimal getRatio() {
@@ -117,13 +117,13 @@ public class MerchantVO {
     }
 
 
-    public String getIntro2() {
-        return intro2;
-    }
-
-    public void setIntro2(String Longro2) {
-        this.intro2 = Longro2;
-    }
+//    public String getIntro2() {
+//        return intro2;
+//    }
+//
+//    public void setIntro2(String Longro2) {
+//        this.intro2 = Longro2;
+//    }
 
 
     public String getOutline() {
@@ -292,13 +292,13 @@ public class MerchantVO {
     }
 
 
-    public String getIndexImgUrl() {
-        return indexImgUrl;
-    }
-
-    public void setIndexImgUrl(String indexImgUrl) {
-        this.indexImgUrl = indexImgUrl;
-    }
+//    public String getIndexImgUrl() {
+//        return indexImgUrl;
+//    }
+//
+//    public void setIndexImgUrl(String indexImgUrl) {
+//        this.indexImgUrl = indexImgUrl;
+//    }
 
 
     public String getListImgUrl() {
@@ -327,31 +327,21 @@ public class MerchantVO {
         this.tips = tips;
     }
 
+//    public Boolean getIspush() {
+//        return ispush;
+//    }
+//
+//    public void setIspush(Boolean ispush) {
+//        this.ispush = ispush;
+//    }
 
-    public Boolean getIssign() {
-        return issign;
-    }
-
-    public void setIssign(Boolean issign) {
-        this.issign = issign;
-    }
-
-
-    public Boolean getIspush() {
-        return ispush;
-    }
-
-    public void setIspush(Boolean ispush) {
-        this.ispush = ispush;
-    }
-
-    public Date getFirstshowTime() {
-        return firstshowTime;
-    }
-
-    public void setFirstshowTime(Date firstshowTime) {
-        this.firstshowTime = firstshowTime;
-    }
+//    public Date getFirstshowTime() {
+//        return firstshowTime;
+//    }
+//
+//    public void setFirstshowTime(Date firstshowTime) {
+//        this.firstshowTime = firstshowTime;
+//    }
 
 
     public Double getScore() {
@@ -363,40 +353,40 @@ public class MerchantVO {
     }
 
 
-    public Integer getRank() {
-        return rank;
-    }
-
-    public void setRank(Integer rank) {
-        this.rank = rank;
-    }
-
-
-    public Byte getPushType() {
-        return pushType;
-    }
-
-    public void setPushType(Byte pushType) {
-        this.pushType = pushType;
-    }
-
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-
-    public List<AppointType> getAppointType() {
-        return appointType;
-    }
-
-    public void setAppointType(List<AppointType> appointType) {
-        this.appointType = appointType;
-    }
+//    public Integer getRank() {
+//        return rank;
+//    }
+//
+//    public void setRank(Integer rank) {
+//        this.rank = rank;
+//    }
+//
+//
+//    public Byte getPushType() {
+//        return pushType;
+//    }
+//
+//    public void setPushType(Byte pushType) {
+//        this.pushType = pushType;
+//    }
+//
+//
+//    public String getCode() {
+//        return code;
+//    }
+//
+//    public void setCode(String code) {
+//        this.code = code;
+//    }
+//
+//
+//    public List<AppointType> getAppointType() {
+//        return appointType;
+//    }
+//
+//    public void setAppointType(List<AppointType> appointType) {
+//        this.appointType = appointType;
+//    }
 
 
     public List<MerchantHeadimg> getHeadimgs() {
@@ -408,13 +398,13 @@ public class MerchantVO {
     }
 
 
-    public Long getCatId() {
-        return catId;
-    }
-
-    public void setCatId(Long catId) {
-        this.catId = catId;
-    }
+//    public Long getCatId() {
+//        return catId;
+//    }
+//
+//    public void setCatId(Long catId) {
+//        this.catId = catId;
+//    }
 
 
     public Long getLandmarkId() {
@@ -475,5 +465,13 @@ public class MerchantVO {
 
     public void setCollectionCodeList(List<String> collectionCodeList) {
         this.collectionCodeList = collectionCodeList;
+    }
+
+    public Integer getCooperationStatus() {
+        return cooperationStatus;
+    }
+
+    public void setCooperationStatus(Integer cooperationStatus) {
+        this.cooperationStatus = cooperationStatus;
     }
 }

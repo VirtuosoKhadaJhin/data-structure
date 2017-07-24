@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -140,7 +141,7 @@ public class MerchantController {
 //        if (codelist != null && codelist.size()>3) {
 //            throw new APIException(ResultCodes.CollectionCodeGreaterThan3);
 //        }
-        String regex = "^\\d{1,9}$";
+        String regex = "^\\d{8,9}$";
         Pattern pattern = Pattern.compile(regex);
 
         for (String code : codelist) {
@@ -321,5 +322,66 @@ public class MerchantController {
     public APIResult list(Long id) {
         List<Merchant> list = merchantDao.findIdNameList(id);
         return new APIResult(list);
+    }
+
+    @RequestMapping("/collectioncodes")
+    public String getCollectionCodes (EntityBdMerchantCollectionCode entity,
+                                      @RequestParam(required = false, defaultValue = "1") int index,
+                                      @RequestParam(required = false, defaultValue = "20") int limit,
+                                      Model model) {
+        BeanUtils.cleanEmpty(entity);
+        Sort sort = new Sort(Sort.Direction.DESC,"updateTime");
+        Pageable pageable = new PageRequest(index - 1, limit, sort);
+        Page<EntityBdMerchantCollectionCode>  page = collectionCodeService.query(entity,pageable);
+        model.addAttribute("page", page);
+        model.addAttribute("entity", entity);
+        List<Country> countries = countryDao.getIdNameList();
+        model.addAttribute("countries", countries);
+        return "merchant/code_list";
+    }
+
+    @RequestMapping(path = "/bind/number", method = RequestMethod.POST)
+    @ResponseBody
+    public APIResult<EntityBdMerchantCollectionCode> bindNumber(EntityBdMerchantCollectionCode entity, Model model) {
+        String number = entity.getCollectionCode();
+        Long mchId = entity.getMchId();
+        if (mchId == null) {
+            throw new APIException(ResultCodes.MissingParameter);
+        }
+        List<EntityBdMerchantCollectionCode>  codeList = collectionCodeService.findEntityBdMerchantCollectionCodesByMchId(mchId);
+        if ( codeList != null && codeList.size() >= 3) {
+            throw new APIException(ResultCodes.CollectionCodeGreaterThan3);
+        }
+        EntityBdMerchantCollectionCode collectionCode = collectionCodeService.findCollectionCode(number);
+        if (collectionCode == null) {
+            throw new APIException(ResultCodes.CollectionCodeError);
+        }
+        if (collectionCode.getMchId() != null && collectionCode.getMchId() != 0 && collectionCode.getMchId().longValue() != mchId.longValue()) {
+            throw new APIException(ResultCodes.CollectionCodeExist, MessageFormat.format(ResultCodes.CollectionCodeExist.getMessage(), number, collectionCode.getMchId()));
+        }
+        collectionCode = merchantService.bindNumber(collectionCode,mchId);
+        return new APIResult(collectionCode);
+    }
+
+    @RequestMapping(path = "/unbind/number", method = RequestMethod.POST)
+    @ResponseBody
+    public APIResult<EntityBdMerchantCollectionCode> unbindNumber(EntityBdMerchantCollectionCode entity, Model model) {
+        String number = entity.getCollectionCode();
+        EntityBdMerchantCollectionCode collectionCode = collectionCodeService.findCollectionCode(number);
+        if (collectionCode == null) {
+            throw new APIException(ResultCodes.CollectionCodeError);
+        }
+        collectionCode = merchantService.unbindNumber(collectionCode);
+        return new APIResult(collectionCode);
+    }
+
+    @RequestMapping(path = "/{countryId}/merchantlist", method = RequestMethod.GET)
+    @ResponseBody
+    public APIResult<Merchant> getMerchantsByCountry(@PathVariable Long countryId,
+                                                     @RequestParam(required = false) Long mchId,
+                                                     @RequestParam(required = false) String mchName) {
+        Pageable pageable = new PageRequest(0,10000, Sort.Direction.DESC, "id");
+        Page<Merchant> merchants = merchantService.findMerchantByCountryFilter(countryId,mchName,mchId,pageable);
+        return new APIResult(merchants);
     }
 }
