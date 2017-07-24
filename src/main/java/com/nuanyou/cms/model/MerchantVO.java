@@ -44,10 +44,10 @@ public class MerchantVO {
 
     private List<SupportType> supportType;
     private String tips;
-//    private Boolean ispush;
+    //    private Boolean ispush;
 //    private Date firstshowTime;
     private Double score;
-//    private Integer rank;
+    //    private Integer rank;
 //    private Byte pushType;
 //    private String code;
 //    private List<AppointType> appointType;
@@ -70,7 +70,7 @@ public class MerchantVO {
 
     private List<String> collectionCodeList;
 
-    private Integer cooperationStatus;
+    private MerchantCooperationStatus cooperationStatus;
 
 
     public BigDecimal getRatio() {
@@ -467,11 +467,11 @@ public class MerchantVO {
         this.collectionCodeList = collectionCodeList;
     }
 
-    public Integer getCooperationStatus() {
+    public MerchantCooperationStatus getCooperationStatus() {
         return cooperationStatus;
     }
 
-    public void setCooperationStatus(Integer cooperationStatus) {
+    public void setCooperationStatus(MerchantCooperationStatus cooperationStatus) {
         this.cooperationStatus = cooperationStatus;
     }
 }

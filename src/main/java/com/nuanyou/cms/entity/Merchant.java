@@ -80,7 +80,7 @@ public class Merchant {
     private BigDecimal ratio;
 
 
-    private Integer cooperationStatus;
+    private MerchantCooperationStatus cooperationStatus;
 
     private Boolean locateExactly;
     private List<String> collectionCodeList;
@@ -448,7 +448,7 @@ public class Merchant {
     }
 
 
-//    @OneToMany(fetch = FetchType.LAZY, targetEntity = MerchantHeadimg.class)
+    //    @OneToMany(fetch = FetchType.LAZY, targetEntity = MerchantHeadimg.class)
 //    @JoinColumns(value = {@JoinColumn(name = "mchid", referencedColumnName = "id")})
     @Transient
     public List<MerchantHeadimg> getHeadimgs() {
@@ -545,11 +545,11 @@ public class Merchant {
     }
 
     @Column(name = "cooperationstatus")
-    public Integer getCooperationStatus() {
+    public MerchantCooperationStatus getCooperationStatus() {
         return cooperationStatus;
     }
 
-    public void setCooperationStatus(Integer cooperationStatus) {
+    public void setCooperationStatus(MerchantCooperationStatus cooperationStatus) {
         this.cooperationStatus = cooperationStatus;
     }
 }
