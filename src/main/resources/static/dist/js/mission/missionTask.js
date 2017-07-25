@@ -2,6 +2,12 @@
  * Created by mylon on 2017/6/28.
  */
 $(function () {
+    // 全选控制
+    var checkboxCount = $(".checkbox-count").val();
+    if (checkboxCount > 0) {
+        $(".th-checked").show();
+    }
+
     // 进入页面勾选已经勾选的,并显示出已经勾选的任务数目
     var oldCheckedTaskIds = $(".hide-checked-taskIds").val();
     if (oldCheckedTaskIds != null && oldCheckedTaskIds.length > 0) {
@@ -122,6 +128,13 @@ $(function () {
             }
             $(".badge-important").text(newCheckedTask.length);
             $(this).prop("checked", false);
+        }
+    });
+
+    // 点击td
+    $(".td-holl-check").on("click", function (e) {
+        if(e.target.tagName == "TD"){
+            $(this).parents("tr").find(".input-checkbox").click();
         }
     });
 
