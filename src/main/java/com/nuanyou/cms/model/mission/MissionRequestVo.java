@@ -24,6 +24,8 @@ public class MissionRequestVo {
 
     private String remark;
 
+    private String version;
+
     private Long groupId;
 
     private Long country;
@@ -87,6 +89,14 @@ public class MissionRequestVo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public Long getCountry() {

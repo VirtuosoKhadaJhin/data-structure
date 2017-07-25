@@ -1,6 +1,5 @@
 package com.nuanyou.cms.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
@@ -11,7 +10,8 @@ import com.nuanyou.cms.model.MerchantVO;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.MerchantCollectionCodeService;
 import com.nuanyou.cms.service.MerchantService;
-import com.nuanyou.cms.util.*;
+import com.nuanyou.cms.util.BeanUtils;
+import com.nuanyou.cms.util.ExcelUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -82,6 +82,7 @@ public class MerchantController {
             entity.setCollectionCodeList(list);
             model.addAttribute("entity", entity);
         }
+        model.addAttribute("cooperationStatuses", MerchantCooperationStatus.values());
         setEnums(model, countryId);
         return "merchant/edit";
     }
@@ -101,6 +102,7 @@ public class MerchantController {
 
         setEnums(model, countryId);
         model.addAttribute("disabled", true);
+        model.addAttribute("cooperationStatuses", MerchantCooperationStatus.values());
         return "merchant/edit";
     }
 
@@ -109,6 +111,7 @@ public class MerchantController {
     public String detail_country(Long id, @PathVariable("countryCode") String countryCode, Model model) {
         Long countryId = countryMap.get(countryCode);
         detail(id, countryId, model);
+        model.addAttribute("cooperationStatuses", MerchantCooperationStatus.values());
         return "merchant/edit";
     }
 
@@ -131,6 +134,7 @@ public class MerchantController {
         model.addAttribute("entity", entity);
         setEnums(model, countryId);
         model.addAttribute("disabled", true);
+        model.addAttribute("cooperationStatuses", MerchantCooperationStatus.values());
         return "merchant/edit";
     }
 
@@ -163,6 +167,7 @@ public class MerchantController {
         Long countryId = countryMap.get(countryCode);
         model.addAttribute("countryHide", true);
         update(vo, countryId, model);
+        model.addAttribute("cooperationStatuses", MerchantCooperationStatus.values());
         return "merchant/edit";
     }
 

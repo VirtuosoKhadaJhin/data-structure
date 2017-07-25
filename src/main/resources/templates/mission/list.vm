@@ -215,7 +215,7 @@
         </div>
         <div class="remark-info" style="display: none;">
             <label class="span5 label-approval">驳回理由：</label>
-            <textarea class="remark-text" placeholder="请填写备注信息"></textarea>
+            <textarea class="remark-text" placeholder="请填写备注信息" rows="3"></textarea>
         </div>
     </div>
     <div class="modal-footer">
