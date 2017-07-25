@@ -7,6 +7,16 @@
     #include("common/css-support.vm")
     <link rel="stylesheet" href="/dist/markdown/css/editormd.css"/>
     <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon"/>
+    <style>
+        .input-waring-tip {
+            line-height: 0px;
+            float: right;
+            margin-right: 23%;
+            cursor: pointer;
+            display: none;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 <div id="content">
@@ -44,12 +54,14 @@
                                 </div>
                                 <label class="control-label">中文名称</label>
                                 <div class="controls">
-                                    <input name="name" type="text" class="span9" value="$!entity.name" maxlength="80">
+                                    <input name="name" type="text" class="span9 ch-name" value="$!entity.name" maxlength="100" placeholder="不得超过15个字">
                                 </div>
+                                <font color="red" class="ch-name-tip input-waring-tip">*不得超过15个字</font>
                                 <label class="control-label">本地名称</label>
                                 <div class="controls">
-                                    <input name="kpname" type="text" class="span9" value="$!entity.kpname" maxlength="80">
+                                    <input name="kpname" type="text" class="span9 kp-name" value="$!entity.kpname" maxlength="100" placeholder="不得超过15个字">
                                 </div>
+                                <font color="red" class="kp-name-tip input-waring-tip">*不得超过15个字</font>
                                 <label class="control-label">团购类型</label>
                                 <div class="controls">
                                     #foreach($e in $!tuanTypes)
@@ -125,9 +137,15 @@
                                 </div>
                             </div>
                             <div class="form-actions">
-                                <button class="btn btn-success" type="submit" id="btn-save">保存</button>
-                                <a class="btn btn-warning" type="button" id="btn-edit">编辑</a>
-                                <a class="btn btn-primary" href="list">返回</a>
+                                <button class="btn btn-success" type="submit" id="btn-save" onclick="return checkNameLength()">
+                                    <i class="icon-edit"> 保存</i>
+                                </button>
+                                <a class="btn btn-warning" type="button" id="btn-edit">
+                                    <i class="icon-edit"> 编辑</i>
+                                </a>
+                                <a class="btn btn-primary" href="list">
+                                    <i class="icon-repeat"> 返回</i>
+                                </a>
                             </div>
                         </form>
                     </div>
@@ -211,11 +229,46 @@
         <div class="modal-footer">
             <button class="btn btn-close-custom">取消</button>
             <button class="btn btn-primary btn-save-custom">保存</button>
+
         </div>
     </div>
 
     #parse("common/js-support.vm")
-    <script>
+    <script type="text/javascript">
+        $(".ch-name").on("blur", function () {
+            var length = $(this).val().length;
+            if (length > 15) {
+                $(".ch-name-tip").show();
+                $(".ch-name").css("border-color", "red");
+                return false;
+            }
+            $(".ch-name-tip").hide();
+            $(".ch-name").css("border-color", "");
+        });
+
+        $(".kp-name").on("blur", function () {
+            var length = $(this).val().length;
+            if (length > 15) {
+                $(".kp-name-tip").show();
+                return false;
+            }
+            $(".kp-name-tip").hide();
+        });
+
+        // 校验字数
+        function checkNameLength() {
+            var chNameLength = $(".ch-name").val().length, kpNameLength = $(".kp-name").val().length;
+            if (chNameLength > 15) {
+                $(".ch-name-tip").show();
+                return false;
+            }
+            if (kpNameLength > 15) {
+                $(".kp-name-tip").show();
+                return false;
+            }
+            return true;
+        }
+
             #if($!disabled)
             $("#btn-save").hide();
             $(":input").attr("disabled", true);
@@ -256,7 +309,7 @@
                             box.initSelecteditemList(result.data);
                         }
                     });
-                }else{
+                } else {
                     box.initSelecteditemList([]);
                 }
                 $.ajax({

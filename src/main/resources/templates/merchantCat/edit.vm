@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>暖游 后台管理系统 商户分类编辑</title>
     #include("common/css-support.vm")
+    <style>
+        .input-waring-tip {
+            line-height: 0px;
+            float: left;
+            margin-left: 200px;
+            cursor: pointer;
+            display: none;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 <div id="content">
@@ -40,7 +50,7 @@
                                 <label class="col-sm-2 control-label">名称：</label>
                                 <div class="controls">
                                     <input name="name" for="name" type="text" placeholder="名称" class="langsAutoComplete cat-name"
-                                           langsKeyName="name" value="$!entity.name #if("$!entity.keyCode" != "")($!entity.keyCode) #end">
+                                           langsKeyName="name" value="$!entity.name#if("$!entity.keyCode" != "")($!entity.keyCode)#end">
                                     <input name="keycode" class="checked-keycode" type="hidden" value="$!entity.keyCode">
 
                                     <a class="btn btn-info btn-mini add-lang" langsKeyName="remark" langsValueName="remarkLabel">
@@ -67,15 +77,16 @@
                                 </div>
                                 <label class="col-sm-2 control-label">简称：</label>
                                 <div class="controls">
-                                    <input name="shortname" for="shortname" type="text" class="form-control langsAutoComplete" placeholder="简称"
-                                           langsKeyName="name" value="$!entity.shortname#if("$!entity.shnKeyCode" != "")($!entity.shnKeyCode) #end" >
+                                    <input name="shortname" for="shortname" type="text" class="form-control langsAutoComplete short-name" placeholder="简称"
+                                           langsKeyName="name" value="$!entity.shortname#if("$!entity.shnKeyCode" != "")($!entity.shnKeyCode)#end">
 
-                                    <input name="shnKeyCode" type="hidden" value="$!entity.shnKeyCode">
+                                    <input name="shnKeyCode" class="short-name-keycode" type="hidden" value="$!entity.shnKeyCode">
 
                                     <a class="btn btn-info btn-mini add-lang" langsKeyName="remark" langsValueName="remarkLabel">
                                         <i class="icon-plus"></i>
                                     </a>
                                 </div>
+                                <font color="red" class="short-name-tip input-waring-tip">*简称长度小于等于4个字</font>
                                 <label class="col-sm-2 control-label">code编码：</label>
                                 <div class="controls">
                                     <select name="code">
@@ -189,12 +200,27 @@
     </div>
 </div>
 <!--***************************************通用新增语言*************************************************************-->
-#include("common/js-support.vm")
-#include("common/image-support.vm")
+    #include("common/js-support.vm")
+    #include("common/image-support.vm")
 <script type="text/javascript">
-    function checkName(){
+    $(".short-name").on("blur", function () {
+        var reg = /\(.*?\)/g, shortNameText = $(this).val(), shortNameLength = shortNameText.replace(reg, "");
+        if (shortNameLength.length > 4) {
+            $(".short-name-tip").show();
+            return false;
+        }
+        $(".short-name-tip").hide();
+        return true;
+    });
+
+    function checkName() {
+        var reg = /\(.*?\)/g, shortNameText = $(".short-name").val(), shortNameLength = shortNameText.replace(reg, "");
+        if (shortNameLength.length > 4) {
+            $(".short-name-tip").show();
+            return false;
+        }
         var name = $(".cat-name").val();
-        if(name == null || name == ""){
+        if (name == null || name == "") {
             alert("分类名称不能为空");
             return false;
         }
