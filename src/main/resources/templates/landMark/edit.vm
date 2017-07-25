@@ -54,7 +54,7 @@
                                     </div>
                                     <label class="control-label">商圈</label>
                                     <div class="controls">
-                                        <select id="district.id" name="district.id" class="span7">
+                                        <select id="district.id" name="district.id" class="span7 district-id" required>
                                             <option value="">全部</option>
                                             #foreach($district in $!districts)
                                                 <option value="$!district.id"#if($!entity.district.id == $!district.id) selected#end>
