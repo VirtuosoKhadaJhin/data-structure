@@ -9,8 +9,8 @@ public enum MerchantCooperationStatus {
     COMPETITION_COMMON(1, "竞对共有"),
     EXCLUSIVE(2, "独家经营"),
     CANCEL(3, "取消合作"),
-    COLSE(4, "关门"),
-    REMOVAL(5, "迁址");
+    COLSE(4, "关门");
+//    REMOVAL(5, "迁址");
 
     private Integer key;
 
