@@ -1,0 +1,28 @@
+.table th, .table td {
+    text-align: center;
+}
+
+.th-orderNo, .th-shopName, .th-comment {
+    width: 18%;
+}
+
+.th-score, .th-status {
+    width: 5%;
+}
+
+.th-commentTime, .th-replyTime {
+    width: 10%;
+}
+
+.table .td-order, .table .td-shopName, .table .td-comment {
+    text-align: left;
+}
+
+.table .td-comment {
+    word-break: break-all;
+    word-wrap: break-word
+}
+
+.table .hide-dispaly{
+    color: red;
+}
