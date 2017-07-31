@@ -71,11 +71,14 @@ public class CommentOrderServiceImpl implements CommentOrderService {
                     if (date != null)
                         predicate.add(cb.lessThanOrEqualTo(root.get("createTime").as(Date.class), date));
                 }
-                if ("high".equals(scoreStr))
+                if (entity.getDisplay() != null) {
+                    predicate.add(cb.equal(root.get("display").as(Boolean.class), entity.getDisplay()));
+                }
+                if ("high".equals(scoreStr)) {
                     predicate.add(cb.greaterThanOrEqualTo(root.get("score").as(Double.class), 4));
-                else if ("low".equals(scoreStr))
+                } else if ("low".equals(scoreStr)) {
                     predicate.add(cb.lessThan(root.get("score").as(Double.class), 4));
-
+                }
                 return query.where(predicate.toArray(new Predicate[predicate.size()])).getRestriction();
             }
         }, pageable);
@@ -123,4 +126,8 @@ public class CommentOrderServiceImpl implements CommentOrderService {
         return list;
     }
 
+    @Override
+    public void showOrHideComment(Long id, Boolean isShow) {
+        commentOrderDao.showOrHideComment(id, isShow);
+    }
 }

@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-
 @Controller
 @RequestMapping("commentOrder")
 public class CommentOrderController {
@@ -104,6 +103,20 @@ public class CommentOrderController {
     }
 
     /**
+     * 显示或隐藏评论
+     *
+     * @param id
+     * @param isShow
+     * @return
+     */
+    @RequestMapping("showOrHideComment")
+    @ResponseBody
+    public APIResult showOrHideComment(Long id, Boolean isShow) {
+        commentOrderService.showOrHideComment(id, isShow);
+        return new APIResult();
+    }
+
+    /**
      * 评价管理
      */
     @RequestMapping("list")
@@ -139,5 +152,4 @@ public class CommentOrderController {
         model.addAttribute("merchants", merchants);
         return "commentOrder/listFake";
     }
-
 }

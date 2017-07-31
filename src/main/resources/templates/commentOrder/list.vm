@@ -7,31 +7,45 @@
     <span class="icon"><i class="icon-th"></i></span>
     <h5>评价列表</h5>
 </div>
+<link href="/dist/css/comment-order/comment.css" rel="stylesheet"/>
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
-        <th width="175px">订单编号</th>
-        <th width="40px">评分</th>
-        <th>店铺名称</th>
-        <th width="35%">商铺评价</th>
-        <th width="140px">评论时间</th>
-        <th width="140px">回复时间</th>
-        <th width="130px">操作</th>
+        <th class="th-orderNo">订单编号</th>
+        <th class="th-score">评分</th>
+        <th class="th-shopName">店铺名称</th>
+        <th class="th-comment">商铺评价</th>
+        <th class="th-commentTime">评论时间</th>
+        <th class="th-replyTime">回复时间</th>
+        <th class="th-status">状态</th>
+        <th class="th-opt">操作</th>
     </tr>
     </thead>
     <tbody>
         #foreach($e in $!page.content)
-        <tr>
-            <td>$!e.order.ordersn</td>
-            <td>$!e.score</td>
-            <td><a href="$!link.requestPath/merchant/detail?id=$!e.merchant.id" class="alink"> $!e.merchant.name</a></td>
-            <td style="word-break: break-all;word-wrap: break-word">$!e.content</td>
-            <td>$!e.createTime</td>
-            <td>$!e.replyTime</td>
-            <td>
+        <tr class="tr-info" data-commentId="$!e.id">
+            <td class="td-order">$!e.order.ordersn</td>
+            <td class="td-score">$!e.score</td>
+            <td class="td-shopName"><a href="$!link.requestPath/merchant/detail?id=$!e.merchant.id" class="alink"> $!e.merchant.name</a></td>
+            <td class="td-comment">$!e.content</td>
+            <td class="td-createTime">$!e.createTime</td>
+            <td class="td-replyTime">$!e.replyTime</td>
+            <td class="comment-status">
+                #if($!e.display)
+                    <label class="show-display">显示</label>
+                #else
+                    <label class="hide-dispaly">隐藏</label>
+                #end
+            </td>
+            <td class="td-opt">
                 <button data-id="$!e.id" class="btn btn-success btn-mini detail-item" modal-id="detail-modal">查看</button>
                 <button data-name="commentId" data-value="$!e.id" class="btn btn-info btn-mini add-item" modal-id="reply-modal">回复</button>
-                <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</button>
+                #if($!e.display)
+                    <button data-id="$!e.id" class="btn btn-danger btn-mini hide-item">隐藏</button>
+                #else
+                    <button data-id="$!e.id" class="btn btn-warning btn-mini show-item">显示</button>
+                #end
+            ##  <button data-id="$!e.id" class="btn btn-danger btn-mini remove-item">删除</button>
             </td>
         </tr>
         #end
@@ -58,9 +72,16 @@
         <label>订单编号</label>
         <input type="text" class="span11" name="order.ordersn" value="$!entity.order.ordersn">
 
+        <label>状态</label>
+        <select name="display" class="span11">
+            <option value="">全部</option>
+            <option #if($!entity.display) selected #end value="true">显示</option>
+            <option #if($!entity.display==false) selected #end value="false">隐藏</option>
+        </select>
+
         <label>评分高低</label>
         <select name="scoreStr" class="span11">
-            <option value="">所有</option>
+            <option value="">全部</option>
             <option #if($!scoreStr == "high") selected #end value="high">高分</option>
             <option #if($!scoreStr == "low") selected #end value="low">低分</option>
         </select>
@@ -105,26 +126,6 @@
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
     </div>
 </div>
-<script src="/dist/js/curd.js"></script>
-<script>
-    $(".detail-item").on("click", function () {
-        var modal = $("#" + $(this).attr("modal-id"));
-        var id = $(this).attr("data-id");
-
-        $.ajax({
-            url: "replies", type: 'get',
-            data: {id: id},
-            success: function (result) {
-                html = "";
-                for (var i in result.data) {
-                    var reply = result.data[i];
-                    html += '<label>' + reply.createTime + '</label>';
-                    html += '<textarea class="span10" disabled>' + reply.content + '</textarea>';
-                }
-                $("#replies").empty().append(html);
-                $(modal).modal();
-            }
-        });
-    });
-</script>
+<script type="text/javascript" src="/dist/js/curd.js"></script>
+<script type="text/javascript" src="/dist/js/comment-order/comment.js"></script>
 #parse("common/list_end.vm")

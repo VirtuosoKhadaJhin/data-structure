@@ -23,4 +23,5 @@ public interface CommentOrderService {
 
     List<CommentReply> findReply(Long id);
 
+    void showOrHideComment(Long id, Boolean isShow);
 }
