@@ -68,7 +68,7 @@
         <input name="name" value="$!entity.name" type="text" placeholder="名称" class="span11">
         <label>本地名称：</label>
         <input name="kpname" value="$!entity.kpname" type="text" placeholder="本地名称" class="span11">
-        <label>状态</label>
+        <label>显示状态</label>
         <select name="display" class="span11">
             <option value="">全部</option>
             <option value="true" #if($!entity.display == true) selected #end>显示</option>
@@ -83,11 +83,12 @@
                 #end
             </select>
         #end
-        <label>合作情况</label>
-        <select name="issign" class="span11">
+        <label>合作状态</label>
+        <select name="cooperationStatus" class="span11">
             <option value="">全部</option>
-            <option value="true" #if($entity.issign==true) selected #end>已签约</option>
-            <option value="false" #if($entity.issign==false) selected #end>未签约</option>
+            #foreach($status in $!cooperationStatuses)
+                <option value="$!status" data-key="$!status.key" #if($!status==$!entity.cooperationStatus)selected #end>$!status.name</option>
+            #end
         </select>
         <button type="submit" class="btn btn-primary">查询</button>
         <a class="btn btn-warning export" href="javascript:void(0);">导出</a>
