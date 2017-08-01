@@ -40,7 +40,7 @@
             <OnMismatch>DENY</OnMismatch>
             <OnMatch>ACCEPT</OnMatch>
         </filter>
-        <destination>ec2-52-78-222-79.ap-northeast-2.compute.amazonaws.com:4561</destination>
+        <destination>ec2-52-196-133-130.ap-northeast-1.compute.amazonaws.com:4561</destination>
         <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder"/>
     </appender>
 
