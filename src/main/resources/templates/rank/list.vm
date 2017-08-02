@@ -65,6 +65,24 @@
         </select>
     </div>
 
+    <div class="control-group">
+        <label>状态</label>
+        <select name="display" class="span11 parent">
+            <option value="">全部</option>
+            <option value="true" #if($!entity.display=="true") selected #end>显示</option>
+            <option value="false" #if($!entity.display=="false") selected #end>隐藏</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>类型</label>
+        <select name="objtype" class="span11 parent">
+            <option value="">全部</option>
+            <option value="2" #if($!entity.objtype=="2") selected #end>团购</option>
+            <option value="1" #if($!entity.objtype=="1") selected #end>商家</option>
+        </select>
+    </div>
+    
     <button type="submit" class="btn btn-primary">查询</button>
 </form>
 <script src="/dist/js/cascade-select.js"></script>

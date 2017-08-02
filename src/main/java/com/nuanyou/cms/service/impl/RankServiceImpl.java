@@ -41,7 +41,13 @@ public class RankServiceImpl implements RankService {
 
                 if (entity.getCity() != null && entity.getCity().getId() != null)
                     predicate.add(cb.equal(root.get("city").get("id"), entity.getCity().getId()));
-
+    
+                if (entity.getObjtype() != null)
+                    predicate.add(cb.equal(root.get("objtype"), entity.getObjtype()));
+                
+                if (entity.getDisplay()!=null)
+                    predicate.add(cb.equal(root.get("display"),entity.getDisplay()));
+                
                 Predicate[] pre = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(pre)).getRestriction();
             }

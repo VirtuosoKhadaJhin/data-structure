@@ -195,9 +195,9 @@
 
     $("#merchant-save").bind("click", function () {
         var merchantId = $("#merchantId").val();
-        alert(merchantId);
+//        alert(merchantId);
         var value = $("#merchantId").find("option:selected").text();
-        alert(value);
+//        alert(value);
         if (!merchantId) {
             return alert("请选择!");
         } else {
