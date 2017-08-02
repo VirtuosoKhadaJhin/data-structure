@@ -190,6 +190,7 @@ public class MerchantController {
 
         model.addAttribute("entity", entity);
         model.addAttribute("YouFu", SupportType.YouFu);
+        model.addAttribute("cooperationStatuses", MerchantCooperationStatus.values());
         return "merchant/list";
     }
 
