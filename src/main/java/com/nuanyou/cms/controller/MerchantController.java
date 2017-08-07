@@ -264,7 +264,7 @@ public class MerchantController {
         propertyHeaderMap.put("payTypes.name", "支付方式");
         propertyHeaderMap.put("supportType.name", "支持类型");
         propertyHeaderMap.put("display", "显示状态");
-        propertyHeaderMap.put("issign", "合作情况");
+        propertyHeaderMap.put("cooperationStatus.name", "合作情况");
         propertyHeaderMap.put("district.name", "商圈信息");
         propertyHeaderMap.put("mcat.name", "一级分类");
         propertyHeaderMap.put("subcat.name", "二级分类");
