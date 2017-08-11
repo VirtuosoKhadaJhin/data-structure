@@ -130,15 +130,17 @@
 
                         <form class="form-horizontal search-form" method="get" action="list">
 
-                            <div class="search-select">
-                                <label>国家</label>
-                                <select class="span11 select-country" id="country" name="country">
-                                    <option value="">全部</option>
-                                    #foreach($e in $!countries)
-                                        <option value="$!e.id" #if($!requestVo.country.id==$!e.id)selected #end>$!e.name</option>
-                                    #end
-                                </select>
-                            </div>
+                            #if($!countries.size() > 1)
+                                <div class="search-select">
+                                    <label>国家</label>
+                                    <select class="span11 select-country" id="country" name="country">
+                                        <option value="">全部</option>
+                                        #foreach($e in $!countries)
+                                            <option value="$!e.id" #if($!requestVo.country.id==$!e.id)selected #end>$!e.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                            #end
 
                             <div class="search-select">
                                 <label>城市</label>

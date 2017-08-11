@@ -1,81 +1,103 @@
-#parse("common/list_start.vm")
-<div id="breadcrumb">
-    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
-    <a href="../city/list" class="tip-bottom" data-original-title="">城市管理</a>
-    <a href="#" class="tip-bottom" data-original-title="">列表</a>
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 商户模块 城市管理</title>
+    #include("common/css-support.vm")
+    <link href="/dist/css/city/city.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="content" class="content-container">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10">
+                <div class="widget-box">
+                    <div class="widget-content nopadding">
+                        <div id="breadcrumb">
+                            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+                            <a href="../city/list" class="tip-bottom" data-original-title="">城市管理</a>
+                            <a href="#" class="tip-bottom" data-original-title="">列表</a>
+                        </div>
+                        <div class="widget-title">
+                            <span class="icon"><i class="icon-th"></i></span>
+                            <h5>城市列表</h5>
+                            <a class="btn btn-mini btn-info buttons" href="edit?type=1"><i class="icon-plus"> 新增</i></a>
+                        </div>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>序号
+                                    #if($!page.sort.getOrderFor("id").direction=="ASC")
+                                        <i class="icon-sort-up" onclick="sort('id','DESC')"></i>
+                                    #elseif($!page.sort.getOrderFor("id").direction=="DESC")
+                                        <i class="icon-sort-down" onclick="sort('id','')"></i>
+                                    #else
+                                        <i class="icon-sort" onclick="sort('id','ASC')"></i>
+                                    #end
+                                </th>
+                                <th>城市名称</th>
+                                <th>所属国家
+                                    #if($!page.sort.getOrderFor("country.name").direction=="ASC")
+                                        <i class="icon-sort-up" onclick="sort('country.name','DESC')"></i>
+                                    #elseif($!page.sort.getOrderFor("country.name").direction=="DESC")
+                                        <i class="icon-sort-down" onclick="sort('country.name','')"></i>
+                                    #else
+                                        <i class="icon-sort" onclick="sort('country.name','ASC')"></i>
+                                    #end
+                                </th>
+
+                                <th>排序</th>
+                                <th>是否显示</th>
+                                <th class="table-set" width="90px">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($entity in $!page.content)
+                                <tr class="odd gradeX">
+                                    <td>$!{velocityCount}</td>
+                                    <td>$!entity.name</td>
+                                    <td>$!entity.country.name</td>
+                                    <td>$!entity.sort</td>
+                                    <td>#if($!entity.display)显示#else 隐藏#end</td>
+                                    <td>
+                                        <a href="edit?type=2&id=$!entity.id" class="btn btn-primary btn-mini"><i class="icon-edit"> 编辑</i></a>
+                                    </td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                        #parse("common/list_mid.vm")
+                        <form class="form-horizontal search-form" method="post">
+                            <div class="control-group">
+                                <label>城市名称：</label>
+                                <input type="text" class="span11" placeholder="城市名称" name="nameOrId" value="$!nameOrId">
+                            </div>
+
+                            #if($!countries.size() > 1)
+                                <div class="control-group">
+                                    <label>国家：</label>
+                                    <select id="country.id" name="country.id" class="span11">
+                                        <option value="">全部</option>
+                                        #foreach($e in $!countries)
+                                            <option value="$!e.id" #if($!entity.country.id==$!e.id) selected #end>$!e.id:$!e.name</option>
+                                        #end
+                                    </select>
+                                </div>
+                            #end
+
+                            <div class="control-group">
+                                <button type="submit" class="btn btn-primary"><i class="icon-search"> 查询</i></button>
+                                <button class="btn btn-warning search-reset"><i class="icon-repeat"> 重置</i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="widget-title">
-    <span class="icon"><i class="icon-th"></i></span>
-    <h5>城市列表</h5>
-    <a class="btn btn-mini btn-info buttons" href="edit?type=1">新增</a>
-</div>
-<table class="table table-bordered table-striped">
-    <thead>
-    <tr>
-        <th>ID
-            #if($!page.sort.getOrderFor("id").direction=="ASC")
-                <i class="icon-sort-up" onclick="sort('id','DESC')"></i>
-            #elseif($!page.sort.getOrderFor("id").direction=="DESC")
-                <i class="icon-sort-down" onclick="sort('id','')"></i>
-            #else
-                <i class="icon-sort" onclick="sort('id','ASC')"></i>
-            #end
-        </th>
-        <th>城市名称</th>
-        <th>所属国家
-            #if($!page.sort.getOrderFor("country.name").direction=="ASC")
-                <i class="icon-sort-up" onclick="sort('country.name','DESC')"></i>
-            #elseif($!page.sort.getOrderFor("country.name").direction=="DESC")
-                <i class="icon-sort-down" onclick="sort('country.name','')"></i>
-            #else
-                <i class="icon-sort" onclick="sort('country.name','ASC')"></i>
-            #end
-        </th>
-
-        <th>排序</th>
-        <th>是否显示</th>
-        <th class="table-set" width="90px">操作</th>
-    </tr>
-    </thead>
-    <tbody>
-        #foreach($entity in $!page.content)
-        <tr class="odd gradeX">
-            <td>$!entity.id</td>
-            <td>$!entity.name</td>
-            <td>$!entity.country.name</td>
-            <td>$!entity.sort</td>
-            <td>#if($!entity.display)显示#else 隐藏#end</td>
-            <td>
-                <a href="edit?type=2&id=$!entity.id" class="btn btn-success btn-mini">编辑</a>
-                <a href="edit?type=3&id=$!entity.id" class="btn btn-info btn-mini">查看</a>
-            </td>
-        </tr>
-        #end
-    </tbody>
-</table>
-#parse("common/list_mid.vm")
-<form class="form-horizontal " method="post">
-    <div class="control-group">
-        <label>城市名称 或ID</label>
-        <input type="text" class="span11" name="nameOrId" value="$!nameOrId">
-    </div>
-    <div class="control-group">
-        <label>国家</label>
-        <select id="country.id" name="country.id" class="span7">
-            <option value="">全部</option>
-            #foreach($e in $!countries)
-                <option value="$!e.id" #if($!entity.country.id==$!e.id) selected #end>$!e.id:$!e.name</option>
-            #end
-        </select>
-    </div>
-    <div class="control-group">
-        <button type="submit" class="btn btn-primary">查询</button>
-    </div>
-
-    <input type="text" name="name1" value="1">
-    <input type="text" name="name1" value="2">
-</form>
-
-#parse("common/list_end.vm")
-
+<script type="text/javascript" src="/dist/js/city/city.js"></script>
+</body>
+</html>
 
