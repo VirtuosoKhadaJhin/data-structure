@@ -3,6 +3,7 @@ package com.nuanyou.cms.service;
 import com.nuanyou.cms.entity.Channel;
 import com.nuanyou.cms.entity.EntityBdMerchantCollectionCode;
 import com.nuanyou.cms.entity.Merchant;
+import com.nuanyou.cms.model.MerchantQueryParam;
 import com.nuanyou.cms.model.MerchantVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,4 +57,6 @@ public interface MerchantService {
     EntityBdMerchantCollectionCode unbindNumber (EntityBdMerchantCollectionCode collectionCode);
 
     Page<Merchant> findMerchantByCountryFilter(final Long country, String mchName, Long mchId, Pageable pageable);
+
+    Page<Merchant> findMerchant (MerchantQueryParam param, Pageable pageable);
 }

@@ -5,6 +5,7 @@ import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.entity.Banner;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.service.BannerService;
+import com.nuanyou.cms.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -27,7 +28,7 @@ public class BannerController {
     @Autowired
     private BannerDao bannerDao;
     @Autowired
-    private CountryDao countryDao;
+    private CountryService countryService;
 
     @RequestMapping("add")
     public String add(Banner entity) {
@@ -38,7 +39,7 @@ public class BannerController {
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         Banner entity = null;
         if (id != null) {
             entity = bannerDao.findOne(id);
@@ -60,7 +61,7 @@ public class BannerController {
     protected HttpServletRequest request;
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index, Banner entity, Model model) {
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         Page<Banner> page = bannerService.findByCondition(index, entity);
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);

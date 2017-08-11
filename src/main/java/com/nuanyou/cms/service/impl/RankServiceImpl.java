@@ -4,6 +4,7 @@ import com.nuanyou.cms.dao.RankDao;
 import com.nuanyou.cms.entity.Rank;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.RankService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,15 +28,20 @@ public class RankServiceImpl implements RankService {
 
     @Autowired
     private RankDao rankDao;
+    @Autowired
+    private UserService userService;
 
     @Override
     public Page<Rank> findByCondition(Integer index, final Rank entity) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
-
+        final List<Long> countryIds = userService.findUserCountryId();
         return rankDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("city").get("country").get("id").in(countryIds));
+                }
                 if (entity.getCountry() != null && entity.getCountry().getId() != null)
                     predicate.add(cb.equal(root.get("city").get("country").get("id"), entity.getCountry().getId()));
 

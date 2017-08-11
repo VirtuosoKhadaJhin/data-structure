@@ -72,10 +72,7 @@ public class CulturalRecommendationsGroupController {
     public String list(CulturalRecommendationsGroup entity, @RequestParam(required = false, defaultValue = "1") int index, Model model) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
 
-        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("title", contains().ignoreCase());
-
-        BeanUtils.cleanEmpty(entity);
-        Page<CulturalRecommendationsGroup> page = culturalRecommendationsGroupDao.findAll(Example.of(entity, matcher), pageable);
+        Page<CulturalRecommendationsGroup> page = culturalRecommendationsGroupService.findByCondition(entity,pageable);
         model.addAttribute("page", page);
 
         setEnums(model);

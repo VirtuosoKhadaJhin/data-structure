@@ -52,7 +52,7 @@ public class RateController {
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
         // all countries
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         Rate entity = null;
         if (id != null) {
             entity = rateDao.findOne(id);

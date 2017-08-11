@@ -71,11 +71,7 @@ public class RecommendCatController {
     @RequestMapping("list")
     public String list(RecommendCat entity, @RequestParam(required = false, defaultValue = "1") int index, Model model) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
-
-        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("title", contains().ignoreCase());
-
-        BeanUtils.cleanEmpty(entity);
-        Page<RecommendCat> page = recommendCatDao.findAll(Example.of(entity, matcher), pageable);
+        Page<RecommendCat> page = recommendCatService.findByCondition(entity,pageable);
         model.addAttribute("page", page);
 
         setEnums(model);

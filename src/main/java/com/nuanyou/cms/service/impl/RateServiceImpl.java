@@ -4,6 +4,7 @@ import com.nuanyou.cms.dao.RateDao;
 import com.nuanyou.cms.entity.Rate;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.RateService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,12 +29,15 @@ public class RateServiceImpl implements RateService {
     @Autowired
     private RateDao rateDao;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public Page<Rate> findByCondition(Integer index, final Rate entity) {
 
 
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
-
+        final List<Long> countryIds = userService.findUserCountryId();
         return rateDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
@@ -45,6 +49,9 @@ public class RateServiceImpl implements RateService {
                 Predicate thb = cb.equal(root.get("code"), "THB");
                 Predicate or = cb.or(krw, jpy, eur, thb);
                 predicate.add(or);
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("country").get("id").in(countryIds));
+                }
                 return query.where(predicate.toArray(pre)).getRestriction();
             }
         }, pageable);

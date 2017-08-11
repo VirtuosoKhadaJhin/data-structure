@@ -7,11 +7,10 @@ import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.ChannelType;
 import com.nuanyou.cms.entity.enums.CodeType;
 import com.nuanyou.cms.entity.enums.MerchantCooperationStatus;
+import com.nuanyou.cms.entity.enums.RefundStatus;
+import com.nuanyou.cms.model.MerchantQueryParam;
 import com.nuanyou.cms.model.MerchantVO;
-import com.nuanyou.cms.service.ItemDetailimgService;
-import com.nuanyou.cms.service.MerchantCollectionCodeService;
-import com.nuanyou.cms.service.MerchantService;
-import com.nuanyou.cms.service.MerchantStaffService;
+import com.nuanyou.cms.service.*;
 import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.MyCacheManager;
@@ -73,6 +72,9 @@ public class MerchantServiceImpl implements MerchantService {
     @Autowired
     private DistrictDao districtDao;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public List<Merchant> getIdNameList() {
         return getIdNameList(null);
@@ -83,10 +85,11 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public List<Merchant> getIdNameList(Boolean display) {
+        List<Long> countryIds = userService.findUserCountryId();
         if (display == null)
-            return merchantDao.getIdNameList();
+            return merchantDao.getIdNameList(countryIds);
         else
-            return merchantDao.getIdNameList();
+            return merchantDao.getIdNameList(countryIds);
 
  /*       if (cacheManager.getValue(key)!=null){
             return cacheManager.getValue(key);
@@ -327,12 +330,17 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public List<Merchant> findMerchantByCountry(final Long country) {
+        final List<Long> countryIds = userService.findUserCountryId();
         Specification specification = new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 if (country != null) {
                     predicate.add(cb.equal(root.get("district").get("country").get("id"), country));
+                }else {
+                    if (countryIds != null && countryIds.size() > 0) {
+                        predicate.add(root.get("district").get("country").get("id").in(countryIds));
+                    }
                 }
                 predicate.add(cb.equal(root.get("display"), true));
                 Predicate[] arrays = new Predicate[predicate.size()];
@@ -387,5 +395,41 @@ public class MerchantServiceImpl implements MerchantService {
 
         List<Merchant> list = merchantDao.findIdNameByCountry(country);
         return new PageImpl<Merchant>(list);
+    }
+
+    @Override
+    public Page<Merchant> findMerchant (final MerchantQueryParam param, final Pageable pageable) {
+        final List<Long> countryIds = userService.findUserCountryId();
+                Specification specification = new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("district").get("country").get("id").in(countryIds));
+                }
+                if (param.id != null) {
+                    predicate.add(cb.equal(root.get("id"), param.id));
+                }
+                if (StringUtils.isNotEmpty(param.name)) {
+                    predicate.add(cb.like(root.get("name"), "%"+param.name+"%"));
+                }
+                if (StringUtils.isNotEmpty(param.kpname)) {
+                    predicate.add(cb.like(root.get("kpname"), "%"+param.kpname+"%"));
+                }
+                if (param.countryId != null) {
+                    predicate.add(cb.equal(root.get("district").get("country").get("id"), param.countryId));
+                }
+                if (param.cooperationStatus  != null) {
+                    predicate.add(cb.equal(root.get("cooperationStatus").get("key"), param.cooperationStatus));
+                }
+                if (param.display  != null) {
+                    predicate.add(cb.equal(root.get("display"), param.display ));
+                }
+                Predicate[] arrays = new Predicate[predicate.size()];
+
+                return query.where(predicate.toArray(arrays)).getRestriction();
+            }
+        };
+        return merchantDao.findAll(specification,pageable);
     }
 }

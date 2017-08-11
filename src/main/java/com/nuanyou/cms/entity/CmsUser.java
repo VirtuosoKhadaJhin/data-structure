@@ -13,7 +13,7 @@ import javax.persistence.*;
  */
 @Entity
 @EntityListeners(DateEntityListener.class)
-@Table(name = "cms30_user",catalog = "cms")
+@Table(name = "cms_user")
 public class CmsUser {
 
     @Id
@@ -21,11 +21,11 @@ public class CmsUser {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "username")
+    @Column(name = "name")
     private String username;
 
-    @Column(name = "password")
-    private String password;
+//    @Column(name = "password")
+//    private String password;
 
     @Column(name = "email")
     private String email;
@@ -46,13 +46,13 @@ public class CmsUser {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
 
     public String getEmail() {
         return email;

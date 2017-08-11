@@ -11,6 +11,7 @@ import com.nuanyou.cms.entity.order.*;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.OrderRefundLogService;
 import com.nuanyou.cms.service.OrderService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.DateUtils;
 import com.nuanyou.cms.util.TimeCondition;
@@ -57,6 +58,8 @@ public class OrderServiceImpl implements OrderService {
     private MerchantDao merchantDao;
     @Autowired
     private OrderItemDao orderItemDao;
+    @Autowired
+    private UserService userService;
 
     private static String timePattern = "yyyy-MM-dd HH:mm:ss";
     private static String decimalPattern = "#0.00";
@@ -64,11 +67,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page<Order> findByCondition(Integer index, final Order entity, final TimeCondition time, Pageable pageable) {
+        final List<Long> countryIds = userService.findUserCountryId();
         return orderDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
-
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("countryid").in(countryIds));
+                }
                 if (entity.getId() != null) {
                     Predicate p = cb.equal(root.get("id"), entity.getId());
                     predicate.add(p);
@@ -126,11 +132,14 @@ public class OrderServiceImpl implements OrderService {
         Pageable pageable = null;
         if (index != null)
             pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "refundtime");
-
+        final List<Long> countryIds = userService.findUserCountryId();
         return orderDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("countryid").in(countryIds));
+                }
                 if (entity.getRefundstatus() != null) {
                     Predicate pStatus = cb.equal(root.get("refundstatus"), entity.getRefundstatus());
                     predicate.add(pStatus);

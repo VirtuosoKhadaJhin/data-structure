@@ -4,6 +4,7 @@ import com.nuanyou.cms.dao.SearchKeywordDao;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.entity.SearchKeyword;
 import com.nuanyou.cms.entity.Country;
+import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.SearchKeywordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,7 @@ public class SearchKeywordController {
     @Autowired
     private SearchKeywordDao searchKeywordDao;
     @Autowired
-    private CountryDao countryDao;
+    private CountryService countryService;
 
     @RequestMapping("add")
     public String add(SearchKeyword entity) {
@@ -37,7 +38,7 @@ public class SearchKeywordController {
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         SearchKeyword entity = null;
         if (id != null) {
             entity = searchKeywordDao.findOne(id);
@@ -57,7 +58,7 @@ public class SearchKeywordController {
 
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index, SearchKeyword entity, Model model) {
-        List<Country> countries = countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         Page<SearchKeyword> page = searchKeywordService.findByCondition(index, entity);
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);

@@ -10,6 +10,7 @@ import com.nuanyou.cms.model.DistrictVo;
 import com.nuanyou.cms.model.LangsCategory;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.model.enums.LangsCountry;
+import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.DistrictService;
 import com.nuanyou.cms.service.LangsCategoryService;
 import com.nuanyou.cms.util.NumberUtils;
@@ -43,7 +44,7 @@ public class DistrictController {
     @Autowired
     private DistrictDao districtDao;
     @Autowired
-    private CountryDao countryDao;
+    private CountryService countryService;
 
     @RequestMapping("add")
     public String add(District district) {
@@ -55,7 +56,7 @@ public class DistrictController {
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type, HttpServletRequest request) {
         // all countries
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         District entity = null;
         if (id != null) {
             entity = districtDao.findOne(id);
@@ -109,7 +110,7 @@ public class DistrictController {
         model.addAttribute("flag", "district");
         model.addAttribute("nameOrId", nameOrId);
 
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         model.addAttribute("countries", countries);
         return "district/list";
     }

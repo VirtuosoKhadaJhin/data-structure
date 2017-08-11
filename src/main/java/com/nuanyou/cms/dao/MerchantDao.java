@@ -13,8 +13,8 @@ import java.util.List;
  */
 public interface MerchantDao extends JpaRepository<Merchant, Long>, JpaSpecificationExecutor {
 
-    @Query(value = "select new Merchant(t.id,t.name) from Merchant t")
-    List<Merchant> getIdNameList();
+    @Query(value = "select new Merchant(t.id,t.name) from Merchant t where t.district.country.id in ?1")
+    List<Merchant> getIdNameList(List<Long> countryIds);
 
     @Query(value = "select t.kpname from Merchant t where t.id=?1")
     String getLocalName(Long id);

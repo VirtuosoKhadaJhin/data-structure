@@ -19,6 +19,8 @@ public interface DistrictService {
 
     List<District> getIdNameList();
 
+    List<District> getIdNameList(Long countryId);
+
     District saveNotNull(District entity);
 
     /**

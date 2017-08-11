@@ -46,7 +46,7 @@ public class MissionGroupController {
     @RequestMapping("list")
     public String list(MissionGroupVo requestVo, Model model) {
         Page<MissionGroupVo> vos = missionGroupService.findAllGroups(requestVo);
-        List<Country> countries = countryService.findAllCountries();
+        List<Country> countries = countryService.getIdNameList();
         List<City> cities = cityService.findAllCities();
         model.addAttribute("countries", countries);
         model.addAttribute("cities", cities);
@@ -79,7 +79,7 @@ public class MissionGroupController {
      */
     @RequestMapping("add")
     public String add(Model model) {
-        List<Country> countries = countryService.findAllCountries();
+        List<Country> countries = countryService.getIdNameList();
         List<City> cities = cityService.findAllCities();
         List<BdUser> allBdUsers = missionGroupService.findAllBdUserNonGroup();
         model.addAttribute("allBdUsers", allBdUsers);
@@ -98,7 +98,7 @@ public class MissionGroupController {
     @RequestMapping("edit")
     public String edit(Model model, Long id) {
         MissionGroup group = missionGroupService.findGroupById(id);
-        List<Country> countries = countryService.findAllCountries();
+        List<Country> countries = countryService.getIdNameList();
         List<City> cities = cityService.findAllCities();
         List<BdUser> nonGroupUsers = missionGroupService.findNonGroupByCountryId(group.getCountry().getId(), id);
         model.addAttribute("nonGroupUsers", nonGroupUsers);
