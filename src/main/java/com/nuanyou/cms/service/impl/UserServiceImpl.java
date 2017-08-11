@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService{
         if(user==null){
             throw new APIException(ResultCodes.Fail,"查询用户失败,id"+id);
         }
-        return user.getUsername();
+        return user.getName();
     }
 
     @Override
