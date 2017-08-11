@@ -46,12 +46,12 @@ public class UserServiceImpl implements UserService{
         String email = UserHolder.getUser().getEmail();
         CmsUser user = cmsUserDao.findByEmail(email);
         if(user==null){
-            throw new APIException(ResultCodes.Fail,"查询用户失败");
+//            throw new APIException(ResultCodes.Fail,"查询用户失败");
         }
         ServletRequestAttributes ra = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = ra.getRequest();
         String uri = request.getRequestURI();
-        List<Object[]> list = cmsUserDao.findCountryIdByUserMenu(user.getId(),uri);
+        List<Object[]> list = cmsUserDao.findCountryIdByUserMenu(1L,"/menu/list");
         List<Long> countryIds = new ArrayList<>();
         for (Object[] objects : list) {
             countryIds.add(Long.parseLong(objects[0].toString()));

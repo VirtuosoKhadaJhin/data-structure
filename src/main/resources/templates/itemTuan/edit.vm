@@ -17,6 +17,14 @@
             font-weight: bold;
         }
     </style>
+
+    <script>
+            #if($!disabled)
+            alert ('保存成功');
+            #else
+            //            alert ('保存失败');
+            #end
+    </script>
 </head>
 <body>
 <div id="content">

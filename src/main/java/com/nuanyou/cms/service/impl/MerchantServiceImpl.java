@@ -77,7 +77,7 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public List<Merchant> getIdNameList() {
-        return getIdNameList(null);
+        return getIdNameList(true);
     }
 
     private static final String sg_url = "https://sg.h5.m.91nuanyou.com/view/order/youfu.html";
@@ -86,10 +86,10 @@ public class MerchantServiceImpl implements MerchantService {
     @Override
     public List<Merchant> getIdNameList(Boolean display) {
         List<Long> countryIds = userService.findUserCountryId();
-        if (display == null)
-            return merchantDao.getIdNameList(countryIds);
+        if (countryIds != null && countryIds.size() > 0)
+            return merchantDao.getIdNameList(display,countryIds);
         else
-            return merchantDao.getIdNameList(countryIds);
+            return merchantDao.getIdNameList(display);
 
  /*       if (cacheManager.getValue(key)!=null){
             return cacheManager.getValue(key);

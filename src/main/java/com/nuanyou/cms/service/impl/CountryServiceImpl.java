@@ -24,7 +24,11 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public List<Country> getIdNameList() {
         List<Long> countryIds = userService.findUserCountryId();
-        return countryDao.getIdNameList(countryIds);
+        if (countryIds != null && countryIds.size() > 0)
+            return countryDao.getIdNameList(countryIds);
+        else
+            return countryDao.findAllCountries();
+
     }
 
     @Override
