@@ -69,16 +69,17 @@
 </div>
 #parse("common/list_mid.vm")
 <form>
-    <div class="control-group">
-        <label>国家:</label>
-        <select name="country.id" class="span11">
-            <option value="">全部</option>
-            #foreach($e in $!countries)
-                <option value="$!e.id" #if($!entity.country.id==$!e.id) selected #end>$!e.name</option>
-            #end
-        </select>
-    </div>
-
+    #if($!countries.size() > 1)
+        <div class="control-group">
+            <label>国家:</label>
+            <select name="country.id" class="span11">
+                <option value="">全部</option>
+                #foreach($e in $!countries)
+                    <option value="$!e.id" #if($!entity.country.id==$!e.id) selected #end>$!e.name</option>
+                #end
+            </select>
+        </div>
+    #end
 
     <div class="control-group">
         <label>位置:</label>

@@ -134,7 +134,7 @@
 
 
 
-
+    #if($!countries.size() > 1)
         <label for="status">国家：</label>
         <select id="countryid" name="countryid" class="span11">
             <option value="">全部</option>
@@ -148,6 +148,7 @@
                 </option>
             #end
         </select>
+    #end
 
     <label for="status">订单类型：</label>
     <select id="ordertype" name="ordertype" class="span11">

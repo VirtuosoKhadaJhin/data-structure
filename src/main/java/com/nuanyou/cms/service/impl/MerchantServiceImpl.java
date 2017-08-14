@@ -6,8 +6,6 @@ import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.ChannelType;
 import com.nuanyou.cms.entity.enums.CodeType;
-import com.nuanyou.cms.entity.enums.MerchantCooperationStatus;
-import com.nuanyou.cms.entity.enums.RefundStatus;
 import com.nuanyou.cms.model.MerchantQueryParam;
 import com.nuanyou.cms.model.MerchantVO;
 import com.nuanyou.cms.service.*;
@@ -23,7 +21,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -258,7 +259,7 @@ public class MerchantServiceImpl implements MerchantService {
         CmsUser cmsUser = cmsUserDao.findByEmail(UserHolder.getUser().getEmail());
         if (cmsUser != null) {
             collectionCode.setModifierId(cmsUser.getId());
-            collectionCode.setModifier(cmsUser.getUsername());
+            collectionCode.setModifier(cmsUser.getName());
         }
         collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
 
@@ -285,7 +286,7 @@ public class MerchantServiceImpl implements MerchantService {
         CmsUser cmsUser = cmsUserDao.findByEmail(UserHolder.getUser().getEmail());
         if (cmsUser != null) {
             collectionCode.setModifierId(cmsUser.getId());
-            collectionCode.setModifier(cmsUser.getUsername());
+            collectionCode.setModifier(cmsUser.getName());
         }
         collectionCode.setUpdateTime(new Date());
         collectionCodeService.saveEntityBdMerchantCollectionCode(collectionCode);
