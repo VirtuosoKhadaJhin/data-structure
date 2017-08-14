@@ -47,7 +47,12 @@ public class MissionGroupController {
     public String list(MissionGroupVo requestVo, Model model) {
         Page<MissionGroupVo> vos = missionGroupService.findAllGroups(requestVo);
         List<Country> countries = countryService.getIdNameList();
-        List<City> cities = cityService.findAllCities();
+        List<City> cities;
+        if (countries != null && countries.size() == 1) {
+            cities = cityService.findCityByCountryId(countries.get(0).getId());
+        }else {
+            cities = cityService.findAllCities();
+        }
         model.addAttribute("countries", countries);
         model.addAttribute("cities", cities);
         model.addAttribute("page", vos);//page统一命名，分页
