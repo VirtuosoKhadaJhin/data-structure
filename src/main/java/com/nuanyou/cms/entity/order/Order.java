@@ -698,7 +698,7 @@ public class Order {
     }
 
     public Boolean getRefundQualified(Order order) {
-        if (order.getOrderstatus() == NewOrderStatus.Consumed || order.getOrderstatus() == NewOrderStatus.Commented ||
+        if ((order.getOrderstatus() == NewOrderStatus.Payed && (order.getOrdertype() == OrderType.Huigou || order.getOrdertype() == OrderType.TuanGou))||order.getOrderstatus() == NewOrderStatus.Consumed || order.getOrderstatus() == NewOrderStatus.Commented ||
                 order.getOrderstatus() == NewOrderStatus.AutoVerification || order.getOrderstatus() == NewOrderStatus.MerchantVerfication) {
             if (order.getRefundstatus() == null || order.getRefundstatus() == RefundStatus.Unknown) {
                 return true;
