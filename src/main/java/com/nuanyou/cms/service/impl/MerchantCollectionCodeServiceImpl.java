@@ -6,6 +6,7 @@ import com.nuanyou.cms.commons.MD5Utils;
 import com.nuanyou.cms.dao.EntityBdMerchantCollectionCodeDao;
 import com.nuanyou.cms.entity.EntityBdMerchantCollectionCode;
 import com.nuanyou.cms.service.MerchantCollectionCodeService;
+import com.nuanyou.cms.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -46,6 +47,9 @@ public class MerchantCollectionCodeServiceImpl implements MerchantCollectionCode
     private EntityBdMerchantCollectionCodeDao entityBdMerchantCollectionCodeDao;
     @Value("${numberbind.domain}")
     private String domain;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public Long findMchIdByCode (String code) {
@@ -161,10 +165,14 @@ public class MerchantCollectionCodeServiceImpl implements MerchantCollectionCode
 
     @Override
     public Page<EntityBdMerchantCollectionCode> query (final EntityBdMerchantCollectionCode entity, Pageable pageable) {
+        final List<Long> countryIds = userService.findUserCountryId();
         Page<EntityBdMerchantCollectionCode> result = entityBdMerchantCollectionCodeDao.findAll(new Specification(){
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<>();
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("countryId").in(countryIds));
+                }
                 if (entity.getMchId() != null) {
                     predicate.add(cb.equal(root.get("mchId"), entity.getMchId()));
                 }
