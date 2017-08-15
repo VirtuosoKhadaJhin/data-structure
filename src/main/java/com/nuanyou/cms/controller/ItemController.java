@@ -79,6 +79,7 @@ public class ItemController {
         model.addAttribute("supportTypes", ItemSupportType.values());
 
         model.addAttribute("disabled", true);
+        model.addAttribute("update", true);
         return "item/edit";
     }
 

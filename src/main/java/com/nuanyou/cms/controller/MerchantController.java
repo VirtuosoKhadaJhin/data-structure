@@ -137,8 +137,9 @@ public class MerchantController {
         entity.setCollectionCodeList(returnCodes);
         model.addAttribute("entity", entity);
         setEnums(model, countryId);
-        model.addAttribute("disabled", true);
         model.addAttribute("cooperationStatuses", MerchantCooperationStatus.values());
+        model.addAttribute("disabled", true);
+        model.addAttribute("update", true);
         return "merchant/edit";
     }
 

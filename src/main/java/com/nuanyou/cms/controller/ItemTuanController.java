@@ -111,7 +111,8 @@ public class ItemTuanController {
         model.addAttribute("tuanTypes", TuanType.values());
 
         model.addAttribute("disabled", true);
-        return "redirect:detail?id=" + entity.getId();
+        model.addAttribute("update", true);
+        return "itemTuan/edit";
     }
 
     @RequestMapping(path = "remove", method = RequestMethod.GET)
