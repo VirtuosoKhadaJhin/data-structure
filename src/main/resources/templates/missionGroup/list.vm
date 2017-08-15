@@ -130,7 +130,6 @@
 
                         <form class="form-horizontal search-form" method="get" action="list">
 
-                            #if($!countries.size() > 1)
                                 <div class="search-select">
                                     <label>国家</label>
                                     <select class="span11 select-country" id="country" name="country">
@@ -140,7 +139,6 @@
                                         #end
                                     </select>
                                 </div>
-                            #end
 
                             <div class="search-select">
                                 <label>城市</label>

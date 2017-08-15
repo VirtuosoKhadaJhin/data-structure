@@ -10,6 +10,8 @@ import com.nuanyou.cms.model.BdUserRequestVo;
 import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.BdUserService;
+import com.nuanyou.cms.service.UserService;
+import com.nuanyou.cms.sso.client.validation.vo.User;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.MD5Utils;
 import org.apache.commons.collections.CollectionUtils;
@@ -44,11 +46,14 @@ public class BdUserServiceImpl implements BdUserService {
     @Autowired
     private BdCountryDao bdCountryDao;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public Page<BdUserVo> findAllBdUserVos(final BdUserRequestVo requestVo) {
         //分页请求
         Pageable pageable = new PageRequest(requestVo.getIndex() - 1, PageUtil.pageSize);
-
+        final List<Long> countryIds = userService.findUserCountryId();
         //配置查询条件,查询表中数据
         Page<BdUser> bdUsers = bdUserDao.findAll(new Specification() {
 
@@ -56,6 +61,9 @@ public class BdUserServiceImpl implements BdUserService {
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 predicate.add(cb.equal(root.get("deleted"), 0));
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("country").get("id").in(countryIds));
+                }
                 if (requestVo.getConturyid() != null) {
                     predicate.add(cb.equal(root.get("country").get("id"), requestVo.getConturyid()));
                 }

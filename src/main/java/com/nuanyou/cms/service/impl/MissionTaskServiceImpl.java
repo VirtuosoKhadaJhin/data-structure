@@ -17,6 +17,7 @@ import com.nuanyou.cms.model.mission.MissionDistributeParamVo;
 import com.nuanyou.cms.model.mission.MissionRequestVo;
 import com.nuanyou.cms.model.mission.MissionTaskVo;
 import com.nuanyou.cms.service.MissionTaskService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.DateUtils;
@@ -53,14 +54,21 @@ public class MissionTaskServiceImpl implements MissionTaskService {
     @Autowired
     private BdUserDao bdUserDao;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public Page<MissionTaskVo> findAllMissionTask(final MissionRequestVo requestVo) {
         Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageSize());
+        final List<Long> countryIds = userService.findUserCountryId();
         Specification spec = new Specification() {
 
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("merchant").get("district").get("country").get("id").in(countryIds));
+                }
                 if (requestVo.getMchId() != null) {
                     requestVo.getMchIds().add(requestVo.getMchId());
                 }
