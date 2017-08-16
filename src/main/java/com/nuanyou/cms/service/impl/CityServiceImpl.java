@@ -42,6 +42,9 @@ public class CityServiceImpl implements CityService {
                 if (countryIds != null && countryIds.size() > 0) {
                     predicate.add(root.get("country").get("id").in(countryIds));
                 }
+                if (entity.getCountry() != null && entity.getCountry().getId() != null) {
+                    predicate.add(cb.equal(root.get("country").get("id"), entity.getCountry().getId()));
+                }
                 if (entity.getId() != null) {
                     predicate.add(cb.equal(root.get("id"), entity.getId()));
                 }
