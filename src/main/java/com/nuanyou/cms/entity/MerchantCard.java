@@ -22,7 +22,7 @@ public class MerchantCard {
     private CardType type;
     private Boolean display;
     private String title;
-    private SimpleMerchant merchant;
+    private Merchant merchant;
     private String intro;
     private String explains;
     private String code;
@@ -71,11 +71,11 @@ public class MerchantCard {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "mchid")
-    public SimpleMerchant getMerchant() {
+    public Merchant getMerchant() {
         return merchant;
     }
 
-    public void setMerchant(SimpleMerchant merchant) {
+    public void setMerchant(Merchant merchant) {
         this.merchant = merchant;
     }
 

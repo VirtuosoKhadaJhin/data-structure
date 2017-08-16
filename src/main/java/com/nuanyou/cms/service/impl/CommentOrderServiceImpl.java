@@ -9,6 +9,7 @@ import com.nuanyou.cms.entity.CommentReply;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.order.Order;
 import com.nuanyou.cms.service.CommentOrderService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.TimeCondition;
 import org.apache.commons.lang3.StringUtils;
@@ -39,15 +40,20 @@ public class CommentOrderServiceImpl implements CommentOrderService {
 
     @Autowired
     private CommentReplyDao commentReplyDao;
+    @Autowired
+    private UserService userService;
 
     @Override
     public Page<CommentOrder> findByCondition(final CommentOrder entity, final TimeCondition time, final String scoreStr, Pageable pageable) {
+        final List<Long> countryIds = userService.findUserCountryId();
         return commentOrderDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<>();
                 predicate.add(cb.lessThanOrEqualTo(root.get("deleted"), Boolean.FALSE));
-
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("order").get("countryid").in(countryIds));
+                }
                 Order order = entity.getOrder();
                 if (order != null) {
                     String ordersn = order.getOrdersn();

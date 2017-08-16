@@ -1,11 +1,13 @@
 package com.nuanyou.cms.service.impl;
 
 import com.nuanyou.cms.dao.MerchantCardDao;
+import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.MerchantCard;
 import com.nuanyou.cms.entity.SimpleMerchant;
 import com.nuanyou.cms.entity.enums.CardType;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.MerchantCardService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.TimeCondition;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +34,8 @@ public class MerchantCardServiceImpl implements MerchantCardService {
 
     @Autowired
     private MerchantCardDao dao;
+    @Autowired
+    private UserService userService;
 
     @Override
     public MerchantCard saveNotNull(MerchantCard entity) {
@@ -45,13 +49,15 @@ public class MerchantCardServiceImpl implements MerchantCardService {
 
     public Page<MerchantCard> findByCondition(Integer index, final MerchantCard entity, final TimeCondition validTime) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
-
+        final List<Long> countryIds = userService.findUserCountryId();
         return dao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<>();
-
-                SimpleMerchant merchant = entity.getMerchant();
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("merchant").get("district").get("country").get("id").in(countryIds));
+                }
+                Merchant merchant = entity.getMerchant();
                 if (merchant != null) {
                     Long mchId = merchant.getId();
                     if (mchId != null)

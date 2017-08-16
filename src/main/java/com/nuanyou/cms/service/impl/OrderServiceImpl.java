@@ -278,6 +278,10 @@ public class OrderServiceImpl implements OrderService {
 
     private List<Predicate> getOrderExportPredicates(Root root, CriteriaBuilder cb, Order entity, TimeCondition time) {
         List<Predicate> predicate = new ArrayList<Predicate>();
+        final List<Long> countryIds = userService.findUserCountryId();
+        if (countryIds != null && countryIds.size() > 0) {
+            predicate.add(root.get("countryid").in(countryIds));
+        }
         if (entity.getId() != null) {
             Predicate p = cb.equal(root.get("id"), entity.getId());
             predicate.add(p);
@@ -327,10 +331,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private List<OrderItem> getOrderItems(final Order entity, final TimeCondition time) {
+        final List<Long> countryIds = userService.findUserCountryId();
         return orderItemDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("order").get("merchant").get("district").get("country").get("id").in(countryIds));
+                }
                 if (time.getBegin() != null) {
                     Predicate p = cb.greaterThanOrEqualTo(root.get("order").get("createtime").as(Date.class), time.getBegin());
                     predicate.add(p);

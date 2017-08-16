@@ -145,7 +145,7 @@ public class CommentOrderController {
         entity.setType(2);
 
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "replyTime", "createTime");
-        Page<CommentOrder> page = commentOrderDao.findAll(Example.of(entity), pageable);
+        Page<CommentOrder> page = commentOrderService.findByCondition(entity, null, null, pageable);
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
         List<Merchant> merchants = merchantService.getIdNameList();
