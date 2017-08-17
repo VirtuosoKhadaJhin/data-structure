@@ -51,6 +51,8 @@ public class UserServiceImpl implements UserService{
         ServletRequestAttributes ra = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = ra.getRequest();
         String uri = request.getRequestURI();
+        if (uri.endsWith("/export"))
+            uri = uri.replace("/export","");
         List<Object[]> list = cmsUserDao.findCountryIdByUserMenu(user.getId(),uri);
         List<Long> countryIds = new ArrayList<>();
         for (Object[] objects : list) {
