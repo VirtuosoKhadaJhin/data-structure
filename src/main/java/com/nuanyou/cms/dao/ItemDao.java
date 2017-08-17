@@ -2,6 +2,7 @@ package com.nuanyou.cms.dao;
 
 import com.nuanyou.cms.entity.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 /**
  * Created by Alan.ye on 2016/9/7.
  */
-public interface ItemDao extends JpaRepository<Item, Long> {
+public interface ItemDao extends JpaRepository<Item, Long> ,JpaSpecificationExecutor{
 
     List<Item> findByMerchantIdAndCatId(Long mchId, Long catId);
 

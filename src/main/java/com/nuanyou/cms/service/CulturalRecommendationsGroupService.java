@@ -1,6 +1,8 @@
 package com.nuanyou.cms.service;
 
 import com.nuanyou.cms.entity.CulturalRecommendationsGroup;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -14,5 +16,7 @@ public interface CulturalRecommendationsGroupService {
     void delete(Long id);
 
     List<CulturalRecommendationsGroup> getIdNameList();
+
+    Page<CulturalRecommendationsGroup> findByCondition(final CulturalRecommendationsGroup entity, Pageable pageable);
 
 }

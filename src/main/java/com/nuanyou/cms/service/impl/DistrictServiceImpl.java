@@ -7,8 +7,10 @@ import com.nuanyou.cms.entity.District;
 import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.model.DistrictVo;
 import com.nuanyou.cms.service.DistrictService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,19 +33,29 @@ public class DistrictServiceImpl implements DistrictService {
     private DistrictDao districtDao;
     @Autowired
     private EntityNyLangsDictionaryDao dictionaryDao;
+    @Autowired
+    private UserService userService;
 
     @Override
     public Page<DistrictVo> findByCondition(final District entity, Pageable pageable, final Locale locale) {
+        //edit at 2017/8/8 by young
+        final List<Long> countryIds = userService.findUserCountryId();
         // 孙昊修改了查询方式, 在原有的字段sort上实现了排序功能
         Page<District> districts = districtDao.findAll(new Specification() {
 
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("country").get("id").in(countryIds));
+                }
+                if (entity.getCountry() != null && entity.getCountry().getId() != null) {
+                    predicate.add(cb.equal(root.get("country").get("id"), entity.getCountry().getId()));
+                }
                 if (entity.getId() != null) {
                     predicate.add(cb.equal(root.get("id"), entity.getId()));
                 }
-                if (org.apache.commons.lang3.StringUtils.isNotEmpty(entity.getName())) {
+                if (StringUtils.isNotEmpty(entity.getName())) {
                     predicate.add(cb.like(root.get("name"), "%" + entity.getName() + "%"));
                 }
                 if (null != entity.getDisplay()) {
@@ -106,7 +118,16 @@ public class DistrictServiceImpl implements DistrictService {
 
     @Override
     public List<District> getIdNameList() {
-        return this.districtDao.getIdNameList();
+        List<Long> countryIds = userService.findUserCountryId();
+        if (countryIds != null && countryIds.size() > 0)
+            return this.districtDao.getIdNameList(true,countryIds);
+        else
+            return this.districtDao.getIdNameList(true);
+    }
+
+    @Override
+    public List<District> getIdNameList(Long countryId) {
+        return this.districtDao.getIdNameList(true,countryId);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.CityService;
+import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.util.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +35,12 @@ public class CityController {
     @Autowired
     private CityDao cityDao;
     @Autowired
-    private CountryDao countryDao;
+    private CountryService countryService;
 
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         City entity = null;
         if (id != null) {
             entity = cityDao.findOne(id);
@@ -86,7 +87,7 @@ public class CityController {
         model.addAttribute("entity", entity);
         model.addAttribute("nameOrId", nameOrId);
 
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         model.addAttribute("countries", countries);
         return "city/list";
     }

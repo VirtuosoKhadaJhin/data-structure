@@ -3,6 +3,8 @@ package com.nuanyou.cms.service;
 import com.nuanyou.cms.entity.Item;
 import com.nuanyou.cms.entity.ItemTuan;
 import com.nuanyou.cms.model.ItemVO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,5 +23,7 @@ public interface ItemService {
     List<Item> getIdNameList();
 
     List<Item> findItemTuans();
+
+    Page<Item> findByCondition(final Item entity, Pageable pageable);
 
 }

@@ -3,6 +3,7 @@ package com.nuanyou.cms.service.impl;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.service.CountryService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,17 @@ public class CountryServiceImpl implements CountryService {
 
     @Autowired
     private CountryDao countryDao;
+    @Autowired
+    private UserService userService;
 
     @Override
     public List<Country> getIdNameList() {
-        return countryDao.getIdNameList();
+        List<Long> countryIds = userService.findUserCountryId();
+        if (countryIds != null && countryIds.size() > 0)
+            return countryDao.getIdNameList(countryIds);
+        else
+            return countryDao.findAllCountries();
+
     }
 
     @Override

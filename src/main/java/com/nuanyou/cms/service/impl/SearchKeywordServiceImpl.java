@@ -2,12 +2,24 @@ package com.nuanyou.cms.service.impl;
 
 import com.nuanyou.cms.dao.SearchKeywordDao;
 import com.nuanyou.cms.entity.SearchKeyword;
+import com.nuanyou.cms.entity.enums.RefundStatus;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.SearchKeywordService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Felix on 2016/9/26.
@@ -19,21 +31,33 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
     private
     SearchKeywordDao searchKeywordDao;
 
-    @Override
-    public Page<SearchKeyword> findByCondition(int index, SearchKeyword entity) {
-        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
-        ExampleMatcher e = ExampleMatcher.matching();
-        ExampleMatcher.GenericPropertyMatcher g = ExampleMatcher.GenericPropertyMatcher.of(ExampleMatcher.StringMatcher.ENDING);
-        if (entity.getId() != null) {
-            e = e.withMatcher("id", g.exact());
-        }
+    @Autowired
+    private UserService userService;
 
-        if (entity.getDisplay() != null) {
-            e = e.withMatcher("display", g.exact());
-        } else {
-            entity.setDisplay(null);
-        }
-        return searchKeywordDao.findAll(Example.of(entity, e), pageable);
+    @Override
+    public Page<SearchKeyword> findByCondition(int index, final SearchKeyword entity) {
+        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
+        final List<Long> countryIds = userService.findUserCountryId();
+        return searchKeywordDao.findAll(new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("country").get("id").in(countryIds));
+                }
+                if (entity.getId() != null) {
+                    predicate.add(cb.equal(root.get("id"), entity.getId()));
+                }
+                if (entity.getDisplay() != null) {
+                    predicate.add(cb.equal(root.get("display"), entity.getDisplay()));
+                }
+                if (entity.getCountry() != null && entity.getCountry().getId() != null) {
+                    predicate.add(cb.equal(root.get("country").get("id"), entity.getCountry().getId()));
+                }
+                Predicate[] pre = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(pre)).getRestriction();
+            }
+        }, pageable);
     }
 
     @Override

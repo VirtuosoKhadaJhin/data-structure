@@ -7,13 +7,14 @@ package com.nuanyou.cms.entity;
 import com.nuanyou.cms.commons.DateEntityListener;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 用户
  */
 @Entity
 @EntityListeners(DateEntityListener.class)
-@Table(name = "cms30_user",catalog = "cms")
+@Table(name = "cms_user")
 public class CmsUser {
 
     @Id
@@ -21,14 +22,30 @@ public class CmsUser {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "username")
-    private String username;
-
-    @Column(name = "password")
-    private String password;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "email")
     private String email;
+
+    @Column(name = "mobile")
+    private String mobile;
+
+    @Column(name = "job")
+    private String job;
+
+    @Column(name = "createdt")
+    private Date createDt;
+
+    @Column(name = "updatedt")
+    private Date updateDt;
+
+    @Column(name = "delflag")
+    private Boolean delFlag = false;
+
+    public CmsUser() {
+        super();
+    }
 
     public Long getId() {
         return id;
@@ -38,20 +55,12 @@ public class CmsUser {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -60,5 +69,45 @@ public class CmsUser {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public Date getCreateDt() {
+        return createDt;
+    }
+
+    public void setCreateDt(Date createDt) {
+        this.createDt = createDt;
+    }
+
+    public Date getUpdateDt() {
+        return updateDt;
+    }
+
+    public void setUpdateDt(Date updateDt) {
+        this.updateDt = updateDt;
+    }
+
+    public Boolean getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Boolean delFlag) {
+        this.delFlag = delFlag;
     }
 }

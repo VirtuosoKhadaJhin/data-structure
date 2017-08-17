@@ -5,6 +5,7 @@ import com.nuanyou.cms.entity.Feature;
 import com.nuanyou.cms.entity.enums.FeatureCat;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.FeatureService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,16 +30,22 @@ public class FeatureServiceImpl implements FeatureService {
 
     @Autowired
     private FeatureDao dao;
+    @Autowired
+    private UserService userService;
 
     @Override
     public Page<Feature> findByCondition(Integer index, final Feature entity) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, new Sort(Sort.Direction.ASC, "sort", "id"));
+        final List<Long> countryIds = userService.findUserCountryId();
         return dao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
 
                 predicate.add(cb.equal(root.get("deleted"), false));
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("country").get("id").in(countryIds));
+                }
 
                 if (entity.getCountry() != null && entity.getCountry().getId() != null) {
                     Predicate p = cb.equal(root.get("country").get("id"), entity.getCountry().getId());

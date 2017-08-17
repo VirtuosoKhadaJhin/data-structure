@@ -4,6 +4,7 @@ import com.nuanyou.cms.dao.FakeUserDao;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.entity.FakeUser;
 import com.nuanyou.cms.entity.Country;
+import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.FakeUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,7 @@ public class FakeUserController {
     @Autowired
     private FakeUserDao fakeUserDao;
     @Autowired
-    private CountryDao countryDao;
+    private CountryService countryService;
 
     @RequestMapping("add")
     public String add(FakeUser entity) {
@@ -38,7 +39,7 @@ public class FakeUserController {
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
         // all countries
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         FakeUser entity = null;
         if (id != null) {
             entity = fakeUserDao.findOne(id);

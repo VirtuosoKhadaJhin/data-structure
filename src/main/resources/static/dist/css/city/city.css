@@ -1,0 +1,17 @@
+html, body {
+    height: 100%;
+}
+
+.table td {
+    padding: 8px;
+    line-height: 20px;
+    text-align: center;
+}
+
+.table .tr-class:hover {
+    cursor: pointer;
+}
+
+.control-group {
+    margin-bottom: 10px !important;
+}

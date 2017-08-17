@@ -5,14 +5,27 @@ import com.nuanyou.cms.dao.ItemDirectmailDao;
 import com.nuanyou.cms.dao.ItemStatsDao;
 import com.nuanyou.cms.dao.ItemTuanDao;
 import com.nuanyou.cms.entity.*;
+import com.nuanyou.cms.entity.order.Order;
 import com.nuanyou.cms.model.ItemVO;
 import com.nuanyou.cms.service.ItemService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
+import com.nuanyou.cms.util.TimeCondition;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +45,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private ItemDao itemDao;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     @Transactional
@@ -139,5 +155,42 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> findItemTuans() {
         return this.itemDao.findItemTuans();
+    }
+
+    @Override
+    public Page<Item> findByCondition(final Item entity, Pageable pageable) {
+        final List<Long> countryIds = userService.findUserCountryId();
+        return itemDao.findAll(new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("merchant").get("district").get("country").get("id").in(countryIds));
+                }
+                if (entity.getName() != null) {
+                    Predicate p = cb.equal(root.get("name"), entity.getName());
+                    predicate.add(p);
+                }
+                if (entity.getItemType() != null) {
+                    Predicate p = cb.equal(root.get("type"), entity.getItemType());
+                    predicate.add(p);
+                    predicate.add(cb.equal(root.get("itemType"), entity.getItemType()));
+                }
+                if (entity.getMerchant() != null && entity.getMerchant().getId() != null) {
+                    Predicate p = cb.equal(root.get("merchant").get("id"), entity.getMerchant().getId());
+                    predicate.add(p);
+                }
+                if (entity.getMerchant() != null && StringUtils.isNotBlank(entity.getMerchant().getName())) {
+                    Predicate p = cb.equal(root.get("merchant").get("name"), entity.getMerchant().getName());
+                    predicate.add(p);
+                }
+                if (entity.getCat() != null && StringUtils.isNotBlank(entity.getCat().getName())) {
+                    Predicate p = cb.equal(root.get("cat").get("name"), entity.getCat().getName());
+                    predicate.add(p);
+                }
+                Predicate[] pre = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(pre)).getRestriction();
+            }
+        }, pageable);
     }
 }

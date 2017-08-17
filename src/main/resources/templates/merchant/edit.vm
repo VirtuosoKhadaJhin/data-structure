@@ -7,8 +7,17 @@
     #include("common/css-support.vm")
     #include("common/js-support.vm")
     <link rel="stylesheet" href="/dist/markdown/css/editormd.css"/>
+
+    <script>
+            #if($!update)
+            alert ('保存成功');
+            #else
+//            alert ('保存失败');
+            #end
+    </script>
 </head>
 <body>
+
 <div id="content">
     <div id="content-header">
         <div id="breadcrumb">
@@ -23,6 +32,7 @@
                 <div class="widget-box">
                     <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i></span>
                         <h5>#if (!$!entity.id)商户新增#else商户编辑#end</h5>
+                        <h5 style="float: right;"><a class="goback" href="list">返回</a></h5>
                     </div>
                     <div class="widget-content nopadding">
                         <form class="form-horizontal merchantValidate" action="update" method="post" id="commonForm">

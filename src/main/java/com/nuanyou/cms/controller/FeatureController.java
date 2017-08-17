@@ -6,6 +6,7 @@ import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.entity.Feature;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.enums.FeatureCat;
+import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.FeatureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,7 @@ public class FeatureController {
     @Autowired
     private FeatureDao featureDao;
     @Autowired
-    private CountryDao countryDao;
+    private CountryService countryService;
 
     @RequestMapping("add")
     public String add(Feature entity) {
@@ -39,7 +40,7 @@ public class FeatureController {
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         Feature entity = null;
         if (id != null) {
             entity = featureDao.findOne(id);
@@ -68,7 +69,7 @@ public class FeatureController {
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index, Feature entity, Model model) {
         Page<Feature> page = featureService.findByCondition(index, entity);
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
         model.addAttribute("countries", countries);

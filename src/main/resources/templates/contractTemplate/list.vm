@@ -51,20 +51,21 @@
 #parse("common/list_mid.vm")
 <form>
     <div class="control-group">
-        <label for="status">国家：</label>
-        <select  name="countryId" class="span11">
-            <option value="">全部</option>
-            #foreach($c in $!countries)
-                <option value="$!c.id"
-                    #if($!countryId== $!c.id)
-                        selected
-                    #end
-                >
-                    $!c.name
-                </option>
-            #end
-        </select>
-
+        #if($!countries.size() > 1)
+            <label for="status">国家：</label>
+            <select name="countryId" class="span11">
+                <option value="">全部</option>
+                #foreach($c in $!countries)
+                    <option value="$!c.id"
+                        #if($!countryId== $!c.id)
+                            selected
+                        #end
+                    >
+                        $!c.name
+                    </option>
+                #end
+            </select>
+        #end
 
         <label for="status">$!status 状态：</label>
         <select id="status" name="status" class="span11">
@@ -80,7 +81,7 @@
             #end
         </select>
         <label>合同类型</label>
-        <select name="type"  class="span11">
+        <select name="type" class="span11">
             <option value="">全部</option>
             <option value="1"  #if($!type==1)selected #end>主合同</option>
             <option value="2"  #if($!type==2)selected #end>附加合同</option>
@@ -136,7 +137,6 @@
     });
 
 
-
     $(".delete").each(function (i, o) {
         $(o).on("click", function (event) {
             if (!confirm('确实要删除吗?'))
@@ -156,8 +156,6 @@
             });
         });
     });
-
-
 
 
 </script>

@@ -92,15 +92,17 @@
                                     <label>批量编码：</label>
                                     <textarea class="batch-collection-codes" name="codes" placeholder="以英文逗号','或换行分隔,最多支持20个" rows="3">$!entity.codes</textarea>
                                 </div>
-                                <div class="search-country">
-                                    <label>国家：</label>
-                                    <select name="countryId" class="search-country-select">
-                                        <option value>全部</option>
-                                        #foreach($e in $!countries)
-                                            <option value="$!e.id" #if($!entity.countryId == $!e.id) selected #end> $!e.name</option>
-                                        #end
-                                    </select>
-                                </div>
+                                #if($!countries.size() > 1)
+                                    <div class="search-country">
+                                        <label>国家：</label>
+                                        <select name="countryId" class="search-country-select">
+                                            <option value>全部</option>
+                                            #foreach($e in $!countries)
+                                                <option value="$!e.id" #if($!entity.countryId == $!e.id) selected #end> $!e.name</option>
+                                            #end
+                                        </select>
+                                    </div>
+                                #end
                                 <div class="search-batch-merchant-ids">
                                     <label>商户id：</label>
                                     <textarea class="batch-merchant-ids" name="mchIds" placeholder="以英文逗号','或换行分隔,最多支持20个" rows="3">$!entity.mchIds</textarea>

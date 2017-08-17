@@ -47,7 +47,7 @@ public class BdUserController {
     @RequestMapping("list")
     public String list(BdUserRequestVo requestVo, Model model) {
         Page<BdUserVo> vos = bdUserService.findAllBdUserVos(requestVo);
-        List<Country> allCountries = countryService.findAllCountries();
+        List<Country> allCountries = countryService.getIdNameList();
         model.addAttribute("allCountries", allCountries);
         model.addAttribute("requestVo", requestVo);//刷新界面
         model.addAttribute("page", vos);
@@ -63,7 +63,7 @@ public class BdUserController {
     @RequestMapping("add")
     public String add(Model model) {
         List<BdRole> roles = bdUserService.findAllRoles();
-        List<BdCountry> countries = bdUserService.findAllCountry();
+        List<Country> countries = countryService.getIdNameList();
         model.addAttribute("roles", roles);
         model.addAttribute("countries", countries);
         model.addAttribute("vo", new BdUser());
@@ -81,7 +81,7 @@ public class BdUserController {
     public String edit(Long id, Model model) {
         BdUserVo vo = bdUserService.findUserById(id);
         List<BdRole> roles = bdUserService.findAllRoles();
-        List<BdCountry> countries = bdUserService.findAllCountry();
+        List<Country> countries = countryService.getIdNameList();
         model.addAttribute("roles", roles);
         model.addAttribute("countries", countries);
         model.addAttribute("vo", vo);

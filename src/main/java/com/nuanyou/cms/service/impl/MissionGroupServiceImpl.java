@@ -13,6 +13,7 @@ import com.nuanyou.cms.model.BdUserVo;
 import com.nuanyou.cms.model.mission.MissionGroupParamVo;
 import com.nuanyou.cms.model.mission.MissionGroupVo;
 import com.nuanyou.cms.service.MissionGroupService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -47,18 +48,23 @@ public class MissionGroupServiceImpl implements MissionGroupService {
     @Autowired
     private BdUserDao bdUserDao;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public Page<MissionGroupVo> findAllGroups(final MissionGroupVo requestVo) {
         //分页请求
         final Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageNum());
-
+        final List<Long> countryIds = userService.findUserCountryId();
         Page<MissionGroup> groups = groupDao.findAll(new Specification() {
 
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 predicate.add(cb.equal(root.get("delFlag"), 0));
-
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("country").get("id").in(countryIds));
+                }
                 if (StringUtils.isNotEmpty(requestVo.getName())) {
                     predicate.add(cb.like(root.get("name"), "%" + requestVo.getName() + "%"));
                 }

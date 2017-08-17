@@ -2,6 +2,7 @@ package com.nuanyou.cms.controller;
 
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
+import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.ItemService;
 import com.nuanyou.cms.service.RankService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class RankController {
     @Autowired
     private ItemDao itemDao;
     @Autowired
-    private CountryDao countryDao;
+    private CountryService countryService;
     @Autowired
     private MerchantCatDao merchantCatDao;
     @Autowired
@@ -45,7 +46,7 @@ public class RankController {
     public String edit(Long id, Model model, Integer type) {
         List<MerchantCat> cats = this.merchantCatDao.getIdNameList();
         List<Item> tuans = this.itemService.findItemTuans();
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         Rank entity = null;
         if (id != null) {
             entity = rankDao.findOne(id);
@@ -69,7 +70,7 @@ public class RankController {
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index, Rank entity, Model model) {
         Page<Rank> page = rankService.findByCondition(index, entity);
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
 
         for (Rank rank : page) {
             setExtra(rank);

@@ -15,6 +15,7 @@ import com.nuanyou.cms.entity.user.PasUserProfile;
 import com.nuanyou.cms.model.OrderSave;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.remote.service.RemoteOrderService;
+import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.OrderService;
 import com.nuanyou.cms.util.ExcelUtil;
@@ -50,7 +51,7 @@ public class OrderController {
     @Autowired
     private OrderDao orderDao;
     @Autowired
-    private CountryDao countryDao;
+    private CountryService countryService;
     @Autowired
     private MerchantService merchantService;
     @Autowired
@@ -150,7 +151,7 @@ public class OrderController {
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, TimeCondition time) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "id");
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         List<OrderType> orderTypes = Arrays.asList(OrderType.values());
         List<OrderPayType> orderPayTypes = Arrays.asList(OrderPayType.values());
         List<NewOrderStatus> newOrderStatuses = Arrays.asList(NewOrderStatus.values());
@@ -185,7 +186,7 @@ public class OrderController {
                 order.setUser(userProfile);
             }
         }
-        List<Country> countries = this.countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         model.addAttribute("countries", countries);
         List<RefundStatus> refundStatuses = new ArrayList<RefundStatus>(
                 Arrays.asList(RefundStatus.values())

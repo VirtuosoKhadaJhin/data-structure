@@ -41,7 +41,7 @@
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <li><a href="edit?id=$!entity.id">基础信息编辑</a></li>
-##                        <li><a href="/merchantHeadimgOld/list?mchId=$!entity.id"">商家详情页图片编辑2.0</a></li>
+                    ##                        <li><a href="/merchantHeadimgOld/list?mchId=$!entity.id"">商家详情页图片编辑2.0</a></li>
                         <li><a href="/merchantHeadimg/edit?mchId=$!entity.id"">商家详情页图片编辑3.0</a></li>
                         <li><a href="/merchantSubsidy/list?mchId=$!entity.id"">商户补贴编辑</a></li>
                         <li><a href="/userSubsidy/list?mchId=$!entity.id"">用户补贴编辑</a></li>
@@ -74,7 +74,7 @@
             <option value="true" #if($!entity.display == true) selected #end>显示</option>
             <option value="false" #if($!entity.display == false) selected #end>隐藏</option>
         </select>
-        #if(!$countryHide)
+        #if(!$countryHide && $!countries.size() > 1)
             <label>国家</label>
             <select name="district.country.id" class="span11">
                 <option value="">全部</option>

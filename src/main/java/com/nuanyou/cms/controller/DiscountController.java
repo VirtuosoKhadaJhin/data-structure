@@ -5,6 +5,7 @@ import com.nuanyou.cms.dao.DiscountDao;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.Discount;
 import com.nuanyou.cms.entity.enums.DiscountType;
+import com.nuanyou.cms.model.DiscountQueryParam;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.DiscountService;
@@ -85,18 +86,22 @@ public class DiscountController {
     public String list(@RequestParam(required = false, defaultValue = "1") int index,
                        @RequestParam(required = false) String nameOrId,
                        Discount entity, Model model) {
-        if (StringUtils.isNotBlank(nameOrId)) {
-            if (StringUtils.isNumeric(nameOrId)) {
-                entity.setId(NumberUtils.toLong(nameOrId));
-            } else {
-                entity.setTitle(nameOrId);
-            }
-        }
+
 
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "id");
-        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("title", contains().ignoreCase());
 
-        Page<Discount> page = discountDao.findAll(Example.of(entity, matcher), pageable);
+        DiscountQueryParam param = new DiscountQueryParam ();
+        if (StringUtils.isNotBlank(nameOrId)) {
+            if (StringUtils.isNumeric(nameOrId)) {
+                param.id = NumberUtils.toLong(nameOrId);
+            } else {
+                param.name = nameOrId;
+            }
+        }
+        param.cityId = entity.getCity() != null ? entity.getCity().getId() :null;
+        param.countryId = entity.getCountry() != null ? entity.getCountry().getId() :null;
+        param.type = entity.getType() != null ? entity.getType().getValue() :null;
+        Page<Discount> page = discountService.findDiscount( param,  pageable);
         model.addAttribute("page", page);
 
         List<Country> countries = countryService.getIdNameList();

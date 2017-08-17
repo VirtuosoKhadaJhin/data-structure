@@ -9,6 +9,8 @@ import com.nuanyou.cms.dao.MerchantHeadimgDao;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.MerchantHeadimg;
+import com.nuanyou.cms.model.MerchantQueryParam;
+import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.MerchantHeadimgService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.util.BeanUtils;
@@ -39,7 +41,7 @@ public class MerchantHeadimgController {
     private MerchantDao merchantDao;
 
     @Autowired
-    private CountryDao countryDao;
+    private CountryService countryService;
 
     @Autowired
     private MerchantHeadimgService merchantHeadimgService;
@@ -120,10 +122,14 @@ public class MerchantHeadimgController {
                        @RequestParam(required = false, defaultValue = "1") int index, Model model) {
         Pageable pageable = new PageRequest(index - 1, 10, Sort.Direction.DESC, "id");
 
-        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("name", contains().ignoreCase()).withMatcher("kpname", contains().ignoreCase());
-
-        BeanUtils.cleanEmpty(entity);
-        Page<Merchant> page = merchantDao.findAll(Example.of(entity, matcher), pageable);
+        MerchantQueryParam param = new MerchantQueryParam();
+        param.id = entity.getId();
+        param.name = entity.getName();
+        param.kpname = entity.getKpname();
+        param.countryId = entity.getDistrict()!=null?entity.getDistrict().getCountry().getId():null;
+        param.display = entity.getDisplay();
+        param.cooperationStatus = entity.getCooperationStatus()!=null?entity.getCooperationStatus().getKey():null;
+        Page<Merchant> page = merchantService.findMerchant(param,pageable);
         List<Merchant> content = page.getContent();
         for (Merchant merchant : content) {
             List<MerchantHeadimg> list = merchantHeadimgService.find(new MerchantHeadimg(merchant.getId()));
@@ -132,7 +138,7 @@ public class MerchantHeadimgController {
 
         model.addAttribute("page", page);
 
-        List<Country> countries = countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         model.addAttribute("countries", countries);
 
         List<Merchant> merchants = merchantService.getIdNameList();

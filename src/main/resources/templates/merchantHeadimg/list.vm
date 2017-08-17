@@ -74,15 +74,15 @@
             <option value="true" #if($!entity.display == true) selected #end>显示</option>
             <option value="false" #if($!entity.display == false) selected #end>隐藏</option>
         </select>
-
-        <label>国家</label>
-        <select class="span11" name="district.country.id">
-            <option value="">全部</option>
-            #foreach($e in $!countries)
-                <option value="$!e.id" #if($!entity.district.country.id==$!e.id) selected #end>$!e.name</option>
-            #end
-        </select>
-
+        #if($!countries.size() > 1)
+            <label>国家</label>
+            <select class="span11" name="district.country.id">
+                <option value="">全部</option>
+                #foreach($e in $!countries)
+                    <option value="$!e.id" #if($!entity.district.country.id==$!e.id) selected #end>$!e.name</option>
+                #end
+            </select>
+        #end
         <label>合作情况</label>
         <select class="span11" name="issign">
             <option value="">全部</option>

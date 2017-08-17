@@ -4,6 +4,7 @@ import com.nuanyou.cms.dao.BannerDao;
 import com.nuanyou.cms.entity.Banner;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.BannerService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +29,21 @@ public class BannerServiceImpl implements BannerService {
 
     @Autowired
     private BannerDao bannerDao;
+    @Autowired
+    private UserService userService;
 
     @Override
     public Page<Banner> findByCondition(Integer index, final Banner entity) {
 
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
-
+        final List<Long> countryIds = userService.findUserCountryId();
         return bannerDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("country").get("id").in(countryIds));
+                }
                 if (!StringUtils.isEmpty(entity.getPage())) {
                     Predicate p = cb.equal(root.get("page"), entity.getPage());
                     predicate.add(p);

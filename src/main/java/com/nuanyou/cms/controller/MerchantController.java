@@ -6,8 +6,11 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.*;
+import com.nuanyou.cms.model.MerchantQueryParam;
 import com.nuanyou.cms.model.MerchantVO;
 import com.nuanyou.cms.model.PageUtil;
+import com.nuanyou.cms.service.CountryService;
+import com.nuanyou.cms.service.DistrictService;
 import com.nuanyou.cms.service.MerchantCollectionCodeService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.util.BeanUtils;
@@ -23,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
@@ -47,10 +51,10 @@ public class MerchantController {
     private MerchantCatDao merchantCatDao;
 
     @Autowired
-    private DistrictDao districtDao;
+    private DistrictService districtService;
 
     @Autowired
-    private CountryDao countryDao;
+    private CountryService countryService;
 
     @Autowired
     private MerchantStatsDao merchantStatsDao;
@@ -133,8 +137,9 @@ public class MerchantController {
         entity.setCollectionCodeList(returnCodes);
         model.addAttribute("entity", entity);
         setEnums(model, countryId);
-        model.addAttribute("disabled", true);
         model.addAttribute("cooperationStatuses", MerchantCooperationStatus.values());
+        model.addAttribute("disabled", true);
+        model.addAttribute("update", true);
         return "merchant/edit";
     }
 
@@ -176,13 +181,17 @@ public class MerchantController {
     public String list(Merchant entity, @RequestParam(required = false, defaultValue = "1") int index, Model model) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "id");
 
-        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("name", contains().ignoreCase()).withMatcher("kpname", contains().ignoreCase());
-
-        BeanUtils.cleanEmpty(entity);
-        Page<Merchant> page = merchantDao.findAll(Example.of(entity, matcher), pageable);
+        MerchantQueryParam param = new MerchantQueryParam();
+        param.id = entity.getId();
+        param.name = entity.getName();
+        param.kpname = entity.getKpname();
+        param.countryId = entity.getDistrict()!=null?entity.getDistrict().getCountry().getId():null;
+        param.display = entity.getDisplay();
+        param.cooperationStatus = entity.getCooperationStatus()!=null?entity.getCooperationStatus().getKey():null;
+        Page<Merchant> page = merchantService.findMerchant(param,pageable);
         model.addAttribute("page", page);
 
-        List<Country> countries = countryDao.findAll();
+        List<Country> countries = countryService.getIdNameList();
         model.addAttribute("countries", countries);
 
         List<Merchant> merchants = merchantService.getIdNameList();
@@ -243,10 +252,16 @@ public class MerchantController {
         response.setHeader("Cache-Control", "max-age=30");
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("商户列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
 
-        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("name", contains().ignoreCase()).withMatcher("kpname", contains().ignoreCase());
-        BeanUtils.cleanEmpty(entity);
-        List<Merchant> list = merchantDao.findAll(Example.of(entity, matcher), new Sort(Sort.Direction.DESC, "id"));
+        Pageable pageable = new PageRequest(0, 10000, Sort.Direction.DESC, "id");
 
+        MerchantQueryParam param = new MerchantQueryParam();
+        param.id = entity.getId();
+        param.name = entity.getName();
+        param.kpname = entity.getKpname();
+        param.countryId = entity.getDistrict()!=null?entity.getDistrict().getCountry().getId():null;
+        param.display = entity.getDisplay();
+        param.cooperationStatus = entity.getCooperationStatus()!=null?entity.getCooperationStatus().getKey():null;
+        Page<Merchant> page = merchantService.findMerchant(param,pageable);
 
 //        for (Merchant merchant : list) {
 //            Long id = merchant.getId();
@@ -289,7 +304,7 @@ public class MerchantController {
 //        propertyHeaderMap.put("name", "商户用户开始时间");
 //        propertyHeaderMap.put("name", "商户用户结束时间");
 //        propertyHeaderMap.put("name", "国家");
-        XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, list);
+        XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, page.getContent());
         OutputStream os = response.getOutputStream();
         ex.write(os);
 
@@ -312,9 +327,9 @@ public class MerchantController {
 
         List<District> districts;
         if (countryId == null)
-            districts = districtDao.getIdNameList(true);
+            districts = districtService.getIdNameList();
         else
-            districts = districtDao.getIdNameList(true, countryId);
+            districts = districtService.getIdNameList(countryId);
         model.addAttribute("districts", districts);
 
         model.addAttribute("weeks", Week.values());
@@ -341,7 +356,7 @@ public class MerchantController {
         Page<EntityBdMerchantCollectionCode>  page = collectionCodeService.query(entity,pageable);
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
-        List<Country> countries = countryDao.getIdNameList();
+        List<Country> countries = countryService.getIdNameList();
         model.addAttribute("countries", countries);
         return "merchant/code_list";
     }

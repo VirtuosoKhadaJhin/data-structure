@@ -16,13 +16,13 @@ import java.util.List;
  */
 public interface DistrictDao extends JpaRepository<District, Long>, JpaSpecificationExecutor {
 
-    @Query(value = "select new District(t.id,t.name) from District t")
-    List<District> getIdNameList();
-
     @Query(value = "select new District(t.id,t.name) from District t where t.display=?1")
     List<District> getIdNameList(boolean display);
 
-    @Query(value = "select new District(t.id,t.name) from District t where t.display=?1 and city.country.id=?2")
+    @Query(value = "select new District(t.id,t.name) from District t where t.display=?1 and t.country.id in ?2")
+    List<District> getIdNameList(boolean display,List<Long> countryIds);
+
+    @Query(value = "select new District(t.id,t.name) from District t where t.display=?1 and t.country.id=?2")
     List<District> getIdNameList(boolean display, Long countryId);
 
     @Query(value = "select new District(t.id,t.name) from District t where city.id=:id")

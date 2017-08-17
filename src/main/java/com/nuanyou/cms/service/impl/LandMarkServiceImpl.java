@@ -4,6 +4,7 @@ import com.nuanyou.cms.dao.LandMarkDao;
 import com.nuanyou.cms.entity.District;
 import com.nuanyou.cms.entity.Landmark;
 import com.nuanyou.cms.service.LandMarkService;
+import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,20 @@ public class LandMarkServiceImpl implements LandMarkService {
 
     @Autowired
     private LandMarkDao landMarkDao;
+    @Autowired
+    private UserService userService;
 
     @Override
     public Page<Landmark> findByCondition(final Landmark entity, Pageable pageable) {
+        final List<Long> countryIds = userService.findUserCountryId();
         return landMarkDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
+
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("district").get("country").get("id").in(countryIds));
+                }
 
                 if (entity.getDisplay() != null)
                     predicate.add(cb.equal(root.get("display"), entity.getDisplay()));

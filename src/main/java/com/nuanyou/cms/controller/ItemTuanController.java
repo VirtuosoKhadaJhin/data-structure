@@ -111,7 +111,8 @@ public class ItemTuanController {
         model.addAttribute("tuanTypes", TuanType.values());
 
         model.addAttribute("disabled", true);
-        return "redirect:detail?id=" + entity.getId();
+        model.addAttribute("update", true);
+        return "itemTuan/edit";
     }
 
     @RequestMapping(path = "remove", method = RequestMethod.GET)
@@ -123,13 +124,13 @@ public class ItemTuanController {
     @RequestMapping("list")
     public String list(Item entity, @RequestParam(required = false, defaultValue = "1") int index, Model model) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize);
-        ExampleMatcher matcher = ExampleMatcher.matching()
-                .withMatcher("cat.name", contains().ignoreCase())
-                .withMatcher("merchant.name", contains().ignoreCase())
-                .withMatcher("name", contains().ignoreCase());
+//        ExampleMatcher matcher = ExampleMatcher.matching()
+//                .withMatcher("cat.name", contains().ignoreCase())
+//                .withMatcher("merchant.name", contains().ignoreCase())
+//                .withMatcher("name", contains().ignoreCase());
 
         entity.setItemType(2);
-        Page<Item> page = itemDao.findAll(Example.of(entity, matcher), pageable);
+        Page<Item> page = itemService.findByCondition(entity,pageable);
         model.addAttribute("page", page);
 
         List<Merchant> merchants = merchantService.getIdNameList();
