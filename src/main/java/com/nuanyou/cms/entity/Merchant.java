@@ -545,6 +545,7 @@ public class Merchant {
     }
 
     @Column(name = "cooperationstatus")
+    @Enumerated(EnumType.ORDINAL)
     public MerchantCooperationStatus getCooperationStatus() {
         return cooperationStatus;
     }
