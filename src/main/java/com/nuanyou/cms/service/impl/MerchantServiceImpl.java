@@ -406,8 +406,12 @@ public class MerchantServiceImpl implements MerchantService {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
-                if (countryIds != null && countryIds.size() > 0) {
-                    predicate.add(root.get("district").get("country").get("id").in(countryIds));
+                if (param.countryids != null && param.countryids.size() > 0) {
+                    predicate.add(root.get("district").get("country").get("id").in(param.countryids));
+                }else {
+                    if (countryIds != null && countryIds.size() > 0) {
+                        predicate.add(root.get("district").get("country").get("id").in(countryIds));
+                    }
                 }
                 if (param.id != null) {
                     predicate.add(cb.equal(root.get("id"), param.id));

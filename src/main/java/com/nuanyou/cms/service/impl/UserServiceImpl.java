@@ -47,8 +47,8 @@ public class UserServiceImpl implements UserService{
         ServletRequestAttributes ra = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = ra.getRequest();
         HttpSession session = request.getSession();
-        if (session.getAttribute("countryIds") != null )
-            return (List)session.getAttribute("countryIds");
+//        if (session.getAttribute("countryIds") != null )
+//            return (List)session.getAttribute("countryIds");
         String email = UserHolder.getUser().getEmail();
         CmsUser user = cmsUserDao.findByEmail(email);
         if(user==null){
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService{
         for (Object[] objects : list) {
             countryIds.add(Long.parseLong(objects[0].toString()));
         }
-        session.setAttribute("countryIds",countryIds);
+//        session.setAttribute("countryIds",countryIds);
         return countryIds;
     }
 

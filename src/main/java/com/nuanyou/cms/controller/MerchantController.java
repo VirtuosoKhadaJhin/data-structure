@@ -9,10 +9,8 @@ import com.nuanyou.cms.entity.enums.*;
 import com.nuanyou.cms.model.MerchantQueryParam;
 import com.nuanyou.cms.model.MerchantVO;
 import com.nuanyou.cms.model.PageUtil;
-import com.nuanyou.cms.service.CountryService;
-import com.nuanyou.cms.service.DistrictService;
-import com.nuanyou.cms.service.MerchantCollectionCodeService;
-import com.nuanyou.cms.service.MerchantService;
+import com.nuanyou.cms.service.*;
+import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.ExcelUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -61,6 +59,9 @@ public class MerchantController {
 
     @Autowired
     MerchantCollectionCodeService collectionCodeService;
+
+    @Autowired
+    private UserService userService;
 
     private static final Map<String, Long> countryMap = new HashMap<>();
 
@@ -200,6 +201,9 @@ public class MerchantController {
         model.addAttribute("entity", entity);
         model.addAttribute("YouFu", SupportType.YouFu);
         model.addAttribute("cooperationStatuses", MerchantCooperationStatus.values());
+
+        List<Long> countryids = userService.findUserCountryId();
+        model.addAttribute("countryids", countryids);
         return "merchant/list";
     }
 
@@ -245,7 +249,7 @@ public class MerchantController {
     }
 
     @RequestMapping(path = "export")
-    public void export(Merchant entity, HttpServletResponse response) throws IOException {
+    public void export( String countryids,Merchant entity, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=" + "UTF-8");
         response.setHeader("Pragma", "public");
@@ -261,6 +265,7 @@ public class MerchantController {
         param.countryId = entity.getDistrict()!=null?entity.getDistrict().getCountry().getId():null;
         param.display = entity.getDisplay();
         param.cooperationStatus = entity.getCooperationStatus()!=null?entity.getCooperationStatus().getKey():null;
+        param.countryids = CommonUtils.StringToList(countryids);
         Page<Merchant> page = merchantService.findMerchant(param,pageable);
 
 //        for (Merchant merchant : list) {
@@ -318,7 +323,7 @@ public class MerchantController {
         if (id != null) {
             entity.setDistrict(new District(new Country(id)));
         }
-        export(entity, response);
+        export(null,entity, response);
     }
 
     private void setEnums(Model model, Long countryId) {

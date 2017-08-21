@@ -15,13 +15,13 @@ public interface OrderService {
 
     Page<Order> findByCondition(Integer index, Order entity, TimeCondition time, Pageable pageable);
 
-    List<ViewOrderExport> findExportByCondition(Order entity, TimeCondition time, Pageable o);
+    List<ViewOrderExport> findExportByCondition(Order entity, TimeCondition time,List<Long> countryids, Pageable o);
 
-    long countViewOrderExports(final Order entity, final TimeCondition time);
+    long countViewOrderExports(final Order entity, final TimeCondition time,List<Long> countryids);
 
-    Page<Order> findRefundByCondition(Integer index, Order entity, TimeCondition time);
+    Page<Order> findRefundByCondition(Integer index, Order entity, TimeCondition time,List<Long> countryids);
 
-    List<Order> findRefundByCondition(Order entity, TimeCondition time);
+    List<Order> findRefundByCondition(Order entity, TimeCondition time,final List<Long> countryids);
 
     Integer getBuyNum(Long userId);
 

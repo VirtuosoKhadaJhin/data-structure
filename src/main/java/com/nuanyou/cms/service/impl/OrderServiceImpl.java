@@ -128,7 +128,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public Page<Order> findRefundByCondition(Integer index, final Order entity, final TimeCondition time) {
+    public Page<Order> findRefundByCondition(Integer index, final Order entity, final TimeCondition time,final List<Long> countryids) {
         Pageable pageable = null;
         if (index != null)
             pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "refundtime");
@@ -137,8 +137,12 @@ public class OrderServiceImpl implements OrderService {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
-                if (countryIds != null && countryIds.size() > 0) {
-                    predicate.add(root.get("countryid").in(countryIds));
+                if (countryids != null && countryids.size() > 0) {
+                    predicate.add(root.get("countryid").in(countryids));
+                }else {
+                    if (countryIds != null && countryIds.size() > 0) {
+                        predicate.add(root.get("countryid").in(countryIds));
+                    }
                 }
                 if (entity.getRefundstatus() != null) {
                     Predicate pStatus = cb.equal(root.get("refundstatus"), entity.getRefundstatus());
@@ -189,15 +193,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findRefundByCondition(final Order entity, final TimeCondition time) {
-        return findRefundByCondition(null, entity, time).getContent();
+    public List<Order> findRefundByCondition(final Order entity, final TimeCondition time,final List<Long> countryids) {
+        return findRefundByCondition(null, entity, time,countryids).getContent();
     }
 
 
     @Override
-    public List<ViewOrderExport> findExportByCondition(final Order entity, final TimeCondition time, Pageable pageable) {
+    public List<ViewOrderExport> findExportByCondition(final Order entity, final TimeCondition time, List<Long> countryids, Pageable pageable) {
         Long begin_exportOrder = System.currentTimeMillis();
-        List<ViewOrderExport> orderList = getViewOrderExports(entity, time);
+        List<ViewOrderExport> orderList = getViewOrderExports(entity, time,countryids);
         Long end_exportOrder = System.currentTimeMillis();
         log.info("count(order):" + orderList.size());
         log.info("read data from ViewOrderExport:" + (end_exportOrder - begin_exportOrder) / 1000 + "s");
@@ -254,33 +258,32 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long countViewOrderExports(final Order entity, final TimeCondition time) {
+    public long countViewOrderExports(final Order entity, final TimeCondition time,final List<Long> countryids) {
         return viewOrderExportDao.count(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                List<Predicate> predicate = getOrderExportPredicates(root, cb, entity, time);
+                List<Predicate> predicate = getOrderExportPredicates(root, cb, entity, time,countryids);
                 Predicate[] pre = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(pre)).getRestriction();
             }
         });
     }
 
-    private List<ViewOrderExport> getViewOrderExports(final Order entity, final TimeCondition time) {
+    private List<ViewOrderExport> getViewOrderExports(final Order entity, final TimeCondition time,final List<Long> countryids) {
         return viewOrderExportDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                List<Predicate> predicate = getOrderExportPredicates(root, cb, entity, time);
+                List<Predicate> predicate = getOrderExportPredicates(root, cb, entity, time,countryids);
                 Predicate[] pre = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(pre)).getRestriction();
             }
         }, new Sort(Sort.Direction.ASC, "id"));
     }
 
-    private List<Predicate> getOrderExportPredicates(Root root, CriteriaBuilder cb, Order entity, TimeCondition time) {
+    private List<Predicate> getOrderExportPredicates(Root root, CriteriaBuilder cb, Order entity, TimeCondition time,List<Long> countryids) {
         List<Predicate> predicate = new ArrayList<Predicate>();
-        final List<Long> countryIds = userService.findUserCountryId();
-        if (countryIds != null && countryIds.size() > 0) {
-            predicate.add(root.get("countryid").in(countryIds));
+        if (countryids != null && countryids.size() > 0) {
+            predicate.add(root.get("countryid").in(countryids));
         }
         if (entity.getId() != null) {
             Predicate p = cb.equal(root.get("id"), entity.getId());

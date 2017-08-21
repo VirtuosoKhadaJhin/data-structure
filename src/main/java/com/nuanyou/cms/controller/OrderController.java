@@ -18,6 +18,8 @@ import com.nuanyou.cms.remote.service.RemoteOrderService;
 import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.OrderService;
+import com.nuanyou.cms.service.UserService;
+import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.util.ExcelUtil;
 import com.nuanyou.cms.util.TimeCondition;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -69,6 +72,8 @@ public class OrderController {
     @Autowired
     private OrderDirectMailDao directMailDao;
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("add")
     public String add(Order entity) {
@@ -165,6 +170,7 @@ public class OrderController {
                 order.setUser(null);
             }
         }
+        List<Long> countryids = userService.findUserCountryId();
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
         model.addAttribute("countries", countries);
@@ -173,12 +179,13 @@ public class OrderController {
         model.addAttribute("orderPayTypes", orderPayTypes);
         model.addAttribute("merchants", merchants);
         model.addAttribute("time", time);
+        model.addAttribute("countryids", countryids);
         return "order/list";
     }
 
     @RequestMapping("refundList")
     public String refundList(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, TimeCondition time) {
-        Page<Order> page = orderService.findRefundByCondition(index, entity, time);
+        Page<Order> page = orderService.findRefundByCondition(index, entity, time,null);
         for (Order order : page.getContent()) {
             //注意：此处为避免查询慢，只查询userid和nickname字段
             PasUserProfile userProfile = pasUserProfileDao.findPartsByUserid(order.getUserId());
@@ -191,18 +198,20 @@ public class OrderController {
         List<RefundStatus> refundStatuses = new ArrayList<RefundStatus>(
                 Arrays.asList(RefundStatus.values())
         );
+        List<Long> countryids = userService.findUserCountryId();
         refundStatuses.remove(0);
         model.addAttribute("refundStatuses", refundStatuses);
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
         model.addAttribute("time", time);
+        model.addAttribute("countryids", countryids);
         return "order/refundList";
     }
 
     @RequestMapping(value = "count", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult count(Order entity, TimeCondition time) throws IOException {
-        long size = this.orderService.countViewOrderExports(entity, time);
+    public APIResult count(Order entity, TimeCondition time,String countryids ) throws IOException {
+        long size = this.orderService.countViewOrderExports(entity, time,CommonUtils.StringToList(countryids));
         if (size > 10000)
             return new APIResult(ResultCodes.Fail, ": 数据大于10000条，请缩小筛选范围后导出。");
         return new APIResult();
@@ -210,14 +219,14 @@ public class OrderController {
 
 
     @RequestMapping("export")
-    public void export(Order entity, TimeCondition time, HttpServletResponse response) throws IOException {
+    public void export(Order entity, TimeCondition time, String countryids , HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=UTF-8");
         response.setHeader("Pragma", "public");
         response.setHeader("Cache-Control", "max-age=30");
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
         Long begin = System.currentTimeMillis();
-        List<ViewOrderExport> page = this.orderService.findExportByCondition(entity, time, null);
+        List<ViewOrderExport> page = this.orderService.findExportByCondition(entity, time, CommonUtils.StringToList(countryids) ,null);
         Long end = System.currentTimeMillis();
         log.info("read data from sql:" + (end - begin) / 1000 + "s");
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
@@ -274,7 +283,7 @@ public class OrderController {
     }
 
     @RequestMapping("refundList/export")
-    public void exportRefund(Order entity, TimeCondition time, HttpServletResponse response) throws IOException {
+    public void exportRefund(Order entity, TimeCondition time, String countryids ,HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=" + "UTF-8");
         response.setHeader("Pragma", "public");
@@ -282,7 +291,7 @@ public class OrderController {
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("退款订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
 
         //BeanUtils.cleanEmpty(entity);
-        List<Order> list = orderService.findRefundByCondition(entity, time);
+        List<Order> list = orderService.findRefundByCondition(entity, time,CommonUtils.StringToList(countryids));
 
         Map<Long, PasUserProfile> userMap = new HashMap<>();
         for (Order order : list) {

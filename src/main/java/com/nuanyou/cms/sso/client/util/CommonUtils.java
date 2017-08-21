@@ -4,6 +4,7 @@ package com.nuanyou.cms.sso.client.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.ss.formula.functions.T;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -16,7 +17,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -204,6 +208,18 @@ public final class CommonUtils {
                 httpRequest.getRequestURI()
                         .substring(httpRequest.getContextPath().length())).matches();
         return excluded;
+    }
+
+    public static List<Long> StringToList(String str){
+        if(str == null)
+            return null;
+        str = str.replace("[","").replace("]","");
+        String[] array = str.split(",");
+        List<Long> l = new ArrayList<>();
+        for (String i : array) {
+            l.add(Long.parseLong(i.trim()));
+        }
+        return l;
     }
 
 }
