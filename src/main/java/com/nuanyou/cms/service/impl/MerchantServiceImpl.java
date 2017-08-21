@@ -6,6 +6,7 @@ import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.ChannelType;
 import com.nuanyou.cms.entity.enums.CodeType;
+import com.nuanyou.cms.entity.enums.MerchantCooperationStatus;
 import com.nuanyou.cms.model.MerchantQueryParam;
 import com.nuanyou.cms.model.MerchantVO;
 import com.nuanyou.cms.service.*;
@@ -421,7 +422,7 @@ public class MerchantServiceImpl implements MerchantService {
                     predicate.add(cb.equal(root.get("district").get("country").get("id"), param.countryId));
                 }
                 if (param.cooperationStatus  != null) {
-                    predicate.add(cb.equal(root.get("cooperationStatus").get("key"), param.cooperationStatus));
+                    predicate.add(cb.equal(root.get("cooperationStatus").as(MerchantCooperationStatus.class), param.cooperationStatus));
                 }
                 if (param.display  != null) {
                     predicate.add(cb.equal(root.get("display"), param.display ));
