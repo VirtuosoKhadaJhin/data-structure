@@ -91,7 +91,7 @@
 #parse("common/list_mid.vm")
 <form class="form-horizontal orderForm" method="get">
     <div class="control-group">
-
+        <input type="hidden" class="span11" name="countryids" value="$!countryids" >
         <label>订单ID：</label>
         <input type="text" class="span11" name="id" value="$!entity.id" placeholder="订单ID">
     </div>

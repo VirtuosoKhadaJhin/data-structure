@@ -90,7 +90,7 @@
 #parse("common/list_mid.vm")
 <form class="form-horizontal " role="form" method="get">
     <div class="control-group">
-
+        <input type="hidden" class="span11" name="countryids" value="$!countryids" >
         #if($!countries.size() > 1)
             <label>国家：</label>
             <select name="countryid" class="span11">

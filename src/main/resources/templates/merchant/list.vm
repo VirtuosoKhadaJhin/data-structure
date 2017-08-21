@@ -62,6 +62,8 @@
 #parse("common/list_mid.vm")
 <form>
     <div class="control-group">
+        <input type="hidden" class="span11" name="countryids" value="$!countryids" >
+
         <label>ID：</label>
         <input name="id" value="$!entity.id" type="text" placeholder="ID" class="span11">
         <label>名称：</label>

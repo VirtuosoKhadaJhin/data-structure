@@ -1,6 +1,7 @@
 package com.nuanyou.cms.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by young on 2017/8/8.
@@ -18,4 +19,6 @@ public class MerchantQueryParam implements Serializable{
     public Long countryId;
 
     public Integer cooperationStatus;
+
+    public List<Long> countryids;
 }
