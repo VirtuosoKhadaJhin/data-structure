@@ -272,6 +272,7 @@ public class OrderController {
         propertyHeaderMap.put("postagermb", "邮费(人民币)");
         propertyHeaderMap.put("postage", "邮费(本地)");
         propertyHeaderMap.put("fullOrderItems", "商品");
+        propertyHeaderMap.put("settlement", "清算机构");
         Long begin_w = System.currentTimeMillis();
         XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, page);
         Long end_w = System.currentTimeMillis();
