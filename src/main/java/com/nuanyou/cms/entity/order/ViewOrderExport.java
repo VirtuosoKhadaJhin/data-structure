@@ -101,7 +101,7 @@ public class ViewOrderExport {
 
     private Integer buyTimes;
 
-
+    private String settlement;
 
 
 
@@ -481,7 +481,14 @@ public class ViewOrderExport {
         this.iscode = iscode;
     }
 
+    @Column(name = "settlement")
+    public String getSettlement() {
+        return settlement;
+    }
 
+    public void setSettlement(String settlement) {
+        this.settlement = settlement;
+    }
 
 
 
