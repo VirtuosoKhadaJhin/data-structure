@@ -211,7 +211,7 @@ public class OrderController {
     @RequestMapping(value = "count", method = RequestMethod.POST)
     @ResponseBody
     public APIResult count(Order entity, TimeCondition time,String countryids ) throws IOException {
-        long size = this.orderService.countViewOrderExports(entity, time,CommonUtils.StringToList(countryids));
+        long size = this.orderService.countViewOrderExports(entity, time,(!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null);
         if (size > 10000)
             return new APIResult(ResultCodes.Fail, ": 数据大于10000条，请缩小筛选范围后导出。");
         return new APIResult();
@@ -226,7 +226,7 @@ public class OrderController {
         response.setHeader("Cache-Control", "max-age=30");
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
         Long begin = System.currentTimeMillis();
-        List<ViewOrderExport> page = this.orderService.findExportByCondition(entity, time, CommonUtils.StringToList(countryids) ,null);
+        List<ViewOrderExport> page = this.orderService.findExportByCondition(entity, time, (!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null,null);
         Long end = System.currentTimeMillis();
         log.info("read data from sql:" + (end - begin) / 1000 + "s");
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
@@ -292,7 +292,7 @@ public class OrderController {
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("退款订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
 
         //BeanUtils.cleanEmpty(entity);
-        List<Order> list = orderService.findRefundByCondition(entity, time,CommonUtils.StringToList(countryids));
+        List<Order> list = orderService.findRefundByCondition(entity, time,(!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null);
 
         Map<Long, PasUserProfile> userMap = new HashMap<>();
         for (Order order : list) {
