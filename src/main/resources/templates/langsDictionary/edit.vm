@@ -71,12 +71,13 @@
 
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span6" style="width: 80%;">
-                    <div class="widget-box" style="width: 78%">
+                <div class="span10">
+                    <div class="widget-box" style="width: 100%">
                         <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                             <h5>编辑&查看</h5>
                         </div>
-                        <form class="form-horizontal langsDicFormValidate" role="form" id="uploadForm" action="/langsMessageTip/uploadImg" name="uploadForm"
+                        <form class="form-horizontal langsDicFormValidate" role="form" id="uploadForm"
+                              action="/langsMessageTip/uploadImg" name="uploadForm"
                               enctype="multipart/form-data">
 
                             <div class="nopadding" style="width: 100%;">
@@ -87,7 +88,8 @@
                                                 style="color: red;margin: 0px;padding: 5px;">*</font>：</label>
                                         <div class="controls" style="margin-left: 152px;">
                                             <input for="name" name="keyCode" id="keyCode" type="text" class="span7"
-                                                   readonly="readonly" style="width: 80%" value="$!langsDictionary.keyCode">
+                                                   readonly="readonly" style="width: 80%"
+                                                   value="$!langsDictionary.keyCode">
                                             <label id="keyCodeStatus" class="keyCodeStatus">KeyCode重复</label>
                                         </div>
                                     </div>
@@ -96,7 +98,8 @@
                                             <font style="color: red;margin: 0px;padding: 5px;">*</font>：
                                         </label>
                                         <div class="controls" style="margin-left: 152px;">
-                                            <select class="span7 select2 " name="categoryId" style="width: 80%" disabled="disabled" readonly="readonly">
+                                            <select class="span7 select2 " name="categoryId" style="width: 80%"
+                                                    disabled="disabled" readonly="readonly">
                                                 #foreach($e in $!langsCategories)
                                                     #if($!langsDictionary.categoryId == $!e.id)
                                                         <option value="$!e.id" selected>$!e.name</option>
@@ -121,7 +124,8 @@
                                                 #set($hasNullMessage=true)
                                                 #foreach($message in $!langsDictionary.langsMessageList)
                                                     #if($!message.langsKey == $!langCountry.key)
-                                                        <input data-id="$!message.id" name="$!langCountry.key" type="text" style="width: 80%"
+                                                        <input data-id="$!message.id" name="$!langCountry.key"
+                                                               type="text" style="width: 80%"
                                                                class="span7 countryLanguage" value="$!message.message">
                                                         #set($hasNullMessage=false)
                                                     #end
@@ -140,22 +144,24 @@
 
                                 </div>
 
-                                <div class="fr langs-messagetip" style="width:50%;float: left" data-messagetip="$!langsDictionary.messagetip.id">
+                                <div class="fr langs-messagetip" style="width:50%;float: left"
+                                     data-messagetip="$!langsDictionary.messagetip.id">
                                     <div class="">
                                         <label class="control-label" style="min-width: 100px;max-width: 100px;">描&nbsp;&nbsp;&nbsp;述：</label>
                                         <div class="controls" style="margin-left: 110px">
-                                            <textarea placeholder="多语言描述" class="form-control" id="remark" style="min-width: 250px;resize: none;" cols="4"
-                                                      rows="4" text="$!langsDictionary.messageTip.remark">
-                                            </textarea>
+                                            <textarea placeholder="多语言描述" class="form-control" id="remark" style="width: 80%;resize: none;" cols="4" rows="4" value="$!langsDictionary.messageTip.remark">$!langsDictionary.messageTip.remark</textarea>
                                         </div>
                                     </div>
                                     <div class="">
-                                        <label class="control-label" style="min-width: 100px;max-width: 100px;">场景图：</label>
+                                        <label class="control-label"
+                                               style="min-width: 100px;max-width: 100px;">场景图：</label>
                                         <div class="controls" style="margin-left: 110px">
                                             <input id="lefile" name="file" type="file" style="display:none">
-                                            <div class="input-append">
-                                                <input id="photoCover" class="span4" type="text">
-                                                <a class="btn btn-mini btn-primary" onclick="$('input[id=lefile]').click();">
+                                            <div class="input-append" style="width: 60%">
+                                                <input id="photoCover" class="span4" type="text" style="width: 80%;">
+                                                <a class="btn btn-mini btn-primary"
+                                                   style="width: 25%;min-width: 70px;"
+                                                   onclick="$('input[id=lefile]').click();">
                                                     <i class="icon-folder-open" style="padding-right"></i>选择图片
                                                 </a>
                                             </div>

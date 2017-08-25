@@ -1,0 +1,75 @@
+.tdInput {
+    width: 90%;
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    padding: 5px 5px !important;
+}
+
+.popover-span {
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 0px !important;
+}
+
+.popover-img {
+    margin-top: 10px;
+    width: 250px;
+    height: auto;
+}
+
+.popover-label {
+    font-size: 12.5px !important;
+    margin-top: 5px;
+}
+
+.text-gray {
+    background-color: grey;
+}
+
+.td-sort {
+    min-width: 60px;
+}
+
+td.lang-message .tdInput {
+    margin-bottom: 0;
+}
+
+.table {
+    table-layout: fixed !important;
+}
+
+.table td {
+    text-align: center;
+    word-break: break-all;
+}
+
+.table td label {
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-align: center !important;
+}
+
+.table .no-result-div {
+    text-align: center;
+    vertical-align: middle;
+    height: 50px;
+    line-height: 50px;
+}
+
+.table td input {
+    max-width: 110px;
+}
+
+.table .th-id, .th-category {
+    width: 5%;
+}
+
+.table .th-updatetime, .th-op {
+    width: 10%;
+}
+
+.table .th-keycode, .th-lang {
+    width: 10%;
+}

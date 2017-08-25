@@ -67,14 +67,14 @@ public enum LangsCountry {
         return langsCountries;
     }
 
-    public static List<LangsCountryVo> viewAllCountrysResultList() {
+    public static List<LangsCountryVo> viewRoleCountrysResultList(List<String> roleCountryCodes) {
         List<LangsCountryVo> langsCountryVos = Lists.newArrayList();
 
         LangsCountry[] langsCountryEnums = LangsCountry.values();
         for (LangsCountry langsCountry : langsCountryEnums) {
-            // String[] langsCountrys = langsCountry.getValue().split("-");
-            // langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0]
-            if (langsCountry.getKey() != 1 && langsCountry.getKey() != 2) {
+            String[] langsCountrys = langsCountry.getValue().split("-");
+            String countryCode = langsCountrys.length > 1 ? langsCountrys[1] : langsCountrys[0];
+            if (langsCountry.getKey() != 1 && langsCountry.getKey() != 2 && roleCountryCodes.contains(countryCode)) {
                 LangsCountryVo vo = new LangsCountryVo(langsCountry.getKey(), langsCountry.getValue());
                 langsCountryVos.add(vo);
             }

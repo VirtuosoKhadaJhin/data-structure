@@ -1,0 +1,88 @@
+html, body {
+    height: 100%;
+}
+
+.table {
+    table-layout: fixed !important;
+}
+
+.popover-span {
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 0px !important;
+}
+
+.popover-img {
+    margin-top: 10px;
+    width: 250px;
+    height: auto;
+}
+
+.popover-label {
+    font-size: 12.5px !important;
+    margin-top: 5px;
+}
+
+.table td {
+    padding: 8px;
+    line-height: 20px;
+    text-align: center;
+}
+
+.table .tr-class:hover {
+    cursor: pointer;
+}
+
+.th-id, .th-category {
+    width: 5%;
+}
+
+.th-op {
+    width: 10%;
+}
+
+.th-keycode, .th-lang {
+    width: 20%;
+}
+
+.table label {
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-align: center !important;
+}
+
+.th-remark {
+    width: 25%;
+}
+
+.tdInput {
+    width: 80%;
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    padding: 5px 5px !important;
+    margin-bottom: 0px !important;
+}
+
+.search-reset {
+    margin-left: 3px;
+}
+
+.text-gray {
+    background-color: grey;
+}
+
+.local-country-div {
+    margin: 4px;
+    float: right;
+    width: 260px;
+    margin-right: -100px;
+}
+
+.no-result-div {
+    text-align: center;
+    vertical-align: middle;
+    height: 50px;
+    line-height: 50px;
+}

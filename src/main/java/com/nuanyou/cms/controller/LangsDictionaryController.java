@@ -5,9 +5,8 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.model.*;
 import com.nuanyou.cms.model.enums.LangsCountry;
-import com.nuanyou.cms.service.LangsCategoryService;
-import com.nuanyou.cms.service.LangsDictionaryService;
-import com.nuanyou.cms.service.LangsMessageTipService;
+import com.nuanyou.cms.service.*;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,13 +24,13 @@ import java.util.List;
 public class LangsDictionaryController {
 
     @Autowired
-    private LangsDictionaryService dictionaryService;
+    private CountryService countryService;
 
     @Autowired
     private LangsCategoryService categoryService;
 
     @Autowired
-    private LangsMessageTipService messageTipService;
+    private LangsDictionaryService dictionaryService;
 
     private static final Integer LOCAL_KEY = 5;
 
@@ -77,7 +76,8 @@ public class LangsDictionaryController {
     @RequestMapping("localList")
     public String local(LangsDictionaryRequestVo requestVo, Model model) {
         Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllLocalDictionary(requestVo);
-        List<LangsCountryVo> langsCountryVos = LangsCountry.viewAllCountrysResultList();
+        List<String> roleCountryCodes = countryService.countryCodes();
+        List<LangsCountryVo> langsCountryVos = LangsCountry.viewRoleCountrysResultList(roleCountryCodes);
         List<LangsCategory> categories = categoryService.findAllCategories();
 
         // 页面显示当地语言
@@ -178,7 +178,8 @@ public class LangsDictionaryController {
         // 根据keyCode查询中文、英文、当地文
         List<LangsDictionary> dictionarys = dictionaryService.viewLocalLangsDictionary(dictionaryVo);
         model.addAttribute("dictionarys", dictionarys);
-        model.addAttribute("langsCountries", LangsCountry.localValues(LOCAL_KEY));
+        model.addAttribute("dictionaryVo", dictionaryVo);
+        model.addAttribute("langsCountries", LangsCountry.localValues(dictionaryVo.getCountryKey()));
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
 
         return "langsDictionary/local_edit";

@@ -1,6 +1,7 @@
 package com.nuanyou.cms.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by nuanyoupc7 on 2017/6/9.
@@ -113,4 +114,5 @@ public class LangsDictionaryRequestVo implements Serializable {
     public void setCountryKey(Integer countryKey) {
         this.countryKey = countryKey;
     }
+
 }

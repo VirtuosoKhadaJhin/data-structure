@@ -24,5 +24,7 @@ public interface EntityNyLangsMessageTipDao extends JpaRepository<EntityNyLangsM
     @Query(value = "select lm from EntityNyLangsMessageTip lm where lm.keyCode=:keyCode and lm.delFlag=false")
     EntityNyLangsMessageTip findByKeyCode(@Param("keyCode") String keyCode);
 
+    @Query(value = "select lm from EntityNyLangsMessageTip lm where lm.keyCode in:keyCodes and lm.delFlag=false")
+    List<EntityNyLangsMessageTip> findByKeyCodes(@Param("keyCodes") List<String> keyCodes);
 
 }

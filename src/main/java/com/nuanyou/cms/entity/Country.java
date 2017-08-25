@@ -42,6 +42,12 @@ public class Country {
         this.name = name;
     }
 
+    public Country(Long id, String name,String code) {
+        this.id = id;
+        this.name = name;
+        this.code = code;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

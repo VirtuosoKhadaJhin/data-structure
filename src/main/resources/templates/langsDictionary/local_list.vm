@@ -1,260 +1,182 @@
-#parse("common/list_start.vm")
-<div id="breadcrumb">
-    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
-        主页</a>
-    <a href="localList" class="tip-bottom" data-original-title="">当地语言管理</a>
-    <a href="#" class="tip-bottom" data-original-title="">列表</a>
-</div>
-<div class="widget-title">
-    <span class="icon"><i class="icon-th"></i></span>
-    <h5>当地语言列表</h5>
-#*    <a class="btn btn-mini btn-info buttons" href="local_add">新增</a>*#
-#*显示国家下拉框*#
-#*
-    <div class="control-group">
-        *##*<label class="control-label">多语言分类</label>*##*
-        <div class="controls">
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+    #include("common/js-support.vm")
+    <link href="/dist/css/langs-dictionary/localLang.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="content" class="content-container">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10">
+                <div class="widget-box">
+                    <div class="widget-content nopadding">
 
+                        <div id="breadcrumb">
+                            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i
+                                    class="icon-home"></i>
+                                主页</a>
+                            <a href="localList" class="tip-bottom" data-original-title="">当地语言管理</a>
+                            <a href="#" class="tip-bottom" data-original-title="">列表</a>
+                        </div>
+                        <div class="widget-title">
+                            <span class="icon"><i class="icon-th"></i></span>
+                            <h5>当地语言列表</h5>
+                            <div class="local-country-div">
+                                <select class="span7 select2 local-country-select">
+                                    <option value="">选择国家</option>
+                                    #foreach($e in $!langsCountryVos)
+                                        <option value="$!e.langsCountryKey"
+                                                #if($!entity.countryKey == $!e.langsCountryKey)selected#end>$!e.langsCountryDesc</option>
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                        <table class="table table-bordered data-table dataTable">
+                            <thead class="table-thead">
+                            <tr class="thead-tr">
+                                <th class="th-id">序号</th>
+                                <th class="th-category">分类</th>
+                                <th class="th-keycode">keyCode</th>
+                                #foreach($langCountry in $!langsCountries)
+                                    <th class="th-lang">
+                                        #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
+                                            $!langCountry.desc ($!langCountry.value)
+                                        #end
+                                        #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
+                                            当地语-$!langCountry.desc ($!langCountry.value)
+                                        #end
+                                    </th>
+                                #end
+                                <th class="th-remark">备注</th>
+                                <th class="th-op">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody class="tbody-list">
+                                #if ($null.isNull($page.content) || $page.content.size()==0)
+                                <tr class="tbody-tr">
+                                    <td colspan="11">
+                                        <div class="no-result-div">
+                                            <p>没有符合条件的多语言记录信息！</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                #end
+                                #foreach($entity in $!page)
+                                <tr class="tr-class" data-keycode="$!entity.keyCode" data-remark="$!entity.messageTip.remark" data-img="$!entity.messageTip.imgUrl">
+                                    #set($placement = 'right')
+                                    #if($!velocityCount <= 2)
+                                        #set($placement = 'bottom')
+                                    #elseif($!velocityCount >= 15)
+                                        #set($placement = 'top')
+                                    #end
+                                    <td class="td-id" data-placement="$!placement" data-placement="$!placement">
+                                        <label class="td-id-label">$!{velocityCount}</label>
+                                    </td>
+                                    <td class="td-category" title="$!entity.categoryName" data-placement="$!placement">
+                                        <label>$!entity.categoryName</label>
+                                    </td>
+                                    <td class="td-keycode" title="$!entity.keyCode" data-placement="$!placement">
+                                        <label class="td-keycode-label">$!entity.keyCode</label>
+                                    </td>
+                                    #foreach($langCountry in $!langsCountries)
+                                        <td class="lang-message" data-language="$!langCountry.desc ($!langCountry.value)" key-code="$!entity.keyCode" langs-key="$!langCountry.key" data-placement="$!placement">
+                                            #set($hasNullMessage=true)
+                                            #foreach($lang in $!entity.langsMessageList)
+                                                #if($!lang.langsKey == $!langCountry.key)
+                                                    #if($!langCountry.key == 1 || $!langCountry.key == 2)
+                                                        <input class='tdInput lang-message-label' data-message="$!lang.message" value="$!lang.message" type='text'readonly="readonly"/>
+                                                    #else
+                                                        #if($!lang.message != "")
+                                                            <label class="lang-message-label" data-message="$!lang.message" >$!lang.message</label>
+                                                        #else
+                                                            <input class='tdInput lang-message-label' data-message="$!lang.message" onchange='saveLang(this)' type='text'/>
+                                                        #end
+                                                    #end
+                                                    #set($hasNullMessage=false)
+                                                #end
+                                            #end
+                                            #if($hasNullMessage)
+                                                #if($!langCountry.key == 1 || $!langCountry.key == 2)
+                                                    <input class='tdInput' readonly="readonly" type='text'/>
+                                                #else
+                                                    <input class='tdInput' onchange='saveLang(this)' type='text'/>
+                                                #end
+                                            #end
+                                        </td>
+                                    #end
+                                    <td class="td-remark" data-placement="$!placement">
+                                        <label class="td-remark-label">$!entity.messageTip.remark</label>
+                                    </td>
+                                    <td class="td-op" data-placement="$!placement" style="word-break: keep-all">
+                                        <a class="btn btn-primary btn-mini modify-item" key-code="$!entity.keyCode"><i class="icon-edit"> 编辑</i></a>
+                                    </td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                #set($i=$!page.number + 1)
+                <div class="pagination" style="float:right">
+                    <ul total="$!page.totalPages" index="$!i"></ul>
+                </div>
+            </div>
+            <div class="span2">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"><i class="icon-list"></i></span>
+                        <h5>筛选列表</h5>
+                    </div>
+                    <div class="widget-content">
+                        <form class="form-horizontal search-form" method="get">
+                            <div class="control-group" style="margin-bottom: 10px">
+                                <label>分类：</label>
+                                <select class="span11 select2 " name="baseNameId">
+                                    <option value="">全部分类</option>
+                                    #foreach($e in $!categories)
+                                        <option value="$!e.id"
+                                                #if($!e.id==$!entity.baseNameId)selected #end>$!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+
+                            <div class="control-group" style="margin-bottom: 10px">
+                                <label>keyCode：</label>
+                                <input type="text" class="span11" name="keyCode" value="$!entity.keyCode"
+                                       placeholder="请输入keyCode">
+                            </div>
+                            <div class="control-group" style="margin-bottom: 10px">
+                                <label>当地语：
+                                    #if ("$!localLangs" != "")
+                                        ($!localLangs)
+                                    #else
+                                        (中文)
+                                    #end
+                                </label>
+                                <input type="text" class="span11" name="message" value="$!entity.message"
+                                       placeholder="请输入当地语">
+                            </div>
+                            <div class="control-group" style="clear: both;margin-top: 10px;">
+                                <input type="hidden" value="$!entity.countryKey" name="countryKey" class="country-key" />
+                                <button type="submit" class="btn btn-primary"><i class="icon-search"> 查询</i></button>
+                                <button class="btn btn-warning search-reset"><i class="icon-refresh"> 重置</i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-*#
-    <div style="margin: 4px;float: right;width: 260px;margin-right: -100px;">
-        <select class="span7 select2 " id="country" onchange="interchangeCountry()">
-            <option value="">选择国家</option>
-            #foreach($e in $!langsCountryVos)
-                <option value="$!e.langsCountryKey">$!e.langsCountryDesc</option>
-            #end
-        </select>
-    </div>
-
-
 </div>
-<style>
-    .tdInput {
-        width: 75%;
-    }
+<script src="/dist/js/page-support.js"></script>
+<script src="/dist/js/langs-dictionary/localLang.js"></script>
+</body>
+</html>
 
-    .text-gray {
-        background-color: grey;
-    }
-</style>
-<div style="width: 100%">
-    <table class="table table-bordered data-table dataTable" id="DataTables_Table_0">
-    #*表格头*#
-        <thead role="row">
-        <tr>#*标题行*#
-        #*分类*#
-            <th width="5%">序号</th>
-            <th width="5%">分类</th>
-        #*keyCode*#
-            <th width="5%">keyCode</th>
-        #*多个语言循环展示*#
-            #foreach($langCountry in $!langsCountries)
-                <th width="15%">
-
-                #*$!langCountry.desc ($!langCountry.value)*#
-                    #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
-                        $!langCountry.desc ($!langCountry.value)
-                    #end
-                    #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
-                        当地语-$!langCountry.desc ($!langCountry.value)
-                    #end
-                </th>
-            #end
-        #*操作*#
-            <th width="5%">操作</th>
-        </tr>
-        </thead>
-    #*表格体*#
-        <tbody>
-        #*循环展示表格体*#
-            #set($sort = 1)
-
-            #if ($null.isNull($page.content) || $page.content.size()==0)
-            <tr>
-                <td colspan="11" style="text-align:center;">
-                    <div class="no-result-div"
-                         style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
-                        <p>没有符合条件的多语言记录信息！</p>
-                    </div>
-                </td>
-            </tr>
-            #end
-
-            #foreach($entity in $!page)
-            <tr class="odd gradeX">
-                <td><label style="text-align: center;padding-top: 5%">$sort</label>
-                </td>
-                <td><label style="text-align: center;padding-top: 5%">$!entity.categoryName</label>
-                </td>
-                <td style="text-align: center">$!entity.keyCode</td>
-                #foreach($langCountry in $!langsCountries)
-                    <td class="lang-message" style="text-align: center" key-code="$!entity.keyCode"
-                        langs-key="$!langCountry.key">
-                        #set($hasNullMessage=true)
-                        #foreach($lang in $!entity.langsMessageList)
-                            #if($!lang.langsKey == $!langCountry.key)
-                                #if($!langCountry.key == 1 || $!langCountry.key == 2)
-                                    <input class='tdInput' readonly="readonly" value="$!lang.message" type='text'/>
-                                #else
-                                    #if($!lang.message != "")
-                                        <label style="text-align: center;padding-top: 5%">$!lang.message</label>
-                                    #else
-                                        <input class='tdInput' onchange='saveLang(this)' type='text'/>
-                                    #end
-                                #end
-
-                                #set($hasNullMessage=false)
-                            #end
-                        #end
-                        #if($hasNullMessage)
-                            #if($!langCountry.key == 1 || $!langCountry.key == 2)
-                                <input class='tdInput' readonly="readonly" type='text'/>
-                            #else
-                                <input class='tdInput' onchange='saveLang(this)' type='text'/>
-                            #end
-                        #end
-                    </td>
-                #end
-                <td>
-                    <div style="text-align: center">
-                        <a class="btn btn-primary btn-mini modify-item" key-code="$!entity.keyCode">编辑</a>
-                    </div>
-                </td>
-            </tr>
-                #set($sort = $sort + 1)
-            #end
-        </tbody>
-    </table>
-</div>
-
-#parse("common/list_mid.vm")
-<form class="form-horizontal search-form" method="get">
-    <div class="control-group" style="margin-bottom: 10px">
-        <label>分类</label>
-        <select class="span7 select2 " name="baseNameId" style="min-width: 203px;">
-            <option value="">全部分类</option>
-            #foreach($e in $!categories)
-                <option value="$!e.id" #if($!e.id==$!entity.baseNameId) selected #end>$!e.name</option>
-            #end
-        </select>
-    </div>
-
-    <div class="control-group" style="margin-bottom: 10px">
-        <label>keyCode</label>
-        <input type="text" class="span11" name="keyCode" value="$!entity.keyCode">
-    </div>
-    <div class="control-group" style="margin-bottom: 10px">
-        <label>当地语
-            #if ("$!localLangs" != "")
-                ($!localLangs)
-            #else
-                (中文)
-            #end
-        </label>
-        <input type="text" class="span11" name="message" value="$!entity.message">
-    </div>
-
-
-    <div class="control-group" style="clear: both;margin-top: 10px;">
-        <button type="submit" class="btn btn-primary">查询</button>
-        <button class="btn btn-warning search-reset">重置</button>
-    </div>
-</form>
-
-#parse("common/list_end.vm")
-
-<script>
-    $(document).ready(function () {
-        $("select[id='country']").find("option[value='" + getUrlParam("countryKey") + "']").attr("selected", true);
-    });
-    /**
-     * 切换国家
-     */
-    function interchangeCountry() {
-        var countryKey = $("#country").val();
-        var baseNameId = getUrlParam("baseNameId");
-        var keyCode = getUrlParam("keyCode");
-        var message = getUrlParam("message");
-
-        var url = "localList?";
-        if (countryKey != null && countryKey != "") {
-            url = url + "countryKey=" + countryKey;
-        }
-        if (baseNameId != null && baseNameId != null
-                && countryKey == null && countryKey == "") {
-            url = url + "baseNameId=" + baseNameId;
-        } else if (baseNameId != null && baseNameId != null) {
-            url = url + "&&baseNameId=" + baseNameId;
-        }
-        if (keyCode != null && keyCode != null) {
-            url = url + "&&keyCode=" + baseNameId;
-        }
-        if (message != null && message != null) {
-            url = url + "&&message=" + baseNameId;
-        }
-        location.href = url;
-    }
-    /**
-     * 修改语言
-     */
-    $(".modify-item").each(function (i, o) {
-        $(o).on("click", function (event) {
-            var keyCode = $(this).attr("key-code");
-            var pageIndex = getUrlParam("index");
-            if (null == pageIndex) {
-                pageIndex = 1;
-            }
-            location.href = "localEdit?keyCode=" + keyCode + "&&pageIndex=" + pageIndex;
-        });
-    });
-    /**
-     * 获取url中的参数
-     */
-    function getUrlParam(name) {
-        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-        var r = window.location.search.substr(1).match(reg);
-        if (r != null) return unescape(r[2]);
-        return null;
-    }
-
-    $(".search-reset").click(function () {
-        $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
-        $(".search-form").find(".select2").val('').trigger('change');
-    });
-
-    /**
-     * 实时保存语言
-     * @param obj
-     */
-    function saveLang(obj) {
-        console.log("输入的值:" + $(obj).val());
-        console.log("对应的keyCode:" + $(obj).parent().attr("key-code"));
-        console.log("对应的langsKey:" + $(obj).parent().attr("langs-key"));
-
-        var request = {};
-        request.langsKey = $(obj).parent().attr("langs-key");
-        request.keyCode = $(obj).parent().attr("key-code");
-        request.message = $(obj).val();
-        $.ajax({
-            url: 'saveMessage',
-            data: JSON.stringify(request),
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.code == 0) {
-                    // alert("操作成功");
-                } else {
-                    alert(result.msg);
-                }
-            }
-        });
-
-        $(obj).parent().html("<label style='text-align: center;padding-top: 5%'>" + $(obj).val() + "</label>");
-    }
-
-</script>
 
 
 

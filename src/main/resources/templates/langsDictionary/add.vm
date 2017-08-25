@@ -35,8 +35,8 @@
 
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span6" style="width: 70%;min-width:994px;">
-                    <div class="widget-box" style="width: 78%">
+                <div class="span10">
+                    <div class="widget-box" style="width: 100%">
                         <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                             <h5>新增多语言</h5>
                         </div>
@@ -105,7 +105,7 @@
                                     <div class="">
                                         <label class="control-label" style="min-width: 100px;max-width: 100px;">描&nbsp;&nbsp;&nbsp;述：</label>
                                         <div class="controls" style="margin-left: 110px">
-                                            <textarea placeholder="多语言描述" class="form-control" id="remark" style="min-width: 250px;resize: none;" cols="4"
+                                            <textarea placeholder="多语言描述" class="form-control" id="remark" style="width: 80%;resize: none;" cols="4"
                                                       rows="4"></textarea>
                                             <label name="remark" class="control-label required-waring"
                                                    style="padding-top: 2px;text-align: left;width: 140px;">备注不能为空</label>
@@ -115,8 +115,8 @@
                                         <label class="control-label" style="min-width: 100px;max-width: 100px;">场景图：</label>
                                         <div class="controls" style="margin-left: 110px">
                                             <input id="lefile" name="file" type="file" style="display:none">
-                                            <div class="input-append">
-                                                <input id="photoCover" class="span4" type="text">
+                                            <div class="input-append"">
+                                                <input id="photoCover" style="width: 70%;" type="text">
                                                 <a class="btn btn-mini btn-primary" onclick="$('input[id=lefile]').click();">
                                                     <i class="icon-folder-open" style="padding-right"></i>选择图片
                                                 </a>
