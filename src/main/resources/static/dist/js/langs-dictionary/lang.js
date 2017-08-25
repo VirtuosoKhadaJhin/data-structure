@@ -1,5 +1,5 @@
 $(function () {
-    $(".tr-class td").popover(
+    $(".tr-class td:not('.td-1,.td-2')").popover(
         {
             animation: true,
             html: true,
