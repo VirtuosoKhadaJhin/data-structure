@@ -84,7 +84,7 @@
                                         <label class="td-keycode-label">$!entity.keyCode</label>
                                     </td>
                                     #foreach($langCountry in $!langsCountries)
-                                        <td class="lang-message" data-language="$!langCountry.desc ($!langCountry.value)" key-code="$!entity.keyCode" langs-key="$!langCountry.key" data-placement="$!placement">
+                                        <td class="lang-message" data-language="$!langCountry.desc" key-code="$!entity.keyCode" langs-key="$!langCountry.key" data-placement="$!placement">
                                             #set($hasNullMessage=true)
                                             #foreach($lang in $!entity.langsMessageList)
                                                 #if($!lang.langsKey == $!langCountry.key)

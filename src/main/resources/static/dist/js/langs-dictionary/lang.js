@@ -1,5 +1,5 @@
 $(function () {
-    $(".tr-class td:not('.td-1,.td-2')").popover(
+    $(".tr-class td:not('.td-sort, .td-category-name, .td-update-time, .td-op')").popover(
         {
             animation: true,
             html: true,
@@ -12,18 +12,35 @@ $(function () {
 
     $('.tr-class td').on('shown.bs.popover', function () {
         var language = $(this).attr("data-language");
-        var imgUrl = $(this).parents("tr").attr("data-img");
-        var remark = $(this).parents("tr").attr("data-remark");
-        var keyCode = $(this).parents("tr").attr("data-keycode");
         var message = $(this).find(".lang-message-label").attr("data-message");
 
-        var keycodeHtml = "<span class='popover-span'>keycode：</span><label class='popover-label'>" + keyCode + "</label>";
-        var messageHtml = "<span class='popover-span'>" + language + "：</span><label class='popover-label'>" + message + "</label>";
-        var remarkHtml = "<span class='popover-span'>描述：</span><label class='popover-label'>" + remark + "</label>";
-        var imgUrlHtml = "<span class='popover-span'>场景图：</span><img class='popover-img' src='" + imgUrl + "' />";
+        var messageHtml = "";
+        if (message != "" && message != null) {
+            messageHtml = "<tr class='tr-class'>" +
+                "                <td class='td-language'><span class='popover-span'>" + language + "：</span></td>" +
+                "                <td class='td-language-value'><label class='popover-label'>" + message + "</label></td>" +
+                "             </tr>";
+        }
+        var popoverContent = "<table class='popover-table'>" +
+            "                   <tbody class='tbody-class'>" +
+            "                    <tr class='tr-class'>" +
+            "                        <td class='td-keycode'><span class='popover-span'>keycode：</span></td>" +
+            "                        <td class='td-keycode-value'><label class='popover-label'>" + $(this).parents("tr").attr("data-keycode") + "</label></td>" +
+            "                    </tr>"
+            + messageHtml +
+            "                    <tr class='tr-class'>" +
+            "                        <td class='td-remark'><span class='popover-span'>描述：</span></td>" +
+            "                        <td class='td-remark-value'><label class='popover-label'>" + $(this).parents("tr").attr("data-remark") + "</label></td>" +
+            "                    </tr>" +
+            "                    <tr class='tr-class'>" +
+            "                        <td class='td-img'><span class='popover-span'>场景图：</span></td>" +
+            "                        <td class='td-img-value'><label class='popover-label'><img class='popover-img' src='" + $(this).parents("tr").attr("data-img") + "' /></label></td>" +
+            "                    </tr>" +
+            "                   </tbody>" +
+            "                </table>";
 
         $(".popover-content").empty();
-        $(".popover-content").append(keycodeHtml).append((message != "" && message != null) ? messageHtml : "").append((remark != "" && remark != null) ? remarkHtml : "").append(imgUrl != "" ? imgUrlHtml : "");
+        $(".popover-content").append(popoverContent);
     });
 
 });

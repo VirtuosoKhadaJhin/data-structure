@@ -68,7 +68,7 @@
                                         <label class="td-keycode-label">$!entity.keyCode</label>
                                     </td>
                                     #foreach($langCountry in $!langsCountries)
-                                        <td class="lang-message" data-language="$!langCountry.desc ($!langCountry.value)" key-code="$!entity.keyCode" langs-key="$!langCountry.key" data-placement="$!placement">
+                                        <td class="lang-message" data-language="$!langCountry.desc" key-code="$!entity.keyCode" langs-key="$!langCountry.key" data-placement="$!placement">
                                             #set($hasNullMessage=true)
                                             #foreach($lang in $!entity.langsMessageList)
                                                 #if($!lang.langsKey == $!langCountry.key)
@@ -84,7 +84,7 @@
                                     <td class="td-update-time" data-placement="$!placement">
                                         <label class="td-update-time-label" title="$!date.format('yyyy-MM-dd HH:mm:ss ',$!entity.updateDt)">$!date.format('yyyy-MM-dd HH:mm:ss ',$!entity.updateDt)</label>
                                     </td>
-                                    <td>
+                                    <td class="td-op">
                                         <a key-code="$!entity.keyCode" class="btn btn-primary btn-mini modify-item"><i class="icon-edit"> 编辑</i></a>
                                         <a key-code="$!entity.keyCode" class="btn btn-danger btn-mini remove-item"><i class="icon-remove"> 删除</i></a>
                                     </td>

@@ -7,20 +7,40 @@
 
 .popover-span {
     width: 100%;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     margin-left: 0px !important;
 }
 
+.popover-table td {
+    line-height: 35px;
+}
+
+.td-keycode, .td-remark, .td-img, .td-language {
+    text-align: right;
+    vertical-align: top;
+}
+
+.td-keycode-value, .td-remark-value, .td-img-value, .td-language-value {
+    padding-left: 15px;
+}
+
+.popover {
+    max-width: 480px !important;
+}
+
+.popover-table tr:hover {
+    background-color: #fff !important;
+}
+
 .popover-img {
-    margin-top: 10px;
     width: 250px;
     height: auto;
+    margin-top: 10px;
 }
 
 .popover-label {
-    font-size: 12.5px !important;
-    margin-top: 5px;
+    font-size: 15px !important;
 }
 
 .text-gray {

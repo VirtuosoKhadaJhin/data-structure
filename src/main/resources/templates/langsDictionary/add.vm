@@ -52,11 +52,11 @@
                                         <div class="controls" style="margin-left: 152px;">
                                             <input id="verify_keyCode" type="text" style="display: none" value=""
                                                    onkeyup="verifykeyCode()">
-                                            <input for="name" id="keyCode" readonly="readonly"
+                                            <input for="name" id="keyCode"
                                                    class="span7" name="keyCode" type="text" style="width: 80%"
                                                    value="$!entity.keyCode" onblur="verifykeyCode()">
                                             <label id="keyCodeStatus" class="control-label"
-                                                   style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
+                                                   style="display:none;padding-right: 8em;float: right;text-align: left;padding-top: 5px;">KeyCode重复</label>
                                         </div>
                                     </div>
 
@@ -95,7 +95,7 @@
                                                 #end
                                                 <label id="requiredKey_$!langCountry.key"
                                                        class="control-label required-waring"
-                                                       style="text-align: right;width: 140px;padding-top: 3px;">必填项</label>
+                                                       style="text-align: right;width: 140px;padding-top: 3px!important;">必填项</label>
                                             </div>
                                         </div>
                                     #end
@@ -105,33 +105,37 @@
                                     <div class="">
                                         <label class="control-label" style="min-width: 100px;max-width: 100px;">描&nbsp;&nbsp;&nbsp;述：</label>
                                         <div class="controls" style="margin-left: 110px">
-                                            <textarea placeholder="多语言描述" class="form-control" id="remark" style="width: 80%;resize: none;" cols="4"
+                                            <textarea placeholder="多语言描述" class="form-control" id="remark"
+                                                      style="width: 80%;resize: none;" cols="4"
                                                       rows="4"></textarea>
                                             <label name="remark" class="control-label required-waring"
                                                    style="padding-top: 2px;text-align: left;width: 140px;">备注不能为空</label>
                                         </div>
                                     </div>
                                     <div class="">
-                                        <label class="control-label" style="min-width: 100px;max-width: 100px;">场景图：</label>
+                                        <label class="control-label"
+                                               style="min-width: 100px;max-width: 100px;">场景图：</label>
                                         <div class="controls" style="margin-left: 110px">
                                             <input id="lefile" name="file" type="file" style="display:none">
-                                            <div class="input-append"">
-                                                <input id="photoCover" style="width: 70%;" type="text">
-                                                <a class="btn btn-mini btn-primary" onclick="$('input[id=lefile]').click();">
-                                                    <i class="icon-folder-open" style="padding-right"></i>选择图片
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div style="text-align: center;padding-top: 1em;">
-                                            <img style="" id="imgUrl" src="">
+                                            <div class="input-append"
+                                            ">
+                                            <input id="photoCover" style="width: 70%;" type="text">
+                                            <a class="btn btn-mini btn-primary"
+                                               onclick="$('input[id=lefile]').click();">
+                                                <i class="icon-folder-open" style="padding-right"></i>选择图片
+                                            </a>
                                         </div>
                                     </div>
+                                    <div style="text-align: center;padding-top: 1em;">
+                                        <img style="" id="imgUrl" src="">
+                                    </div>
                                 </div>
+                            </div>
 
-                                <div class="form-actions" style="clear:both;text-align: center">
-                                    <a onclick="saveLangsDictionary()" id="saveBtn" class="btn btn-info btn-ok">确定</a>
-                                    <a class="btn btn-primary btn-back" onclick="backLangsDictionaryList()">返回</a>
-                                </div>
+                            <div class="form-actions" style="clear:both;text-align: center">
+                                <a onclick="saveLangsDictionary()" id="saveBtn" class="btn btn-info btn-ok">确定</a>
+                                <a class="btn btn-primary btn-back" onclick="backLangsDictionaryList()">返回</a>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -143,9 +147,11 @@
 
 <script type="text/javascript">
     keyCodeRealTime();
+
     function backLangsDictionaryList() {
         location.href = "list";
     }
+
     // file 上传文件
     $('input[id=lefile]').change(function () {
         $("#saveBtn").attr("onclick", "");
@@ -205,6 +211,7 @@
     function keyCodeRealTime() {
         // 拼接KeyCode
         var requiredUS = $("input[name='1']").val();
+        requiredUS = requiredUS.replace(/\s+/g, "_")
         // 如果是英文,则要增加改变事件,用来改变keyCode
         $("input[name='1']").attr("onchange", "keyCodeRealTime()");
         // 选择的分类
@@ -261,6 +268,11 @@
     function saveLangsDictionary() {
         var saveBtn_distabled = $("#saveBtn").attr("disabled");
         if (saveBtn_distabled || saveBtn_distabled == "disabled") {
+            return false;
+        }
+
+        if($("#keyCode").val().length > 100){
+            alert("keyCode不能超过100位!");
             return false;
         }
 
