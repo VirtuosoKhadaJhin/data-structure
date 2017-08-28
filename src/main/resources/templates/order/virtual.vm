@@ -26,17 +26,29 @@
                         <div class="widget-content nopadding">
                             <form action="virtual" id="form-main" method="post" class="form-horizontal">
                                 <div class="control-group">
-                                    <label class="control-label">团购产品ID</label>
+                                    <label class="control-label">销售渠道：</label>
                                     <div class="controls">
-                                        <span style="color: red" id="itemName"></span>
-                                        <br/>
-                                        <input id="id" name="id" type="number" class="span9" required>
+                                        <input id="saleChannel" name="saleChannel" type="text" class="span9" value="大众点评" readonly>
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label class="control-label">购买数量</label>
+                                    <label class="control-label"><font color="red" style="vertical-align: sub"><b>*</b></font> 渠道订单号：</label>
                                     <div class="controls">
-                                        <input id="number" name="number" type="number" min="1" class="span9" required>
+                                        <input id="channelOrderNo" name="channelOrderNo" type="text" class="span9" placeholder="请输入渠道订单号" required>
+                                        <span style="color: red" id="orderNoName"></span>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">团购产品ID：</label>
+                                    <div class="controls">
+                                        <input id="id" name="id" type="number" class="span9" placeholder="请输入团购产品ID" required>
+                                        <span style="color: red" id="itemName"></span>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label"><font color="red" style="vertical-align: sub"><b>*</b></font> 购买数量：</label>
+                                    <div class="controls">
+                                        <input id="number" name="number" type="number" min="1" class="span9" placeholder="请输入购买数量" required>
                                     </div>
                                 </div>
                                 <div class="form-actions">
@@ -60,7 +72,7 @@
                     if (result.data.length > 0)
                         $("#itemName").html(result.data[0].name);
                     else
-                        $("#itemName").html("没有查询到对应团购产品。");
+                        $("#itemName").html("<b>没有查询到对应团购产品！</b>");
                 }
             });
         });
