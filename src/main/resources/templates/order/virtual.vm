@@ -93,7 +93,7 @@
                 success: function (result) {
                     btn.disabled = false;
                     if (result.code == 0) {
-                        window.location.href = "edit?type=3&id=" + result.data.orderid;
+                        window.location.href = "edit?type=3&id=" + result.data.id;
                     } else {
                         alert(result.msg);
                     }
