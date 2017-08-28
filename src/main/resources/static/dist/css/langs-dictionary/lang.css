@@ -1,8 +1,8 @@
 .tdInput {
-    width: 90%;
+    width: 93%;
     border: 1px solid #ccc !important;
     border-radius: 4px !important;
-    padding: 5px 5px !important;
+    padding: 5px 3px !important;
 }
 
 .popover-span {
@@ -79,7 +79,7 @@ td.lang-message .tdInput {
 }
 
 .table td input {
-    max-width: 110px;
+    max-width: 120px;
 }
 
 .table .th-id, .th-category {

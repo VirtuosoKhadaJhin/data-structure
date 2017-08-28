@@ -82,6 +82,17 @@ public enum LangsCountry {
         return langsCountryVos;
     }
 
+    public static List<LangsCountryVo> viewAllCountrysResultList() {
+        List<LangsCountryVo> langsCountryVos = Lists.newArrayList();
+        for (LangsCountry langsCountry : LangsCountry.values()) {
+            if (langsCountry.getKey() != 1 && langsCountry.getKey() != 2) {
+                LangsCountryVo vo = new LangsCountryVo(langsCountry.getKey(), langsCountry.getValue());
+                langsCountryVos.add(vo);
+            }
+        }
+        return langsCountryVos;
+    }
+
     public Integer getKey() {
         return key;
     }

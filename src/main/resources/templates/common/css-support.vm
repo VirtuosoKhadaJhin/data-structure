@@ -9,3 +9,5 @@
 <link href="/dist/css/common.css" rel="stylesheet"/>
 <link href="/dist/css/jquery-ui-1.12.1.css" rel="stylesheet"/>
 <link href="/dist/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet"/>
+<link href="/dist/css/jquery.xcConfirm.css" rel="stylesheet"/>
+<link href="/dist/css/jquery.loadmask.css" rel="stylesheet"/>

@@ -23,6 +23,8 @@ import java.util.List;
 @RequestMapping("langsDictionary")
 public class LangsDictionaryController {
 
+    private static final String CN_KEY = "0";
+
     @Autowired
     private CountryService countryService;
 
@@ -31,8 +33,6 @@ public class LangsDictionaryController {
 
     @Autowired
     private LangsDictionaryService dictionaryService;
-
-    private static final Integer LOCAL_KEY = 5;
 
     /**
      * 多语言列表查询
@@ -75,10 +75,11 @@ public class LangsDictionaryController {
      */
     @RequestMapping("localList")
     public String local(LangsDictionaryRequestVo requestVo, Model model) {
-        Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllLocalDictionary(requestVo);
         List<String> roleCountryCodes = countryService.countryCodes();
-        List<LangsCountryVo> langsCountryVos = LangsCountry.viewRoleCountrysResultList(roleCountryCodes);
+        List<LangsCountryVo> langsCountryVos = roleCountryCodes.contains(CN_KEY) ? LangsCountry.viewAllCountrysResultList() : LangsCountry.viewRoleCountrysResultList(roleCountryCodes);
         List<LangsCategory> categories = categoryService.findAllCategories();
+
+        this.setDefaultLocalCountry(requestVo, langsCountryVos);
 
         // 页面显示当地语言
         if (requestVo.getCountryKey() != 0) {
@@ -86,12 +87,28 @@ public class LangsDictionaryController {
             model.addAttribute("localLangs", localLangs);
         }
 
+        Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllLocalDictionary(requestVo);
         model.addAttribute("categories", categories);
         model.addAttribute("page", allDictionary);
         model.addAttribute("entity", requestVo);
         model.addAttribute("langsCountryVos", langsCountryVos);
         model.addAttribute("langsCountries", LangsCountry.localValues(requestVo.getCountryKey()));
         return "langsDictionary/local_list";
+    }
+
+    /**
+     * 设置默认选择的国家
+     *
+     * @param requestVo
+     * @param langsCountryVos
+     */
+    private void setDefaultLocalCountry(LangsDictionaryRequestVo requestVo, List<LangsCountryVo> langsCountryVos) {
+        if (requestVo.getCountryKey() == 0) {
+            for (LangsCountryVo langsCountryVo : langsCountryVos) {
+                requestVo.setCountryKey(langsCountryVo.getLangsCountryKey());
+                break;
+            }
+        }
     }
 
     /**

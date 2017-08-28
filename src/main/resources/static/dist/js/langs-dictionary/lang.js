@@ -44,53 +44,6 @@ $(function () {
     });
 
 });
-/**
- * 通用弹窗
- */
-var localeLangs = false;
-
-function langsCommonDialog() {
-    $("input[id='keyCode']").val("");
-    $("input[data-name='langs']").val("");
-    $("#categoryId").val("");
-    $("#select2-categoryId-container").html("全部分类");
-
-    $("#keyCodeStatus").hide();
-    $("#common_langs_saveBtn").attr("style", "");
-    $("#keyCode").css("border", "");
-    $("#common_langs_saveBtn").attr("onclick", "saveLangsDictionary()");
-
-    $('#parameterModal').modal('show');
-    $("span[dir='ltr']").attr("style", "min-width: 180px;");
-
-    $.ajax({
-        url: 'viewLocalLanguage',
-        type: 'post',
-        dataType: 'json',
-        contentType: 'application/json',
-        success: function (result) {
-            if (result.code == 0) {
-                if (result.data != null && localeLangs == false) {
-                    localeLangs = true;
-                    // 如果不是必填项中文和英文
-                    var langsCountry = result.data;
-                    if (langsCountry.langsValue != "zh-CN" && langsCountry.langsValue != "en-US") {
-                        var localeInputHtml = "<div class='control-group'>"
-                            + "<label class='control-label'>"
-                            + langsCountry.langsDesc + (langsCountry.langsValue)
-                            + "：</label>"
-                            + " <div class='controls'>"
-                            + " <input name='" + langsCountry.langsCountryKey + "' data-key='" + langsCountry.langsCountryKey + "' type='text' onkeyup='keyCodeRealTime()' data-name='langs' class='span7 countryLanguage'>"
-                            + " </div>"
-                            + "</div>";
-                        $("#langsInput").append(localeInputHtml);
-
-                    }
-                }
-            }
-        }
-    });
-}
 
 $(".search-reset").click(function () {
     $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
@@ -225,8 +178,6 @@ function keyCodeRealTime() {
     verifykeyCode();
 }
 
-/** ########################多语言common弹出框增加######################## */
-
 /**
  * 获取url中的参数
  */
@@ -256,6 +207,7 @@ function saveMessage(obj) {
             if (result.code == 0) {
                 // alert("操作成功");
             } else {
+                window.wxc.xcConfirm("操作失败," + result.msg, window.wxc.xcConfirm.typeEnum.warning);
                 alert(result.msg);
             }
         }
@@ -277,9 +229,11 @@ $("#DataTables_Table_0").delegate(".selectParameter", "click", function (e) {
 $(".remove-item").each(function (i, o) {
     $(o).on("click", function (event) {
         var keyCode = $(this).attr("key-code");
-        if (confirm("确实要删除keyCode为(" + keyCode + ")的多语言记录吗?")) {
-            sureRemoveLangsDictionary(keyCode);
-        }
+        window.wxc.xcConfirm("确实要删除keyCode为(" + keyCode + ")的多语言记录吗?", window.wxc.xcConfirm.typeEnum.confirm, {
+            onOk: function () {
+                sureRemoveLangsDictionary(keyCode);
+            }
+        });
     });
 });
 
@@ -298,22 +252,30 @@ $(".modify-item").each(function (i, o) {
 });
 
 function sureRemoveLangsDictionary(keyCode) {
-    if (confirm("确实要删除keyCode为(" + keyCode + ")的多语言记录吗?")) {
-        var request = {};
-        request.keyCode = keyCode;
-        $.ajax({
-            url: 'remove',
-            data: JSON.stringify(request),
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.code == 0) {
-                    window.location.reload();
-                } else {
-                    alert("操作失败:" + result.msg);
+    window.wxc.xcConfirm("再次确认是否删除keyCode为(<b style='color:red'>" + keyCode + "</b>)的多语言记录！", window.wxc.xcConfirm.typeEnum.confirm, {
+        onOk: function () {
+            var request = {};
+            request.keyCode = keyCode;
+            LoadingTask.showLoading("html");
+            $.ajax({
+                url: 'remove',
+                data: JSON.stringify(request),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (result) {
+                    LoadingTask.hideLoading("html");
+                    if (result.code == 0) {
+                        window.wxc.xcConfirm("操作成功！", window.wxc.xcConfirm.typeEnum.warning, {
+                            onOk: function () {
+                                window.location.reload();
+                            }
+                        });
+                    } else {
+                        window.wxc.xcConfirm("操作失败," + result.msg, window.wxc.xcConfirm.typeEnum.warning);
+                    }
                 }
-            }
-        });
-    }
+            });
+        }
+    });
 }

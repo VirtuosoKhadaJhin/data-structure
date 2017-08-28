@@ -199,7 +199,7 @@
             request.keyCode = keyCode;
             request.langsKey = localLanguageKey;
             request.localMess = localLanguageMess;
-            $("#saveBtn").prop("disabled", true);
+            LoadingTask.showLoading("html");
             $.ajax({
                 url: 'modifyLocalLangsDictionary',
                 data: JSON.stringify(request),
@@ -207,12 +207,15 @@
                 dataType: 'json',
                 contentType: 'application/json',
                 success: function (result) {
-                    $("#saveBtn").prop("disabled", false);
+                    LoadingTask.hideLoading("html");
                     if (result.code == 0) {
-                        alert("操作成功");
-                        location.href = "localList?countryKey=" + $(".country-key").val();
+                        window.wxc.xcConfirm("操作成功！", window.wxc.xcConfirm.typeEnum.warning, {
+                            onOk: function () {
+                                location.href = "localList?countryKey=" + $(".country-key").val();
+                            }
+                        });
                     } else {
-                        alert(result.msg);
+                        window.wxc.xcConfirm("操作失败！", window.wxc.xcConfirm.typeEnum.warning);
                     }
                 }
             });

@@ -20,6 +20,8 @@ import java.util.List;
 @Service
 public class CountryServiceImpl implements CountryService {
 
+    private static final Long CN_KEY = 0L;
+
     @Autowired
     private CountryDao countryDao;
     @Autowired
@@ -68,6 +70,10 @@ public class CountryServiceImpl implements CountryService {
                 return ((Country) input).getCode();
             }
         });
+        // 数据库没有中国..
+        if(countryIds.contains(CN_KEY)){
+            codes.add("0");
+        }
         return Lists.newArrayList(codes);
     }
 }
