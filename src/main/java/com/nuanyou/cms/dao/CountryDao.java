@@ -18,6 +18,9 @@ public interface CountryDao extends JpaRepository<Country, Long> {
     @Query(value = "select new Country(t.id,t.name) from Country t where t.display = true and t.id in ?1")
     List<Country> getIdNameList(List<Long> ids);
 
+    @Query(value = "select new Country(t.id,t.name,t.code) from Country t where t.display = true and t.id in ?1")
+    List<Country> getIdNameCodeList(List<Long> ids);
+
     @Query(value = "update Country t set t.radio=:radio where t.id=:id and t.display = true")
     void updateCountryRate(@Param("id") Long id, @Param("radio") BigDecimal radio);
 

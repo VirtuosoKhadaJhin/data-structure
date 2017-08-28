@@ -226,7 +226,7 @@ public class OrderController {
         response.setContentType("text/csv; charset=UTF-8");
         response.setHeader("Pragma", "public");
         response.setHeader("Cache-Control", "max-age=30");
-        response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
+        response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".csv", "UTF-8"));
         Long begin = System.currentTimeMillis();
         List<ViewOrderExport> page = this.orderService.findExportByCondition(entity, time, (!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null,null);
         Long end = System.currentTimeMillis();

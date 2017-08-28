@@ -35,8 +35,8 @@
 
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span6" style="width: 70%;min-width:994px;">
-                    <div class="widget-box" style="width: 78%">
+                <div class="span10">
+                    <div class="widget-box" style="width: 100%">
                         <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                             <h5>新增多语言</h5>
                         </div>
@@ -52,11 +52,9 @@
                                         <div class="controls" style="margin-left: 152px;">
                                             <input id="verify_keyCode" type="text" style="display: none" value=""
                                                    onkeyup="verifykeyCode()">
-                                            <input for="name" id="keyCode" readonly="readonly"
+                                            <input for="name" id="keyCode"
                                                    class="span7" name="keyCode" type="text" style="width: 80%"
                                                    value="$!entity.keyCode" onblur="verifykeyCode()">
-                                            <label id="keyCodeStatus" class="control-label"
-                                                   style="display:none;padding-right: 8em;float: right;color:red;text-align: left;padding-top: 5px;">KeyCode重复</label>
                                         </div>
                                     </div>
 
@@ -85,7 +83,7 @@
                                                 #if($!langCountry.key == 1 || $!langCountry.key == 2)
                                                     <input name="$!langCountry.key" data-key="$!langCountry.key"
                                                            style="width: 80%"
-                                                           type="text" onkeyup="keyCodeRealTime()" data-name="langs"
+                                                           type="text" data-name="langs"
                                                            class="span7 countryLanguage">
                                                 #end
                                                 #if($!langCountry.key != 1 && $!langCountry.key != 2)
@@ -93,9 +91,6 @@
                                                            style="width: 80%"
                                                            type="text" data-name="langs" class="span7 countryLanguage">
                                                 #end
-                                                <label id="requiredKey_$!langCountry.key"
-                                                       class="control-label required-waring"
-                                                       style="text-align: right;width: 140px;padding-top: 3px;">必填项</label>
                                             </div>
                                         </div>
                                     #end
@@ -105,33 +100,37 @@
                                     <div class="">
                                         <label class="control-label" style="min-width: 100px;max-width: 100px;">描&nbsp;&nbsp;&nbsp;述：</label>
                                         <div class="controls" style="margin-left: 110px">
-                                            <textarea placeholder="多语言描述" class="form-control" id="remark" style="min-width: 250px;resize: none;" cols="4"
+                                            <textarea placeholder="多语言描述" class="form-control" id="remark"
+                                                      style="width: 80%;resize: none;" cols="4"
                                                       rows="4"></textarea>
                                             <label name="remark" class="control-label required-waring"
                                                    style="padding-top: 2px;text-align: left;width: 140px;">备注不能为空</label>
                                         </div>
                                     </div>
                                     <div class="">
-                                        <label class="control-label" style="min-width: 100px;max-width: 100px;">场景图：</label>
+                                        <label class="control-label"
+                                               style="min-width: 100px;max-width: 100px;">场景图：</label>
                                         <div class="controls" style="margin-left: 110px">
                                             <input id="lefile" name="file" type="file" style="display:none">
-                                            <div class="input-append">
-                                                <input id="photoCover" class="span4" type="text">
-                                                <a class="btn btn-mini btn-primary" onclick="$('input[id=lefile]').click();">
-                                                    <i class="icon-folder-open" style="padding-right"></i>选择图片
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div style="text-align: center;padding-top: 1em;">
-                                            <img style="" id="imgUrl" src="">
+                                            <div class="input-append"
+                                            ">
+                                            <input id="photoCover" style="width: 70%;" type="text">
+                                            <a class="btn btn-mini btn-primary"
+                                               onclick="$('input[id=lefile]').click();">
+                                                <i class="icon-folder-open" style="padding-right"></i>选择图片
+                                            </a>
                                         </div>
                                     </div>
+                                    <div style="text-align: center;padding-top: 1em;">
+                                        <img style="" id="imgUrl" src="">
+                                    </div>
                                 </div>
+                            </div>
 
-                                <div class="form-actions" style="clear:both;text-align: center">
-                                    <a onclick="saveLangsDictionary()" id="saveBtn" class="btn btn-info btn-ok">确定</a>
-                                    <a class="btn btn-primary btn-back" onclick="backLangsDictionaryList()">返回</a>
-                                </div>
+                            <div class="form-actions" style="clear:both;text-align: center">
+                                <a onclick="saveLangsDictionary()" id="saveBtn" class="btn btn-info btn-ok">确定</a>
+                                <a class="btn btn-primary btn-back" onclick="backLangsDictionaryList()">返回</a>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -143,23 +142,23 @@
 
 <script type="text/javascript">
     keyCodeRealTime();
+
     function backLangsDictionaryList() {
         location.href = "list";
     }
+
     // file 上传文件
     $('input[id=lefile]').change(function () {
-        $("#saveBtn").attr("onclick", "");
-        $("#saveBtn").attr("style", "background-color: gray;");
         $('#photoCover').val($(this).val());
+        LoadingTask.showLoading("html");
         $("#uploadForm").ajaxSubmit({
             type: 'post',
             url: "/langsMessageTip/uploadImg",
             contentType: "application/x-www-form-urlencoded; charset=utf-8",
             success: function (result) {
+                LoadingTask.hideLoading("html");
                 if (result.code == 0) {
-                    alert("上传图片成功!");
-                    $("#saveBtn").attr("onclick", "saveLangsDictionary()");
-                    $("#saveBtn").attr("style", "");
+                    window.wxc.xcConfirm("上传图片成功！", window.wxc.xcConfirm.typeEnum.warning);
                     $("#photoCover").val(result.data);
                     $("#imgUrl").attr("src", result.data).show();
                 }
@@ -174,6 +173,10 @@
         var request = {};
         var keyCode = $("input[id='keyCode']").val();
 
+        if (keyCode == null || keyCode == "") {
+            return false;
+        }
+
         request.keyCode = keyCode;
         $.ajax({
             url: 'verifykeyCode',
@@ -184,14 +187,11 @@
             success: function (result) {
                 if (result.code == 0) {
                     if (!result.data) {
-                        $("#keyCodeStatus").show();
                         $("#saveBtn").attr("onclick", "");
-                        $("#keyCode").css("border", "1px solid red");
                         $("#saveBtn").attr("style", "background-color: gray;");
+                        window.wxc.xcConfirm("keyCode重复！", window.wxc.xcConfirm.typeEnum.warning);
                     } else {
-                        $("#keyCodeStatus").hide();
                         $("#saveBtn").attr("style", "");
-                        $("#keyCode").css("border", "");
                         $("#saveBtn").attr("onclick", "saveLangsDictionary()");
                     }
                 }
@@ -205,6 +205,7 @@
     function keyCodeRealTime() {
         // 拼接KeyCode
         var requiredUS = $("input[name='1']").val();
+        requiredUS = requiredUS.replace(/\s+/g, "_")
         // 如果是英文,则要增加改变事件,用来改变keyCode
         $("input[name='1']").attr("onchange", "keyCodeRealTime()");
         // 选择的分类
@@ -235,22 +236,14 @@
         var categoryId = $("select[name='categoryId']").val();
 
         if (requiredUS == null || requiredUS == "") {
-            $("#requiredKey_1").show();
-            $("input[name='1']").css("border", "1px solid red");
+            window.wxc.xcConfirm("英文不能为空！", window.wxc.xcConfirm.typeEnum.warning);
             return false;
         } else if (requiredZH == null || requiredZH == "") {
-            $("#requiredKey_2").show();
-            $("input[name='2']").css("border", "1px solid red");
+            window.wxc.xcConfirm("中文不能为空！", window.wxc.xcConfirm.typeEnum.warning);
             return false;
         } else if (categoryId == null || categoryId == "") {
-            alert("请选择分类!");
+            window.wxc.xcConfirm("请选择分类！", window.wxc.xcConfirm.typeEnum.warning);
             return false;
-        } else {
-            $("#requiredKey_1").hide();
-            $("input[name='1']").css("border", "");
-            $("#requiredKey_2").hide();
-            $("input[name='2']").css("border", "");
-            return true;
         }
         return true;
     }
@@ -261,6 +254,11 @@
     function saveLangsDictionary() {
         var saveBtn_distabled = $("#saveBtn").attr("disabled");
         if (saveBtn_distabled || saveBtn_distabled == "disabled") {
+            return false;
+        }
+
+        if ($("#keyCode").val().length > 100) {
+            window.wxc.xcConfirm("keyCode不能超过100位！", window.wxc.xcConfirm.typeEnum.warning);
             return false;
         }
 
@@ -288,7 +286,7 @@
             "langsMessageList": langsMessageList
         };
         // 防止重复提交
-        $("#saveBtn").attr("disabled", "disabled");
+        LoadingTask.showLoading("html");
         // step1:保存多语言信息
         $.ajax({
             url: 'saveLangsDictionary',
@@ -298,7 +296,6 @@
             contentType: 'application/json',
             success: function (result) {
                 // 防止重复提交
-                $("#saveBtn").removeAttr("disabled");
                 if (result.code == 0) {
                 } else {
                     alert(result.msg);
@@ -319,13 +316,15 @@
             dataType: 'json',
             contentType: 'application/json',
             success: function (result) {
-                console.log(result);
+                LoadingTask.hideLoading("html");
                 if (result.code == 0) {
-                    alert("操作成功!");
-                    location.href = "list";
+                    window.wxc.xcConfirm("操作成功！", window.wxc.xcConfirm.typeEnum.warning, {
+                        onOk: function () {
+                            location.href = "list";
+                        }
+                    });
                 } else {
-                    alert("操作成功!");
-                    location.href = "list";
+                    window.wxc.xcConfirm("操作失败！", window.wxc.xcConfirm.typeEnum.warning);
                 }
             }
         });

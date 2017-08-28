@@ -1,3 +1,14 @@
+function LoadingTask() {
+}
+
+LoadingTask.showLoading = function (a) {
+    $(a).mask('<img src="/dist/img/loading.gif"/>')
+};
+
+LoadingTask.hideLoading = function (a) {
+    $(a).unmask();
+};
+
 window.onload = function () {
     $('.dateTimeFormat').datetimepicker({
         format: "Y-m-d H:i:s",
