@@ -1,21 +1,21 @@
 package com.nuanyou.cms.service.impl;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.nuanyou.cms.dao.CmsUserDao;
 import com.nuanyou.cms.dao.EntityNyLangsCategoryDao;
 import com.nuanyou.cms.dao.EntityNyLangsDictionaryDao;
 import com.nuanyou.cms.dao.EntityNyLangsMessageTipDao;
-import com.nuanyou.cms.entity.CmsUser;
-import com.nuanyou.cms.entity.EntityNyLangsCategory;
-import com.nuanyou.cms.entity.EntityNyLangsDictionary;
-import com.nuanyou.cms.entity.EntityNyLangsMessageTip;
+import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.model.*;
 import com.nuanyou.cms.model.enums.LangsCountry;
+import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.LangsDictionaryService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.sso.client.validation.vo.User;
 import com.nuanyou.cms.util.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -41,18 +41,20 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LangsDictionaryServiceImpl.class);
 
     @Autowired
-    private EntityNyLangsDictionaryDao dictionaryDao;
+    private CmsUserDao cmsUserDao;
+
+    @Autowired
+    private CountryService countryService;
 
     @Autowired
     private EntityNyLangsCategoryDao categoryDao;
 
     @Autowired
-    private EntityNyLangsMessageTipDao messageTipDao;
+    private EntityNyLangsDictionaryDao dictionaryDao;
 
     @Autowired
-    private CmsUserDao cmsUserDao;
+    private EntityNyLangsMessageTipDao messageTipDao;
 
-    private static final Integer LOCAL_KEY = 5;
 
     /**
      * 模板参数搜索message（suggest）
@@ -181,29 +183,38 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         List<LangsDictionary> dataList = Lists.newArrayList();
         List<EntityNyLangsDictionary> entityResult = dictionaryDao.findByKeyCode(dictionaryVo.getKeyCode());
 
-        List<EntityNyLangsDictionary> dictionaries = new ArrayList<EntityNyLangsDictionary>();
-        for (EntityNyLangsDictionary entity : entityResult) {
-            if (LangsCountry.verifyIsLocalLanguage(entity.getLanguage() + "-" + entity.getCountry(), LOCAL_KEY)) {
-                dictionaries.add(entity);
-            }
-        }
-
-        List<LangsDictionary> dictionaryList = this.convertToMultipleLangsCategories(dictionaries);
-
-        dataList.add(new LangsDictionary(dictionaryVo.getKeyCode(), LangsCountry.EN_UK.getKey()));
-        dataList.add(new LangsDictionary(dictionaryVo.getKeyCode(), LangsCountry.ZH_CN.getKey()));
+        List<LangsDictionary> dictionaryList = this.convertToMultipleLangsCategories(entityResult);
 
         for (LangsDictionary dictionary : dictionaryList) {
             dictionary.setLangsCountryKey(LangsCountry.toEnum(dictionary.getBaseNameStr()).getKey());
             if (LangsCountry.toEnum(dictionary.getBaseNameStr()).getValue().equals(LangsCountry.EN_UK.getValue())
                     || LangsCountry.toEnum(dictionary.getBaseNameStr()).getValue().equals(LangsCountry.ZH_CN.getValue())) {
-                LangsDictionary langsDictionary = verifyLangsDictionary(dataList, dictionaryVo.getKeyCode(), LangsCountry.toEnum(dictionary.getBaseNameStr()).getKey());
-                if (null != langsDictionary) {
-                    dataList.remove(langsDictionary);
-                    dataList.add(dictionary);
-                }
-            } else {
                 dataList.add(dictionary);
+            }
+        }
+        if (dictionaryVo.getCountryKey() == null) {
+            return dataList;
+        }
+        // 如果尚未选择国家,则默认选择一个拥有的国家的语言
+        if (dictionaryVo.getCountryKey() == 0) {
+            for (LangsDictionary dictionary : dictionaryList) {
+                dictionary.setLangsCountryKey(LangsCountry.toEnum(dictionary.getBaseNameStr()).getKey());
+                if (!LangsCountry.toEnum(dictionary.getBaseNameStr()).getValue().equals(LangsCountry.EN_UK.getValue())
+                        && !LangsCountry.toEnum(dictionary.getBaseNameStr()).getValue().equals(LangsCountry.ZH_CN.getValue())
+                        && dictionary.getCountry().equals(dictionaryVo)) {
+                    dataList.add(dictionary);
+                    break;
+                }
+            }
+        } else {
+            for (LangsDictionary dictionary : dictionaryList) {
+                dictionary.setLangsCountryKey(LangsCountry.toEnum(dictionary.getBaseNameStr()).getKey());
+                if (!LangsCountry.toEnum(dictionary.getBaseNameStr()).getValue().equals(LangsCountry.EN_UK.getValue())
+                        && !LangsCountry.toEnum(dictionary.getBaseNameStr()).getValue().equals(LangsCountry.ZH_CN.getValue())
+                        && dictionary.getLangsCountryKey().equals(dictionaryVo.getCountryKey())) {
+                    dataList.add(dictionary);
+                    break;
+                }
             }
         }
 
@@ -248,7 +259,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         EntityNyLangsMessageTip entityNyLangsMessageTip = messageTipDao.findByKeyCode(keyCode);
 
         if (entityNyLangsMessageTip != null) {
-            LangsMessageTipVo langsMessageTipVo = convertToLangsMessageTip(entityNyLangsMessageTip);
+            LangsMessageTipVo langsMessageTipVo = this.convertToLangsMessageTip(entityNyLangsMessageTip);
             dictionaryVo.setMessageTip(langsMessageTipVo);
         }
 
@@ -365,7 +376,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         final List<Long> categoryIds = this.getCategoryIdsByBaseName(requestVo.getBaseNameStr());
 
         //条件查询所有结果
-        List<EntityNyLangsDictionary> dictionaries = this.getEntityNyLangsDictionaries(requestVo, categoryIds);
+        List<EntityNyLangsDictionary> dictionaries = this.getEntityNyLangsDictionaries(requestVo, categoryIds, requestVo.getCountryKey());
 
         //合并查询结果Entity->VO
         LinkedHashMap<String, LangsDictionaryVo> langsDictionaryMap = this.getStringLangsDictionaryVos(dictionaries, requestVo, isLocal);
@@ -379,6 +390,10 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         Integer pageNum = requestVo.getPageNum();
 
         List<LangsDictionaryVo> subList = langsDictionaryVos.subList((pageIndex - 1) * pageNum, pageIndex * pageNum > langsDictionaryVos.size() ? langsDictionaryVos.size() : pageIndex * pageNum);
+
+        // 设置备注信息
+        this.setLangsDictionaryMessageTip(subList);
+
         Pageable pageable = new PageRequest(pageIndex - 1, pageNum);  // 计算分页
         Page<LangsDictionaryVo> pageVOs = new PageImpl<LangsDictionaryVo>(subList, pageable, langsDictionaryVos.size());
         return pageVOs;
@@ -388,21 +403,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     private LinkedHashMap<String, LangsDictionaryVo> getStringLangsDictionaryVos(List<EntityNyLangsDictionary> allDictionaries, LangsDictionaryRequestVo requestVo, Boolean isLocalLangs) {
         LinkedHashMap<String, LangsDictionaryVo> langsDictionaryMap = new LinkedHashMap<String, LangsDictionaryVo>();
         List<LangsCountryMessageVo> langsMessageList = Lists.newArrayList();
-        LangsCountryMessageVo messageVo = null;
         Set<String> keyCodes = new HashSet<String>();
-        LangsDictionaryVo dictionaryVo = null;
-        if (BooleanUtils.isTrue(isLocalLangs)) {
-            for (EntityNyLangsDictionary langsDictionary : allDictionaries) {
-                Integer localCountryKey = requestVo.getCountryKey();
-                if (localCountryKey == 0) {
-                    localCountryKey = LOCAL_KEY;
-                }
-                if (LangsCountry.verifyIsLocalLanguage(langsDictionary.getLanguage() + "-" + langsDictionary.getCountry(), localCountryKey)) {
-                    this.setLangsDictionaryVoValue(langsDictionaryMap, langsMessageList, keyCodes, langsDictionary);
-                }
-            }
-            return langsDictionaryMap;
-        }
         for (EntityNyLangsDictionary langsDictionary : allDictionaries) {
             this.setLangsDictionaryVoValue(langsDictionaryMap, langsMessageList, keyCodes, langsDictionary);
         }
@@ -508,7 +509,7 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
         return categoryIds;
     }
 
-    private List<EntityNyLangsDictionary> getEntityNyLangsDictionaries(final LangsDictionaryRequestVo requestVo, final List<Long> categoryIds) {
+    private List<EntityNyLangsDictionary> getEntityNyLangsDictionaries(final LangsDictionaryRequestVo requestVo, final List<Long> categoryIds, final Integer countryKey) {
         final Long baseNameId = requestVo.getBaseNameId();
         /**
          * categoryIds和baseNameId都存在时已BaseNameID为主
@@ -583,5 +584,31 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
             dictionaries.add(langsDictionary);
         }
         return dictionaries;
+    }
+
+    /**
+     * 填充备注信息
+     *
+     * @param langsDictionaryVos
+     */
+    public void setLangsDictionaryMessageTip(List<LangsDictionaryVo> langsDictionaryVos) {
+        Collection codes = CollectionUtils.collect(langsDictionaryVos, new Transformer() {
+            @Override
+            public Object transform(Object input) {
+                return ((LangsDictionaryVo) input).getKeyCode();
+            }
+        });
+        if (CollectionUtils.isEmpty(codes)) {
+            return;
+        }
+        List<EntityNyLangsMessageTip> langsMessageTips = messageTipDao.findByKeyCodes(Lists.<String>newArrayList(codes));
+        Map<String, LangsMessageTipVo> map = Maps.newHashMap();
+        for (EntityNyLangsMessageTip tip : langsMessageTips) {
+            map.put(tip.getKeyCode(), this.convertToLangsMessageTip(tip));
+        }
+        for (LangsDictionaryVo vo : langsDictionaryVos) {
+            LangsMessageTipVo langsMessageTipVo = map.get(vo.getKeyCode());
+            vo.setMessageTip(map.get(vo.getKeyCode()));
+        }
     }
 }

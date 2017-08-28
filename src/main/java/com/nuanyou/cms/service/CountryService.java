@@ -16,4 +16,7 @@ public interface CountryService {
     Country findOne(Long countryId);
 
     List<Country> findAllCountries();
+
+    List<String> countryCodes();
+
 }

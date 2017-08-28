@@ -8,7 +8,7 @@
     #include("common/css-support.vm")
 </head>
 <body>
-<div id="content">
+<div id="content" style="margin-top: 10px">
     <div id="content-header">
         <div id="breadcrumb">
             <div id="breadcrumb">
@@ -21,26 +21,24 @@
 
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span6" style="width: 70%;min-width:994px;">
-                    <div class="widget-box" style="width: 78%">
+                <div class="span10">
+                    <div class="widget-box" style="width: 100%">
                         <div class="widget-title"><span class="icon"> <i
                                 class="icon-align-justify"></i> </span>
                             <h5>编辑&查看</h5>
                         </div>
                         <div class="widget-content nopadding">
                             <form class="form-horizontal langsDicFormValidate">
-
                                 <div class="nopadding" style="width: 100%;">
-
                                     <div class="fl"
-                                         style="border-right:1px solid #eeeeee;box-sizing:border-box;width:48%;">
+                                         style="border-right:1px solid #eeeeee;box-sizing:border-box;width:50%;">
                                         <div class="">
                                             <label class="control-label" style="width: 140px;">
                                                 <font style="color: red;margin: 0px;padding: 5px;">*</font>
                                                 keyCode：</label>
                                             <div class="controls" style="margin-left: 170px;">
                                                 <input for="name" name="keyCode" type="text"
-                                                       class="span7" style="width: 80%"
+                                                       class="span7" style="width: 85%"
                                                        readonly="readonly" value="$!dictionarys[0].keyCode">
                                             </div>
                                         </div>
@@ -61,25 +59,26 @@
                                             <div class="controls" style="margin-left: 170px;">
                                             #end
                                             #if($!langCountry.desc != "中文" && $!langCountry.desc != "英文")
-                                            <div class="controls" style="margin-left: 170px;" id="localLanguage" data-key="$!langCountry.key"
+                                            <div class="controls" style="margin-left: 170px;" id="localLanguage"
+                                                 data-key="$!langCountry.key"
                                                  data-value="$!langCountry.value">
                                             #end
                                             #foreach($dictionary in $!dictionarys)
                                                 #if($!dictionary.langsCountryKey == $!langCountry.key)
                                                     #if($!langCountry.desc == "中文" || $!langCountry.desc == "英文")
                                                         <input type="text" value="$!dictionary.message"
-                                                               style="width: 80%" data-id="$!dictionary.id"
+                                                               style="width: 85%" data-id="$!dictionary.id"
                                                                class="span7 countryLanguage" readonly="readonly">
                                                     #else
                                                         <input type="text" value="$!dictionary.message"
-                                                               style="width: 80%" data-id="$!dictionary.id"
+                                                               style="width: 85%" data-id="$!dictionary.id"
                                                                id='localLanguageMess' class="span7 countryLanguage">
                                                     #end
                                                 #end
                                             #end
                                             #set($num=$num+1)
                                             #if($!dictionarys.size() == 2 && $num == 3)
-                                                <input type="text" value="" style="width: 80%"
+                                                <input type="text" value="" style="width: 85%"
                                                        id='localLanguageMess' class="span7 countryLanguage">
                                             #end
                                         </div>
@@ -89,28 +88,33 @@
                                     </div>
                                     <div class="fr" style="width:50%;float: left">
                                         <div class="">
-                                            <label class="control-label" style="min-width: 100px;max-width: 100px;">备注：</label>
+                                            <label class="control-label"
+                                                   style="min-width: 100px;max-width: 100px;">描述：</label>
                                             <div class="controls" style="margin-left: 80px">
-                                            <textarea placeholder="图文备注" class="form-control" id="remark" cols="4"
-                                                      rows="4" style="resize: none; width: 285px;"
+                                            <textarea placeholder="图文描述" class="form-control" id="remark" cols="4"
+                                                      rows="4" style="resize: none; width: 80%;"
                                                       readonly="readonly"></textarea>
                                             </div>
                                         </div>
                                         <div class="">
-                                            <label class="control-label" style="min-width: 100px;max-width: 100px;">场景图：</label>
+                                            <label class="control-label"
+                                                   style="min-width: 100px;max-width: 100px;">场景图：</label>
                                             <div style="margin-left: 80px">
                                                 <a href="#" id="imgUrlHref" target="_blank">
-                                                    <img style="width: 250px;height: 250px;display: none" id="imgUrl"
+                                                    <img style="width: 250px;height: auto;display: none;margin: 15px 0px;" id="imgUrl"
                                                          src="">
                                                 </a>
                                             </div>
                                             <div class="controls" id="noImg" style="margin-left: 80px;display: none">
-                                                <input type="text" readonly value="暂无场景图" class="span7 countryLanguage">
+                                                <input type="text" readonly value="暂无场景图" class="span7 countryLanguage"
+                                                       style="width: 43%">
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="form-actions" style="clear: both;text-align: center;">
+                                        <input type="hidden" value="$!dictionaryVo.countryKey" name="countryKey"
+                                               class="country-key"/>
                                         <button type="button" id="saveBtn"
                                                 onclick="modifyLocalLangsDictionary()" #*onclick按钮点击事件*#
                                                 class="btn btnSave btn-success">保存
@@ -152,21 +156,23 @@
                                 $("#imgUrl").attr("src", imgUrl);
                                 $("#imgUrlHref").attr("href", imgUrl);
                                 $("#imgUrl").show();
-                            }else{
+                            } else {
                                 $("#noImg").show();
                             }
-                        }else{
+                        } else {
                             $("#noImg").show();
                         }
                     }
                 }
             });
         });
+
         // 返回列表页
         function back() {
-            console.log("localList?index=" + getUrlParam("pageIndex"));
-            location.href = "localList?index=" + getUrlParam("pageIndex");
+            var countryKey = $(".country-key").val();
+            location.href = "localList?countryKey=" + (countryKey == "" ? 0 : countryKey);
         }
+
         /**
          * 获取url中的参数
          */
@@ -193,7 +199,7 @@
             request.keyCode = keyCode;
             request.langsKey = localLanguageKey;
             request.localMess = localLanguageMess;
-
+            LoadingTask.showLoading("html");
             $.ajax({
                 url: 'modifyLocalLangsDictionary',
                 data: JSON.stringify(request),
@@ -201,11 +207,15 @@
                 dataType: 'json',
                 contentType: 'application/json',
                 success: function (result) {
+                    LoadingTask.hideLoading("html");
                     if (result.code == 0) {
-                        alert("操作成功");
-                        location.href = "localList?index=" + getUrlParam("pageIndex");
+                        window.wxc.xcConfirm("操作成功！", window.wxc.xcConfirm.typeEnum.warning, {
+                            onOk: function () {
+                                location.href = "localList?countryKey=" + $(".country-key").val();
+                            }
+                        });
                     } else {
-                        alert(result.msg);
+                        window.wxc.xcConfirm("操作失败！", window.wxc.xcConfirm.typeEnum.warning);
                     }
                 }
             });

@@ -37,6 +37,9 @@ public class LangsDictionaryVo implements Serializable {
     //分类名称
     private Date updateDt;
 
+    // 本地语言country的key
+    private Integer countryKey;
+
     // 接收备注信息
     private LangsMessageTipVo messageTip;
 
@@ -115,6 +118,14 @@ public class LangsDictionaryVo implements Serializable {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public Integer getCountryKey() {
+        return countryKey;
+    }
+
+    public void setCountryKey(Integer countryKey) {
+        this.countryKey = countryKey;
     }
 
     public LangsMessageTipVo getMessageTip() {

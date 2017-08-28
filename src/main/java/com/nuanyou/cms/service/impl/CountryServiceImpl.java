@@ -1,13 +1,17 @@
 package com.nuanyou.cms.service.impl;
 
+import com.google.common.collect.Lists;
 import com.nuanyou.cms.dao.CountryDao;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -15,6 +19,8 @@ import java.util.List;
  */
 @Service
 public class CountryServiceImpl implements CountryService {
+
+    private static final Long CN_KEY = 0L;
 
     @Autowired
     private CountryDao countryDao;
@@ -49,5 +55,25 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public List<Country> findAllCountries() {
         return countryDao.findAllCountries();
+    }
+
+    @Override
+    public List<String> countryCodes() {
+        List<Long> countryIds = userService.findUserCountryId();
+        if (CollectionUtils.isEmpty(countryIds)) {
+            return Lists.newArrayList();
+        }
+        List<Country> countries = countryDao.getIdNameCodeList(countryIds);
+        Collection codes = CollectionUtils.collect(countries, new Transformer() {
+            @Override
+            public Object transform(Object input) {
+                return ((Country) input).getCode();
+            }
+        });
+        // 数据库没有中国..
+        if(countryIds.contains(CN_KEY)){
+            codes.add("0");
+        }
+        return Lists.newArrayList(codes);
     }
 }

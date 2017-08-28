@@ -5,9 +5,8 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.model.*;
 import com.nuanyou.cms.model.enums.LangsCountry;
-import com.nuanyou.cms.service.LangsCategoryService;
-import com.nuanyou.cms.service.LangsDictionaryService;
-import com.nuanyou.cms.service.LangsMessageTipService;
+import com.nuanyou.cms.service.*;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,16 +23,16 @@ import java.util.List;
 @RequestMapping("langsDictionary")
 public class LangsDictionaryController {
 
+    private static final String CN_KEY = "0";
+
     @Autowired
-    private LangsDictionaryService dictionaryService;
+    private CountryService countryService;
 
     @Autowired
     private LangsCategoryService categoryService;
 
     @Autowired
-    private LangsMessageTipService messageTipService;
-
-    private static final Integer LOCAL_KEY = 5;
+    private LangsDictionaryService dictionaryService;
 
     /**
      * 多语言列表查询
@@ -76,9 +75,11 @@ public class LangsDictionaryController {
      */
     @RequestMapping("localList")
     public String local(LangsDictionaryRequestVo requestVo, Model model) {
-        Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllLocalDictionary(requestVo);
-        List<LangsCountryVo> langsCountryVos = LangsCountry.viewAllCountrysResultList();
+        List<String> roleCountryCodes = countryService.countryCodes();
+        List<LangsCountryVo> langsCountryVos = roleCountryCodes.contains(CN_KEY) ? LangsCountry.viewAllCountrysResultList() : LangsCountry.viewRoleCountrysResultList(roleCountryCodes);
         List<LangsCategory> categories = categoryService.findAllCategories();
+
+        this.setDefaultLocalCountry(requestVo, langsCountryVos);
 
         // 页面显示当地语言
         if (requestVo.getCountryKey() != 0) {
@@ -86,12 +87,28 @@ public class LangsDictionaryController {
             model.addAttribute("localLangs", localLangs);
         }
 
+        Page<LangsDictionaryVo> allDictionary = dictionaryService.findAllLocalDictionary(requestVo);
         model.addAttribute("categories", categories);
         model.addAttribute("page", allDictionary);
         model.addAttribute("entity", requestVo);
         model.addAttribute("langsCountryVos", langsCountryVos);
         model.addAttribute("langsCountries", LangsCountry.localValues(requestVo.getCountryKey()));
         return "langsDictionary/local_list";
+    }
+
+    /**
+     * 设置默认选择的国家
+     *
+     * @param requestVo
+     * @param langsCountryVos
+     */
+    private void setDefaultLocalCountry(LangsDictionaryRequestVo requestVo, List<LangsCountryVo> langsCountryVos) {
+        if (requestVo.getCountryKey() == 0) {
+            for (LangsCountryVo langsCountryVo : langsCountryVos) {
+                requestVo.setCountryKey(langsCountryVo.getLangsCountryKey());
+                break;
+            }
+        }
     }
 
     /**
@@ -178,7 +195,8 @@ public class LangsDictionaryController {
         // 根据keyCode查询中文、英文、当地文
         List<LangsDictionary> dictionarys = dictionaryService.viewLocalLangsDictionary(dictionaryVo);
         model.addAttribute("dictionarys", dictionarys);
-        model.addAttribute("langsCountries", LangsCountry.localValues(LOCAL_KEY));
+        model.addAttribute("dictionaryVo", dictionaryVo);
+        model.addAttribute("langsCountries", LangsCountry.localValues(dictionaryVo.getCountryKey()));
         model.addAttribute("selectableLangsCategory", selectableLangsCategory);
 
         return "langsDictionary/local_edit";
