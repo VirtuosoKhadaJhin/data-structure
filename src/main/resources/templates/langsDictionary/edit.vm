@@ -175,8 +175,8 @@
                                 </div>
 
                                 <div class="form-actions" style="clear:both;text-align: center">
-                                    <a onclick="modifyLangsDictionary()" id="editBtn" class="btn btn-info btn-ok">确定</a>
-                                    <a class="btn btn-primary btn-back" onclick="back()">返回</a>
+                                    <a onclick="modifyLangsDictionary()" id="editBtn" class="btn btn-success btn-ok"><i class="icon-edit"> 确定</i></a>
+                                    <a class="btn btn-primary btn-back" onclick="back()"><i class="icon-repeat"> 返回</i></a>
                                     <input type="hidden" class="hide-keycode" value="$!langsDictionary.keyCode"/>
                                 </div>
                         </form>
@@ -207,7 +207,7 @@
                             window.wxc.xcConfirm("上传图片成功！", window.wxc.xcConfirm.typeEnum.warning);
                             $("#photoCover").val(result.data);
                             $("#imgUrl").attr("src", result.data).show();
-                        }else{
+                        } else {
                             window.wxc.xcConfirm("上传图片失败！", window.wxc.xcConfirm.typeEnum.warning);
                         }
                     }
@@ -274,22 +274,19 @@
 
             $("input[class='span7 countryLanguage']").each(function () {
                 var message = $(this).val();
-                if (message == null || message.trim().length == 0) {
-                    return false;
-                }
                 var langsCountryMessageVo = {
-                    id: $(this).attr("data-id"),
+                    id: $(this).attr("data-id") == undefined ? null : $(this).attr("data-id"),
                     langsKey: $(this).attr("name"),
-                    message: message
+                    message: message == undefined ? null : message
                 };
                 langsMessageList.push(langsCountryMessageVo);
             });
+            console.log(langsMessageList);
             var requestParam = {
                 "keyCode": $("input[name='keyCode']").val(),
                 "categoryId": Number($("select[name='categoryId']").val()),
                 "langsMessageList": langsMessageList
             };
-
             // 防止重复提交
             LoadingTask.showLoading("html");
             $.ajax({
@@ -302,8 +299,13 @@
                     // 防止重复提交
                     LoadingTask.hideLoading("html");
                     if (result.code == 0) {
+                        window.wxc.xcConfirm("操作成功！", window.wxc.xcConfirm.typeEnum.warning, {
+                            onOk: function () {
+                                location.href = "list";
+                            }
+                        });
                     } else {
-                        alert(result.msg);
+                        window.wxc.xcConfirm("操作失败！", window.wxc.xcConfirm.typeEnum.warning);
                     }
                 }
             });
@@ -324,13 +326,7 @@
                 contentType: 'application/json',
                 success: function (result) {
                     if (result.code == 0) {
-                        window.wxc.xcConfirm("操作成功！", window.wxc.xcConfirm.typeEnum.warning, {
-                            onOk: function () {
-                                location.href = "list";
-                            }
-                        });
-                    } else {
-                        window.wxc.xcConfirm("操作失败！", window.wxc.xcConfirm.typeEnum.warning);
+
                     }
                 }
             });
