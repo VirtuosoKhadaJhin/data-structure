@@ -20,10 +20,10 @@ public class RemoteOrderService {
     @Value("${nuanyou-api}")
     private String nuanyouapi;
 
-    public APIResult<OrderSave> ordersSaveTuanPost(Integer payType, Long itemId, Integer number, String channel, String channelOrderNo) {
+    public APIResult<OrderSave> ordersSaveTuanPost(Integer payType, Long itemId, Integer number) {
         Map<String, String> param = new HashMap<>();
         param.put("paytype", "1");
-        param.put("productdetail", "{\"id\":" + String.valueOf(itemId) + ",\"num\":" + String.valueOf(number) + ",\"channel\":'" + channel + "',\"channelOrderNo\":'" + channelOrderNo + "'}");
+        param.put("productdetail", "{\"id\":" + String.valueOf(itemId) + ",\"num\":" + String.valueOf(number) + "}");
         String post = HttpUtils.post(nuanyouapi + "/order/save/tuan/virtual", param);
         APIResult<OrderSave> orderSave = JsonUtils.toObj(post, new TypeReference<APIResult<OrderSave>>() {
         });

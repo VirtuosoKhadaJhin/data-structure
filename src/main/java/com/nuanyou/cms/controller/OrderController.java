@@ -88,11 +88,7 @@ public class OrderController {
 
     @RequestMapping(path = "virtual", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult virtual(Long id, Integer number, String channel, String channelOrderNo) {
-        if (channel == null || channel == "")
-            return new APIResult(ResultCodes.MissingParameter);
-        if (channelOrderNo == null || channelOrderNo == "")
-            return new APIResult(ResultCodes.MissingParameter);
+    public APIResult virtual(Long id, Integer number) {
         if (id == null)
             return new APIResult(ResultCodes.MissingParameter);
         if (number == null || number < 1)
@@ -105,7 +101,7 @@ public class OrderController {
         if (items.size() < 1)
             return new APIResult(ResultCodes.NotFoundItem);
 
-        APIResult<OrderSave> result = remoteOrderService.ordersSaveTuanPost(7, id, number, channel, channelOrderNo);
+        APIResult<OrderSave> result = remoteOrderService.ordersSaveTuanPost(7, id, number);
         if (result.isSuccess()) {
             OrderSave orderSave = result.getData();
             result = remoteOrderService.ordersPayCallbackPost(orderSave.getId());
@@ -189,7 +185,7 @@ public class OrderController {
 
     @RequestMapping("refundList")
     public String refundList(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, TimeCondition time) {
-        Page<Order> page = orderService.findRefundByCondition(index, entity, time, null);
+        Page<Order> page = orderService.findRefundByCondition(index, entity, time,null);
         for (Order order : page.getContent()) {
             //注意：此处为避免查询慢，只查询userid和nickname字段
             PasUserProfile userProfile = pasUserProfileDao.findPartsByUserid(order.getUserId());
@@ -214,8 +210,8 @@ public class OrderController {
 
     @RequestMapping(value = "count", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult count(Order entity, TimeCondition time, String countryids) throws IOException {
-        long size = this.orderService.countViewOrderExports(entity, time, (!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null);
+    public APIResult count(Order entity, TimeCondition time,String countryids ) throws IOException {
+        long size = this.orderService.countViewOrderExports(entity, time,(!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null);
         if (size > 10000)
             return new APIResult(ResultCodes.Fail, ": 数据大于10000条，请缩小筛选范围后导出。");
         return new APIResult();
@@ -223,14 +219,14 @@ public class OrderController {
 
 
     @RequestMapping("export")
-    public void export(Order entity, TimeCondition time, String countryids, HttpServletResponse response) throws IOException {
+    public void export(Order entity, TimeCondition time, String countryids , HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=UTF-8");
         response.setHeader("Pragma", "public");
         response.setHeader("Cache-Control", "max-age=30");
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".csv", "UTF-8"));
         Long begin = System.currentTimeMillis();
-        List<ViewOrderExport> page = this.orderService.findExportByCondition(entity, time, (!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null, null);
+        List<ViewOrderExport> page = this.orderService.findExportByCondition(entity, time, (!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null,null);
         Long end = System.currentTimeMillis();
         log.info("read data from sql:" + (end - begin) / 1000 + "s");
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
@@ -288,7 +284,7 @@ public class OrderController {
     }
 
     @RequestMapping("refundList/export")
-    public void exportRefund(Order entity, TimeCondition time, String countryids, HttpServletResponse response) throws IOException {
+    public void exportRefund(Order entity, TimeCondition time, String countryids ,HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=" + "UTF-8");
         response.setHeader("Pragma", "public");
@@ -296,7 +292,7 @@ public class OrderController {
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("退款订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
 
         //BeanUtils.cleanEmpty(entity);
-        List<Order> list = orderService.findRefundByCondition(entity, time, (!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null);
+        List<Order> list = orderService.findRefundByCondition(entity, time,(!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null);
 
         Map<Long, PasUserProfile> userMap = new HashMap<>();
         for (Order order : list) {
