@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>暖游 后台管理系统 菜单管理</title>
     #include("common/css-support.vm")
+    <link href="/dist/css/order-virtual/virtual.css" rel="stylesheet"/>
 </head>
 <body>
 <div id="content">
@@ -18,7 +19,7 @@
 
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span9">
+                <div class="span7">
                     <div class="widget-box">
                         <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                             <h5>虚拟订单</h5>
@@ -26,22 +27,40 @@
                         <div class="widget-content nopadding">
                             <form action="virtual" id="form-main" method="post" class="form-horizontal">
                                 <div class="control-group">
-                                    <label class="control-label">团购产品ID</label>
+                                    <label class="control-label">销售渠道：</label>
                                     <div class="controls">
-                                        <span style="color: red" id="itemName"></span>
-                                        <br/>
-                                        <input id="id" name="id" type="number" class="span9" required>
+                                        <input id="saleChannel" name="channel" type="text" class="span11"
+                                               value="大众点评" readonly>
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label class="control-label">购买数量</label>
+                                    <label class="control-label"><font color="red" style="vertical-align: sub"><b>*</b></font>
+                                        渠道订单号：</label>
                                     <div class="controls">
-                                        <input id="number" name="number" type="number" min="1" class="span9" required>
+                                        <input id="channelOrderNo" name="channelOrderNo" type="text" class="span11"
+                                               placeholder="请输入渠道订单号" required>
+                                        <span style="color: red" id="orderNoName"></span>
+                                    </div>
+                                </div>
+                                <div class="control-group number-control-group">
+                                    <label class="control-label">团购产品ID：</label>
+                                    <div class="controls">
+                                        <input id="id" name="id" type="number" class="span11 number-control"
+                                               placeholder="请输入团购产品ID" required>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label"><font color="red" style="vertical-align: sub"><b>*</b></font>
+                                        购买数量：</label>
+                                    <div class="controls">
+                                        <input id="number" name="number" type="number" min="1" class="span11"
+                                               placeholder="请输入购买数量" required>
                                     </div>
                                 </div>
                                 <div class="form-actions">
                                     <button class="btn btn-success" type="button" id="btn-save">保存</button>
-                                    <button class="btn btn-primary" type="button" onclick="window.history.go(-1);">返回</button>
+                                    <button class="btn btn-primary" type="button" onclick="window.history.go(-1);">返回
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -52,40 +71,88 @@
     </div>
     #include("common/js-support.vm")
     <script>
-        $("#id").on("change", function () {
-            var id = $(this).val();
-            $.ajax({
-                url: '/item/api/list', async: true, data: {id: id, itemType: 2, display: true},
-                success: function (result) {
-                    if (result.data.length > 0)
-                        $("#itemName").html(result.data[0].name);
-                    else
-                        $("#itemName").html("没有查询到对应团购产品。");
-                }
-            });
-        });
-
-        $("#btn-save").on("click", function () {
-            var num = $("#number").val();
-            if (num % 1 != 0 || num < 1) {
-                alert("购买数量为正整数");
-                return;
-            }
-
-            var btn = this;
-            btn.disabled = true;
-            var form = $("#form-main");
-            $.ajax({
-                url: $(form).attr('action'), type: 'post',
-                data: $(form).serialize(),
-                success: function (result) {
-                    btn.disabled = false;
-                    if (result.code == 0) {
-                        window.location.href = "edit?type=3&id=" + result.data.orderid;
-                    } else {
-                        alert(result.msg);
+        $(function () {
+            $(".number-control-group").popover(
+                    {
+                        animation: true,
+                        html: true,
+                        title: "产品信息",
+                        trigger: "manual",
+                        delay: "500",
+                        container: "body",
+                        placement: "right"
                     }
+            );
+
+            $('.number-control-group').on('shown.bs.popover', function () {
+                var itemImg = $(".number-control").attr("data-item-img");
+                var itemName = $(".number-control").attr("data-item-name");
+                var itemIntro = $(".number-control").attr("data-item-intro");
+                if (itemName == undefined) {
+                    return;
                 }
+                var popoverContent = "<table class='popover-table'>" +
+                        "                   <tbody class='tbody-class'>" +
+                        "                    <tr class='tr-class'>" +
+                        "                        <td class='td-name'><span class='popover-span'>商品名称：</span></td>" +
+                        "                        <td class='td-name-value'><label class='popover-label'>" + itemName + "</label></td>" +
+                        "                    </tr>" +
+                        "                    <tr class='tr-class'>" +
+                        "                        <td class='td-intro'><span class='popover-span'>商品介绍：</span></td>" +
+                        "                        <td class='td-intro-value'><label class='popover-label'>" + itemIntro + "</label></td>" +
+                        "                    </tr>" +
+                        "                    <tr class='tr-class'>" +
+                        "                        <td class='td-img'><span class='popover-span'>商品图片：</span></td>" +
+                        "                        <td class='td-img-value'><label class='popover-label'><img class='popover-img' src='" + itemImg + "' /></label></td>" +
+                        "                    </tr>" +
+                        "                   </tbody>" +
+                        "                </table>";
+                $(".popover-content").empty();
+                $(".popover-content").append(popoverContent);
+            });
+
+            $("#id").on("change", function () {
+                var id = $(this).val();
+                $.ajax({
+                    url: '/item/api/list', async: true, data: {id: id, itemType: 2, display: true},
+                    success: function (result) {
+                        if (result.data.length > 0) {
+                            var item = result.data[0];
+                            $(".number-control").attr("data-item-name", item.name);
+                            $(".number-control").attr("data-item-intro", item.intro);
+                            $(".number-control").attr("data-item-img", item.imgUrl);
+                            $('.number-control-group').popover('show');
+                        } else {
+                            $('.number-control-group').popover('show');
+                            $(".popover-content").empty();
+                            $(".popover-content").append("<b style='color: red;font-size: 16px'>没有查询到对应团购产品！</b>");
+                        }
+                    }
+                });
+            });
+
+            $("#btn-save").on("click", function () {
+                var num = $("#number").val();
+                if (num % 1 != 0 || num < 1) {
+                    window.wxc.xcConfirm("<b>购买数量为正整数！</b>", window.wxc.xcConfirm.typeEnum.warning);
+                    return;
+                }
+
+                var btn = this;
+                btn.disabled = true;
+                var form = $("#form-main");
+                $.ajax({
+                    url: $(form).attr('action'), type: 'post',
+                    data: $(form).serialize(),
+                    success: function (result) {
+                        btn.disabled = false;
+                        if (result.code == 0) {
+                            window.location.href = "edit?type=3&id=" + result.data.id;
+                        } else {
+                            window.wxc.xcConfirm("<b>" + result.msg + "</b>", window.wxc.xcConfirm.typeEnum.warning);
+                        }
+                    }
+                });
             });
         });
     </script>

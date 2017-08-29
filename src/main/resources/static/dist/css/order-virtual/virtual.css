@@ -1,0 +1,40 @@
+.popover-span {
+    width: 100%;
+    font-size: 15px;
+    font-weight: bold;
+    margin-left: 0px !important;
+}
+
+.popover-table td {
+    line-height: 35px;
+}
+
+.td-name, .td-intro, .td-img {
+    width: 20%;
+    text-align: right;
+    vertical-align: top;
+}
+
+.td-name-value, .td-intro-value, .td-img-value {
+    width: 80%;
+    padding-left: 15px;
+}
+
+.popover {
+    max-width: 480px !important;
+}
+
+.popover-table tr:hover {
+    background-color: #fff !important;
+}
+
+.popover-img {
+    width: 250px;
+    height: auto;
+    margin-top: 10px;
+}
+
+.popover-label {
+    margin-bottom: 0px !important;
+    font-size: 15px !important;
+}
