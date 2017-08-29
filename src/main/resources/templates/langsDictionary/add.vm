@@ -128,8 +128,8 @@
                             </div>
 
                             <div class="form-actions" style="clear:both;text-align: center">
-                                <a onclick="saveLangsDictionary()" id="saveBtn" class="btn btn-info btn-ok">确定</a>
-                                <a class="btn btn-primary btn-back" onclick="backLangsDictionaryList()">返回</a>
+                                <a onclick="saveLangsDictionary()" id="saveBtn" class="btn btn-success btn-ok"><i class="icon-edit"> 确定</i></a>
+                                <a class="btn btn-primary btn-back" onclick="backLangsDictionaryList()"><i class="icon-repeat"> 返回</i></a>
                             </div>
                         </form>
                     </div>

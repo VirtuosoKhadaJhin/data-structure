@@ -117,9 +117,9 @@
                                                class="country-key"/>
                                         <button type="button" id="saveBtn"
                                                 onclick="modifyLocalLangsDictionary()" #*onclick按钮点击事件*#
-                                                class="btn btnSave btn-success">保存
+                                                class="btn btnSave btn-success"><i class="icon-edit"> 确定</i>
                                         </button>
-                                        <a class="btn btn-primary" onclick="back()">返回</a>
+                                        <a class="btn btn-primary" onclick="back()"><i class="icon-repeat"> 返回</i></a>
                                     </div>
                             </form>
                         </div>
