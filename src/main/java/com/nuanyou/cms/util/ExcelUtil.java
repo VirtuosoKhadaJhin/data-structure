@@ -15,7 +15,7 @@ public class ExcelUtil {
      */
     public static <T> XSSFWorkbook generateXlsxWorkbook(LinkedHashMap<String, String> titleMap, Collection<T> dataSet) {
         XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("sheet1");
+        XSSFSheet sheet = workbook.createSheet("ny-sheet");
         sheet.setDefaultColumnWidth(20);
 
         XSSFCellStyle headerStyle = getHeaderStyle(workbook);
