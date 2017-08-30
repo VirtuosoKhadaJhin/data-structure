@@ -23,6 +23,7 @@ import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.util.ExcelUtil;
 import com.nuanyou.cms.util.TimeCondition;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -170,14 +171,19 @@ public class OrderController {
         Page<Order> page = orderService.findByCondition(index, entity, time, pageable);
         Map<Long,Order> maps = Maps.newHashMap();
         for (Order order : page.getContent()) {
-            maps.put(order.getUserId(),order);
+            if(order.getUserId() != null){
+                maps.put(order.getUserId(),order);
+            }
         }
-        List<PasUserProfile> userProfiles = pasUserProfileDao.findByUserid(maps.keySet());
-        for (PasUserProfile userProfile : userProfiles) {
-            Long userId = userProfile.getId();
-            if(maps.containsKey(userId)){
-                Order order = maps.get(userId);
-                order.setUser(userProfile);
+        Set<Long> userIds = maps.keySet();
+        if(CollectionUtils.isNotEmpty(userIds)){
+            List<PasUserProfile> userProfiles = pasUserProfileDao.findByUserid(userIds);
+            for (PasUserProfile userProfile : userProfiles) {
+                Long userId = userProfile.getId();
+                if(maps.containsKey(userId)){
+                    Order order = maps.get(userId);
+                    order.setUser(userProfile);
+                }
             }
         }
         List<Long> countryids = userService.findUserCountryId();

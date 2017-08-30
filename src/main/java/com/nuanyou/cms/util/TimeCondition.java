@@ -125,7 +125,7 @@ public class TimeCondition {
         return DateUtils.format(begin);
     }
 
-    private static final SimpleDateFormat FORMAT_MINUTE = new SimpleDateFormat("YYYY-MM-DD HH:mm");
+    private static final SimpleDateFormat FORMAT_MINUTE = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     public String getBeginMinuteStr() {
         if (begin_minute == null) {

@@ -135,12 +135,12 @@
 
     <div class="control-group">
         <label>开始时间：</label>
-        <input type="text" class="span11 dateTimeFormatMinute" name="begin_minute" id="beginTime" value="$!dateFormatter.format("yyyy-MM-dd HH:mm",$!time.beginMinuteStr)" placeholder="开始时间">
+        <input type="text" class="span11 dateTimeFormatMinute" name="begin_minute" id="beginTime" value="$!time.beginMinuteStr" placeholder="开始时间">
     </div>
 
     <div class="control-group">
         <label>结束时间：</label>
-        <input type="text" class="span11 dateTimeFormatMinute" name="end_minute" id="endTime" value="$!dateFormatter.format("yyyy-MM-dd HH:mm",$!time.endMinuteStr)" placeholder="结束时间">
+        <input type="text" class="span11 dateTimeFormatMinute" name="end_minute" id="endTime" value="$!time.endMinuteStr" placeholder="结束时间">
     </div>
 
     <div class="control-group">
