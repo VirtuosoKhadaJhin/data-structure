@@ -149,7 +149,9 @@
                                     <div class="">
                                         <label class="control-label" style="min-width: 100px;max-width: 100px;">描&nbsp;&nbsp;&nbsp;述：</label>
                                         <div class="controls" style="margin-left: 110px">
-                                            <textarea placeholder="多语言描述" class="form-control" id="remark" style="width: 80%;resize: none;" cols="4" rows="4" value="$!langsDictionary.messageTip.remark">$!langsDictionary.messageTip.remark</textarea>
+                                            <textarea placeholder="多语言描述" class="form-control" id="remark"
+                                                      style="width: 80%;resize: none;" cols="4" rows="4"
+                                                      value="$!langsDictionary.messageTip.remark">$!langsDictionary.messageTip.remark</textarea>
                                         </div>
                                     </div>
                                     <div class="">
@@ -175,7 +177,8 @@
                                 </div>
 
                                 <div class="form-actions" style="clear:both;text-align: center">
-                                    <a onclick="modifyLangsDictionary()" id="editBtn" class="btn btn-success btn-ok"><i class="icon-edit"> 确定</i></a>
+                                    <a onclick="modifyLangsDictionary()" id="editBtn" class="btn btn-success btn-ok"><i
+                                            class="icon-edit"> 确定</i></a>
                                     <a class="btn btn-primary btn-back" onclick="back()"><i class="icon-repeat"> 返回</i></a>
                                     <input type="hidden" class="hide-keycode" value="$!langsDictionary.keyCode"/>
                                 </div>
@@ -281,13 +284,13 @@
                 };
                 langsMessageList.push(langsCountryMessageVo);
             });
-            console.log(langsMessageList);
             var requestParam = {
                 "keyCode": $("input[name='keyCode']").val(),
                 "categoryId": Number($("select[name='categoryId']").val()),
                 "langsMessageList": langsMessageList
             };
             // 防止重复提交
+            $("#editBtn").attr("disabled", true);
             LoadingTask.showLoading("html");
             $.ajax({
                 url: 'modifyLangsDictionary',
@@ -297,6 +300,7 @@
                 contentType: 'application/json',
                 success: function (result) {
                     // 防止重复提交
+                    $("#editBtn").attr("disabled", false);
                     LoadingTask.hideLoading("html");
                     if (result.code == 0) {
                         window.wxc.xcConfirm("操作成功！", window.wxc.xcConfirm.typeEnum.warning, {
@@ -322,6 +326,7 @@
                 url: '/langsMessageTip/add',
                 data: JSON.stringify(messRequest),
                 type: 'post',
+                async: false,
                 dataType: 'json',
                 contentType: 'application/json',
                 success: function (result) {
