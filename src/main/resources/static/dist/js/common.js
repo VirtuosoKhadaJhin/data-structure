@@ -16,7 +16,7 @@ $(function () {
     });
     messenger.addTarget(window.parent, 'parent');
 
-    $("#breadcrumb a").on("click", function () {
+    $("#breadcrumb a.tip-bottom:first").on("click", function () {
         messenger.send("refreshWindow");
         return false;
     });
