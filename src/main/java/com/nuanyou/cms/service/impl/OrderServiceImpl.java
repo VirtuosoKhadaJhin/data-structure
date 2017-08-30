@@ -79,12 +79,12 @@ public class OrderServiceImpl implements OrderService {
                     Predicate p = cb.equal(root.get("id"), entity.getId());
                     predicate.add(p);
                 }
-                if (time.getBegin() != null) {
-                    Predicate p = cb.greaterThanOrEqualTo(root.get("createtime").as(Date.class), time.getBegin());
+                if (time.getBegin_minute() != null) {
+                    Predicate p = cb.greaterThanOrEqualTo(root.get("createtime").as(Date.class), time.getBegin_minute());
                     predicate.add(p);
                 }
-                if (time.getEnd() != null) {
-                    Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd());
+                if (time.getEnd_minute() != null) {
+                    Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd_minute());
                     predicate.add(p);
                 }
                 if (entity.getMerchant() != null && StringUtils.isNotBlank(entity.getMerchant().getKpname())) {
@@ -289,12 +289,12 @@ public class OrderServiceImpl implements OrderService {
             Predicate p = cb.equal(root.get("id"), entity.getId());
             predicate.add(p);
         }
-        if (time.getBegin() != null) {
-            Predicate p = cb.greaterThanOrEqualTo(root.get("createtime").as(Date.class), time.getBegin());
+        if (time.getBegin_minute() != null) {
+            Predicate p = cb.greaterThanOrEqualTo(root.get("createtime").as(Date.class), time.getBegin_minute());
             predicate.add(p);
         }
-        if (time.getEnd() != null) {
-            Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd());
+        if (time.getEnd_minute() != null) {
+            Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd_minute());
             predicate.add(p);
         }
         if (entity.getMerchant() != null && !StringUtils.isEmpty(entity.getMerchant().getKpname())) {
