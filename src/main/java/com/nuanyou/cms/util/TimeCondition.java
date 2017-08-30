@@ -2,6 +2,7 @@ package com.nuanyou.cms.util;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -13,10 +14,13 @@ public class TimeCondition {
 
     private Date end;
 
+    private Date begin_minute;
+
+    private Date end_minute;
+
     private Date begin_2;
 
     private Date end_2;
-
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public Date getBegin() {
@@ -25,6 +29,23 @@ public class TimeCondition {
 
     public void setBegin(Date begin) {
         this.begin = begin;
+    }
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    public Date getBegin_minute() {
+        return begin_minute;
+    }
+
+    public void setBegin_minute(Date begin_minute) {
+        this.begin_minute = begin_minute;
+    }
+
+    public Date getEnd_minute() {
+        return end_minute;
+    }
+
+    public void setEnd_minute(Date end_minute) {
+        this.end_minute = end_minute;
     }
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -72,7 +93,6 @@ public class TimeCondition {
         this.end = end;
     }
 
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     public Date getBegin_2Date() {
         return begin_2;
@@ -98,13 +118,29 @@ public class TimeCondition {
         return DateUtils.format(end);
     }
 
-
     public String getBeginStr() {
         if (begin == null) {
             return null;
         }
         return DateUtils.format(begin);
     }
+
+    private static final SimpleDateFormat FORMAT_MINUTE = new SimpleDateFormat("YYYY-MM-DD HH:mm");
+
+    public String getBeginMinuteStr() {
+        if (begin_minute == null) {
+            return null;
+        }
+        return FORMAT_MINUTE.format(begin_minute);
+    }
+
+    public String getEndMinuteStr() {
+        if (end_minute == null) {
+            return null;
+        }
+        return FORMAT_MINUTE.format(end_minute);
+    }
+
     public String getEnd_2Str() {
         if (end_2 == null) {
             return null;
@@ -112,13 +148,11 @@ public class TimeCondition {
         return DateUtils.format(end_2);
     }
 
-
     public String getBegin_2Str() {
         if (begin_2 == null) {
             return null;
         }
         return DateUtils.format(begin_2);
     }
-
 
 }

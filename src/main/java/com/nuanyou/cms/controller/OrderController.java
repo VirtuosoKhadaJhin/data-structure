@@ -1,5 +1,6 @@
 package com.nuanyou.cms.controller;
 
+import com.google.common.collect.Maps;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
@@ -27,24 +28,27 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
 @RequestMapping("order")
 public class OrderController {
+
+    private static final Logger log = LoggerFactory.getLogger(OrderController.class);
+
     @Autowired
     private RemoteOrderService remoteOrderService;
     @Autowired
@@ -71,9 +75,15 @@ public class OrderController {
     private UserTelDao userTelDao;
     @Autowired
     private OrderDirectMailDao directMailDao;
-    private static final Logger log = LoggerFactory.getLogger(OrderController.class);
     @Autowired
     private UserService userService;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        dateFormat.setLenient(true);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
 
     @RequestMapping("add")
     public String add(Order entity) {
@@ -109,7 +119,6 @@ public class OrderController {
         return result;
     }
 
-
     @RequestMapping(path = "edit", method = RequestMethod.GET)
     public String edit(Long id, Model model, Integer type) {
         Order order = this.orderDao.findOne(id);
@@ -133,14 +142,12 @@ public class OrderController {
         return "order/edit";
     }
 
-
     @RequestMapping("update")
     public String update(Order entity) throws IOException {
         orderService.saveNotNull(entity);
         String url = "edit?type=3&id=" + entity.getId();
         return "redirect:" + url;
     }
-
 
     @RequestMapping("itemList")
     public String itemList(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model) {
@@ -152,7 +159,6 @@ public class OrderController {
         return "order/orderItemlist";
     }
 
-
     @RequestMapping("list")
     public String list(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, TimeCondition time) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "id");
@@ -162,12 +168,16 @@ public class OrderController {
         List<NewOrderStatus> newOrderStatuses = Arrays.asList(NewOrderStatus.values());
         List<Merchant> merchants = this.merchantService.getIdNameList();
         Page<Order> page = orderService.findByCondition(index, entity, time, pageable);
+        Map<Long,Order> maps = Maps.newHashMap();
         for (Order order : page.getContent()) {
-            PasUserProfile user = pasUserProfileDao.findPartsByUserid(order.getUserId());
-            if (user != null) {
-                order.setUser(user);
-            } else {
-                order.setUser(null);
+            maps.put(order.getUserId(),order);
+        }
+        List<PasUserProfile> userProfiles = pasUserProfileDao.findByUserid(maps.keySet());
+        for (PasUserProfile userProfile : userProfiles) {
+            Long userId = userProfile.getId();
+            if(maps.containsKey(userId)){
+                Order order = maps.get(userId);
+                order.setUser(userProfile);
             }
         }
         List<Long> countryids = userService.findUserCountryId();
@@ -185,7 +195,7 @@ public class OrderController {
 
     @RequestMapping("refundList")
     public String refundList(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, TimeCondition time) {
-        Page<Order> page = orderService.findRefundByCondition(index, entity, time,null);
+        Page<Order> page = orderService.findRefundByCondition(index, entity, time, null);
         for (Order order : page.getContent()) {
             //注意：此处为避免查询慢，只查询userid和nickname字段
             PasUserProfile userProfile = pasUserProfileDao.findPartsByUserid(order.getUserId());
@@ -210,23 +220,22 @@ public class OrderController {
 
     @RequestMapping(value = "count", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult count(Order entity, TimeCondition time,String countryids ) throws IOException {
-        long size = this.orderService.countViewOrderExports(entity, time,(!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null);
+    public APIResult count(Order entity, TimeCondition time, String countryids) throws IOException {
+        long size = this.orderService.countViewOrderExports(entity, time, (!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null);
         if (size > 10000)
             return new APIResult(ResultCodes.Fail, ": 数据大于10000条，请缩小筛选范围后导出。");
         return new APIResult();
     }
 
-
     @RequestMapping("export")
-    public void export(Order entity, TimeCondition time, String countryids , HttpServletResponse response) throws IOException {
+    public void export(Order entity, TimeCondition time, String countryids, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/vnd.ms-excel;charset=UTF-8");
         response.setHeader("Pragma", "public");
         response.setHeader("Cache-Control", "max-age=30");
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
         Long begin = System.currentTimeMillis();
-        List<ViewOrderExport> page = this.orderService.findExportByCondition(entity, time, (!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null,null);
+        List<ViewOrderExport> page = this.orderService.findExportByCondition(entity, time, (!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null, null);
         Long end = System.currentTimeMillis();
         log.info("read data from sql:" + (end - begin) / 1000 + "s");
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
@@ -284,15 +293,15 @@ public class OrderController {
     }
 
     @RequestMapping("refundList/export")
-    public void exportRefund(Order entity, TimeCondition time, String countryids ,HttpServletResponse response) throws IOException {
+    public void exportRefund(Order entity, TimeCondition time, String countryids, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/csv; charset=" + "UTF-8");
+        response.setContentType("application/vnd.ms-excel;charset=UTF-8");
         response.setHeader("Pragma", "public");
         response.setHeader("Cache-Control", "max-age=30");
         response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("退款订单列表" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".xlsx", "UTF-8"));
 
         //BeanUtils.cleanEmpty(entity);
-        List<Order> list = orderService.findRefundByCondition(entity, time,(!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null);
+        List<Order> list = orderService.findRefundByCondition(entity, time, (!countryids.equals("[]")) ? CommonUtils.StringToList(countryids) : null);
 
         Map<Long, PasUserProfile> userMap = new HashMap<>();
         for (Order order : list) {
@@ -344,14 +353,12 @@ public class OrderController {
         os.close();
     }
 
-
     @RequestMapping("refund")
     @ResponseBody
     public APIResult refund(Order entity) {
         this.orderService.refund(entity);
         return new APIResult<>(ResultCodes.Success);
     }
-
 
     @RequestMapping(path = "refundEdit", method = RequestMethod.GET)
     public String refundEdit(Long id, Model model, Integer type) {
@@ -373,6 +380,4 @@ public class OrderController {
         return null;
     }
 
-
 }
-

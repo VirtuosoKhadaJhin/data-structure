@@ -17,6 +17,13 @@ window.onload = function () {
         yearEnd: 2050,
         todayButton: false
     });
+    $('.dateTimeFormatMinute').datetimepicker({
+        format: "Y-m-d H:i",
+        timepicker: true,
+        yearStart: 2000,
+        yearEnd: 2050,
+        todayButton: false
+    });
     $('.dateFormat').datetimepicker({
         format: "Y-m-d",
         timepicker: true,
