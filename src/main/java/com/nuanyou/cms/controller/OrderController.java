@@ -118,8 +118,12 @@ public class OrderController {
 
         APIResult<OrderSave> result = remoteOrderService.ordersSaveTuanPost(7, id, number, channel, channelOrderNo);
         if (result.isSuccess()) {
+            Long orderId = result.getData().getId();
             OrderSave orderSave = result.getData();
             result = remoteOrderService.ordersPayCallbackPost(orderSave.getId());
+            if(result.isSuccess()){
+                return new APIResult(orderId);
+            }
         }
         return result;
     }

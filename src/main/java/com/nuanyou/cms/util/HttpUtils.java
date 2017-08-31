@@ -118,12 +118,6 @@ public class HttpUtils {
         connection.setDoInput(true);
         connection.setDoOutput(true);
 
-        if (connection instanceof HttpsURLConnection) {
-            HttpsURLConnection httpsConn = (HttpsURLConnection) connection;
-            httpsConn.setSSLSocketFactory(SSLFactory);
-            httpsConn.setHostnameVerifier(SimpleVerifier);
-        }
-
         return (HttpURLConnection) connection;
     }
 
