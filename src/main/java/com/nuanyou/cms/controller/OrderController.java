@@ -99,7 +99,11 @@ public class OrderController {
 
     @RequestMapping(path = "virtual", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult virtual(Long id, Integer number) {
+    public APIResult virtual(Long id, Integer number, String channel, String channelOrderNo) {
+        if (channel == null || channel == "")
+            return new APIResult(ResultCodes.MissingParameter);
+        if (channelOrderNo == null || channelOrderNo == "")
+            return new APIResult(ResultCodes.MissingParameter);
         if (id == null)
             return new APIResult(ResultCodes.MissingParameter);
         if (number == null || number < 1)
@@ -112,7 +116,7 @@ public class OrderController {
         if (items.size() < 1)
             return new APIResult(ResultCodes.NotFoundItem);
 
-        APIResult<OrderSave> result = remoteOrderService.ordersSaveTuanPost(7, id, number);
+        APIResult<OrderSave> result = remoteOrderService.ordersSaveTuanPost(7, id, number, channel, channelOrderNo);
         if (result.isSuccess()) {
             OrderSave orderSave = result.getData();
             result = remoteOrderService.ordersPayCallbackPost(orderSave.getId());
