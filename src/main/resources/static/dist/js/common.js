@@ -9,6 +9,19 @@ LoadingTask.hideLoading = function (a) {
     $(a).unmask();
 };
 
+// 解决跨域刷新父页面
+$(function () {
+    var messenger = new Messenger('iframe', 'CmsMessenger');
+    messenger.listen(function (msg) {
+    });
+    messenger.addTarget(window.parent, 'parent');
+
+    $("#breadcrumb a.tip-bottom:first").on("click", function () {
+        messenger.send("refreshWindow");
+        return false;
+    });
+});
+
 window.onload = function () {
     $('.dateTimeFormat').datetimepicker({
         format: "Y-m-d H:i:s",

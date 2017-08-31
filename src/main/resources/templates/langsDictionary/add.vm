@@ -286,16 +286,19 @@
             "langsMessageList": langsMessageList
         };
         // 防止重复提交
+        $("#saveBtn").attr("disabled", true);
         LoadingTask.showLoading("html");
         // step1:保存多语言信息
         $.ajax({
             url: 'saveLangsDictionary',
             data: JSON.stringify(requestParam),
             type: 'post',
+            async: false,
             dataType: 'json',
             contentType: 'application/json',
             success: function (result) {
                 // 防止重复提交
+                $("#saveBtn").attr("disabled", false);
                 if (result.code == 0) {
                 } else {
                     alert(result.msg);

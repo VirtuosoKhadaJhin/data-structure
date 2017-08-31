@@ -107,9 +107,9 @@
                     <div class="widget-content">
                         <form class="form-horizontal search-form" method="get" action="list">
                             <div class="control-group" style="margin-bottom: 10px">
-                                <label>分类</label>
+                                <label>分类：</label>
                                 <select class="span11 select2 " name="baseNameId">
-                                    <option value="">全部分类：</option>
+                                    <option value="">全部分类</option>
                                     #foreach($e in $!categories)
                                         <option value="$!e.id" #if($!e.id==$!requestVo.baseNameId)
                                                 selected #end>$!e.name</option>
