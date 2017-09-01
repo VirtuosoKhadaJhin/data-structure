@@ -17,6 +17,8 @@ public interface MerchantService {
 
     List<Merchant> getIdNameList();
 
+    List<Merchant> getAllIdNameList();
+
     List<Merchant> getIdNameList(Boolean display);
 
     void updateScore(Long id, double score);

@@ -82,6 +82,12 @@ public class MerchantServiceImpl implements MerchantService {
         return getIdNameList(true);
     }
 
+    @Override
+    public List<Merchant> getAllIdNameList() {
+        List<Long> countryIds = userService.findUserCountryId();
+        return merchantDao.getIdNameList(countryIds);
+    }
+
     private static final String sg_url = "https://sg.h5.m.91nuanyou.com/view/order/youfu.html";
     private static final String kr_url = "https://kr.h5.m.91nuanyou.com/view/order/youfu.html";
 

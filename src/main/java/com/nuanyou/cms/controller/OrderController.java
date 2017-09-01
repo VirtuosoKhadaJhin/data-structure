@@ -175,7 +175,7 @@ public class OrderController {
         List<OrderType> orderTypes = Arrays.asList(OrderType.values());
         List<OrderPayType> orderPayTypes = Arrays.asList(OrderPayType.values());
         List<NewOrderStatus> newOrderStatuses = Arrays.asList(NewOrderStatus.values());
-        List<Merchant> merchants = this.merchantService.getIdNameList();
+        List<Merchant> merchants = merchantService.getAllIdNameList();
         Page<Order> page = orderService.findByCondition(index, entity, time, pageable);
         Map<Long,Order> maps = Maps.newHashMap();
         for (Order order : page.getContent()) {
