@@ -16,9 +16,10 @@
         <class>com.nuanyou.cms.util.LinkTool</class>
     </tool>
     <tool>
-        <key>date</key>
+        <key>dateFormatter</key>
         <scope>application</scope>
         <class>org.apache.velocity.tools.generic.DateTool</class>
+        <parameter name="format" value="yyyy-MM-dd HH:mm:ss"/>
     </tool>
 
 </toolbox>
