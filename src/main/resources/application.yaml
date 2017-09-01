@@ -53,7 +53,7 @@ s3:
 
 nuanyou-host: http://testh5.91nuanyou.com
 withdrawurl: http://testuser.api.91nuanyou.com
-nuanyou-api: http://127.0.0.1:8081
+nuanyou-api: https://testapi30.91nuanyou.com
 
 upload:
   s3server: https://kr.file.91nuanyou.com
