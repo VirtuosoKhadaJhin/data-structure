@@ -106,9 +106,9 @@
                         console.log(result);
                         btn.disabled = false;
                         if (result.code == 0) {
-                            window.location.href = "edit?type=3&id=" + result.data.id;
+                            window.location.href = "edit?type=3&id=" + result.data;
                         } else {
-                            window.wxc.xcConfirm("<b>" + result.msg + "</b>", window.wxc.xcConfirm.typeEnum.warning);
+                            window.wxc.xcConfirm("<b>保存失败！" + result.msg + "</b>", window.wxc.xcConfirm.typeEnum.warning);
                         }
                     }
                 });
