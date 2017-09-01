@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统</title>
+    #include("common/css-support.vm")
+    #include("common/js-support.vm")
+    <link href="/dist/css/mission/mission.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="content" class="content-container">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10">
+                <div class="widget-box">
+                    <div class="widget-content nopadding">
+
+                        <div id="breadcrumb"><a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
+                            客户模块</a>
+                            <a href="/mission_task/list" class="tip-bottom" data-original-title="">商户拜访记录</a>
+                        </div>
+                        <div class="widget-title">
+                            <span class="icon"><i class="icon-th"></i></span>
+                            <h5>商户拜访记录</h5>
+                        </div>
+
+                        <table class="table table-bordered data-table dataTable">
+                            <thead class="thead-class">
+                            <tr class="thread-tr">
+                                <th class="th-op">BD名称</th>
+                                <th class="th-op">拜访时间</th>
+                                <th class="th-op">拜访门店</th>
+                                <th class="th-op">国家</th>
+                                <th class="th-op">城市</th>
+                                <th class="th-img">签到图</th>
+                                <th class="th-op">拜访记录</th>
+                            </tr>
+                            </thead>
+                            <tbody class="tbody-list">
+                                #if ($null.isNull($page.content) || $page.content.size()==0)
+                                <tr>
+                                    <td colspan="11" style="text-align:center;">
+                                        <div class="no-result-div"
+                                             style="text-align: center;vertical-align: middle;height: 50px;line-height: 50px;">
+                                            <p>没有符合条件的记录信息！</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                #end
+                                #foreach($entity in $!page.content)
+                                <tr data-mchId="$!entity.merchant.id">
+                                    <td>
+                                        <span>$!entity.user.chineseName</span>
+                                    </td>
+                                    <td class="task-type">$!entity.createTime</td>
+                                    <td><span>$!entity.merchant.id</span>
+                                        <br/>
+                                        <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a></td>
+                                    <td>$!entity.merchant.district.country.name</td>
+                                    <td>$!entity.merchant.district.city.name</td>
+                                    <td class="td-imgurl">
+                                        #if($!entity.imgUrls.size()==0 || "$!entity.imgUrls"=="")
+                                            <label class="no-img-result">暂无签到图片</label>
+                                        #else
+                                            #if($!entity.imgUrls.size()<=3)
+                                                <div class="imgurl-info">
+                                                    #foreach($imgUrl in $!entity.imgUrls)
+                                                        <div class="hovereffect">
+                                                            <a target="_blank" href="$!imgUrl">
+                                                                <img class="img-polaroid td-img" src="$!imgUrl">
+                                                            </a>
+                                                        </div>
+                                                    #end
+                                                </div>
+                                            #else
+                                                <div class="imgurl-info">
+                                                    #foreach($imgUrl in $!entity.imgUrls)
+                                                        #if($velocityCount <=3)
+                                                            <div class="hovereffect">
+                                                                <a target="_blank" href="$!imgUrl">
+                                                                    <img class="img-polaroid td-img" src="$!imgUrl">
+                                                                </a>
+                                                            </div>
+                                                        #end
+                                                    #end
+                                                </div>
+                                                <span>----------------------------------------------------------</span>
+                                                <br>
+                                                <a class="more_img" id="$!entity.imgUrls" target="_blank">查看更多</a>
+                                            #end
+                                        #end
+
+                                    </td>
+                                    <td>$!entity.note</td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                #set($i=$!page.number + 1)
+                <div class="pagination" style="float:right">
+                    <ul total="$!page.totalPages" index="$!i"></ul>
+                </div>
+            </div>
+            <div class="span2">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"><i class="icon-list"></i></span>
+                        <h5>筛选列表</h5>
+                    </div>
+                    <div class="widget-content">
+                        <form class="form-horizontal search-form" method="get">
+                            <div class="search-select">
+                                <label>BD名称</label>
+                                <select class="span11 select2" name="userId">
+                                    <option value="">全部</option>
+                                    #foreach($e in $!bdUsers)
+                                        <option value="$!e.id" #if($!requestVo.userId == $!e.id) selected #end>$!e.id : $!e.chineseName</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>国家</label>
+                                <select class="span11 select2 select-country" id="country" name="countryId">
+                                    <option value>全部</option>
+                                    #foreach($e in $!countries)
+                                        <option value="$!e.id" #if($!requestVo.countryId==$!e.id)selected #end>$!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>城市</label>
+                                <select class="span11 select-city" id="city" name="cityId" disabled>
+                                    <option class="city-unit" value>全部</option>
+                                    #foreach($e in $!cities)
+                                        <option class="option-city" country-id="$!e.country.id" value="$!e.id" #if($!requestVo.cityId == $!e.id) selected #end>$!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div>
+                                <label>商户ID</label>
+                                <input type="text" name="mchId" class="span11" value="$!requestVo.mchId"  placeholder="">
+                            </div>
+                            <div>
+                                <label>商户名称</label>
+                                <input type="text" name="mchName" class="span11" value="$!requestVo.mchName" placeholder="">
+                            </div>
+
+                            <div class="search-select">
+                                <label>拜访开始时间：</label>
+                                <input type="text" name="startTime" class="span11 dateTimeFormatDay" value="$!requestVo.startTimeStr" text="$!requestVo.startTimeStr" placeholder="">
+                            </div>
+
+                            <div class="search-select">
+                                <label>拜访结束时间：</label>
+                                <input type="text" name="endTime" class="span11 dateTimeFormatDay" value="$!requestVo.endTimeStr" text="$!requestVo.endTimeStr" placeholder="">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="icon-search"> 查询</i>
+                            </button>
+                            <button class="btn btn-warning search-reset">
+                                <i class="icon-refresh"> 重置</i>
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 图片浏览弹窗 -->
+<div class="modal hide fade approvalResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">图片浏览</h3>
+    </div>
+
+    <div class="modal-body" style="max-height:600px">
+        <div class="left" style="position: absolute;top: 50%;left: 10px;font-size:30px""><</div>
+        <div style="margin:5px 30px">
+                <img  style="width:480px;height: 400px" class="originalImg" src="">
+        </div>
+        <div class="right" style="position: absolute;top: 50%;right: 10px;font-size:30px"">></div>
+    </div>
+    <div class="modal-footer" style="padding:7px 15px">
+        <p style="text-align:center"><span id="img_index">1</span>/<span id="img_total"></span></p>
+    </div>
+</div>
+<script type="text/javascript" src="/dist/js/page-support.js"></script>
+<script type="text/javascript" src="/dist/js/visit/list.js"></script>
+</body>
+</html>

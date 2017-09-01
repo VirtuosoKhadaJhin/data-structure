@@ -79,8 +79,8 @@
                                 #set($today = $!dateFormatter.format("dd", $!dateFormatter.systemTime))
                                 #foreach($entity in $!page.content)
                                 <tr>
-                                    <td #if($!entity.status.key!=2 && $!entity.status.key!=3)class="td-holl-check"#end>
-                                        #if($!entity.status.key!=2 && $!entity.status.key!=3)
+                                    <td #if($!entity.status.key!=2 )class="td-holl-check"#end>
+                                        #if($!entity.status.key!=2 )
                                             #set($checkboxCount = $checkboxCount + 1)
                                             <input class="styled td-checked input-checkbox" type="checkbox" task-id="$!entity.id">
                                         #end
@@ -144,6 +144,15 @@
                                         <option value="$!e.id" #if($!requestVo.mchId == $!e.id) selected #end>$!e.id : $!e.name</option>
                                     #end
                                 </select>
+                            </div>
+                            <div class="search-select">
+                            <label>合作状态</label>
+                            <select name="cooperationStatus" class="span11">
+                                <option value="">全部</option>
+                                #foreach($status in $!cooperationStatuses)
+                                    <option value="$!status" data-key="$!status.key" #if($!status==$!entity.cooperationStatus)selected #end>$!status.name</option>
+                                #end
+                            </select>
                             </div>
                             <div class="search-select">
                                 <label>任务类型</label>

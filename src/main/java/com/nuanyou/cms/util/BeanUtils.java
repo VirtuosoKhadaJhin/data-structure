@@ -7,6 +7,8 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import com.nuanyou.cms.entity.Merchant;
+import com.nuanyou.cms.model.MerchantVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +56,19 @@ public class BeanUtils {
             setValue(target, pd.getWriteMethod(), value);
         }
         return target;
+    }
+
+    public static void main(String[] args) {
+        Merchant merchant = new Merchant();
+        merchant.setAddress("1");
+        merchant.setName("2");
+        merchant.setFirstshowTime(new Date());
+        merchant.setChannelId(1L);
+        MerchantVO vo = new MerchantVO();
+        vo.setName("3");
+        vo.setAddress("4");
+        copyBean(vo, merchant);
+        System.out.println(merchant.getChannelId());
     }
 
     public static <T> T copyBeanNotNull(Map<String, Object> source, T target) {

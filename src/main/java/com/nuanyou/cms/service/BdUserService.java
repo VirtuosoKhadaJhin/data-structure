@@ -148,6 +148,8 @@ public interface BdUserService {
      */
     List<BdUser> findByCountryAndGroup(Long country, Long groupId);
 
+    List<BdUser> findByCountry(final Long country);
+
     /**
      * 校验BD用户名是否唯一
      *

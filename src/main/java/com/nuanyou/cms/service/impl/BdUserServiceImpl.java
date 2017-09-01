@@ -244,6 +244,25 @@ public class BdUserServiceImpl implements BdUserService {
         }
         return result;
     }
+    @Override
+    public List<BdUser> findByCountry(final Long country) {
+        List<BdUser> result = Lists.newArrayList();
+        List<BdUser> countryUsers = bdUserDao.findAll(new Specification() {
+
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                predicate.add(cb.equal(root.get("deleted"), 0));
+                if (country != null) {
+                    predicate.add(cb.equal(root.get("country").get("id"), country));
+                }
+                Predicate[] arrays = new Predicate[predicate.size()];
+                ArrayList<Order> orderBys = Lists.newArrayList(cb.asc(root.get("updateTime")));
+                return query.where(predicate.toArray(arrays)).getRestriction();
+            }
+        });
+        return countryUsers;
+    }
 
     @Override
     public Boolean checkBdUserUnique(Long id, String name) {
