@@ -3,20 +3,16 @@ package com.nuanyou.cms.service.impl;
 import com.google.common.collect.Lists;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
-import com.nuanyou.cms.dao.BdUserDao;
-import com.nuanyou.cms.dao.CmsUserDao;
-import com.nuanyou.cms.dao.MissionMerchatTrackDao;
-import com.nuanyou.cms.dao.MissionTaskDao;
+import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.CmsUser;
+import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.enums.MerchantCooperationStatus;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import com.nuanyou.cms.entity.mission.BdMerchantTrack;
+import com.nuanyou.cms.entity.mission.MissionGroup;
 import com.nuanyou.cms.entity.mission.MissionTask;
-import com.nuanyou.cms.model.mission.MissionBdMerchantTrack;
-import com.nuanyou.cms.model.mission.MissionDistributeParamVo;
-import com.nuanyou.cms.model.mission.MissionRequestVo;
-import com.nuanyou.cms.model.mission.MissionTaskVo;
+import com.nuanyou.cms.model.mission.*;
 import com.nuanyou.cms.service.MissionTaskService;
 import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
@@ -57,6 +53,9 @@ public class MissionTaskServiceImpl implements MissionTaskService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MerchantDao merchantDao;
 
     @Override
     public Page<MissionTaskVo> findAllMissionTask(final MissionRequestVo requestVo) {
@@ -275,4 +274,25 @@ public class MissionTaskServiceImpl implements MissionTaskService {
 
     }
 
+    @Override
+    public void createTask(MissionCreateParamVo vo) {
+        Merchant merchant = merchantDao.findOne(vo.getMchId());
+        if (merchant == null)
+            throw new APIException(ResultCodes.NotFoundMerchant);
+        List<MissionTask> tasks = missionTaskDao.findByMerchant(merchant);
+        if (tasks != null && tasks.size() > 0)
+            throw new APIException(ResultCodes.MissionExists);
+        MissionTask task = new MissionTask();
+        task.setMerchant(merchant);
+        task.setVersion(vo.getVersion());
+        task.setDelFlag(false);
+        task.setMchName(merchant.getName());
+        task.setStatus(0);
+        MissionGroup group = new MissionGroup();
+        group.setId(vo.getGroupId());
+        task.setGroup(group);
+        task.setCreateDt(new Date());
+        task.setUpdateDt(new Date());
+        missionTaskDao.save(task);
+    }
 }

@@ -52,6 +52,8 @@ public enum ResultCodes {
 
     CurrentUserNotLeader(1003, "只有队长或副队长才能访问此功能"),
 
+    MissionExists(1004, "任务已存在"),
+
     /**
      * ----------order -----------
      */

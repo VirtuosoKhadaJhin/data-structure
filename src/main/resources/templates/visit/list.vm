@@ -53,7 +53,7 @@
                                     <td>
                                         <span>$!entity.user.chineseName</span>
                                     </td>
-                                    <td class="task-type">$!entity.createTime</td>
+                                    <td class="task-type">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.createTime)</td>
                                     <td><span>$!entity.merchant.id</span>
                                         <br/>
                                         <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a></td>
@@ -67,7 +67,7 @@
                                                 <div class="imgurl-info">
                                                     #foreach($imgUrl in $!entity.imgUrls)
                                                         <div class="hovereffect">
-                                                            <a target="_blank" href="$!imgUrl">
+                                                            <a class="a_img" target="_blank" id="$!entity.imgUrls">
                                                                 <img class="img-polaroid td-img" src="$!imgUrl">
                                                             </a>
                                                         </div>
@@ -78,8 +78,8 @@
                                                     #foreach($imgUrl in $!entity.imgUrls)
                                                         #if($velocityCount <=3)
                                                             <div class="hovereffect">
-                                                                <a target="_blank" href="$!imgUrl">
-                                                                    <img class="img-polaroid td-img" src="$!imgUrl">
+                                                                <a class="a_img" target="_blank" id="$!entity.imgUrls">
+                                                                    <img class="img-polaroid td-img"  src="$!imgUrl">
                                                                 </a>
                                                             </div>
                                                         #end
@@ -180,11 +180,11 @@
     </div>
 
     <div class="modal-body" style="max-height:600px">
-        <div class="left" style="position: absolute;top: 50%;left: 10px;font-size:30px""><</div>
+        <div class="left" style="cursor:pointer;position: absolute;top: 50%;left: 10px;font-size:30px""><</div>
         <div style="margin:5px 30px">
                 <img  style="width:480px;height: 400px" class="originalImg" src="">
         </div>
-        <div class="right" style="position: absolute;top: 50%;right: 10px;font-size:30px"">></div>
+        <div class="right" style="cursor:pointer;position: absolute;top: 50%;right: 10px;font-size:30px"">></div>
     </div>
     <div class="modal-footer" style="padding:7px 15px">
         <p style="text-align:center"><span id="img_index">1</span>/<span id="img_total"></span></p>

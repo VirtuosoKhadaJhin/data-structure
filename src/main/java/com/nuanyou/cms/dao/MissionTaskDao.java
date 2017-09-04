@@ -1,5 +1,6 @@
 package com.nuanyou.cms.dao;
 
+import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.mission.MissionTask;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -24,4 +25,6 @@ public interface MissionTaskDao extends JpaRepository<MissionTask, Long>, JpaSpe
     @Modifying
     @Query("update MissionTask t set bdId=?1, status=?2, distrDt=?3,updateDt=?4 where id in ?5")
     void distributeTask(Long bdId, int status, Date distrDt, Date date, List<Long> taskIds);
+
+    List<MissionTask> findByMerchant (Merchant merchant);
 }

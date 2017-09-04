@@ -1,9 +1,6 @@
 package com.nuanyou.cms.service;
 
-import com.nuanyou.cms.model.mission.MissionBdMerchantTrack;
-import com.nuanyou.cms.model.mission.MissionDistributeParamVo;
-import com.nuanyou.cms.model.mission.MissionRequestVo;
-import com.nuanyou.cms.model.mission.MissionTaskVo;
+import com.nuanyou.cms.model.mission.*;
 import org.springframework.data.domain.Page;
 
 /**
@@ -40,5 +37,12 @@ public interface MissionTaskService {
      * @return
      */
     Page<MissionBdMerchantTrack> findAllTrackByMchId(MissionBdMerchantTrack requestVo);
+
+    /**
+     * 新建任務
+     *
+     * @param vo
+     */
+    void createTask(MissionCreateParamVo vo);
 
 }

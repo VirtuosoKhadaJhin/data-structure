@@ -3,33 +3,45 @@
  */
 $(document).ready(function () {
     changeCity(false);
-
+    $(".btn-primary").on("click", function () {
+        var reg = /^[0-9]*$/ ;
+        var mchId = $("input[name=mchId]").val();
+        if (!reg.test(mchId)) {
+            alert("请输入正确的商户ID")
+            return false;
+        }
+    });
 
     $(".more_img").on("click", function () {
         openImgUrls(this.id);
     });
+    $(".a_img").on("click", function () {
+        openImgUrls(this.id);
+    });
+    var index;
+    var imgArray = new Array();
+    $(".left").on("click", function () {
+        if (index > 1){
+            //loading
+            $(".originalImg").attr('src',imgArray[index-2]) ;
+            index = index - 1;
+            $("#img_index").text(index);
+        }
+    });
+    $(".right").on("click", function () {
+        if (index < imgArray.length){
+            $(".originalImg").attr('src',imgArray[index]) ;
+            index = index + 1;
+            $("#img_index").text(index);
+        }
+    });
     function openImgUrls(imgs) {
         imgs = imgs.replace("[","").replace("]","");
-        var imgArray = new Array();
         imgArray = imgs.split(",");
         $(".originalImg").attr('src',imgArray[0]) ;
         $("#img_index").text(1);
         $("#img_total").text(imgArray.length);
-        var index = parseInt($("#img_index").text());
-        $(".left").on("click", function () {
-            if (index > 1){
-                $(".originalImg").attr('src',imgArray[index]) ;
-                index = index - 1;
-                $("#img_index").text(index);
-            }
-        });
-        $(".right").on("click", function () {
-            if (index < imgArray.length){
-                $(".originalImg").attr('src',imgArray[index]) ;
-                index = index + 1;
-                $("#img_index").text(index);
-            }
-        });
+        index = parseInt($("#img_index").text());
         $(".approvalResultModel").modal("show");
     };
 

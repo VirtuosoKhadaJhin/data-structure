@@ -11,10 +11,7 @@ import com.nuanyou.cms.entity.enums.MerchantCooperationStatus;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import com.nuanyou.cms.entity.mission.MissionGroup;
 import com.nuanyou.cms.model.DistrictVo;
-import com.nuanyou.cms.model.mission.MissionBdMerchantTrack;
-import com.nuanyou.cms.model.mission.MissionDistributeParamVo;
-import com.nuanyou.cms.model.mission.MissionRequestVo;
-import com.nuanyou.cms.model.mission.MissionTaskVo;
+import com.nuanyou.cms.model.mission.*;
 import com.nuanyou.cms.service.*;
 import com.nuanyou.cms.sso.client.util.UserHolder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -186,6 +183,19 @@ public class MissionTaskController {
     @ResponseBody
     public APIResult distributeTask(@RequestBody MissionDistributeParamVo vo) {
         missionTaskService.distributeTask(vo);
+        return new APIResult(ResultCodes.Success);
+    }
+
+    /**
+     * 新建任務
+     *
+     * @param vo
+     * @return
+     */
+    @RequestMapping("createTask")
+    @ResponseBody
+    public APIResult createTask(@RequestBody MissionCreateParamVo vo) {
+        missionTaskService.createTask(vo);
         return new APIResult(ResultCodes.Success);
     }
 
