@@ -2,6 +2,7 @@ package com.nuanyou.cms.model.mission;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.collect.Lists;
+import com.nuanyou.cms.entity.enums.MerchantCooperationStatus;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +34,8 @@ public class MissionRequestVo {
     private Long city;
 
     private Long district;
+
+    private MerchantCooperationStatus cooperationStatus;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -229,5 +232,13 @@ public class MissionRequestVo {
             return "";
         }
         return StringUtils.join(taskIds, ",");
+    }
+
+    public MerchantCooperationStatus getCooperationStatus() {
+        return cooperationStatus;
+    }
+
+    public void setCooperationStatus(MerchantCooperationStatus cooperationStatus) {
+        this.cooperationStatus = cooperationStatus;
     }
 }

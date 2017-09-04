@@ -9,6 +9,7 @@ import com.nuanyou.cms.dao.MissionMerchatTrackDao;
 import com.nuanyou.cms.dao.MissionTaskDao;
 import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.CmsUser;
+import com.nuanyou.cms.entity.enums.MerchantCooperationStatus;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import com.nuanyou.cms.entity.mission.BdMerchantTrack;
 import com.nuanyou.cms.entity.mission.MissionTask;
@@ -74,6 +75,9 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 }
                 if (CollectionUtils.isNotEmpty(requestVo.getMchIds())) {
                     predicate.add(root.get("merchant").get("id").in(requestVo.getMchIds()));
+                }
+                if (requestVo.getCooperationStatus() != null) {
+                    predicate.add(cb.equal(root.get("merchant").get("cooperationStatus").as(MerchantCooperationStatus.class), requestVo.getCooperationStatus()));
                 }
                 if (requestVo.getStatus() == null) {
                     if (requestVo.getAudit()) {//审核列表
