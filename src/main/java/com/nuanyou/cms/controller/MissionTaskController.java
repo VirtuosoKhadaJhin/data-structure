@@ -75,6 +75,7 @@ public class MissionTaskController {
      */
     @RequestMapping("list")
     public String list(MissionRequestVo requestVo, Model model) {
+
         if (requestVo.getStatus() == null) {
             requestVo.setStatus(MissionTaskStatus.FINISHED);
         }
