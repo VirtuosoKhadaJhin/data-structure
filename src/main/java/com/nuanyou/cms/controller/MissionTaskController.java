@@ -7,6 +7,7 @@ import com.nuanyou.cms.entity.BdUser;
 import com.nuanyou.cms.entity.City;
 import com.nuanyou.cms.entity.Country;
 import com.nuanyou.cms.entity.Merchant;
+import com.nuanyou.cms.entity.enums.MerchantCooperationStatus;
 import com.nuanyou.cms.entity.enums.MissionTaskStatus;
 import com.nuanyou.cms.entity.mission.MissionGroup;
 import com.nuanyou.cms.model.DistrictVo;
@@ -158,6 +159,7 @@ public class MissionTaskController {
         model.addAttribute("merchants", merchants);
         model.addAttribute("requestVo", requestVo);
         model.addAttribute("taskStatus", MissionTaskStatus.values());
+        model.addAttribute("cooperationStatuses", MerchantCooperationStatus.values());
         return "distribute/list";
     }
 
