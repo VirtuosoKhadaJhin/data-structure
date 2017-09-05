@@ -37,13 +37,12 @@
                                     </strong>条
                                 </span>
                             </div>
-                            <div class="public-div" data-group="$!group.id" data-public="$!group.isPublic">
-                                <input type="hidden" class="public-default-val" value="$!group.id">
-                                <input type="hidden" class="public-default-public" value="$!group.isPublic">
-                                <span style="margin-right: 5px;font-size: 14px;cursor:pointer">未分配商户对所有队员可见：</span>
-                                <input class="radio-public" type="radio" value="1" name="isPublic" #if($!group.isPublic==1) checked #end style="margin-top: -2px"/>可见
-                                <input class="radio-public" type="radio" value="0" name="isPublic" #if($!group.isPublic==0) checked #end style="margin-top: -2px;margin-left: 10px;"/>不可见
+                            <div style = "overflow: hidden" class="public-div" data-group="$!group.id" data-public="$!group.isPublic">
+                                <button class="btn btn-small btn-success task-create">
+                                    <i class="icon-bullhorn"> 新建任务</i>
+                                </button>
                             </div>
+
                         </div>
 
                         <table class="table table-bordered data-table dataTable">
@@ -160,6 +159,7 @@
                                     <option value>全部</option>
                                     <option value="拓新"#if($!requestVo.version == '拓新')selected#end>拓新</option>
                                     <option value="维护"#if($!requestVo.version == '维护')selected#end>维护</option>
+                                    <option value="团购"#if($!requestVo.version == '团购')selected#end>团购</option>
                                 </select>
                             </div>
                             <div class="search-select">
@@ -270,6 +270,36 @@
                     </div>
                 </div>
 
+                <!-- 新建任务弹窗 -->
+                <div class="modal hide fade taskCreateModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">新建任务
+                        </h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="search-select">
+                            <label style="display: inline;margin-left: 6%">商户ID：</label>
+                            <input class = "create-mch-id" type="text" name="mchId" style="width: 30%" class="span8" value="">
+                            <p class = "create-mch-id-tip" style="display: none;margin-left: 6%"><strong style='color: red'>*请填写商户ID</strong></p>
+                        </div>
+                        <div class="search-select">
+                            <label style="display: inline;margin-left: 6%">任务类型：</label>
+                            <select style="width: 30%"  class="span11 create-version" name="version" >
+                                <option value>全部</option>
+                                <option value="拓新">拓新</option>
+                                <option value="维护">维护</option>
+                                <option value="团购">团购</option>
+                            </select>
+                            <p class = "create-version-tip" style="display: none;margin-left: 6%"><strong style='color: red'>*任务类型不可为空</strong></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+                        <button class="btn btn-primary sure-create">确认</button>
+                    </div>
+                </div>
+
                 <!-- 是否可见 提示框 -->
                 <div class="modal hide fade publicSwichModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                     <div class="modal-header">
@@ -312,6 +342,21 @@
                         <p class="distributeResult-text"></p>
                     </div>
                     <input type="hidden" class="audit-result"/>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                    </div>
+                </div>
+
+                <!-- 创建任务结果弹窗 -->
+                <div class="modal hide fade taskCreateResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">提示</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p class="createResult-text"></p>
+                    </div>
+                    <input type="hidden" class="create-result"/>
                     <div class="modal-footer">
                         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
                     </div>

@@ -230,6 +230,11 @@ $(function () {
         $(".taskDistributeModel .modal-body .bd-checkbox-input").removeAttr("checked");
     });
 
+    // 新建任务弹框
+    $(".task-create").on("click", function () {
+        $(".taskCreateModel").modal('show');
+    });
+
     //弹窗初始化数据
     $(".taskDistributeModel").on("show.bs.modal", function () {
         var taskIds = $(".hide-checked-taskIds").val();
@@ -281,6 +286,63 @@ $(function () {
                 $(".taskDistributeResultModel .audit-result").val(result.code);
             }
         });
+    });
+
+    // 确认新建任务
+    $(".sure-create").on("click", function () {
+
+        var mchId = $(".create-mch-id").val();
+        var version = $(".create-version").val();
+        var groupId = $('.public-div').data("group");
+        // 如果没有选择任务
+        if ( !mchId) {
+            $(".create-mch-id-tip").css('display','block');
+            return false;
+        } else {
+            $(".create-mch-id-tip").css('display','none');
+        }
+
+        if (!version) {
+            $(".create-version-tip").css('display','block');
+            return false;
+        }else {
+            $(".create-version-tip").css('display','none');
+        }
+        // $(".taskCreateModel").modal('hide');
+
+        var data = {
+            mchId: mchId,
+            groupId: groupId,
+            version: version
+        };
+        $.ajax({
+            url: 'createTask',
+            data: JSON.stringify(data),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    $(".createResult-text").html("任务创建成功！");
+                    $(".taskCreateResultModel").modal('show');
+                } else {
+                    $(".createResult-text").html(result.msg);
+                    $(".taskCreateResultModel").modal('show');
+                }
+                $(".taskCreateResultModel .create-result").val(result.code);
+
+            }
+        });
+    });
+
+    // 创建任务完成重新加载页面
+    $(".taskCreateResultModel").on("hide.bs.modal", function () {
+        var result = $(".create-result").val();
+        if (result == 0 && result != "") {
+            var currUrl = window.location.search;
+            var newUrl = replaceUrlParamVal(currUrl, "taskIds", "");
+            window.location = newUrl;
+        }
     });
 
     // 指派完成重新加载页面
