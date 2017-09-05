@@ -25,9 +25,7 @@
                             <span class="icon"><i class="icon-th"></i></span>
                             <h5>战地任务列表</h5>
                             <div style="float: left;margin: 2px;">
-                                <button class="btn btn-small btn-success task-distribute">
-                                    <i class="icon-bullhorn"> 任务指派</i>
-                                </button>
+
                                 <span class="has-choosed">已选择：
                                     <strong class="has-choosed-task" style="color: red;margin: 0 3px;">
                                         <span style="cursor:pointer" class="badge badge-important">$!requestVo.taskIds.size()</span>
@@ -37,8 +35,11 @@
                                     </strong>条
                                 </span>
                             </div>
-                            <div style = "overflow: hidden" class="public-div" data-group="$!group.id" data-public="$!group.isPublic">
-                                <button class="btn btn-small btn-success task-create">
+                            <div style = "margin: 2px;" class="public-div" data-group="$!group.id" data-public="$!group.isPublic">
+                                <button style = "margin: 3px;" class="btn btn-small btn-success task-distribute">
+                                    <i class="icon-bullhorn"> 任务指派</i>
+                                </button>
+                                <button style = "margin: 3px;" class="btn btn-small btn-success task-create">
                                     <i class="icon-bullhorn"> 新建任务</i>
                                 </button>
                             </div>

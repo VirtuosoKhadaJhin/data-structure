@@ -15,6 +15,8 @@ import java.util.List;
  */
 public interface MerchantService {
 
+    Merchant getMerchant(Long id);
+
     List<Merchant> getIdNameList();
 
     List<Merchant> getAllIdNameList();
