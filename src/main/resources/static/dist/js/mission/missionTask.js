@@ -232,6 +232,8 @@ $(function () {
 
     // 新建任务弹框
     $(".task-create").on("click", function () {
+        $(".create-mch-id").val('');
+        $(".create-version").val('');
         $(".taskCreateModel").modal('show');
     });
 

@@ -287,7 +287,6 @@
                         <div class="search-select">
                             <label style="display: inline;margin-left: 6%">任务类型：</label>
                             <select style="width: 30%"  class="span11 create-version" name="version" >
-                                <option value>全部</option>
                                 <option value="拓新">拓新</option>
                                 <option value="维护">维护</option>
                                 <option value="团购">团购</option>
