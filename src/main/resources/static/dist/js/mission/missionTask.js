@@ -288,17 +288,57 @@ $(function () {
         });
     });
 
+    $(".create-mch-id").blur(function () {
+        var mchId = $(".create-mch-id").val();
+        if ( !mchId) {
+            $(".create-mch-id-tip").html('<strong style="color: red">*请输入商户ID</strong>');
+            $(".create-mch-id-tip").css('display','block');
+            return false;
+        } else {
+            var reg = /^[0-9]*$/ ;
+            if (!reg.test(mchId)) {
+                $(".create-mch-id-tip").html('<strong style="color: red">*请输入正确的商户ID</strong>');
+                $(".create-mch-id-tip").css('display','block');
+                return false;
+            }
+            $(".create-mch-id-tip").css('display','none');
+        }
+        $.ajax({
+            url: '/merchant/name?id='+mchId,
+            type: 'get',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    if (result.data) {
+                        $(".create-mch-id-tip").html('<strong style="">'+result.data.name+'</strong>');
+                        $(".create-mch-id-tip").css('display','block');
+                    }else {
+                        $(".create-mch-id-tip").html('<strong style="color: red">*商户不存在</strong>');
+                        $(".create-mch-id-tip").css('display','block');
+                    }
+                }
+            }
+        });
+    });
+
     // 确认新建任务
     $(".sure-create").on("click", function () {
 
         var mchId = $(".create-mch-id").val();
         var version = $(".create-version").val();
         var groupId = $('.public-div').data("group");
-        // 如果没有选择任务
+
         if ( !mchId) {
             $(".create-mch-id-tip").css('display','block');
             return false;
         } else {
+            var reg = /^[0-9]*$/ ;
+            if (!reg.test(mchId)) {
+                $(".create-mch-id-tip").html('<strong style="color: red">*请输入正确的商户ID</strong>');
+                $(".create-mch-id-tip").css('display','block');
+                return false;
+            }
             $(".create-mch-id-tip").css('display','none');
         }
 

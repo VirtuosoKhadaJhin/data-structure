@@ -248,6 +248,14 @@ public class MerchantController {
         return new APIResult(channel);
     }
 
+
+    @RequestMapping(path = "/name", method = RequestMethod.GET)
+    @ResponseBody
+    public APIResult<Merchant> getMerchantName(Long id) throws Exception {
+        Merchant merchant = merchantService.getMerchant(id);
+        return new APIResult(merchant);
+    }
+
     @RequestMapping(path = "export")
     public void export( String countryids,Merchant entity, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");

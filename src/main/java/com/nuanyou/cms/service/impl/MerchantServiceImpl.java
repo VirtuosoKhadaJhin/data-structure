@@ -78,6 +78,11 @@ public class MerchantServiceImpl implements MerchantService {
     private UserService userService;
 
     @Override
+    public  Merchant getMerchant(Long id) {
+        return merchantDao.findOne(id);
+    }
+
+    @Override
     public List<Merchant> getIdNameList() {
         return getIdNameList(true);
     }

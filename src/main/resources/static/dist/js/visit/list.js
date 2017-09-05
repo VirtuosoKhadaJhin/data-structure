@@ -12,6 +12,21 @@ $(document).ready(function () {
         }
     });
 
+    showLoading = function (a) {
+        $(a).mask('<img src="/dist/img/loading.gif"/>')
+    };
+
+    hideLoading = function (a) {
+        $(a).unmask();
+    };
+
+    $(".originalImg").load(function () {
+        hideLoading ($(".show_img"));
+    });
+
+    $(".originalImg").error(function () {
+    });
+
     $(".more_img").on("click", function () {
         openImgUrls(this.id);
     });
@@ -23,6 +38,7 @@ $(document).ready(function () {
     $(".left").on("click", function () {
         if (index > 1){
             //loading
+            showLoading($(".show_img"));
             $(".originalImg").attr('src',imgArray[index-2]) ;
             index = index - 1;
             $("#img_index").text(index);
@@ -30,6 +46,7 @@ $(document).ready(function () {
     });
     $(".right").on("click", function () {
         if (index < imgArray.length){
+            showLoading($(".show_img"));
             $(".originalImg").attr('src',imgArray[index]) ;
             index = index + 1;
             $("#img_index").text(index);
