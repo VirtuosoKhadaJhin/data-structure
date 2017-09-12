@@ -18,6 +18,10 @@ public class VisitQueryRequest {
 
     private Long mchId;
 
+    private Long districtId;
+
+    private Long visitTypeId;
+
     private String mchName;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
@@ -110,5 +114,21 @@ public class VisitQueryRequest {
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public Long getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(Long districtId) {
+        this.districtId = districtId;
+    }
+
+    public Long getVisitTypeId() {
+        return visitTypeId;
+    }
+
+    public void setVisitTypeId(Long visitTypeId) {
+        this.visitTypeId = visitTypeId;
     }
 }

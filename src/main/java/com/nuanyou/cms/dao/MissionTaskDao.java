@@ -27,4 +27,9 @@ public interface MissionTaskDao extends JpaRepository<MissionTask, Long>, JpaSpe
     void distributeTask(Long bdId, int status, Date distrDt, Date date, List<Long> taskIds);
 
     List<MissionTask> findByMerchant (Merchant merchant);
+
+    @Transactional
+    @Modifying
+    @Query("update MissionTask t set version=?3,updateDt=?1 where id in ?2")
+    void changeType(Date date, List<Long> taskIds,String type);
 }

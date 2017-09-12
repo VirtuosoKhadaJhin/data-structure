@@ -28,13 +28,16 @@
                         <table class="table table-bordered data-table dataTable">
                             <thead class="thead-class">
                             <tr class="thread-tr">
-                                <th class="th-op">BD名称</th>
-                                <th class="th-op">拜访时间</th>
-                                <th class="th-op">拜访门店</th>
-                                <th class="th-op">国家</th>
-                                <th class="th-op">城市</th>
-                                <th class="th-img">签到图</th>
-                                <th class="th-op">拜访记录</th>
+                                <th class="th-op" style="width: 2%">BD名称</th>
+                                <th class="th-op" style="width: 2%">拜访时间</th>
+                                <th class="th-op" style="width: 3%">拜访类型</th>
+                                <th class="th-op" style="width: 5%">拜访门店</th>
+                                <th class="th-op" style="width: 4%">当地名称</th>
+                                <th class="th-op" style="width: 2%">国家</th>
+                                <th class="th-op" style="width: 2%">城市</th>
+                                <th class="th-op" style="width: 3%">商圈</th>
+                                <th class="th-op" style="width: 1%">签到图</th>
+                                <th class="th-op" style="width: 12%">拜访记录</th>
                             </tr>
                             </thead>
                             <tbody class="tbody-list">
@@ -54,41 +57,23 @@
                                         <span>$!entity.user.chineseName</span>
                                     </td>
                                     <td class="task-type">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.createTime)</td>
+                                    <td>
+                                        #if($!entity.type)
+                                            <span>$!entity.type.name</span>
+                                        #end
+                                    </td>
                                     <td><span>$!entity.merchant.id</span>
                                         <br/>
                                         <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a></td>
+                                    <td>$!entity.merchant.kpname</td>
                                     <td>$!entity.merchant.district.country.name</td>
                                     <td>$!entity.merchant.district.city.name</td>
+                                    <td>$!entity.merchant.district.name</td>
                                     <td class="td-imgurl">
                                         #if($!entity.imgUrls.size()==0 || "$!entity.imgUrls"=="")
-                                            <label class="no-img-result">暂无签到图片</label>
+                                            <label class="no-img-result">0张</label>
                                         #else
-                                            #if($!entity.imgUrls.size()<=3)
-                                                <div class="imgurl-info">
-                                                    #foreach($imgUrl in $!entity.imgUrls)
-                                                        <div class="hovereffect">
-                                                            <a class="a_img" target="_blank" id="$!entity.imgUrls">
-                                                                <img class="img-polaroid td-img" src="$!imgUrl">
-                                                            </a>
-                                                        </div>
-                                                    #end
-                                                </div>
-                                            #else
-                                                <div class="imgurl-info">
-                                                    #foreach($imgUrl in $!entity.imgUrls)
-                                                        #if($velocityCount <=3)
-                                                            <div class="hovereffect">
-                                                                <a class="a_img" target="_blank" id="$!entity.imgUrls">
-                                                                    <img class="img-polaroid td-img"  src="$!imgUrl">
-                                                                </a>
-                                                            </div>
-                                                        #end
-                                                    #end
-                                                </div>
-                                                <span>----------------------------------------------------------</span>
-                                                <br>
-                                                <a class="more_img" id="$!entity.imgUrls" target="_blank">查看更多</a>
-                                            #end
+                                            <a class="more_img" id="$!entity.imgUrls" target="_blank">$!entity.imgUrls.size()张</a>
                                         #end
 
                                     </td>
@@ -138,6 +123,17 @@
                                     #end
                                 </select>
                             </div>
+
+                            <div class="search-select">
+                                <input type="hidden" value="$!requestVo.districtId" id="hidden_districtId"></input>
+                                <label>商圈</label>
+                                <select class="span11 select2 district" name="districtId" disabled>
+##                                    <option value>全部</option>
+##                                    #foreach($e in $!districts)
+##                                        <option value="$!e.id" #if($!requestVo.districtId == $!e.id) selected #end>$!e.name</option>
+##                                    #end
+                                </select>
+                            </div>
                             <div>
                                 <label>商户ID</label>
                                 <input type="text" name="mchId" class="span11" value="$!requestVo.mchId"  placeholder="">
@@ -146,7 +142,15 @@
                                 <label>商户名称</label>
                                 <input type="text" name="mchName" class="span11" value="$!requestVo.mchName" placeholder="">
                             </div>
-
+                            <div class="search-select">
+                                <label>拜访类型</label>
+                                <select class="span11 select2" name="visitTypeId">
+                                    <option value="">全部</option>
+                                    #foreach($e in $!visitTypes)
+                                        <option value="$!e.id" #if($!requestVo.visitTypeId == $!e.id) selected #end>$!e.name</option>
+                                    #end
+                                </select>
+                            </div>
                             <div class="search-select">
                                 <label>拜访开始时间：</label>
                                 <input type="text" name="startTime" class="span11 dateTimeFormatDay" value="$!requestVo.startTimeStr" text="$!requestVo.startTimeStr" placeholder="">
@@ -162,6 +166,10 @@
                             </button>
                             <button class="btn btn-warning search-reset">
                                 <i class="icon-refresh"> 重置</i>
+                            </button>
+                            <br><br>
+                            <button class="btn btn-warning export" style="width: 145px">
+                                <i style="font-family: FontAwesome; font-weight: normal;font-style: normal;"> 导出表格</i>
                             </button>
                         </form>
 

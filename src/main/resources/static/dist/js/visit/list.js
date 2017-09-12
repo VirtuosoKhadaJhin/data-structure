@@ -3,6 +3,8 @@
  */
 $(document).ready(function () {
     changeCity(false);
+    changeDistrict($(".select-city").val());
+
     $(".btn-primary").on("click", function () {
         var reg = /^[0-9]*$/ ;
         var mchId = $("input[name=mchId]").val();
@@ -10,6 +12,15 @@ $(document).ready(function () {
             alert("请输入正确的商户ID")
             return false;
         }
+        var form = $(document.forms[0]);
+        form.attr("action", "");
+        form.attr("target", "");
+    });
+    $(".export").on("click", function () {
+        var form = $(document.forms[0]);
+        form.attr("action", "export");
+        form.attr("target", "_blank");
+        form.submit();
     });
 
     showLoading = function (a) {
@@ -24,8 +35,11 @@ $(document).ready(function () {
         hideLoading ($(".show_img"));
     });
 
-    $(".originalImg").error(function () {
+    $(".originalImg").error(function (e) {
+        // hideLoading ($(".show_img"));
+        $(".originalImg").attr('src',"/dist/img/errorimg.jpg") ;
     });
+
 
     $(".more_img").on("click", function () {
         openImgUrls(this.id);
@@ -55,6 +69,7 @@ $(document).ready(function () {
     function openImgUrls(imgs) {
         imgs = imgs.replace("[","").replace("]","");
         imgArray = imgs.split(",");
+        showLoading($(".show_img"));
         $(".originalImg").attr('src',imgArray[0]) ;
         $("#img_index").text(1);
         $("#img_total").text(imgArray.length);
@@ -71,6 +86,10 @@ $(document).ready(function () {
 
     $(".select-country").on("change", function () {
         changeCity(true);
+        $(".district").html('<option value>全部</option>');
+    });
+    $(".select-city").on("change", function () {
+        changeDistrict($(".select-city").val());
     });
 
     function changeCity(isReset) {
@@ -92,6 +111,35 @@ $(document).ready(function () {
         if (isReset) {
             $("#city").val("");
         }
+    }
+
+    function changeDistrict(cityId) {
+
+        $.ajax({
+            url: cityId+'/districts',
+            data: null,
+            type: 'get',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    var html = '<option value>全部</option>';
+
+                    if (result.data) {
+                        result.data.forEach(function (dis) {
+                            if ($("#hidden_districtId").val()&&$("#hidden_districtId").val() == dis.id){
+                                html = html + '<option value="'+dis.id+'" selected>'+dis.name+'</option>';
+                            }else {
+                                html = html + '<option value="'+dis.id+'" >'+dis.name+'</option>';
+                            }
+
+                        });
+                    }
+                    $(".district").html(html);
+                    $(".district").removeAttr("disabled");
+                }
+            }
+        });
     }
 
 

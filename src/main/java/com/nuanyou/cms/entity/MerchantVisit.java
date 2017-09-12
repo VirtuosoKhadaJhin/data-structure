@@ -38,6 +38,9 @@ public class MerchantVisit {
     private String content;
     @Column(name = "operation")
     private Integer operation;
+    @ManyToOne
+    @JoinColumn(name="type")
+    private VisitType type;
 
     public Long getId() {
         return id;
@@ -118,4 +121,11 @@ public class MerchantVisit {
         return Lists.newArrayList(signImgUrls.split(","));
     }
 
+    public VisitType getType() {
+        return type;
+    }
+
+    public void setType(VisitType type) {
+        this.type = type;
+    }
 }
