@@ -319,15 +319,15 @@
                         <label>任务类型变更为：</label>
                         <div class="search-select bd-checkd-prev">
                             <div style="margin: 5px;margin-left: 20%;">
-                                <input style="margin-top: -5px;" task-type="拓新" name="bdCheckboxInput" class="bd-checkbox-input" type="checkbox">
+                                <input style="margin-top: -5px;" task-type="拓新" name="bdCheckboxInput" class="bd-checkbox-input" type="radio">
                                 <span class="bd-checkbox-label">拓新任务</span>
                             </div>
                             <div style="margin: 5px;margin-left: 20%;">
-                                <input style="margin-top: -5px;" task-type="维护" name="bdCheckboxInput" class="bd-checkbox-input" type="checkbox">
+                                <input style="margin-top: -5px;" task-type="维护" name="bdCheckboxInput" class="bd-checkbox-input" type="radio">
                                 <span class="bd-checkbox-label">维护任务</span>
                             </div>
                             <div style="margin: 5px;margin-left: 20%;">
-                                <input style="margin-top: -5px;" task-type="团购" name="bdCheckboxInput" class="bd-checkbox-input" type="checkbox">
+                                <input style="margin-top: -5px;" task-type="团购" name="bdCheckboxInput" class="bd-checkbox-input" type="radio">
                                 <span class="bd-checkbox-label">团购任务</span>
                             </div>
                         </div>

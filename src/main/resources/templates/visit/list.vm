@@ -56,7 +56,7 @@
                                     <td>
                                         <span>$!entity.user.chineseName</span>
                                     </td>
-                                    <td class="task-type">$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.createTime)</td>
+                                    <td class="task-type">$!dateFormatter.format("yyyy-MM-dd",$!entity.createTime)<br>$!dateFormatter.format("HH:mm:ss",$!entity.createTime)</td>
                                     <td>
                                         #if($!entity.type)
                                             <span>$!entity.type.name</span>
@@ -73,7 +73,7 @@
                                         #if($!entity.imgUrls.size()==0 || "$!entity.imgUrls"=="")
                                             <label class="no-img-result">0张</label>
                                         #else
-                                            <a class="more_img" id="$!entity.imgUrls" target="_blank">$!entity.imgUrls.size()张</a>
+                                            <a style="text-decoration: underline" class="more_img" id="$!entity.imgUrls" target="_blank">$!entity.imgUrls.size()张</a>
                                         #end
 
                                     </td>
@@ -96,6 +96,7 @@
                     </div>
                     <div class="widget-content">
                         <form class="form-horizontal search-form" method="get">
+                            <input type="hidden" class="span11" name="countryids" value="$!countryids" >
                             <div class="search-select">
                                 <label>BD名称</label>
                                 <select class="span11 select2" name="userId">
@@ -128,7 +129,7 @@
                                 <input type="hidden" value="$!requestVo.districtId" id="hidden_districtId"></input>
                                 <label>商圈</label>
                                 <select class="span11 select2 district" name="districtId" disabled>
-##                                    <option value>全部</option>
+                                    <option value>全部</option>
 ##                                    #foreach($e in $!districts)
 ##                                        <option value="$!e.id" #if($!requestVo.districtId == $!e.id) selected #end>$!e.name</option>
 ##                                    #end

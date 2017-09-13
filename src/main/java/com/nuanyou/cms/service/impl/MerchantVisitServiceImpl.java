@@ -8,7 +8,10 @@ import com.nuanyou.cms.entity.enums.MerchantCooperationStatus;
 import com.nuanyou.cms.model.VisitQueryRequest;
 import com.nuanyou.cms.service.MerchantVisitService;
 import com.nuanyou.cms.service.UserService;
+import com.nuanyou.cms.sso.client.util.CommonUtils;
+import com.nuanyou.cms.util.DateUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +24,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,8 +47,13 @@ public class MerchantVisitServiceImpl implements MerchantVisitService {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<Predicate>();
-                if (countryIds != null && countryIds.size() > 0) {
-                    predicate.add(root.get("merchant").get("district").get("country").get("id").in(countryIds));
+                List<Long> cids =  CommonUtils.StringToList(param.getCountryids());
+                if (cids != null && cids.size() > 0) {
+                    predicate.add(root.get("merchant").get("district").get("country").get("id").in(cids));
+                }else {
+                    if (countryIds != null && countryIds.size() > 0) {
+                        predicate.add(root.get("merchant").get("district").get("country").get("id").in(countryIds));
+                    }
                 }
                 if (param.getUserId() != null) {
                     predicate.add(cb.equal(root.get("user").get("id"), param.getUserId()));
@@ -68,10 +77,12 @@ public class MerchantVisitServiceImpl implements MerchantVisitService {
                     predicate.add(cb.equal(root.get("type"), param.getVisitTypeId()));
                 }
                 if (param.getStartTime()  != null) {
-                    predicate.add(cb.greaterThanOrEqualTo(root.get("createTime"), param.getStartTime()));
+                    Pair<Date, Date> dayStartEndTime = DateUtils.getDayStartEndTime(param.getStartTime());
+                    predicate.add(cb.greaterThanOrEqualTo(root.get("createTime"), dayStartEndTime.getLeft()));
                 }
                 if (param.getEndTime()  != null) {
-                    predicate.add(cb.lessThanOrEqualTo(root.get("createTime"), param.getEndTime()));
+                    Pair<Date, Date> dayStartEndTime = DateUtils.getDayStartEndTime(param.getEndTime());
+                    predicate.add(cb.lessThanOrEqualTo(root.get("createTime"), dayStartEndTime.getRight()));
                 }
                 Predicate[] arrays = new Predicate[predicate.size()];
 
