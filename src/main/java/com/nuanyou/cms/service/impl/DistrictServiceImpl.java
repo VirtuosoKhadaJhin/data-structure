@@ -120,14 +120,14 @@ public class DistrictServiceImpl implements DistrictService {
     public List<District> getIdNameList() {
         List<Long> countryIds = userService.findUserCountryId();
         if (countryIds != null && countryIds.size() > 0)
-            return this.districtDao.getIdNameList(true,countryIds);
+            return this.districtDao.getIdNameList(countryIds);
         else
-            return this.districtDao.getIdNameList(true);
+            return this.districtDao.getIdNameList();
     }
 
     @Override
     public List<District> getIdNameList(Long countryId) {
-        return this.districtDao.getIdNameList(true,countryId);
+        return this.districtDao.getIdNameList(countryId);
     }
 
     @Override
