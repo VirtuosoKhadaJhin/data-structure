@@ -25,10 +25,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -81,6 +83,11 @@ public class VisitController {
         }
         List<VisitType> visitTypes = visitService.findVisitTypes();
         model.addAttribute("visitTypes", visitTypes);
+        List<Long> countryids = new ArrayList<>();
+        for (Country country : countries) {
+            countryids.add(country.getId());
+        }
+        model.addAttribute("countryids", countryids);
         model.addAttribute("countries", countries);
         model.addAttribute("cities", cities);
         model.addAttribute("districts", districts);
@@ -98,12 +105,14 @@ public class VisitController {
     }
 
     @RequestMapping(path = "export")
-    public void export( VisitQueryRequest request, HttpServletResponse response) throws IOException {
+    public void export( VisitQueryRequest request,HttpServletRequest req, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=" + "UTF-8");
         response.setHeader("Pragma", "public");
         response.setHeader("Cache-Control", "max-age=30");
-        response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("拜访记录" + DateFormatUtils.format(new Date(), "yyMMdd") + ".xlsx", "UTF-8"));
+        String fileName = "拜访记录" + DateFormatUtils.format(new Date(), "yyMMdd");
+        fileName = processFileName(req,fileName);
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
 
         Pageable pageable = new PageRequest(0, 10000, Sort.Direction.DESC, "createTime");
 
@@ -123,6 +132,33 @@ public class VisitController {
 
         os.flush();
         os.close();
+    }
+
+    /**
+     *
+     * @Title: processFileName
+     *
+     * @Description: ie,chrom,firfox下处理文件名显示乱码
+     */
+    public static String processFileName(HttpServletRequest request, String fileNames) {
+        String codedfilename = null;
+        try {
+            String agent = request.getHeader("USER-AGENT");
+            if (null != agent && -1 != agent.indexOf("MSIE") || null != agent
+                    && -1 != agent.indexOf("Trident")) {// ie
+
+                String name = java.net.URLEncoder.encode(fileNames, "UTF8");
+
+                codedfilename = name;
+            } else if (null != agent && -1 != agent.indexOf("Mozilla")) {// 火狐,chrome等
+
+
+                codedfilename = new String(fileNames.getBytes("UTF-8"), "iso-8859-1");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return codedfilename;
     }
 
 }

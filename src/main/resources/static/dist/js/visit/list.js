@@ -3,7 +3,7 @@
  */
 $(document).ready(function () {
     changeCity(false);
-    changeDistrict($(".select-city").val());
+
 
     $(".btn-primary").on("click", function () {
         var reg = /^[0-9]*$/ ;
