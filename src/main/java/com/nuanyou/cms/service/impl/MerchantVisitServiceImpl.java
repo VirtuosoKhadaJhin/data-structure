@@ -1,7 +1,9 @@
 package com.nuanyou.cms.service.impl;
 
 import com.nuanyou.cms.dao.MerchantVisitDao;
+import com.nuanyou.cms.dao.VisitTypeDao;
 import com.nuanyou.cms.entity.MerchantVisit;
+import com.nuanyou.cms.entity.VisitType;
 import com.nuanyou.cms.entity.enums.MerchantCooperationStatus;
 import com.nuanyou.cms.model.VisitQueryRequest;
 import com.nuanyou.cms.service.MerchantVisitService;
@@ -31,6 +33,8 @@ public class MerchantVisitServiceImpl implements MerchantVisitService {
     private UserService userService;
     @Autowired
     private MerchantVisitDao visitDao;
+    @Autowired
+    private VisitTypeDao visitTypeDao;
 
     @Override
     public Page<MerchantVisit> queryMerchantVisit(final VisitQueryRequest param,Pageable pageable) {
@@ -57,6 +61,12 @@ public class MerchantVisitServiceImpl implements MerchantVisitService {
                 if (param.getCityId() != null) {
                     predicate.add(cb.equal(root.get("merchant").get("district").get("city").get("id"), param.getCityId()));
                 }
+                if (param.getDistrictId() != null) {
+                    predicate.add(cb.equal(root.get("merchant").get("district").get("id"), param.getDistrictId()));
+                }
+                if (param.getVisitTypeId() != null) {
+                    predicate.add(cb.equal(root.get("type"), param.getVisitTypeId()));
+                }
                 if (param.getStartTime()  != null) {
                     predicate.add(cb.greaterThanOrEqualTo(root.get("createTime"), param.getStartTime()));
                 }
@@ -69,5 +79,10 @@ public class MerchantVisitServiceImpl implements MerchantVisitService {
             }
         };
         return visitDao.findAll(specification,pageable);
+    }
+
+    @Override
+    public List<VisitType> findVisitTypes(){
+        return visitTypeDao.findAll();
     }
 }

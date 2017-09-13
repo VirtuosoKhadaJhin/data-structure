@@ -55,6 +55,8 @@ public class MissionTaskVo {
 
     private Boolean isPublic;
 
+    private Date visitDt;
+
     public Long getId() {
         return id;
     }
@@ -213,6 +215,14 @@ public class MissionTaskVo {
 
     public void setIsPublic(Boolean aPublic) {
         isPublic = aPublic;
+    }
+
+    public Date getVisitDt() {
+        return visitDt;
+    }
+
+    public void setVisitDt(Date visitDt) {
+        this.visitDt = visitDt;
     }
 
     public boolean getIsExpiredDistributed() {

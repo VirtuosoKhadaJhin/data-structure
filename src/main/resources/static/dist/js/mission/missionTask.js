@@ -237,6 +237,21 @@ $(function () {
         $(".taskCreateModel").modal('show');
     });
 
+    // 类型变更弹框
+    $(".task-type-change").on("click", function () {
+        $(".datetime-distrDt").val(new Date().Format("yyyy-MM-dd"));
+        var hideValues = $(".hide-checked-taskIds").val();
+        var checkedValues = hideValues.split(",")
+        if (hideValues == null || hideValues == "") {
+            $(".typeChangeResult-text").html("<strong style='color: red'>请选择任务！</strong>");
+            $(".taskTypeChangeResultModel").modal('show');
+        } else {
+            $(".taskTypeChangeModel").modal('show');
+        }
+        $(".task-type-change-count").text(checkedValues.length);
+        $(".taskTypeChangeModel .modal-body .bd-checkbox-input").removeAttr("checked");
+    });
+
     //弹窗初始化数据
     $(".taskDistributeModel").on("show.bs.modal", function () {
         var taskIds = $(".hide-checked-taskIds").val();
@@ -246,6 +261,8 @@ $(function () {
             $(".task-distribute-count").val(taskIds.toString());
         }
     });
+
+
 
     // 确认指派任务
     $(".sure-distribute").on("click", function () {
@@ -286,6 +303,47 @@ $(function () {
                     $(".taskDistributeResultModel").modal('show');
                 }
                 $(".taskDistributeResultModel .audit-result").val(result.code);
+            }
+        });
+    });
+
+    //确认变更类型
+    $(".sure-type-change").on("click", function () {
+        var taskIds = $(".hide-checked-taskIds").val().split(",");
+        var taskType = $("input[name='bdCheckboxInput']:checked").attr("task-type");
+
+        $(".taskTypeChangeModel").modal('hide');
+        $(".typeChangeResult-text").text("任务类型变更成功！");
+
+        // 如果没有选择任务
+        if (taskIds.length == 0) {
+            $(".typeChangeResult-text").html("<strong style='color: red'>请选择任务！</strong>");
+            return false;
+        } else if (typeof(taskType) == "undefined") {
+            $(".typeChangeResult-text").html("<strong style='color: red'>请选择任务类型！</strong>");
+            $(".taskTypeChangeResultModel").modal('show');
+            return false;
+        }
+
+        var data = {
+            taskType: taskType,
+            taskIds: taskIds
+        };
+        $.ajax({
+            url: 'changeType',
+            data: JSON.stringify(data),
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.code == 0) {
+                    $(".typeChangeResult-text").html("任务类型变更成功！");
+                    $(".taskTypeChangeResultModel").modal('show');
+                } else {
+                    $(".distributeResult-text").html("任务类型变更失败！");
+                    $(".taskTypeChangeResultModel").modal('show');
+                }
+                $(".taskTypeChangeResultModel .change-result").val(result.code);
             }
         });
     });
@@ -390,6 +448,16 @@ $(function () {
     // 指派完成重新加载页面
     $(".taskDistributeResultModel").on("hide.bs.modal", function () {
         var result = $(".audit-result").val();
+        if (result == 0 && result != "") {
+            var currUrl = window.location.search;
+            var newUrl = replaceUrlParamVal(currUrl, "taskIds", "");
+            window.location = newUrl;
+        }
+    });
+
+    // 指派完成重新加载页面
+    $(".taskTypeChangeResultModel").on("hide.bs.modal", function () {
+        var result = $(".change-result").val();
         if (result == 0 && result != "") {
             var currUrl = window.location.search;
             var newUrl = replaceUrlParamVal(currUrl, "taskIds", "");

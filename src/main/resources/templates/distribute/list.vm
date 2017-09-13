@@ -36,7 +36,10 @@
                                 </span>
                             </div>
                             <div style = "margin: 2px;" class="public-div" data-group="$!group.id" data-public="$!group.isPublic">
-                                <button style = "margin: 3px;" class="btn btn-small btn-success task-distribute">
+                                <button style = "margin: 3px;" class="btn btn-small btn-success task-type-change">
+                                    <i class="icon-bullhorn"> 类型变更</i>
+                                </button>
+                                <button style = "margin: 3px;float: none;" class="btn btn-small btn-success task-distribute">
                                     <i class="icon-bullhorn"> 任务指派</i>
                                 </button>
                                 <button style = "margin: 3px;" class="btn btn-small btn-success task-create">
@@ -55,12 +58,13 @@
                                 </th>
                                 <th class="th-op">任务类型</th>
                                 <th class="th-op">商户信息</th>
+                                <th class="th-op">当地名称</th>
                                 <th class="th-op">商圈</th>
                                 <th class="th-op">BD名称</th>
                                 <th class="th-op">状态</th>
                                 <th class="th-op">驳回原因</th>
                                 <th class="th-op">指派时间</th>
-                                <th class="th-op">完成时间</th>
+                                <th class="th-op">拜访时间</th>
                                 <th class="th-op">审核时间</th>
                             </tr>
                             </thead>
@@ -93,6 +97,7 @@
                                         <br/>
                                         <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a>
                                     </td>
+                                    <td>$!entity.merchant.kpname</td>
                                     <td class="merchant-district">$!entity.merchant.district.name</td>
                                     <td class="task-cnName">$!entity.bdUser.chineseName</td>
                                     <td class="td-task-status" data-isExpired="$!entity.isExpiredDistributed" data-status="$!entity.status">
@@ -104,7 +109,7 @@
                                     </td>
                                     <td class="td-bz" title="$!entity.remark">$!entity.remark</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.distrDt)</td>
-                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishDt)</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm",$!entity.visitDt)</td>
                                     <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditDt)</td>
                                 </tr>
                                 #end
@@ -189,34 +194,34 @@
 
                             #if($!requestVo.status.key==1 || $!requestVo.status.key==2 || "$!requestVo.status" == "")
                                 <div class="search-select task-distrdt" style="display:block">
-                                    <label>指派时间：</label>
-                                    <input type="text" name="distrDt" class="span11 dateTimeFormatDay" value="$!requestVo.distrDtStr" text="$!requestVo.distrDtStr" placeholder="指派时间">
+                                    <label>指派日期：</label>
+                                    <input type="text" name="distrDt" class="span11 dateTimeFormatDay" value="$!requestVo.distrDtStr" text="$!requestVo.distrDtStr" placeholder="指派日期">
                                 </div> #else
                                 <div class="search-select task-distrdt" style="display:none">
-                                    <label>指派时间：</label>
-                                    <input type="text" name="distrDt" class="span11 dateTimeFormatDay" value="$!requestVo.distrDtStr" text="$!requestVo.distrDtStr" placeholder="指派时间">
+                                    <label>指派日期：</label>
+                                    <input type="text" name="distrDt" class="span11 dateTimeFormatDay" value="$!requestVo.distrDtStr" text="$!requestVo.distrDtStr" placeholder="指派日期">
                                 </div>
                             #end
                             #if($!requestVo.status.key==3 || $!requestVo.status.key==4 || "$!requestVo.status" == "")
                                 <div class="search-select task-auditdt" style="display:block">
-                                    <label>审核时间：</label>
-                                    <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
+                                    <label>审核日期：</label>
+                                    <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核日期">
                                 </div>
                             #else
                                 <div class="search-select task-auditdt" style="display:none">
-                                    <label>审核时间：</label>
-                                    <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核时间">
+                                    <label>审核日期：</label>
+                                    <input type="text" name="auditDt" class="span11 dateTimeFormatDay" value="$!requestVo.auditDtStr" text="$!requestVo.auditDtStr" placeholder="审核日期">
                                 </div>
                             #end
                             #if($!requestVo.status.key==2 || "$!requestVo.status"== "")
                                 <div class="search-select task-finishdt" style="display:block">
-                                    <label>完成时间：</label>
-                                    <input type="text" name="finishDt" id="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="完成时间">
+                                    <label>拜访日期：</label>
+                                    <input type="text" name="finishDt" id="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="拜访日期">
                                 </div>
                             #else
                                 <div class="search-select task-finishdt" style="display:none">
-                                    <label>完成时间：</label>
-                                    <input type="text" name="finishDt" id="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="完成时间">
+                                    <label>拜访日期：</label>
+                                    <input type="text" name="finishDt" id="finishDt" class="span11 dateTimeFormatDay" value="$!requestVo.finishDtStr" text="$!requestVo.finishDtStr" placeholder="拜访日期">
                                 </div>
                             #end
                             <div class="btn-group">
@@ -300,6 +305,39 @@
                     </div>
                 </div>
 
+                <!-- 类型变更弹窗 -->
+                <div class="modal hide fade taskTypeChangeModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">任务指派
+                            <label class="has-choosed" style="display: inline;float: none;">已选择：
+                                <strong class="task-type-change-count" style="color: red;margin: 0 3px;">$!requestVo.taskIds.size()</strong>条
+                            </label>
+                        </h3>
+                    </div>
+                    <div class="modal-body">
+                        <label>任务类型变更为：</label>
+                        <div class="search-select bd-checkd-prev">
+                            <div style="margin: 5px;margin-left: 20%;">
+                                <input style="margin-top: -5px;" task-type="拓新" name="bdCheckboxInput" class="bd-checkbox-input" type="checkbox">
+                                <span class="bd-checkbox-label">拓新任务</span>
+                            </div>
+                            <div style="margin: 5px;margin-left: 20%;">
+                                <input style="margin-top: -5px;" task-type="维护" name="bdCheckboxInput" class="bd-checkbox-input" type="checkbox">
+                                <span class="bd-checkbox-label">维护任务</span>
+                            </div>
+                            <div style="margin: 5px;margin-left: 20%;">
+                                <input style="margin-top: -5px;" task-type="团购" name="bdCheckboxInput" class="bd-checkbox-input" type="checkbox">
+                                <span class="bd-checkbox-label">团购任务</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary sure-type-change">确认</button>
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                    </div>
+                </div>
+
                 <!-- 是否可见 提示框 -->
                 <div class="modal hide fade publicSwichModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
                     <div class="modal-header">
@@ -342,6 +380,21 @@
                         <p class="distributeResult-text"></p>
                     </div>
                     <input type="hidden" class="audit-result"/>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                    </div>
+                </div>
+
+                <!-- 类型变更结果弹窗 -->
+                <div class="modal hide fade taskTypeChangeResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">提示</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p class="typeChangeResult-text"></p>
+                    </div>
+                    <input type="hidden" class="change-result"/>
                     <div class="modal-footer">
                         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
                     </div>

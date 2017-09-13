@@ -45,4 +45,11 @@ public interface MissionTaskService {
      */
     void createTask(MissionCreateParamVo vo);
 
+    /**
+     * 任务类型变更
+     *
+     * @param vo
+     */
+    void changeType(TaskTypeChangeVo vo);
+
 }

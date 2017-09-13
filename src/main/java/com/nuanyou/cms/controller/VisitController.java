@@ -1,11 +1,18 @@
 package com.nuanyou.cms.controller;
 
+import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.mission.MissionGroup;
+import com.nuanyou.cms.model.DistrictVo;
+import com.nuanyou.cms.model.MerchantQueryParam;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.model.VisitQueryRequest;
 import com.nuanyou.cms.model.mission.MissionBdMerchantTrack;
 import com.nuanyou.cms.service.*;
+import com.nuanyou.cms.sso.client.util.CommonUtils;
+import com.nuanyou.cms.util.ExcelUtil;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,9 +20,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -37,6 +52,9 @@ public class VisitController {
     @Autowired
     private CityService cityService;
 
+    @Autowired
+    private DistrictService districtService;
+
     /**
      * 查看拜访记录
      *
@@ -53,18 +71,58 @@ public class VisitController {
         Page<MerchantVisit> visits = visitService.queryMerchantVisit(request,pageable);
 
         List<City> cities;
+        List<District> districts ;
         if (countries != null && countries.size() == 1) {
             cities = cityService.findCityByCountryId(countries.get(0).getId());
+            districts = districtService.getIdNameList(countries.get(0).getId());
         }else {
             cities = cityService.findAllCities();
+            districts = districtService.getIdNameList();
         }
+        List<VisitType> visitTypes = visitService.findVisitTypes();
+        model.addAttribute("visitTypes", visitTypes);
         model.addAttribute("countries", countries);
         model.addAttribute("cities", cities);
+        model.addAttribute("districts", districts);
         model.addAttribute("page", visits);
         model.addAttribute("requestVo", request);
         model.addAttribute("bdUsers", bdUsers);
         return "visit/list";
     }
 
+    @RequestMapping("/{cityId}/districts")
+    @ResponseBody
+    public APIResult<List<DistrictVo>> getDistrictsByCityId(@PathVariable Long cityId){
+        List<DistrictVo> districtVos = districtService.findByCity(cityId);
+        return new APIResult(districtVos);
+    }
+
+    @RequestMapping(path = "export")
+    public void export( VisitQueryRequest request, HttpServletResponse response) throws IOException {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/csv; charset=" + "UTF-8");
+        response.setHeader("Pragma", "public");
+        response.setHeader("Cache-Control", "max-age=30");
+        response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("拜访记录" + DateFormatUtils.format(new Date(), "yyMMdd") + ".xlsx", "UTF-8"));
+
+        Pageable pageable = new PageRequest(0, 10000, Sort.Direction.DESC, "createTime");
+
+        Page<MerchantVisit> visits = visitService.queryMerchantVisit(request,pageable);
+
+        LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
+        propertyHeaderMap.put("user.chineseName", "BD名称");
+        propertyHeaderMap.put("createTime", "拜访时间");
+        propertyHeaderMap.put("merchant.kpname", "拜访门店");
+        propertyHeaderMap.put("merchant.district.country.name", "国家");
+        propertyHeaderMap.put("merchant.district.city.name", "城市");
+        propertyHeaderMap.put("note", "拜访记录");
+
+        XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, visits.getContent());
+        OutputStream os = response.getOutputStream();
+        ex.write(os);
+
+        os.flush();
+        os.close();
+    }
 
 }

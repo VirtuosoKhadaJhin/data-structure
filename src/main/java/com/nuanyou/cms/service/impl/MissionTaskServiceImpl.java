@@ -105,9 +105,10 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                     predicate.add(cb.equal(root.get("merchant").get("district").get("city").get("id"), requestVo.getCity()));
                 }
                 if (requestVo.getFinishDt() != null) {
+                    //edit finishDt to by young at 2017-09-12
                     Pair<Date, Date> dayStartEndTime = DateUtils.getDayStartEndTime(requestVo.getFinishDt());
-                    predicate.add(cb.greaterThanOrEqualTo(root.get("finishDt").as(Date.class), dayStartEndTime.getLeft()));
-                    predicate.add(cb.lessThanOrEqualTo(root.get("finishDt").as(Date.class), dayStartEndTime.getRight()));
+                    predicate.add(cb.greaterThanOrEqualTo(root.get("visitDt").as(Date.class), dayStartEndTime.getLeft()));
+                    predicate.add(cb.lessThanOrEqualTo(root.get("visitDt").as(Date.class), dayStartEndTime.getRight()));
                 }
                 if (requestVo.getAuditDt() != null) {
                     Pair<Date, Date> dayStartEndTime = DateUtils.getDayStartEndTime(requestVo.getAuditDt());
@@ -147,6 +148,14 @@ public class MissionTaskServiceImpl implements MissionTaskService {
             throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
         }
         missionTaskDao.distributeTask(vo.getBdId(), MissionTaskStatus.UN_FINISH.getKey(), vo.getDistrDt(), new Date(), vo.getTaskIds());
+    }
+
+    @Override
+    public void changeType(TaskTypeChangeVo vo){
+        if (vo.getTaskType() == null || vo.getTaskIds() == null) {
+            throw new APIException(ResultCodes.MissingParameter, ResultCodes.MissingParameter.getMessage());
+        }
+        missionTaskDao.changeType(new Date(),vo.getTaskIds(),vo.getTaskType());
     }
 
     @Override

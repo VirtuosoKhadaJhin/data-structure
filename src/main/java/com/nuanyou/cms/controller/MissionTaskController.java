@@ -187,6 +187,19 @@ public class MissionTaskController {
     }
 
     /**
+     * 任务类型变更
+     *
+     * @param vo
+     * @return
+     */
+    @RequestMapping("changeType")
+    @ResponseBody
+    public APIResult changeType(@RequestBody TaskTypeChangeVo vo) {
+        missionTaskService.changeType(vo);
+        return new APIResult(ResultCodes.Success);
+    }
+
+    /**
      * 新建任務
      *
      * @param vo

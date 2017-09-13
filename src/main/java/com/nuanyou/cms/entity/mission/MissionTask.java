@@ -83,6 +83,11 @@ public class MissionTask {
     @Column(name = "delflag")
     private Boolean delFlag = false;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @Column(name = "visitdt", nullable = true)
+    private Date visitDt;
+
     public Long getId() {
         return id;
     }
@@ -217,5 +222,13 @@ public class MissionTask {
 
     public void setDelFlag(Boolean delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public Date getVisitDt() {
+        return visitDt;
+    }
+
+    public void setVisitDt(Date visitDt) {
+        this.visitDt = visitDt;
     }
 }
