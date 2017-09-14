@@ -15,9 +15,9 @@ import java.util.List;
 public interface CityDao extends JpaRepository<City, Long>, JpaSpecificationExecutor {
 
 
-    @Query(value = "select new City(t.id,t.name) from City t where t.country.id=:id and t.display = true")
+    @Query(value = "select new City(t.id,t.name) from City t where t.country.id=:id")
     List<City> findIdNameList(@Param("id") Long id);
 
-    @Query(value = "select t from City t where t.display = true")
+    @Query(value = "select t from City t ")
     List<City> findAllCities();
 }

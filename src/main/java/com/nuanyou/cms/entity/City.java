@@ -22,7 +22,7 @@ public class City {
     private String icon;
     private Integer sort;
     private String code;
-    private Boolean display = true;
+    private Boolean display;
     private Country country;
     private Date updatetime;
     private Date createtime;
