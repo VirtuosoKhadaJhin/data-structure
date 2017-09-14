@@ -167,7 +167,7 @@ public class ItemServiceImpl implements ItemService {
                 if (countryIds != null && countryIds.size() > 0) {
                     predicate.add(root.get("merchant").get("district").get("country").get("id").in(countryIds));
                 }
-                if (entity.getName() != null) {
+                if (StringUtils.isNotBlank(entity.getName())) {
                     Predicate p = cb.equal(root.get("name"), entity.getName());
                     predicate.add(p);
                 }
