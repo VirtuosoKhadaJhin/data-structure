@@ -51,11 +51,6 @@ public class CityServiceImpl implements CityService {
                 if (StringUtils.isNotEmpty(entity.getName())) {
                     predicate.add(cb.like(root.get("name"), "%"+entity.getName()+"%"));
                 }
-                if (entity.getDisplay() != null) {
-                    predicate.add(cb.equal(root.get("display"), entity.getDisplay()));
-                }else {
-                    predicate.add(cb.equal(root.get("display"), true));
-                }
                 Predicate[] arrays = new Predicate[predicate.size()];
 
                 return query.where(predicate.toArray(arrays)).getRestriction();

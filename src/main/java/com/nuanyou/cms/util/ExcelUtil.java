@@ -124,6 +124,7 @@ public class ExcelUtil {
         style.setBorderTop(XSSFCellStyle.BORDER_THIN);
         style.setAlignment(XSSFCellStyle.ALIGN_CENTER);
         style.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
+        style.setWrapText(true);
         // 生成另一个字体
         XSSFFont font = (XSSFFont) workbook.createFont();
         font.setBoldweight(XSSFFont.BOLDWEIGHT_NORMAL);
