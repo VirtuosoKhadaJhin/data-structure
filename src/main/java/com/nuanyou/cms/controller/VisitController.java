@@ -121,9 +121,13 @@ public class VisitController {
         LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
         propertyHeaderMap.put("user.chineseName", "BD名称");
         propertyHeaderMap.put("createTime", "拜访时间");
-        propertyHeaderMap.put("merchant.kpname", "拜访门店");
+        propertyHeaderMap.put("type.name", "拜访类型");
+        propertyHeaderMap.put("merchant.id", "门店ID");
+        propertyHeaderMap.put("merchant.name", "拜访门店");
+        propertyHeaderMap.put("merchant.kpname", "当地名称");
         propertyHeaderMap.put("merchant.district.country.name", "国家");
         propertyHeaderMap.put("merchant.district.city.name", "城市");
+        propertyHeaderMap.put("merchant.district.name", "商圈");
         propertyHeaderMap.put("note", "拜访记录");
 
         XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, visits.getContent());

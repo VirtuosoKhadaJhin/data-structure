@@ -3,7 +3,7 @@
  */
 $(document).ready(function () {
     changeCity(false);
-
+    changeDistrict($(".select-city").val());
 
     $(".btn-primary").on("click", function () {
         var reg = /^[0-9]*$/ ;
@@ -79,6 +79,8 @@ $(document).ready(function () {
 
     // 搜索框重置
     $(".search-reset").click(function () {
+        $(".search-form").attr("action", "");
+        $(".search-form").attr("target", "");
         $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
         $(".search-form").find(".select2").val('').trigger('change');
     });
@@ -114,6 +116,10 @@ $(document).ready(function () {
     }
 
     function changeDistrict(cityId) {
+        if(!cityId) {
+            $(".district").attr("disabled", "disabled");
+            return false;
+        }
 
         $.ajax({
             url: cityId+'/districts',

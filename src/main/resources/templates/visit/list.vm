@@ -29,14 +29,14 @@
                             <thead class="thead-class">
                             <tr class="thread-tr">
                                 <th class="th-op" style="width: 2%">BD名称</th>
-                                <th class="th-op" style="width: 2%">拜访时间</th>
+                                <th class="th-op" style="width: 4%">拜访时间</th>
                                 <th class="th-op" style="width: 3%">拜访类型</th>
                                 <th class="th-op" style="width: 5%">拜访门店</th>
                                 <th class="th-op" style="width: 4%">当地名称</th>
                                 <th class="th-op" style="width: 2%">国家</th>
                                 <th class="th-op" style="width: 2%">城市</th>
                                 <th class="th-op" style="width: 3%">商圈</th>
-                                <th class="th-op" style="width: 1%">签到图</th>
+                                <th class="th-op" style="width: 2%">签到图</th>
                                 <th class="th-op" style="width: 12%">拜访记录</th>
                             </tr>
                             </thead>
