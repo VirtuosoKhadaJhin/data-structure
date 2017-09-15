@@ -262,7 +262,6 @@
             return false;
         }
 
-        keyCodeRealTime();
         var checkResult = checkRequiredParams();
         if (!checkResult) {
             return false;
