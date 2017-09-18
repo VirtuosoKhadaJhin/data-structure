@@ -77,6 +77,8 @@ public class Order {
     private Coupon coupon;
     private Long countryid;
 
+    @Column(name = "settlement", nullable = false, length = 25)
+    private String settlement;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -651,6 +653,14 @@ public class Order {
 
     public void setMchlocalereduce(BigDecimal mchlocalereduce) {
         this.mchlocalereduce = mchlocalereduce;
+    }
+
+    public String getSettlement() {
+        return settlement;
+    }
+
+    public void setSettlement(String settlement) {
+        this.settlement = settlement;
     }
 
     public Long getCountryid() {

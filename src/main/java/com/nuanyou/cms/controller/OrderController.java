@@ -360,6 +360,7 @@ public class OrderController {
         propertyHeaderMap.put("okppriceF", "原价(本地)");
         propertyHeaderMap.put("payableF", "总价(人民币)");
         propertyHeaderMap.put("opriceF", "原价(人民币)");
+        propertyHeaderMap.put("settlement", "清分机构");
         XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, list);
         OutputStream os = response.getOutputStream();
         ex.write(os);
