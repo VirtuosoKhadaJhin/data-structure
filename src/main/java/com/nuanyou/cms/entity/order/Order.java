@@ -655,6 +655,14 @@ public class Order {
         this.mchlocalereduce = mchlocalereduce;
     }
 
+    public String getSettlement() {
+        return settlement;
+    }
+
+    public void setSettlement(String settlement) {
+        this.settlement = settlement;
+    }
+
     public Long getCountryid() {
         return countryid;
     }
