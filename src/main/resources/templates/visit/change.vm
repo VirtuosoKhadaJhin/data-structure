@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>暖游 后台管理系统 菜单管理</title>
+    #include("common/css-support.vm")
+    #include("common/js-support.vm")
+</head>
+<body>
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb">
+            <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+            <a href="list" class="tip-bottom" data-original-title="">订单管理</a>
+            <a href="javascipt:void(0)" class="tip-bottom" data-original-title="">编辑/查看</a>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="">
+                    <div class="widget-box">
+                        <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                            <h5>编辑记录</h5>
+                        </div>
+                        <div class="widget-content nopadding">
+                            <div class="form-horizontal">
+                                <div class="control-group">
+                                   <table style="border-collapse: separate;border-spacing: 15px;">
+                                       <tr>
+                                           <td style="color: red" colspan="4">*点击红字查看变更详情</td>
+                                       </tr>
+                                       <tr>
+                                           <td #if($!change.localName.change) class="change" data-type="text" data-multi="false"  data-originalvalue="$!change.localName.originalValue" data-currentvalue="$!change.localName.currentValue" #end style="width: 10%; #if($!change.localName.change) color :red;cursor:pointer; #end">本地名称</td><td style="width: 25%">$!change.localName.currentValue</td>
+                                           <td #if($!change.districtName.change) class="change" data-type="text" data-multi="false"  data-originalvalue="$!change.districtName.originalValue" data-currentvalue="$!change.districtName.currentValue" #end style="width: 10%; #if($!change.districtName.change) color :red;cursor:pointer; #end">商圈信息</td><td style="width: 25%">$!change.districtName.currentValue</td>
+                                       </tr>
+                                       <tr>
+                                           <td #if($!change.localAddress.change) class="change" data-type="text" data-multi="false"  data-originalvalue="$!change.localAddress.originalValue" data-currentvalue="$!change.localAddress.currentValue" #end style="width: 10%; #if($!change.localAddress.change) color :red ;cursor:pointer;#end">本地地址</td><td>$!change.localAddress.currentValue</td>
+                                           <td #if($!change.cooperationName.change) class="change" data-type="text" data-multi="false"  data-originalvalue="$!change.cooperationName.originalValue" data-currentvalue="$!change.cooperationName.currentValue" #end style="width: 10%; #if($!change.cooperationName.change) color :red ;cursor:pointer; #end">合作状态</td><td>$!change.cooperationName.currentValue</td>
+                                       </tr>
+                                       <tr>
+                                           <td #if($!change.catName.change) class="change" data-type="text" data-multi="false"  data-originalvalue="$!change.catName.originalValue" data-currentvalue="$!change.catName.currentValue" #end style="width: 10%; #if($!change.catName.change) color :red;cursor:pointer; #end">分类信息</td><td>$!change.catName.currentValue</td>
+                                           <td #if($!change.subCatName.change) class="change" data-type="text" data-multi="false"  data-originalvalue="$!change.subCatName.originalValue" data-currentvalue="$!change.subCatName.currentValue" #end style="width: 10%; #if($!change.subCatName.change) color :red;cursor:pointer; #end">子分类信息</td><td>$!change.subCatName.currentValue</td>
+                                       </tr>
+                                       <tr>
+                                           <td #if($!change.startTime.change) class="change" data-type="text" data-multi="false"  data-originalvalue="$!change.startTime.originalValue" data-currentvalue="$!change.startTime.currentValue" #end style="width: 10%; #if($!change.startTime.change) color :red ;cursor:pointer;#end">营业开始时间</td><td>$!dateFormatter.format("HH:mm",$!change.startTime.currentValue)</td>
+                                           <td #if($!change.endTime.change) class="change" data-type="text" data-multi="false"  data-originalvalue="$!change.endTime.originalValue" data-currentvalue="$!change.endTime.currentValue" #end style="width: 10%; #if($!change.endTime.change) color :red;cursor:pointer; #end">营业结束时间</td><td>$!dateFormatter.format("HH:mm",$!change.endTime.currentValue)</td>
+                                       </tr>
+                                       <tr>
+                                           <td #if($!change.businessDays.change) class="change" data-type="text" data-multi="true"  data-originalvalue="$!change.businessDays.originalValue" data-currentvalue="$!change.businessDays.currentValue" #end style="width: 10%; #if($!change.businessDays.change) color :red ;cursor:pointer;#end">营业日</td>
+                                           <td colspan="3">
+                                            #foreach($businessDay in $!change.businessDays.currentValue)
+                                                $businessDay&nbsp;&nbsp;&nbsp;
+                                            #end
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td #if($!change.tel.change) class="change" data-type="text" data-multi="false"  data-originalvalue="$!change.tel.originalValue" data-currentvalue="$!change.tel.currentValue" #end style="width: 10%; #if($!change.tel.change) color :red ;cursor:pointer;#end">商家电话</td><td>$!change.tel.currentValue</td>
+                                           <td #if($!change.cosume.change) class="change" data-type="text" data-multi="false"  data-originalvalue="$!change.cosume.originalValue" data-currentvalue="$!change.cosume.currentValue" #end style="width: 10%; #if($!change.cosume.change) color :red;cursor:pointer; #end">人均消费</td><td>$!change.cosume.currentValue</td>
+                                       </tr>
+                                       <tr>
+                                           <td #if($!change.payTypes.change) class="change" data-type="text" data-multi="true"  data-originalvalue="$!change.payTypes.originalValue" data-currentvalue="$!change.payTypes.currentValue" #end style="width: 10%; #if($!change.payTypes.change) color :red ;cursor:pointer;#end">支付方式</td>
+                                           <td colspan="3">
+                                               #foreach($payType in $!change.payTypes.currentValue)
+                                                   $payType&nbsp;&nbsp;&nbsp;
+                                               #end
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td #if($!change.supportTypes.change) class="change" data-type="text" data-multi="true"  data-originalvalue="$!change.supportTypes.originalValue" data-currentvalue="$!change.supportTypes.currentValue" #end style="width: 10%; #if($!change.supportTypes.change) color :red;cursor:pointer; #end">支付类型</td>
+                                           <td colspan="3">
+                                               #foreach($supportType in $!change.supportTypes.currentValue)
+                                                   $supportType&nbsp;&nbsp;&nbsp;
+                                               #end
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td #if($!change.headImg.change) class="change" data-type="img" data-multi="false"  data-originalvalue="$!change.headImg.originalValue" data-currentvalue="$!change.headImg.currentValue" #end style="width: 10%; #if($!change.headImg.change) color :red;cursor:pointer; #end">门头图</td>
+                                           <td #if($!change.listImg.change) class="change" data-type="img" data-multi="false"  data-originalvalue="$!change.listImg.originalValue" data-currentvalue="$!change.listImg.currentValue" #end style="width: 25%; #if($!change.listImg.change) color :red;cursor:pointer; #end">列表图</td>
+                                       </tr>
+                                       <tr>
+                                           <td style="width: 10%; "><img  style="width:160px;height: 100px" src="$!change.headImg.currentValue"></td>
+                                           <td style="width: 25%; "><img  style="width:160px;height: 100px" src="$!change.listImg.currentValue"></td>
+                                       </tr>
+                                       <tr>
+                                           <td #if($!change.detailImgs.change) class="change" data-type="img" data-multi="true"  data-originalvalue="$!change.detailImgs.originalValue" data-currentvalue="$!change.detailImgs.currentValue" #end style="width: 10%; #if($!change.detailImgs.change) color :red;cursor:pointer; #end">详情图</td>
+                                       </tr>
+                                       <tr>
+                                           <td colspan="4">
+                                               #foreach($detailImg in $!change.detailImgs.currentValue)
+                                                   <img  style="width:160px;height: 100px" src="$!detailImg">&nbsp;&nbsp;&nbsp;
+                                               #end
+                                           </td>
+                                       </tr>
+
+                                   </table>
+                                </div>
+                                <div class="form-actions" style=" display: none;">
+                                    <button class="btn btn-primary" href="list" onclick="window.history.go(-1);">返回</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 变更项目弹窗 -->
+    <div class="modal hide fade changeResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;top:20%">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">变更项目</h3>
+        </div>
+
+        <div class="modal-body" style="max-height:480px">
+            <table style="width: 100%;border-collapse: separate;border-spacing: 15px;">
+            <tr>
+                <td style="width: 20%">变更项目</td>
+                <td style="width: 60%" class="item"></td>
+            </tr>
+            <tr>
+                <td>变更人</td>
+                <td >$!change.bdName</td>
+            </tr>
+            <tr>
+                <td>变更时间</td>
+                <td >$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!change.changeTime)</td>
+            </tr>
+            <tr>
+                <td>原内容</td>
+                <td  class="originalvalue"></td>
+            </tr>
+            <tr>
+                <td>变更为</td>
+                <td  class="currentvalue"></td>
+            </tr>
+            </table>
+        </div>
+        <div class="modal-footer" style="padding:7px 15px">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">确定</button>
+        </div>
+</div>
+
+</div>
+    <script type="text/javascript" src="/dist/js/visit/change.js"></script>
+</body>
+</html>

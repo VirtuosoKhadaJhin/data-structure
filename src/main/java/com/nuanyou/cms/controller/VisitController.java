@@ -8,6 +8,7 @@ import com.nuanyou.cms.model.MerchantQueryParam;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.model.VisitQueryRequest;
 import com.nuanyou.cms.model.mission.MissionBdMerchantTrack;
+import com.nuanyou.cms.model.visit.VisitChangeVo;
 import com.nuanyou.cms.service.*;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.util.ExcelUtil;
@@ -56,6 +57,60 @@ public class VisitController {
 
     @Autowired
     private DistrictService districtService;
+
+    /**
+     * 查看拜访商户记录
+     *
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping("/visitmerchantlist")
+    public String getVisitMerchantlist(VisitQueryRequest request, @RequestParam(required = false, defaultValue = "1") int index, Model model) {
+        Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "createTime");
+
+        List<Country> countries = countryService.getIdNameList();
+        List<BdUser> bdUsers = bdUserService.findAllBdUsers();
+        Page<MerchantVisit> visits = visitService.queryLatestVisit(request,pageable);
+
+        List<City> cities;
+        List<District> districts ;
+        if (countries != null && countries.size() == 1) {
+            cities = cityService.findCityByCountryId(countries.get(0).getId());
+            districts = districtService.getIdNameList(countries.get(0).getId());
+        }else {
+            cities = cityService.findAllCities();
+            districts = districtService.getIdNameList();
+        }
+        List<VisitType> visitTypes = visitService.findVisitTypes();
+        model.addAttribute("visitTypes", visitTypes);
+        List<Long> countryids = new ArrayList<>();
+        for (Country country : countries) {
+            countryids.add(country.getId());
+        }
+        model.addAttribute("countryids", countryids);
+        model.addAttribute("countries", countries);
+        model.addAttribute("cities", cities);
+        model.addAttribute("districts", districts);
+        model.addAttribute("page", visits);
+        model.addAttribute("requestVo", request);
+        model.addAttribute("bdUsers", bdUsers);
+        return "visit/visit_merchant_list";
+    }
+
+    /**
+     * 查看变更
+     *
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping("/change")
+    public String change(Long id, Model model){
+        VisitChangeVo vo = visitService.getChange(id);
+        model.addAttribute("change", vo);
+        return "visit/change";
+    }
 
     /**
      * 查看拜访记录

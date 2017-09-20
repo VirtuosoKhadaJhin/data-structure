@@ -23,6 +23,11 @@ public interface MissionTaskDao extends JpaRepository<MissionTask, Long>, JpaSpe
 
     @Transactional
     @Modifying
+    @Query("update MissionTask t set version = '维护',status=?2, remark=?3, auditor=?4, auditDt=?5, updateDt=?5 where mchId=?1")
+    void approveThroughTask(Long mchId, int status, String remark, Long auditor, Date date);
+
+    @Transactional
+    @Modifying
     @Query("update MissionTask t set bdId=?1, status=?2, distrDt=?3,updateDt=?4 where id in ?5")
     void distributeTask(Long bdId, int status, Date distrDt, Date date, List<Long> taskIds);
 

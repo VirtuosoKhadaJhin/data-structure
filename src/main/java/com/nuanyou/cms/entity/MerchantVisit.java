@@ -28,10 +28,10 @@ public class MerchantVisit {
     private Date updateTime;
     @Column(name = "createtime")
     private Date createTime;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userid")
     private BdUser user;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mchid")
     private Merchant merchant;
     @Column(name = "content")
@@ -41,6 +41,8 @@ public class MerchantVisit {
     @ManyToOne
     @JoinColumn(name="type")
     private VisitType type;
+    @Transient
+    private Integer visitCount;
 
     public Long getId() {
         return id;
@@ -127,5 +129,14 @@ public class MerchantVisit {
 
     public void setType(VisitType type) {
         this.type = type;
+    }
+
+
+    public Integer getVisitCount() {
+        return visitCount;
+    }
+
+    public void setVisitCount(Integer visitCount) {
+        this.visitCount = visitCount;
     }
 }
