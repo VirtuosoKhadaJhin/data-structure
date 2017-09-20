@@ -1,5 +1,6 @@
 $(".pagination ul").each(function (i, o) {
     var total = parseInt($(this).attr("total"));
+    var totalelements = parseInt($(this).attr("totalelements"));
     var index = parseInt($(this).attr("index"));
     if (total == 0)
         return;
@@ -17,7 +18,11 @@ $(".pagination ul").each(function (i, o) {
     var isFirst = index == 1;
     var isLast = index == total;
 
-    var htm = build(1, "首页", isFirst);
+    var htm = '';
+    if (totalelements) {
+        htm = '<li><span>共'+totalelements+'条，每页20条</span></li>';
+    }
+    htm += build(1, "首页", isFirst);
     htm += build(index - 1, "«", isFirst);
 
     for (var i = left; i <= right; i++)

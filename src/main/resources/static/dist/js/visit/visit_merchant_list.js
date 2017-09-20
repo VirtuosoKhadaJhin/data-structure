@@ -2,6 +2,8 @@
  * Created by young on 2017/9/1.
  */
 $(document).ready(function () {
+    changeCity(false);
+    changeDistrict($(".select-city").val());
 
     $(".btn-primary").on("click", function () {
         var reg = /^[0-9]*$/ ;
@@ -16,7 +18,7 @@ $(document).ready(function () {
     });
     $(".export").on("click", function () {
         var form = $(document.forms[0]);
-        form.attr("action", "export");
+        form.attr("action", "exportLatestVisit");
         form.attr("target", "_blank");
         form.submit();
     });

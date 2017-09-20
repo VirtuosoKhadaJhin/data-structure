@@ -139,7 +139,12 @@ public class MissionTaskServiceImpl implements MissionTaskService {
         }
         String dmail = UserHolder.getUser().getEmail();
         CmsUser cmsUser = userDao.findByEmail(dmail);
-        missionTaskDao.updateTaskStatus(vo.getMchId(), vo.getStatus().getKey(), vo.getRemark(), cmsUser.getId(), new Date());
+        if (vo.getStatus().equals(MissionTaskStatus.APPROVED)){
+            missionTaskDao.approveThroughTask(vo.getMchId(), vo.getStatus().getKey(), vo.getRemark(), cmsUser.getId(), new Date());
+        }else {
+            missionTaskDao.updateTaskStatus(vo.getMchId(), vo.getStatus().getKey(), vo.getRemark(), cmsUser.getId(), new Date());
+        }
+
     }
 
     @Override
