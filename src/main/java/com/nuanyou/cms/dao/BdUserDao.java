@@ -20,6 +20,9 @@ public interface BdUserDao extends JpaRepository<BdUser, Long>, JpaSpecification
     @Query(value = "SELECT t from BdUser t where t.deleted=0")
     List<BdUser> findallBdUser();
 
+    @Query(value = "SELECT t from BdUser t where t.deleted=0 and t.dmail=?1")
+    BdUser getBdUserByDmail(String dmail);
+
     @Query(value = "SELECT t from BdUser t where t.country.id=:id and t.deleted = 0")
     List<BdUser> findBdUsersByCountryId(@Param("id") Long id);
 
