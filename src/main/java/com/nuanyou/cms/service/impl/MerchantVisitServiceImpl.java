@@ -231,7 +231,8 @@ public class MerchantVisitServiceImpl implements MerchantVisitService {
             indexImg.setCurrentValue(imgList.get(0));
             List<String> imgs = new ArrayList<>();
             if (imgList.size() > 1){
-                for (String img : imgList){
+                for (int i = 1;i< imgList.size();i++){
+                    String img = imgList.get(i);
                     imgs.add(img);
                 }
                 detailImgs.setCurrentValue(imgs);
@@ -281,14 +282,15 @@ public class MerchantVisitServiceImpl implements MerchantVisitService {
             supportTypes.setChange(supportTypes.compareChange());
             headImg.setOriginalValue(previous_detail.getIndexImgUrl());
             headImg.setChange(headImg.compareChange());
-            List<String> previous_imgList = JSON.parseArray(detail.getHeadImgUrls(), String.class);
+            List<String> previous_imgList = JSON.parseArray(previous_detail.getHeadImgUrls(), String.class);
 
             if (previous_imgList != null && previous_imgList.size() > 0) {
                 indexImg.setOriginalValue(previous_imgList.get(0));
                 indexImg.setChange(indexImg.compareChange());
                 List<String> imgs = new ArrayList<>();
                 if (previous_imgList.size() > 1){
-                    for (String img : previous_imgList){
+                    for (int i = 1;i< previous_imgList.size();i++){
+                        String img = previous_imgList.get(i);
                         imgs.add(img);
                     }
                     detailImgs.setOriginalValue(imgs);
