@@ -79,8 +79,16 @@
                                            <td #if($!change.listImg.change) class="change" data-type="img" data-multi="false"  data-originalvalue="$!change.listImg.originalValue" data-currentvalue="$!change.listImg.currentValue" #end style="width: 25%; #if($!change.listImg.change) color :red;cursor:pointer; #end">列表图</td>
                                        </tr>
                                        <tr>
-                                           <td style="width: 10%; "><img  style="width:160px;height: 100px" src="$!change.headImg.currentValue"></td>
-                                           <td style="width: 25%; "><img  style="width:160px;height: 100px" src="$!change.listImg.currentValue"></td>
+                                           <td style="width: 10%; ">
+                                               #if($!change.headImg.currentValue)
+                                                    <img  style="width:160px;height: 100px" src="$!change.headImg.currentValue">
+                                               #end
+                                           </td>
+                                           <td style="width: 25%; ">
+                                                #if($!change.listImg.currentValue)
+                                                    <img  style="width:160px;height: 100px" src="$!change.listImg.currentValue">
+                                                #end
+                                           </td>
                                        </tr>
                                        <tr>
                                            <td #if($!change.detailImgs.change) class="change" data-type="img" data-multi="true"  data-originalvalue="$!change.detailImgs.originalValue" data-currentvalue="$!change.detailImgs.currentValue" #end style="width: 10%; #if($!change.detailImgs.change) color :red;cursor:pointer; #end">详情图</td>

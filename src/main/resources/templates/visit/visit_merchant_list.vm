@@ -36,11 +36,11 @@
                                 <th class="th-op" style="width: 4%">拜访时间</th>
                                 <th class="th-op" style="width: 2%">BD名称</th>
                                 <th class="th-op" style="width: 3%">拜访类型</th>
-                                <th class="th-op" style="width: 3%">商圈</th>
+                                <th class="th-op" style="width: 4%">城市商圈</th>
                                 <th class="th-op" style="width: 5%">历史拜访次数</th>
                                 <th class="th-op" style="width: 2%">签到图</th>
                                 <th class="th-op" style="width: 12%">拜访记录</th>
-                                <th class="th-op" style="width: 6%">操作</th>
+                                <th class="th-op" style="width: 4%">操作</th>
                             </tr>
                             </thead>
                             <tbody class="tbody-list">
@@ -69,7 +69,7 @@
                                             <span>$!entity.type.name</span>
                                         #end
                                     </td>
-                                    <td>$!entity.merchant.district.name</td>
+                                    <td>$!entity.merchant.district.country.name<br>$!entity.merchant.district.city.name<br>$!entity.merchant.district.name</td>
                                     <td>$!entity.visitCount</td>
                                     <td class="td-imgurl">
                                         #if($!entity.imgUrls.size()==0 || "$!entity.imgUrls"=="")

@@ -28,14 +28,15 @@
                         <table class="table table-bordered data-table dataTable">
                             <thead class="thead-class">
                             <tr class="thread-tr">
+                                <th class="th-op" style="width: 2%">BD名称</th>
+                                <th class="th-op" style="width: 4%">拜访时间</th>
+                                <th class="th-op" style="width: 3%">拜访类型</th>
                                 <th class="th-op" style="width: 5%">拜访门店</th>
                                 <th class="th-op" style="width: 4%">当地名称</th>
-                                <th class="th-op" style="width: 4%">拜访时间</th>
-                                <th class="th-op" style="width: 2%">BD名称</th>
-                                <th class="th-op" style="width: 3%">拜访类型</th>
+                                <th class="th-op" style="width: 4%">城市商圈</th>
                                 <th class="th-op" style="width: 2%">签到图</th>
                                 <th class="th-op" style="width: 12%">拜访记录</th>
-                                <th class="th-op" style="width: 6%">操作</th>
+                                <th class="th-op" style="width: 4%">操作</th>
                             </tr>
                             </thead>
                             <tbody class="tbody-list">
@@ -51,19 +52,20 @@
                                 #end
                                 #foreach($entity in $!page.content)
                                 <tr data-mchId="$!entity.merchant.id">
-                                    <td><span>$!entity.merchant.id</span>
-                                        <br/>
-                                        <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a></td>
-                                    <td>$!entity.merchant.kpname</td>
-                                    <td class="task-type">$!dateFormatter.format("yyyy-MM-dd",$!entity.createTime)<br>$!dateFormatter.format("HH:mm:ss",$!entity.createTime)</td>
                                     <td>
                                         <span>$!entity.user.chineseName</span>
                                     </td>
+                                    <td class="task-type">$!dateFormatter.format("yyyy-MM-dd",$!entity.createTime)<br>$!dateFormatter.format("HH:mm:ss",$!entity.createTime)</td>
                                     <td>
                                         #if($!entity.type)
                                             <span>$!entity.type.name</span>
                                         #end
                                     </td>
+                                    <td><span>$!entity.merchant.id</span>
+                                        <br/>
+                                        <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a></td>
+                                    <td>$!entity.merchant.kpname</td>
+                                    <td>$!entity.merchant.district.country.name<br>$!entity.merchant.district.city.name<br>$!entity.merchant.district.name</td>
                                     <td class="td-imgurl">
                                         #if($!entity.imgUrls.size()==0 || "$!entity.imgUrls"=="")
                                             <label class="no-img-result">0张</label>
@@ -95,14 +97,6 @@
                     <div class="widget-content">
                         <form class="form-horizontal search-form" method="get">
                             <input type="hidden" class="span11" name="countryids" value="$!countryids" >
-                            <div>
-                                <label>商户ID</label>
-                                <input type="text" name="mchId" class="span11" value="$!requestVo.mchId"  placeholder="">
-                            </div>
-                            <div>
-                                <label>商户名称</label>
-                                <input type="text" name="mchName" class="span11" value="$!requestVo.mchName" placeholder="">
-                            </div>
                             <div class="search-select">
                                 <label>BD名称</label>
                                 <select class="span11 select2" name="userId">
@@ -111,6 +105,43 @@
                                         <option value="$!e.id" #if($!requestVo.userId == $!e.id) selected #end>$!e.id : $!e.chineseName</option>
                                     #end
                                 </select>
+                            </div>
+                            <div class="search-select">
+                                <label>国家</label>
+                                <select class="span11 select2 select-country" id="country" name="countryId">
+                                    <option value>全部</option>
+                                    #foreach($e in $!countries)
+                                        <option value="$!e.id" #if($!requestVo.countryId==$!e.id)selected #end>$!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+                            <div class="search-select">
+                                <label>城市</label>
+                                <select class="span11 select-city" id="city" name="cityId" disabled>
+                                    <option class="city-unit" value>全部</option>
+                                    #foreach($e in $!cities)
+                                        <option class="option-city" country-id="$!e.country.id" value="$!e.id" #if($!requestVo.cityId == $!e.id) selected #end>$!e.name</option>
+                                    #end
+                                </select>
+                            </div>
+
+                            <div class="search-select">
+                                <input type="hidden" value="$!requestVo.districtId" id="hidden_districtId"></input>
+                                <label>商圈</label>
+                                <select class="span11 select2 district" name="districtId" disabled>
+                                    <option value>全部</option>
+##                                    #foreach($e in $!districts)
+##                                        <option value="$!e.id" #if($!requestVo.districtId == $!e.id) selected #end>$!e.name</option>
+##                                    #end
+                                </select>
+                            </div>
+                            <div>
+                                <label>商户ID</label>
+                                <input type="text" name="mchId" class="span11" value="$!requestVo.mchId"  placeholder="">
+                            </div>
+                            <div>
+                                <label>商户名称</label>
+                                <input type="text" name="mchName" class="span11" value="$!requestVo.mchName" placeholder="">
                             </div>
                             <div class="search-select">
                                 <label>拜访类型</label>
