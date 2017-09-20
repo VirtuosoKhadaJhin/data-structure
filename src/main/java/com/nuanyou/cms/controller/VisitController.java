@@ -193,6 +193,41 @@ public class VisitController {
         os.close();
     }
 
+    @RequestMapping(path = "exportLatestVisit")
+    public void exportLatestVisit( VisitQueryRequest request,HttpServletRequest req, HttpServletResponse response) throws IOException {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/csv; charset=" + "UTF-8");
+        response.setHeader("Pragma", "public");
+        response.setHeader("Cache-Control", "max-age=30");
+        String fileName = "最近拜访记录" + DateFormatUtils.format(new Date(), "yyMMdd");
+        fileName = processFileName(req,fileName);
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
+
+        Pageable pageable = new PageRequest(0, 10000, Sort.Direction.DESC, "createTime");
+
+        Page<MerchantVisit> visits = visitService.queryLatestVisit(request,pageable);
+
+        LinkedHashMap<String, String> propertyHeaderMap = new LinkedHashMap<>();
+
+
+        propertyHeaderMap.put("merchant.id", "门店ID");
+        propertyHeaderMap.put("merchant.name", "拜访门店");
+        propertyHeaderMap.put("merchant.kpname", "当地名称");
+        propertyHeaderMap.put("user.chineseName", "BD名称");
+        propertyHeaderMap.put("createTime", "拜访时间");
+        propertyHeaderMap.put("type.name", "拜访类型");
+        propertyHeaderMap.put("merchant.district.name", "商圈");
+        propertyHeaderMap.put("visitCount", "历史拜访次数");
+        propertyHeaderMap.put("note", "拜访记录");
+
+        XSSFWorkbook ex = ExcelUtil.generateXlsxWorkbook(propertyHeaderMap, visits.getContent());
+        OutputStream os = response.getOutputStream();
+        ex.write(os);
+
+        os.flush();
+        os.close();
+    }
+
     /**
      *
      * @Title: processFileName

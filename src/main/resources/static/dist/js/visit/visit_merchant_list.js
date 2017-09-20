@@ -18,7 +18,7 @@ $(document).ready(function () {
     });
     $(".export").on("click", function () {
         var form = $(document.forms[0]);
-        form.attr("action", "export");
+        form.attr("action", "exportLatestVisit");
         form.attr("target", "_blank");
         form.submit();
     });
