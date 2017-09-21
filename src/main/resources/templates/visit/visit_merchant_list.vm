@@ -18,7 +18,7 @@
 
                         <div id="breadcrumb"><a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i>
                             客户模块</a>
-                            <a href="/mission_task/list" class="tip-bottom" data-original-title="">商户拜访记录</a>
+                            <a href="/visit/visitmerchantlist" class="tip-bottom" data-original-title="">商户拜访记录</a>
                         </div>
                         <div class="widget-title">
                             <span class="icon"><i class="icon-th"></i></span>
