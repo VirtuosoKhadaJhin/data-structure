@@ -18,6 +18,7 @@ public class VisitSaveParameter {
     private Long subCatId;
     private Long districtId;
     private String tels;
+    private String email;
     private Double longitude;
     private Double latitude;
     private String indexImgUrl;
@@ -249,5 +250,13 @@ public class VisitSaveParameter {
 
     public void setVisitType(Integer visitType) {
         this.visitType = visitType;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -50,6 +50,10 @@
                                 <div class="controls">
                                     <input type="text" class="span10" placeholder="商家电话" name="telphone" value="$!entity.telphone" maxlength="20">
                                 </div>
+                                <label class="control-label">商家邮箱</label>
+                                <div class="controls">
+                                    <input type="text" class="span10" placeholder="商家邮箱" name="email" value="$!entity.email" maxlength="20">
+                                </div>
                                 <label class="control-label">人均消费</label>
                                 <div class="controls">
                                     <input type="number" class="span10" placeholder="人均消费" name="consume" value="$!entity.consume" maxlength="10">
