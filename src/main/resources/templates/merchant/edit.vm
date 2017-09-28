@@ -353,6 +353,13 @@
             #end
 
         var save_confirm = function () {
+            var email = $("input[name='email']")[0].value;
+            var reg = /^\w[-_\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/;
+            if (!reg.test(email)){
+                alert('商家邮箱输入错误，请重新填写');
+                return false;
+            }
+
             if (oldcode != newcode) {
                 if (newcode == 1 || newcode == 2) {
                     if (!confirm('是否确定更改此商家的合作状态?')) {
