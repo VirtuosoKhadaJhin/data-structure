@@ -28,6 +28,7 @@ public class Merchant {
     private String intro2;
     private String outline;
     private String telphone;
+    private String email;
     private Date businessStart;
     private Date businessEnd;
     private List<Week> businessDay;
@@ -149,6 +150,14 @@ public class Merchant {
 
     public void setTelphone(String telphone) {
         this.telphone = telphone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @DateTimeFormat(pattern = "HH:mm:ss", iso = DateTimeFormat.ISO.TIME)

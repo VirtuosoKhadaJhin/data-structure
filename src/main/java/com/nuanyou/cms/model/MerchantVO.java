@@ -21,6 +21,7 @@ public class MerchantVO {
     private String intro;
     private String outline;
     private String telphone;
+    private String email;
     private Date businessStart;
     private Date businessEnd;
     private List<Week> businessDay;
@@ -143,6 +144,13 @@ public class MerchantVO {
         this.telphone = telphone;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     @DateTimeFormat(pattern = "HH:mm:ss", iso = DateTimeFormat.ISO.TIME)
     @JsonFormat(pattern = "HH:mm:ss", timezone = "GMT+8")
