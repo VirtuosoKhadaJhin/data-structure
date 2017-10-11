@@ -231,6 +231,9 @@ public class MissionTaskVo {
         }
         Pair<Date, Date> startEndTime = DateUtils.getDayStartEndTime(new Date());
         long time = startEndTime.getLeft().getTime();
+        if(this.distrDt == null){
+            return true;
+        }
         long oldTime = this.distrDt.getTime();
         return oldTime < time;
     }
