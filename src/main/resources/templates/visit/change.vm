@@ -67,7 +67,7 @@
                                            </td>
                                        </tr>
                                        <tr>
-                                           <td #if($!change.supportTypes.change) class="change" data-type="text" data-multi="true"  data-originalvalue="$!change.supportTypes.originalValue" data-currentvalue="$!change.supportTypes.currentValue" #end style="width: 10%; #if($!change.supportTypes.change) color :red;cursor:pointer; #end">支付类型</td>
+                                           <td #if($!change.supportTypes.change) class="change" data-type="text" data-multi="true"  data-originalvalue="$!change.supportTypes.originalValue" data-currentvalue="$!change.supportTypes.currentValue" #end style="width: 10%; #if($!change.supportTypes.change) color :red;cursor:pointer; #end">产品类型</td>
                                            <td colspan="3">
                                                #foreach($supportType in $!change.supportTypes.currentValue)
                                                    $supportType&nbsp;&nbsp;&nbsp;
