@@ -46,11 +46,11 @@
                                 <div class="controls">
                                     <input type="text" class="span10" placeholder="本地名称" name="kpname" value="$!entity.kpname" maxlength="80">
                                 </div>
-                                <label class="control-label">商家电话</label>
+                                <label class="control-label">商家固定电话</label>
                                 <div class="controls">
                                     <input type="text" class="span10" placeholder="商家电话" name="telphone" value="$!entity.telphone" maxlength="20">
                                 </div>
-                                <label class="control-label">商家邮箱</label>
+                                <label class="control-label">老板邮箱</label>
                                 <div class="controls">
                                     <input type="text" class="span10" placeholder="商家邮箱" name="email" value="$!entity.email" maxlength="20">
                                 </div>
@@ -243,7 +243,7 @@
                                         /> $!e.name
                                     #end
                                 </div>
-                                <label class="control-label">支持类型</label>
+                                <label class="control-label">产品类型</label>
                                 <div class="controls">
                                     #foreach($e in $!supportTypes)
                                         <input type="checkbox" name="supportType" value="$!e"
