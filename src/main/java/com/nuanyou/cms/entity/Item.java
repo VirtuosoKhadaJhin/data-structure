@@ -27,6 +27,7 @@ public class Item {
     private Integer type;
     private Integer itemType;
     private String intro;
+    private String localIntro;
     private String outline;
     private BigDecimal price;
     private BigDecimal kpPrice;
@@ -126,6 +127,14 @@ public class Item {
         this.intro = Longro;
     }
 
+    @Column(name = "localintro", nullable = true, length = 400)
+    public String getLocalIntro() {
+        return localIntro;
+    }
+
+    public void setLocalIntro(String localIntro) {
+        this.localIntro = localIntro;
+    }
 
     @Column(name = "outline", nullable = true, length = 200)
     public String getOutline() {

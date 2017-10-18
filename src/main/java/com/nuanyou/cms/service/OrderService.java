@@ -31,7 +31,7 @@ public interface OrderService {
 
     void validate(Long id, Integer type, String cmsusername);
 
-
+    Boolean checkUnRedeem(Long itemId);
 }
 
 

@@ -1,9 +1,12 @@
 package com.nuanyou.cms.service.impl;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.domain.NotificationPublisher;
+import com.nuanyou.cms.entity.ItemTuan;
 import com.nuanyou.cms.entity.UserCardItem;
 import com.nuanyou.cms.entity.coupon.Coupon;
 import com.nuanyou.cms.entity.enums.*;
@@ -43,7 +46,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderDao orderDao;
     @Autowired
     private OrderRefundLogService orderRefundLogService;
-
+    @Autowired
+    private ItemTuanDao itemTuanDao;
     @Autowired
     private OrderVouchCardDao orderVouchCardDao;
     @Autowired
@@ -128,7 +132,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public Page<Order> findRefundByCondition(Integer index, final Order entity, final TimeCondition time,final List<Long> countryids) {
+    public Page<Order> findRefundByCondition(Integer index, final Order entity, final TimeCondition time, final List<Long> countryids) {
         Pageable pageable = null;
         if (index != null)
             pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "refundtime");
@@ -139,7 +143,7 @@ public class OrderServiceImpl implements OrderService {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 if (countryids != null && countryids.size() > 0) {
                     predicate.add(root.get("countryid").in(countryids));
-                }else {
+                } else {
                     if (countryIds != null && countryIds.size() > 0) {
                         predicate.add(root.get("countryid").in(countryIds));
                     }
@@ -193,15 +197,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findRefundByCondition(final Order entity, final TimeCondition time,final List<Long> countryids) {
-        return findRefundByCondition(null, entity, time,countryids).getContent();
+    public List<Order> findRefundByCondition(final Order entity, final TimeCondition time, final List<Long> countryids) {
+        return findRefundByCondition(null, entity, time, countryids).getContent();
     }
 
 
     @Override
     public List<ViewOrderExport> findExportByCondition(final Order entity, final TimeCondition time, List<Long> countryids, Pageable pageable) {
         Long begin_exportOrder = System.currentTimeMillis();
-        List<ViewOrderExport> orderList = getViewOrderExports(entity, time,countryids);
+        List<ViewOrderExport> orderList = getViewOrderExports(entity, time, countryids);
         Long end_exportOrder = System.currentTimeMillis();
         log.info("count(order):" + orderList.size());
         log.info("read data from ViewOrderExport:" + (end_exportOrder - begin_exportOrder) / 1000 + "s");
@@ -258,29 +262,29 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public long countViewOrderExports(final Order entity, final TimeCondition time,final List<Long> countryids) {
+    public long countViewOrderExports(final Order entity, final TimeCondition time, final List<Long> countryids) {
         return viewOrderExportDao.count(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                List<Predicate> predicate = getOrderExportPredicates(root, cb, entity, time,countryids);
+                List<Predicate> predicate = getOrderExportPredicates(root, cb, entity, time, countryids);
                 Predicate[] pre = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(pre)).getRestriction();
             }
         });
     }
 
-    private List<ViewOrderExport> getViewOrderExports(final Order entity, final TimeCondition time,final List<Long> countryids) {
+    private List<ViewOrderExport> getViewOrderExports(final Order entity, final TimeCondition time, final List<Long> countryids) {
         return viewOrderExportDao.findAll(new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
-                List<Predicate> predicate = getOrderExportPredicates(root, cb, entity, time,countryids);
+                List<Predicate> predicate = getOrderExportPredicates(root, cb, entity, time, countryids);
                 Predicate[] pre = new Predicate[predicate.size()];
                 return query.where(predicate.toArray(pre)).getRestriction();
             }
         }, new Sort(Sort.Direction.ASC, "id"));
     }
 
-    private List<Predicate> getOrderExportPredicates(Root root, CriteriaBuilder cb, Order entity, TimeCondition time,List<Long> countryids) {
+    private List<Predicate> getOrderExportPredicates(Root root, CriteriaBuilder cb, Order entity, TimeCondition time, List<Long> countryids) {
         List<Predicate> predicate = new ArrayList<Predicate>();
         if (countryids != null && countryids.size() > 0) {
             predicate.add(root.get("countryid").in(countryids));
@@ -479,6 +483,23 @@ public class OrderServiceImpl implements OrderService {
         backCardAndCoupon(order, DateUtils.newDate());
 
 
+    }
+
+    @Override
+    public Boolean checkUnRedeem(Long itemId) {
+        List<ItemTuan> itemTuans = itemTuanDao.findByItemId(itemId);
+        Set<Long> itemIds = Sets.newHashSet(itemId);
+        for (ItemTuan itemTuan : itemTuans) {
+            itemIds.add(itemTuan.getSubItem().getId());
+        }
+        List<OrderItem> orderItems = orderItemDao.findByItemidIn(Lists.newArrayList(itemIds));
+        List<Long> orderIds = Lists.newArrayList();
+        for (OrderItem orderItem : orderItems) {
+            orderIds.add(orderItem.getOrder().getId());
+        }
+        Integer unRedeemedNum = orderDao.findUnRedeemedAndIdIn(orderIds);
+
+        return unRedeemedNum > 0;
     }
 
     private void backCardAndCoupon(Order order, Date now) {

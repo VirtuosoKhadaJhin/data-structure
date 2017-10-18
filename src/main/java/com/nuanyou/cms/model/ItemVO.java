@@ -25,6 +25,7 @@ public class ItemVO {
     private Integer type;
     private Integer itemType;
     private String intro;
+    private String localIntro;
     private String outline;
     private BigDecimal price;
     private BigDecimal kpPrice;
@@ -116,6 +117,13 @@ public class ItemVO {
         this.intro = Longro;
     }
 
+    public String getLocalIntro() {
+        return localIntro;
+    }
+
+    public void setLocalIntro(String localIntro) {
+        this.localIntro = localIntro;
+    }
 
     public String getOutline() {
         return outline;

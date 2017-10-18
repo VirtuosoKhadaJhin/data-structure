@@ -191,7 +191,7 @@ public class BdUserServiceImpl implements BdUserService {
 
     @Override
     public BdUser findBdUserByDemail(String email) {
-        return bdUserDao.findOne(Example.of(new BdUser(email)));
+        return bdUserDao.getBdUserByDmail(email);
     }
 
     @Override

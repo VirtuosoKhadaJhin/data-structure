@@ -12,6 +12,7 @@ import com.nuanyou.cms.model.ItemVO;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.ItemService;
 import com.nuanyou.cms.service.MerchantService;
+import com.nuanyou.cms.service.OrderService;
 import com.nuanyou.cms.util.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class ItemTuanController {
 
     @Autowired
     private ItemDao itemDao;
+
+    @Autowired
+    private OrderService orderService;
 
     @Autowired
     private ItemTuanDao itemTuanDao;
@@ -85,6 +89,13 @@ public class ItemTuanController {
         this.edit(id, model);
         model.addAttribute("disabled", true);
         return "itemTuan/edit";
+    }
+
+    @RequestMapping(path = "checkUnRedeem")
+    @ResponseBody
+    public APIResult checkUnRedeem(Long itemId) {
+        Boolean hasUnRedeemedOrder = orderService.checkUnRedeem(itemId);
+        return new APIResult(hasUnRedeemedOrder);
     }
 
     @RequestMapping(path = "update", method = RequestMethod.POST)
