@@ -15,6 +15,6 @@ public interface OrderDao extends JpaRepository<Order, Long>, JpaSpecificationEx
     @Query(value = "SELECT COUNT(1) from ny_order WHERE ny_order.status not in(0,4) and userid=:id", nativeQuery = true)
     Integer getBuyNum(@Param("id") Integer id);
 
-    @Query(value = "SELECT COUNT(id) from ny_order WHERE ny_order.orderstatus=1 and id in?1", nativeQuery = true)
+    @Query(value = "SELECT COUNT(id) from ny_order WHERE ny_order.orderstatus=1 and ny_order.status=1 and ny_order.id in?1", nativeQuery = true)
     Integer findUnRedeemedAndIdIn(List<Long> orderIds);
 }
