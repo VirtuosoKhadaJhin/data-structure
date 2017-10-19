@@ -37,12 +37,12 @@
                             <i class="icon-home"></i>
                             主页
                         </a>
-                        <a href="list" class="tip-bottom" data-original-title="">团购商品管理</a>
+                        <a href="list" class="tip-bottom" data-original-title="">特品推荐商品管理</a>
                         <a href="javascipt:void(0);" class="tip-bottom" data-original-title="">编辑/查看</a>
                     </div>
                     <div class="widget-title">
                         <span class="icon"> <i class="icon-align-justify"></i></span>
-                        <h5>商品编辑</h5>
+                        <h5>特品推荐商品编辑</h5>
                         <h5 style="float: right;">
                             <a class="goback" href="list">返回</a>
                         </h5>
@@ -139,12 +139,12 @@
                                 <div class="controls">
                                     <input name="sort" type="number" class="span9" value="$!entity.sort">
                                 </div>
-                                <label class="control-label">概述</label>
+                                <label class="control-label">商品详情</label>
                                 <div class="controls">
                                     <textarea class="span9" name="intro" rows="5" style="resize: vertical;"
                                               maxlength="200">$!entity.intro</textarea>
                                 </div>
-                                <label class="control-label">当地描述</label>
+                                <label class="control-label">商品详情（当地文）</label>
                                 <div class="controls">
                                     <textarea class="span9" name="localIntro" rows="5" style="resize: vertical;"
                                               maxlength="200">$!entity.localIntro</textarea>
@@ -170,7 +170,7 @@
                                     </button>
                                     <p>尺寸: 320 * 240, 限制: 50k</p>
                                 </div>
-                                <label class="control-label">注意事项</label>
+                                <label class="control-label">购买须知</label>
                                 <div class="controls">
                                     <textarea name="notice" id="notice" class="span9">$!entity.notice</textarea>
                                 </div>
