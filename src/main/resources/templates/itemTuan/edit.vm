@@ -81,7 +81,7 @@
                                            maxlength="50" placeholder="不得超过50个字">
                                 </div>
                                 <font color="red" class="kp-name-tip input-waring-tip">*不得超过50个字</font>
-                                <label class="control-label">团购类型</label>
+                                <label class="control-label">特品推荐类型</label>
                                 <div class="controls">
                                     #foreach($e in $!tuanTypes)
                                         <input name="tuanType" type="checkbox" class="checkbox" value="$!e"
