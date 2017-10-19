@@ -52,7 +52,7 @@
                                 </div>
                                 <label class="control-label">老板邮箱</label>
                                 <div class="controls">
-                                    <input type="text" class="span10" placeholder="商家邮箱" name="email" value="$!entity.email" maxlength="20">
+                                    <input type="text" class="span10" placeholder="商家邮箱" name="email" value="$!entity.email" maxlength="45">
                                 </div>
                                 <label class="control-label">人均消费</label>
                                 <div class="controls">
