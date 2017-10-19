@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface OrderItemDao extends JpaRepository<OrderItem, Long>, JpaSpecificationExecutor {
 
-    List<OrderItem> findByItemidIn(List<Long> itemIds);
+    List<OrderItem> findByItemid(Integer itemId);
 }

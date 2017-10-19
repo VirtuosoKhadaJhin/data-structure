@@ -487,12 +487,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Boolean checkUnRedeem(Long itemId) {
-        List<ItemTuan> itemTuans = itemTuanDao.findByItemId(itemId);
-        Set<Long> itemIds = Sets.newHashSet(itemId);
-        for (ItemTuan itemTuan : itemTuans) {
-            itemIds.add(itemTuan.getSubItem().getId());
-        }
-        List<OrderItem> orderItems = orderItemDao.findByItemidIn(Lists.newArrayList(itemIds));
+        List<OrderItem> orderItems = orderItemDao.findByItemid(itemId.intValue());
         List<Long> orderIds = Lists.newArrayList();
         for (OrderItem orderItem : orderItems) {
             orderIds.add(orderItem.getOrder().getId());
