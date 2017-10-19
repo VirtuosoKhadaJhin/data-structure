@@ -11,7 +11,7 @@ public enum SupportType {
     /**
      * 惠购
      */
-    HuiGou(1, "惠购"), //
+    HuiGou(1, "中文点单"), //
     /**
      * 优付
      */
@@ -19,11 +19,11 @@ public enum SupportType {
     /**
      * 团购
      */
-    TuanGou(4, "团购"),//
+    TuanGou(4, "特品推荐"),//
     /**
      * 直邮购
      */
-    ZhiYouGou(8, "直邮购");//
+    ZhiYouGou(8, "专柜直购");//
 
     public final Byte value;
 
