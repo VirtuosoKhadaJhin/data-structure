@@ -72,15 +72,15 @@
                                 <label class="control-label">中文名称</label>
                                 <div class="controls">
                                     <input name="name" type="text" class="span9 ch-name" value="$!entity.name"
-                                           maxlength="100" placeholder="不得超过15个字">
+                                           maxlength="50" placeholder="不得超过50个字">
                                 </div>
-                                <font color="red" class="ch-name-tip input-waring-tip">*不得超过15个字</font>
+                                <font color="red" class="ch-name-tip input-waring-tip">*不得超过50个字</font>
                                 <label class="control-label">本地名称</label>
                                 <div class="controls">
                                     <input name="kpname" type="text" class="span9 kp-name" value="$!entity.kpname"
-                                           maxlength="100" placeholder="不得超过15个字">
+                                           maxlength="50" placeholder="不得超过50个字">
                                 </div>
-                                <font color="red" class="kp-name-tip input-waring-tip">*不得超过15个字</font>
+                                <font color="red" class="kp-name-tip input-waring-tip">*不得超过50个字</font>
                                 <label class="control-label">团购类型</label>
                                 <div class="controls">
                                     #foreach($e in $!tuanTypes)
@@ -279,7 +279,7 @@
     <script type="text/javascript">
         $(".ch-name").on("blur", function () {
             var length = $(this).val().length;
-            if (length > 15) {
+            if (length > 50) {
                 $(".ch-name-tip").show();
                 $(".ch-name").css("border-color", "red");
                 return false;
@@ -290,7 +290,7 @@
 
         $(".kp-name").on("blur", function () {
             var length = $(this).val().length;
-            if (length > 15) {
+            if (length > 50) {
                 $(".kp-name-tip").show();
                 return false;
             }
@@ -300,11 +300,11 @@
         // 校验字数
         function checkNameLength() {
             var chNameLength = $(".ch-name").val().length, kpNameLength = $(".kp-name").val().length;
-            if (chNameLength > 15) {
+            if (chNameLength > 50) {
                 $(".ch-name-tip").show();
                 return false;
             }
-            if (kpNameLength > 15) {
+            if (kpNameLength > 50) {
                 $(".kp-name-tip").show();
                 return false;
             }
