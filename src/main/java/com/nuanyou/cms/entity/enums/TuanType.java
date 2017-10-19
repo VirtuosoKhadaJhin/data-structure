@@ -19,7 +19,9 @@ public enum TuanType {
     /**
      * 免预约
      */
-    NotAppointment(4, "免预约");//
+    NotAppointment(4, "免预约"),
+
+    InAdvance(8, "提前一小时预定"),;//
 
     public final Byte value;
 
