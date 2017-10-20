@@ -177,6 +177,8 @@ public class MerchantVisitServiceImpl implements MerchantVisitService {
         changeVo.setBdName(visit.getUser().getChineseName());
         changeVo.setChangeTime(visit.getCreateTime());
 
+        VisitDetailExtension<String> tag = new VisitDetailExtension<String>();
+        tag.setCurrentValue(detail.getTag());
         VisitDetailExtension<String> localName = new VisitDetailExtension<String>();
         localName.setCurrentValue(detail.getName());
         VisitDetailExtension<String> districtName = new VisitDetailExtension<String>();
@@ -242,6 +244,8 @@ public class MerchantVisitServiceImpl implements MerchantVisitService {
         if (visits != null && visits.size() > 0) {
             MerchantVisit previousVisit = visits.get(0);
             VisitSaveParameter previous_detail =  JSON.parseObject(previousVisit.getContent(),VisitSaveParameter.class);
+            tag.setOriginalValue(previous_detail.getTag());
+            tag.setChange(tag.compareChange());
             localName.setOriginalValue(previous_detail.getName());
             localName.setChange(localName.compareChange());
             District previous_district = districtDao.findOne(previous_detail.getDistrictId());
@@ -298,6 +302,7 @@ public class MerchantVisitServiceImpl implements MerchantVisitService {
                 }
             }
         }
+        changeVo.setTag(tag);
         changeVo.setLocalName(localName);
         changeVo.setDistrictName(districtName);
         changeVo.setLocalAddress(localAddress);
