@@ -75,7 +75,7 @@
                                            </td>
                                        </tr>
                                        <tr>
-                                           <td #if($!change.tag.change) class="change" data-type="text" data-multi="false"  data-originalvalue="$!change.tag.originalValue" data-currentvalue="$!change.tag.currentValue" #end style="width: 10%; #if($!change.tag.change) color :red;cursor:pointer; #end">商户标签</td><td style="width: 25%">$!change.tag.currentValue</td>
+                                           <td #if($!change.tag.change) class="change" data-type="text" data-multi="false"  data-originalvalue="$!change.tag.originalValue" data-currentvalue="$!change.tag.currentValue" #end style="width: 10%; #if($!change.tag.change) color :red;cursor:pointer; #end">竞对名称</td><td style="width: 25%">$!change.tag.currentValue</td>
                                        </tr>
                                        <tr>
                                            <td #if($!change.headImg.change) class="change" data-type="img" data-multi="false"  data-originalvalue="$!change.headImg.originalValue" data-currentvalue="$!change.headImg.currentValue" #end style="width: 10%; #if($!change.headImg.change) color :red;cursor:pointer; #end">门头图</td>
