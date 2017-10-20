@@ -141,13 +141,12 @@
                                 </div>
                                 <label class="control-label">商品详情</label>
                                 <div class="controls">
-                                    <textarea class="span9" name="intro" rows="5" style="resize: vertical;"
-                                              maxlength="200">$!entity.intro</textarea>
+                                    <textarea name="intro" id="intro" class="span9">$!entity.intro</textarea>
                                 </div>
                                 <label class="control-label">商品详情（当地文）</label>
                                 <div class="controls">
-                                    <textarea class="span9" name="localIntro" rows="5" style="resize: vertical;"
-                                              maxlength="200">$!entity.localIntro</textarea>
+                                    <textarea name="localIntro" id="localIntro"
+                                              class="span9">$!entity.localIntro</textarea>
                                 </div>
                                 <label class="control-label">展示图</label>
                                 <div class="controls">
@@ -601,12 +600,23 @@
     <script type="text/javascript">
         var editor;
         KindEditor.ready(function (K) {
-            editor = K.create('#notice', {
+            uploadJson: '/Home/UploadImage',
+            editor = K.create('#notice, #intro, #localIntro', {
+                uploadJson : '../itemTuan/upload/editor',
+                fileManagerJson : '../itemTuan/upload/editor',
+                allowFileManager : true,
                 items: [
-                    'forecolor', 'bold'
+                    'source', '|', 'undo', 'redo', '|', 'preview', 'template', 'code', 'cut', 'copy', 'paste',
+                    'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                    'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                    'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+                    'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'image',
+                    'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'hr', 'emoticons', 'pagebreak',
+                    'link', 'unlink', '|', 'about'
                 ]
             });
         });
+
     </script>
 </body>
 </html>
