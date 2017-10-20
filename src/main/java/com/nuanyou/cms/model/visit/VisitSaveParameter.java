@@ -39,7 +39,7 @@ public class VisitSaveParameter {
     private Integer cooperationStatus;
     private String contactPerson;
     private String contactInfo;
-
+    private String tag;
     private Integer visitType;
     @JsonProperty("merchantid")
     public Long getMerchantId() {
@@ -258,5 +258,13 @@ public class VisitSaveParameter {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

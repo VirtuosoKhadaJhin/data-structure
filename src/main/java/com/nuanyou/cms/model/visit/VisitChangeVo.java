@@ -40,6 +40,8 @@ public class VisitChangeVo {
 
     private VisitDetailExtension<List<String>> detailImgs;
 
+    private VisitDetailExtension<String> tag;
+
     private Date changeTime;
 
     private String bdName;
@@ -186,5 +188,13 @@ public class VisitChangeVo {
 
     public void setBdName(String bdName) {
         this.bdName = bdName;
+    }
+
+    public VisitDetailExtension<String> getTag() {
+        return tag;
+    }
+
+    public void setTag(VisitDetailExtension<String> tag) {
+        this.tag = tag;
     }
 }
