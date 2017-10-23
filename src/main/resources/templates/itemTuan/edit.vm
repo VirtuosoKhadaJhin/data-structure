@@ -148,7 +148,7 @@
                                     <textarea name="localIntro" id="localIntro"
                                               class="span9">$!entity.localIntro</textarea>
                                 </div>
-                                <label class="control-label">展示图</label>
+                                <label class="control-label">展示图（多图）</label>
                                 <div class="controls">
                                     <input type="text" class="span8" name="imgUrl" id="imgUrl" value="$!entity.imgUrl">
                                     <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览
