@@ -1,6 +1,10 @@
 #parse("common/list_start.vm")
+<link href="/dist/css/order-refund/refund.css" rel="stylesheet"/>
 <div id="breadcrumb">
-    <a href="/index" class="tip-bottom" data-original-title="Go to Home"><i class="icon-home"></i> 主页</a>
+    <a href="/index" class="tip-bottom" data-original-title="Go to Home">
+        <i class="icon-home"></i>
+        主页
+    </a>
     <a href="../order/refundList" class="tip-bottom" data-original-title="">退款管理</a>
 </div>
 <div class="widget-title">
@@ -40,13 +44,15 @@
             #foreach($e in $!page.content)
             <tr>
                 <!--操作-->
-                <td>
-                    <a href="refundEdit?type=3&id=$!e.id" class="btn btn-success btn-mini">退款操作</a>
+                <td style="text-align: center">
+                    <a href="refundEdit?type=3&id=$!e.id" class="btn btn-info btn-mini">手工操作</a>
+                    <button class="btn btn-primary btn-mini auto-refund" data-id=""$!e.id>自动退款</button>
                 </td>
                 <td>$!e.id</td>
                 <td>
                     <a href="$!link.contextPath/order/list?ordersn=$!e.ordersn" class="alink">
-                        订单编号:$!e.ordersn<br>
+                        订单编号:$!e.ordersn
+                        <br>
                         订单流水号:$!e.transactionid
                     </a>
                 </td>
@@ -55,14 +61,13 @@
                 <td>$!e.ordertype.name</td>
                 <td>$!e.paytype.name</td>
                 <td>
-
-
                     <a href="$!link.requestPath/merchant/detail?id=$!e.merchant.id" class="alink">
-                        ID $!e.merchant.id<br>
-                        名称 $!e.merchant.name<br>
+                        ID $!e.merchant.id
+                        <br>
+                        名称 $!e.merchant.name
+                        <br>
                         本地 $!e.merchant.kpname
                     </a>
-
                 </td>
                 <td>$!e.userId</td>
                 <td>$!e.user.nickname</td>
@@ -71,7 +76,9 @@
                 <td> $!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.refundtime)</td>
                 <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!e.refundaudittime)</td>
                 <td>$!e.refundsource.name</td>
-                <td><span title="$!e.refundremark">$!e.refundremark</span></td>
+                <td>
+                    <span title="$!e.refundremark">$!e.refundremark</span>
+                </td>
                 <td>$!numberFormatter.format("#0.00",$!e.kpprice)</td>
                 <td>$!numberFormatter.format("#0.00",$!e.okpprice)</td>
                 <td>
@@ -90,13 +97,14 @@
 #parse("common/list_mid.vm")
 <form class="form-horizontal " role="form" method="get">
     <div class="control-group">
-        <input type="hidden" class="span11" name="countryids" value="$!countryids" >
+        <input type="hidden" class="span11" name="countryids" value="$!countryids">
         #if($!countries.size() > 1)
             <label>国家：</label>
             <select name="countryid" class="span11">
                 <option value="">全部</option>
                 #foreach($country in $!countries)
-                    <option value="$country.id" #if($!entity.countryid== $country.id) selected #end>$country.name</option>
+                    <option value="$country.id" #if($!entity.countryid== $country.id)
+                            selected #end>$country.name</option>
                 #end
             </select>
         #end
@@ -110,13 +118,21 @@
         <label>商户中文名：</label>
         <input type="text" class="span11" name="merchant.name" value="$!entity.merchant.name" placeholder="商户中文名">
 
-        <label>下单时间：</label>
-        <input type="text" class="span11 dateTimeFormat" name="begin" value="$!time.beginStr" id="beginTime" placeholder="开始时间">
-        <input type="text" class="span11 dateTimeFormat" name="end" value="$!time.endStr" id="endTime" placeholder="结束时间">
+        <label>下单开始时间：</label>
+        <input type="text" class="span11 dateTimeFormat" name="begin" value="$!time.beginStr" id="beginTime"
+               placeholder="开始时间">
 
-        <label>申请退款时间：</label>
-        <input type="text" class="span11 dateTimeFormat" name="begin_2" value="$!time.begin_2Str" id="beginTime2" placeholder="开始时间">
-        <input type="text" class="span11 dateTimeFormat" name="end_2" value="$!time.end_2Str" id="endTime2" placeholder="结束时间">
+        <label>下单结束时间：</label>
+        <input type="text" class="span11 dateTimeFormat" name="end" value="$!time.endStr" id="endTime"
+               placeholder="结束时间">
+
+        <label>申请退款开始时间：</label>
+        <input type="text" class="span11 dateTimeFormat" name="begin_2" value="$!time.begin_2Str" id="beginTime2"
+               placeholder="开始时间">
+
+        <label>申请退款结束时间：</label>
+        <input type="text" class="span11 dateTimeFormat" name="end_2" value="$!time.end_2Str" id="endTime2"
+               placeholder="结束时间">
 
         <div class="input-group-addon">退款状态</div>
         <select name="refundstatus" class="span11">
@@ -128,11 +144,22 @@
 
     </div>
 
-    <button type="submit" class="btn btn-primary">查询</button>
-    <a class="btn btn-warning export" href="javascript:void(0);">导出</a>
+    <div class="form-btn">
+        <button type="submit" class="btn btn-primary">查询</button>
+        <a class="btn btn-warning export" href="javascript:void(0);">导出</a>
+    </div>
+
 </form>
 <script type="text/javascript">
     $(function () {
+        $(".auto-refund").on("click", function () {
+            window.wxc.xcConfirm("自动退款，请点击确认按钮。", "confirm", {
+                onOk: function () {
+                    LoadingTask.showLoading("html");
+                }
+            });
+        });
+
         $(".export").on("click", function () {
 
             if (!validateTime($("#beginTime").val(), $("#endTime").val()) && !validateTime($("#beginTime2").val(), $("#endTime2").val())) {
