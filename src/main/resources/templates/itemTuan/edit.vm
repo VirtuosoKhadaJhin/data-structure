@@ -139,13 +139,12 @@
                                 <div class="controls">
                                     <textarea name="intro" id="intro" class="span9">$!entity.intro</textarea>
                                 </div>
-                                <p style="margin-left: 200px;">图文消息限制4000字以内</p>
+                                <p style="margin-left: 200px;">图文详情限制4000字以内</p>
                                 <label class="control-label">商品详情（当地文）</label>
                                 <div class="controls">
-                                    <textarea name="localIntro" id="localIntro"
-                                              class="span9">$!entity.localIntro</textarea>
+                                    <textarea name="localIntro" rows="5" class="span9">$!entity.localIntro</textarea>
                                 </div>
-                                <p style="margin-left: 200px;">图文消息限制4000字以内</p>
+                                <p style="margin-left: 200px;">字数详情限制4000字以内</p>
 
                                 <label class="control-label">展示图（多图）</label>
                                 <div class="controls" style="height: 100px;">
