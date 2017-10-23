@@ -4,6 +4,7 @@
 <link href="http://cdn.bootcss.com/jquery-datetimepicker/2.5.4/jquery.datetimepicker.min.css" rel="stylesheet"/>
 <link href="/dist/css/matrix-style.css" rel="stylesheet"/>
 <link href="/dist/css/matrix-media.css" rel="stylesheet"/>
+<link href="/dist/css/jquery.slideBox.css" rel="stylesheet"/>
 <link href="/dist/font-awesome/css/font-awesome.css" rel="stylesheet"/>
 <link href="/dist/css/uniform.css" rel="stylesheet"/>
 <link href="/dist/css/common.css" rel="stylesheet"/>

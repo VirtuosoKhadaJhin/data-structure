@@ -90,6 +90,54 @@
         } else {
             $('#modal-fileupload').modal('hide');
             $("#" + id).val(imgUrl);
+            if (id == "multiImgs") {
+                $.ajax({
+                    url: 'saveImgUrl',
+                    async: false,
+                    data: {itemId: $(".item-tuan-id").val(), imgUrl: imgUrl},
+                    type: 'post',
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.data == null) {
+                            window.wxc.xcConfirm("超过张数限制！", window.wxc.xcConfirm.typeEnum.confirm);
+                            return false;
+                        }
+                        var imgId = result.data.id;
+                        var imgContent = "<div class='hovereffect' data-id='" + imgId + "'>" +
+                                "<a target='_blank' href='" + imgUrl + "'>" +
+                                "<img class='img-polaroid td-img' src='" + imgUrl + "'" +
+                                " style='width: 60px;height: 60px;'" +
+                                " onerror='javascript:this.src='/dist/img/logo.png';'>" +
+                                "</a>" +
+                                "<button type='button' class='btn btn-danger btn-mini img-remove'" +
+                                "style='display: block;margin-left: 35%;margin-top: 8px;' data-id='" + imgId + "'>删除" +
+                                "</button>" +
+                                "</div>";
+                        $(".no-img-list").hide();
+                        $(".img-list").append(imgContent);
+                        $(".img-remove").on("click", function(){
+                            var id = $(this).attr("data-id");
+                            window.wxc.xcConfirm("确认删除该图片吗？", window.wxc.xcConfirm.typeEnum.confirm, {
+                                onOk: function () {
+                                    LoadingTask.showLoading("html");
+                                    $.ajax({
+                                        url: 'deleteImgUrl',
+                                        async: false,
+                                        data: {itemId: id},
+                                        type: 'post',
+                                        dataType: 'json',
+                                        success: function (result) {
+                                            LoadingTask.hideLoading("html");
+                                            $("#imgHover_" + id).remove();
+                                        },
+                                    });
+                                }
+                            });
+                        });
+
+                    },
+                });
+            }
         }
         $("#uploadBtn").removeAttr("disabled");
     }

@@ -12,6 +12,7 @@ import com.nuanyou.cms.entity.enums.TuanType;
 import com.nuanyou.cms.model.ItemVO;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.ItemService;
+import com.nuanyou.cms.service.ItemTuanImgService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.OrderService;
 import com.nuanyou.cms.util.JsonUtils;
@@ -48,6 +49,9 @@ public class ItemTuanController {
     private ItemTuanDao itemTuanDao;
 
     @Autowired
+    private ItemTuanImgService itemTuanImgService;
+
+    @Autowired
     private TuanActivityTemplateDao tuanActivityTemplateDao;
 
     @Autowired
@@ -70,10 +74,10 @@ public class ItemTuanController {
         if (originalFilename.contains(".")) {
             fileType = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
         }
-        try{
+        try {
             String callBackImgUrl = fileClient.uploadFile(file.getInputStream(), fileType);
             response.getWriter().println("{\"error\" : 0,\"url\" : \"" + callBackImgUrl + "\"}");
-        }catch (Exception e){
+        } catch (Exception e) {
             response.getWriter().println("{\"error\" : 1,\"url\" : \"上传失败，请等待网络稳定时重试！\"}");
         }
     }
@@ -92,6 +96,9 @@ public class ItemTuanController {
                 entity.setOkpPrice(price);
                 model.addAttribute("hasItems", true);
             }
+
+            List<ItemTuanImg> itemTuanImgUrls = itemTuanImgService.getItemTuanImgUrls(id);
+            model.addAttribute("imgUrls", itemTuanImgUrls);
 
             model.addAttribute("entity", entity);
             mchId = entity.getMerchant().getId();
@@ -164,7 +171,7 @@ public class ItemTuanController {
 //                .withMatcher("name", contains().ignoreCase());
 
         entity.setItemType(2);
-        Page<Item> page = itemService.findByCondition(entity,pageable);
+        Page<Item> page = itemService.findByCondition(entity, pageable);
         model.addAttribute("page", page);
 
         List<Merchant> merchants = merchantService.getIdNameList();
@@ -173,6 +180,21 @@ public class ItemTuanController {
         model.addAttribute("entity", entity);
         return "itemTuan/list";
     }
+
+    @RequestMapping("saveImgUrl")
+    @ResponseBody
+    public APIResult saveImgUrl(@RequestParam(required = true) Long itemId, @RequestParam(required = true) String imgUrl) {
+        ItemTuanImg itemTuanImg = itemTuanImgService.saveImgUrl(itemId, imgUrl);
+        return new APIResult(itemTuanImg);
+    }
+
+    @RequestMapping("deleteImgUrl")
+    @ResponseBody
+    public APIResult deleteImgUrl(@RequestParam(required = true) Long itemId) {
+        itemTuanImgService.deleteImgUrl(itemId);
+        return new APIResult();
+    }
+
 
     @RequestMapping(path = "api/list")
     @ResponseBody
