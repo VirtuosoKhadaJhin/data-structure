@@ -136,6 +136,9 @@ public class ItemTuanController {
             });
         }
 
+        List<ItemTuanImg> itemTuanImgUrls = itemTuanImgService.getItemTuanImgUrls(vo.getId());
+        model.addAttribute("imgUrls", itemTuanImgUrls);
+
         vo.setItemType(2);
         Item entity = itemService.saveNotNull(vo, itemTuanList);
         model.addAttribute("entity", entity);
