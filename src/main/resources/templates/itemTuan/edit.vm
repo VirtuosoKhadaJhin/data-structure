@@ -6,6 +6,7 @@
     <title>暖游 后台管理系统</title>
     #include("common/css-support.vm")
     <link rel="stylesheet" href="/dist/markdown/css/editormd.css"/>
+    <link href="/dist/css/mission/tracks.css" rel="stylesheet"/>
     <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon"/>
     <style>
         .input-waring-tip {
@@ -30,7 +31,7 @@
 <div id="content">
     <div class="container-fluid">
         <div class="row-fluid">
-            <div class="span10">
+            <div class="span12">
                 <div class="widget-box">
                     <div id="breadcrumb">
                         <a href="/index" class="tip-bottom" data-original-title="Go to Home">
@@ -56,7 +57,7 @@
                             <div class="control-group">
                                 <label class="control-label">商户</label>
                                 <div class="controls">
-                                    <select name="merchant.id" class="span9 select2" target-name="cat.id"
+                                    <select name="merchant.id" class="span8 select2" target-name="cat.id"
                                             target-url="/itemCat/api/list?display=true">
                                         #foreach($e in $!merchants)
                                             <option value="$!e.id" #if($!e.id == $!entity.merchant.id)
@@ -130,40 +131,57 @@
                                     <input name="display" type="radio" value="false"#if(!$entity.display)checked#end/>
                                     否
                                 </div>
-                            #*             <label class="control-label">团购日期</label>
-                                         <div class="controls">
-                                             <input name="startTime" type="text" class="span5 dateTimeFormat" placeholder="开始时间" required value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.startTime)">
-                                             <input name="endTime" type="text" class="span5 dateTimeFormat" placeholder="结束时间" required value="$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.endTime)">
-                                         </div>*#
                                 <label class="control-label">顺序</label>
                                 <div class="controls">
                                     <input name="sort" type="number" class="span9" value="$!entity.sort">
                                 </div>
                                 <label class="control-label">商品详情</label>
                                 <div class="controls">
-                                    <textarea class="span9" name="intro" rows="5" style="resize: vertical;"
-                                              maxlength="200">$!entity.intro</textarea>
+                                    <textarea name="intro" id="intro" class="span9">$!entity.intro</textarea>
                                 </div>
+                                <p style="margin-left: 200px;">图文详情限制4000字以内</p>
                                 <label class="control-label">商品详情（当地文）</label>
                                 <div class="controls">
-                                    <textarea class="span9" name="localIntro" rows="5" style="resize: vertical;"
-                                              maxlength="200">$!entity.localIntro</textarea>
+                                    <textarea name="localIntro" rows="5" class="span9">$!entity.localIntro</textarea>
                                 </div>
-                                <label class="control-label">展示图</label>
-                                <div class="controls">
-                                    <input type="text" class="span8" name="imgUrl" id="imgUrl" value="$!entity.imgUrl">
-                                    <button type="button" class="btn btn-success previewBtn" data-id="imgUrl">预览
-                                    </button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="imgUrl"
-                                            imageSpec="TuanShow">上传
-                                    </button>
-                                    <p>尺寸: 640 * 480, 限制: 100k</p>
+                                <p style="margin-left: 200px;">字数详情限制4000字以内</p>
+
+                                <label class="control-label">展示图（多图）</label>
+                                <div class="controls" style="height: 100px;">
+                                    <div class="imgurl-info" style="height: 100px;">
+                                        #if($!imgUrls.size() == 0)
+                                            <textarea type="text" class="no-img-list span8" placeholder="暂无展示图" rows="5"
+                                                      style="resize: none" readonly></textarea>
+                                        #end
+                                        <div class="img-list" style="#if($!imgUrls.size() == 0)display:none #end">
+                                            #foreach($entity in $!imgUrls)
+                                                <div class="hovereffect" id="imgHover_$!entity.id">
+                                                    <a target="_blank" href="$!entity.imgUrl">
+                                                        <img class="img-polaroid td-img" src="$!entity.imgUrl"
+                                                             style="width: 60px;height: 60px;"
+                                                             onerror="javascript:this.src='/dist/img/logo.png';">
+                                                    </a>
+                                                    <button type="button" class="btn btn-danger btn-mini img-remove" data-id="$!entity.id"
+                                                            style="display: block;margin-left: 35%;margin-top: 8px;">删除
+                                                    </button>
+                                                </div>
+                                            #end
+                                        </div>
+                                        <button type="button" style="margin-left: 20px;margin-top: 2px"
+                                                class="btn btn-success uploadImgBtn" data-id="multiImgs"
+                                                imageSpec="TuanShow">上传
+                                        </button>
+                                    </div>
                                 </div>
+                                <p style="margin-left: 200px;margin-top: 10px">尺寸: 640 * 480, 限制: 100k</p>
+
+
                                 <label class="control-label">列表图</label>
                                 <div class="controls">
                                     <input type="text" class="span8" name="indexImgUrl" id="indexImgUrl"
                                            value="$!entity.indexImgUrl">
-                                    <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">预览
+                                    <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">
+                                        预览
                                     </button>
                                     <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl"
                                             imageSpec="TuanList">上传
@@ -174,18 +192,18 @@
                                 <div class="controls">
                                     <textarea name="notice" id="notice" class="span9">$!entity.notice</textarea>
                                 </div>
-                            </div>
-                            <div class="form-actions">
-                                <button class="btn btn-success" type="submit" id="btn-save"
-                                        onclick="return checkNameLength()">
-                                    <i class="icon-edit"> 保存</i>
-                                </button>
-                                <a class="btn btn-warning" type="button" id="btn-edit">
-                                    <i class="icon-edit"> 编辑</i>
-                                </a>
-                                <a class="btn btn-primary" href="list">
-                                    <i class="icon-repeat"> 返回</i>
-                                </a>
+                                <div class="form-actions">
+                                    <button class="btn btn-success" type="submit" id="btn-save"
+                                            onclick="return checkNameLength()">
+                                        <i class="icon-edit"> 保存</i>
+                                    </button>
+                                    <a class="btn btn-warning" type="button" id="btn-edit">
+                                        <i class="icon-edit"> 编辑</i>
+                                    </a>
+                                    <a class="btn btn-primary" href="list">
+                                        <i class="icon-repeat"> 返回</i>
+                                    </a>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -277,6 +295,26 @@
 
     #parse("common/js-support.vm")
     <script type="text/javascript">
+        $(".img-remove").on("click", function(){
+            var id = $(this).attr("data-id");
+            window.wxc.xcConfirm("确认删除该图片吗？", window.wxc.xcConfirm.typeEnum.confirm, {
+                onOk: function () {
+                    LoadingTask.showLoading("html");
+                    $.ajax({
+                        url: 'deleteImgUrl',
+                        async: false,
+                        data: {itemId: id},
+                        type: 'post',
+                        dataType: 'json',
+                        success: function (result) {
+                            LoadingTask.hideLoading("html");
+                            $("#imgHover_" + id).remove();
+                        },
+                    });
+                }
+            });
+        });
+
         $(".ch-name").on("blur", function () {
             var length = $(this).val().length;
             if (length > 50) {
@@ -601,12 +639,23 @@
     <script type="text/javascript">
         var editor;
         KindEditor.ready(function (K) {
-            editor = K.create('#notice', {
-                items: [
-                    'forecolor', 'bold'
-                ]
-            });
+            uploadJson: '/Home/UploadImage',
+                    editor = K.create('#notice, #intro, #localIntro', {
+                        uploadJson: '../itemTuan/upload/editor',
+                        fileManagerJson: '../itemTuan/upload/editor',
+                        allowFileManager: true,
+                        items: [
+                            'source', '|', 'undo', 'redo', '|', 'preview', 'template', 'code', 'cut', 'copy', 'paste',
+                            'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                            'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                            'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+                            'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'image',
+                            'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'hr', 'emoticons', 'pagebreak',
+                            'link', 'unlink', '|', 'about'
+                        ]
+                    });
         });
+
     </script>
 </body>
 </html>

@@ -7,6 +7,7 @@
 <script src="/dist/js/xcConfirm.js"></script>
 <script src="/dist/js/jquery.loadmask.js"></script>
 <script src="/dist/js/jquery.metadata.js"></script>
+<script src="/dist/js/jquery.slideBox.js"></script>
 <script src="/dist/js/messenger.js"></script>
 <script src="/dist/js/common.js"></script>
 <script src="/dist/js/jquery-form.js"></script>
