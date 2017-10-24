@@ -1,4 +1,11 @@
 #parse("common/list_start.vm")
+<style>
+    .checkbox {
+        zoom: 140% !important;
+        margin: 0px !important;
+        margin-top: -1px!important;
+    }
+</style>
 <div id="breadcrumb">
     <a href="/index" class="tip-bottom"><i class="icon-home"></i>主页</a>
     <a href="javascript:void(0);" class="tip-bottom">评价管理</a>
@@ -11,6 +18,7 @@
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
+        <th class="th-select"> <input class="checkbox select-all" type="checkbox" />全选</th>
         <th class="th-orderNo">订单编号</th>
         <th class="th-score">评分</th>
         <th class="th-shopName">店铺名称</th>
@@ -24,6 +32,9 @@
     <tbody>
         #foreach($e in $!page.content)
         <tr class="tr-info" data-commentId="$!e.id">
+            <td class="td-select">
+                <input class="checkbox select-one" type="checkbox" />
+            </td>
             <td class="td-order">$!e.order.ordersn</td>
             <td class="td-score">$!e.score</td>
             <td class="td-shopName"><a href="$!link.requestPath/merchant/detail?id=$!e.merchant.id" class="alink"> $!e.merchant.name</a></td>
@@ -54,7 +65,7 @@
 #parse("common/list_mid.vm")
 <form method="get">
     <div class="control-group">
-        <label>商户</label>
+        <label>商户ID</label>
         <select class="span11 select2" name="merchant.id">
             <option value="">全部</option>
             #foreach($merchant in $!merchants)
