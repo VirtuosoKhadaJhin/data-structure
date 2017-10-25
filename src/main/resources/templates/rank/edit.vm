@@ -39,17 +39,17 @@
                                 <div class="controls">
                                     <select class="span7" name="objtype">
                                         <option value="1" #if($!entity.objtype == 1) selected #end>商户</option>
-                                        <option value="2" #if($!entity.objtype == 2) selected #end>团购</option>
+                                        <option value="2" #if($!entity.objtype == 2) selected #end>特品推荐</option>
                                     </select>
                                 </div>
 
-                                <label class="control-label">类型值(商户/团购))</label>
+                                <label class="control-label">类型值(商户/特品推荐))</label>
                                 <div class="controls">
                                     <input type="hidden" class="span6" name="objid" value="$!entity.objid">
                                     #if($!entity.objtype == 1)
                                         <input type="text" class="span6" name="value" value="商家:$!entity.merchant.id : $!entity.merchant.name" readonly required>
                                     #elseif($!entity.objtype == 2)
-                                        <input type="text" class="span6" name="value" value="团购:$!entity.item.id : $!entity.item.name" readonly required>
+                                        <input type="text" class="span6" name="value" value="特品推荐:$!entity.item.id : $!entity.item.name" readonly required>
                                     #else
                                         <input type="text" class="span6" name="value" readonly required>
                                     #end

@@ -90,7 +90,11 @@
                                         #end
                                     </td>
                                     <td class="td-task-status">
-                                        $!entity.version
+                                        #if($!entity.version == "团购")
+                                            特品推荐
+                                        #else
+                                            $!entity.version
+                                        #end
                                     </td>
                                     <td class="merchant-info">
                                         <span>$!entity.merchant.id</span>
@@ -165,7 +169,7 @@
                                     <option value>全部</option>
                                     <option value="拓新"#if($!requestVo.version == '拓新')selected#end>拓新</option>
                                     <option value="维护"#if($!requestVo.version == '维护')selected#end>维护</option>
-                                    <option value="团购"#if($!requestVo.version == '团购')selected#end>团购</option>
+                                    <option value="团购"#if($!requestVo.version == '团购')selected#end>特品推荐</option>
                                 </select>
                             </div>
                             <div class="search-select">
@@ -294,7 +298,7 @@
                             <select style="width: 30%"  class="span11 create-version" name="version" >
                                 <option value="拓新">拓新</option>
                                 <option value="维护">维护</option>
-                                <option value="团购">团购</option>
+                                <option value="团购">特品推荐</option>
                             </select>
                             <p class = "create-version-tip" style="display: none;margin-left: 6%"><strong style='color: red'>*任务类型不可为空</strong></p>
                         </div>
@@ -328,7 +332,7 @@
                             </div>
                             <div style="margin: 5px;margin-left: 20%;">
                                 <input style="margin-top: -5px;zoom: 140%;" task-type="团购" name="bdCheckboxInput" class="bd-checkbox-input" type="radio">
-                                <span class="bd-checkbox-label">团购任务</span>
+                                <span class="bd-checkbox-label">特品推荐任务</span>
                             </div>
                         </div>
                     </div>
