@@ -106,23 +106,22 @@ public class OrderRefundServiceImpl implements OrderRefundService {
 
     @Override
     public APIResult autoHandleRefund(Long id, String transactionId) throws Exception {
-        OrderRefundLog entity = orderRefundLogDao.findOne(id);
-
         List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("tradeno", RSAUtil.encryptTradeNo(transactionId)));
 
-        try {
-            APIResult responseData = this.httpService.doPost(new URI(refundUrl), parameters, APIResult.class);
-            System.out.println("responseText：" + responseData.toString());
+        APIResult responseData = this.httpService.doPost(new URI(refundUrl), parameters, APIResult.class);
+        System.out.println("responseText：" + responseData.toString());
 
+        if(responseData.getCode() == ResultCodes.Success.getCode()){
             // 修改订单状态和退款订单状态 1：通过 2：不通过
-            orderDao.updateOrderRefundLogStatus(entity.getId(), 1);
-            orderRefundLogDao.updateOrderRefundLogStatus(entity.getOrder().getId(), 1);
+            try{
+                orderService.validate(id, RefundStatus.Success.getValue(), "admin");
+            }catch (Exception e){
 
-            return responseData;
-        } catch (Exception e) {
-            return new APIResult(ResultCodes.Fail, "，请稍候重试！");
+            }
         }
+
+        return responseData;
 
     }
 
