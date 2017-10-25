@@ -90,3 +90,6 @@ paymentRecord:
 
 numberbind:
     domain: https://9ny.me/api/
+
+autoHandleRefund:
+  url: http://test.payment.91nuanyou.com/order/refund

@@ -2,6 +2,8 @@ package com.nuanyou.cms.service;
 
 import com.nuanyou.cms.model.CodePayResponse;
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.List;
 
 /**
  * Created by Byron on 2017/6/12.
@@ -21,6 +24,10 @@ public interface HttpService {
     String doGet(URI uri) throws IOException;
 
     String doPost(URI uri, String request) throws IOException;
+
+    String doRequest(HttpRequestBase request) throws IOException;
+
+    <T> T doPost(URI uri, List<NameValuePair> parameters, Class<T> t) throws IOException;
 
     String doPost(URI uri, HttpEntity request) throws IOException;
 
