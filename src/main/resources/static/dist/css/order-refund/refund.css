@@ -1,0 +1,18 @@
+.form-horizontal input {
+    width: 93%;
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    padding: 5px 10px !important;
+    margin-bottom: 10px;
+}
+
+.form-horizontal .form-btn{
+    margin-top: 10px;
+}
+
+.form-horizontal select {
+    width: 93%;
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    margin-bottom: 10px;
+}

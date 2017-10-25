@@ -1,16 +1,17 @@
 package com.nuanyou.cms.controller;
 
+import com.nuanyou.cms.commons.APIResult;
+import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.OrderRefundLogDao;
 import com.nuanyou.cms.entity.order.OrderRefundLog;
+import com.nuanyou.cms.model.mission.MissionDistributeParamVo;
 import com.nuanyou.cms.service.OrderRefundService;
 import com.nuanyou.cms.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -69,6 +70,13 @@ public class OrderRefundLogController {
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
         return "orderRefundLog/list";
+    }
+
+    @RequestMapping("autoHandleRefund")
+    @ResponseBody
+    public APIResult autoHandleRefund(@RequestParam Long id, @RequestParam String transactionId) throws Exception {
+        APIResult apiResult = orderRefundService.autoHandleRefund(id, transactionId);
+        return new APIResult(apiResult);
     }
 
 }
