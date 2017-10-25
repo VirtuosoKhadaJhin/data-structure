@@ -1,7 +1,9 @@
 package com.nuanyou.cms.service.impl;
 
 import com.nuanyou.cms.commons.APIException;
+import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
+import com.nuanyou.cms.dao.OrderDao;
 import com.nuanyou.cms.dao.OrderRefundLogDao;
 import com.nuanyou.cms.entity.enums.RefundStatus;
 import com.nuanyou.cms.entity.order.OrderRefundLog;
@@ -37,6 +39,9 @@ import java.util.List;
  */
 @Service
 public class OrderRefundServiceImpl implements OrderRefundService {
+
+    @Autowired
+    private OrderDao orderDao;
 
     @Autowired
     private HttpService httpService;
@@ -100,16 +105,24 @@ public class OrderRefundServiceImpl implements OrderRefundService {
     }
 
     @Override
-    public void autoHandleRefund(String transactionId) throws Exception {
-        String tradeno = RSAUtil.encryptTradeNo(transactionId);
+    public APIResult autoHandleRefund(Long id, String transactionId) throws Exception {
+        OrderRefundLog entity = orderRefundLogDao.findOne(id);
 
-        URI uri = new URI(refundUrl);
         List<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair("tradeno", tradeno));
+        parameters.add(new BasicNameValuePair("tradeno", RSAUtil.encryptTradeNo(transactionId)));
 
-        String responseText = this.httpService.doPost(uri, parameters, Object.class).toString();
+        try {
+            APIResult responseData = this.httpService.doPost(new URI(refundUrl), parameters, APIResult.class);
+            System.out.println("responseText：" + responseData.toString());
 
-        System.out.println("responseText：" + responseText);
+            // 修改订单状态和退款订单状态 1：通过 2：不通过
+            orderDao.updateOrderRefundLogStatus(entity.getId(), 1);
+            orderRefundLogDao.updateOrderRefundLogStatus(entity.getOrder().getId(), 1);
+
+            return responseData;
+        } catch (Exception e) {
+            return new APIResult(ResultCodes.Fail, "，请稍候重试！");
+        }
 
     }
 

@@ -74,10 +74,9 @@ public class OrderRefundLogController {
 
     @RequestMapping("autoHandleRefund")
     @ResponseBody
-    public APIResult autoHandleRefund(@RequestParam String transactionId) throws Exception {
-
-        orderRefundService.autoHandleRefund(transactionId);
-        return new APIResult(ResultCodes.Success);
+    public APIResult autoHandleRefund(@RequestParam Long id, @RequestParam String transactionId) throws Exception {
+        APIResult apiResult = orderRefundService.autoHandleRefund(id, transactionId);
+        return new APIResult(apiResult);
     }
 
 }
