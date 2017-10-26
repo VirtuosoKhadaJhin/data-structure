@@ -45,9 +45,8 @@
             <tr>
                 <!--操作-->
                 <td style="text-align: center">
+                    <a href="refundEdit?type=3&id=$!e.id" class="btn btn-info btn-mini">手工操作</a>
                     #if($!e.refundstatus == 'RefundInProgress' && $!e.paytype == "WXPAY")
-
-                        <a href="refundEdit?type=3&id=$!e.id" class="btn btn-info btn-mini">手工操作</a>
                         <button class="btn btn-primary btn-mini auto-refund" data-id="$!e.id" data-transactionid="$!e.transactionid">自动退款</button>
                     #end
                 </td>
