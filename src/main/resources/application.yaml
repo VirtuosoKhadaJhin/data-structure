@@ -65,9 +65,7 @@ AWS:
   region: ap-northeast-2
   sns:
     topic:
-      refund: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refund
-      refundSuccess: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refundSuccess
-      refundFail: arn:aws:sns:ap-northeast-2:904656167085:test-ny-v3-refundFail
+z
 
 sso:
   urlPatterns: /*
@@ -93,5 +91,3 @@ numberbind:
 
 autoHandleRefund:
   url: http://test.payment.91nuanyou.com/order/refund
-  sns:
-    url: http://127.0.0.1:5000/push/refundSuccess
