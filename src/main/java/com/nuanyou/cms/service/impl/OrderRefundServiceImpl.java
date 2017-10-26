@@ -12,7 +12,7 @@ import com.nuanyou.cms.service.HttpService;
 import com.nuanyou.cms.service.OrderRefundService;
 import com.nuanyou.cms.service.OrderService;
 import com.nuanyou.cms.util.BeanUtils;
-import com.nuanyou.cms.util.RSAUtil;
+import com.nuanyou.cms.util.RSAUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -54,6 +54,9 @@ public class OrderRefundServiceImpl implements OrderRefundService {
 
     @Value("${autoHandleRefund.url}")
     private String refundUrl;
+
+    @Value("${autoHandleRefund.sns.url}")
+    private String refundSns;
 
     @Override
     public Page<OrderRefundLog> findByCondition(int index, final OrderRefundLog entity) {
@@ -107,12 +110,20 @@ public class OrderRefundServiceImpl implements OrderRefundService {
     @Override
     public APIResult autoHandleRefund(Long id, String transactionId) throws Exception {
         List<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair("tradeno", RSAUtil.encryptTradeNo(transactionId)));
+        parameters.add(new BasicNameValuePair("tradeno", RSAUtils.encryptTradeNo(transactionId)));
 
         APIResult responseData = this.httpService.doPost(new URI(refundUrl), parameters, APIResult.class);
         System.out.println("responseText：" + responseData.toString());
 
         if(responseData.getCode() == ResultCodes.Success.getCode()){
+            // 发送推送
+            List<NameValuePair> sns_parameters = new ArrayList<>();
+            sns_parameters.add(new BasicNameValuePair("orderid", id.toString()));
+
+            APIResult sns_responseData = this.httpService.doPost(new URI(refundSns), sns_parameters, APIResult.class);
+            System.out.println("sns_responseText：" + sns_responseData.toString());
+
+
             // 修改订单状态和退款订单状态 1：通过 2：不通过
             try{
                 orderService.validate(id, RefundStatus.Success.getValue(), "admin");
