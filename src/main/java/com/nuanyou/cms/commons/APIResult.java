@@ -16,6 +16,15 @@ public class APIResult<T> {
     @JsonProperty("data")
     private T data;
 
+    @Override
+    public String toString() {
+        return "APIResult{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
+    }
+
     public APIResult() {
         this.code = ResultCodes.Success.code;
         this.msg = ResultCodes.Success.message;

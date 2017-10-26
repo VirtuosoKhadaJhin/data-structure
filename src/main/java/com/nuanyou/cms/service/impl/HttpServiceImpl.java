@@ -1,13 +1,18 @@
 package com.nuanyou.cms.service.impl;
 
+import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nuanyou.cms.model.CodePayResponse;
 import com.nuanyou.cms.service.HttpService;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -27,6 +32,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.util.List;
 
 /**
  * Created by Byron on 2017/6/13.
@@ -77,6 +83,25 @@ public class HttpServiceImpl implements HttpService {
     @Override
     public String doPost(URI uri, String request) throws IOException {
         return doPost ( uri, new StringEntity ( request, StandardCharsets.UTF_8 ) );
+    }
+
+    @Override
+    public String doRequest(HttpRequestBase request) throws IOException {
+        try (CloseableHttpResponse response = HttpClientBuilder.create().build().execute(request)) {
+            Header[] headers = response.getAllHeaders();
+            HttpEntity entity = response.getEntity();
+            String result = loadEntity(entity);
+            return result;
+        }
+    }
+
+    @Override
+    public <T> T doPost(URI uri, List<NameValuePair> parameters, Class<T> tClass) throws IOException {
+        HttpPost post = new HttpPost(uri);
+        post.setEntity(new UrlEncodedFormEntity(parameters, StandardCharsets.UTF_8));
+        String result = doRequest(post);
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(result, tClass);
     }
 
     @Override
