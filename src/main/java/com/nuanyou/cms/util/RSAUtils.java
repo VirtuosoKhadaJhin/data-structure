@@ -19,7 +19,7 @@ import java.util.Base64;
 /**
  * 数字签名工具
  */
-public class RSAUtil {
+public class RSAUtils {
     public static String sign(byte[] data, String privateKey) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, InvalidKeySpecException {
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(Base64Utils.decodeFromString(privateKey));
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");

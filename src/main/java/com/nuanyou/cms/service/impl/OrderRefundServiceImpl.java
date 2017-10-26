@@ -12,7 +12,7 @@ import com.nuanyou.cms.service.HttpService;
 import com.nuanyou.cms.service.OrderRefundService;
 import com.nuanyou.cms.service.OrderService;
 import com.nuanyou.cms.util.BeanUtils;
-import com.nuanyou.cms.util.RSAUtil;
+import com.nuanyou.cms.util.RSAUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -107,7 +107,7 @@ public class OrderRefundServiceImpl implements OrderRefundService {
     @Override
     public APIResult autoHandleRefund(Long id, String transactionId) throws Exception {
         List<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair("tradeno", RSAUtil.encryptTradeNo(transactionId)));
+        parameters.add(new BasicNameValuePair("tradeno", RSAUtils.encryptTradeNo(transactionId)));
 
         APIResult responseData = this.httpService.doPost(new URI(refundUrl), parameters, APIResult.class);
         System.out.println("responseText：" + responseData.toString());
