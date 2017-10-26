@@ -55,9 +55,6 @@ public class OrderRefundServiceImpl implements OrderRefundService {
     @Value("${autoHandleRefund.url}")
     private String refundUrl;
 
-    @Value("${autoHandleRefund.sns.url}")
-    private String refundSns;
-
     @Override
     public Page<OrderRefundLog> findByCondition(int index, final OrderRefundLog entity) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "createTime");
@@ -116,14 +113,6 @@ public class OrderRefundServiceImpl implements OrderRefundService {
         System.out.println("responseText：" + responseData.toString());
 
         if(responseData.getCode() == ResultCodes.Success.getCode()){
-            // 发送推送
-            List<NameValuePair> sns_parameters = new ArrayList<>();
-            sns_parameters.add(new BasicNameValuePair("orderid", id.toString()));
-
-            APIResult sns_responseData = this.httpService.doPost(new URI(refundSns), sns_parameters, APIResult.class);
-            System.out.println("sns_responseText：" + sns_responseData.toString());
-
-
             // 修改订单状态和退款订单状态 1：通过 2：不通过
             try{
                 orderService.validate(id, RefundStatus.Success.getValue(), "admin");
