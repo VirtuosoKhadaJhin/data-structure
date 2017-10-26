@@ -65,7 +65,6 @@ AWS:
   region: ap-northeast-2
   sns:
     topic:
-z
 
 sso:
   urlPatterns: /*
