@@ -45,8 +45,8 @@
             <tr>
                 <!--操作-->
                 <td style="text-align: center">
-                    #if($!e.refundstatus == 'RefundInProgress')
-                        <a href="refundEdit?type=3&id=$!e.id" class="btn btn-info btn-mini">手工操作</a>
+                    <a href="refundEdit?type=3&id=$!e.id" class="btn btn-info btn-mini">手工操作</a>
+                    #if($!e.refundstatus == 'RefundInProgress' && $!e.paytype == "WXPAY")
                         <button class="btn btn-primary btn-mini auto-refund" data-id="$!e.id" data-transactionid="$!e.transactionid">自动退款</button>
                     #end
                 </td>
@@ -167,8 +167,11 @@
                         dataType: 'json',
                         success: function (result) {
                             LoadingTask.hideLoading("html");
-                            console.log(result);
-                            window.wxc.xcConfirm(result.data.msg, "warning");
+                            window.wxc.xcConfirm(result.data.msg, "warning", {
+                                onOk: function () {
+                                    window.location.reload();
+                                }
+                            });
                         }
                     });
                 }
