@@ -167,8 +167,11 @@
                         dataType: 'json',
                         success: function (result) {
                             LoadingTask.hideLoading("html");
-                            console.log(result);
-                            window.wxc.xcConfirm(result.data.msg, "warning");
+                            window.wxc.xcConfirm(result.data.msg, "warning", {
+                                onOk: function () {
+                                    window.location.reload();
+                                }
+                            });
                         }
                     });
                 }
