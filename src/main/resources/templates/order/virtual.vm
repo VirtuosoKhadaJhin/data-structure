@@ -43,10 +43,10 @@
                                     </div>
                                 </div>
                                 <div class="control-group number-control-group">
-                                    <label class="control-label">团购产品ID：</label>
+                                    <label class="control-label">特品推荐产品ID：</label>
                                     <div class="controls">
                                         <input id="id" name="id" type="number" class="span9 number-control"
-                                               placeholder="请输入团购产品ID" required>
+                                               placeholder="请输入特品推荐产品ID" required>
                                         <span style="color: red" class="itemName"></span>
                                     </div>
                                 </div>

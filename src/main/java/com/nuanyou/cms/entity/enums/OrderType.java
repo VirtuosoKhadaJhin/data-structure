@@ -7,7 +7,7 @@ public enum OrderType {
     Huigou(1, "惠购订单"),
     Youfu(2, "优付订单"),
     WaiMai(3, "外卖订单"),
-    TuanGou(4, "团购订单"),
+    TuanGou(4, "特品推荐订单"),
     Pos(5, "POS收款"),
     Lianmeng(6, "联盟订单"),
     Shunfenggou(7, "顺风购订单"),

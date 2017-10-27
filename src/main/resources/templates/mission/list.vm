@@ -73,7 +73,13 @@
                                         <br/>
                                         <a target="_blank" href="/merchant/edit?id=$!entity.merchant.id">$!entity.merchant.name</a>
                                     </td>
-                                    <td class="task-type">$!entity.version</td>
+                                    <td class="task-type">
+                                        #if($!entity.version == "团购")
+                                            特品推荐
+                                        #else
+                                            $!entity.version
+                                        #end
+                                    </td>
                                     <td class="task-merchant-cooperationStatus">$!entity.merchant.cooperationStatus.name</td>
                                     <td>$!entity.merchant.district.city.name</td>
                                     <td>$!entity.group.name - $!entity.bdUser.chineseName</td>

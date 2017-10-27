@@ -35,7 +35,7 @@
                 <td>商家</td>
                 <td>$!entity.merchant.name</td>
             #else
-                <td>团购</td>
+                <td>特品推荐</td>
                 <td>$!entity.item.name</td>
             #end
             <td>
@@ -80,7 +80,7 @@
         <label>类型</label>
         <select name="objtype" class="span11 parent">
             <option value="">全部</option>
-            <option value="2" #if($!entity.objtype=="2") selected #end>团购</option>
+            <option value="2" #if($!entity.objtype=="2") selected #end>特品推荐</option>
             <option value="1" #if($!entity.objtype=="1") selected #end>商家</option>
         </select>
     </div>
