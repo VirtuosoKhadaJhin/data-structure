@@ -30,15 +30,15 @@
                             <tr class="thread-tr">
                                 <th class="th-op">操作</th>
                                 <th class="th-op">商户名称</th>
-                                <th class="th-op">任务类型</th>
+                                <th class="th-op" style="width: 4%;">任务类型</th>
                                 <th class="th-op">合作状态</th>
-                                <th class="th-op">跟进类型</th>
-                                <th class="th-op">城市</th>
+                                <th class="th-op" style="width: 5%;">拜访类型</th>
+                                <th class="th-op" style="width: 4%;">城市</th>
                                 <th class="th-op">组名-BD名</th>
-                                <th class="th-img">签到图</th>
-                                <th class="th-op">商户通版本号</th>
-                                <th class="th-op">测试订单</th>
-                                <th class="th-op">状态</th>
+                                <th class="th-img" style="width: 18%;">签到图</th>
+                                <th class="th-op" style="width: 4%;">商户通版本号</th>
+                                <th class="th-op" style="width: 4%;">测试订单</th>
+                                <th class="th-op" style="width: 4%;">状态</th>
                                 <th class="th-op">拜访记录</th>
                                 <th class="th-op">审核备注</th>
                                 <th class="th-op">审核时间</th>
@@ -67,7 +67,11 @@
                                                     </button>
                                                 </nobr>
                                             </div>
+                                            <br>
                                         #end
+                                        <a style="color:#fff" class="btn btn-success btn-mini"  href="/visit/change?id=$!entity.visitId">
+                                            <i class="icon-eye-open">查看变更</i>
+                                        </a>
                                     </td>
                                     <td>
                                         <span>$!entity.merchant.id</span>
@@ -106,8 +110,8 @@
                                     <td>$!entity.status.value</td>
                                     <td class="td-bz" title="$!entity.merchantTrack.note">$!entity.merchantTrack.note</td>
                                     <td class="td-bz" title="$!entity.remark">$!entity.remark</td>
-                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.auditDt)</td>
-                                    <td>$!dateFormatter.format("yyyy-MM-dd HH:mm:ss",$!entity.finishDt)</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.auditDt)<br>$!dateFormatter.format("HH:mm:ss",$!entity.auditDt)</td>
+                                    <td>$!dateFormatter.format("yyyy-MM-dd",$!entity.finishDt)<br>$!dateFormatter.format("HH:mm:ss",$!entity.finishDt)</td>
                                 </tr>
                                 #end
                             </tbody>
