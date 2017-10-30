@@ -69,9 +69,11 @@
                                             </div>
                                             <br>
                                         #end
+                                    #if($!entity.visitId)
                                         <a style="color:#fff" class="btn btn-success btn-mini"  href="/visit/change?id=$!entity.visitId">
                                             <i class="icon-eye-open">查看变更</i>
                                         </a>
+                                    #end
                                     </td>
                                     <td>
                                         <span>$!entity.merchant.id</span>

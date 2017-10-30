@@ -251,8 +251,10 @@ public class MissionTaskServiceImpl implements MissionTaskService {
         }
         for (Map.Entry entry : maps.entrySet()){
             BdMerchantTrack bdMerchantTrack = map.get(entry.getKey());
-            maps.get(entry.getKey()).setVisitType(bdMerchantTrack.getVisitType()!=null?bdMerchantTrack.getVisitType().getName():null);
-            maps.get(entry.getKey()).setVisitId(bdMerchantTrack.getId());
+            if (bdMerchantTrack != null) {
+                maps.get(entry.getKey()).setVisitType(bdMerchantTrack.getVisitType() != null ? bdMerchantTrack.getVisitType().getName() : null);
+                maps.get(entry.getKey()).setVisitId(bdMerchantTrack.getId());
+            }
         }
         Iterator<BdMerchantTrack> iterator = tracks.iterator();
         while (iterator.hasNext()) {
