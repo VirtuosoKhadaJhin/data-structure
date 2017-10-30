@@ -243,6 +243,13 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 return query.where(predicate.toArray(arrays)).getRestriction();
             }
         });
+        Map<Long,String> map = new HashMap<>();
+        for (BdMerchantTrack bdMerchantTrack : tracks) {
+            if (!map.containsKey(bdMerchantTrack.getMchId()))
+                map.put(bdMerchantTrack.getMchId(),bdMerchantTrack.getVisitType()!=null?bdMerchantTrack.getVisitType().getName():null);
+        }
+        for (Map.Entry entry : maps.entrySet())
+            maps.get(entry.getKey()).setVisitType(map.get(entry.getKey()));
         Iterator<BdMerchantTrack> iterator = tracks.iterator();
         while (iterator.hasNext()) {
             BdMerchantTrack next = iterator.next();

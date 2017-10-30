@@ -32,6 +32,7 @@
                                 <th class="th-op">商户名称</th>
                                 <th class="th-op">任务类型</th>
                                 <th class="th-op">合作状态</th>
+                                <th class="th-op">跟进类型</th>
                                 <th class="th-op">城市</th>
                                 <th class="th-op">组名-BD名</th>
                                 <th class="th-img">签到图</th>
@@ -81,6 +82,7 @@
                                         #end
                                     </td>
                                     <td class="task-merchant-cooperationStatus">$!entity.merchant.cooperationStatus.name</td>
+                                    <td class="">$!entity.visitType</td>
                                     <td>$!entity.merchant.district.city.name</td>
                                     <td>$!entity.group.name - $!entity.bdUser.chineseName</td>
                                     <td class="td-imgurl">
