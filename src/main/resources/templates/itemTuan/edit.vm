@@ -164,7 +164,7 @@
                                             #end
                                         </div>
                                         <button type="button" style="margin-left: 5px"
-                                                class="btn btn-success uploadImgBtn" data-id="multiImgs"
+                                                class="btn btn-success uploadImgBtn" data-prex="jpg" data-id="multiImgs"
                                                 imageSpec="TuanShow">上传
                                         </button>
                                     </div>
