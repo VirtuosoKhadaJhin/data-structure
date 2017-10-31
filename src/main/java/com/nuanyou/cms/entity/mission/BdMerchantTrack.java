@@ -2,6 +2,8 @@ package com.nuanyou.cms.entity.mission;
 
 import com.google.common.collect.Lists;
 import com.nuanyou.cms.commons.DateEntityListener;
+import com.nuanyou.cms.entity.BdUser;
+import com.nuanyou.cms.entity.VisitType;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
@@ -44,6 +46,11 @@ public class BdMerchantTrack {
 
     @Column(name = "operation")
     private Integer operation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "type")
+    private VisitType visitType;
+
 
     public Long getId() {
         return id;
@@ -115,6 +122,14 @@ public class BdMerchantTrack {
 
     public void setOperation(Integer operation) {
         this.operation = operation;
+    }
+
+    public VisitType getVisitType() {
+        return visitType;
+    }
+
+    public void setVisitType(VisitType visitType) {
+        this.visitType = visitType;
     }
 
     public List<String> getImgUrls(){

@@ -57,6 +57,10 @@ public class MissionTaskVo {
 
     private Date visitDt;
 
+    private String visitType;
+
+    private Long visitId;
+
     public Long getId() {
         return id;
     }
@@ -223,6 +227,22 @@ public class MissionTaskVo {
 
     public void setVisitDt(Date visitDt) {
         this.visitDt = visitDt;
+    }
+
+    public String getVisitType() {
+        return visitType;
+    }
+
+    public void setVisitType(String visitType) {
+        this.visitType = visitType;
+    }
+
+    public Long getVisitId() {
+        return visitId;
+    }
+
+    public void setVisitId(Long visitId) {
+        this.visitId = visitId;
     }
 
     public boolean getIsExpiredDistributed() {

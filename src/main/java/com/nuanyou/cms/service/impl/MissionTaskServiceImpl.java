@@ -240,9 +240,22 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 predicate.add(root.get("mchId").in(ids));
                 Predicate[] arrays = new Predicate[predicate.size()];
                 ArrayList<Order> orderBys = Lists.newArrayList(cb.desc(root.get("id")));
+                query.orderBy(orderBys);
                 return query.where(predicate.toArray(arrays)).getRestriction();
             }
         });
+        Map<Long,BdMerchantTrack> map = new HashMap<>();
+        for (BdMerchantTrack bdMerchantTrack : tracks) {
+            if (!map.containsKey(bdMerchantTrack.getMchId()))
+                map.put(bdMerchantTrack.getMchId(),bdMerchantTrack);
+        }
+        for (Map.Entry entry : maps.entrySet()){
+            BdMerchantTrack bdMerchantTrack = map.get(entry.getKey());
+            if (bdMerchantTrack != null) {
+                maps.get(entry.getKey()).setVisitType(bdMerchantTrack.getVisitType() != null ? bdMerchantTrack.getVisitType().getName() : null);
+                maps.get(entry.getKey()).setVisitId(bdMerchantTrack.getId());
+            }
+        }
         Iterator<BdMerchantTrack> iterator = tracks.iterator();
         while (iterator.hasNext()) {
             BdMerchantTrack next = iterator.next();

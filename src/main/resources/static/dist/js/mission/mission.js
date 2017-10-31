@@ -13,6 +13,62 @@ $(function () {
         }
     });
 
+    // show img
+
+    showLoading = function (a) {
+        $(a).mask('<img src="/dist/img/loading.gif"/>')
+    };
+
+    hideLoading = function (a) {
+        $(a).unmask();
+    };
+
+    $(".originalImg").load(function () {
+        hideLoading ($(".show_img"));
+    });
+
+    $(".originalImg").error(function (e) {
+        // hideLoading ($(".show_img"));
+        $(".originalImg").attr('src',"/dist/img/errorimg.jpg") ;
+    });
+
+
+    $(".more_img").on("click", function () {
+        openImgUrls(this.id);
+    });
+    $(".a_img").on("click", function () {
+        openImgUrls(this.id);
+    });
+    var index;
+    var imgArray = new Array();
+    $(".left").on("click", function () {
+        if (index > 1){
+            //loading
+            showLoading($(".show_img"));
+            $(".originalImg").attr('src',imgArray[index-2]) ;
+            index = index - 1;
+            $("#img_index").text(index);
+        }
+    });
+    $(".right").on("click", function () {
+        if (index < imgArray.length){
+            showLoading($(".show_img"));
+            $(".originalImg").attr('src',imgArray[index]) ;
+            index = index + 1;
+            $("#img_index").text(index);
+        }
+    });
+    function openImgUrls(imgs) {
+        imgs = imgs.replace("[","").replace("]","");
+        imgArray = imgs.split(",");
+        showLoading($(".show_img"));
+        $(".originalImg").attr('src',imgArray[0]) ;
+        $("#img_index").text(1);
+        $("#img_total").text(imgArray.length);
+        index = parseInt($("#img_index").text());
+        $(".imgResultModel").modal("show");
+    };
+
     // 搜索框重置
     $(".search-reset").click(function () {
         $(".search-form").find('input:text, input:password, input:file, select, textarea').val('');
@@ -20,6 +76,10 @@ $(function () {
         // $(".select-country").val("1");
     });
 
+
+    $(".viewChange").on("click", function () {
+        window.open( "/visit/change?id="+$(this).attr("data-visitId"));
+    });
     // 审批弹窗
     $(".approval").on("click", function () {
         $(".approval-status").val("APPROVED");
