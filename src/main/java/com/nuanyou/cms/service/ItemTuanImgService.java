@@ -1,5 +1,6 @@
 package com.nuanyou.cms.service;
 
+import com.nuanyou.cms.entity.ItemDetailimg;
 import com.nuanyou.cms.entity.ItemTuanImg;
 
 import java.util.List;
@@ -15,4 +16,5 @@ public interface ItemTuanImgService {
 
     List<ItemTuanImg> getItemTuanImgUrls(Long itemId);
 
+    void setNewItemTuanImgs(Long id, List<String> detailimgs);
 }

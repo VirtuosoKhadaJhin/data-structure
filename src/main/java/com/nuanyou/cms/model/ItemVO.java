@@ -56,12 +56,31 @@ public class ItemVO {
 
     private List<String> spec;
 
+    // UI使用
+    private List<String> detailImgs;
+
     public ItemVO() {
     }
 
     public ItemVO(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Boolean getHot() {
+        return isHot;
+    }
+
+    public void setHot(Boolean hot) {
+        isHot = hot;
+    }
+
+    public List<String> getDetailImgs() {
+        return detailImgs;
+    }
+
+    public void setDetailImgs(List<String> detailImgs) {
+        this.detailImgs = detailImgs;
     }
 
     public Long getId() {
