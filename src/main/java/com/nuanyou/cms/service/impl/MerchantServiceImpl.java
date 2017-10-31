@@ -93,8 +93,8 @@ public class MerchantServiceImpl implements MerchantService {
         return merchantDao.getIdNameList(countryIds);
     }
 
-    private static final String sg_url = "https://sg.h5.m.91nuanyou.com/view/order/youfu.html";
-    private static final String kr_url = "https://kr.h5.m.91nuanyou.com/view/order/youfu.html";
+    private static final String sg_url = "https://sg.h5.m.91nuanyou.com/view/order/guide.html";
+    private static final String kr_url = "https://kr.h5.m.91nuanyou.com/view/order/guide.html";
 
     @Override
     public List<Merchant> getIdNameList(Boolean display) {

@@ -24,25 +24,25 @@
                             <span class="icon"><i class="icon-th"></i></span>
                             <h5>商户审核列表</h5>
                         </div>
-
-                        <table class="table table-bordered data-table dataTable">
+                        <div style="height: 640px;overflow: auto;width: 100%">
+                        <table class="table table-bordered data-table dataTable" style="width: 2000px;">
                             <thead class="thead-class">
                             <tr class="thread-tr">
-                                <th class="th-op">操作</th>
-                                <th class="th-op">商户名称</th>
-                                <th class="th-op" style="width: 4%;">任务类型</th>
-                                <th class="th-op">合作状态</th>
-                                <th class="th-op" style="width: 5%;">拜访类型</th>
-                                <th class="th-op" style="width: 4%;">城市</th>
-                                <th class="th-op">组名-BD名</th>
-                                <th class="th-img" style="width: 18%;">签到图</th>
-                                <th class="th-op" style="width: 4%;">商户通版本号</th>
-                                <th class="th-op" style="width: 4%;">测试订单</th>
-                                <th class="th-op" style="width: 4%;">状态</th>
-                                <th class="th-op">拜访记录</th>
-                                <th class="th-op">审核备注</th>
-                                <th class="th-op">审核时间</th>
-                                <th class="th-op">完成时间</th>
+                                <th>操作</th>
+                                <th>商户名称</th>
+                                <th>任务类型</th>
+                                <th>合作状态</th>
+                                <th>拜访类型</th>
+                                <th>城市</th>
+                                <th>组名-BD名</th>
+                                <th>签到图</th>
+                                <th>商户通版本号</th>
+                                <th>测试订单</th>
+                                <th>状态</th>
+                                <th>拜访记录</th>
+                                <th>审核备注</th>
+                                <th>审核时间</th>
+                                <th>完成时间</th>
                             </tr>
                             </thead>
                             <tbody class="tbody-list">
@@ -59,21 +59,22 @@
                                 #foreach($entity in $!page.content)
                                 <tr data-mchId="$!entity.merchant.id">
                                     <td>
+                                    <div class="td-op" data-mchId="$!entity.mchId">
                                         #if($!entity.status.key != 3)
-                                            <div class="td-op" data-mchId="$!entity.mchId">
                                                 <nobr>
                                                     <button type="button" class="btn btn-success btn-small td-button approval">
                                                         <i class="icon-file"> 审批</i>
                                                     </button>
                                                 </nobr>
-                                            </div>
-                                            <br>
                                         #end
                                     #if($!entity.visitId)
-                                        <a style="color:#fff" class="btn btn-success btn-mini"  href="/visit/change?id=$!entity.visitId">
-                                            <i class="icon-eye-open">查看变更</i>
-                                        </a>
+                                        <nobr>
+                                            <button type="button" class="btn btn-success btn-small td-button viewChange" data-visitId="$!entity.visitId">
+                                                <i class="icon-eye-open">查看变更</i>
+                                            </button>
+                                        </nobr>
                                     #end
+                                    </div>
                                     </td>
                                     <td>
                                         <span>$!entity.merchant.id</span>
@@ -93,19 +94,10 @@
                                     <td>$!entity.group.name - $!entity.bdUser.chineseName</td>
                                     <td class="td-imgurl">
                                         #if($!entity.merchantTrack.imgUrls.size()==0 || "$!entity.merchantTrack.imgUrls"=="")
-                                            <label class="no-img-result">暂无签到图片</label>
+                                            <label class="no-img-result" style="cursor: default;">0张</label>
                                         #else
-                                            <div class="imgurl-info">
-                                                #foreach($imgUrl in $!entity.merchantTrack.imgUrls)
-                                                    <div class="hovereffect">
-                                                        <a target="_blank" href="$!imgUrl">
-                                                            <img class="img-polaroid td-img" src="$!imgUrl">
-                                                        </a>
-                                                    </div>
-                                                #end
-                                            </div>
+                                            <a style="text-decoration: underline" class="more_img" id="$!entity.merchantTrack.imgUrls" target="_blank">$!entity.merchantTrack.imgUrls.size()张</a>
                                         #end
-                                        <a class="imgurl-info-more" target="_blank" href="tracks?mchId=$!entity.merchant.id">查看更多--></a>
                                     </td>
                                     <td>$!entity.mchVersion</td>
                                     <td class="td-bz"><a target="_blank" href="/order/edit?type=3&id=$!entity.orderno">$!entity.orderno</a></td>
@@ -118,6 +110,7 @@
                                 #end
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
                 #set($i=$!page.number + 1)
@@ -254,6 +247,24 @@
         <input type="hidden" class="audit-result"/>
         <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
     </div>
+</div>
+<!-- 图片浏览弹窗 -->
+<div class="modal hide fade imgResultModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999999;top:20%">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">图片浏览</h3>
+    </div>
+
+    <div class="modal-body" style="max-height:600px">
+        <div class="left" style="cursor:pointer;position: absolute;top: 50%;left: 10px;font-size:30px""><</div>
+    <div class="show_img" style="margin:5px 30px">
+        <img  style="width:480px;height: 400px" class="originalImg" src="">
+    </div>
+    <div class="right" style="cursor:pointer;position: absolute;top: 50%;right: 10px;font-size:30px"">></div>
+</div>
+<div class="modal-footer" style="padding:7px 15px">
+    <p style="text-align:center"><span id="img_index">1</span>/<span id="img_total"></span></p>
+</div>
 </div>
 <script type="text/javascript" src="/dist/js/page-support.js"></script>
 <script type="text/javascript" src="/dist/js/mission/mission.js"></script>
