@@ -25,7 +25,8 @@
                             <h5>商户审核列表</h5>
                         </div>
                         <div style="height: 640px;overflow: auto;width: 100%">
-                        <table class="table table-bordered data-table dataTable" style="width: 2000px;">
+                            <div style="width: 2000px;">
+                        <table class="table table-bordered data-table dataTable" >
                             <thead class="thead-class">
                             <tr class="thread-tr">
                                 <th>操作</th>
@@ -110,6 +111,7 @@
                                 #end
                             </tbody>
                         </table>
+                            </div>
                         </div>
                     </div>
                 </div>
