@@ -12,4 +12,6 @@ public interface ItemTuanImgDao extends JpaRepository<ItemTuanImg, Long> {
 
     List<ItemTuanImg> findByItemId(Long itemId);
 
+    List<ItemTuanImg> findByImgUrlIn(List<String> imgUrls);
+
 }

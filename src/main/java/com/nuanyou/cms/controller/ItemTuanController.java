@@ -16,6 +16,7 @@ import com.nuanyou.cms.service.ItemTuanImgService;
 import com.nuanyou.cms.service.MerchantService;
 import com.nuanyou.cms.service.OrderService;
 import com.nuanyou.cms.util.JsonUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -136,12 +137,17 @@ public class ItemTuanController {
             });
         }
 
-        List<ItemTuanImg> itemTuanImgUrls = itemTuanImgService.getItemTuanImgUrls(vo.getId());
-        model.addAttribute("imgUrls", itemTuanImgUrls);
 
         vo.setItemType(2);
         Item entity = itemService.saveNotNull(vo, itemTuanList);
         model.addAttribute("entity", entity);
+
+        if(vo.getId() == null && CollectionUtils.isNotEmpty(vo.getDetailImgs())){
+            itemTuanImgService.setNewItemTuanImgs(entity.getId(), vo.getDetailImgs());
+        }
+
+        List<ItemTuanImg> itemTuanImgUrls = itemTuanImgService.getItemTuanImgUrls(entity.getId());
+        model.addAttribute("imgUrls", itemTuanImgUrls);
 
         List<Merchant> merchants = merchantService.getIdNameList();
         model.addAttribute("merchants", merchants);

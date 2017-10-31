@@ -149,10 +149,6 @@
                                 <label class="control-label">展示图（多图）</label>
                                 <div class="controls" style="height: 100px;">
                                     <div class="imgurl-info" style="height: 100px;">
-                                        #if($!imgUrls.size() == 0)
-                                            <textarea type="text" class="no-img-list span8" placeholder="暂无展示图" rows="5"
-                                                      style="resize: none" readonly></textarea>
-                                        #end
                                         <div class="img-list" style="#if($!imgUrls.size() == 0)display:none #end">
                                             #foreach($entity in $!imgUrls)
                                                 <div class="hovereffect" id="imgHover_$!entity.id">
@@ -167,7 +163,7 @@
                                                 </div>
                                             #end
                                         </div>
-                                        <button type="button" style="margin-left: 20px;margin-top: 2px"
+                                        <button type="button" style="margin-left: 5px"
                                                 class="btn btn-success uploadImgBtn" data-id="multiImgs"
                                                 imageSpec="TuanShow">上传
                                         </button>
@@ -193,6 +189,7 @@
                                     <textarea name="notice" id="notice" class="span9">$!entity.notice</textarea>
                                 </div>
                                 <div class="form-actions">
+                                    <input type="hidden" value="" id="detailimgs" name="detailImgs" />
                                     <button class="btn btn-success" type="submit" id="btn-save"
                                             onclick="return checkNameLength()">
                                         <i class="icon-edit"> 保存</i>
@@ -337,6 +334,15 @@
 
         // 校验字数
         function checkNameLength() {
+            var detailimgs = $.makeArray();
+            $(".imgurl-info img").each(function() {
+                detailimgs.push($(this).attr("src"));
+            });
+            console.log(detailimgs);
+            if(detailimgs.length > 0){
+                $("#detailimgs").val(detailimgs);
+            }
+
             var chNameLength = $(".ch-name").val().length, kpNameLength = $(".kp-name").val().length;
             if (chNameLength > 50) {
                 $(".ch-name-tip").show();
