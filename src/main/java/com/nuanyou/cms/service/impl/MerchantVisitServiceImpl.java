@@ -245,52 +245,38 @@ public class MerchantVisitServiceImpl implements MerchantVisitService {
             MerchantVisit previousVisit = visits.get(0);
             VisitSaveParameter previous_detail =  JSON.parseObject(previousVisit.getContent(),VisitSaveParameter.class);
             tag.setOriginalValue(previous_detail.getTag());
-            tag.setChange(tag.compareChange());
             localName.setOriginalValue(previous_detail.getName());
-            localName.setChange(localName.compareChange());
             District previous_district = districtDao.findOne(previous_detail.getDistrictId());
             districtName.setOriginalValue(previous_district.getName());
             localAddress.setOriginalValue(previous_detail.getAddress());
-            localAddress.setChange(localAddress.compareChange());
             cooperationName.setOriginalValue(MerchantCooperationStatus.toEnum(previous_detail.getCooperationStatus()).getName());
             if (previous_detail.getCatId() != null){
                 MerchantCat previous_cat = merchantCatDao.findOne(previous_detail.getCatId());
                 catName.setOriginalValue(previous_cat.getName());
             }
-            catName.setChange(catName.compareChange());
             if (previous_detail.getSubCatId() != null){
                 MerchantCat previous_subCat = merchantCatDao.findOne(previous_detail.getSubCatId());
                 subCatName.setOriginalValue(previous_subCat.getName());
             }
-            subCatName.setChange(subCatName.compareChange());
             startTime.setOriginalValue(previous_detail.getOpeningStartTime());
-            startTime.setChange(startTime.compareChange());
             endTime.setOriginalValue(previous_detail.getOpeningEndTime());
-            endTime.setChange(endTime.compareChange());
             List<String> previous_businessDaylist = JSON.parseArray(previous_detail.getBusinessDays(), String.class);
 
             businessDays.setOriginalValue(previous_businessDaylist);
-            businessDays.setChange(businessDays.compareChange());
             List<String> previous_telList = JSON.parseArray(previous_detail.getTels(), String.class);
             if (previous_telList != null && previous_telList.size() > 0) {
                 tel.setOriginalValue(previous_telList.get(0));
-                tel.setChange(tel.compareChange());
             }
             cosume.setOriginalValue(previous_detail.getConsumptionPerPerson()!=null?previous_detail.getConsumptionPerPerson().toString():null);
-            cosume.setChange(cosume.compareChange());
             List<String> previous_payTypeList = JSON.parseArray(previous_detail.getPayTypes(), String.class);
             payTypes.setOriginalValue(previous_payTypeList);
-            payTypes.setChange(payTypes.compareChange());
             List<String> previous_supportTypeList = JSON.parseArray(previous_detail.getSupportTypes(), String.class);
             supportTypes.setOriginalValue(previous_supportTypeList);
-            supportTypes.setChange(supportTypes.compareChange());
             headImg.setOriginalValue(previous_detail.getIndexImgUrl());
-            headImg.setChange(headImg.compareChange());
             List<String> previous_imgList = JSON.parseArray(previous_detail.getHeadImgUrls(), String.class);
 
             if (previous_imgList != null && previous_imgList.size() > 0) {
                 indexImg.setOriginalValue(previous_imgList.get(0));
-                indexImg.setChange(indexImg.compareChange());
                 List<String> imgs = new ArrayList<>();
                 if (previous_imgList.size() > 1){
                     for (int i = 1;i< previous_imgList.size();i++){
@@ -298,7 +284,6 @@ public class MerchantVisitServiceImpl implements MerchantVisitService {
                         imgs.add(img);
                     }
                     detailImgs.setOriginalValue(imgs);
-                    detailImgs.setChange(detailImgs.compareChange());
                 }
             }
         }
