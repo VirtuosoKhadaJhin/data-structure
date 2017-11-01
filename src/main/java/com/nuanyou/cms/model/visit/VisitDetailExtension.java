@@ -31,7 +31,7 @@ public class VisitDetailExtension<T> {
     }
 
     public Boolean getChange() {
-        return change;
+        return compareChange();
     }
 
     public void setChange(Boolean change) {

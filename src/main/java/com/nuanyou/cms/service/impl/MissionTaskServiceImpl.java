@@ -244,18 +244,7 @@ public class MissionTaskServiceImpl implements MissionTaskService {
                 return query.where(predicate.toArray(arrays)).getRestriction();
             }
         });
-        Map<Long,BdMerchantTrack> map = new HashMap<>();
-        for (BdMerchantTrack bdMerchantTrack : tracks) {
-            if (!map.containsKey(bdMerchantTrack.getMchId()))
-                map.put(bdMerchantTrack.getMchId(),bdMerchantTrack);
-        }
-        for (Map.Entry entry : maps.entrySet()){
-            BdMerchantTrack bdMerchantTrack = map.get(entry.getKey());
-            if (bdMerchantTrack != null) {
-                maps.get(entry.getKey()).setVisitType(bdMerchantTrack.getVisitType() != null ? bdMerchantTrack.getVisitType().getName() : null);
-                maps.get(entry.getKey()).setVisitId(bdMerchantTrack.getId());
-            }
-        }
+
         Iterator<BdMerchantTrack> iterator = tracks.iterator();
         while (iterator.hasNext()) {
             BdMerchantTrack next = iterator.next();
@@ -267,7 +256,8 @@ public class MissionTaskServiceImpl implements MissionTaskService {
             MissionTaskVo missionTaskVo = maps.get(mchId);
             if (missionTaskVo.getStatus() != MissionTaskStatus.UN_DISTRIBUTE) {
                 if (userId.equals(missionTaskVo.getBdUser().getId())) {//相同BD的时候才需要添加(存在多个BD录入商户信息)
-                    missionTaskVo.setMerchantTrack(next);
+                    if (missionTaskVo.getMerchantTrack().getId() == null)
+                        missionTaskVo.setMerchantTrack(next);
                     iterator.remove();
                 }
             }
