@@ -68,9 +68,9 @@
                                                     </button>
                                                 </nobr>
                                         #end
-                                    #if($!entity.visitId)
+                                    #if($!entity.merchantTrack.id)
                                         <nobr>
-                                            <button type="button" class="btn btn-success btn-small td-button viewChange" data-visitId="$!entity.visitId">
+                                            <button type="button" class="btn btn-success btn-small td-button viewChange" data-visitId="$!entity.merchantTrack.id">
                                                 <i class="icon-eye-open">查看变更</i>
                                             </button>
                                         </nobr>
@@ -90,7 +90,11 @@
                                         #end
                                     </td>
                                     <td class="task-merchant-cooperationStatus">$!entity.merchant.cooperationStatus.name</td>
-                                    <td class="">$!entity.visitType</td>
+                                    <td class="">
+                                        #if($!entity.merchantTrack.visitType)
+                                            $!entity.merchantTrack.visitType.name
+                                        #end
+                                    </td>
                                     <td>$!entity.merchant.district.city.name</td>
                                     <td>$!entity.group.name - $!entity.bdUser.chineseName</td>
                                     <td class="td-imgurl">
