@@ -74,6 +74,7 @@
         }
 
         var size = $("#size").val();
+
         if (size && $("#uploadFile")[0].files[0].size / 1024 > size) {
             alert("图片不能大于" + size + "kb");
             return false;
@@ -116,7 +117,7 @@
                         $(".no-img-list").hide();
                         $(".img-list").append(imgContent);
                         $('.img-remove').unbind("click");
-                        $(".img-remove").on("click", function(){
+                        $(".img-remove").on("click", function () {
                             var id = $(this).attr("data-id");
                             window.wxc.xcConfirm("确认删除该图片吗？", window.wxc.xcConfirm.typeEnum.confirm, {
                                 onOk: function () {

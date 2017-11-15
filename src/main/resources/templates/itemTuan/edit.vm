@@ -153,9 +153,7 @@
                                             #foreach($entity in $!imgUrls)
                                                 <div class="hovereffect" id="imgHover_$!entity.id">
                                                     <a target="_blank" href="$!entity.imgUrl">
-                                                        <img class="img-polaroid td-img" src="$!entity.imgUrl"
-                                                             style="width: 60px;height: 60px;"
-                                                             onerror="javascript:this.src='/dist/img/logo.png';">
+                                                        <img class="img-polaroid td-img" src="$!entity.imgUrl" style="width: 60px;height: 60px;" onerror="javascript:this.src='/dist/img/logo.png';">
                                                     </a>
                                                     <button type="button" class="btn btn-danger btn-mini img-remove" data-id="$!entity.id"
                                                             style="display: block;margin-left: 35%;margin-top: 8px;">删除
@@ -163,13 +161,11 @@
                                                 </div>
                                             #end
                                         </div>
-                                        <button type="button" style="margin-left: 5px"
-                                                class="btn btn-success uploadImgBtn" data-id="multiImgs"
-                                                imageSpec="TuanShow">上传
+                                        <button type="button" style="margin-left: 5px" class="btn btn-success uploadImgBtn" data-id="multiImgs" data-size="300" imageSpec="TuanShow">上传
                                         </button>
                                     </div>
                                 </div>
-                                <p style="margin-left: 200px;margin-top: 10px">尺寸: 640 * 480, 限制: 100k</p>
+                                <p style="margin-left: 200px;margin-top: 10px">尺寸: 640 * 480, 限制: 300k</p>
 
 
                                 <label class="control-label">列表图</label>
@@ -179,10 +175,9 @@
                                     <button type="button" class="btn btn-success previewBtn" data-id="indexImgUrl">
                                         预览
                                     </button>
-                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl"
-                                            imageSpec="TuanList">上传
+                                    <button type="button" class="btn btn-success uploadImgBtn" data-id="indexImgUrl" data-size="150" imageSpec="TuanList">上传
                                     </button>
-                                    <p>尺寸: 320 * 240, 限制: 50k</p>
+                                    <p>尺寸: 320 * 240, 限制: 150k</p>
                                 </div>
                                 <label class="control-label">购买须知</label>
                                 <div class="controls">
@@ -274,10 +269,9 @@
                         <div class="controls">
                             <input type="text" class="span4" name="custom-imgUrl" id="itemImg">
                             <button type="button" class="btn btn-success previewBtn" data-id="itemImg">预览</button>
-                            <button type="button" class="btn btn-success uploadImgBtn" data-id="itemImg"
-                                    imageSpec="ItemList">上传
+                            <button type="button" class="btn btn-success uploadImgBtn" data-id="itemImg" data-size="150" imageSpec="ItemList">上传
                             </button>
-                            <p>尺寸: 320 * 240, 限制: 50k</p>
+                            <p>尺寸: 320 * 240, 限制: 150k</p>
                         </div>
                     </div>
                 </form>
