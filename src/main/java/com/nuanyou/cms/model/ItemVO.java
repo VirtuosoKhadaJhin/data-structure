@@ -45,6 +45,7 @@ public class ItemVO {
     private Date startTime;
     private Date endTime;
     private String notice;
+    private String localNotice;
 
     private List<ItemSupportType> supportType;
 
@@ -179,6 +180,13 @@ public class ItemVO {
         this.notice = notice;
     }
 
+    public String getLocalNotice() {
+        return localNotice;
+    }
+
+    public void setLocalNotice(String localNotice) {
+        this.localNotice = localNotice;
+    }
 
     public BigDecimal getOkpPrice() {
         return okpPrice;

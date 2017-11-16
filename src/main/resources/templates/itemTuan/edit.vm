@@ -183,6 +183,10 @@
                                 <div class="controls">
                                     <textarea name="notice" id="notice" class="span9">$!entity.notice</textarea>
                                 </div>
+                                <label class="control-label">购买须知（当地文）</label>
+                                <div class="controls">
+                                    <textarea name="localNotice" id="localNotice" class="span9">$!entity.localNotice</textarea>
+                                </div>
                                 <div class="form-actions">
                                     <input type="hidden" value="" id="detailimgs" name="detailImgs" />
                                     <button class="btn btn-success" type="submit" id="btn-save"
@@ -640,7 +644,7 @@
         var editor;
         KindEditor.ready(function (K) {
             uploadJson: '/Home/UploadImage',
-                    editor = K.create('#notice, #intro, #localIntro', {
+                    editor = K.create('#notice, #localNotice, #intro, #localIntro', {
                         uploadJson: '../itemTuan/upload/editor',
                         fileManagerJson: '../itemTuan/upload/editor',
                         allowFileManager: true,
