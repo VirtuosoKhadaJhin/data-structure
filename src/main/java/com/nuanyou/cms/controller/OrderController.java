@@ -15,6 +15,7 @@ import com.nuanyou.cms.entity.order.*;
 import com.nuanyou.cms.entity.user.PasUserProfile;
 import com.nuanyou.cms.model.OrderSave;
 import com.nuanyou.cms.model.PageUtil;
+import com.nuanyou.cms.model.enums.OrderSaleChannel;
 import com.nuanyou.cms.remote.service.RemoteOrderService;
 import com.nuanyou.cms.service.CountryService;
 import com.nuanyou.cms.service.MerchantService;
@@ -93,7 +94,8 @@ public class OrderController {
     }
 
     @RequestMapping(path = "virtual", method = RequestMethod.GET)
-    public String virtual() {
+    public String virtual(Model model) {
+        model.addAttribute("channels", OrderSaleChannel.values());
         return "order/virtual";
     }
 
@@ -121,7 +123,7 @@ public class OrderController {
             Long orderId = result.getData().getId();
             OrderSave orderSave = result.getData();
             result = remoteOrderService.ordersPayCallbackPost(orderSave.getId());
-            if(result.isSuccess()){
+            if (result.isSuccess()) {
                 return new APIResult(orderId);
             }
         }
@@ -177,18 +179,18 @@ public class OrderController {
         List<NewOrderStatus> newOrderStatuses = Arrays.asList(NewOrderStatus.values());
         List<Merchant> merchants = merchantService.getAllIdNameList();
         Page<Order> page = orderService.findByCondition(index, entity, time, pageable);
-        Map<Long,Order> maps = Maps.newHashMap();
+        Map<Long, Order> maps = Maps.newHashMap();
         for (Order order : page.getContent()) {
-            if(order.getUserId() != null){
-                maps.put(order.getUserId(),order);
+            if (order.getUserId() != null) {
+                maps.put(order.getUserId(), order);
             }
         }
         Set<Long> userIds = maps.keySet();
-        if(CollectionUtils.isNotEmpty(userIds)){
+        if (CollectionUtils.isNotEmpty(userIds)) {
             List<PasUserProfile> userProfiles = pasUserProfileDao.findByUserid(userIds);
             for (PasUserProfile userProfile : userProfiles) {
                 Long userId = userProfile.getId();
-                if(maps.containsKey(userId)){
+                if (maps.containsKey(userId)) {
                     Order order = maps.get(userId);
                     order.setUser(userProfile);
                 }

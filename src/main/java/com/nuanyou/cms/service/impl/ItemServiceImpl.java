@@ -1,5 +1,6 @@
 package com.nuanyou.cms.service.impl;
 
+import com.google.common.base.Strings;
 import com.nuanyou.cms.dao.ItemDao;
 import com.nuanyou.cms.dao.ItemDirectmailDao;
 import com.nuanyou.cms.dao.ItemStatsDao;
@@ -12,6 +13,7 @@ import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.TimeCondition;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -90,6 +92,9 @@ public class ItemServiceImpl implements ItemService {
         boolean hasItems = itemTuans != null && !itemTuans.isEmpty();
         if (hasItems) {
             vo.setOkpPrice(null);
+        }
+        if(Strings.isNullOrEmpty(vo.getLocalNotice())){
+            vo.setLocalNotice(null);
         }
         Item entity = BeanUtils.copyBeanNotNull(vo, new Item());
         Merchant merchant = vo.getMerchant();

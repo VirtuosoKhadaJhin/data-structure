@@ -48,6 +48,7 @@ public class Item {
     private Date startTime;
     private Date endTime;
     private String notice;
+    private String localNotice;
 
     private List<ItemSupportType> supportType;
 
@@ -165,6 +166,14 @@ public class Item {
         this.kpPrice = kpPrice;
     }
 
+    @Column(name = "localnotice")
+    public String getLocalNotice() {
+        return localNotice;
+    }
+
+    public void setLocalNotice(String localNotice) {
+        this.localNotice = localNotice;
+    }
 
     @Column(name = "notice")
     public String getNotice() {
