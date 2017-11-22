@@ -161,6 +161,7 @@ public class CommentOrderController {
         currentPageInfoStr = "currentPageInfo"+currentPageStrTemp;
         Map<String,Object> SessionMap ;
         Map<String,Object> SessionChildMap ;
+        Map<String,Object> SessionGrandsonMap ;
         if(session.getAttribute("recordedInfo") != null){
              SessionMap = (Map<String,Object>)session.getAttribute("recordedInfo");
         }else{
@@ -171,8 +172,17 @@ public class CommentOrderController {
         if("true".equals(checkboxAllStatus)){
             for (String key : SessionMap.keySet()) {
                 SessionChildMap = (Map<String,Object>)SessionMap.get(key);
-                for(String keys : SessionChildMap.keySet()){
-                    SessionChildMap.put(keys,"checked");
+                SessionGrandsonMap = (Map<String,Object>)SessionChildMap.get("currentPageMap");
+                for(String keys : SessionGrandsonMap.keySet()){
+                    SessionGrandsonMap.put(keys,"checked");
+                }
+            }
+        }else{
+            for (String key : SessionMap.keySet()) {
+                SessionChildMap = (Map<String,Object>)SessionMap.get(key);
+                SessionGrandsonMap = (Map<String,Object>)SessionChildMap.get("currentPageMap");
+                for(String keys : SessionGrandsonMap.keySet()){
+                    SessionGrandsonMap.put(keys,"");
                 }
             }
         }
