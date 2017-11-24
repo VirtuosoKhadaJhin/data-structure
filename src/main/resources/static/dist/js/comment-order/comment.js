@@ -35,33 +35,43 @@ $(function () {
         }
     });
 
+
     //导出按钮
     $("#exportComment").on("click", function () {
-        var IdStrChecked = new Array();
-        var IdStrNoChecked = new Array();
-        $(" tbody tr").each(function(){
-            if($(this).find("td:first .input-checkbox").is(':checked')){
-                IdStrChecked.push($(this).data("commentid"));
-            }else{
-                IdStrNoChecked.push($(this).data("commentid"));
-            }
-        });
-        var map = {};//返回对象
-        map["IdStrChecked"] = IdStrChecked;//未选中数据Id
-        map["IdStrNoChecked"] = IdStrNoChecked;//未选中数据Id
-        map["checkboxAllStatus"] = $("#checkboxAllStatus").val();//勾选状态
-        var jsonMap = JSON.stringify(map);
-        $.ajax({
-            url: 'exportData',
-            data: jsonMap,
-            contentType: 'application/json',
-            type: 'post',
-            success: function (result) {
-                if (result.code == 0) {
-                    $("#paramFrom").attr("action", "exportComment");
-                    $("#paramFrom").submit();
-                    $("#paramFrom").attr("action", "");
-                }
+        var currentCountShow = $("#currentCountShow").text();
+        var ocnfirmInfo = "是否全部导出";
+        if(currentCountShow != 0){
+            ocnfirmInfo = "当前勾选评论"+currentCountShow+"条，导出请点击确认按钮";
+        }
+        window.wxc.xcConfirm(ocnfirmInfo, window.wxc.xcConfirm.typeEnum.confirm, {
+            onOk: function () {
+                var IdStrChecked = new Array();
+                var IdStrNoChecked = new Array();
+                $(" tbody tr").each(function(){
+                    if($(this).find("td:first .input-checkbox").is(':checked')){
+                        IdStrChecked.push($(this).data("commentid"));
+                    }else{
+                        IdStrNoChecked.push($(this).data("commentid"));
+                    }
+                });
+                var map = {};//返回对象
+                map["IdStrChecked"] = IdStrChecked;//未选中数据Id
+                map["IdStrNoChecked"] = IdStrNoChecked;//未选中数据Id
+                map["checkboxAllStatus"] = $("#checkboxAllStatus").val();//勾选状态
+                var jsonMap = JSON.stringify(map);
+                $.ajax({
+                    url: 'exportData',
+                    data: jsonMap,
+                    contentType: 'application/json',
+                    type: 'post',
+                    success: function (result) {
+                        if (result.code == 0) {
+                            $("#paramFrom").attr("action", "exportComment");
+                            $("#paramFrom").submit();
+                            $("#paramFrom").attr("action", "");
+                        }
+                    }
+                });
             }
         });
     })

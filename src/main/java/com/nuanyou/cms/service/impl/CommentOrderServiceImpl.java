@@ -1,5 +1,6 @@
 package com.nuanyou.cms.service.impl;
 
+import com.google.common.collect.Lists;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.CommentOrderDao;
@@ -145,6 +146,7 @@ public class CommentOrderServiceImpl implements CommentOrderService {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<>();
+                predicate.add(cb.isNotNull(root.get("order").get("ordersn")));
                 predicate.add(cb.lessThanOrEqualTo(root.get("deleted"), Boolean.FALSE));
                 if (countryIds != null && countryIds.size() > 0) {
                     predicate.add(root.get("order").get("countryid").in(countryIds));
@@ -180,7 +182,8 @@ public class CommentOrderServiceImpl implements CommentOrderService {
                 } else if ("low".equals(scoreStr)) {
                     predicate.add(cb.lessThan(root.get("score").as(Double.class), 4));
                 }
-                return query.where(predicate.toArray(new Predicate[predicate.size()])).getRestriction();
+                ArrayList<javax.persistence.criteria.Order> orderBys = Lists.newArrayList(cb.desc(root.get("createTime")));
+                return query.where(predicate.toArray(new Predicate[predicate.size()])).orderBy(orderBys).getRestriction();
             }
         });
     }
