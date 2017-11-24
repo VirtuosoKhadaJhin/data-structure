@@ -45,7 +45,6 @@ public class FileUploadController {
             String originalFilename = file.getOriginalFilename();
             if (originalFilename.contains("."))
                 fileType = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
-
             is = file.getInputStream();
         }
 

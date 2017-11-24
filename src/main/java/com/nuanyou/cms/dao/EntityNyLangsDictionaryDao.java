@@ -24,4 +24,6 @@ public interface EntityNyLangsDictionaryDao extends JpaRepository<EntityNyLangsD
 
     List<EntityNyLangsDictionary> findByKeyCode(String keyCode);
 
+    EntityNyLangsDictionary findByKeyCodeAndCountry(String keyCode,String CountryCode);
+
 }

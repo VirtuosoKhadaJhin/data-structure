@@ -1,5 +1,6 @@
 package com.nuanyou.cms.service;
 
+import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.model.LangsDictionary;
 import com.nuanyou.cms.model.LangsDictionaryRequestVo;
 import com.nuanyou.cms.model.LangsDictionaryVo;
@@ -39,6 +40,9 @@ public interface LangsDictionaryService {
      * @throws UnsupportedEncodingException
      */
     LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale);
+
+
+    EntityNyLangsDictionary findByKeyCodeAndCountry(String keyCode, String CountryCode);
 
     /**
      * 查询当地语Message内容

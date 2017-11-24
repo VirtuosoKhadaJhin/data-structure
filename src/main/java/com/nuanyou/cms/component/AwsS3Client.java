@@ -1,5 +1,6 @@
 package com.nuanyou.cms.component;
 
+import com.alibaba.fastjson.JSONObject;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
@@ -10,8 +11,10 @@ import com.nuanyou.cms.util.ContentTypeUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 @Component("s3")
 public class AwsS3Client extends FileClient {
@@ -23,6 +26,8 @@ public class AwsS3Client extends FileClient {
     private String domain;
 
     private String region;
+
+
 
     public AwsS3Client(@Value("${s3.bucketName}") String bucketName,
                        @Value("${s3.domain}") String domain,
@@ -56,6 +61,43 @@ public class AwsS3Client extends FileClient {
         SetObjectAclRequest request = new SetObjectAclRequest(bucketName, filePath, acl);
         client.setObjectAcl(request);
         return new StringBuilder(domain).append("/").append(filePath).toString();
+    }
+
+    public InputStream queryFile(String filePath) throws IOException {
+        GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, filePath);
+        S3Object object = client.getObject(getObjectRequest);
+        InputStream objectData = object.getObjectContent();
+        return objectData;
+    }
+
+
+
+    /**
+     * 获取JSON格式配置文件
+     *
+     * @param key
+     * @return
+     * @throws IOException
+     */
+    public JSONObject acquireConfig(String key) throws IOException {
+        GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, key);
+        S3Object object = client.getObject(getObjectRequest);
+        InputStream objectData = object.getObjectContent();
+        return displayTextInputStream(objectData);
+    }
+
+    private static JSONObject displayTextInputStream(InputStream input) throws IOException {
+        StringBuilder json = new StringBuilder();
+        // Read one text line at a time and display.
+        BufferedReader reader = new BufferedReader(new
+                InputStreamReader(input));
+        String inputLine = null;
+        while ((inputLine = reader.readLine()) != null) {
+            json.append(inputLine);
+        }
+        JSONObject response = JSONObject.parseObject(json.toString());
+        reader.close();
+        return response;
     }
 
 }

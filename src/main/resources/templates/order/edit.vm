@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>暖游 后台管理系统 菜单管理</title>
     #include("common/css-support.vm")
+    #include("common/js-support.vm")
 </head>
 <body>
 <div id="content">
@@ -28,6 +29,7 @@
                                     <label class="control-label">订单编号</label>
                                     <div class="controls">
                                         <input type="text" disabled class="span11" value="$!order.ordersn">
+
                                     </div>
                                     <label class="control-label">流水号</label>
                                     <div class="controls">
@@ -37,6 +39,7 @@
                                         <label class="control-label">核销码</label>
                                         <div class="controls">
                                             <input type="text" disabled class="span11" value="$!order.verifyCode">
+                                            <button class="btn btn-primary" onclick="downloadBarcode($!order.verifyCode);">下载条形码</button>
                                         </div>
                                     #end
                                     <label class="control-label">订单类型</label>
@@ -50,6 +53,7 @@
                                     <label class="control-label">商户</label>
                                     <div class="controls">
                                         <input type="text" disabled class="span11" value="$!order.merchant.name">
+                                        <input type="text" disabled class="span11" value="$!order.countryid">
                                     </div>
                                     <label class="control-label">下单时间</label>
                                     <div class="controls">
@@ -135,4 +139,16 @@
         </div>
     </div>
 </body>
+<script type="text/javascript">
+    /*水印下载条形码*/
+        function downloadBarcode(VerificationCode) {
+            $.ajax({
+                url: 'downloadBarcode',
+                type: 'post',
+                data: {VerificationCode: VerificationCode,countryid:$!order.countryid},
+                success: function (result) {
+                }
+            });
+        }
+</script>
 </html>
