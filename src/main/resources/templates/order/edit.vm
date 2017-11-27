@@ -18,7 +18,7 @@
 
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span6">
+                <div class="span9">
                     <div class="widget-box">
                         <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
                             <h5>订单查看</h5>
@@ -29,7 +29,6 @@
                                     <label class="control-label">订单编号</label>
                                     <div class="controls">
                                         <input type="text" disabled class="span11" value="$!order.ordersn">
-
                                     </div>
                                     <label class="control-label">流水号</label>
                                     <div class="controls">
@@ -37,9 +36,9 @@
                                     </div>
                                     #if($order.verifyCode)
                                         <label class="control-label">核销码</label>
-                                        <div class="controls">
-                                            <input type="text" disabled class="span11" value="$!order.verifyCode">
-                                            <button class="btn btn-primary" onclick="downloadBarcode($!order.verifyCode);">下载条形码</button>
+                                        <div class="controls clearfix">
+                                            <input type="text" style="float: left" disabled class="span9 " value="$!order.verifyCode">
+                                            <button class="btn btn-primary span2 " onclick="downloadBarcode($!order.verifyCode);">下载条形码</button>
                                         </div>
                                     #end
                                     <label class="control-label">订单类型</label>
