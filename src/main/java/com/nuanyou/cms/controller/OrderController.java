@@ -1,10 +1,20 @@
 package com.nuanyou.cms.controller;
 
 import com.google.common.collect.Maps;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
+import com.nuanyou.cms.component.FileClient;
+import com.nuanyou.cms.component.ZxingCode;
 import com.nuanyou.cms.dao.*;
+import com.nuanyou.cms.domain.OrderDetailLocalKeys;
 import com.nuanyou.cms.entity.Country;
+import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.entity.Item;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.enums.NewOrderStatus;
@@ -13,23 +23,24 @@ import com.nuanyou.cms.entity.enums.OrderType;
 import com.nuanyou.cms.entity.enums.RefundStatus;
 import com.nuanyou.cms.entity.order.*;
 import com.nuanyou.cms.entity.user.PasUserProfile;
+import com.nuanyou.cms.model.LangsDictionaryVo;
 import com.nuanyou.cms.model.OrderSave;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.model.enums.OrderSaleChannel;
 import com.nuanyou.cms.remote.service.RemoteOrderService;
-import com.nuanyou.cms.service.CountryService;
-import com.nuanyou.cms.service.MerchantService;
-import com.nuanyou.cms.service.OrderService;
-import com.nuanyou.cms.service.UserService;
+import com.nuanyou.cms.service.*;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.util.ExcelUtil;
 import com.nuanyou.cms.util.TimeCondition;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.poi.util.LocaleUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
@@ -37,9 +48,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.stream.ImageOutputStream;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -79,6 +92,22 @@ public class OrderController {
     private OrderDirectMailDao directMailDao;
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LangsDictionaryService langsDictionaryService;
+
+
+    @Autowired
+    @Qualifier("s3")
+    private FileClient fileClient;
+
+    @Value("${s3.barCodeMainImgPath}")
+    private String barCodeMainImgPath;
+
+    private static final String KEY = "keycode";
+    private static final String WIDTH = "mwidth";
+    private static final String HEIGHT = "mheight";
+    private static final String IMAGETYPE = "JPEG";
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -395,6 +424,41 @@ public class OrderController {
         this.orderService.validate(id, type, cmsusername);
         response.sendRedirect("../order/refundEdit?refundEdit=3&id=" + id);
         return null;
+    }
+
+    @RequestMapping(path = "downloadBarcode")
+    public  void  downloadBarcode(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/x-msdownload");
+        String  fileName = "核销条形码.jpg";
+        String fname ="";
+        // 解决中文文件名乱码问题
+        if (request.getHeader("User-Agent").toLowerCase()
+                .indexOf("firefox") > 0) {
+            fname = new String(fileName.getBytes("UTF-8"), "ISO8859-1"); // firefox浏览器
+        } else if (request.getHeader("User-Agent").toUpperCase()
+                .indexOf("MSIE") > 0) {
+            fname = URLEncoder.encode(fileName, "UTF-8");// IE浏览器
+        }else if (request.getHeader("User-Agent").toUpperCase()
+                .indexOf("CHROME") > 0) {
+            fname = new String(fileName.getBytes("UTF-8"), "ISO8859-1");// 谷歌
+        }
+        response.setHeader("Content-Disposition", "attachment;filename="+fname);
+        String keycode = request.getParameter("VerificationCode");
+        String countryid = request.getParameter("countryid");
+        Country countryInfo = countryService.findOne(Long.valueOf(countryid));
+        String countryCode = "";
+        if(countryInfo != null){
+            countryCode = countryInfo.getCode().toString();
+        }
+        EntityNyLangsDictionary byKeyCodeAndCountry = langsDictionaryService.findByKeyCodeAndCountry(OrderDetailLocalKeys.global_tips, countryCode);
+        String message = "";
+        if(byKeyCodeAndCountry != null){
+             message = byKeyCodeAndCountry.getMessage();
+        }
+        if (keycode != null && !"".equals(keycode)) {
+            OutputStream out = response.getOutputStream();
+            ZxingCode.encode(out,keycode, message, barCodeMainImgPath, fileClient);
+        }
     }
 
 }

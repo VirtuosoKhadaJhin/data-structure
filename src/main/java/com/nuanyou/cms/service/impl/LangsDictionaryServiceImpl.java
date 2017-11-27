@@ -243,7 +243,6 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
     @Override
     public LangsDictionaryVo findLangsDictionary(String keyCode, Locale locale) {
         List<EntityNyLangsDictionary> entityNyLangsDictionarys = dictionaryDao.findByKeyCode(keyCode);
-
         List<LangsCountryMessageVo> langsMessageList = Lists.newArrayList();
         LangsDictionaryVo dictionaryVo = new LangsDictionaryVo();
         for (EntityNyLangsDictionary langsDictionary : entityNyLangsDictionarys) {
@@ -265,6 +264,12 @@ public class LangsDictionaryServiceImpl implements LangsDictionaryService {
 
         return dictionaryVo;
     }
+
+    @Override
+    public EntityNyLangsDictionary findByKeyCodeAndCountry(String keyCode, String CountryCode) {
+       return dictionaryDao.findByKeyCodeAndCountry(keyCode,CountryCode);
+    }
+
 
     @Override
     public String findLocalMessageByKeyCode(String keyCode, Locale locale) {

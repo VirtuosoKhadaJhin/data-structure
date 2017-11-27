@@ -1,5 +1,7 @@
 package com.nuanyou.cms.component;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,6 +24,10 @@ public abstract class FileClient {
         return uploadFile(buildPath(suffix), file);
     }
 
+    public InputStream queryFile(String path) throws IOException {
+        return queryFile(path);
+    }
+
     public static String buildPath(String suffix) {
         StringBuilder filePath = new StringBuilder();
         filePath.append(System.currentTimeMillis());
@@ -32,4 +38,6 @@ public abstract class FileClient {
         filePath.append(suffix);
         return filePath.toString();
     }
+
+
 }
