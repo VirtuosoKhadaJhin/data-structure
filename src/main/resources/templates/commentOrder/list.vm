@@ -6,11 +6,19 @@
 <div class="widget-title">
     <span class="icon"><i class="icon-th"></i></span>
     <h5>评价列表</h5>
+    <h5 >已勾选 </h5>
+    <h5  id="currentCountShow">$!currentCount</h5>
+    <button  id="clearCheck" class="btn btn-danger btn-mini hide-item" style="margin-top: 7px;">清空</button>
+    <button  id="exportComment" class="btn btn-danger btn-mini hide-item" style="margin-top: 7px; Float:right">导出评论</button>
 </div>
 <link href="/dist/css/comment-order/comment.css" rel="stylesheet"/>
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
+        <th class="th-op">
+            <input style="margin-top: 0px;" id="checkbox-all" class="th-checked" type="checkbox">
+            <strong>全选</strong>
+        </th>
         <th class="th-orderNo">订单编号</th>
         <th class="th-score">评分</th>
         <th class="th-shopName">店铺名称</th>
@@ -24,6 +32,21 @@
     <tbody>
         #foreach($e in $!page.content)
         <tr class="tr-info" data-commentId="$!e.id">
+            <td>
+                #if($!SessionMap)
+                    #foreach($item in $!SessionMap.entrySet())
+                        #if($!{item.key} == $!e.id)
+                            <input class="styled td-checked input-checkbox" type="checkbox" $!{item.value} task-id="$!e.id">
+                        #end
+                    #end
+                #else
+                    #if($!checkboxAllStatus == "true")
+                        <input class="styled td-checked input-checkbox" type="checkbox"  checked task-id="$!e.id">
+                    #else
+                        <input class="styled td-checked input-checkbox" type="checkbox" task-id="$!e.id">
+                    #end
+                #end
+            </td>
             <td class="td-order">$!e.order.ordersn</td>
             <td class="td-score">$!e.score</td>
             <td class="td-shopName"><a href="$!link.requestPath/merchant/detail?id=$!e.merchant.id" class="alink"> $!e.merchant.name</a></td>
@@ -51,21 +74,21 @@
         #end
     </tbody>
 </table>
-#parse("common/list_mid.vm")
-<form method="get">
-    <div class="control-group">
-        <label>商户</label>
-        <select class="span11 select2" name="merchant.id">
-            <option value="">全部</option>
-            #foreach($merchant in $!merchants)
-                <option value="$!merchant.id"
-                    #if($!entity.merchant.id == $!merchant.id)
-                        selected
-                    #end
-                >$!merchant.id:$!merchant.name</option>
-            #end
-        </select>
+#*分页总条数*#
+<input type="hidden"  class="span11" id="pageCountAll" value="$!page.totalElements">
+#*当前页*#
+<input type="hidden"  class="span11" id="currentPage" value="$!page.number">
+#*全选状态*#
+<input type="hidden"  class="span11" id="checkboxAllStatus" value="$!checkboxAllStatus">
+#*目标页*#
+<input type="hidden"  class="span11" id="targetPage" value="$!targetPage">
 
+
+#parse("common/list_mid.vm")
+<form method="get" id="paramFrom">
+    <div class="control-group">
+        <label>商户Id</label>
+        <input type="text" class="span11" name="merchant.id" value="$!entity.merchant.id">
         <label>商户名称</label>
         <input type="text" class="span11" name="merchant.name" value="$!entity.merchant.name">
 
@@ -89,11 +112,9 @@
         <label>评论时间</label>
         <input type="text" class="span11 dateFormat" name="beginDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.beginDate)" placeholder="开始时间">
         <input type="text" class="span11 dateFormat" name="endDate" value="$!dateFormatter.format("yyyy-MM-dd",$!time.endDate)" placeholder="结束时间">
-
         <button type="submit" class="btn btn-primary">查询</button>
     </div>
 </form>
-
 <div id="reply-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
