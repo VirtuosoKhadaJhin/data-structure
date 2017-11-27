@@ -1,5 +1,6 @@
 package com.nuanyou.cms.service.impl;
 
+import com.google.common.collect.Lists;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.CommentOrderDao;
@@ -136,4 +137,55 @@ public class CommentOrderServiceImpl implements CommentOrderService {
     public void showOrHideComment(Long id, Boolean isShow) {
         commentOrderDao.showOrHideComment(id, isShow);
     }
+
+
+    @Override
+    public List<CommentOrder> findByCondition(final CommentOrder entity, final TimeCondition time,final String scoreStr) {
+        final List<Long> countryIds = userService.findUserCountryId();
+        return commentOrderDao.findAll(new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<>();
+                predicate.add(cb.isNotNull(root.get("order").get("ordersn")));
+                predicate.add(cb.lessThanOrEqualTo(root.get("deleted"), Boolean.FALSE));
+                if (countryIds != null && countryIds.size() > 0) {
+                    predicate.add(root.get("order").get("countryid").in(countryIds));
+                }
+                Order order = entity.getOrder();
+                if (order != null) {
+                    String ordersn = order.getOrdersn();
+                    if (StringUtils.isNotBlank(ordersn))
+                        predicate.add(cb.like(root.get("order").get("ordersn").as(String.class), "%" + ordersn + "%"));
+                }
+                Merchant merchant = entity.getMerchant();
+                if (merchant != null) {
+                    Long id = merchant.getId();
+                    if (id != null)
+                        predicate.add(cb.equal(root.get("merchant").get("id").as(Long.class), id));
+                    String name = merchant.getName();
+                    if (name != null)
+                        predicate.add(cb.like(root.get("merchant").get("name").as(String.class), "%" + name + "%"));
+                }
+                if (time != null) {
+                    Date date = time.getBegin();
+                    if (date != null)
+                        predicate.add(cb.greaterThanOrEqualTo(root.get("createTime").as(Date.class), date));
+                    date = time.getEnd();
+                    if (date != null)
+                        predicate.add(cb.lessThanOrEqualTo(root.get("createTime").as(Date.class), date));
+                }
+                if (entity.getDisplay() != null) {
+                    predicate.add(cb.equal(root.get("display").as(Boolean.class), entity.getDisplay()));
+                }
+                if ("high".equals(scoreStr)) {
+                    predicate.add(cb.greaterThanOrEqualTo(root.get("score").as(Double.class), 4));
+                } else if ("low".equals(scoreStr)) {
+                    predicate.add(cb.lessThan(root.get("score").as(Double.class), 4));
+                }
+                ArrayList<javax.persistence.criteria.Order> orderBys = Lists.newArrayList(cb.desc(root.get("createTime")));
+                return query.where(predicate.toArray(new Predicate[predicate.size()])).orderBy(orderBys).getRestriction();
+            }
+        });
+    }
+
 }
