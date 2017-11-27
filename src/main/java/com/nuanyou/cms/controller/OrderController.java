@@ -427,12 +427,22 @@ public class OrderController {
     }
 
     @RequestMapping(path = "downloadBarcode")
-    @ResponseBody
     public  void  downloadBarcode(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        long length = 0;
         response.setContentType("application/x-msdownload");
-        response.setContentLength((int)length);
-
+        String  fileName = "核销条形码.jpg";
+        String fname ="";
+        // 解决中文文件名乱码问题
+        if (request.getHeader("User-Agent").toLowerCase()
+                .indexOf("firefox") > 0) {
+            fname = new String(fileName.getBytes("UTF-8"), "ISO8859-1"); // firefox浏览器
+        } else if (request.getHeader("User-Agent").toUpperCase()
+                .indexOf("MSIE") > 0) {
+            fname = URLEncoder.encode(fileName, "UTF-8");// IE浏览器
+        }else if (request.getHeader("User-Agent").toUpperCase()
+                .indexOf("CHROME") > 0) {
+            fname = new String(fileName.getBytes("UTF-8"), "ISO8859-1");// 谷歌
+        }
+        response.setHeader("Content-Disposition", "attachment;filename="+fname);
         String keycode = request.getParameter("VerificationCode");
         String countryid = request.getParameter("countryid");
         Country countryInfo = countryService.findOne(Long.valueOf(countryid));
@@ -445,24 +455,10 @@ public class OrderController {
         if(byKeyCodeAndCountry != null){
              message = byKeyCodeAndCountry.getMessage();
         }
-        ImageOutputStream imageOutput = null;
-        InputStream  inputStream = null;
         if (keycode != null && !"".equals(keycode)) {
-            ServletOutputStream  out = response.getOutputStream();
-            Map<String, Object> encode = ZxingCode.encode(keycode, message, barCodeMainImgPath, fileClient);
-            imageOutput = (ImageOutputStream)encode.get("imageOutput");
-            inputStream = (InputStream)encode.get("inputStream");
-        }
-        length = imageOutput.length();
-        byte[] bytes = new byte[1024];
-        long count = 0;
-        while(count < length){
-            int len = inputStream.read(bytes, 0, 1024);
-            count +=len;
             OutputStream out = response.getOutputStream();
-            out.write(bytes, 0, len);
-            out.flush();
-            out.close();
+            ZxingCode.encode(out,keycode, message, barCodeMainImgPath, fileClient);
         }
     }
+
 }

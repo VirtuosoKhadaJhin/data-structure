@@ -141,14 +141,8 @@
 </body>
 <script type="text/javascript">
     /*水印下载条形码*/
-        function downloadBarcode(VerificationCode) {
-            $.ajax({
-                url: 'downloadBarcode',
-                type: 'post',
-                data: {VerificationCode: VerificationCode,countryid:$!order.countryid},
-                success: function (result) {
-                }
-            });
-        }
+    function downloadBarcode(VerificationCode){
+            window.location.href="downloadBarcode?VerificationCode="+VerificationCode+"&countryid="+$!order.countryid;
+    }
 </script>
 </html>

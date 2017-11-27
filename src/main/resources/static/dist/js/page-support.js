@@ -50,6 +50,7 @@ function sort(propertie, direction) {
     window.location.href = window.location.href.split("?")[0] + search;
 }
 
+
 function UrlBuilder() {
     var params = window.location.search;
     if (params) {

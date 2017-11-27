@@ -36,43 +36,35 @@ public class ZxingCode {
      * 生成条形码
      * @param contents 核销码
      */
-    public static Map<String, Object>  encode(String contents, String localMess,String barCodeMainImgPath,FileClient fileClient) {
+    public static void  encode(OutputStream out ,String contents, String localMess,String barCodeMainImgPath,FileClient fileClient) {
         int width = 380, height = 80;
         int codeWidth = 3 + (7 * 6) + 5 + (7 * 6) + 3;
-            codeWidth = Math.max(codeWidth, width);
-        Map<String, Object> stringObjectMap = new HashMap<>();
+        codeWidth = Math.max(codeWidth, width);
         try {
             Hashtable<EncodeHintType, String> hints = new Hashtable<>();
             hints.put(EncodeHintType.CHARACTER_SET, CHARSET);
             BitMatrix bitMatrix = new MultiFormatWriter().encode(contents,BarcodeFormat.CODE_128, codeWidth, height, hints);
-            //MatrixToImageWriter.writeToStream(bitMatrix, "jpg",new FileOutputStream(encodePath));
             BufferedImage encodePath = MatrixToImageWriter.toBufferedImage(bitMatrix);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageOutputStream imageOutput = ImageIO.createImageOutputStream(byteArrayOutputStream);
             ImageIO.write(encodePath, "jpg", imageOutput);
             InputStream codeInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-
             InputStream InputStream = fileClient.queryFile(barCodeMainImgPath);
-            stringObjectMap = pressImage(InputStream, codeInputStream, contents, localMess, -1, 480, -1, 380, -1, -1, 1f);//添加水印图片
-//pressText("f://Img//主图2 - 副本.jpg", contents, "宋体", Font.BOLD, 20, Color.BLACK, -1, 380, 1f);
-            //pressTips("f://Img//主图2 - 副本 (5).jpg", Mess, "宋体", Font.BOLD, 30, Color.BLACK, -1, 480, 1f);
+            pressImage(out ,InputStream, codeInputStream, contents, localMess, -1, 480, -1, 380, -1, -1, 1f);//添加水印图片
         } catch (Exception e) {
             e.printStackTrace();
-
         }
-        return stringObjectMap;
     }
     /**
-     * @param targetImg 目标图片路径，如：d://myPictrue//1.jpg
-     * @param encodePath 水印图片路径，如：C://myPictrue//logo.png
+     * @param targetImg 目标图片路径，流文件
+     * @param encodePath 水印图片路径，流文件
      * @param x 水印图片距离目标图片左侧的偏移量，如果x<0, 则在正中间
      * @param y 水印图片距离目标图片上侧的偏移量，如果y<0, 则在正中间
      * @param alpha 透明度(0.0 -- 1.0, 0.0为完全透明，1.0为完全不透明)
      */
     //添加图片水印
-    public static Map<String,Object> pressImage(InputStream targetImg, InputStream encodePath,String pressText , String Mess , int messX ,int messY , int textX ,int textY,int x, int y, float alpha) throws IOException {
-        InputStream inputStream = null;
-        Map<String,Object> map = new HashMap<>();
+    public static void pressImage(OutputStream out ,InputStream targetImg, InputStream encodePath,String pressText , String Mess , int messX ,int messY , int textX ,int textY,int x, int y, float alpha) throws IOException {
+        InputStream is = null;
         try {
             Image mainImage = ImageIO.read(targetImg);
             int mainWidth = mainImage.getWidth(null);
@@ -135,22 +127,22 @@ public class ZxingCode {
             }
             mainGraphics.drawImage(encodeImage, x, y, encodeWidth, encodeHeight, null); // 水印图片结束
             mainGraphics.dispose();
-
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageOutputStream imageOutput = ImageIO.createImageOutputStream(byteArrayOutputStream);
             ImageIO.write(bufferedImage, PICTRUE_FORMATE_JPG, imageOutput);
-            inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-            //输出流
-            //ImageIO.write(bufferedImage, PICTRUE_FORMATE_JPG, new File("f:\\test.jpg"));//关闭主图
-            long length = imageOutput.length();
-            map.put("length",length);
-            map.put("inputStream",inputStream);
-            map.put("imageOutput",imageOutput);
+            is = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+            int b;
+            while((b = is.read())!= -1)
+            {
+                out.write(b);
+            }
             System.out.println("添加水印图片完成!");
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            is.close();
+            out.close();
         }
-        return map;
     }
 
     /**
