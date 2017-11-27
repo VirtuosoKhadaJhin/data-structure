@@ -1,20 +1,12 @@
 package com.nuanyou.cms.controller;
 
 import com.google.common.collect.Maps;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.component.FileClient;
 import com.nuanyou.cms.component.ZxingCode;
 import com.nuanyou.cms.dao.*;
-import com.nuanyou.cms.domain.OrderDetailLocalKeys;
 import com.nuanyou.cms.entity.Country;
-import com.nuanyou.cms.entity.EntityNyLangsDictionary;
 import com.nuanyou.cms.entity.Item;
 import com.nuanyou.cms.entity.Merchant;
 import com.nuanyou.cms.entity.enums.NewOrderStatus;
@@ -23,7 +15,6 @@ import com.nuanyou.cms.entity.enums.OrderType;
 import com.nuanyou.cms.entity.enums.RefundStatus;
 import com.nuanyou.cms.entity.order.*;
 import com.nuanyou.cms.entity.user.PasUserProfile;
-import com.nuanyou.cms.model.LangsDictionaryVo;
 import com.nuanyou.cms.model.OrderSave;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.model.enums.OrderSaleChannel;
@@ -34,7 +25,6 @@ import com.nuanyou.cms.util.ExcelUtil;
 import com.nuanyou.cms.util.TimeCondition;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.poi.util.LocaleUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +38,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.imageio.stream.ImageOutputStream;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -101,8 +89,22 @@ public class OrderController {
     @Qualifier("s3")
     private FileClient fileClient;
 
-    @Value("${s3.barCodeMainImgPath}")
-    private String barCodeMainImgPath;
+    @Value("${s3.krCodeMainImgPath}")
+    private String krCodeMainImgPath;
+
+    @Value("${s3.jpCodeMainImgPath}")
+    private String jpCodeMainImgPath;
+
+    @Value("${s3.thCodeMainImgPath}")
+    private String thCodeMainImgPath;
+
+    @Value("${s3.geCodeMainImgPath}")
+    private String geCodeMainImgPath;
+
+    @Value("${s3.enCodeMainImgPath}")
+    private String enCodeMainImgPath;
+
+
 
     private static final String KEY = "keycode";
     private static final String WIDTH = "mwidth";
@@ -445,7 +447,15 @@ public class OrderController {
         response.setHeader("Content-Disposition", "attachment;filename="+fname);
         String keycode = request.getParameter("VerificationCode");
         String countryid = request.getParameter("countryid");
-        Country countryInfo = countryService.findOne(Long.valueOf(countryid));
+        String titleInfo = enCodeMainImgPath;
+        switch(countryid){
+            case "1": titleInfo = krCodeMainImgPath;break;
+            case "2": titleInfo = jpCodeMainImgPath;break;
+            case "3": titleInfo = thCodeMainImgPath;break;
+            case "4": titleInfo = geCodeMainImgPath;break;
+            default:break;
+        }
+/*      Country countryInfo = countryService.findOne(Long.valueOf(countryid));
         String countryCode = "";
         if(countryInfo != null){
             countryCode = countryInfo.getCode().toString();
@@ -454,10 +464,11 @@ public class OrderController {
         String message = "";
         if(byKeyCodeAndCountry != null){
              message = byKeyCodeAndCountry.getMessage();
-        }
+        }*/
         if (keycode != null && !"".equals(keycode)) {
             OutputStream out = response.getOutputStream();
-            ZxingCode.encode(out,keycode, message, barCodeMainImgPath, fileClient);
+            //ZxingCode.encode(out,keycode, message, barCodeMainImgPath, fileClient);
+            ZxingCode.encode(out,keycode, titleInfo, fileClient);
         }
     }
 

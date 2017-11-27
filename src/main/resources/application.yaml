@@ -1,8 +1,8 @@
 spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://rdsw9r566jxer973wqi2.mysql.rds.aliyuncs.com:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
-    username: dev
+    url: jdbc:mysql://test20-db.9ny.me:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
+    username: nuanyou20
     password: 1qaz2wsxE
     test-on-borrow: true
     validation-query: select 1
@@ -44,17 +44,39 @@ oss:
   accessKeyId: OgdPMXR4cLyeIxEW
   secretAccessKey: zgSa3pBpQEo4EPQt1sVBF4U66QJZ21
 
+#s3:
+  #bucketName: dev.img.91nuanyou.com
+  #domain: http://dev.img.91nuanyou.com
+  #region: us-east-1
+  #accessKey: AKIAJODFEQRC67I5MMTA
+  #secretKey: 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
+  #krCodeMainImgPath: barCodeImg/krCodeMainImg.jpg
+  #thCodeMainImgPath: barCodeImg/thCodeMainImg.jpg
+  #jpCodeMainImgPath: barCodeImg/jpCodeMainImg.jpg
+  #geCodeMainImgPath: barCodeImg/geCodeMainImg.jpg
+  #enCodeMainImgPath: barCodeImg/enCodeMainImg.jpg
+
 s3:
-  bucketName: dev.img.91nuanyou.com
-  domain: http://dev.img.91nuanyou.com
-  region: us-east-1
-  accessKey: AKIAJODFEQRC67I5MMTA
-  secretKey: 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
+  bucketName: nuanyou-resource-test
+  domain: https://s3-ap-northeast-2.amazonaws.com
+  region: ap-northeast-2
+  accessKey: AKIAJUY7DPOSAJFGF6NA
+  secretKey: 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
   barCodeMainImgPath: barCodeMainImg.jpg
+  krCodeMainImgPath: barCodeImg/krCodeMainImg.jpg
+  thCodeMainImgPath: barCodeImg/thCodeMainImg.jpg
+  jpCodeMainImgPath: barCodeImg/jpCodeMainImg.jpg
+  geCodeMainImgPath: barCodeImg/geCodeMainImg.jpg
+  enCodeMainImgPath: barCodeImg/enCodeMainImg.jpg
+
+
+
 
 nuanyou-host: http://testh5.91nuanyou.com
 withdrawurl: http://testuser.api.91nuanyou.com
-nuanyou-api: http://127.0.0.1:8081
+#nuanyou-api: http://127.0.0.1:8081
+nuanyou-api: https://testapi30.91nuanyou.com
+
 
 upload:
   s3server: https://kr.file.91nuanyou.com

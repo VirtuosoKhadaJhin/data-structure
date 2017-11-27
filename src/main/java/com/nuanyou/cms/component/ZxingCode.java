@@ -30,7 +30,7 @@ public class ZxingCode {
      * 生成条形码
      * @param contents 核销码
      */
-    public static void  encode(OutputStream out ,String contents, String localMess,String barCodeMainImgPath,FileClient fileClient) {
+    public static void  encode(OutputStream out ,String contents,String titleInfo,FileClient fileClient) {
         int width = 380, height = 80;
         int codeWidth = 3 + (7 * 6) + 5 + (7 * 6) + 3;
         codeWidth = Math.max(codeWidth, width);
@@ -43,8 +43,8 @@ public class ZxingCode {
             ImageOutputStream imageOutput = ImageIO.createImageOutputStream(byteArrayOutputStream);
             ImageIO.write(encodePath, "jpg", imageOutput);
             InputStream codeInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-            InputStream InputStream = fileClient.queryFile(barCodeMainImgPath);
-            pressImage(out ,InputStream, codeInputStream, contents, localMess, -1, 480, -1, 380, -1, -1, 1f);//添加水印图片
+            InputStream InputStream = fileClient.queryFile(titleInfo);
+            pressImage(out ,InputStream, codeInputStream, contents, -1, 480, -1, 380, -1, -1, 1f);//添加水印图片
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,7 +57,7 @@ public class ZxingCode {
      * @param alpha 透明度(0.0 -- 1.0, 0.0为完全透明，1.0为完全不透明)
      */
     //添加图片水印
-    public static void pressImage(OutputStream out ,InputStream targetImg, InputStream encodePath,String pressText , String Mess , int messX ,int messY , int textX ,int textY,int x, int y, float alpha) throws IOException {
+    public static void pressImage(OutputStream out ,InputStream targetImg, InputStream encodePath,String pressText  , int messX ,int messY , int textX ,int textY,int x, int y, float alpha) throws IOException {
         InputStream is = null;
         try {
             Image mainImage = ImageIO.read(targetImg);
@@ -85,8 +85,8 @@ public class ZxingCode {
                 textY = mainPressTextHeight;
             }
             mainGraphics.drawString(pressText, textX ,textY + pressTextHeight);
-            //拼接信息文字
-            int messWidth = 30 * getLength(Mess);
+/*          //拼接信息文字
+            int messWidth = 30 * getLength("난요우관리자앱으로.");
             int messHeight = 30;
             int mainMessWidth  = mainWidth - messWidth;
             int mainMessHeight = mainHeight - messHeight;
@@ -100,7 +100,7 @@ public class ZxingCode {
             }else if(messY > mainMessHeight){
                 messY = mainMessHeight;
             }
-            mainGraphics.drawString(Mess, messX, messY + messHeight);//添加水印
+            mainGraphics.drawString("난요우관리자앱으로", messX, messY + messHeight);//添加水印*/
             //添加核销一维码
             //ImageInputStream
             Image encodeImage = ImageIO.read(encodePath);
