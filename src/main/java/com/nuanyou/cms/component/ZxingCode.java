@@ -31,7 +31,7 @@ public class ZxingCode {
      * @param contents 核销码
      */
     public static void  encode(OutputStream out ,String contents,String titleInfo,FileClient fileClient) {
-        int width = 380, height = 80;
+        int width = 480, height = 120;//条形码大小
         int codeWidth = 3 + (7 * 6) + 5 + (7 * 6) + 3;
         codeWidth = Math.max(codeWidth, width);
         try {
@@ -42,35 +42,35 @@ public class ZxingCode {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageOutputStream imageOutput = ImageIO.createImageOutputStream(byteArrayOutputStream);
             ImageIO.write(encodePath, "jpg", imageOutput);
-            InputStream codeInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-            InputStream InputStream = fileClient.queryFile(titleInfo);
-            pressImage(out ,InputStream, codeInputStream, contents, -1, 480, -1, 380, -1, -1, 1f);//添加水印图片
+            InputStream codeInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());//条形码输出流
+            InputStream InputStream = fileClient.queryFile(titleInfo);//下载底图的输出流
+            pressImage(out ,InputStream, codeInputStream, contents, -1,590, -1,-1, 1f);//添加水印图片
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     /**
-     * @param targetImg 目标图片路径，流文件
-     * @param encodePath 水印图片路径，流文件
+     * @param targetImgStream 目标图片路径，流文件
+     * @param encodeStream 水印图片路径，流文件
      * @param x 水印图片距离目标图片左侧的偏移量，如果x<0, 则在正中间
      * @param y 水印图片距离目标图片上侧的偏移量，如果y<0, 则在正中间
      * @param alpha 透明度(0.0 -- 1.0, 0.0为完全透明，1.0为完全不透明)
      */
     //添加图片水印
-    public static void pressImage(OutputStream out ,InputStream targetImg, InputStream encodePath,String pressText  , int messX ,int messY , int textX ,int textY,int x, int y, float alpha) throws IOException {
+    public static void pressImage(OutputStream out ,InputStream targetImgStream, InputStream encodeStream,String pressText ,int textX ,int textY,int x, int y, float alpha) throws IOException {
         InputStream is = null;
         try {
-            Image mainImage = ImageIO.read(targetImg);
+            Image mainImage = ImageIO.read(targetImgStream);
             int mainWidth = mainImage.getWidth(null);
             int mainHeight = mainImage.getHeight(null);
             BufferedImage bufferedImage = new BufferedImage(mainWidth, mainHeight, BufferedImage.TYPE_INT_RGB);
             Graphics2D mainGraphics = bufferedImage.createGraphics();//创建图片文件(最后合成的图片)
             mainGraphics.drawImage(mainImage, 0, 0, mainWidth, mainHeight, null);
-            mainGraphics.setFont(new Font("宋体", Font.BOLD, 20));//拼接水印核销码
+            mainGraphics.setFont(new Font("宋体", Font.BOLD, 30));//拼接水印核销码
             mainGraphics.setColor(Color.BLACK);//拼接水印核销码
             mainGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
             //拼接核销码
-            int  pressTextWidth = 20 * getLength(pressText);
+            int  pressTextWidth = 30 * getLength(pressText);
             int  pressTextHeight = 20;
             int mainPressTextWidth = mainWidth - pressTextWidth;
             int mainPressTextHeight = mainHeight - pressTextHeight;
@@ -103,7 +103,7 @@ public class ZxingCode {
             mainGraphics.drawString("난요우관리자앱으로", messX, messY + messHeight);//添加水印*/
             //添加核销一维码
             //ImageInputStream
-            Image encodeImage = ImageIO.read(encodePath);
+            Image encodeImage = ImageIO.read(encodeStream);
             int encodeWidth = encodeImage.getWidth(null);
             int encodeHeight = encodeImage.getHeight(null);
             //水印文件与底图的差值
