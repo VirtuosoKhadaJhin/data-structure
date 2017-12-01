@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface OrderRefundLogDao extends JpaRepository<OrderRefundLog, Long>, JpaSpecificationExecutor {
 
+    @Query("select t from OrderRefundLog t where t.order.id =?1 and t.id=(select min(k.id) from OrderRefundLog k where k.order.id =?1) ")
     OrderRefundLog findByOrderId(Long id);
 
     @Modifying

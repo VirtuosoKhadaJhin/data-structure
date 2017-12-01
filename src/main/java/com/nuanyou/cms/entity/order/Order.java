@@ -76,6 +76,15 @@ public class Order {
     private PasUserProfile user;
     private Coupon coupon;
     private Long countryid;
+    private Boolean onlinable;
+
+    public Boolean getOnlinable() {
+        return onlinable;
+    }
+
+    public void setOnlinable(Boolean onlinable) {
+        this.onlinable = onlinable;
+    }
 
     @Column(name = "settlement", nullable = false, length = 25)
     private String settlement;
