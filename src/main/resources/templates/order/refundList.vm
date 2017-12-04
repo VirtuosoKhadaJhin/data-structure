@@ -167,7 +167,6 @@
     $(function () {
         //点击审核通过或是拒绝
         $(".checkOperation").on("click", function () {
-            debugger
             var orderId = $(this).data('id');
             var operationType = $(this).data('type');
             $.ajax({
@@ -176,7 +175,6 @@
                 type: 'post',
                 dataType: 'json',
                 success: function (result) {
-                    alert(result.code);
                     if(result.code == 0){
                         window.location.reload();
                     }
