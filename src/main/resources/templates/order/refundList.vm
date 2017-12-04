@@ -47,7 +47,6 @@
             <tr>
                 <!--操作-->
                 <td style="text-align: center">
-                    $!e.refundstatus.value
                 #if($!e.refundstatus.value == 201 )
                     <buton  class="btn btn-info btn-mini checkOperation" data-id="$!e.id" data-type="1">通过</buton>
                     <buton  class="btn btn-danger btn-mini checkOperation" data-id="$!e.id" data-type="2">拒绝</buton>
