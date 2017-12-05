@@ -198,7 +198,6 @@
                 type: 'post',
                 dataType: 'json',
                 success: function (result) {
-                    alert(result.code);
                     if(result.code == 0){
                         window.location.reload();
                     }
