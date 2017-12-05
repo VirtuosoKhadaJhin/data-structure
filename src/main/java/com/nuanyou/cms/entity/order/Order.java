@@ -78,6 +78,7 @@ public class Order {
     private Long countryid;
     private Boolean onlinable;
 
+    @Column(name = "onlinable")
     public Boolean getOnlinable() {
         return onlinable;
     }
