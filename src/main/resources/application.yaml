@@ -6,6 +6,26 @@ spring:
     password: 1qaz2wsxE
     test-on-borrow: true
     validation-query: select 1
+#  开发
+#  datasource:
+#    driverClassName: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://rdsw9r566jxer973wqi2.mysql.rds.aliyuncs.com:3306/nuanyou20?useUnicode=true&characterEncoding=UTF-8
+#    username: dev
+#    password: 1qaz2wsxE
+#    test-on-borrow: true
+#    validation-query: select 1
+
+
+  mail:
+    host: smtp.126.com
+    username: zarabin@126.com
+    password: aa529437740
+    properties:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+          required: true
 
   jpa:
     database: MYSQL
@@ -74,8 +94,9 @@ s3:
 
 nuanyou-host: http://testh5.91nuanyou.com
 withdrawurl: http://testuser.api.91nuanyou.com
-#nuanyou-api: http://127.0.0.1:8081
-nuanyou-api: https://testapi30.91nuanyou.com
+
+nuanyou-api: http://127.0.0.1:8081
+#nuanyou-api: https://testapi30.91nuanyou.com
 
 
 upload:
@@ -104,7 +125,7 @@ sso:
 
 contractService: http://127.0.0.1:8200
 accountService: http://127.0.0.1:8086
-
+orderService: http://172.16.0.230:8017
 
 paymentRecord:
   service-address: http://test.payment.91nuanyou.com

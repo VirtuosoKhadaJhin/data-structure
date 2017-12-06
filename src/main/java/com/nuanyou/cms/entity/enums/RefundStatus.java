@@ -8,8 +8,8 @@ public enum RefundStatus {
     Unknown(0, "未退款"),
     RefundInProgress(201, "待处理"),
     Failure(202, "退款失败"),
-    Success(203, "退款成功");
-
+    Success(203, "退款成功"),
+    REFUNDAPPROVAL(204, "审核通过");
 
     public final Integer value;
 

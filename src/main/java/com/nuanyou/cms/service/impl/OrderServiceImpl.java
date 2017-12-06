@@ -1,12 +1,13 @@
 package com.nuanyou.cms.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.nuanyou.cms.commons.APIException;
+import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.domain.NotificationPublisher;
-import com.nuanyou.cms.entity.ItemTuan;
 import com.nuanyou.cms.entity.UserCardItem;
 import com.nuanyou.cms.entity.coupon.Coupon;
 import com.nuanyou.cms.entity.enums.*;
@@ -15,13 +16,21 @@ import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.OrderRefundLogService;
 import com.nuanyou.cms.service.OrderService;
 import com.nuanyou.cms.service.UserService;
+import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.DateUtils;
 import com.nuanyou.cms.util.TimeCondition;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +43,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.*;
 
 /**
@@ -64,6 +75,16 @@ public class OrderServiceImpl implements OrderService {
     private OrderItemDao orderItemDao;
     @Autowired
     private UserService userService;
+
+    @Value("${orderService}")
+    private String orderService;
+
+    public static class  refundParam {
+        public String refundRemark ;
+        public String refundReason;
+        public String iapplicantIdds;
+        public String refundSource;
+    }
 
     private static String timePattern = "yyyy-MM-dd HH:mm:ss";
     private static String decimalPattern = "#0.00";
@@ -152,11 +173,7 @@ public class OrderServiceImpl implements OrderService {
                     Predicate pStatus = cb.equal(root.get("refundstatus"), entity.getRefundstatus());
                     predicate.add(pStatus);
                 } else {
-                    CriteriaBuilder.In<Integer> in = cb.in(root.get("refundstatus").as(Integer.class));
-                    in.value(RefundStatus.Failure.getValue());
-                    in.value(RefundStatus.RefundInProgress.getValue());
-                    in.value(RefundStatus.Success.getValue());
-                    predicate.add(in);
+                   cb.isNotNull(root.get("refundstatus"));
                 }
                 if (time.getBegin() != null) {
                     Predicate p = cb.greaterThanOrEqualTo(root.get("createtime").as(Date.class), time.getBegin());
@@ -408,33 +425,61 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void refund(Order entity) {
-        Order order = this.orderDao.findOne(entity.getId());
-        if (order == null) {
-            throw new APIException(ResultCodes.OrderNotFound, " Detail：OrderID" + entity.getId());
-        }
-        if (!order.getRefundQualified(order)) {
-            throw new APIException(ResultCodes.OrderOther, "只有 【退款失败、已消费、已评价、自动核销、商户核销】 的订单支持发起退款申请");
-        }
+    public void refund(Order entity) throws URISyntaxException, IOException {
+        if(entity != null){
+            Order order = this.orderDao.findOne(entity.getId());
+            if (order == null) {
+                throw new APIException(ResultCodes.OrderNotFound, " Detail：OrderID" + entity.getId());
+            }
+            if (!order.getRefundQualified(order)) {
+                throw new APIException(ResultCodes.OrderOther, "只有 【退款失败、已消费、已评价、自动核销、商户核销】 的订单支持发起退款申请");
+            }
 
-        if (order.getRefundstatus() != null) {
-            if (order.getRefundstatus() == RefundStatus.RefundInProgress) {
-                throw new APIException(ResultCodes.Refunding, " Detail：OrderID" + order.getId());
-            } else if (order.getRefundstatus() == RefundStatus.Success) {
-                throw new APIException(ResultCodes.RefundingSuccess, " Detail：OrderID" + order.getId());
+            if (order.getRefundstatus() != null) {
+                if (order.getRefundstatus() == RefundStatus.RefundInProgress) {
+                    throw new APIException(ResultCodes.Refunding, " Detail：OrderID" + order.getId());
+                } else if (order.getRefundstatus() == RefundStatus.Success) {
+                    throw new APIException(ResultCodes.RefundingSuccess, " Detail：OrderID" + order.getId());
+                }
+            }
+            HttpPost method = new HttpPost(orderService+"/orders/"+order.getId()+"/refunds");
+            // 接收参数json列表
+            JSONObject jsonParam = new JSONObject();
+            jsonParam.put("refundRemark", entity.getRefundremark());
+            jsonParam.put("refundReason", "匿名操作");
+            jsonParam.put("applicantId", UserHolder.getUser().getUserid().toString());
+            jsonParam.put("refundSource", RefundSource.CMS.getValue());//
+            StringEntity entitys = new StringEntity(jsonParam.toString(),"utf-8");
+            entitys.setContentEncoding("UTF-8");
+            entitys.setContentType("application/json");
+            method.setEntity(entitys);
+            CloseableHttpResponse response = HttpClientBuilder.create().build().execute(method);
+            String responseText = EntityUtils.toString(response.getEntity());
+            System.out.println(responseText);
+            APIResult apiResult = JSON.parseObject(responseText,APIResult.class);
+            if (apiResult.getCode() == null || apiResult.getCode() != 0) {
+                throw new APIException(ResultCodes.UnkownError, apiResult.getMsg());
             }
         }
-        order.setRefundremark(entity.getRefundremark());
-        order.setId(entity.getId());
-        order.setStatusname("已申请退款");
-        order.setRefundreason("匿名操作");
-        order.setRefundstatus(RefundStatus.RefundInProgress);//退款中
-        order.setOldrefundstatus(0);
-        order.setRefundtime(DateUtils.newDate());
-        order.setRefundsource(RefundSource.CMS);//// 退款来源：1.客户端，2.cms，3.商户端
-        this.orderDao.save(order);
+    }
 
-        this.notificationPublisher.publishRefund(order.getId().toString());
+    /**
+     * 提交orderService
+     * @param json
+     * @param url
+     */
+    public static void doPost(String url,JSONObject json){
+        DefaultHttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost(url);
+        try {
+            StringEntity s = new StringEntity(json.toString());
+            s.setContentEncoding("UTF-8");
+            s.setContentType("application/json");//发送json数据需要设置contentType
+            post.setEntity(s);
+            client.execute(post);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -536,5 +581,88 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    /**
+     * 退款审核操作通过1拒绝2
+     * @param operationType
+     * @param orderId
+     * @return
+     */
+    @Override
+    public APIResult refundOperate(Integer operationType, Long orderId) throws IOException {
+        Order orderInfo = orderDao.findOne(orderId);
+        APIResult apiResult = null;
+        JSONObject jsonParam;
+        if(null != orderInfo){
+            if(RefundStatus.RefundInProgress == orderInfo.getRefundstatus()){
+                String url = "";
+                if(operationType == 1){
+                    url =  orderService+"/orders/"+orderId+"/refunds/_approval";
+                }else{
+                    url =  orderService+"/orders/"+orderId+"/refunds/_cancel";
+                }
+                jsonParam = new JSONObject();
+                jsonParam.put("operateId", UserHolder.getUser().getUserid());
+                jsonParam.put("operateType", RefundSource.CMS.getValue());
+                apiResult = httpPost(url, jsonParam);
+            }
+        }
+        return apiResult;
+    }
 
+    /**
+     * 退款审核操作通过手共登记 2 联机 1
+     * @param operationType
+     * @param orderId
+     * @return
+     */
+    @Override
+    public APIResult checkPass(Integer operationType, Long orderId) throws IOException {
+        Order orderInfo = orderDao.findOne(orderId);
+        APIResult apiResult = null;
+        JSONObject jsonParam;
+        if(null != orderInfo){
+            if(RefundStatus.REFUNDAPPROVAL == orderInfo.getRefundstatus()){//状态为审核通过的
+                String url = "";
+                if(operationType == 1){
+                    url =  orderService+"/orders/"+orderId+"/refunds/_perform";
+                }else{
+                    url =  orderService+"/orders/"+orderId+"/refunds/_book";
+                }
+                jsonParam = new JSONObject();
+                jsonParam.put("operateId", UserHolder.getUser().getUserid());
+                jsonParam.put("operateType", RefundSource.CMS.getValue());
+                apiResult = httpPost(url, jsonParam);
+            }
+        }
+        return apiResult;
+    }
+
+    /**
+     * 提交orderService 订单退款服务
+     * @param url
+     * @param jsonParam
+     * @return
+     * @throws IOException
+     */
+    private static APIResult httpPost(String url,JSONObject jsonParam) throws IOException {
+        APIResult apiResult = null;
+        if(null != url && !"".equals(url)){
+                HttpPost post = new HttpPost(url);
+            if(jsonParam != null){
+                // 接收参数json列表
+                StringEntity entity = new StringEntity(jsonParam.toString(),"utf-8");
+                entity.setContentEncoding("UTF-8");
+                entity.setContentType("application/json");
+                post.setEntity(entity);
+                CloseableHttpResponse response = HttpClientBuilder.create().build().execute(post);
+                String responseText = EntityUtils.toString(response.getEntity());
+                System.out.println(responseText);
+                apiResult = JSON.parseObject(responseText,APIResult.class);
+                if (apiResult.getCode() == null || apiResult.getCode() != 0) {
+                    throw new APIException(ResultCodes.UnkownError, apiResult.getMsg());
+                }
+            }
+        }
+        return apiResult;
+    }
 }

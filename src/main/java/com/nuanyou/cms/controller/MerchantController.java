@@ -177,11 +177,16 @@ public class MerchantController {
         return "merchant/edit";
     }
 
-
+    /**
+     * 商铺列表
+     * @param entity
+     * @param index
+     * @param model
+     * @return
+     */
     @RequestMapping("list")
     public String list(Merchant entity, @RequestParam(required = false, defaultValue = "1") int index, Model model) {
         Pageable pageable = new PageRequest(index - 1, PageUtil.pageSize, Sort.Direction.DESC, "id");
-
         MerchantQueryParam param = new MerchantQueryParam();
         param.id = entity.getId();
         param.name = entity.getName();

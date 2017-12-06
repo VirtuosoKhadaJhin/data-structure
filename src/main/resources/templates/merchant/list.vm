@@ -71,7 +71,7 @@
         <label>本地名称：</label>
         <input name="kpname" value="$!entity.kpname" type="text" placeholder="本地名称" class="span11">
         <label>显示状态</label>
-        <select name="display" class="span11">
+        <select name="display" class="span11">ny_merchant_card
             <option value="">全部</option>
             <option value="true" #if($!entity.display == true) selected #end>显示</option>
             <option value="false" #if($!entity.display == false) selected #end>隐藏</option>

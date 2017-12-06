@@ -1,11 +1,15 @@
 package com.nuanyou.cms.service;
 
+import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.entity.order.Order;
 import com.nuanyou.cms.entity.order.ViewOrderExport;
 import com.nuanyou.cms.util.TimeCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -25,13 +29,18 @@ public interface OrderService {
 
     Integer getBuyNum(Long userId);
 
-    void refund(Order entity);
+    void refund(Order entity) throws URISyntaxException, IOException;
 
     Order saveNotNull(Order entity);
 
     void validate(Long id, Integer type, String cmsusername);
 
     Boolean checkUnRedeem(Long itemId);
+
+    APIResult refundOperate(Integer operationType, Long orderId) throws IOException;
+
+    APIResult checkPass(Integer operationType, Long orderId) throws IOException;
+
 }
 
 

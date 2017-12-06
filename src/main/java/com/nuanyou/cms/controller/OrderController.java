@@ -40,7 +40,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -82,10 +84,6 @@ public class OrderController {
     private UserService userService;
 
     @Autowired
-    private LangsDictionaryService langsDictionaryService;
-
-
-    @Autowired
     @Qualifier("s3")
     private FileClient fileClient;
 
@@ -103,13 +101,6 @@ public class OrderController {
 
     @Value("${s3.enCodeMainImgPath}")
     private String enCodeMainImgPath;
-
-
-
-    private static final String KEY = "keycode";
-    private static final String WIDTH = "mwidth";
-    private static final String HEIGHT = "mheight";
-    private static final String IMAGETYPE = "JPEG";
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -385,6 +376,7 @@ public class OrderController {
         propertyHeaderMap.put("refundtime", "申请退款时间");
         propertyHeaderMap.put("refundaudittime", "处理时间");
         propertyHeaderMap.put("usetime", "使用时间");
+
         propertyHeaderMap.put("refundsource.name", "来源");
         propertyHeaderMap.put("refundremark", "备注");
         propertyHeaderMap.put("ordercode", "使用码");
@@ -401,14 +393,21 @@ public class OrderController {
         os.close();
     }
 
+    /**
+     * 退款申请
+     * @param entity
+     * @return
+     * @throws IOException
+     * @throws URISyntaxException
+     */
     @RequestMapping("refund")
     @ResponseBody
-    public APIResult refund(Order entity) {
+    public APIResult refund(Order entity) throws IOException, URISyntaxException {
         this.orderService.refund(entity);
         return new APIResult<>(ResultCodes.Success);
     }
 
-    @RequestMapping(path = "refundEdit", method = RequestMethod.GET)
+/*  @RequestMapping(path = "refundEdit", method = RequestMethod.GET)
     public String refundEdit(Long id, Model model, Integer type) {
         Order entity = null;
         if (id != null) {
@@ -419,15 +418,30 @@ public class OrderController {
         model.addAttribute("type", type);
         model.addAttribute("log", log);
         return "order/refundEdit";
-    }
+    }*/
 
+ /*  /**
+     * 手动通过
+     * @param id
+     * @param type
+     * @param response
+     * @param cmsusername
+     * @return
+     * @throws IOException
+     *//*
     @RequestMapping(path = "validate", method = RequestMethod.POST)
     public String validate(Long id, Integer type, HttpServletResponse response, String cmsusername) throws IOException {
         this.orderService.validate(id, type, cmsusername);
         response.sendRedirect("../order/refundEdit?refundEdit=3&id=" + id);
         return null;
-    }
+    }*/
 
+    /**
+     * 下载条形码合成图片
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     @RequestMapping(path = "downloadBarcode")
     public  void  downloadBarcode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/x-msdownload");
@@ -455,21 +469,33 @@ public class OrderController {
             case "4": titleInfo = geCodeMainImgPath;break;
             default:break;
         }
-/*      Country countryInfo = countryService.findOne(Long.valueOf(countryid));
-        String countryCode = "";
-        if(countryInfo != null){
-            countryCode = countryInfo.getCode().toString();
-        }
-        EntityNyLangsDictionary byKeyCodeAndCountry = langsDictionaryService.findByKeyCodeAndCountry(OrderDetailLocalKeys.global_tips, countryCode);
-        String message = "";
-        if(byKeyCodeAndCountry != null){
-             message = byKeyCodeAndCountry.getMessage();
-        }*/
         if (keycode != null && !"".equals(keycode)) {
             OutputStream out = response.getOutputStream();
-            //ZxingCode.encode(out,keycode, message, barCodeMainImgPath, fileClient);
             ZxingCode.encode(out,keycode, titleInfo, fileClient);
         }
     }
 
+    /**
+     * 退款操作通过还是拒绝
+     * @param orderId
+     * @param operationType
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(path = "refundOperate")
+    public APIResult refundOperate(Integer operationType, Long orderId) throws IOException {
+        return orderService.refundOperate(operationType,orderId);
+    }
+
+    /**
+     * 退款通过后操作
+     * @param operationType
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(path = "checkPass")
+    public APIResult checkPass(Integer operationType, Long orderId) throws IOException {
+        orderService.checkPass(operationType,orderId);
+        return new APIResult();
+    }
 }
