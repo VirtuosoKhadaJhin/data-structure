@@ -722,7 +722,7 @@ public class Order {
                 order.getOrderstatus() == NewOrderStatus.AutoVerification || order.getOrderstatus() == NewOrderStatus.MerchantVerfication) {
             if (order.getRefundstatus() == null || order.getRefundstatus() == RefundStatus.Unknown) {
                 return true;
-            } else {   //退款中或者退款成功//退款失败
+    } else {   //退款中或者退款成功//退款失败·~_l?"
                 return false;
             }
         } else {
