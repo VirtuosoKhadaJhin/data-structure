@@ -599,9 +599,9 @@ public class OrderServiceImpl implements OrderService {
         if(null != orderInfo){
             if(RefundStatus.RefundInProgress == orderInfo.getRefundstatus()){
                 String url = "";
-                if(operationType == 1){
+                if(operationType == 1){//通过
                     url =  orderService+"/orders/"+orderId+"/refunds/_approval";
-                }else{
+                }else{//拒绝
                     url =  orderService+"/orders/"+orderId+"/refunds/_cancel";
                 }
                 jsonParam = new JSONObject();
@@ -628,9 +628,9 @@ public class OrderServiceImpl implements OrderService {
             //状态为审核通过的
             if(RefundStatus.REFUNDAPPROVAL == orderInfo.getRefundstatus()){
                 String url = "";
-                if(operationType == 1){
+                if(operationType == 1){//联机
                     url =  orderService+"/orders/"+orderId+"/refunds/_perform";
-                }else{
+                }else{//手工
                     url =  orderService+"/orders/"+orderId+"/refunds/_book";
                 }
                 jsonParam = new JSONObject();
