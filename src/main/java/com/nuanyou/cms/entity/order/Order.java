@@ -718,11 +718,13 @@ public class Order {
     }
 
     public Boolean getRefundQualified(Order order) {
+        //已支付的    惠购订单的   特品推荐订单的   已消费的  已评价的  自动核销的   商户核销的
         if ((order.getOrderstatus() == NewOrderStatus.Payed && (order.getOrdertype() == OrderType.Huigou || order.getOrdertype() == OrderType.TuanGou))||order.getOrderstatus() == NewOrderStatus.Consumed || order.getOrderstatus() == NewOrderStatus.Commented ||
                 order.getOrderstatus() == NewOrderStatus.AutoVerification || order.getOrderstatus() == NewOrderStatus.MerchantVerfication) {
-            if (order.getRefundstatus() == null || order.getRefundstatus() == RefundStatus.Unknown) {
+            //退款状态为null  未退款的  退款失败的 可以退款
+            if (order.getRefundstatus() == null || order.getRefundstatus() == RefundStatus.Unknown || order.getRefundstatus() == RefundStatus.Failure) {
                 return true;
-    } else {   //退款中或者退款成功//退款失败·~_l?"
+    } else {
                 return false;
             }
         } else {
