@@ -44,7 +44,7 @@
                                 </div>
                                 <label class="control-label">本地名称</label>
                                 <div class="controls">
-                                    <input type="text" class="span10" placeholder="本地名称" name="kpname" value="$!entity.kpname" maxlength="80">
+                                    <input type="text" class="span10" placeholder="本地名称" name="kpname" value="$!entity.kpname" maxlength="100">
                                 </div>
                                 <label class="control-label">商家固定电话</label>
                                 <div class="controls">
