@@ -1,21 +1,11 @@
 package com.nuanyou.cms.service.impl;
 
-import com.nuanyou.cms.commons.APIException;
-import com.nuanyou.cms.commons.APIResult;
-import com.nuanyou.cms.commons.ResultCodes;
-import com.nuanyou.cms.dao.OrderDao;
 import com.nuanyou.cms.dao.OrderRefundLogDao;
-import com.nuanyou.cms.entity.enums.RefundStatus;
 import com.nuanyou.cms.entity.order.OrderRefundLog;
 import com.nuanyou.cms.model.PageUtil;
-import com.nuanyou.cms.service.HttpService;
 import com.nuanyou.cms.service.OrderRefundService;
-import com.nuanyou.cms.service.OrderService;
 import com.nuanyou.cms.util.BeanUtils;
-import com.nuanyou.cms.util.RSAUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -24,13 +14,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,14 +28,14 @@ import java.util.List;
 @Service
 public class OrderRefundServiceImpl implements OrderRefundService {
 
-    @Autowired
+/*  @Autowired
     private OrderDao orderDao;
 
     @Autowired
     private HttpService httpService;
 
     @Autowired
-    private OrderService orderService;
+    private OrderService orderService;*/
 
     @Autowired
     private OrderRefundLogDao orderRefundLogDao;
@@ -84,7 +72,7 @@ public class OrderRefundServiceImpl implements OrderRefundService {
         }, pageable);
     }
 
-    @Override
+ /* @Override
     @Transactional
     public void validate(Long id, Integer type) {
         OrderRefundLog entity = orderRefundLogDao.findOne(id);
@@ -102,9 +90,9 @@ public class OrderRefundServiceImpl implements OrderRefundService {
         }
         this.orderService.saveNotNull(entity.getOrder());
         this.saveNotNull(entity);
-    }
+    }*/
 
-    @Override
+ /* @Override
     public APIResult autoHandleRefund(Long id, String transactionId) throws Exception {
         List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("tradeno", RSAUtils.encryptTradeNo(transactionId)));
@@ -123,7 +111,7 @@ public class OrderRefundServiceImpl implements OrderRefundService {
 
         return responseData;
 
-    }
+    }*/
 
     @Override
     public OrderRefundLog saveNotNull(OrderRefundLog entity) {

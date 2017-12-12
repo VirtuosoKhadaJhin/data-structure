@@ -9,11 +9,11 @@ import org.springframework.data.domain.Page;
  */
 public interface OrderRefundService {
 
-    void validate(Long id, Integer type);
+    /*void validate(Long id, Integer type);*/
 
     OrderRefundLog saveNotNull(OrderRefundLog entity);
 
-    APIResult autoHandleRefund(Long id, String transactionId) throws Exception;
+    /*APIResult autoHandleRefund(Long id, String transactionId) throws Exception;*/
 
     Page<OrderRefundLog> findByCondition(int index, OrderRefundLog entity);
 

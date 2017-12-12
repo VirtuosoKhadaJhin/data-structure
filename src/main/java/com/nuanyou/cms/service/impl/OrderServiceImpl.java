@@ -10,15 +10,20 @@ import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.domain.NotificationPublisher;
 import com.nuanyou.cms.entity.UserCardItem;
 import com.nuanyou.cms.entity.coupon.Coupon;
-import com.nuanyou.cms.entity.enums.*;
-import com.nuanyou.cms.entity.order.*;
+import com.nuanyou.cms.entity.enums.CardStatusEnum;
+import com.nuanyou.cms.entity.enums.CouponStatusEnum;
+import com.nuanyou.cms.entity.enums.RefundSource;
+import com.nuanyou.cms.entity.enums.RefundStatus;
+import com.nuanyou.cms.entity.order.Order;
+import com.nuanyou.cms.entity.order.OrderItem;
+import com.nuanyou.cms.entity.order.OrderVouchCard;
+import com.nuanyou.cms.entity.order.ViewOrderExport;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.OrderRefundLogService;
 import com.nuanyou.cms.service.OrderService;
 import com.nuanyou.cms.service.UserService;
 import com.nuanyou.cms.sso.client.util.UserHolder;
 import com.nuanyou.cms.util.BeanUtils;
-import com.nuanyou.cms.util.DateUtils;
 import com.nuanyou.cms.util.TimeCondition;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -55,22 +60,22 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderDao orderDao;
-    @Autowired
+/*  @Autowired
     private OrderRefundLogService orderRefundLogService;
     @Autowired
-    private ItemTuanDao itemTuanDao;
+    private ItemTuanDao itemTuanDao;*/
     @Autowired
     private OrderVouchCardDao orderVouchCardDao;
     @Autowired
     private UserCardItemDao userCardItemDao;
     @Autowired
     private CouponDao couponDao;
-    @Autowired
-    private NotificationPublisher notificationPublisher;
+/*  @Autowired
+    private NotificationPublisher notificationPublisher;*/
     @Autowired
     private ViewOrderExportDao viewOrderExportDao;
-    @Autowired
-    private MerchantDao merchantDao;
+/*  @Autowired
+    private MerchantDao merchantDao;*/
     @Autowired
     private OrderItemDao orderItemDao;
     @Autowired
@@ -79,12 +84,6 @@ public class OrderServiceImpl implements OrderService {
     @Value("${orderService}")
     private String orderService;
 
-    public static class  refundParam {
-        public String refundRemark ;
-        public String refundReason;
-        public String iapplicantIdds;
-        public String refundSource;
-    }
 
     private static String timePattern = "yyyy-MM-dd HH:mm:ss";
     private static String decimalPattern = "#0.00";
@@ -422,7 +421,12 @@ public class OrderServiceImpl implements OrderService {
         return this.orderDao.getBuyNum(userId.intValue());
     }
 
-
+    /**
+     * 退款申请
+     * @param entity
+     * @throws URISyntaxException
+     * @throws IOException
+     */
     @Transactional
     @Override
     public void refund(Order entity) throws URISyntaxException, IOException {
@@ -492,8 +496,8 @@ public class OrderServiceImpl implements OrderService {
         return orderDao.save(oldEntity);
     }
 
-
-    @Override
+//2017/12/06 退款改造 重构
+/*  @Override
     @Transactional
     public void validate(Long id, Integer type, String cmsusername) {
         Order order = orderDao.findOne(id);
@@ -528,7 +532,7 @@ public class OrderServiceImpl implements OrderService {
         backCardAndCoupon(order, DateUtils.newDate());
 
 
-    }
+    }*/
 
     @Override
     public Boolean checkUnRedeem(Long itemId) {
@@ -595,9 +599,9 @@ public class OrderServiceImpl implements OrderService {
         if(null != orderInfo){
             if(RefundStatus.RefundInProgress == orderInfo.getRefundstatus()){
                 String url = "";
-                if(operationType == 1){
+                if(operationType == 1){//通过
                     url =  orderService+"/orders/"+orderId+"/refunds/_approval";
-                }else{
+                }else{//拒绝
                     url =  orderService+"/orders/"+orderId+"/refunds/_cancel";
                 }
                 jsonParam = new JSONObject();
@@ -621,11 +625,12 @@ public class OrderServiceImpl implements OrderService {
         APIResult apiResult = null;
         JSONObject jsonParam;
         if(null != orderInfo){
-            if(RefundStatus.REFUNDAPPROVAL == orderInfo.getRefundstatus()){//状态为审核通过的
+            //状态为审核通过的
+            if(RefundStatus.REFUNDAPPROVAL == orderInfo.getRefundstatus()){
                 String url = "";
-                if(operationType == 1){
+                if(operationType == 1){//联机
                     url =  orderService+"/orders/"+orderId+"/refunds/_perform";
-                }else{
+                }else{//手工
                     url =  orderService+"/orders/"+orderId+"/refunds/_book";
                 }
                 jsonParam = new JSONObject();

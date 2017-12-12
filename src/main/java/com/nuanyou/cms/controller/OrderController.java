@@ -231,30 +231,7 @@ public class OrderController {
         return "order/list";
     }
 
-    @RequestMapping("refundList")
-    public String refundList(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, TimeCondition time) {
-        Page<Order> page = orderService.findRefundByCondition(index, entity, time, null);
-        for (Order order : page.getContent()) {
-            //注意：此处为避免查询慢，只查询userid和nickname字段
-            PasUserProfile userProfile = pasUserProfileDao.findPartsByUserid(order.getUserId());
-            if (userProfile != null) {
-                order.setUser(userProfile);
-            }
-        }
-        List<Country> countries = countryService.getIdNameList();
-        model.addAttribute("countries", countries);
-        List<RefundStatus> refundStatuses = new ArrayList<RefundStatus>(
-                Arrays.asList(RefundStatus.values())
-        );
-        List<Long> countryids = userService.findUserCountryId();
-        refundStatuses.remove(0);
-        model.addAttribute("refundStatuses", refundStatuses);
-        model.addAttribute("page", page);
-        model.addAttribute("entity", entity);
-        model.addAttribute("time", time);
-        model.addAttribute("countryids", countryids);
-        return "order/refundList";
-    }
+
 
     @RequestMapping(value = "count", method = RequestMethod.POST)
     @ResponseBody
@@ -407,6 +384,39 @@ public class OrderController {
         return new APIResult<>(ResultCodes.Success);
     }
 
+    /**
+     * 退款列表
+     * @param index
+     * @param entity
+     * @param model
+     * @param time
+     * @return
+     */
+    @RequestMapping("refundList")
+    public String refundList(@RequestParam(required = false, defaultValue = "1") int index, Order entity, Model model, TimeCondition time) {
+        Page<Order> page = orderService.findRefundByCondition(index, entity, time, null);
+        for (Order order : page.getContent()) {
+            //注意：此处为避免查询慢，只查询userid和nickname字段
+            PasUserProfile userProfile = pasUserProfileDao.findPartsByUserid(order.getUserId());
+            if (userProfile != null) {
+                order.setUser(userProfile);
+            }
+        }
+        List<Country> countries = countryService.getIdNameList();
+        model.addAttribute("countries", countries);
+        List<RefundStatus> refundStatuses = new ArrayList<RefundStatus>(
+                Arrays.asList(RefundStatus.values())
+        );
+        List<Long> countryids = userService.findUserCountryId();
+        refundStatuses.remove(0);
+        model.addAttribute("refundStatuses", refundStatuses);
+        model.addAttribute("page", page);
+        model.addAttribute("entity", entity);
+        model.addAttribute("time", time);
+        model.addAttribute("countryids", countryids);
+        return "order/refundList";
+    }
+
 /*  @RequestMapping(path = "refundEdit", method = RequestMethod.GET)
     public String refundEdit(Long id, Model model, Integer type) {
         Order entity = null;
@@ -435,6 +445,32 @@ public class OrderController {
         response.sendRedirect("../order/refundEdit?refundEdit=3&id=" + id);
         return null;
     }*/
+
+
+
+    /**
+     * 退款操作-通过还是拒绝
+     * @param orderId
+     * @param operationType
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(path = "refundOperate")
+    public APIResult refundOperate(Integer operationType, Long orderId) throws IOException {
+        return orderService.refundOperate(operationType,orderId);
+    }
+
+    /**
+     * 退款通过后-操作
+     * @param operationType
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(path = "checkPass")
+    public APIResult checkPass(Integer operationType, Long orderId) throws IOException {
+        orderService.checkPass(operationType,orderId);
+        return new APIResult();
+    }
 
     /**
      * 下载条形码合成图片
@@ -473,29 +509,5 @@ public class OrderController {
             OutputStream out = response.getOutputStream();
             ZxingCode.encode(out,keycode, titleInfo, fileClient);
         }
-    }
-
-    /**
-     * 退款操作通过还是拒绝
-     * @param orderId
-     * @param operationType
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(path = "refundOperate")
-    public APIResult refundOperate(Integer operationType, Long orderId) throws IOException {
-        return orderService.refundOperate(operationType,orderId);
-    }
-
-    /**
-     * 退款通过后操作
-     * @param operationType
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(path = "checkPass")
-    public APIResult checkPass(Integer operationType, Long orderId) throws IOException {
-        orderService.checkPass(operationType,orderId);
-        return new APIResult();
     }
 }

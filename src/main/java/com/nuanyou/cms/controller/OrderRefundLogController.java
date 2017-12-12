@@ -42,12 +42,12 @@ public class OrderRefundLogController {
     }
 
 
-    @RequestMapping(path = "validate", method = RequestMethod.GET)
+ /* @RequestMapping(path = "validate", method = RequestMethod.GET)
     public String validate(Long id, Model model,Integer type,HttpServletResponse response) throws IOException {
         this.orderRefundService.validate(id,type);
         response.sendRedirect( "../orderRefundLog/edit?type=3&id="+id);
         return "orderRefundLog/edit";
-    }
+    }*/
 
 
     @RequestMapping(path = "update", method = RequestMethod.POST)
@@ -72,11 +72,11 @@ public class OrderRefundLogController {
         return "orderRefundLog/list";
     }
 
-    @RequestMapping("autoHandleRefund")
+ /* @RequestMapping("autoHandleRefund")
     @ResponseBody
     public APIResult autoHandleRefund(@RequestParam Long id, @RequestParam String transactionId) throws Exception {
         APIResult apiResult = orderRefundService.autoHandleRefund(id, transactionId);
         return new APIResult(apiResult);
     }
-
+*/
 }

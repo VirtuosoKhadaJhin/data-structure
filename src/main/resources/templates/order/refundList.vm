@@ -177,6 +177,12 @@
                 success: function (result) {
                     if(result.code == 0){
                         window.location.reload();
+                    }else{
+                        window.wxc.xcConfirm(result.msg, "warning", {
+                            onOk: function () {
+                                window.location.reload();
+                            }
+                        });
                     }
                 },
                 erro:function () {
@@ -200,6 +206,12 @@
                 success: function (result) {
                     if(result.code == 0){
                         window.location.reload();
+                    }else{
+                        window.wxc.xcConfirm(result.msg, "warning", {
+                            onOk: function () {
+                                window.location.reload();
+                            }
+                        });
                     }
                 },
                 erro:function () {

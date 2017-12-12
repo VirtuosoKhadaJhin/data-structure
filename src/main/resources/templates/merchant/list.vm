@@ -8,12 +8,12 @@
     <thead>
     <tr>
         <th>ID</th>
-        <th>商家名称</th>
-        <th>本地名称</th>
-        <th>商家固定电话</th>
-        <th>商圈信息</th>
-        <th>一级分类</th>
-        <th>二级分类</th>
+        <th width="150px">商家名称</th>
+        <th width="250px">本地名称</th>
+        <th width="100px">商家固定电话</th>
+        <th width="120px">商圈信息</th>
+        <th width="100px">一级分类</th>
+        <th width="100px">二级分类</th>
         <th width="70px">产品类型</th>
         <th width="160px">支付方式</th>
         <th width="200px">地址</th>
@@ -26,7 +26,7 @@
         <tr class="odd gradeX">
             <td>$!entity.id</td>
             <td>$!entity.name</td>
-            <td>$!entity.kpname</td>
+            <td style="word-break:break-all">$!entity.kpname</td>
             <td>$!entity.telphone</td>
             <td>$!entity.district.name</td>
             <td>$!entity.mcat.name</td>
@@ -67,7 +67,7 @@
         <label>ID：</label>
         <input name="id" value="$!entity.id" type="text" placeholder="ID" class="span11">
         <label>名称：</label>
-        <input name="name" value="$!entity.name" type="text" placeholder="名称" class="span11">
+        <input name="name" value="$!entity.name"  type="text" placeholder="名称" class="span11">
         <label>本地名称：</label>
         <input name="kpname" value="$!entity.kpname" type="text" placeholder="本地名称" class="span11">
         <label>显示状态</label>

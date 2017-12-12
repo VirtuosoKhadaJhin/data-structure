@@ -33,7 +33,7 @@ public interface OrderService {
 
     Order saveNotNull(Order entity);
 
-    void validate(Long id, Integer type, String cmsusername);
+    /*void validate(Long id, Integer type, String cmsusername);*/
 
     Boolean checkUnRedeem(Long itemId);
 
