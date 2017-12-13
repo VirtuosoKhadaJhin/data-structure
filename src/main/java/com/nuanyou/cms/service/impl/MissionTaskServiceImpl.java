@@ -57,6 +57,12 @@ public class MissionTaskServiceImpl implements MissionTaskService {
     @Autowired
     private MerchantDao merchantDao;
 
+
+    @Autowired
+    private MerchantAccountDao merchantAccountDao;
+
+
+
     @Override
     public Page<MissionTaskVo> findAllMissionTask(final MissionRequestVo requestVo) {
         Pageable pageable = new PageRequest(requestVo.getIndex() - 1, requestVo.getPageSize());
@@ -228,6 +234,11 @@ public class MissionTaskServiceImpl implements MissionTaskService {
         for (MissionTask missionTask : missionTasks) {
             MissionTaskVo taskVo = BeanUtils.copyBeanNotNull(missionTask, new MissionTaskVo());
             taskVo.setStatus(MissionTaskStatus.toEnum(missionTask.getStatus()));
+            //商户通是否激活
+            Integer mchActivate = merchantAccountDao.findByMchid(missionTask.getMerchant().getId());
+            if(mchActivate > 0 ){
+                taskVo.setActivate(true);
+            }
             maps.put(missionTask.getMerchant().getId(), taskVo);
         }
         if (CollectionUtils.isEmpty(ids)) {

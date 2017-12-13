@@ -595,8 +595,8 @@ public class OrderServiceImpl implements OrderService {
                         notificationPublisher.publishRefundFail(orderId.toString());
                     }
                     orderInfo.setStatusname(StatusnameStr);
-                    orderInfo.setRefundaudittime(DateUtils.newDate());
-                    orderInfo.setRefundstatus(StatusNameObj);//202 失败 203 成功
+                    orderInfo.setRefundaudittime(DateUtils.newDate());//退款时间
+                    orderInfo.setRefundstatus(StatusNameObj);//退款状态 202 失败 203 成功
                     orderDao.save(orderInfo);
 
                     return new APIResult();

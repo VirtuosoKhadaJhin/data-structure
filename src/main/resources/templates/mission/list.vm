@@ -38,6 +38,7 @@
                                 <th>组名-BD名</th>
                                 <th>签到图</th>
                                 <th>商户通版本号</th>
+                                <th>商户通专业版激活状态</th>
                                 <th>测试订单</th>
                                 <th>状态</th>
                                 <th>拜访记录</th>
@@ -105,6 +106,11 @@
                                         #end
                                     </td>
                                     <td>$!entity.mchVersion</td>
+                                    #if($!entity.activate)
+                                        <td>是</td>
+                                    #else
+                                        <td>否</td>
+                                    #end
                                     <td class="td-bz"><a target="_blank" href="/order/edit?type=3&id=$!entity.orderno">$!entity.orderno</a></td>
                                     <td>$!entity.status.value</td>
                                     <td class="td-bz" title="$!entity.merchantTrack.note">$!entity.merchantTrack.note</td>
