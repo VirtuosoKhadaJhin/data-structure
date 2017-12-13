@@ -10,6 +10,6 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface MerchantAccountDao extends JpaRepository<MerchantAccount, Integer>, JpaSpecificationExecutor {
 
-    @Query(value = "select count(0) from sl_merchant_account t where t.mchid = ?1" ,nativeQuery = true)
+    @Query(value = "select count(0) from sl_merchant_account t where t.mchid = ?1 and activated = 1" ,nativeQuery = true)
     Integer findByMchid(Long mchid);
 }
