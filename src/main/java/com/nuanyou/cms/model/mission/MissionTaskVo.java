@@ -61,6 +61,16 @@ public class MissionTaskVo {
 
     private Long visitId;
 
+    private boolean activate = false;
+
+    public boolean isActivate() {
+        return activate;
+    }
+
+    public void setActivate(boolean activate) {
+        this.activate = activate;
+    }
+
     public Long getId() {
         return id;
     }
