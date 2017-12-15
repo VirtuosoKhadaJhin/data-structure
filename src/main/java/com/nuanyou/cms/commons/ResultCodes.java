@@ -43,6 +43,9 @@ public enum ResultCodes {
 
     SourceRepeat(506, "渠道码重复"),
 
+
+    CrmServiceException(601, "CRM服务异常"),
+
     /**
      * ------missionTask------
      */

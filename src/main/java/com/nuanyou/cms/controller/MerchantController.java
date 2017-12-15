@@ -6,13 +6,14 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.*;
-import com.nuanyou.cms.model.MerchantQueryParam;
-import com.nuanyou.cms.model.MerchantVO;
-import com.nuanyou.cms.model.PageUtil;
+import com.nuanyou.cms.model.*;
 import com.nuanyou.cms.service.*;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.ExcelUtil;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -63,6 +64,9 @@ public class MerchantController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RemoteCrmService remoteCrmService;
+
     private static final Map<String, Long> countryMap = new HashMap<>();
 
     static {
@@ -74,6 +78,15 @@ public class MerchantController {
 
     @Value("${nuanyou-host}")
     private String nuanyouHost;
+
+    @ApiOperation("获取商户信息(客服)")
+    @ApiResponses(@ApiResponse(code = 200, message = "获取商户信息(客服)", response = CustomerServicePage.class))
+    @RequestMapping(path = "customer", method = RequestMethod.GET)
+    public String customerservice(@RequestParam String originCallNo, Model model) throws Exception {
+        CustomerServiceInfo info = remoteCrmService.getCustomerServiceInfo(originCallNo);
+        model.addAttribute("info", info);
+        return "customer/customer";
+    }
 
     @RequestMapping(path = {"edit", "add"}, method = RequestMethod.GET)
     public String edit(@RequestParam(required = false) Long id, Long countryId, Model model) {
