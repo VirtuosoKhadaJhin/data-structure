@@ -1,5 +1,7 @@
 package com.nuanyou.cms.remote.sevenmoor;
 
+import java.util.List;
+
 /**
  * Created by young on 2017/12/15.
  */
@@ -11,9 +13,11 @@ public class Customer {
 
     private String title;
 
-//    private String version;
+    private String version;
 
     private String status;
+
+    private List<Tel> phone;
 
     public String get_id() {
         return _id;
@@ -39,13 +43,13 @@ public class Customer {
         this.title = title;
     }
 
-//    public String getVersion() {
-//        return version;
-//    }
-//
-//    public void setVersion(String version) {
-//        this.version = version;
-//    }
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
     public String getStatus() {
         return status;
@@ -53,5 +57,13 @@ public class Customer {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<Tel> getPhone() {
+        return phone;
+    }
+
+    public void setPhone(List<Tel> phone) {
+        this.phone = phone;
     }
 }

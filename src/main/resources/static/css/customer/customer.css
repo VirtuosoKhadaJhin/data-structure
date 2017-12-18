@@ -1,5 +1,10 @@
 html, body {
 	height: 100%;
+	background: #edf1f2;
+}
+
+.breadcrumb {
+	background: none;
 }
 
 .content {
@@ -113,4 +118,9 @@ html, body {
 	padding: 10px 20px;
 	background: #fff;
 	border-radius: 8px 8px 0 0;
+}
+
+.fixed-table-container {
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
 }

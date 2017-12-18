@@ -1,6 +1,7 @@
 $(function () {
 	var countryId, cityId, districtId, userId, mchId, mchName, startDate, endDate;
 	var _page = 1, _size = 40;
+	var mchId = $('#mchid').val() || 0;
 
 	init();
 
@@ -10,7 +11,9 @@ $(function () {
 		initData();
 	}
 
-	function initPage() { }
+	function initPage() {
+        winheight = $(window).height() - $('#table').offset().top - 40;
+	}
 
 	function initEvent() { }
 
@@ -19,22 +22,13 @@ $(function () {
 	}
 
 	function loadList() {
-		var queryParams = {
-			countryId: countryId,
-			cityId: cityId,
-			districtId: districtId,
-			userId: userId,
-			mchId: mchId,
-			mchName: mchName,
-			startDate: startDate,
-			endDate: endDate
-		};
+		var queryParams = {};
 
 		$("#table").bootstrapTable({
-			url: '../follow/list?page='+ _page +'&size=' + _size,
-			method: 'post',
+			url: '../merchant/orderList?mchId=' + mchId,
+			method: 'get',
+			height: winheight,
 			queryParams: queryParams,
-			height: 200,
 			striped: true,
 			pagination: true,
 			pageNumber: 1,
@@ -46,30 +40,39 @@ $(function () {
 			columns:[
 				{
 					title: '下单时间',
-					field: 'followTime',
+					field: 'createtime',
 				},{
 					title: '使用时间',
-					field: 'followTime'
+					field: 'usetime'
 				},{
 					title: '总价（本地）',
-					field: 'followTime'
+					field: 'kpprice'
 				},{
 					title: '总价（RMB）',
-					field: 'userName',
+					field: 'price',
 				},{
 					title: '订单状态',
-					field: 'content',
-					width: '30%'
+					field: 'ststus'
 				},{
 					title: '订单类型',
-					field: 'imgs.length'
+					field: 'type'
 				},{
 					title: '订单编号和流水',
-					field: 'content'
+					field: 'orderFormatter',
+					formatter: orderFormatter
 				}
 			],
 			responseHandler: function(result){
 				if (result.code === 0) {
+					for (var i = 0; i < result.data.list.length; i++) {
+                        var orderFormatter = {
+                            transactionid: result.data.list[i].transactionid,
+                            ordersn: result.data.list[i].ordersn
+                        }
+
+                        result.data.list[i].orderFormatter = orderFormatter;
+                    }
+
 					var returnData = {
 						rows: result.data.list,
 						total: result.data.total
@@ -85,5 +88,15 @@ $(function () {
 				url: '../follow/list?page='+ number +'&size=' + size,
 			});
 		});
+	}
+
+    function nullFormatter(value) {
+        return value || "";
+    }
+
+	function orderFormatter(orderFormatter) {
+		return [
+			'<span>'+ nullFormatter(orderFormatter.transactionid) +'</span><span>'+ nullFormatter(orderFormatter.ordersn) +'</span>'
+		].join('');
 	}
 });

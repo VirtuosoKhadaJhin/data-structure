@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8"/>
 	<title>客服</title>
-	<link rel="stylesheet" href="../../static/css/common/font-awesome.min.css"/>
-	<link rel="stylesheet" href="../../static/css/common/bootstrap.min.css"/>
-	<link rel="stylesheet" href="../../static/css/common/bootstrap-table.min.css"/>
-	<link rel="stylesheet" href="../../static/css/common/common.css"/>
+	<link rel="stylesheet" href="/css/common/font-awesome.min.css"/>
+	<link rel="stylesheet" href="/css/common/bootstrap.min.css"/>
+	<link rel="stylesheet" href="/css/common/bootstrap-table.min.css"/>
+	<link rel="stylesheet" href="/css/common/common.css"/>
+    <link rel="stylesheet" href="/css/customer/customer.css"/>
 </head>
 
 <body>
-	<link rel="stylesheet" href="../../static/css/customer/customer.css"/>
+	<input type="hidden" id="mchid" value="$!info.merchant.nyid" />
+
 	<div class="content">
 		<div class="content-header">
 			<div class="breadcrumb">
 				<a class="tip-bottom">CMS</a> >
 				<a href="javascript:;" class="tip-bottom">客服</a>
 			</div>
-			<span class="merchantname">[$!info.merchant.nyid] $!info.merchant.name</span>
+			<span class="merchantname">【#if($!info.merchant.nyid) $!info.merchant.nyid #else 未发布 #end】 $!info.merchant.name</span>
 		</div>
 		
 		<div class="container-fluid">
@@ -79,21 +81,21 @@
 					</div>
 				</div>
 
-				<div class="tab"> 
+				<div class="tab">
 					<input type="radio" id="tabRadio2" class="radio" name="tab" />
 					<label class="label" for="tabRadio2">合作信息</label>
 					<div class="tab-content">
 						<div class="panel panel-default panel-cms panel-cms-width">
 							#foreach($contract in $!info.contracts)
 							<div class="panel-heading">
-								<span><i class="fa fa-stop" aria-hidden="true"></i> $!contract.优付服务</span>
+								<span><i class="fa fa-stop" aria-hidden="true"></i> $!contract.serviceTypeName</span>
 							</div>
 
 							<div class="panel-body">
 								<ul class="list-group">
 									<li class="list-group-item">
 										<span>生效日期</span>
-										<span>$!dateFormatter.format("yyyy-MM-dd", $!contract.signDate)</span>
+										<span>$!dateFormatter.format("yyyy-MM-dd", $!contract.contractSettle.effectTime)</span>
 									</li>
 									<li class="list-group-item">
 										<span>签约BD</span>
@@ -101,43 +103,43 @@
 									</li>
 									<li class="list-group-item">
 										<span>合同期限</span>
-										<span>$!contract.status</span>
+										<span>$!contract.contractSettle.contractPeriod</span>
 									</li>
 									<li class="list-group-item">
 										<span>银行名称</span>
-										<span>$!contract.status</span>
+										<span>$!contract.contractBankAccount.bankName</span>
 									</li>
 									<li class="list-group-item">
 										<span>截止日期</span>
-										<span>$!dateFormatter.format("yyyy-MM-dd", $!contract.signDate)</span>
+										<span>$!dateFormatter.format("yyyy-MM-dd", $!contract.contractSettle.dueTime)</span>
 									</li>
 									<li class="list-group-item">
 										<span>分行名称</span>
-										<span>$!contract.status</span>
+										<span>$!contract.contractBankAccount.branchBankName</span>
 									</li>
 									<li class="list-group-item">
 										<span>账期类型</span>
-										<span>$!contract.status</span>
+										<span>$!contract.contractSettle.settleType</span>
 									</li>
 									<li class="list-group-item">
 										<span>户名</span>
-										<span>$!contract.status</span>
+										<span>$!contract.contractBankAccount.accountName</span>
 									</li>
 									<li class="list-group-item">
 										<span>账期（T+）</span>
-										<span>$!contract.status</span>
+										<span>$!contract.contractSettle.settlePeriod</span>
 									</li>
 									<li class="list-group-item">
 										<span>账号类型</span>
-										<span>$!contract.status</span>
+										<span>$!contract.contractBankAccount.accountType</span>
 									</li>
 									<li class="list-group-item">
-										<span>手续费率/团购佣金（%）</span>
-										<span>$!contract.status</span>
+										<span>#if($!contract.contractBankAccount.serviceTypeCode == "TT") 团购佣金 #else 手续费率 #end（%）</span>
+										<span>$!contract.contractSettle.fee</span>
 									</li>
 									<li class="list-group-item">
 										<span>银行账号</span>
-										<span>$!contract.status</span>
+										<span>$!contract.contractBankAccount.account</span>
 									</li>
 								</ul>
 							</div>
@@ -159,9 +161,9 @@
 		</div>
 	</div>
 	
-	<script src="../../static/libs/vendor/jquery/jquery-3.2.1.min.js"></script>
-	<script src="../../static/libs/vendor/bootstrap/bootstrap.min.js"></script>
-	<script src="../../static/libs/vendor/bootstrap/bootstrap-table.min.js"></script>
-	<script src="../../static/js/customer/customer.js"></script>
+	<script src="/libs/vendor/jquery/jquery-3.2.1.min.js"></script>
+	<script src="/libs/vendor/bootstrap/bootstrap.min.js"></script>
+	<script src="/libs/vendor/bootstrap/bootstrap-table.min.js"></script>
+	<script src="/js/customer/customer.js"></script>
 </body>
 </html>
