@@ -29,4 +29,8 @@ public class MD5Utils {
         return result.toString();
     }
 
+    public static void main(String[] args) {
+        System.out.println(MD5Utils.encrypt("dkfk"));
+    }
+
 }

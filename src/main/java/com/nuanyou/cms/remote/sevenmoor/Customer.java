@@ -13,6 +13,8 @@ public class Customer {
 
     private String version;
 
+    private String status;
+
     public String getId() {
         return id;
     }
@@ -43,5 +45,13 @@ public class Customer {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

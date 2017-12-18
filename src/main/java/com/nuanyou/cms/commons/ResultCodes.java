@@ -46,6 +46,8 @@ public enum ResultCodes {
 
     CrmServiceException(601, "CRM服务异常"),
 
+    SevenmoorServiceException(602, "七陌服务异常"),
+
     /**
      * ------missionTask------
      */

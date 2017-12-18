@@ -7,6 +7,7 @@ import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.*;
 import com.nuanyou.cms.model.*;
+import com.nuanyou.cms.remote.sevenmoor.SevenmoorService;
 import com.nuanyou.cms.service.*;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.util.BeanUtils;
@@ -25,7 +26,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
@@ -33,8 +33,6 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
 
 @Controller
 @RequestMapping("merchant")
@@ -67,6 +65,9 @@ public class MerchantController {
     @Autowired
     private RemoteCrmService remoteCrmService;
 
+    @Autowired
+    private SevenmoorService sevenmoorService;
+
     private static final Map<String, Long> countryMap = new HashMap<>();
 
     static {
@@ -81,10 +82,20 @@ public class MerchantController {
 
     @ApiOperation("获取商户信息(客服)")
     @ApiResponses(@ApiResponse(code = 200, message = "获取商户信息(客服)", response = CustomerServicePage.class))
-    @RequestMapping(path = "customer", method = RequestMethod.GET)
+    @RequestMapping(path = "customer.html", method = RequestMethod.GET)
     public String customerservice(@RequestParam String originCallNo, Model model) throws Exception {
         CustomerServiceInfo info = remoteCrmService.getCustomerServiceInfo(originCallNo);
         model.addAttribute("info", info);
+
+//        if (info != null && info.getMerchant() != null) {
+//            String name = "";
+//            if (info.getMerchant().getNyid() != null) {
+//                name = "["+info.getMerchant().getNyid() +"] "+info.getMerchant().getName();
+//            }else {
+//                name = info.getMerchant().getName();
+//            }
+//            sevenmoorService.addCustomer(info.getMerchant().getId().toString(),name);
+//        }
         return "customer/customer";
     }
 
