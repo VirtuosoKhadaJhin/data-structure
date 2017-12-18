@@ -85,7 +85,7 @@ $(function () {
 			}
 		}).on("page-change.bs.table", function(e, number, size) {
 			$("#table").bootstrapTable('refresh', {
-				url: '../follow/list?page='+ number +'&size=' + size,
+				url:'../merchant/orderList?mchId=' + mchId + '&page='+ number +'&size=' + size,
 			});
 		});
 	}
