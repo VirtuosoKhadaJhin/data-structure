@@ -5,22 +5,22 @@ package com.nuanyou.cms.remote.sevenmoor;
  */
 public class Customer {
 
-    private String id;
+    private String _id;
 
     private String name;
 
     private String title;
 
-    private String version;
+//    private String version;
 
     private String status;
 
-    public String getId() {
-        return id;
+    public String get_id() {
+        return _id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String getName() {
@@ -39,13 +39,13 @@ public class Customer {
         this.title = title;
     }
 
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
+//    public String getVersion() {
+//        return version;
+//    }
+//
+//    public void setVersion(String version) {
+//        this.version = version;
+//    }
 
     public String getStatus() {
         return status;

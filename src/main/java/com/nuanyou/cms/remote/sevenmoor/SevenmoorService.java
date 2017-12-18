@@ -67,13 +67,13 @@ public class SevenmoorService {
         String responseText = EntityUtils.toString(response.getEntity());
         System.out.println("RemoteMerchantService getVersion responseText:"+responseText);
         JSONObject jsonObject = JSON.parseObject(responseText);
-        if (jsonObject.get("code") != 200) {
+        if (jsonObject.getInteger("code") != 200) {
             throw new APIException(ResultCodes.SevenmoorServiceException, jsonObject.get("message"));
         }
         return jsonObject.getJSONObject("data").getString("version");
     }
 
-    public void addCustomer(String id,String mchName) throws URISyntaxException, IOException {
+    public void addCustomer(String mchId,String mchName) throws URISyntaxException, IOException {
         Date now = new Date();
         String url = domain + "/v20170418/customer/insert/"+id+"?sig="+sign(now);
         System.out.println("RemoteMerchantService addCustomer url:"+url);
@@ -84,10 +84,10 @@ public class SevenmoorService {
         System.out.println(v);
 
         AddCustomers addCustomers = new AddCustomers();
-        addCustomers.setVersion("1");
+        addCustomers.setVersion(v);
         List<Customer> customers = new ArrayList<>();
         Customer customer = new Customer();
-        customer.setId(id);
+        customer.set_id(mchId);
         customer.setName(mchName);
         customer.setStatus("status0");
         customers.add(customer);
@@ -103,7 +103,7 @@ public class SevenmoorService {
         String responseText = EntityUtils.toString(response.getEntity());
         System.out.println("RemoteMerchantService addCustomer responseText:"+responseText);
         JSONObject jsonObject = JSON.parseObject(responseText);
-        if (jsonObject.get("code") != 200) {
+        if (jsonObject.getInteger("code") != 200) {
             throw new APIException(ResultCodes.SevenmoorServiceException, jsonObject.get("message"));
         }
     }
