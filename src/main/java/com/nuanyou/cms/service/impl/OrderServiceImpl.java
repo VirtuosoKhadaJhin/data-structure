@@ -658,7 +658,7 @@ public class OrderServiceImpl implements OrderService {
                 List<Predicate> predicate = new ArrayList<Predicate>();
                 predicate.add(cb.equal(root.get("merchant").get("id"),mchId));
                 Predicate[] pre = new Predicate[predicate.size()];
-                return query.where(predicate.toArray(pre)).getRestriction();
+                return query.where(predicate.toArray(pre)).orderBy(cb.desc(root.get("createtime"))).getRestriction();
             }
         }, pageable);
         List<OrderModel> orderModels = new ArrayList<>();
