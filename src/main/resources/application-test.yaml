@@ -87,7 +87,10 @@ paymentRecord:
   waiting-time: 5
 
 crm:
-  domain: http://localhost
+  sg:
+    domain: https://test.crm.91naunyou.com
+  kr:
+    domain: https://test.crm.91naunyou.com
   authKey: 123456
 
 7moor:

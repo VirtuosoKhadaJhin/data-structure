@@ -24,10 +24,23 @@ import java.util.List;
 @Service
 public class RemoteCrmServiceImpl implements RemoteCrmService {
 
-    @Value("${crm.domain}")
+    @Value("${crm.kr.domain}")
+    private String krDomain;
+    @Value("${crm.sg.domain}")
+    private String sgDomain;
     private String domain;
     @Value("${crm.authKey}")
     private String authKey;
+
+    @Override
+    public void setKrDomain(){
+        domain = krDomain;
+    }
+
+    @Override
+    public void setSgDomain(){
+        domain = sgDomain;
+    }
 
     @Override
     public CustomerServiceInfo getCustomerServiceInfo(String callNo) throws Exception {
