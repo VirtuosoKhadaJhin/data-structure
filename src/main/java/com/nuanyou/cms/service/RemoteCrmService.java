@@ -8,10 +8,6 @@ import com.nuanyou.cms.model.CustomerServiceInfo;
  */
 public interface RemoteCrmService {
 
-    void setKrDomain();
-
-    void setSgDomain();
-
     CustomerServiceInfo getCustomerServiceInfo(String callNo)  throws Exception;
 
 }

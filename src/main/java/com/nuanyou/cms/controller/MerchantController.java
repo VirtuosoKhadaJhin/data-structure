@@ -13,6 +13,8 @@ import com.nuanyou.cms.service.*;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.ExcelUtil;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.sun.xml.internal.ws.resources.HttpserverMessages;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -84,16 +86,17 @@ public class MerchantController {
 
     @Value("${nuanyou-host}")
     private String nuanyouHost;
+    @Value("${cms.redirect}")
+    private String cmsRedirect;
 
     @ApiOperation("获取商户信息(客服)")
     @ApiResponses(@ApiResponse(code = 200, message = "获取商户信息(客服)", response = CustomerServicePage.class))
     @RequestMapping(path = "customer.html", method = RequestMethod.GET)
-    public String customerservice(@RequestParam String originCallNo, Model model) throws Exception {
-        remoteCrmService.setKrDomain();
+    public String customerservice(@RequestParam String originCallNo, @RequestParam(required = false,defaultValue = "false") Boolean q, Model model, HttpServletResponse response) throws Exception {
         CustomerServiceInfo info = remoteCrmService.getCustomerServiceInfo(originCallNo);
         if (info == null || info.getMerchant() == null) {
-            remoteCrmService.setSgDomain();
-            info = remoteCrmService.getCustomerServiceInfo(originCallNo);
+            if (!q)
+                response.sendRedirect(cmsRedirect+"/merchant/customer.html?q=true&originCallNo="+originCallNo);
         }
         model.addAttribute("info", info);
 
