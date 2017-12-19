@@ -88,9 +88,9 @@ paymentRecord:
 
 crm:
   sg:
-    domain: https://test.crm.91naunyou.com
+    domain: https://test.crm.91nuanyou.com
   kr:
-    domain: https://test.crm.91naunyou.com
+    domain: https://test.crm.91nuanyou.com
   authKey: 123456
 
 7moor:
