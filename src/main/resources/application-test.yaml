@@ -71,7 +71,7 @@ sso:
   urlExcludePattern: ^/test|^/dist/.*|^/favicon.*
   loginUrl: https://testuser.api.91nuanyou.com/oauth/corp
   reLogin: false
-  serverName: http://testmerchant.99mice.com
+  serverName: http://127.0.0.1:8085
   validateCodeUrl: https://testuser.api.91nuanyou.com/corp/oauth/access_token
   stateExpiredInMilliSeconds: 120000
 
@@ -85,3 +85,13 @@ paymentRecord:
   service-address: http://test.payment.91nuanyou.com
   pattern-url: /paymentOrderRecord/*
   waiting-time: 5
+
+crm:
+  domain: http://localhost
+  authKey: 123456
+
+7moor:
+  domain: http://apis.7moor.com
+  id: N00000016592
+  secret: 71d88120-e3a6-11e7-a47c-9516d082d912
+  version: 201712140004

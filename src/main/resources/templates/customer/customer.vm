@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+	<title>客服</title>
+	<link rel="stylesheet" href="/css/common/font-awesome.min.css"/>
+	<link rel="stylesheet" href="/css/common/bootstrap.min.css"/>
+	<link rel="stylesheet" href="/css/common/bootstrap-table.min.css"/>
+	<link rel="stylesheet" href="/css/common/common.css"/>
+    <link rel="stylesheet" href="/css/customer/customer.css"/>
+</head>
+
+<body>
+	<input type="hidden" id="mchid" value="$!info.merchant.nyid" />
+
+	<div class="content">
+		#if($!info.merchant)
+		<div class="content-header">
+			<div class="breadcrumb">
+				<a class="tip-bottom">CMS</a> >
+				<a href="javascript:;" class="tip-bottom">客服</a>
+			</div>
+			<span class="merchantname">【#if($!info.merchant.nyid) $!info.merchant.nyid #else 未发布 #end】 $!info.merchant.name</span>
+		</div>
+		
+		<div class="container-fluid">
+			<div class="tabs">
+				<div class="tab">
+					<input type="radio" id="tabRadio1" class="radio" name="tab" checked="checked" />
+					<label class="label" for="tabRadio1">商户信息</label>
+					<div class="tab-content">
+						<div class="panel panel-default panel-cms">
+							<div class="panel-heading">
+								<span><i class="fa fa-stop" aria-hidden="true"></i> 基础信息</span>
+							</div>
+
+							<div class="panel-body">
+								<ul class="list-group">
+									<li class="list-group-item">
+										<span>当地名称</span>
+										<span>$!info.merchant.localName</span>
+									</li>
+									<li class="list-group-item">
+										<span>当地地址</span>
+										<span>$!info.merchant.localAddress</span>
+									</li>
+									<li class="list-group-item">
+										<span>所属商圈</span>
+										<span>$!info.merchant.districtName</span>
+									</li>
+									<li class="list-group-item">
+										<span>商户电话</span>
+										<span>$!info.merchant.phone</span>
+									</li>
+									<li class="list-group-item">
+										<span>商户分类</span>
+										<span>$!info.merchant.catName</span>
+									</li>
+									<li class="list-group-item">
+										<span>支付方式</span>
+										<span>$!info.merchant.localName</span>
+									</li>
+								</ul>
+							</div>
+
+							<div class="panel-heading">
+								<span><i class="fa fa-stop" aria-hidden="true"></i> 联系人信息</span>
+							</div>
+
+							<table class="table contact">
+								#foreach($contact in $!info.contacts)
+									<tr>
+										<td>1</td>
+										<td>$!contact.name</td>
+										<td>$!contact.jobName</td>
+										<td>$!contact.telephone</td>
+										<td>$!contact.email</td>
+									</tr>
+								#end
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div class="tab">
+					<input type="radio" id="tabRadio2" class="radio" name="tab" />
+					<label class="label" for="tabRadio2">合作信息</label>
+					<div class="tab-content">
+						<div class="panel panel-default panel-cms panel-cms-width">
+							#foreach($contract in $!info.contracts)
+							<div class="panel-heading">
+								<span><i class="fa fa-stop" aria-hidden="true"></i> $!contract.serviceTypeName</span>
+							</div>
+
+							<div class="panel-body">
+								<ul class="list-group">
+									<li class="list-group-item">
+										<span>生效日期</span>
+										<span>$!dateFormatter.format("yyyy-MM-dd", $!contract.contractSettle.effectTime)</span>
+									</li>
+									<li class="list-group-item">
+										<span>签约BD</span>
+										<span>$!contract.userName</span>
+									</li>
+									<li class="list-group-item">
+										<span>合同期限</span>
+										<span>$!contract.contractSettle.contractPeriod</span>
+									</li>
+									<li class="list-group-item">
+										<span>银行名称</span>
+										<span>$!contract.contractBankAccount.bankName</span>
+									</li>
+									<li class="list-group-item">
+										<span>截止日期</span>
+										<span>$!dateFormatter.format("yyyy-MM-dd", $!contract.contractSettle.dueTime)</span>
+									</li>
+									<li class="list-group-item">
+										<span>分行名称</span>
+										<span>$!contract.contractBankAccount.branchBankName</span>
+									</li>
+									<li class="list-group-item">
+										<span>账期类型</span>
+										<span>$!contract.contractSettle.settleType</span>
+									</li>
+									<li class="list-group-item">
+										<span>户名</span>
+										<span>$!contract.contractBankAccount.accountName</span>
+									</li>
+									<li class="list-group-item">
+										<span>账期（T+）</span>
+										<span>$!contract.contractSettle.settlePeriod</span>
+									</li>
+									<li class="list-group-item">
+										<span>账号类型</span>
+										<span>$!contract.contractBankAccount.accountType</span>
+									</li>
+									<li class="list-group-item">
+										<span>#if($!contract.contractBankAccount.serviceTypeCode == "TT") 团购佣金 #else 手续费率 #end（%）</span>
+										<span>$!contract.contractSettle.fee</span>
+									</li>
+									<li class="list-group-item">
+										<span>银行账号</span>
+										<span>$!contract.contractBankAccount.account</span>
+									</li>
+								</ul>
+							</div>
+							#end
+						</div>
+					</div>
+				</div>
+
+				<div class="tab">
+					<input type="radio" id="tabRadio3" class="radio" name="tab" />
+					<label class="label" for="tabRadio3">交易信息</label>
+					<div class="tab-content">
+						<div class="panel panel-default panel-cms">
+							<table id="table" class="table"></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+			#else
+		<div class="nothing">
+            <div class="nothingbox">
+                <img src="/images/nothing.png" alt="" />
+				<span>没有匹配到商户 ~</span>
+			</div>
+		</div>
+
+		#end
+	</div>
+	
+	<script src="/libs/vendor/jquery/jquery-3.2.1.min.js"></script>
+	<script src="/libs/vendor/bootstrap/bootstrap.min.js"></script>
+	<script src="/libs/vendor/bootstrap/bootstrap-table.min.js"></script>
+	<script src="/js/customer/customer.js"></script>
+</body>
+</html>

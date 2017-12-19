@@ -15,6 +15,8 @@ import com.nuanyou.cms.entity.order.Order;
 import com.nuanyou.cms.entity.order.OrderItem;
 import com.nuanyou.cms.entity.order.OrderVouchCard;
 import com.nuanyou.cms.entity.order.ViewOrderExport;
+import com.nuanyou.cms.model.OrderModel;
+import com.nuanyou.cms.model.PageModel;
 import com.nuanyou.cms.model.PageUtil;
 import com.nuanyou.cms.service.OrderRefundLogService;
 import com.nuanyou.cms.service.OrderService;
@@ -47,6 +49,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.util.*;
 
@@ -644,6 +647,47 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         return apiResult;
+    }
+
+    @Override
+    public PageModel<OrderModel> getMerchantOrders(final Long mchId, Integer page, Integer size) {
+        Pageable pageable = new PageRequest(page-1,size);
+        Page<Order> orders = orderDao.findAll(new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<Predicate>();
+                predicate.add(cb.equal(root.get("merchant").get("id"),mchId));
+                Predicate[] pre = new Predicate[predicate.size()];
+                return query.where(predicate.toArray(pre)).getRestriction();
+            }
+        }, pageable);
+        List<OrderModel> orderModels = new ArrayList<>();
+        for (Order order : orders.getContent() ) {
+            OrderModel orderModel = new OrderModel();
+            orderModel.setId(order.getId());
+            orderModel.setCreatetime(order.getCreatetime());
+            if (order.getKpprice() != null) {
+                orderModel.setKpprice(order.getKpprice().setScale(2));
+            }
+            BigDecimal price = order.getPayable()!=null?order.getPayable():order.getPrice();
+            if (price != null) {
+                orderModel.setPrice(price.setScale(2));
+            }
+            orderModel.setType(order.getOrdertype().getName());
+            orderModel.setStstus(order.getOrderstatus().getName());
+            orderModel.setOrdersn(order.getOrdersn());
+            orderModel.setTransactionid(order.getTransactionid());
+            orderModel.setUsetime(order.getUsetime());
+
+            orderModels.add(orderModel);
+        }
+        PageModel<OrderModel> pageModel = new PageModel<OrderModel>();
+        pageModel.setPage(page);
+        pageModel.setSize(size);
+        pageModel.setPages(orders.getTotalPages());
+        pageModel.setTotal(orders.getTotalElements());
+        pageModel.setList(orderModels);
+        return pageModel;
     }
 
     /**

@@ -6,13 +6,17 @@ import com.nuanyou.cms.commons.ResultCodes;
 import com.nuanyou.cms.dao.*;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.*;
-import com.nuanyou.cms.model.MerchantQueryParam;
-import com.nuanyou.cms.model.MerchantVO;
-import com.nuanyou.cms.model.PageUtil;
+import com.nuanyou.cms.entity.order.Order;
+import com.nuanyou.cms.model.*;
+import com.nuanyou.cms.remote.sevenmoor.SevenmoorService;
 import com.nuanyou.cms.service.*;
 import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.util.BeanUtils;
 import com.nuanyou.cms.util.ExcelUtil;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -24,7 +28,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
@@ -32,8 +35,6 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
 
 @Controller
 @RequestMapping("merchant")
@@ -63,6 +64,15 @@ public class MerchantController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RemoteCrmService remoteCrmService;
+
+    @Autowired
+    private SevenmoorService sevenmoorService;
+
+    @Autowired
+    private OrderService orderService;
+
     private static final Map<String, Long> countryMap = new HashMap<>();
 
     static {
@@ -74,6 +84,48 @@ public class MerchantController {
 
     @Value("${nuanyou-host}")
     private String nuanyouHost;
+
+    @ApiOperation("获取商户信息(客服)")
+    @ApiResponses(@ApiResponse(code = 200, message = "获取商户信息(客服)", response = CustomerServicePage.class))
+    @RequestMapping(path = "customer.html", method = RequestMethod.GET)
+    public String customerservice(@RequestParam String originCallNo, Model model) throws Exception {
+        CustomerServiceInfo info = remoteCrmService.getCustomerServiceInfo(originCallNo);
+        model.addAttribute("info", info);
+
+        if (info != null && info.getMerchant() != null) {
+            String name = "";
+            if (info.getMerchant().getNyid() != null) {
+                name = "["+info.getMerchant().getNyid() +"] "+info.getMerchant().getName();
+            }else {
+                name = info.getMerchant().getName();
+            }
+            List<String> tels = new ArrayList<>();
+            if (StringUtils.isNotEmpty(info.getMerchant().getPhone())) {
+                tels.add(info.getMerchant().getPhone());
+            }
+            if (info.getContacts() != null && info.getContacts().size() > 0) {
+                for (ContactModel contactModel : info.getContacts()) {
+                    if (StringUtils.isNotEmpty(contactModel.getTelephone())) {
+                        tels.add(contactModel.getTelephone());
+                    }
+                }
+            }
+
+            sevenmoorService.addCustomer(info.getMerchant().getId().toString(),name,tels);
+        }
+        return "customer/customer";
+    }
+
+    @ApiOperation(value = "订单列表", notes = "订单列表")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "订单列表")})
+    @RequestMapping(path = {"/orderList"}, method = RequestMethod.GET)
+    @ResponseBody
+    public APIResult<PageModel<OrderModel>> orderList(@RequestParam Long mchId,
+                                                 @ApiParam("页码") @RequestParam(required = false, defaultValue = "1") Integer page,
+                                                 @ApiParam("分页") @RequestParam(required = false, defaultValue = "40") Integer size) {
+        PageModel<OrderModel> orders = orderService.getMerchantOrders(mchId,page,size);
+        return new APIResult(orders);
+    }
 
     @RequestMapping(path = {"edit", "add"}, method = RequestMethod.GET)
     public String edit(@RequestParam(required = false) Long id, Long countryId, Model model) {
