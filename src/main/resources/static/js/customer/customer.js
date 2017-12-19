@@ -2,6 +2,7 @@ $(function () {
 	var countryId, cityId, districtId, userId, mchId, mchName, startDate, endDate;
 	var _page = 1, _size = 40;
 	var mchId = $('#mchid').val() || 0;
+	var winheight;
 
 	init();
 
@@ -12,7 +13,9 @@ $(function () {
 	}
 
 	function initPage() {
-        winheight = $(window).height() - $('#table').offset().top - 40;
+		if($('#table').offset()) {
+            winheight = $(window).height() - $('#table').offset().top - 40;
+		}
 	}
 
 	function initEvent() { }

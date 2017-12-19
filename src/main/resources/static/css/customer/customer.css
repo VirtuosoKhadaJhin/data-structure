@@ -124,3 +124,21 @@ html, body {
 	border-left: 1px solid #ddd;
 	border-right: 1px solid #ddd;
 }
+
+.nothing {
+	width: 100%;
+	height:100%;
+	display: table;
+}
+
+.nothingbox {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+}
+.nothingbox span {
+	clear: both;
+	display: block;
+	font-size:20px;
+	margin-top:30px;
+}

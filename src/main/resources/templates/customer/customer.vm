@@ -14,6 +14,7 @@
 	<input type="hidden" id="mchid" value="$!info.merchant.nyid" />
 
 	<div class="content">
+		#if($!info.merchant)
 		<div class="content-header">
 			<div class="breadcrumb">
 				<a class="tip-bottom">CMS</a> >
@@ -159,6 +160,15 @@
 				</div>
 			</div>
 		</div>
+			#else
+		<div class="nothing">
+            <div class="nothingbox">
+                <img src="/images/nothing.png" alt="" />
+				<span>没有匹配到商户 ~</span>
+			</div>
+		</div>
+
+		#end
 	</div>
 	
 	<script src="/libs/vendor/jquery/jquery-3.2.1.min.js"></script>
