@@ -94,7 +94,10 @@ public class MerchantController {
     @ApiOperation("获取商户信息(客服)")
     @ApiResponses(@ApiResponse(code = 200, message = "获取商户信息(客服)", response = CustomerServicePage.class))
     @RequestMapping(path = "customer.html", method = RequestMethod.GET)
-    public String customerservice(@RequestParam String originCallNo, @RequestParam(required = false,defaultValue = "false") Boolean q, Model model, HttpServletResponse response) throws Exception {
+    public String customerservice(@RequestParam String originCallNo,@RequestParam String CallNo, @RequestParam(required = false,defaultValue = "false") Boolean q, Model model, HttpServletResponse response) throws Exception {
+        if (StringUtils.isEmpty(originCallNo)) {
+            originCallNo = CallNo;
+        }
         CustomerServiceInfo info = remoteCrmService.getCustomerServiceInfo(originCallNo);
         if (info == null || info.getMerchant() == null) {
             if (!q)

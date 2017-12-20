@@ -48,9 +48,11 @@ public class RemoteCrmServiceImpl implements RemoteCrmService {
 
             return info;
         } catch (ConnectException e) {
-            throw new APIException(ResultCodes.CrmServiceException,e.getLocalizedMessage());
+            e.printStackTrace();
+            throw new APIException(ResultCodes.CrmServiceException);
         } catch (Exception e) {
-            throw new APIException(ResultCodes.CrmServiceException,e.getLocalizedMessage());
+            e.printStackTrace();
+            throw new APIException(ResultCodes.CrmServiceException);
         } finally {
             if (response != null) {
                 response.close();
