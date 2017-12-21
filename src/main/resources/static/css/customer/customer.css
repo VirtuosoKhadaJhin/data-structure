@@ -49,7 +49,7 @@ html, body {
 	position: absolute;
 	left: -999em;
 	background: #fff;
-	padding: 15px 0;
+	width: 100%;
 }
 
 .radio:checked ~ .tab-content {

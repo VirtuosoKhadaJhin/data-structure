@@ -3,10 +3,11 @@ package com.nuanyou.cms.controller;
 import com.nuanyou.cms.commons.APIException;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
-import com.nuanyou.cms.dao.*;
+import com.nuanyou.cms.dao.MerchantCatDao;
+import com.nuanyou.cms.dao.MerchantDao;
+import com.nuanyou.cms.dao.MerchantStatsDao;
 import com.nuanyou.cms.entity.*;
 import com.nuanyou.cms.entity.enums.*;
-import com.nuanyou.cms.entity.order.Order;
 import com.nuanyou.cms.model.*;
 import com.nuanyou.cms.remote.sevenmoor.SevenmoorService;
 import com.nuanyou.cms.service.*;
@@ -22,7 +23,10 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -84,12 +88,32 @@ public class MerchantController {
 
     @Value("${nuanyou-host}")
     private String nuanyouHost;
+    @Value("${cms.redirect}")
+    private String cmsRedirect;
 
     @ApiOperation("获取商户信息(客服)")
     @ApiResponses(@ApiResponse(code = 200, message = "获取商户信息(客服)", response = CustomerServicePage.class))
     @RequestMapping(path = "customer.html", method = RequestMethod.GET)
-    public String customerservice(@RequestParam String originCallNo, Model model) throws Exception {
-        CustomerServiceInfo info = remoteCrmService.getCustomerServiceInfo(originCallNo);
+    public String customerservice(@RequestParam(required = false) String originCallNo,
+                                  @RequestParam(required = false) String CallNo,
+                                  @RequestParam(required = false,defaultValue = "false") Boolean q,
+                                  Model model, HttpServletResponse response) throws Exception {
+        String queryPhone = originCallNo;
+        if (StringUtils.isEmpty(queryPhone)) {
+            queryPhone = CallNo;
+        }
+        CustomerServiceInfo info = remoteCrmService.getCustomerServiceInfo(queryPhone);
+        if (info == null || info.getMerchant() == null) {
+            if (!q) {
+                if (StringUtils.isEmpty(originCallNo)) {
+                    originCallNo = "";
+                }
+                if (StringUtils.isEmpty(CallNo)) {
+                    CallNo = "";
+                }
+                response.sendRedirect(cmsRedirect + "/merchant/customer.html?q=true&originCallNo=" + originCallNo + "&CallNo=" + CallNo);
+            }
+        }
         model.addAttribute("info", info);
 
         if (info != null && info.getMerchant() != null) {

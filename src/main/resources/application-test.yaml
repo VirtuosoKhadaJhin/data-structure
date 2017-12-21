@@ -87,7 +87,7 @@ paymentRecord:
   waiting-time: 5
 
 crm:
-  domain: http://localhost
+  domain: https://test.crm.91nuanyou.com
   authKey: 123456
 
 7moor:
@@ -95,3 +95,6 @@ crm:
   id: N00000016592
   secret: 71d88120-e3a6-11e7-a47c-9516d082d912
   version: 201712140004
+
+cms:
+  redirect: http://localhost:8085

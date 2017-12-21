@@ -56,10 +56,10 @@
 										<span>商户分类</span>
 										<span>$!info.merchant.catName</span>
 									</li>
-									<li class="list-group-item">
-										<span>支付方式</span>
-										<span>$!info.merchant.localName</span>
-									</li>
+##									<li class="list-group-item">
+##										<span>支付方式</span>
+##										<span>$!info.merchant.localName</span>
+##									</li>
 								</ul>
 							</div>
 
@@ -170,7 +170,7 @@
 
 		#end
 	</div>
-	
+
 	<script src="/libs/vendor/jquery/jquery-3.2.1.min.js"></script>
 	<script src="/libs/vendor/bootstrap/bootstrap.min.js"></script>
 	<script src="/libs/vendor/bootstrap/bootstrap-table.min.js"></script>
