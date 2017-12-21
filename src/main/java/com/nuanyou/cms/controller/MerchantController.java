@@ -95,12 +95,12 @@ public class MerchantController {
     @ApiResponses(@ApiResponse(code = 200, message = "获取商户信息(客服)", response = CustomerServicePage.class))
     @RequestMapping(path = "customer.html", method = RequestMethod.GET)
     public String customerservice(@RequestParam(required = false) String originCallNo,
-                                  @RequestParam(required = false) String CallNo,
+                                  @RequestParam(required = false) String CalledNO,
                                   @RequestParam(required = false,defaultValue = "false") Boolean q,
                                   Model model, HttpServletResponse response) throws Exception {
         String queryPhone = originCallNo;
         if (StringUtils.isEmpty(queryPhone)) {
-            queryPhone = CallNo;
+            queryPhone = CalledNO;
         }
         CustomerServiceInfo info = remoteCrmService.getCustomerServiceInfo(queryPhone);
         if (info == null || info.getMerchant() == null) {
@@ -108,10 +108,10 @@ public class MerchantController {
                 if (StringUtils.isEmpty(originCallNo)) {
                     originCallNo = "";
                 }
-                if (StringUtils.isEmpty(CallNo)) {
-                    CallNo = "";
+                if (StringUtils.isEmpty(CalledNO)) {
+                    CalledNO = "";
                 }
-                response.sendRedirect(cmsRedirect + "/merchant/customer.html?q=true&originCallNo=" + originCallNo + "&CallNo=" + CallNo);
+                response.sendRedirect(cmsRedirect + "/merchant/customer.html?q=true&originCallNo=" + originCallNo + "&CalledNO=" + CalledNO);
             }
         }
         model.addAttribute("info", info);
