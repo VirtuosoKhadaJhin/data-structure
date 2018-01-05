@@ -18,7 +18,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         super.addInterceptors(registry);
-        registry.addInterceptor(countryInterceptor()).addPathPatterns("/*").excludePathPatterns("^/test|^/dist/.*|^/favicon.*");
+        registry.addInterceptor(countryInterceptor()).addPathPatterns("/*").excludePathPatterns("^/test|^/dist/.*|^/favicon.*","/swagger-ui.html", "/webjars/**", "/swagger-resources", "/swagger-resources/**", "/v2/api-docs");
     }
 
 

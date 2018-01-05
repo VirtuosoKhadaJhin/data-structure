@@ -3,6 +3,8 @@ package com.nuanyou.cms.service;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.entity.order.Order;
 import com.nuanyou.cms.entity.order.ViewOrderExport;
+import com.nuanyou.cms.model.OrderModel;
+import com.nuanyou.cms.model.PageModel;
 import com.nuanyou.cms.util.TimeCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +42,8 @@ public interface OrderService {
     APIResult refundOperate(Integer operationType, Long orderId) throws IOException;
 
     APIResult checkPass(Integer operationType, Long orderId) throws IOException;
+
+    PageModel<OrderModel> getMerchantOrders(Long mchId, Integer page, Integer size);
 
 }
 

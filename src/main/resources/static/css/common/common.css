@@ -1,0 +1,164 @@
+* {
+    list-style: none;
+}
+
+html, body {
+    width: 100%;
+    background: #f5f5f5;
+}
+
+em, i, b {
+    font-style: normal;
+}
+
+a {
+    color: #333;
+}
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+textarea {
+    resize: none
+}
+
+.danger {
+    color: red;
+}
+
+.success {
+    color: green;
+}
+
+.fl {
+    float: left !important;
+}
+
+.fr {
+    float: right !important;
+}
+
+i.fa {
+    margin-right: 5px;
+}
+
+.content {
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* div[class^="col-md-2"] {
+    overflow: hidden;
+}
+
+div[class^="col-md-2"]>div {
+    overflow: auto;
+} */
+.breadcrumb {
+    padding: 8px 0;
+}
+
+.panel-default {
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 0 5px #ddd;
+}
+
+.panel-default .panel-heading {
+    background: #fff;
+    overflow: hidden;
+}
+
+.panel-footer {
+    background: #fff;
+    border-top: none;
+    border-radius: 0;
+    overflow: hidden;
+}
+
+.panel-footer button {
+    float: right;
+}
+
+.table th, .table td {
+    text-align: center;
+}
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    border-left: .5px solid #ddd;
+    border-right: .5px solid #ddd;
+    vertical-align: middle;
+}
+
+.table>tbody>tr>td:nth-of-type(1), .table>tbody>tr>td:last-child, .table>tbody>tr>th:nth-of-type(1), .table>tbody>tr>th:last-child, .table>tfoot>tr>td:nth-of-type(1), .table>tfoot>tr>td:last-child, .table>tfoot>tr>th:nth-of-type(1), .table>tfoot>tr>th:last-child, .table>thead>tr>td:nth-of-type(1), .table>thead>tr>td:last-child, .table>thead>tr>th:nth-of-type(1), .table>thead>tr>th:last-child {
+    border-left: none;
+    border-right: none;
+}
+
+.table>tbody>tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.fixed-table-container {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+}
+
+.fixed-table-pagination {
+    background: #fff;
+}
+
+.pagination-detail {
+    display: none;
+}
+
+.table span {
+    display: block;
+}
+
+.table button+button {
+    margin-left: 5px;
+}
+
+.th-check input {
+    vertical-align: -2px;
+    margin-right: 5px;
+}
+
+.pagination>li>a, .pagination>li>span {
+    color: #333;
+}
+
+.pagination {
+    margin-left: 41%;
+}
+
+.form {
+    padding: 15px;
+    box-sizing: border-box;
+    background: #fff;
+    box-shadow: 0 0 5px #ddd;
+}
+
+.img {
+    cursor: pointer;
+}
+
+.modal {
+    display: block;
+}
+
+.alert {
+    position: absolute;
+    z-index: 7000;
+    top: 40%;
+    left: 46%;
+    font-weight: bold;
+}
