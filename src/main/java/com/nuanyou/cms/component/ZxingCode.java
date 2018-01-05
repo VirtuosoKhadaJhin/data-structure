@@ -1,10 +1,8 @@
 package com.nuanyou.cms.component;
 
 import com.google.zxing.*;
-import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.common.HybridBinarizer;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
@@ -44,7 +42,12 @@ public class ZxingCode {
             ImageIO.write(encodePath, "jpg", imageOutput);
             InputStream codeInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());//条形码输出流
             InputStream InputStream = fileClient.queryFile(titleInfo);//下载底图的输出流
-            pressImage(out ,InputStream, codeInputStream, contents, -1,590, -1,-1, 1f);//添加水印图片
+            java.io.InputStream inputStream = pressImage(out, InputStream, codeInputStream, contents, -1, 590, -1, -1, 1f);//添加水印图片
+
+            String filePath = fileClient.uploadFile(inputStream, ".jpg");
+            System.out.println("filePath：" + filePath);
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,7 +60,7 @@ public class ZxingCode {
      * @param alpha 透明度(0.0 -- 1.0, 0.0为完全透明，1.0为完全不透明)
      */
     //添加图片水印
-    public static void pressImage(OutputStream out ,InputStream targetImgStream, InputStream encodeStream,String pressText ,int textX ,int textY,int x, int y, float alpha) throws IOException {
+    public static InputStream pressImage(OutputStream out , InputStream targetImgStream, InputStream encodeStream, String pressText , int textX , int textY, int x, int y, float alpha) throws IOException {
         InputStream is = null;
         try {
             Image mainImage = ImageIO.read(targetImgStream);
@@ -107,18 +110,14 @@ public class ZxingCode {
             ImageOutputStream imageOutput = ImageIO.createImageOutputStream(byteArrayOutputStream);
             ImageIO.write(bufferedImage, PICTRUE_FORMATE_JPG, imageOutput);
             is = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-            int b;
-            while((b = is.read())!= -1)
-            {
-                out.write(b);
-            }
-            System.out.println("添加水印图片完成!");
+            return is;
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
             is.close();
             out.close();
         }
+        return is;
     }
 
     /**
