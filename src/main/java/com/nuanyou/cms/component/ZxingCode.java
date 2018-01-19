@@ -28,7 +28,7 @@ public class ZxingCode {
      * 生成条形码
      * @param contents 核销码
      */
-    public static void  encode(OutputStream out ,String contents,String titleInfo,FileClient fileClient) {
+    public static String  encode(String contents,String titleInfo,FileClient fileClient) {
         int width = 480, height = 120;//条形码大小
         int codeWidth = 3 + (7 * 6) + 5 + (7 * 6) + 3;
         codeWidth = Math.max(codeWidth, width);
@@ -42,15 +42,15 @@ public class ZxingCode {
             ImageIO.write(encodePath, "jpg", imageOutput);
             InputStream codeInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());//条形码输出流
             InputStream InputStream = fileClient.queryFile(titleInfo);//下载底图的输出流
-            java.io.InputStream inputStream = pressImage(out, InputStream, codeInputStream, contents, -1, 590, -1, -1, 1f);//添加水印图片
+            java.io.InputStream inputStream = pressImage(InputStream, codeInputStream, contents, -1, 590, -1, -1, 1f);//添加水印图片
 
             String filePath = fileClient.uploadFile(inputStream, ".jpg");
             System.out.println("filePath：" + filePath);
-
-
+            return filePath;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return "";
     }
     /**
      * @param targetImgStream 目标图片路径，流文件
@@ -60,7 +60,7 @@ public class ZxingCode {
      * @param alpha 透明度(0.0 -- 1.0, 0.0为完全透明，1.0为完全不透明)
      */
     //添加图片水印
-    public static InputStream pressImage(OutputStream out , InputStream targetImgStream, InputStream encodeStream, String pressText , int textX , int textY, int x, int y, float alpha) throws IOException {
+    public static InputStream pressImage(InputStream targetImgStream, InputStream encodeStream, String pressText , int textX , int textY, int x, int y, float alpha) throws IOException {
         InputStream is = null;
         try {
             Image mainImage = ImageIO.read(targetImgStream);
@@ -115,7 +115,6 @@ public class ZxingCode {
             e.printStackTrace();
         }finally {
             is.close();
-            out.close();
         }
         return is;
     }

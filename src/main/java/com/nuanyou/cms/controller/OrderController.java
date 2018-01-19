@@ -61,6 +61,8 @@ public class OrderController {
     @Autowired
     private OrderRefundLogDao logDao;
     @Autowired
+    private OrderVirtualMailDao virtualMailDao;
+    @Autowired
     private OrderDao orderDao;
     @Autowired
     private CountryService countryService;
@@ -123,7 +125,7 @@ public class OrderController {
 
     @RequestMapping(path = "virtual", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult virtual(Long id, Integer number, String channel, String channelOrderNo) {
+    public APIResult virtual(Long id, Integer number, String channel, String email, Boolean isPush, String channelOrderNo) {
         if (channel == null || channel == "")
             return new APIResult(ResultCodes.MissingParameter);
         if (channelOrderNo == null || channelOrderNo == "")
@@ -146,10 +148,71 @@ public class OrderController {
             OrderSave orderSave = result.getData();
             result = remoteOrderService.ordersPayCallbackPost(orderSave.getId());
             if (result.isSuccess()) {
+                // 上传邮件图片
+                Order order = orderDao.findOne(orderId);
+                String titleInfo = enCodeMainImgPath;
+                if(order.getCountryid() != null){
+                    switch(order.getCountryid().toString()){
+                        case "1": titleInfo = krCodeMainImgPath;break;
+                        case "2": titleInfo = jpCodeMainImgPath;break;
+                        case "3": titleInfo = thCodeMainImgPath;break;
+                        case "4": titleInfo = geCodeMainImgPath;break;
+                        default:break;
+                    }
+                }
+                String path = ZxingCode.encode(order.getVerifyCode(), titleInfo, fileClient);
+                OrderVirtualMail virtualMail = new OrderVirtualMail();
+                virtualMail.setCodeImgUrl(path);
+                virtualMail.setEmail(email);
+                virtualMail.setOrderId(orderId);
+                virtualMail.setPush(isPush);
+                virtualMailDao.save(virtualMail);
                 return new APIResult(orderId);
             }
         }
         return result;
+    }
+
+    /**
+     * 下载条形码合成图片
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping(path = "downloadBarcode")
+    public  void  downloadBarcode(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/x-msdownload");
+        String  fileName = "核销条形码.jpg";
+        String fname ="";
+        // 解决中文文件名乱码问题
+        if (request.getHeader("User-Agent").toLowerCase()
+                .indexOf("firefox") > 0) {
+            fname = new String(fileName.getBytes("UTF-8"), "ISO8859-1"); // firefox浏览器
+        } else if (request.getHeader("User-Agent").toUpperCase()
+                .indexOf("MSIE") > 0) {
+            fname = URLEncoder.encode(fileName, "UTF-8");// IE浏览器
+        }else if (request.getHeader("User-Agent").toUpperCase()
+                .indexOf("CHROME") > 0) {
+            fname = new String(fileName.getBytes("UTF-8"), "ISO8859-1");// 谷歌
+        }
+        response.setHeader("Content-Disposition", "attachment;filename="+fname);
+        String keycode = request.getParameter("VerificationCode");
+        String countryid = request.getParameter("countryid");
+        String titleInfo = enCodeMainImgPath;
+        switch(countryid){
+            case "1": titleInfo = krCodeMainImgPath;break;
+            case "2": titleInfo = jpCodeMainImgPath;break;
+            case "3": titleInfo = thCodeMainImgPath;break;
+            case "4": titleInfo = geCodeMainImgPath;break;
+            default:break;
+        }
+        OrderVirtualMail orderVirtualMail = virtualMailDao.findByOrderId(orderId);
+        if(orderVirtualMail != null){
+            System.out.println(orderVirtualMail.getCodeImgUrl());
+        }
+        if (keycode != null && !"".equals(keycode)) {
+            ZxingCode.encode(keycode, titleInfo, fileClient);
+        }
     }
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
@@ -472,42 +535,4 @@ public class OrderController {
         return new APIResult();
     }
 
-    /**
-     * 下载条形码合成图片
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    @RequestMapping(path = "downloadBarcode")
-    public  void  downloadBarcode(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("application/x-msdownload");
-        String  fileName = "核销条形码.jpg";
-        String fname ="";
-        // 解决中文文件名乱码问题
-        if (request.getHeader("User-Agent").toLowerCase()
-                .indexOf("firefox") > 0) {
-            fname = new String(fileName.getBytes("UTF-8"), "ISO8859-1"); // firefox浏览器
-        } else if (request.getHeader("User-Agent").toUpperCase()
-                .indexOf("MSIE") > 0) {
-            fname = URLEncoder.encode(fileName, "UTF-8");// IE浏览器
-        }else if (request.getHeader("User-Agent").toUpperCase()
-                .indexOf("CHROME") > 0) {
-            fname = new String(fileName.getBytes("UTF-8"), "ISO8859-1");// 谷歌
-        }
-        response.setHeader("Content-Disposition", "attachment;filename="+fname);
-        String keycode = request.getParameter("VerificationCode");
-        String countryid = request.getParameter("countryid");
-        String titleInfo = enCodeMainImgPath;
-        switch(countryid){
-            case "1": titleInfo = krCodeMainImgPath;break;
-            case "2": titleInfo = jpCodeMainImgPath;break;
-            case "3": titleInfo = thCodeMainImgPath;break;
-            case "4": titleInfo = geCodeMainImgPath;break;
-            default:break;
-        }
-        if (keycode != null && !"".equals(keycode)) {
-            OutputStream out = response.getOutputStream();
-            ZxingCode.encode(out,keycode, titleInfo, fileClient);
-        }
-    }
 }
