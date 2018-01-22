@@ -20,6 +20,7 @@ public class MerchantStaff {
     private String password;
     private String tel;
     private Date createTime;
+    private Date updateTime;
 
     public MerchantStaff() {
     }
@@ -99,5 +100,14 @@ public class MerchantStaff {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    @Column(name = "updatetime")
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
