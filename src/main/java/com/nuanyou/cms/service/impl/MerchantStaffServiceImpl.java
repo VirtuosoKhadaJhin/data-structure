@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * Created by Felix on 2016/9/8.
  */
@@ -23,6 +25,7 @@ public class MerchantStaffServiceImpl implements MerchantStaffService {
     @Override
     public MerchantStaff saveNotNull(MerchantStaff entity) {
         String password = entity.getPassword();
+        Date now = new Date();
         int count = dao.findByUsername(entity.getUsername());
         if (entity.getId() == null) {
             if (count > 0)
@@ -30,7 +33,8 @@ public class MerchantStaffServiceImpl implements MerchantStaffService {
 
             if (StringUtils.isBlank(password))
                 password = StringUtils.leftPad(entity.getMchId().toString(), 4, '0');
-
+            entity.setCreateTime(now);
+            entity.setUpdateTime(now);
             entity.setPassword(MD5Utils.encrypt(password));
             return dao.save(entity);
         } else {
@@ -46,6 +50,7 @@ public class MerchantStaffServiceImpl implements MerchantStaffService {
                 throw new APIException(ResultCodes.UsedName);
 
             BeanUtils.copyBeanNotNull(entity, oldEntity);
+            oldEntity.setUpdateTime(now);
             return dao.save(oldEntity);
         }
     }

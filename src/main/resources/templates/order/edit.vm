@@ -140,7 +140,7 @@
 <script type="text/javascript">
     /*水印下载条形码*/
     function downloadBarcode(VerificationCode){
-            window.location.href="downloadBarcode?VerificationCode="+VerificationCode+"&countryid="+$!order.countryid;
+            window.location.href="downloadBarcode?orderId="+$!order.id;
     }
 </script>
 </html>
