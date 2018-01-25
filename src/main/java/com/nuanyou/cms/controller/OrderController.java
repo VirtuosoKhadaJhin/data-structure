@@ -152,6 +152,11 @@ public class OrderController {
         if (items.size() < 1)
             return new APIResult(ResultCodes.NotFoundItem);
 
+        List<Order> channelOrders = orderDao.findByChannel(channel, channelOrderNo);
+        if(CollectionUtils.isNotEmpty(channelOrders)){
+            return new APIResult(ResultCodes.ChannelOrderExists);
+        }
+
         APIResult<OrderSave> result = remoteOrderService.ordersSaveTuanPost(7, id, number, channel, channelOrderNo);
         if (result.isSuccess()) {
             Long orderId = result.getData().getId();

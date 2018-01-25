@@ -68,6 +68,7 @@ public enum ResultCodes {
     Audited(2004, "已经审核完毕"),
     OrderNotFound(2005, "未发现订单"),
     OrderOther(2006, "其他订单错误"),
+    ChannelOrderExists(2007, "该渠道订单号已存在"),
 
     CollectionCodeError(3001, "收款码编号不正确"),
     CollectionCodeExist(3002, "收款码{0}已被{1}占用"),
