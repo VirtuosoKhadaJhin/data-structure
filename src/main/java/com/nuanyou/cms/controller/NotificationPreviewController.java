@@ -91,9 +91,9 @@ public class NotificationPreviewController {
             title = item.getTitle();
             imgUrl = item.getImgUrl();
             linkUrl = item.getLinkUrl();
-            contentPartTwo += "<item>" + "<Title><![CDATA[" + title + "]]></Title>" + "<PicUrl><![CDATA[" + imgUrl + "]]></PicUrl>" + "<Url><![CDATA[" + linkUrl + "]]></Url>" + "</item>";
+            contentPartTwo += "<item><Title><![CDATA[" + title + "]]></Title><PicUrl><![CDATA[" + imgUrl + "]]></PicUrl><Url><![CDATA[" + linkUrl + "]]></Url></item>";
         }
-        String contentPartOne = " <MsgType><![CDATA[news]]>" + "</MsgType><ArticleCount>"+itemLength+"</ArticleCount>" + "<Articles>%s</Articles>";
+        String contentPartOne = " <MsgType><![CDATA[news]]></MsgType><ArticleCount>"+itemLength+"</ArticleCount>" + "<Articles>%s</Articles>";
         String content = String.format(contentPartOne, contentPartTwo);
         System.out.println(content);
         List<NameValuePair> params = new ArrayList<>();
