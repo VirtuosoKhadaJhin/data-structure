@@ -50,11 +50,11 @@ public class NotificationPreviewController {
     /**
      * 消推页面
      *
-     * @param model
+     * @param 
      * @return
      */
     @RequestMapping("list")
-    public String list(Model model) {
+    public String list() {
         return "notificationPreview/list";
     }
 
