@@ -95,7 +95,7 @@ public class NotificationPreviewController {
         }
         String contentPartOne = " <MsgType><![CDATA[news]]></MsgType><ArticleCount>"+itemLength+"</ArticleCount>" + "<Articles>%s</Articles>";
         String content = String.format(contentPartOne, contentPartTwo);
-        System.out.println(content);
+        //System.out.println(content);
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sceneid", "PushMsgAfterConsumePreview"));
         params.add(new BasicNameValuePair("subscribereply", content));
