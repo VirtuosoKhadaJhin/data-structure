@@ -1,0 +1,120 @@
+<link rel="stylesheet" href="/css/common/bootstrap.min.css">
+<style>
+.gap_distance{  
+    margin-bottom: 12px;
+}
+</style>
+#include("common/js-support.vm")
+<script type="text/javascript" src="http://cdn.bootcss.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<div class="row gap_distance"></div>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-3 input-group" style="left: 15px;">
+        <input id="merchantId" type="number" class="form-control " placeholder="商户Id" aria-describedby="basic-addon2">
+        <span class="input-group-addon btn-btn-primary" style="cursor:pointer" id="query-btn">搜索</span>
+    </div><!-- /input-group -->
+</div><!-- /.col-lg-6 -->
+<div class="row gap_distance"></div>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-9">
+        <table id="notificationPreviewTable" class=" table table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 57px;">序号</th>
+                    <th>标题</th>
+                    <th>图片链接</th>
+                    <th>跳转链接</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="4" style="color: red;" class="text-center">暂无数据，请输入商户Id。</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div >
+<div class="row">
+    <div class="col-md-2" style="margin-left: 15px;"></div>
+    <div class="qrcode"></div>
+</div>
+<div class="row gap_distance"></div>
+<div class="row">
+    <div class="col-md-2" style="margin-left: 15px;"></div>
+    <button id="producePreview" class="btn btn-primary"  style="width: 100px;">生成预览</button>
+</div>
+<script>
+$(function () {
+    
+    //生成二维码
+    var codeImg = "http://weixin.qq.com/q/02iN-8YuSI9YP10000007U";
+    $('.qrcode').qrcode({width: 100, height: 100, correctLevel: 0, text: codeImg});
+    
+    $("#merchantId").keydown(function() {
+        if (event.keyCode == "13") {
+            queryData();
+        }
+    });
+    $("#query-btn").on("click", function () {
+        queryData();
+    });
+    //生成预览调用老谢接口
+    $("#producePreview").on("click", function () {
+        var list = [];
+        $("#notificationPreviewTable tbody").children().each(function(){
+            var content = new Object();
+            var item = $(this).children();
+            for(var i = 0; i< item.length;i++){
+                content.title = item[1].innerText;;
+                content.imgUrl = item[2].innerText;
+                content.linkUrl = item[3].innerText;
+            }
+            list.push(content);
+        });
+        $.ajax({
+            url: 'content',
+            data:JSON.stringify(list),
+            type: 'post',
+            contentType: "application/json",
+            success: function (result) {
+                if (result.code == 0) {
+                    alert(result.msg);
+                } else {
+                    alert(result.msg);
+                }
+            }
+        });
+    });
+});
+//获取列表数据
+function queryData() {
+    $("#notificationPreviewTable tbody").html("");
+    var merchantId = $("#merchantId").val();
+    $.ajax({
+        url: 'notificationPreviewData',
+        data:{merchantId:merchantId},
+        type: 'post',
+        success: function (result) {
+            if (result.code == 0) {
+                var html = "";
+                $.each(result.data.list, function(commentIndex, comment){
+                    serialNumber = Number(commentIndex)+1;
+                    html += '<tr>'
+                            + '<td>'+serialNumber+'</td>'
+                            + '<td>'+comment['title']+'</td>'
+                            + '<td>'+comment['imgUrl']+'</td>'
+                            + '<td>'+comment['linkUrl']+'</td>'
+                            + '</tr>';
+                    $("#notificationPreviewTable tbody").append(html)
+                    html = "";
+                });
+            } else {
+                alert("失败:" + result.msg);
+            }
+        }
+    });
+}
+</script>
+
+

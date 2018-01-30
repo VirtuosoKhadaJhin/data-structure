@@ -151,3 +151,9 @@ crm:
 
 cms:
   redirect: http://localhost:8085
+  
+itemtuan:
+  pushconfig: http://prod-env.3ukriqptr3.ap-southeast-1.elasticbeanstalk.com/api/v1
+  
+nuanyou:
+  domain: https://sso.91nuanyou.com
