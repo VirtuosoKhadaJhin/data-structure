@@ -61,7 +61,7 @@ public class AwsS3Client extends FileClient {
         acl.grantPermission(GroupGrantee.AllUsers, Permission.Read);
         SetObjectAclRequest request = new SetObjectAclRequest(bucketName, filePath, acl);
         client.setObjectAcl(request);
-        return new StringBuilder(domain).append("/").append(bucketName).append("/").append(filePath).toString();
+        return new StringBuilder(domain).append("/").append(filePath).toString();
     }
 
     public InputStream queryFile(String filePath) throws IOException {
