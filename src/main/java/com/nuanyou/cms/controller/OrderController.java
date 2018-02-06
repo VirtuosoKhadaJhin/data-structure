@@ -1,5 +1,8 @@
 package com.nuanyou.cms.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.nuanyou.cms.commons.APIResult;
 import com.nuanyou.cms.commons.ResultCodes;
@@ -125,83 +128,6 @@ public class OrderController {
     public String add(Order entity) {
         orderDao.save(entity);
         return "order/list";
-    }
-
-    @RequestMapping(path = "virtual", method = RequestMethod.GET)
-    public String virtual(Model model) {
-        model.addAttribute("channels", OrderSaleChannel.values());
-        return "order/virtual";
-    }
-
-    @RequestMapping(path = "virtual", method = RequestMethod.POST)
-    @ResponseBody
-    public APIResult virtual(Long id, Integer number, String channel, String email, String channelOrderNo) {
-        if (channel == null || channel == "")
-            return new APIResult(ResultCodes.MissingParameter);
-        if (channelOrderNo == null || channelOrderNo == "")
-            return new APIResult(ResultCodes.MissingParameter);
-        if (id == null)
-            return new APIResult(ResultCodes.MissingParameter);
-        if (number == null || number < 1)
-            return new APIResult(ResultCodes.MissingParameter);
-        Item item = new Item();
-        item.setId(id);
-        item.setDisplay(true);
-        item.setItemType(2);
-        List<Item> items = itemDao.findAll(Example.of(item));
-        if (items.size() < 1)
-            return new APIResult(ResultCodes.NotFoundItem);
-
-        List<Order> channelOrders = orderDao.findByChannel(channel, channelOrderNo);
-        if(CollectionUtils.isNotEmpty(channelOrders)){
-            return new APIResult(ResultCodes.ChannelOrderExists);
-        }
-
-        APIResult<OrderSave> result = remoteOrderService.ordersSaveTuanPost(7, id, number, channel, channelOrderNo);
-        if (result.isSuccess()) {
-            Long orderId = result.getData().getId();
-            OrderSave orderSave = result.getData();
-            result = remoteOrderService.ordersPayCallbackPost(orderSave.getId());
-            if (this.saveEmailTemplate(email, Boolean.FALSE, result, orderId)) return new APIResult(orderId);
-        }
-        return result;
-    }
-
-    /**
-     * 下载条形码合成图片
-     *
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    @RequestMapping(path = "downloadBarcode")
-    public ResponseEntity<InputStreamResource> downloadBarcode(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("application/x-msdownload");
-        String orderId = request.getParameter("orderId");
-        OrderVirtualMail orderVirtualMail = virtualMailDao.findByOrderId(Long.parseLong(orderId));
-        String fileName = "verify_code.jpg";
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", fileName));
-        headers.add("Pragma", "no-cache");
-        headers.add("Expires", "0");
-
-        URL url = new URL(orderVirtualMail.getCodeImgUrl());
-        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-        //设置超时间为3秒
-        conn.setConnectTimeout(3*1000);
-        //防止屏蔽程序抓取而返回403错误
-        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
-
-        //得到输入流
-        InputStream inputStream = conn.getInputStream();
-
-        return ResponseEntity
-                .ok()
-                .headers(headers)
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(new InputStreamResource(inputStream));
-
     }
 
     @RequestMapping(path = "edit", method = RequestMethod.GET)
@@ -470,35 +396,6 @@ public class OrderController {
         return "order/refundList";
     }
 
-/*  @RequestMapping(path = "refundEdit", method = RequestMethod.GET)
-    public String refundEdit(Long id, Model model, Integer type) {
-        Order entity = null;
-        if (id != null) {
-            entity = orderDao.findOne(id);
-        }
-        OrderRefundLog log = this.logDao.findByOrderId(id);
-        model.addAttribute("entity", entity);
-        model.addAttribute("type", type);
-        model.addAttribute("log", log);
-        return "order/refundEdit";
-    }*/
-
- /*  /**
-     * 手动通过
-     * @param id
-     * @param type
-     * @param response
-     * @param cmsusername
-     * @return
-     * @throws IOException
-     *//*
-    @RequestMapping(path = "validate", method = RequestMethod.POST)
-    public String validate(Long id, Integer type, HttpServletResponse response, String cmsusername) throws IOException {
-        this.orderService.validate(id, type, cmsusername);
-        response.sendRedirect("../order/refundEdit?refundEdit=3&id=" + id);
-        return null;
-    }*/
-
 
     /**
      * 退款操作-通过还是拒绝
@@ -526,42 +423,110 @@ public class OrderController {
         return new APIResult();
     }
 
-    private boolean saveEmailTemplate(String email, Boolean isPush, APIResult<OrderSave> result, Long orderId) {
-        if (result.isSuccess()) {
-            // 上传邮件图片
-            Order order = orderDao.findOne(orderId);
-            String titleInfo = enCodeMainImgPath;
-            if (order.getCountryid() != null) {
-                switch (order.getCountryid().toString()) {
-                    case "1":
-                        titleInfo = krCodeMainImgPath;
-                        break;
-                    case "2":
-                        titleInfo = jpCodeMainImgPath;
-                        break;
-                    case "3":
-                        titleInfo = thCodeMainImgPath;
-                        break;
-                    case "4":
-                        titleInfo = geCodeMainImgPath;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            String path = ZxingCode.encode(order.getVerifyCode(), titleInfo, fileClient);
-            OrderVirtualMail virtualMail = new OrderVirtualMail();
-            virtualMail.setCodeImgUrl(path);
-            virtualMail.setEmail(email);
-            virtualMail.setOrderId(orderId);
-            virtualMail.setPush(isPush);
-            virtualMailDao.save(virtualMail);
+    @RequestMapping(path = "virtual", method = RequestMethod.GET)
+    public String virtual(Model model) {
+        model.addAttribute("channels", OrderSaleChannel.values());
+        return "order/virtual";
+    }
 
-            // 发送消息调用邮件发送
-            notificationPublisher.publishVirtualEmail(orderId.toString());
-            return true;
+    @RequestMapping(path = "virtual", method = RequestMethod.POST)
+    @ResponseBody
+    public APIResult virtual(Long id, Integer number, String channel, String email, String channelOrderNo) {
+        if (channel == null || channel == "")
+            return new APIResult(ResultCodes.MissingParameter);
+        if (channelOrderNo == null || channelOrderNo == "")
+            return new APIResult(ResultCodes.MissingParameter);
+        if (id == null)
+            return new APIResult(ResultCodes.MissingParameter);
+        if (number == null || number < 1)
+            return new APIResult(ResultCodes.MissingParameter);
+        Item item = new Item();
+        item.setId(id);
+        item.setDisplay(true);
+        item.setItemType(2);
+        List<Item> items = itemDao.findAll(Example.of(item));
+        if (items.size() < 1)
+            return new APIResult(ResultCodes.NotFoundItem);
+
+        List<Long> orderPostResults = Lists.newArrayList();
+        for (int i = 1; i <= number; i++) {
+            APIResult<OrderSave> result = remoteOrderService.ordersSaveTuanPost(7, id, 1, channel, channelOrderNo + "-" + i);
+            if (!result.isSuccess()) {
+                continue;
+            }
+            OrderSave orderSave = result.getData();
+            Long orderId = orderSave.getId();
+            result = remoteOrderService.ordersPayCallbackPost(orderSave.getId());
+            if (!result.isSuccess()) {
+                continue;
+            }
+            orderPostResults.add(orderId);
         }
-        return false;
+        for (Long orderId : orderPostResults) {
+            this.saveEmailTemplate(email, orderId);
+        }
+
+        if (orderPostResults.size() == 0) {
+            return new APIResult(ResultCodes.VirtualOrderRepeat);
+        }
+        notificationPublisher.publishVirtualEmail(JSONArray.toJSONString(orderPostResults));
+        return new APIResult(orderPostResults);
+    }
+
+    /**
+     * 下载条形码合成图片
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping(path = "downloadBarcode")
+    public ResponseEntity<InputStreamResource> downloadBarcode(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/x-msdownload");
+        String orderId = request.getParameter("orderId");
+        OrderVirtualMail orderVirtualMail = virtualMailDao.findByOrderId(Long.parseLong(orderId));
+        String fileName = "verify_code.jpg";
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", fileName));
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+
+        URL url = new URL(orderVirtualMail.getCodeImgUrl());
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(3 * 1000);
+        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(new InputStreamResource(conn.getInputStream()));
+
+    }
+
+    private void saveEmailTemplate(String email, Long orderId) {
+        // 上传邮件图片
+        Order order = orderDao.findOne(orderId);
+        String titleInfo = enCodeMainImgPath;
+        if (order.getCountryid() == null) {
+            return;
+        }
+        switch (order.getCountryid().toString()) {
+            case "1": titleInfo = krCodeMainImgPath; break;
+            case "2": titleInfo = jpCodeMainImgPath; break;
+            case "3": titleInfo = thCodeMainImgPath; break;
+            case "4": titleInfo = geCodeMainImgPath; break;
+            default: break;
+        }
+        String path = ZxingCode.encode(order.getVerifyCode(), titleInfo, fileClient);
+        OrderVirtualMail virtualMail = new OrderVirtualMail();
+        virtualMail.setCodeImgUrl(path);
+        virtualMail.setEmail(email);
+        virtualMail.setOrderId(orderId);
+        virtualMail.setPush(Boolean.FALSE);
+        virtualMailDao.save(virtualMail);
+
     }
 
 

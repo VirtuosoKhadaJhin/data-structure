@@ -78,7 +78,9 @@ public enum ResultCodes {
     ContractNotAssignedForMerchant(603, "合同未关联商户"),
     PoundageOrPayDaysIsNull(601, "手续费账期起结金额账期类型不能为空"),
 
-    AddMerchantSettlementError(602, "访问Account增加一个商户清算时出现错误"),;
+    AddMerchantSettlementError(602, "访问Account增加一个商户清算时出现错误"),
+    VirtualOrderRepeat(715, "尚未保存成功订单，请检查虚拟订单号重复");
+
 
     /**
      * ----------order -----------
