@@ -23,9 +23,6 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 repositories {
-    maven {
-        url "http://nexus.hellobiz.cn/nexus/content/repositories/releases/"
-    }
     mavenCentral()
 }
 
