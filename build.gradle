@@ -3,12 +3,6 @@ buildscript {
         springBootVersion = '1.4.0.RELEASE'
     }
     repositories {
-        maven {
-            url "http://nexus.hellobiz.cn/nexus/content/repositories/central/"
-        }
-        maven {
-            url "http://nexus.hellobiz.cn/nexus/content/repositories/releases/"
-        }
         mavenCentral()
     }
     dependencies {
@@ -29,9 +23,6 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 repositories {
-    maven {
-        url "http://nexus.hellobiz.cn/nexus/content/repositories/central/"
-    }
     maven {
         url "http://nexus.hellobiz.cn/nexus/content/repositories/releases/"
     }
@@ -95,5 +86,5 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.12'
+    gradleVersion = '4.5'
 }
