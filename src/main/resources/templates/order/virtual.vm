@@ -61,6 +61,14 @@
                                                placeholder="请输入购买数量" required>
                                     </div>
                                 </div>
+                                <div class="control-group">
+                                    <label class="control-label">
+                                        收件人邮箱：</label>
+                                    <div class="controls">
+                                        <input id="email" name="email" type="email" min="1" class="span9"
+                                               placeholder="收件人邮箱" required>
+                                    </div>
+                                </div>
                                 <div class="form-actions">
                                     <button class="btn btn-success" type="button" id="btn-save">保存</button>
                                     <button class="btn btn-primary" type="button" onclick="window.history.go(-1);">返回
@@ -77,8 +85,12 @@
     <script>
         $(function () {
 
-            $("#id").on("blur", function () {
+            $("#id").on("change", function () {
+                $(".itemName").text("");
                 var id = $(this).val();
+                if(!id){
+                    return;
+                }
                 $.ajax({
                     url: '/item/api/list', async: true, data: {id: id, itemType: 2, display: true},
                     success: function (result) {
@@ -106,10 +118,9 @@
                     url: $(form).attr('action'), type: 'post',
                     data: $(form).serialize(),
                     success: function (result) {
-                        console.log(result);
                         btn.disabled = false;
                         if (result.code == 0) {
-                            window.location.href = "edit?type=3&id=" + result.data;
+                            window.location.href = "list";
                         } else {
                             window.wxc.xcConfirm("<b>保存失败！" + result.msg + "</b>", window.wxc.xcConfirm.typeEnum.warning);
                         }

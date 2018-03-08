@@ -68,6 +68,7 @@ public enum ResultCodes {
     Audited(2004, "已经审核完毕"),
     OrderNotFound(2005, "未发现订单"),
     OrderOther(2006, "其他订单错误"),
+    ChannelOrderExists(2007, "该渠道订单号已存在"),
 
     CollectionCodeError(3001, "收款码编号不正确"),
     CollectionCodeExist(3002, "收款码{0}已被{1}占用"),
@@ -77,7 +78,9 @@ public enum ResultCodes {
     ContractNotAssignedForMerchant(603, "合同未关联商户"),
     PoundageOrPayDaysIsNull(601, "手续费账期起结金额账期类型不能为空"),
 
-    AddMerchantSettlementError(602, "访问Account增加一个商户清算时出现错误"),;
+    AddMerchantSettlementError(602, "访问Account增加一个商户清算时出现错误"),
+    VirtualOrderRepeat(715, "尚未保存成功订单，请检查虚拟订单号重复");
+
 
     /**
      * ----------order -----------

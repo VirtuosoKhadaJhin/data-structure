@@ -23,6 +23,9 @@ public class NotificationPublisher {
     @Value("${AWS.sns.topic.refundFail}")
     private String refundFailTopic;
 
+    @Value("${AWS.sns.topic.virtualEmail}")
+    private String virtualEmailTopic;
+
     @Autowired
     private AmazonSNSClient snsClient;
 
@@ -36,5 +39,9 @@ public class NotificationPublisher {
 
     public void publishRefundFail(String orderId) {
         snsClient.publish(refundFailTopic, orderId);
+    }
+
+    public void publishVirtualEmail(String orderId) {
+        snsClient.publish(virtualEmailTopic, orderId);
     }
 }

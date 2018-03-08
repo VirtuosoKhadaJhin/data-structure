@@ -21,13 +21,14 @@ public class AwsS3Client extends FileClient {
 
     private AmazonS3Client client;
 
+    @Value("${s3.bucketName}")
     private String bucketName;
 
+    @Value("${s3.domain}")
     private String domain;
 
+    @Value("${s3.region}")
     private String region;
-
-
 
     public AwsS3Client(@Value("${s3.bucketName}") String bucketName,
                        @Value("${s3.domain}") String domain,
