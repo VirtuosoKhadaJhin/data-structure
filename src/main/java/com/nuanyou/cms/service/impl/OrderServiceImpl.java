@@ -296,6 +296,7 @@ public class OrderServiceImpl implements OrderService {
 
     private List<Predicate> getOrderExportPredicates(Root root, CriteriaBuilder cb, Order entity, TimeCondition time, List<Long> countryids) {
         List<Predicate> predicate = new ArrayList<Predicate>();
+        predicate.add(root.get("paytime").isNotNull());
         if (countryids != null && countryids.size() > 0) {
             predicate.add(root.get("countryid").in(countryids));
         }
@@ -304,11 +305,11 @@ public class OrderServiceImpl implements OrderService {
             predicate.add(p);
         }
         if (time.getBegin_minute() != null) {
-            Predicate p = cb.greaterThanOrEqualTo(root.get("createtime").as(Date.class), time.getBegin_minute());
+            Predicate p = cb.greaterThanOrEqualTo(root.get("paytime").as(Date.class), time.getBegin_minute());
             predicate.add(p);
         }
         if (time.getEnd_minute() != null) {
-            Predicate p = cb.lessThanOrEqualTo(root.get("createtime").as(Date.class), time.getEnd_minute());
+            Predicate p = cb.lessThanOrEqualTo(root.get("paytime").as(Date.class), time.getEnd_minute());
             predicate.add(p);
         }
         if (entity.getMerchant() != null && !StringUtils.isEmpty(entity.getMerchant().getKpname())) {
