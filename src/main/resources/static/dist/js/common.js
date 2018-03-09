@@ -30,6 +30,14 @@ window.onload = function () {
         yearEnd: 2050,
         todayButton: false
     });
+    $('.dateTimeFormatDefault').datetimepicker({
+        format: "Y-m-d H:i",
+        timepicker: true,
+        defaultTime: "00:00",
+        yearStart: 2000,
+        yearEnd: 2050,
+        todayButton: false
+    });
     $('.dateTimeFormatMinute').datetimepicker({
         format: "Y-m-d H:i",
         timepicker: true,
