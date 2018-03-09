@@ -23,6 +23,9 @@ public class OrderVirtualMail {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "tripdate")
+    private String tripDate;
+
     @Column(name = "codeimgurl")
     private String codeImgUrl;
 
@@ -51,6 +54,14 @@ public class OrderVirtualMail {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getTripDate() {
+        return tripDate;
+    }
+
+    public void setTripDate(String tripDate) {
+        this.tripDate = tripDate;
     }
 
     public String getCodeImgUrl() {

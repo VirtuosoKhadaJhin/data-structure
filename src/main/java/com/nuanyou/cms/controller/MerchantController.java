@@ -96,7 +96,7 @@ public class MerchantController {
     @RequestMapping(path = "customer.html", method = RequestMethod.GET)
     public String customerservice(@RequestParam(required = false) String originCallNo,
                                   @RequestParam(required = false) String CallNo,
-                                  @RequestParam(required = false,defaultValue = "false") Boolean q,
+                                  @RequestParam(required = false, defaultValue = "false") Boolean q,
                                   Model model, HttpServletResponse response) throws Exception {
         String queryPhone = originCallNo;
         if (StringUtils.isEmpty(queryPhone)) {
@@ -119,8 +119,8 @@ public class MerchantController {
         if (info != null && info.getMerchant() != null) {
             String name = "";
             if (info.getMerchant().getNyid() != null) {
-                name = "["+info.getMerchant().getNyid() +"] "+info.getMerchant().getName();
-            }else {
+                name = "[" + info.getMerchant().getNyid() + "] " + info.getMerchant().getName();
+            } else {
                 name = info.getMerchant().getName();
             }
             List<String> tels = new ArrayList<>();
@@ -135,7 +135,7 @@ public class MerchantController {
                 }
             }
 
-            sevenmoorService.addCustomer(info.getMerchant().getId().toString(),name,tels);
+            sevenmoorService.addCustomer(info.getMerchant().getId().toString(), name, tels);
         }
         return "customer/customer";
     }
@@ -145,9 +145,9 @@ public class MerchantController {
     @RequestMapping(path = {"/orderList"}, method = RequestMethod.GET)
     @ResponseBody
     public APIResult<PageModel<OrderModel>> orderList(@RequestParam Long mchId,
-                                                 @ApiParam("页码") @RequestParam(required = false, defaultValue = "1") Integer page,
-                                                 @ApiParam("分页") @RequestParam(required = false, defaultValue = "40") Integer size) {
-        PageModel<OrderModel> orders = orderService.getMerchantOrders(mchId,page,size);
+                                                      @ApiParam("页码") @RequestParam(required = false, defaultValue = "1") Integer page,
+                                                      @ApiParam("分页") @RequestParam(required = false, defaultValue = "40") Integer size) {
+        PageModel<OrderModel> orders = orderService.getMerchantOrders(mchId, page, size);
         return new APIResult(orders);
     }
 
@@ -167,6 +167,25 @@ public class MerchantController {
         setEnums(model, countryId);
         return "merchant/edit";
     }
+
+    @RequestMapping(path = "copy", method = RequestMethod.GET)
+    public String copy(@RequestParam Long id, Model model) {
+        Merchant entity = merchantDao.findOne(id);
+        List<EntityBdMerchantCollectionCode> codeList = collectionCodeService.findEntityBdMerchantCollectionCodesByMchId(id);
+        List<String> list = new ArrayList<>();
+        for (EntityBdMerchantCollectionCode code : codeList) {
+            list.add(code.getCollectionCode());
+        }
+        setEnums(model, null);
+        entity.setId(null);
+        entity.setName(entity.getName() + " - 复制");
+        entity.setKpname(entity.getKpname() + " - copy");
+        entity.setCollectionCodeList(list);
+        model.addAttribute("entity", entity);
+        model.addAttribute("cooperationStatuses", MerchantCooperationStatus.values());
+        return "merchant/edit";
+    }
+
 
     @RequestMapping(path = {"{countryCode}/edit", "{countryCode}/add"}, method = RequestMethod.GET)
     public String edit_country(@RequestParam(required = false) Long id, @PathVariable("countryCode") String countryCode, Model model) {
@@ -200,7 +219,7 @@ public class MerchantController {
     public String update(MerchantVO vo, Long countryId, Model model) {
         List<String> tmp = new ArrayList<>();
         List<String> returnCodes = new ArrayList<>();
-        if (vo.getCollectionCodeList()!=null && vo.getCollectionCodeList().size()>0) {
+        if (vo.getCollectionCodeList() != null && vo.getCollectionCodeList().size() > 0) {
             for (String code : vo.getCollectionCodeList())
                 if (StringUtils.isNotEmpty(code)) {
                     tmp.add(code);
@@ -208,7 +227,7 @@ public class MerchantController {
                 }
         }
         vo.setCollectionCodeList(tmp);
-        validateCollectionCodes (vo.getCollectionCodeList());
+        validateCollectionCodes(vo.getCollectionCodeList());
 
         MerchantVO entity = merchantService.saveNotNull(vo);
         entity.setCollectionCodeList(returnCodes);
@@ -220,7 +239,7 @@ public class MerchantController {
         return "merchant/edit";
     }
 
-    public void validateCollectionCodes ( List<String> codelist) {
+    public void validateCollectionCodes(List<String> codelist) {
 //        if (codelist == null || codelist.size() == 0) {
 //            throw new APIException(ResultCodes.CollectionCodeError);
 //        }
@@ -239,7 +258,7 @@ public class MerchantController {
             }
         }
         Set<String> set = new HashSet<>(codelist);
-        if (set.size() != codelist.size() ){
+        if (set.size() != codelist.size()) {
             throw new APIException(ResultCodes.CollectionCodeRepeat);
         }
     }
@@ -255,6 +274,7 @@ public class MerchantController {
 
     /**
      * 商铺列表
+     *
      * @param entity
      * @param index
      * @param model
@@ -267,10 +287,10 @@ public class MerchantController {
         param.id = entity.getId();
         param.name = entity.getName();
         param.kpname = entity.getKpname();
-        param.countryId = entity.getDistrict()!=null?entity.getDistrict().getCountry().getId():null;
+        param.countryId = entity.getDistrict() != null ? entity.getDistrict().getCountry().getId() : null;
         param.display = entity.getDisplay();
-        param.cooperationStatus = entity.getCooperationStatus()!=null?entity.getCooperationStatus().getKey():null;
-        Page<Merchant> page = merchantService.findMerchant(param,pageable);
+        param.cooperationStatus = entity.getCooperationStatus() != null ? entity.getCooperationStatus().getKey() : null;
+        Page<Merchant> page = merchantService.findMerchant(param, pageable);
         model.addAttribute("page", page);
 
         List<Country> countries = countryService.getIdNameList();
@@ -338,7 +358,7 @@ public class MerchantController {
     }
 
     @RequestMapping(path = "export")
-    public void export( String countryids,Merchant entity, HttpServletResponse response) throws IOException {
+    public void export(String countryids, Merchant entity, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/csv; charset=" + "UTF-8");
         response.setHeader("Pragma", "public");
@@ -351,11 +371,11 @@ public class MerchantController {
         param.id = entity.getId();
         param.name = entity.getName();
         param.kpname = entity.getKpname();
-        param.countryId = entity.getDistrict()!=null?entity.getDistrict().getCountry().getId():null;
+        param.countryId = entity.getDistrict() != null ? entity.getDistrict().getCountry().getId() : null;
         param.display = entity.getDisplay();
-        param.cooperationStatus = entity.getCooperationStatus()!=null?entity.getCooperationStatus().getKey():null;
+        param.cooperationStatus = entity.getCooperationStatus() != null ? entity.getCooperationStatus().getKey() : null;
         param.countryids = CommonUtils.StringToList(countryids);
-        Page<Merchant> page = merchantService.findMerchant(param,pageable);
+        Page<Merchant> page = merchantService.findMerchant(param, pageable);
 
 //        for (Merchant merchant : list) {
 //            Long id = merchant.getId();
@@ -412,7 +432,7 @@ public class MerchantController {
         if (id != null) {
             entity.setDistrict(new District(new Country(id)));
         }
-        export(null,entity, response);
+        export(null, entity, response);
     }
 
     private void setEnums(Model model, Long countryId) {
@@ -440,14 +460,14 @@ public class MerchantController {
     }
 
     @RequestMapping("/collectioncodes")
-    public String getCollectionCodes (EntityBdMerchantCollectionCode entity,
-                                      @RequestParam(required = false, defaultValue = "1") int index,
-                                      @RequestParam(required = false, defaultValue = "20") int limit,
-                                      Model model) {
+    public String getCollectionCodes(EntityBdMerchantCollectionCode entity,
+                                     @RequestParam(required = false, defaultValue = "1") int index,
+                                     @RequestParam(required = false, defaultValue = "20") int limit,
+                                     Model model) {
         BeanUtils.cleanEmpty(entity);
-        Sort sort = new Sort(Sort.Direction.DESC,"updateTime");
+        Sort sort = new Sort(Sort.Direction.DESC, "updateTime");
         Pageable pageable = new PageRequest(index - 1, limit, sort);
-        Page<EntityBdMerchantCollectionCode>  page = collectionCodeService.query(entity,pageable);
+        Page<EntityBdMerchantCollectionCode> page = collectionCodeService.query(entity, pageable);
         model.addAttribute("page", page);
         model.addAttribute("entity", entity);
         List<Country> countries = countryService.getIdNameList();
@@ -463,8 +483,8 @@ public class MerchantController {
         if (mchId == null) {
             throw new APIException(ResultCodes.MissingParameter);
         }
-        List<EntityBdMerchantCollectionCode>  codeList = collectionCodeService.findEntityBdMerchantCollectionCodesByMchId(mchId);
-        if ( codeList != null && codeList.size() >= 3) {
+        List<EntityBdMerchantCollectionCode> codeList = collectionCodeService.findEntityBdMerchantCollectionCodesByMchId(mchId);
+        if (codeList != null && codeList.size() >= 3) {
             throw new APIException(ResultCodes.CollectionCodeGreaterThan3);
         }
         EntityBdMerchantCollectionCode collectionCode = collectionCodeService.findCollectionCode(number);
@@ -474,7 +494,7 @@ public class MerchantController {
         if (collectionCode.getMchId() != null && collectionCode.getMchId() != 0 && collectionCode.getMchId().longValue() != mchId.longValue()) {
             throw new APIException(ResultCodes.CollectionCodeExist, MessageFormat.format(ResultCodes.CollectionCodeExist.getMessage(), number, collectionCode.getMchId()));
         }
-        collectionCode = merchantService.bindNumber(collectionCode,mchId);
+        collectionCode = merchantService.bindNumber(collectionCode, mchId);
         return new APIResult(collectionCode);
     }
 
@@ -495,8 +515,8 @@ public class MerchantController {
     public APIResult<Merchant> getMerchantsByCountry(@PathVariable Long countryId,
                                                      @RequestParam(required = false) Long mchId,
                                                      @RequestParam(required = false) String mchName) {
-        Pageable pageable = new PageRequest(0,10000, Sort.Direction.DESC, "id");
-        Page<Merchant> merchants = merchantService.findMerchantByCountryFilter(countryId,mchName,mchId,pageable);
+        Pageable pageable = new PageRequest(0, 10000, Sort.Direction.DESC, "id");
+        Page<Merchant> merchants = merchantService.findMerchantByCountryFilter(countryId, mchName, mchId, pageable);
         return new APIResult(merchants);
     }
 }

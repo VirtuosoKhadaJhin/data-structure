@@ -31,12 +31,15 @@
             <td>$!item.name</td>
             <td>#if($!item.isHot)推荐#else 普通#end</td>
             <td>#if($!item.display)上架#else 下架#end</td>
-            <td>
+            <td width="15%" style="text-align: center;">
                 <a class="btn btn-success btn-mini" data-id="$!item.id" href="detail?id=$!item.id">
                     <i class="icon-eye-open"> 查看</i>
                 </a>
                 <a class="btn btn-info btn-mini" data-id="$!item.id" href="edit?id=$!item.id">
                     <i class="icon-edit"> 编辑</i>
+                </a>
+                <a class="btn btn-primary btn-mini" data-id="$!item.id" href="copy?id=$!item.id">
+                    <i class="icon-random"> 复制</i>
                 </a>
             </td>
         </tr>

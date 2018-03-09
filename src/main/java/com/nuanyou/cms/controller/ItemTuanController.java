@@ -115,6 +115,39 @@ public class ItemTuanController {
         return "itemTuan/edit";
     }
 
+    @RequestMapping(path = "copy", method = RequestMethod.GET)
+    public String copy(@RequestParam Long id, Model model) {
+        List<Merchant> merchants = merchantService.getIdNameList();
+        model.addAttribute("merchants", merchants);
+
+        Long mchId = merchants.get(0).getId();
+
+        Item entity = itemDao.findOne(id);
+        BigDecimal price = itemService.calcItemTuanPrice(id);
+        if (price.compareTo(BigDecimal.ZERO) != 0) {//有单品时
+            entity.setOkpPrice(price);
+            model.addAttribute("hasItems", true);
+        }
+
+        List<ItemTuanImg> itemTuanImgUrls = itemTuanImgService.getItemTuanImgUrls(id);
+        model.addAttribute("imgUrls", itemTuanImgUrls);
+
+        entity.setId(null);
+        entity.setName(entity.getName() + " - 复制");
+        entity.setKpname(entity.getKpname() + " - copy");
+        model.addAttribute("entity", entity);
+        mchId = entity.getMerchant().getId();
+
+        List<ItemCat> cats = itemCatDao.findIdNameList(mchId);
+        model.addAttribute("cats", cats);
+
+        List<TuanActivityTemplate> templates = tuanActivityTemplateDao.findAll();
+        model.addAttribute("templates", templates);
+
+        model.addAttribute("tuanTypes", TuanType.values());
+        return "itemTuan/edit";
+    }
+
     @RequestMapping(path = "detail", method = RequestMethod.GET)
     public String detail(Long id, Model model) {
         this.edit(id, model);
@@ -142,7 +175,7 @@ public class ItemTuanController {
         Item entity = itemService.saveNotNull(vo, itemTuanList);
         model.addAttribute("entity", entity);
 
-        if(vo.getId() == null && CollectionUtils.isNotEmpty(vo.getDetailImgs())){
+        if (vo.getId() == null && CollectionUtils.isNotEmpty(vo.getDetailImgs())) {
             itemTuanImgService.setNewItemTuanImgs(entity.getId(), vo.getDetailImgs());
         }
 

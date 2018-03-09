@@ -28,6 +28,7 @@ import com.nuanyou.cms.sso.client.util.CommonUtils;
 import com.nuanyou.cms.util.ExcelUtil;
 import com.nuanyou.cms.util.TimeCondition;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -431,7 +432,7 @@ public class OrderController {
 
     @RequestMapping(path = "virtual", method = RequestMethod.POST)
     @ResponseBody
-    public APIResult virtual(Long id, Integer number, String channel, String email, String channelOrderNo) {
+    public APIResult virtual(Long id, Integer number, String channel, String email, String channelOrderNo, String tripDate) {
         if (channel == null || channel == "")
             return new APIResult(ResultCodes.MissingParameter);
         if (channelOrderNo == null || channelOrderNo == "")
@@ -463,7 +464,7 @@ public class OrderController {
             orderPostResults.add(orderId);
         }
         for (Long orderId : orderPostResults) {
-            this.saveEmailTemplate(email, orderId);
+            this.saveEmailTemplate(email, orderId, tripDate);
         }
 
         if (orderPostResults.size() == 0) {
@@ -505,7 +506,7 @@ public class OrderController {
 
     }
 
-    private void saveEmailTemplate(String email, Long orderId) {
+    private void saveEmailTemplate(String email, Long orderId, String tripDate) {
         // 上传邮件图片
         Order order = orderDao.findOne(orderId);
         String titleInfo = enCodeMainImgPath;
@@ -523,6 +524,9 @@ public class OrderController {
         OrderVirtualMail virtualMail = new OrderVirtualMail();
         virtualMail.setCodeImgUrl(path);
         virtualMail.setEmail(email);
+        if(StringUtils.isNotEmpty(tripDate)){
+            virtualMail.setTripDate(tripDate);
+        }
         virtualMail.setOrderId(orderId);
         virtualMail.setPush(Boolean.FALSE);
         virtualMailDao.save(virtualMail);
